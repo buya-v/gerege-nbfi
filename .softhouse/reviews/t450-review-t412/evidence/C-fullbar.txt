@@ -1,0 +1,12 @@
+bar-attest: commit 1a2fb48a268fbc892b42a84bd6a314d28a127ad1
+bar-attest: tree   054000b16dd1f515ad3f1dbfab1df3b2d3ed1239
+bar-attest: scratch worktree /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-attest.sNApNyuNq9/wt
+bar-attest: running the bar (this takes minutes) ...
+bar-attest: bar exit: 0
+bar-attest: probe lines PRINTED: 1
+bar-attest: 
+bar-attest: ATTESTED FULL -- tree 054000b16dd1f515ad3f1dbfab1df3b2d3ed1239
+bar-attest:   exit 0, probe PRESENT x1 all reading `up`, VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+bar-attest:   ledger:     /private/tmp/t450/clone/.git/softhouse-driver-gate/attest.tsv
+bar-attest:   transcript: /private/tmp/t450/clone/.git/softhouse-driver-gate/attested-054000b16dd1f515ad3f1dbfab1df3b2d3ed1239.log
+BAR_ATTEST_RC=0 WALL=85

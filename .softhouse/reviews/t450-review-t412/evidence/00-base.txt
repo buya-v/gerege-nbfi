@@ -1,0 +1,3 @@
+BASE=0d38d884716a2c87f9c5f995bd4421eb0bea36c0
+BASETREE=f7dc5b04b0c21cd778d97bad972029507d2c3d3e
+FULL	f7dc5b04b0c21cd778d97bad972029507d2c3d3e	0d38d884716a2c87f9c5f995bd4421eb0bea36c0	2026-08-29T02:54:37Z	exit0 probe=1xup VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.

@@ -1,0 +1,14 @@
+bar-attest: commit a050df3e6f5832a8ca19a0cad8ea8ff3e5e08561
+bar-attest: tree   b85edcc46e984e2edfecb000c29cb86b85acb8c2
+bar-attest: scratch worktree /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-attest.F3WWJ9S6jH/wt
+bar-attest: running the bar (this takes minutes) ...
+bar-attest: bar exit: 2
+bar-attest: probe lines PRINTED: 0
+bar-attest: REFUSED -- the probe line was NEVER PRINTED. Four exit-2 paths run before it, including a
+bar-attest:   failed HARD guard. ABSENCE IS NOT `down`; it is 'no verdict is available' (P-84).
+conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+conformance: guard_capture_namespace FAILED (rc=1). Full transcript above.
+conformance: guard_dead_path_frontier FAILED. Full guard transcript above.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+bar-attest:   transcript kept at /private/tmp/t450/clone/.git/softhouse-driver-gate/last-refused-bar.log
+BAR_ATTEST_RC=1 WALL=85

@@ -1,0 +1,18 @@
+driver-push-gate: running /private/tmp/t450/clone2/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=bare url=/tmp/t450/remote2.git
+driver-push-gate: pushing 87292a7506e61c87f58656bf5215c00bccb0ac5d -> refs/heads/main   tree=b09bd9be34c9ad885fc84285776f299689b92624
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of 87292a7506e61c87f58656bf5215c00bccb0ac5d.
+driver-push-gate: 
+driver-push-gate: C2 REFUSED -- a NON-MERGE commit in 87292a7506e61c87f58656bf5215c00bccb0ac5d writes outside the driver allowlist
+driver-push-gate:   (.softhouse/, docs/, .claude/):
+driver-push-gate:     87292a75 nexus/internal/apps/t450probe/probe.go
+driver-push-gate: 
+driver-push-gate:   Merge commits are exempt -- they lawfully carry a worker's whole branch, and that
+driver-push-gate:   branch ran the bar. A non-merge commit on main is the driver's own writing, and over
+driver-push-gate:   the last 400 such commits it has never lawfully left those three prefixes.
+driver-push-gate:   If this is a deliberate in-place repair, set SOFTHOUSE_DRIVER_GATE_BYPASS to a reason.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/tmp/t450/remote2.git'
+PUSH_RC=1

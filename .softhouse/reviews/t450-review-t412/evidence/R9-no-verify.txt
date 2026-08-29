@@ -1,0 +1,7 @@
+To /tmp/t450/remote2.git
+ * [new branch]        HEAD -> main
+PUSH_RC=0
+--- gate output present? ---
+0
+--- does the pushed tree carry a gitlink? ---
+160000 commit 0d38d884716a2c87f9c5f995bd4421eb0bea36c0	strayworktree

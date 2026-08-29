@@ -1,0 +1,10 @@
+ARM R1-gitlink                   EXPECT rc=1 GOT rc=1  marker[C1 REFUSED -- THE PUSHED TREE CONTAINS A GITLINK] PRESENT  PASS
+ARM R2-gitlink-bypass            EXPECT rc=1 GOT rc=1  marker[THERE IS NO BYPASS FOR C1] PRESENT  PASS
+ARM R3-outside-allowlist         EXPECT rc=1 GOT rc=1  marker[C2 REFUSED -- a NON-MERGE commit] PRESENT  PASS
+ARM R4-allowlist-bypass          EXPECT rc=0 GOT rc=0  marker[BYPASSED: C2 allowlist] PRESENT  PASS
+ARM R5-short-bypass              EXPECT rc=1 GOT rc=0  marker[C2 REFUSED -- a NON-MERGE commit] MISSING  ***FAIL***
+ARM R6-bad-citation              EXPECT rc=1 GOT rc=1  marker[C3 REFUSED -- THE CHEAP SUBSET FAILED ON THE PUSHED TREE] PRESENT  PASS
+ARM R7-deletion                  EXPECT rc=1 GOT rc=1  marker[C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED] PRESENT  PASS
+ARM R8-honest-allowed            EXPECT rc=0 GOT rc=0  marker[C3 PASS -- cheap subset clean] PRESENT  PASS
+ARM R9-no-verify              rc=0: THE GITLINK PUSH SUCCEEDED, gate never ran.  (finding, not a pass)
+arms passed: 7   arms failed: 1
