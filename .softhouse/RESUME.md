@@ -1,71 +1,83 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260829-080002` **ITERATION 5** (local, Buyan's Mac) — **FIVE WORKERS DISPATCHED.**
-Written and pushed BEFORE the first `git worktree add`, per softhouse-program STEP 0.
+## FIRE `20260829-080002` **ITERATION 5** (local, Buyan's Mac) — IN FLIGHT, 3 PAIRS MERGED, 2 TASKS LIVE
 
-Oracle **REACHABLE** for this whole fire: `https://localhost:8443/fineract-provider/actuator/health`,
-PostgreSQL at `localhost:5432`, pinned Fineract `/Users/buv/fineract @ 426a23544`.
+Oracle **REACHABLE** all iteration: `https://localhost:8443/fineract-provider/actuator/health`,
+PostgreSQL `localhost:5432`, pinned Fineract `/Users/buv/fineract @ 426a23544`.
 
-## BAR ON `main` AT DISPATCH — GREEN, measured on the tree that actually landed
+## BAR ON `main` — GREEN, and now ATTESTED rather than merely asserted
 
-```
-bash .softhouse/conformance.sh   →  EXIT 0
-probe line PRESENT (grep -c 'probe = ' == 1), reads `up`     ← presence tested BEFORE value
-VERDICT: PASS — 46 parity vectors match the pinned reference oracle, 7884 cells compared
-dead-path frontier GREEN, deadOccurrences 108 · frontier 11 == pinned 11
-```
+Every merge this iteration was graded **on the merge result, in a scratch worktree outside the repo,
+before `main` was touched**, then attested by tree sha and pushed only after the pushed tree was
+confirmed to BE the graded tree. Latest: `EXIT 0`, probe PRESENT ×1 `up`,
+`VERDICT: PASS — 46 parity vectors, 7884 cells`, frontier `11 == 11`, `deadOccurrences 108`.
 
-Graded at `main` = `2a1dac46`, which is the tree iteration 4 pushed. This is T412's own complaint
-applied to this iteration: the bar was run on the commit that IS on `main`, not on a scratch tree.
+## MERGED THIS ITERATION — THREE REVIEWED PAIRS
 
-## ⚠ WHAT THIS ITERATION FOUND IN THE INHERITED RECORD, BEFORE IT DISPATCHED ANYTHING
-
-`tasks.json` carried **two tasks whose work is merged on `main`** in non-terminal states, and one of
-them in the dangerous direction:
-
-| Task | Record said | Truth on `main` |
+| Pair | Verdict | What landed |
 |---|---|---|
-| `T428` | `needs_retry` — *"worker killed mid-flight … a killed worker is dead, not paused"* | **MERGED.** `git merge-base --is-ancestor softhouse/T428-review-t421 main` → **YES**; 35 tracked files under `.softhouse/reviews/t428-review-t421/`. The worker **finished**. |
-| `T421` | `needs_review` | **MERGED.** 33 tracked files under `.softhouse/capture/t421-t406-conditions/`, and its review (`T428`) landed too. Branch deleted post-merge. |
+| `T350` + `T449` | APPROVED WITH CONDITIONS (2 MAJOR) → **`T451`** | The reconciler now refuses to demote on **CONTENT**, not on a branch NAME. T449 ran a **256-state partition enumeration by EXECUTING the predicates**: 0 states with no verdict, 0 with two. |
+| `T442` + `T447` | APPROVED WITH CONDITIONS (3 MAJOR) → **`T452`** | C-T440-1 closed: the probe is assembled at runtime, not respelled to evade `git grep`. Class sweep: 1704 scripts / 399 searches, 4 self-matching probes, all fail-CLOSED. |
+| `T412` + `T450` | APPROVED WITH CONDITIONS (2 MAJOR) → **`T453`** | The **driver push gate**, installed and enforcing. C1 gitlink refusal, C2 write-path allowlist, C3 tree-identity + cheap subset on the PUSHED tree. |
 
-`T428` is **`T403` observed in the opposite direction** — the reconciler "cannot tell a killed worker
-from a worker that never existed", and here it wrote the *killed* story for a worker that **finished and
-merged**. `T421` is the **`T350`** shape: the reconciler keys on a branch that no longer exists rather
-than on whether the content is on `main`. Both records are corrected in this commit, and both tasks are
-dispatched this wave with this as first-hand evidence.
+## ⚠ THE THREE THINGS THE NEXT FIRE MOST NEEDS TO KNOW
 
-**Iteration 4's own summary was right and the machine-readable record was wrong.** The prose cursor in
-`program.json` said "T421+T428 merged"; `ready-tasks.py` offered neither. Prose and record disagreed and
-only the prose was true.
+**1. `T453` IS URGENT AND MONEY-ADJACENT.** The push gate is **live with a driven hole**. T450 drove
+three STATE-set-confined deltas that pass the cheap subset, get a CHEAP attestation written, and are
+ALLOWED — and the full bar on that exact tree then goes `EXIT 2` with no probe line. One is
+`guard_no_float_in_capture_requests`, a **money non-negotiable**. The reasoning error in one sentence:
+*the STATE-set table asks which files each guard READS; three guards resolve against the tree's
+INVENTORY, so an ADDITION is the same hazard as the DELETION already excluded.* Nine of the 108 pinned
+dead-path literals live inside the STATE set, including `.softhouse/uat.md` — ordinary driver work.
 
-## IN FLIGHT — FIVE WORKERS (all `opus`, all worktree-isolated, file sets disjoint)
+**2. `NOTHING INSTALLS THE GATE` (T453 M-2).** Zero hits repo-wide outside T412's own files. `.git/hooks`
+is untracked, so **the cloud fire and any CI runner are silently ungated**. It protects exactly one
+machine because one worker ran the installer by hand, once. P-45 for the eighth time.
 
-| Task | Branch | What it is |
+**3. THE GATE REFUSED THE DRIVER, AND WAS RIGHT.** At the `T350`+`T449` merge the driver had graded the
+merge result and verified tree identity by hand — and was still refused, because a transcript is bytes
+and nothing binds it to the tree it claims to have graded. The remedy was to attest properly
+(`bar-attest.sh` checks the tree out itself), never to bypass. **`bypass.log` still does not exist.**
+
+## IN FLIGHT — TWO WORKERS
+
+| Task | Branch | State |
 |---|---|---|
-| `T445` | `softhouse/T445-case-route` | **MAJOR, LIVE ON `main`.** M-1 from T444: a **fifth** witness-forgery route survives all three of T431's new lines — the closing grep reads the **filesystem**, and T375's own argument was never applied to the deciding test. Sole writer to `conformance.sh` this wave. |
-| `T442` | `softhouse/T442-t440-conditions` | **MAJOR, CONFIRMED.** C-T440-1: T424's comment-claims drive **fails on the tree it ships in**, and its committed transcript records the opposite. Plus T440's five remaining conditions. |
-| `T433` | `softhouse/T433-t423-c1` | **MAJOR, CONFIRMED.** C-T423-1: T393 ships a **false impossibility claim** in two tracked executable files, and sends the next task to build an artefact it does not need. |
-| `T350` | `softhouse/T350-reconcile-content` | The reconciler's refusal-to-demote is keyed on a branch **NAME**, not its **CONTENT**. Raised again, first-hand, by this iteration's `T421` finding. |
-| `T412` | `softhouse/T412-driver-selfgrading` | The driver pushes to `main` without ever running the bar on its own commits — and reddened `main` doing it. Filed by a driver against itself. |
+| `T433` | `softhouse/T433-t423-c1` | 3 commits, **no handoff yet.** ARM F landed inside section 10; false impossibility corrected at both executable sites. |
+| `T446` | `softhouse/T446-review-t445` | Just dispatched, **no commits yet.** Reviewing T445. |
 
-**Disjointness checked before dispatch:** `conformance.sh` has exactly one writer (`T445`);
-`bin/ready-tasks.py` has exactly one writer (`T350`); `T442`, `T433`, `T412` write only their own
-capture/review directories. No serialising dependency was needed.
+## HELD, COMPLETE, UNMERGED PENDING REVIEW
+`T445` (`softhouse/T445-case-route`, 10 commits, tip `236fc829`, own bar EXIT 0, scope clean, merges
+clean onto current `main`) — **blocked on `T446`.** T444 found ONE fail-open; T445 found **four**, three
+of them new and all driven RED on **unmutated `main`**: `MCASE` (directories differing only in case),
+`LEGDIRTY` and `WDIRTY` (rows/witnesses existing only in the working tree). Remedy: every graded read now
+comes from the **tracked blob**. Proposed pattern `FU-T445-8`: *a test that reads the WORKING TREE cannot
+decide a question about what is COMMITTED* — six fail-opens in one function have had that shape.
 
-## NEXT WAVE (reviewers, one per branch, independent, re-deriving)
-`T446`→T445, `T447`→T442, `T448`→T433, `T449`→T350, `T450`→T412.
+## QUEUE FOR THE NEXT FIRE
+`T453` (urgent, money-adjacent) → `T451`, `T452` → `T403` (the reconciler's other half; `T350` held
+`ready-tasks.py` this wave) → `T443` + `T441` (both write `conformance.sh`, serialised behind `T445`) →
+`T419` → `T437` → `T434`/`T435`/`T436` → `T399`, `T425`, `T394`, `T395`.
 
-## QUEUE AFTER THAT
-`T403` (the reconciler's other half — held out only because `T350` owns `ready-tasks.py` this wave) →
-`T443` + `T441` (both write `conformance.sh`, serialised behind `T445`) → `T419` → `T437` → `T434`,
-`T435`, `T436` → `T399`, `T425`, `T394`, `T395`.
+## RECORD DEFECTS CORRECTED THIS ITERATION
+`T421` (`needs_review`) and `T428` (`needs_retry`, "worker killed mid-flight") were both **merged on
+`main`** — 33 and 35 tracked files respectively. `T428` is `T403` in the mirror: the reconciler wrote the
+*killed* story for a worker that **finished**. Both corrected before dispatch; both fed to `T350`.
 
-## OPEN GATES — none blocks anything, and no CONTRACT gate is open
-`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`, `G-22`. `ready-tasks.py` reports
-`OPEN CONTRACT GATES … NONE open. Every gate id in program.json.gates_pending was inspected.`
+**Also corrected: a DRIVER measurement error.** The scope check must run against the **merge-base**, not
+`git diff main..branch`. Once `main` advances under live workers the two-dot diff attributes the
+**driver's own later commits** to the branch as deletions — it made all five branches look like they had
+clobbered `tasks.json` and deleted a live task. None had.
+
+## OPEN GATES — none blocks anything, no CONTRACT gate open
+`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`, `G-22`.
+
+## NEEDS A HUMAN EVENTUALLY (not a gate, but no agent should guess)
+`T286` is **partially landed**: 27 of its files are on `main`, its branch is 2 commits ahead and is
+**not** an ancestor. Found by `T350`, confirmed by `T449`. It printed nothing before this iteration.
 
 ## Pause reason
-None yet — this manifest is the pre-dispatch record, not an exit record. If you are reading it because
-the fire died, the five tasks above were **in flight and are now dead**; check each branch for commits
+None — this is an in-flight checkpoint, not an exit record. If you are reading it because the fire died:
+`T433` and `T446` were **live and are now dead**. Check each branch for commits
 (`git rev-list --count main..<branch>`) and mark each `needs_retry` with what it actually carried.
-**A branch that exists is not evidence of work — that is the `T350` defect this very wave is fixing.**
+`T445` is COMPLETE and unmerged — do not restart it, review it.
