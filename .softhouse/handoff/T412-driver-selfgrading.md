@@ -401,4 +401,28 @@ and `$(git rev-parse --git-common-dir)/hooks/{pre-push, softhouse-t412-gate/}`.
 
 ## 7. This branch's own bar
 
-BAR_BLOCK
+`bash .softhouse/conformance.sh` on the committed, clean `softhouse/T412-driver-selfgrading` tree.
+Scratch in `/tmp`, outside the repo. Transcript: `.softhouse/capture/t412-driver-selfgrading/out/BAR-on-this-branch.log`.
+
+**PRESENCE BEFORE VALUE**, in that order, because four exit-2 paths run before the probe prints:
+
+```
+$ grep -c 'probe = ' bar.log
+1                                   <-- PRINTED AT ALL. Absence would not be `down`.
+
+$ grep -n 'probe = ' bar.log
+203:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+$ grep -n '^VERDICT' bar.log
+818:VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+EXIT=0
+WALL_SECONDS=80
+```
+
+`git status --porcelain` empty before and after. Guard census 15/15 timed, 0 ceiling breaches,
+0 unbudgeted. The dead-path frontier reads `108 == 108` — it moved to 109 once, on a quoted
+literal in `driver-push-gate.sh` that ended in an escaped backtick, and was repaired by rewording
+rather than by growing the pin. The fail-open frontier is unchanged at 11 rows; none of the five
+new scripts joins it.
+
