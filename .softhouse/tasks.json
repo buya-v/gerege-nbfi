@@ -7098,7 +7098,7 @@
   },
   {
    "id": "T472",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -7112,7 +7112,7 @@
     "T467"
    ],
    "description": "Independent adversarial review of T467 (softhouse/T467-t464-conditions, tip 6a345e4a). Re-derive; do not inherit T467's or T464's numbers.",
-   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T467) at 2026-08-29T09:51:01Z, isolated worktree, model opus, branch softhouse/T472-review-t467."
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T467) at 2026-08-29T09:51:01Z, isolated worktree, model opus, branch softhouse/T472-review-t467. || local fire 20260829-080002 iter6: DONE on softhouse/T472-review-t467 (2 commits, tip 0accb769, 17 files, scope clean). VERDICT APPROVED WITH CONDITIONS (1 MAJOR, 2 MINOR, 3 LOW). THE CLASS CLOSURE DOES NOT SURVIVE ATTACK: two spellings reproduce T464 exact harm AT T467 TIP AND BOTH WERE CAUGHT BY THE PREDICATE T467 REPLACED -- (a) echo <words UNQUOTED> # <tag> in run-all.sh at 6a345e4a gives section 10 exit 0 / run-all.sh exit 0 / regenerated transcript carries the false sentence UNTAGGED x1, where at 3f4e236a the same line gives exit 1; control case Q (same line, words QUOTED) IS caught at 6a345e4a, so the ONLY difference between caught and missed is one pair of quote characters -- quoted_segments returns [] for a line with no quote char and the trailing-comment tag silences predicate 1; (b) print(b\"<claim>\".decode()) # <tag> caught by T455 via the print( prefix, missed by T467 because a bytes Constant is not a str Constant. THREE MORE missed by BOTH refs and UNDERSTATED in the declared open routes: %-formatting, f-strings, bytes literals -- all carry the whole claim in literals ON ONE LINE, caught by neither predicate. Reach at the tip: 7152 %-format sites / 571 files; 2491 f-strings / 170 files; 192 bytes literals / 60 files; 26 unquoted-echo lines / 20 files INCLUDING THREE OF T467 OWN INSTRUMENTS. ZERO-FALSE-POSITIVES is true for four files, NOT for the rule: over 1687 tracked .py/.sh, T467 rule flags 6 files that T455 flags 0, and all six are the tag-guard lineage (t433 x3, t455, t448, t464) -- i.e. the files most likely to be added to the population NEXT. FAIL-CLOSED BRANCH IS GENUINELY VALUE-REACHABLE and control (l) IS a real control -- decisive drive: restoring T455 exact int return on a CLEAN corpus makes (l) and (l1) FAIL WHILE (k) STILL PASSES, so (l) reaches the consumer and is not (k) renamed. F-T464-5 coverage HOLDS and T472 ran the bar on the TIP 6a345e4a, not 1afa5dba. The untracked-file route T467 only DECLARED was DRIVEN by T472: an untracked file does enter the population and reddens the arm by a value."
   },
   {
    "id": "T473",
@@ -7163,6 +7163,26 @@
    "dependencies": [],
    "description": "FILED 2026-08-29 by fire 20260829-080002 iter6 from T469's independent review of T462. Both merged (tree 8f3136cb). The shipped resolver diff is CORRECT and T469 could not break the subset guarantee -- these are conditions on the CLAIMS and the INSTRUMENT, not on the fix. RE-DERIVE; do not inherit T469's numbers.\n\n## C-T469-2 (MINOR, AND IT IS THE ONE THAT MATTERS) -- THE NEGATIVE CONTROL IS ITSELF A DEFECT\nT462 built a new instrument to escape the SELF-SELECTED POPULATION that T456 diagnosed in T451, and reported '3 planted, 2 caught, 1 correctly ignored'. T469 drove the one that was 'correctly ignored': D-NULL flips merged/REFUSE -> indeterminate/demote at three budgets -- which is C-T456-1's OWN CLASS, the destructive direction. So the score is 2 defects, 2 caught, ZERO VERIFIED NON-DEFECTS, and C-T456-2 IS NOT REPAIRED. The self-selected population survived the instrument built to escape it, one level down.\nWITHDRAW the claim, and then do the harder thing: find a genuine non-defect mutation and show the instrument ignores it. If no genuine non-defect can be constructed, SAY SO -- that is itself a finding about the state space, and an honest 'cannot' is the preferred outcome here.\n\n## C-T469-1 (MINOR) -- THE GUARANTEE IS STATED ONE SCOPE TOO LARGE\n--deadline-secs is PROCESS-GLOBAL; the probe is per-task. Driven: a fan-out-20 sink starves the NEXT task's probe from REFUSE into demote, 11 of 12 cells. This is NOT a regression (main does the same) and is unreachable at today's fan-out of 2 -- it is a defect in the SENTENCE, not in the diff. Restate the guarantee at its true scope (per-invocation, not per-process) and say what would be needed to make it per-process.\n\n## C-T469-3 (MINOR) -- THE REPAIR SHIPS A NEW FALSE HISTORY\nThe C-T456-7 repair asserts a line-number history that is wrong. Measured: the sweep line was 3125 on T451's OWN commit 0bf11587 AND at its tip; 3127 was introduced by T451 and was NEVER right -- exactly what T456 said. Also FIVE citations were removed, not the four the handoff claims. NOTE T469 judged that removing the line numbers IS a genuine repair rather than an evasion, because the text citation is unique -- so fix the history, keep the removal.\n\n## LOW\n- C-T469-4: the C-T456-4 fix leaves bare present-tense cardinals INSIDE ITS OWN REWRITTEN PARAGRAPHS, and |A| measurably oscillated 15 -> 16 -> 15 DURING T469's review. Set B = {} confirmed at HEAD 319952da2d10 / 712 refs; an independent census at 34fe206f8495 / 714 refs shows the SHAPE claim holds 10 of 10 foreign. Also stale and untouched: '10,088 paths' (10,372 today), '705 live refs' (714).\n- C-T469-5: two patterns.md:<line> citations survive stale by 31 lines -- same rot class, same file, undeclared.\n- C-T469-6: 'floor invariant : OK' is a MODULE-LEVEL PRESENCE CHECK -- delete the floor from the guard and it still prints OK. Make it measure the floor.\n- C-T469-7: ARM A's blind classes are nameable -- the 'none' route is outside the state space entirely. Name them in the instrument.\n\n## T469'S OWN DECLARED GAPS -- pick these up\nFive ARM-A plants were driven by a delegated instrument T469 did NOT personally re-run (it marked them as such). The cross-task budget residual needs a fire-program.sh change NOBODY OWNS. And T469 did not attack refs_naming / RefIndex, ON WHICH EVERY NUMBER IN THIS CHAIN RESTS -- that is the highest-value unexamined surface here.\n\nSCOPE: ready-tasks.py and your own capture dir. ready-tasks.py is the resolver the driver runs EVERY FIRE to decide what to dispatch -- drive every change RED and GREEN and keep clean-host behaviour unchanged. Slow-host drives by slowing the HOST (a wrapper on PATH), never by editing the code under test. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103). Bar on your own committed tree, probe PRESENCE before value.",
    "note": "Filed by the driver of fire 20260829-080002 iter6 from T469's 3 MINOR and 4 LOW conditions plus its three declared gaps."
+  },
+  {
+   "id": "T476",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "title": "T467 REPAIR PASS: the emitter-class closure REGRESSES two spellings the replaced predicate caught, and ships an untagged false claim inside the file whose subject is untagged false claims",
+   "branch": "softhouse/T476-t472-repair",
+   "files_hint": [
+    ".softhouse/reviews/A2-11/",
+    ".softhouse/capture/t476-t472-repair/"
+   ],
+   "dependencies": [
+    "T467",
+    "T472"
+   ],
+   "description": "Repair pass on T467 under T472's MAJOR. Built ON TOP of softhouse/T467-t464-conditions; T467 is NOT merged pending this.",
+   "note": "local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:30:01Z as the T467 repair pass under T472's MAJOR. T467 held UNMERGED deliberately -- the driver does not merge a known guard regression. Branched from softhouse/T467-t464-conditions."
   }
  ],
  "cross_corroboration": {
