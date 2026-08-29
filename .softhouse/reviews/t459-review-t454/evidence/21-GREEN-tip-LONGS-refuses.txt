@@ -1,0 +1,17 @@
+T459 arm LONGS-tip, base 02fb1af4
+host: macOS 26.5.1 (25F80), APFS case- and fold-INSENSITIVE, git 2.50.1 (Apple Git-155),
+      GNU bash 3.2.57(1); core.ignorecase=true core.precomposeunicode=true
+cwd for the run: a scratch directory OUTSIDE every repository involved
+---------------------------------------------------------------------------
+probe line COUNT (read BEFORE its value, P-84) : 0
+probe value                                    : -
+VERDICT line                                   : <absent>
+guards-dir census                              : population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- every REFUSED / FAILED line in the log --------------------------------
+33:conformance: guard_harness_text_is_committed FAILED: 1 substituted path(s).
+--- the HARNESS-TEXT census, verbatim -------------------------------------
+25:conformance:   HARNESS-TEXT CENSUS: HEAD 6511649b3021d41fbafc8612e13daf62c6c860ab; tracked paths whose materialised bytes
+28:conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+--- guard-cost census ------------------------------------------------------
+234:conformance:   GUARD-COST CENSUS: 16 guards timed, 74s total wall,
+258:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.

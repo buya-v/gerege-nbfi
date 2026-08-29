@@ -1,0 +1,19 @@
+
+=== ARM RWB3-CTL-cbc8733c  (base cbc8733c)
+    committed blob of .softhouse/guards/W.txt = 1d644900597d3a6ccaf938e8822889229d04d25e
+    materialised at that path = 8e6ad58f11e2b1d498359447dbad9d44ed846422
+    what is on disk there: #!/usr/bin/env bash # T459 fixture member. # self-naming hea
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance: direction exists precisely so that it never is. REFUSED.
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    --- decisive-lines watch:
+    conformance:   registration decisive lines: 7 present, 2 evaluated on an input
+    --- reached-by verdict lines:
+    conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+    conformance: guard_guards_dir_registration: .softhouse/guards/zz-t459-member.sh declares REACHED-BY .softhouse/guards/W.txt,
+    conformance: and THAT REACHED-BY WITNESS DOES NOT NAME zz-t459-member.sh IN ITS COMMITTED

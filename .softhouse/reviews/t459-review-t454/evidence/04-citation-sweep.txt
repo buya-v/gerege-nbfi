@@ -1,0 +1,32 @@
+citations of the form conformance.sh:NNNN, tip tree
+distinct files carrying at least one : 223
+total occurrences                    : 1772
+occurrences whose cited LINE TEXT CHANGED between main and the tip: 138
+files affected: 26
+
+    26 moved /  338 total   .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt
+    23 moved /   38 total   .softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt
+    23 moved /   49 total   .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt
+    14 moved /   22 total   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md
+     9 moved /   14 total   .softhouse/reviews/t337-review-t323/REVIEW.md
+     6 moved /   52 total   .softhouse/tasks.json
+     5 moved /    7 total   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md
+     4 moved /    8 total   .softhouse/reviews/t364-review-t358/REVIEW.md
+     3 moved /  100 total   .softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt
+     3 moved /    5 total   .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt
+     2 moved /    3 total   .softhouse/reviews/t364-review-t358/evidence/03-t364-haystack-occurrences.txt
+     2 moved /    2 total   .softhouse/reviews/t387-review-t360/REVIEW.md
+     2 moved /    2 total   .softhouse/reviews/t406-review-t391/REVIEW.md
+     2 moved /    2 total   .softhouse/reviews/t409-review-t390/REVIEW.md
+     2 moved /    6 total   .softhouse/reviews/t411-review-t401/REVIEW.md
+     2 moved /    4 total   .softhouse/reviews/t444-review-t431/REVIEW.md
+     1 moved /    3 total   .softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh
+     1 moved /    4 total   .softhouse/capture/t445-case-route/evidence/02-condition-by-condition.md
+     1 moved /    1 total   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T364.md
+     1 moved /    1 total   .softhouse/reviews/t364-review-t358/evidence/04-t364-path-normalisation.txt
+     1 moved /    1 total   .softhouse/reviews/t384-review-t375/REVIEW.md
+     1 moved /    9 total   .softhouse/reviews/t411-review-t401/evidence/20-census-enumeration.txt
+     1 moved /    1 total   .softhouse/reviews/t422-review-t416/REVIEW.md
+     1 moved /   24 total   .softhouse/reviews/t444-review-t431/evidence/06-conformance-line-citation-sweep.txt
+     1 moved /    2 total   .softhouse/reviews/t446-review-t445/REVIEW.md
+     1 moved /    2 total   .softhouse/reviews/t450-review-t412/REVIEW.md

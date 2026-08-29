@@ -1,0 +1,23 @@
+tracked paths containing each digraph a fold can collapse (this repository):
+  ss   : 827
+  st   : 2824
+  ff   : 713
+  fi   : 653
+  fl   : 174
+  ffi  : 23
+  ffl  : 4
+
+the paths this harness reads or EXECUTES from the working tree -- do any contain one?
+  .softhouse/conformance.sh                            digraphs: NONE
+  .softhouse/guards                                    digraphs: NONE
+  .softhouse/guards/check-ledger-invariants.sh         digraphs: NONE
+  .softhouse/guards/check-capture-namespace.sh         digraphs: NONE
+  .softhouse/guards/check-dead-path-frontier.sh        digraphs: NONE
+  .softhouse/guards/ledgerguard/main.go                digraphs: NONE
+  .softhouse/bin/ready-tasks.py                        digraphs: NONE
+  .softhouse/bin/fire-program.sh                       digraphs: fi
+  .softhouse/bin/go-env.sh                             digraphs: NONE
+
+CONCLUSION: the restricted answer of ONE collider for the two working-tree-read paths is
+CORRECT, but for a reason the census did not test -- those paths happen to contain no
+digraph. Across the tracked tree the class is live.

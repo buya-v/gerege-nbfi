@@ -1,0 +1,15 @@
+T459 arm LONGSTRIP1, base 02fb1af4
+host: macOS 26.5.1 (25F80), APFS case- and fold-INSENSITIVE, git 2.50.1 (Apple Git-155),
+      GNU bash 3.2.57(1); core.ignorecase=true core.precomposeunicode=true
+cwd for the run: a scratch directory OUTSIDE every repository involved
+---------------------------------------------------------------------------
+probe line COUNT (read BEFORE its value, P-84) : 0
+probe value                                    : -
+VERDICT line                                   : <absent>
+guards-dir census                              : population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- every REFUSED / FAILED line in the log --------------------------------
+240:conformance: guard_cost_census FAILED: 0 ceiling breach(es),
+--- the HARNESS-TEXT census, verbatim -------------------------------------
+--- guard-cost census ------------------------------------------------------
+213:conformance:   GUARD-COST CENSUS: 15 guards timed, 71s total wall,
+230:conformance: guard-cost: GUARD_COST_BUDGETS carries a row for guard_harness_text_is_committed, which this run
