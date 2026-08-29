@@ -208,6 +208,18 @@ real `tasks.json`, before this branch had a commit:
   needs a human. That is the T421/T428 shape, live, and it printed nothing before.
 * `T268` → **not** flagged (see §2b). 1 flag over 45 READY + 8 BLOCKED tasks.
 
+`out/51-ready-list-AFTER-commit.txt` is the same command after this branch's first commit:
+`T350` correctly moves `STILLBORN → COMMITS` ("1 commit(s) ahead of main, head 2979fdaaf"),
+which is the negative control for the `stillborn` arm — it fires on a branch that has
+contributed nothing and stops the moment one commit lands.
+
+**Bar on the committed tree** — `out/60-bar-on-committed-tree.txt`:
+`bash .softhouse/conformance.sh` → **EXIT 0**; `grep -c 'probe = '` → **1** (tested for
+presence before its value was read);
+`conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up`;
+`VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells
+compared`; all 16 wrong ledger implementations died through the harness.
+
 ---
 
 ## 5. A probe that could not fire, found while measuring
