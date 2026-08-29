@@ -1,0 +1,34 @@
+repo:  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ee68bc1d2562d6a
+module: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ee68bc1d2562d6a/.softhouse/bin/ready-tasks.py
+local heads: 686
+
+index build (once per process, independent of task count):
+  landed_index()  commit subjects + exact handoff names : 0.2165s
+  main_tree()     every tracked path on main            : 0.0827s
+  main_tree note: 9730 path(s) tracked on main were scanned for a path component naming the id
+
+landed_evidence() over 360 ids: 1.2107s total, 0.00336s per task
+
+==============================================================================
+BRANCHES THE PRE-T350 CODE CALLED `merged` (0 ahead of main AND ancestor of main)
+==============================================================================
+  still `merged` (REFUSE), corroborated by content on main : 173
+  flip to `stillborn` (DEMOTE), nothing owning on main     : 2
+  no task id parseable from the branch name                : 426
+
+EVERY FLIP, LISTED -- inspect these, do not trust the count:
+  softhouse/T350-reconcile-content                         id=T350      head: b102875c softhouse fire 20260829-080002 iter5: dispatch record for 5 workers, pushed BEFOR
+  softhouse/T412-driver-selfgrading                        id=T412      head: b102875c softhouse fire 20260829-080002 iter5: dispatch record for 5 workers, pushed BEFOR
+
+A SAMPLE OF THE ONES THAT STAY `merged`:
+  softhouse/A2-10-review-a2-5                              id=A2-10     commit 1e8a44b78 on main, subject 'Merge A2-10: independent review of 
+  softhouse/A2-11-review-a2-7                              id=A2-11     commit 74a6cdcd1 on main, subject 'A2-11: independent review of A2-7 —
+  softhouse/A2-12-a2-8-microfix                            id=A2-12     commit ff868648f on main, subject "A2-12: A2-9's four non-money correc
+  softhouse/A2-13-dec2-gl-contract                         id=A2-13     handoff .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-1
+  softhouse/A2-14-review-dec2                              id=A2-14     commit e6bef7761 on main, subject "A2-14: DEC-2 review -- REJECTED. Se
+  softhouse/A2-16-dec2-rev2                                id=A2-16     commit 09074ea79 on main, subject 'A2-16: DEC-2 revision 2 -- and no l
+  softhouse/A2-17-review-dec2-rev2                         id=A2-17     commit f39a65d93 on main, subject 'A2-17: DEC-2 rev2 review -- MICRO-F
+  softhouse/A2-18-ledger-invariant-guard                   id=A2-18     commit c9c28259e on main, subject 'A2-18: build the I-3/I-4 source gua
+  softhouse/A2-19-review-dec2-rev2-second                  id=A2-19     commit 446fb7a44 on main, subject 'A2-19: second independent review of
+  softhouse/A2-20-context-allowlist                        id=A2-20     commit 48bf77689 on main, subject 'A2-20: refuse a vector whose contex
+  ... 173 total

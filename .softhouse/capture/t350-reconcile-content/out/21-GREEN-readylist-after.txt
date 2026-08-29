@@ -1,0 +1,46 @@
+==============================================================================
+T350 READY-LIST DRIVE -- GREEN -- ready-tasks.py with T350 applied
+module under test: .softhouse/bin/ready-tasks.py
+module sha256:     fc56c0d469af2ddf7b7677b041f422e8ebbd6b60f21fc3ee7df43bdd1ff647f1
+fixture main:      b102875c7e0d1b7f1ba4339180cedc5e207dfb11
+  T421 needs_review, branch softhouse/T421-t406-conditions -- DELETED in fixture
+  T428 needs_retry,  branch softhouse/T428-review-t421     -- DELETED in fixture
+  T351 needs_retry,  branch softhouse/T351-old-name        -- never existed;
+       softhouse/T351-progress-accounting is live and carries t351 content
+  T339x needs_retry, branch softhouse/T339x-never-existed  -- truly nothing
+tracked on fixture main:
+  paths naming t421: 70
+  paths naming t428: 36
+  paths naming t351: 0
+  paths naming t339x: 0
+==============================================================================
+IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (0)
+
+READY (4)
+  T339x    opus   code    CONTROL -- genuinely unstarted, must stay silently READY
+  T351     opus   code    CONTROL -- work lives on a live ref, NOT on main
+  T421     opus   review  T406's six conditions on T391
+           !! WORK BEARING id T421 IS ALREADY ON MAIN: commit ffb52921c on main, subject 'T421: stop the handoff counting its own commits -- cite the command, not the number'
+              This task is NOT terminal, so it is offered above -- but dispatching it
+              would redo work that has landed. READ THAT HISTORY BEFORE DISPATCHING and
+              set the record to its true terminal status. (T421 and T428 both sat
+              non-terminal with their deliverables on main; the branch was pruned after
+              the merge and its absence read as 'nothing was done'.)
+  T428     opus   review  INDEPENDENT review of T421
+           !! WORK BEARING id T428 IS ALREADY ON MAIN: commit 8a6706c60 on main, subject 'T428: independent review of T421 -- APPROVED WITH CONDITIONS, four LOW findings'
+              This task is NOT terminal, so it is offered above -- but dispatching it
+              would redo work that has landed. READ THAT HISTORY BEFORE DISPATCHING and
+              set the record to its true terminal status. (T421 and T428 both sat
+              non-terminal with their deliverables on main; the branch was pruned after
+              the merge and its absence read as 'nothing was done'.)
+
+BLOCKED (0)
+
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+DEPENDENCY EDGES THAT RESOLVE NOWHERE (0)
+  NONE. Every edge was decided against tasks.json or an archived run file,
+  and this line is printed only after checking both -- it is not a default.
+==============================================================================
+resolver exit: 0

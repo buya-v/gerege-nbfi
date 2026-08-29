@@ -115,6 +115,31 @@ So `branch_wip` now also asks "does a case-variant of this name exist", via
 `/CASE-VARIANT`. When the check could not run it says `/CASE-UNCHECKED` instead, because
 a silent absence of warning is what this file exists to stop being possible.
 
+T350 -- FU-T330-1. THE REFUSAL WAS BOUGHT WITH A NAME, AND THE NAME WAS THIS PROGRAM'S
+OWN. T330 gave the reconciler two ways to REFUSE a demotion. One of them, `relocated`,
+fired whenever a live ref's NAME carried the task id. On 2026-08-28 the ref that saved
+T339 from demotion was `softhouse/rescued-t339-base-20260828-080001` -- created by the
+WRAPPER'S OWN WORKTREE SWEEP, which names rescue branches after the worktree DIRECTORY
+(`/private/tmp/t339-base`). Its entire diff vs main is a 219-line deletion from
+`.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` and `.t347-postcheckout-marker`, which
+belongs to T347. T339 had produced nothing. So the reconciler read its own sibling's
+naming convention back as independent corroboration, refused, left the task
+`in_progress`, and a human had to override it -- the exact state STEP 5.5 item 4 calls
+an active lie to the next orchestrator.
+
+AND THE SAME DEFECT RUNS THE OTHER WAY. `merge-base --is-ancestor` said MERGED for
+T431, whose branch head WAS the driver's dispatch commit 280817a1f (`git worktree add`
+branches from wherever the driver stands), so C-T407-1 -- a MAJOR -- was reported as
+landed while it was unstarted. And T421/T428 sat non-terminal with 33 and 35 tracked
+deliverable files on main, because their branches had been pruned after the merge and
+nothing in this file was ever ASKED about a task that is not `in_progress`.
+
+A BRANCH THAT EXISTS IS NOT EVIDENCE OF WORK, AND A BRANCH THAT IS GONE IS NOT EVIDENCE
+OF NO WORK. Every verdict that withholds a demotion is now bought with CONTENT -- a
+tracked path on main whose component BEGINS with the id, a commit subject prefixed with
+it, or a ref whose OWN diff vs main carries such a path or such a subject. See the T350
+block above `main_tree()` for the predicate, the failure directions and the costs.
+
 WHO MAY CALL `--reconcile`, RESTATED AFTER T319. It rewrites tasks.json, so it refuses
 unless it can POSITIVELY establish authority. `.softhouse/LOCK` must be on disk and name
 a `pid` (> 1) that is an ANCESTOR of this process on this host. A MISSING lock file is
@@ -888,6 +913,17 @@ def landed_index():
     # observation named) answers about the INDEX OF THE CURRENT CHECKOUT, and a worker
     # worktree's index is not main; `ls-tree main` asks the branch the work lands on,
     # which is the question, and measured the same 0.044s.
+    #
+    # T350 -- THIS SOURCE WAS ALMOST INERT AND NOBODY HAD MEASURED IT.  It keys the
+    # index on `os.path.basename(path)[:-3]`, i.e. it fires only for a handoff named
+    # EXACTLY `<id>.md`.  Measured on main at b102875c: 542 handoff paths are tracked,
+    # 229 are bare `T###.md` and 313 are the convention this program has used all
+    # month -- `T164-analyze7-float-guard.md`, `T350-reconcile-content.md`.  For every
+    # one of those 313 this source contributed NOTHING, and the absence looked exactly
+    # like the absence of a handoff.  P-22: a control that cannot fire is worse than
+    # none, because it is believed.  Source 3 below subsumes it (a bare `T101.md` is a
+    # path COMPONENT naming T101), so this is kept only because it is cheap, exact and
+    # already load-bearing in the notes people have read for two weeks.
     rc2, out2, err2 = _run([GIT, "ls-tree", "-r", "--name-only", "main", "--",
                             ".softhouse/handoff"], timeout=15)
     if rc2 != 0:
@@ -903,20 +939,284 @@ def landed_index():
             continue
         idx.setdefault(base[:-3], []).append("handoff %s tracked on main" % path)
         h += 1
-    notes.append("%d handoff .md path(s) tracked on main" % h)
+    notes.append("%d handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see "
+                 "source 3 for the rest)" % h)
     _LANDED = (idx, "; ".join(notes))
     return _LANDED
 
 
+# ===================================================================== T350 ==========
+# FU-T330-1 -- THE REFUSAL WAS KEYED ON A NAME, AND A NAME IS AN ASSERTION BY WHOEVER
+# TYPED IT.
+#
+# On 2026-08-28 the wrapper of fire 20260828-080001 REFUSED to demote T339, reason
+# recorded verbatim in the tasks.json blob at ac72956b: "a live ref carrying this task's
+# id exists under another name; `needs_retry` would duplicate a line that still exists
+# ... 1 live ref(s) carry id T339 -- softhouse/rescued-t339-base-20260828-080001".
+# That ref's ENTIRE diff vs main is a 219-line DELETION from
+# `.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` plus `.t347-postcheckout-marker`,
+# which belongs to T347.  T339 had produced nothing.  The ref is named for the WORKTREE
+# DIRECTORY (`/private/tmp/t339-base`), by the WRAPPER'S OWN SWEEP -- so `refs_naming`
+# was reading its own sibling's naming convention back as independent corroboration.
+# That is P-80's shape ("a corrected cardinal rots in every place it was restated"):
+# one assertion, restated somewhere else, then counted twice.
+#
+# AND IT FAILS IN BOTH DIRECTIONS, WHICH IS WHY THE FIX IS NOT "DROP THE REFUSAL".
+#   NAME PRESENT, CONTENT ABSENT -> a false REFUSAL.  T339 (above).  T431, whose branch
+#     `softhouse/T431-t407-conditions` pointed AT the driver's own dispatch commit
+#     280817a1f -- `git worktree add` branches from wherever the driver is -- so
+#     `rev-list --count main..` was 0 and `merge-base --is-ancestor` was TRUE, and this
+#     module printed "WIP: MERGED ... The work LANDED. Do NOT read this as an unstarted
+#     task."  C-T407-1, a MAJOR, was UNSTARTED.
+#   NAME ABSENT, CONTENT PRESENT -> a task that has landed is carried non-terminal
+#     forever.  T421 (33 files on main under .softhouse/capture/t421-t406-conditions/)
+#     and T428 (35 under .softhouse/reviews/t428-review-t421/) sat as `needs_review` /
+#     `needs_retry` with their branches pruned after the merge.
+#
+# THE PREDICATE.  A ref, or a branch-name, may buy a task a reprieve ONLY by carrying
+# CONTENT that plausibly belongs to the task:
+#   * ON MAIN     -- a commit subject prefixed `<id>:` / `Merge <id>:`, OR a tracked
+#                    path with a COMPONENT naming the id.  (sources 1-3)
+#   * ON A REF    -- the ref's OWN diff vs main (three-dot, so it is stable as main
+#                    advances) contains a path naming the id, OR a commit in `main..ref`
+#                    has a subject naming the id.  A name match alone is NOT evidence
+#                    and is reported as `name-only`.
+# Nothing in that sentence is a filename convention this program controls -- and in
+# particular NOTHING here special-cases `rescued-*`.  Excluding the wrapper's own prefix
+# by name would be the same mistake one level out (P-91): the next sweep invents a new
+# prefix and the guard silently stops covering it.  The content test does not care what
+# the ref is called.
+#
+# WHICH WAY IT FAILS, STATED ONCE.  It is NOT one direction, and pretending otherwise is
+# what produced two incidents in opposite directions:
+#   * evidence of content ON MAIN  -> REFUSE to demote.  Irreversible loss lives here
+#     (T324: re-dispatching merged work put 14 files / 2,338 insertions up for redoing),
+#     main is durable, and the signal is a tracked object rather than a name.
+#   * evidence only from a NAME    -> DEMOTE.  A name is not evidence at all, and the
+#     cost of the refusal is a permanent `in_progress` lie, which STEP 5.5 item 4 names
+#     ("Leaving it in_progress tells the next fire that work is happening when nothing
+#     is") and which the driver of fire 20260828-140005 had to override by hand.
+#   * probes that DID NOT RUN      -> fall back to the polarity of the strongest signal
+#     that DID run, never to the flattering one.  An absent branch with unrun probes
+#     demotes (`indeterminate`, T330's rule, kept).  A branch that IS an ancestor of
+#     main with unrun probes withholds (`merged-unverified`) -- because "reachable from
+#     main" is a positive git fact that ran, just an ambiguous one, and reading an
+#     ambiguous positive as "nothing was done" is exactly the T324 accident.
+#
+# COST.  Source 3 is ONE extra `git ls-tree -r --name-only main` for the whole run:
+# 0.070s for 9,730 paths, measured, versus 0.041s for the handoff-only listing it
+# widens -- net +0.029s once, not per task.  Per-task matching is a lowercase substring
+# prefilter over the cached list then a boundary regex on the survivors.  The REF
+# content probe costs 2 git calls (~0.16s) and runs ONLY for refs that already matched
+# by name -- zero in the ordinary case, one in the T339 incident.  It is capped, and an
+# unprobed candidate degrades to `indeterminate` (which DEMOTES) rather than to a
+# refusal: an unrun probe must never buy a task a reprieve.
+# See .softhouse/capture/t350-reconcile-content/out/30-budget.txt.
+_MAINTREE = ("uncached", None)
+_IDPAT = {}
+MAX_REFS_PROBED = 8
+
+
+def id_pattern(tid):
+    """(anywhere, leading) -- two cached matchers for a task id, and the difference
+    between them is the difference between MENTIONING a task and OWNING a path.
+
+    `(?<![0-9A-Za-z])` rather than `\\b` because ids end in digits and `\\b` would match
+    inside `T4211`.  `leading` is anchored: it matches a path component that STARTS with
+    the id, which is this program's directory convention for ownership --
+    `.softhouse/capture/<id>-<slug>/`, `.softhouse/reviews/<id>-<slug>/`,
+    `.softhouse/handoff/<id>-<slug>.md`.
+
+    WHY THE SPLIT IS NOT OPTIONAL, AND IT WAS MEASURED ON THE FIRST GREEN RUN.  With a
+    single anywhere-matcher, T268 -- a live, genuinely unfinished task -- was flagged
+    "WORK BEARING id T268 IS ALREADY ON MAIN: 24 tracked path(s)", every one of them
+    under `.softhouse/capture/t286-t268-retry/`, which is T286's capture directory named
+    for the task it RETRIES.  A mention is not a claim.  `t286-t268-retry` begins with
+    t286, so it is T286's, and T268 gets no reprieve out of it.
+
+    This is still a convention -- but it is a convention over TRACKED PATHS ON MAIN,
+    which are objects someone committed, not over a branch name that a sibling process
+    typed.  Mentions are not discarded: they are reported under MENTIONED so the reader
+    can see what the rule declined to count.
+    """
+    pair = _IDPAT.get(tid)
+    if pair is None:
+        pair = (re.compile(r"(?<![0-9A-Za-z])" + re.escape(tid) + r"(?![0-9A-Za-z])",
+                           re.IGNORECASE),
+                re.compile(re.escape(tid) + r"(?![0-9A-Za-z])", re.IGNORECASE))
+        _IDPAT[tid] = pair
+    return pair
+
+
+def main_tree():
+    """([(path, path.lower()), ...] or None, note) -- every path tracked on main.
+
+    ONE git call per process.  None means the listing FAILED and a miss below means
+    NOTHING WAS LOOKED AT -- which is why every caller carries a `complete` flag rather
+    than treating an empty result as an answer.
+    """
+    global _MAINTREE
+    if _MAINTREE[0] != "uncached":
+        return _MAINTREE
+    rc, out, err = _run([GIT, "ls-tree", "-r", "--name-only", "main"], timeout=15)
+    if rc != 0:
+        _MAINTREE = (None, "could not list tracked paths on main (git rc=%s, %s) -- so "
+                           "NO path evidence was gathered and its ABSENCE below means "
+                           "NOTHING WAS LOOKED AT" % (rc, err))
+        return _MAINTREE
+    paths = out.splitlines()
+    _MAINTREE = ([(p, p.lower()) for p in paths],
+                 "%d path(s) tracked on main were scanned for a path component naming "
+                 "the id" % len(paths))
+    return _MAINTREE
+
+
+def paths_naming(tid, entries):
+    """(owning, mentioning) -- paths from `entries` whose COMPONENT names `tid`.
+
+    COMPONENT, not substring of the whole path: `.softhouse/capture/t421-.../bin/x.sh`
+    counts for T421, and so does `.../handoff/T101.md` for T101.  `owning` requires the
+    component to START with the id (see `id_pattern`); `mentioning` is everything else
+    that names it.  Only `owning` buys a reprieve.  The cheap lowercase `in` test first
+    is not decoration -- it is what keeps a 9,730-path scan at ~1 ms per task instead of
+    running a regex 9,730 times.
+    """
+    needle = tid.lower()
+    anywhere, leading = id_pattern(tid)
+    owning, mentioning = [], []
+    for path, low in entries:
+        if needle not in low:
+            continue
+        parts = path.split("/")
+        if any(leading.match(part) for part in parts):
+            owning.append(path)
+        elif any(anywhere.search(part) for part in parts):
+            mentioning.append(path)
+    return owning, mentioning
+
+
 def landed_evidence(tid):
-    """(evidence_list_or_None, note).  None = the probes DID NOT RUN."""
+    """(evidence, complete, note).
+
+    `complete` is False when ANY source failed to run.  A NON-EMPTY `evidence` is
+    conclusive whatever `complete` says -- finding a tracked object is positive
+    knowledge and a second source failing cannot unfind it.  An EMPTY `evidence` with
+    `complete` False means only that nobody looked, and no caller may read it as
+    "nothing landed".
+
+    (Before T350 this returned `None` to mean "did not run", which forced callers to
+    conflate "unavailable" with "empty" the moment either source half-answered.)
+    """
     if not tid:
-        return None, ("NO TASK ID was passed to branch_wip, so none of the three "
-                      "landed-work signals could be run at all")
+        return [], False, ("NO TASK ID was passed, so none of the landed-work signals "
+                           "could be run at all")
+    ev = []
+    ok = True
+    notes = []
     idx, note = landed_index()
+    notes.append("commit subjects + exact handoff names: %s" % note)
     if idx is None:
-        return None, note
-    return idx.get(tid, []), note
+        ok = False
+    else:
+        ev.extend(idx.get(tid, []))
+    entries, tnote = main_tree()
+    if entries is None:
+        ok = False
+        notes.append("tracked paths on main: %s" % tnote)
+    else:
+        owning, mentioning = paths_naming(tid, entries)
+        if owning:
+            ev.append("%d tracked path(s) on main have a component BEGINNING with %s "
+                      "-- e.g. %s" % (len(owning), tid, ", ".join(owning[:3])))
+        notes.append("tracked paths on main: %s; %d OWNING (component begins with the "
+                     "id) and %d MENTIONING (%s) -- only OWNING paths were counted as "
+                     "evidence"
+                     % (tnote, len(owning), len(mentioning),
+                        ", ".join(mentioning[:2]) or "none"))
+    return ev, ok, "; ".join(notes)
+
+
+def ref_content_evidence(tid, ref):
+    """(evidence_or_None, note) -- does `ref` CARRY work for `tid`, or is it merely
+    NAMED for it?  None means the probe DID NOT RUN.
+
+    Two questions, both about the ref's OWN contribution:
+      * `git log main..<ref>` -- does any commit only this ref has carry `tid` in its
+        subject?
+      * `git diff main...<ref>` -- three-dot, i.e. merge-base..ref, so the answer does
+        not change as main advances underneath it.  Does any path it adds or touches
+        have a component naming `tid`?
+
+    On the real incident ref, measured: subject "RESCUED: WIP from a worker that never
+    signalled done (fire 20260828-080001)", paths
+    `.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` and `.t347-postcheckout-marker`.
+    Neither names t339.  On the control `softhouse/T351-progress-accounting`: 1 commit
+    and `.softhouse/capture/t351-progress-accounting/...`.  The two are indistinguishable
+    by NAME and unambiguous by CONTENT, which is the whole of this task.
+    """
+    anywhere, leading = id_pattern(tid)
+    rc, out, err = _run([GIT, "log", "--format=%H%x09%s", "main..%s" % ref], timeout=15)
+    if rc is None or rc != 0:
+        return None, ("could not read the commits `%s` has that main does not (git "
+                      "rc=%s, %s)" % (ref, rc, err))
+    hits = []
+    n_commits = 0
+    for line in out.splitlines():
+        sha, _, subject = line.partition("\t")
+        n_commits += 1
+        # A commit only this ref has, whose SUBJECT names the id anywhere. Generous on
+        # purpose: this is the ref side, where the destructive error is demoting a line
+        # that still exists, and a commit message is written by the worker doing the
+        # work rather than by a sweep naming a directory.
+        if anywhere.search(subject):
+            hits.append("commit %s on %s, subject %r" % (sha[:9], ref, subject[:80]))
+    rc2, out2, err2 = _run([GIT, "diff", "--name-only", "main...%s" % ref], timeout=15)
+    if rc2 is None or rc2 != 0:
+        return None, ("commits on `%s` were read, but its diff vs main was not (git "
+                      "rc=%s, %s) -- reported as UNAVAILABLE rather than half-trusted"
+                      % (ref, rc2, err2))
+    paths = out2.splitlines()
+    for path in paths:
+        # OWNING components only, same rule as main: a path under
+        # `.softhouse/capture/t286-t268-retry/` belongs to T286, not to T268.
+        if any(leading.match(part) for part in path.split("/")):
+            hits.append("path %s in the diff of %s vs main" % (path, ref))
+    return hits, ("%s carries %d commit(s) main does not and touches %d path(s) vs its "
+                  "merge-base with main" % (ref, n_commits, len(paths)))
+
+
+def refs_carrying_content(tid, exclude):
+    """(carriers, name_only, unprobed, note).
+
+    `carriers` are refs that PASSED the content test and may block a demotion.
+    `name_only` are refs that matched by NAME and carry nothing belonging to `tid` --
+    the T339 shape.  They are reported, loudly, and they block NOTHING.
+    `unprobed` are refs the budget or git could not answer for; they block nothing
+    either, and their presence makes the verdict `indeterminate`, which DEMOTES.
+    """
+    refs, note = refs_naming(tid, exclude)
+    if refs is None:
+        return None, None, None, note
+    carriers, name_only, unprobed, why = [], [], [], []
+    for ref in refs[:MAX_REFS_PROBED]:
+        ev, rnote = ref_content_evidence(tid, ref)
+        if ev is None:
+            unprobed.append(ref)
+            why.append("%s NOT PROBED (%s)" % (ref, rnote))
+        elif ev:
+            carriers.append((ref, ev))
+            why.append("%s CARRIES CONTENT (%s)" % (ref, "; ".join(ev[:2])))
+        else:
+            name_only.append(ref)
+            why.append("%s is NAME-ONLY -- %s, and nothing in either names %s"
+                       % (ref, rnote, tid))
+    if len(refs) > MAX_REFS_PROBED:
+        for ref in refs[MAX_REFS_PROBED:]:
+            unprobed.append(ref)
+        why.append("%d further name-matching ref(s) were NOT probed (cap %d)"
+                   % (len(refs) - MAX_REFS_PROBED, MAX_REFS_PROBED))
+    return carriers, name_only, unprobed, "%s. %s" % (note, " | ".join(why) or
+                                                      "no ref name carries this id")
 
 
 def refs_naming(tid, exclude):
@@ -954,33 +1254,56 @@ def reconcile_action(kind):
     it was handed and no caller ever COMPARED the kind.
     """
     base = (kind or "").split("/")[0]
+    if base == "merged-unverified":
+        # T350. The branch IS reachable from main -- a positive git fact that DID run --
+        # but the content probes that would say whether anything bearing this id landed
+        # did NOT. Withhold. This is the ONE place an unrun probe leaves a refusal
+        # standing, and the reason is that the signal that ran is itself a positive one:
+        # reading "ancestor of main" as "nothing was done" is the T324 accident.
+        return ("REFUSE to demote -- the branch is an ANCESTOR OF MAIN but the content "
+                "probes DID NOT RUN, so MERGED and STILLBORN were not told apart; "
+                "withholding rather than offering possibly-merged work for re-dispatch")
     if base.startswith("merged"):
         return ("REFUSE to demote -- work bearing this task's id is ON MAIN; "
                 "`needs_retry` would OFFER completed work for re-dispatch")
     if base.startswith("relocated"):
-        return ("REFUSE to demote -- a live ref carrying this task's id exists under "
-                "another name; `needs_retry` would duplicate a line that still exists")
+        return ("REFUSE to demote -- a live ref CARRIES CONTENT for this task's id "
+                "under another name; `needs_retry` would duplicate a line that still "
+                "exists")
+    # T350 -- everything below DEMOTES, and two of these kinds used to REFUSE:
+    #   `stillborn`      a branch whose head was already on main when it was created;
+    #                    it is an ancestor of main because it IS main. (T431/C-T407-1.)
+    #   `name-only-refs` refs matched the id BY NAME and carry nothing belonging to it.
+    #                    (T339, where the matching ref was named by the wrapper's own
+    #                    worktree sweep after the worktree directory.)
     return "demote to needs_retry"
 
 
 def _absent_verdict(branch, tid):
-    """The THREE-WAY (four, counting `relocated`) reading of an absent branch.
+    """The reading of an absent branch.  FIVE worlds since T350, not four.
 
-    `git rev-parse --verify <branch>` answers rc=1/empty in FOUR different worlds and
-    this function's whole job is that they are not the same world:
-      merged      -- work is on main, branch pruned.  MUST NOT demote.  (T324.)
-      relocated   -- a live ref carries the id elsewhere.  MUST NOT demote.  (T302/T308.)
-      unstarted   -- all signals ran and all came back empty.  Demote; this is the only
-                     world the pre-T330 code was right about.
-      indeterminate -- a signal DID NOT RUN.  Demote, and say the word UNVERIFIED.
+    `git rev-parse --verify <branch>` answers rc=1/empty in every one of them and this
+    function's whole job is that they are not the same world:
+      merged         -- CONTENT bearing the id is on main.  MUST NOT demote.  (T324.)
+      relocated      -- a live ref CARRIES CONTENT for the id.  MUST NOT demote.
+                        (T302/T308; and now measured, not inferred from its name.)
+      name-only-refs -- refs match the id BY NAME ONLY and carry nothing of it.
+                        DEMOTE, and name them.  This is T339: the ref that blocked it
+                        was `softhouse/rescued-t339-base-20260828-080001`, named by the
+                        wrapper's own sweep after the worktree directory
+                        `/private/tmp/t339-base`, whose whole content is a deletion in
+                        `.softhouse/reviews/A2-11/` and a marker file belonging to T347.
+      unstarted      -- every signal ran and every one came back empty.
+      indeterminate  -- a signal DID NOT RUN.  Demote, and say the word UNVERIFIED.
     """
     head = ("Its recorded branch %s does not exist in this repo. THIS IS NOT EVIDENCE "
             "THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this "
             "repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a "
             "branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 "
-            "therefore does not stop at that observation. " % branch)
-    ev, ev_note = landed_evidence(tid)
-    refs, ref_note = refs_naming(tid, branch)
+            "therefore does not stop at that observation, and T350 does not stop at a "
+            "NAME either. " % branch)
+    ev, complete, ev_note = landed_evidence(tid)
+    carriers, name_only, unprobed, ref_note = refs_carrying_content(tid, branch)
     if ev:
         return "merged", (head + "MEASURED: work bearing id %s IS ON MAIN -- %s. The "
                           "work LANDED; the branch was pruned after the merge. This "
@@ -990,34 +1313,53 @@ def _absent_verdict(branch, tid):
                           "ADJUDICATE whether it is `done`; this reconciler will not "
                           "assert a review that did not happen. (Signals: %s.)"
                           % (tid, "; ".join(ev[:4]), ev_note))
-    if refs:
+    if carriers:
         return "relocated", (head + "MEASURED: the branch is gone under its RECORDED "
-                             "spelling, but %d live ref(s) carry id %s -- %s. A rename "
-                             "or a case-variant (T308's 2026-08-27 defect, which hid 4 "
-                             "commits on T297 and 8 on T305) looks exactly like a "
-                             "pruned branch from the recorded name. NOT demoted: the "
-                             "line still exists and re-dispatch would fork it. Run "
+                             "spelling, but %d live ref(s) CARRY CONTENT for id %s -- "
+                             "%s. A rename or a case-variant (T308's 2026-08-27 defect, "
+                             "which hid 4 commits on T297 and 8 on T305) looks exactly "
+                             "like a pruned branch from the recorded name. NOT demoted: "
+                             "the line still exists and re-dispatch would fork it. Run "
                              "`python3 .softhouse/bin/branch_sweep.py sweep --pattern "
-                             "'*%s*' --counts` before touching either. (Ref store: %s.)"
-                             % (len(refs), tid,
-                                ", ".join(branch_sweep.short(r) for r in refs[:6]),
+                             "'*%s*' --counts` before touching either. This verdict is "
+                             "bought with the ref's OWN diff vs main, never with its "
+                             "name (T350/FU-T330-1). (Ref store: %s.)"
+                             % (len(carriers), tid,
+                                "; ".join("%s -- %s" % (branch_sweep.short(r),
+                                                        "; ".join(e[:2]))
+                                          for r, e in carriers[:4]),
                                 tid, ref_note))
-    if ev is None or refs is None:
+    if not complete or carriers is None or unprobed:
         return "indeterminate", (head + "BUT THE SIGNALS THAT WOULD SEPARATE THOSE "
-                                 "WORLDS DID NOT RUN: landed-work evidence -- %s; ref "
-                                 "store -- %s. Provenance UNVERIFIED. The task IS still "
-                                 "demoted, because a dead dispatch is dead whether or "
-                                 "not git answered -- but `needs_retry` here means "
+                                 "WORLDS DID NOT ALL RUN: landed-work evidence -- %s; "
+                                 "ref store -- %s. Provenance UNVERIFIED. The task IS "
+                                 "still demoted, because a dead dispatch is dead whether "
+                                 "or not git answered -- but `needs_retry` here means "
                                  "SOMEBODY MUST LOOK, not 'nothing was done'. FAIL-"
                                  "CLOSED BY DESIGN: an unrun probe must never buy a "
                                  "task a reprieve." % (ev_note, ref_note))
-    return "unstarted", (head + "MEASURED, and all three signals came back EMPTY: no "
-                         "commit subject on main begins `%s:` or `Merge %s:`, no "
-                         "handoff `%s.md` is tracked on main, and no live ref carries "
-                         "the id. This is the unstarted world, and saying so is now a "
-                         "measurement rather than the default reading of an absence. "
-                         "(Landed index: %s. Ref store: %s.)"
-                         % (tid, tid, tid, ev_note, ref_note))
+    if name_only:
+        return "name-only-refs", (
+            head + "MEASURED, AND THIS IS THE T350 CASE: %d live ref(s) carry id %s IN "
+            "THEIR NAME -- %s -- and NOT ONE of them carries any content belonging to "
+            "it. No commit only that ref has names %s in its subject, and no path in "
+            "its diff vs main has a component naming %s. A branch NAME is an assertion "
+            "by whoever created the branch, and in the recorded incident the creator "
+            "was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after "
+            "the worktree directory -- so treating the name as corroboration was the "
+            "reconciler reading its own sibling back to itself. DEMOTED. Do NOT delete "
+            "the ref(s) on the strength of this line: they may hold another task's WIP "
+            "(the T339 ref held T347's marker). (Landed index: %s. Ref store: %s.)"
+            % (len(name_only), tid,
+               ", ".join(branch_sweep.short(r) for r in name_only[:6]),
+               tid, tid, ev_note, ref_note))
+    return "unstarted", (head + "MEASURED, and every signal came back EMPTY: no commit "
+                         "subject on main begins `%s:` or `Merge %s:`, no tracked path "
+                         "on main has a component naming %s, and no live ref carries "
+                         "the id in its name or its content. This is the unstarted "
+                         "world, and saying so is now a measurement rather than the "
+                         "default reading of an absence. (Landed index: %s. Ref store: "
+                         "%s.)" % (tid, tid, tid, ev_note, ref_note))
 
 
 def branch_wip(branch, tid=None):
@@ -1029,10 +1371,15 @@ def branch_wip(branch, tid=None):
     so that an unconverted caller fails LOUDLY and CONSERVATIVELY rather than by
     TypeError inside a SIGTERM handler.
 
-    kind is one of: none / absent / merged / relocated / unstarted / indeterminate /
-    commits / unverified -- each optionally suffixed `/CASE-VARIANT` or
-    `/CASE-UNCHECKED` by T312. `reconcile_action(kind)` -- and nothing else -- turns a
-    kind into an ACTION; the suffixes are stripped there, so they remain safe to carry.
+    kind is one of: none / absent / merged / merged-unverified / stillborn / relocated /
+    name-only-refs / unstarted / indeterminate / commits / unverified -- each optionally
+    suffixed `/CASE-VARIANT` or `/CASE-UNCHECKED` by T312. `reconcile_action(kind)` --
+    and nothing else -- turns a kind into an ACTION; the suffixes are stripped there, so
+    they remain safe to carry.
+
+    T350 added `stillborn` and `name-only-refs` (both DEMOTE; both used to be spelled
+    `merged` and `relocated` respectively and therefore REFUSED) and `merged-unverified`
+    (REFUSES, and says why it could not do better).
     """
     kind, text = _branch_wip_core(branch, tid)
     if not branch:
@@ -1088,11 +1435,57 @@ def _branch_wip_core(branch, tid=None):
     # second one. Ask the question that separates them.
     rcm, _, errm = _run([GIT, "merge-base", "--is-ancestor", sha, "main"])
     if rcm == 0:
-        return "merged", ("!! Its branch %s exists at %s and IS MERGED INTO main -- every "
-                          "commit on it is reachable from main. The work LANDED. Do NOT "
-                          "read this as an unstarted task and do NOT re-dispatch it "
-                          "without reading that history first; `needs_retry` here means "
-                          "'somebody must adjudicate', not 'do it again'." % (branch, sha[:9]))
+        # ===================================================================== T350 ===
+        # "IS AN ANCESTOR OF MAIN" IS NOT "THE WORK LANDED", AND THE COUNTER-EXAMPLE IS
+        # THE NORMAL WAY THIS PROGRAM CREATES BRANCHES. `git worktree add -b <branch>`
+        # branches from wherever the DRIVER is standing, which is a commit it has just
+        # pushed to main. A worker killed before its first commit leaves a branch whose
+        # head IS that dispatch commit: zero ahead of main, ancestor of main, and
+        # carrying nothing whatever.
+        #
+        # MEASURED, not hypothesised. Fire 20260829-080002 reported for T431 "WIP:
+        # MERGED ... The work LANDED. Do NOT read this as an unstarted task." Its branch
+        # `softhouse/T431-t407-conditions` stood at 280817a1f, whose own subject is
+        # "softhouse: iter4 wave 2 -- five dispatched, records pushed BEFORE the first
+        # worktree add" -- the driver's dispatch commit. C-T407-1, a MAJOR finding, was
+        # UNSTARTED and this line said the opposite.
+        #
+        # So the ancestry is kept as the CHEAP FILTER it is, and the verdict is bought
+        # with content on main. Three outcomes, and the middle one is new:
+        #   evidence found            -> merged, REFUSE (unchanged, now corroborated)
+        #   probes could not all run  -> merged-unverified, REFUSE (see reconcile_action)
+        #   probes ran, nothing found -> stillborn, DEMOTE
+        ev, complete, ev_note = landed_evidence(tid)
+        if ev:
+            return "merged", ("!! Its branch %s exists at %s, IS MERGED INTO main -- "
+                              "every commit on it is reachable from main -- AND work "
+                              "bearing id %s is on main: %s. The work LANDED. Do NOT "
+                              "read this as an unstarted task and do NOT re-dispatch it "
+                              "without reading that history first; `needs_retry` here "
+                              "means 'somebody must adjudicate', not 'do it again'. "
+                              "(Landed index: %s.)"
+                              % (branch, sha[:9], tid, "; ".join(ev[:4]), ev_note))
+        if not complete:
+            return "merged-unverified", (
+                "!! Its branch %s exists at %s and every commit on it is reachable from "
+                "main -- but the probes that would say whether anything bearing id %s "
+                "actually LANDED on main DID NOT RUN (%s). MERGED and STILLBORN (a "
+                "branch created by `git worktree add` at the driver's own dispatch "
+                "commit, killed before its first commit) are not told apart here. "
+                "WITHHELD rather than demoted: `ancestor of main` is a positive fact "
+                "that DID run, and reading an ambiguous positive as 'nothing was done' "
+                "is the T324 accident." % (branch, sha[:9], tid, ev_note))
+        return "stillborn", (
+            "!! Its branch %s exists at %s, has NO commit ahead of main, and is an "
+            "ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING "
+            "bearing id %s is on main -- no commit subject `%s:` or `Merge %s:`, no "
+            "tracked path with a component naming %s. This is the shape `git worktree "
+            "add -b` produces for a worker killed before its first commit: the branch "
+            "was cut from the driver's own dispatch commit and never moved. It reads "
+            "as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire "
+            "20260829-080002 printed 'The work LANDED' for exactly this on T431, while "
+            "C-T407-1 (a MAJOR) had not been touched. DEMOTED. (Landed index: %s.)"
+            % (branch, sha[:9], tid, tid, tid, tid, ev_note))
     if rcm != 1:
         return "unverified", ("Its branch %s exists at %s and has no commit ahead of main, "
                               "but `git merge-base --is-ancestor` could not answer (rc=%s, "
@@ -1440,15 +1833,61 @@ def main():
         print("    root also counts, and REFUSES); and the lock-holder check passes.")
         print("    On any of those the lines above STAND, unrepaired. Do not read their")
         print("    survival as proof a fire is running.")
+    # ===================================================================== T350 ========
+    # THE OTHER DIRECTION, AND IT WAS NEVER REACHABLE FROM ANY CODE ABOVE.
+    #
+    # Everything printed so far -- `branch_wip`, `RECONCILE WOULD` -- runs ONLY for
+    # tasks whose status is `in_progress`. A task that has been demoted, or that is
+    # waiting on a review, is printed in READY with an id, a model, a target and a
+    # title, and NOTHING ELSE. The driver dispatches from that list.
+    #
+    # Fire 20260829-080002 iteration 5 audited every non-terminal record against main
+    # and found two that were false in the DANGEROUS direction:
+    #   T428  carried `needs_retry`, note "worker killed mid-flight ... a killed worker
+    #         is dead, not paused" -- while `softhouse/T428-review-t421` was an ancestor
+    #         of main and 35 tracked files sat under `.softhouse/reviews/t428-review-t421/`.
+    #   T421  carried `needs_review` with its branch field set and the branch deleted --
+    #         while 33 tracked files sat under `.softhouse/capture/t421-t406-conditions/`
+    #         and its review had landed too.
+    # Neither was a wrong ANSWER by the reconciler. THE RECONCILER WAS NEVER ASKED.
+    # "A branch that exists is not evidence of work, and a branch that is gone is not
+    # evidence of no work" only bites if it is enforced where the dispatch decision is
+    # actually made, which is here.
+    #
+    # It is a FLAG, not a filter: this resolver will not silently withhold a task from
+    # the driver on the strength of a path name. It prints what is on main and lets the
+    # driver adjudicate -- the same refusal-to-assert-a-review the reconciler makes.
+    # Cost: one lowercase substring prefilter over the cached 9,730-path listing per
+    # task, ~1ms; the git calls behind it were already spent once for the whole run.
+    def _landed_flag(tid, pad):
+        ev, complete, _note = landed_evidence(tid)
+        if ev:
+            print("%s!! WORK BEARING id %s IS ALREADY ON MAIN: %s" % (pad, tid, ev[0]))
+            print("%s   This task is NOT terminal, so it is offered above -- but"
+                  " dispatching it" % pad)
+            print("%s   would redo work that has landed. READ THAT HISTORY BEFORE"
+                  " DISPATCHING and" % pad)
+            print("%s   set the record to its true terminal status. (T421 and T428 both"
+                  " sat" % pad)
+            print("%s   non-terminal with their deliverables on main; the branch was"
+                  " pruned after" % pad)
+            print("%s   the merge and its absence read as 'nothing was done'.)" % pad)
+        elif not complete:
+            print("%s   (landed-work probe DID NOT RUN for %s -- absence of the warning"
+                  " above" % (pad, tid))
+            print("%s   means nothing was looked at, not that nothing landed.)" % pad)
+
     print()
     print("READY (%d)" % len(ready))
     for tid, t, _, edges in sorted(ready):
         via = " via archive" if any("archive" in e[2] for e in edges) else ""
         print("  %-8s %-6s %-7s %s%s" % (tid, t.get("model", "?"),
                                          t.get("target", "?"), t.get("title", "")[:78], via))
+        _landed_flag(tid, "           ")
     print("\nBLOCKED (%d)" % len(blocked))
     for tid, t, unmet, _ in sorted(blocked):
         print("  %-8s waiting on: %s" % (tid, ", ".join("%s [%s]" % u for u in unmet)))
+        _landed_flag(tid, "           ")
     # READY here means TASK dependencies are met. It does NOT mean a gate permits the
     # work. A task can be dependency-ready and still forbidden -- e.g. writing vectors
     # in a context whose DEC-n is unratified. The driver decides that; this only warns.

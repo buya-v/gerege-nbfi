@@ -1,0 +1,82 @@
+==============================================================================
+T350 DRIVE -- RED -- ready-tasks.py as it stands on main (3d7fef80)
+module under test: /tmp/t350-ready-tasks-RED.py
+module sha256:     3d7fef805a55bf21f233db911232272fd50b1aa18b5b81e30b0444fb5ba43dbb
+fixture:           /tmp/t350-fixture (clone HEAD b102875c7)
+==============================================================================
+
+------------------------------------------------------------------------------
+CASE A/T339  name-only rescue ref, work NOT on main
+  fixture main   : ac72956b9
+  recorded branch: softhouse/T339-review-t270
+  task id        : T339
+  EXPECTED       : MUST DEMOTE -- the only ref is named for a WORKTREE, its diff vs main is a deletion in .softhouse/reviews/A2-11/ plus .t347-postcheckout-marker, and nothing in it names t339.
+  ---
+  WIP kind       : relocated
+  RECONCILE WOULD: REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
+  note           : Its recorded branch softhouse/T339-review-t270 does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) carry id T339 -- softhouse/rescued-t339-base-20260828-080001. A rename or a case-variant (T308's 2026-08-27 defect, which hid 4 commits on T297 and 8 on T305) looks exactly like a pruned branch from the recorded name. NOT demoted: the line still exists and re-dispatch would fork it. Run `python3 .softhouse/bin/branch_sweep.py sweep --pattern '*T339*' --counts` before touching either. (Ref store: loose refs walked from /tmp/t350-fixture/.git/refs/heads and packed entries parsed from /tmp/t350-fixture/.git/packed-refs.)
+
+------------------------------------------------------------------------------
+CASE B/T431  branch head IS the driver's dispatch commit
+  fixture main   : 280817a1f
+  recorded branch: softhouse/T431-t407-conditions
+  task id        : T431
+  EXPECTED       : MUST DEMOTE -- zero commits ahead of main, ancestor of main only because it IS main, and nothing bearing t431 is on main. C-T407-1 was UNSTARTED.
+  ---
+  WIP kind       : merged
+  RECONCILE WOULD: REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work for re-dispatch
+  note           : !! Its branch softhouse/T431-t407-conditions exists at 280817a1f and IS MERGED INTO main -- every commit on it is reachable from main. The work LANDED. Do NOT read this as an unstarted task and do NOT re-dispatch it without reading that history first; `needs_retry` here means 'somebody must adjudicate', not 'do it again'.
+
+------------------------------------------------------------------------------
+CASE C/T421  branch pruned post-merge, 33 files ON MAIN
+  fixture main   : b102875c7
+  recorded branch: softhouse/T421-t406-conditions
+  task id        : T421
+  EXPECTED       : MUST REFUSE -- .softhouse/capture/t421-t406-conditions/ is tracked on main.
+  ---
+  WIP kind       : merged
+  RECONCILE WOULD: REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work for re-dispatch
+  note           : Its recorded branch softhouse/T421-t406-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: work bearing id T421 IS ON MAIN -- commit ffb52921c on main, subject 'T421: stop the handoff counting its own commits -- cite the command, not the number'; commit 467b90081 on main, subject 'T421: seven, not six -- the fix was itself a commit'; commit 2bcc3454b on main, subject 'T421: handoff says six commits, which is how many there are'; commit fbff5e7ae on main, subject 'T421: record that main moved to d3b93690 mid-task, re-checked, merge still clean'. The work LANDED; the branch was pruned after the merge. This task is NOT demoted: `needs_retry` is the status that OFFERS a task for re-dispatch, and re-dispatching merged work is the concrete damage FU-RECONCILE-1 records. A HUMAN MUST ADJUDICATE whether it is `done`; this reconciler will not assert a review that did not happen. (Signals: 1730 of 2547 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 337 handoff .md path(s) tracked on main.)
+
+------------------------------------------------------------------------------
+CASE D/T428  branch DELETED, 35 files ON MAIN
+  fixture main   : b102875c7
+  recorded branch: softhouse/T428-review-t421
+  task id        : T428
+  EXPECTED       : MUST REFUSE -- .softhouse/reviews/t428-review-t421/ is tracked on main.
+  ---
+  WIP kind       : merged
+  RECONCILE WOULD: REFUSE to demote -- work bearing this task's id is ON MAIN; `needs_retry` would OFFER completed work for re-dispatch
+  note           : Its recorded branch softhouse/T428-review-t421 does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: work bearing id T428 IS ON MAIN -- commit 8a6706c60 on main, subject 'T428: independent review of T421 -- APPROVED WITH CONDITIONS, four LOW findings'. The work LANDED; the branch was pruned after the merge. This task is NOT demoted: `needs_retry` is the status that OFFERS a task for re-dispatch, and re-dispatching merged work is the concrete damage FU-RECONCILE-1 records. A HUMAN MUST ADJUDICATE whether it is `done`; this reconciler will not assert a review that did not happen. (Signals: 1730 of 2547 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 337 handoff .md path(s) tracked on main.)
+
+------------------------------------------------------------------------------
+CASE E/T351  CONTROL: live ref carries REAL t351 content
+  fixture main   : b102875c7
+  recorded branch: softhouse/T351-old-name
+  task id        : T351
+  EXPECTED       : MUST REFUSE -- softhouse/T351-progress-accounting is 1 commit ahead of main and its diff names .softhouse/capture/t351-progress-accounting/. Demoting would fork a line that still exists.
+  ---
+  WIP kind       : relocated
+  RECONCILE WOULD: REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
+  note           : Its recorded branch softhouse/T351-old-name does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: the branch is gone under its RECORDED spelling, but 3 live ref(s) carry id T351 -- softhouse/T351-progress-accounting, softhouse/T369-review-t351, softhouse/T370-t351-retry. A rename or a case-variant (T308's 2026-08-27 defect, which hid 4 commits on T297 and 8 on T305) looks exactly like a pruned branch from the recorded name. NOT demoted: the line still exists and re-dispatch would fork it. Run `python3 .softhouse/bin/branch_sweep.py sweep --pattern '*T351*' --counts` before touching either. (Ref store: loose refs walked from /tmp/t350-fixture/.git/refs/heads and packed entries parsed from /tmp/t350-fixture/.git/packed-refs.)
+
+------------------------------------------------------------------------------
+CASE F/T442  CONTROL: live ref carries REAL t442 content
+  fixture main   : b102875c7
+  recorded branch: softhouse/T442-old-name
+  task id        : T442
+  EXPECTED       : MUST REFUSE -- softhouse/T442-t440-conditions is 1 commit ahead of main and its diff names .softhouse/capture/t424/instruments/t442-*.
+  ---
+  WIP kind       : relocated
+  RECONCILE WOULD: REFUSE to demote -- a live ref carrying this task's id exists under another name; `needs_retry` would duplicate a line that still exists
+  note           : Its recorded branch softhouse/T442-old-name does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation. MEASURED: the branch is gone under its RECORDED spelling, but 1 live ref(s) carry id T442 -- softhouse/T442-t440-conditions. A rename or a case-variant (T308's 2026-08-27 defect, which hid 4 commits on T297 and 8 on T305) looks exactly like a pruned branch from the recorded name. NOT demoted: the line still exists and re-dispatch would fork it. Run `python3 .softhouse/bin/branch_sweep.py sweep --pattern '*T442*' --counts` before touching either. (Ref store: loose refs walked from /tmp/t350-fixture/.git/refs/heads and packed entries parsed from /tmp/t350-fixture/.git/packed-refs.)
+
+==============================================================================
+SUMMARY -- RED -- ready-tasks.py as it stands on main (3d7fef80)
+  A/T339  name-only rescue ref, work NOT on main       relocated                  REFUSE to demote
+  B/T431  branch head IS the driver's dispatch commit  merged                     REFUSE to demote
+  C/T421  branch pruned post-merge, 33 files ON MAIN   merged                     REFUSE to demote
+  D/T428  branch DELETED, 35 files ON MAIN             merged                     REFUSE to demote
+  E/T351  CONTROL: live ref carries REAL t351 content  relocated                  REFUSE to demote
+  F/T442  CONTROL: live ref carries REAL t442 content  relocated                  REFUSE to demote
+==============================================================================

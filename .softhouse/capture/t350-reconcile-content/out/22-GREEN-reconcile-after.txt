@@ -1,0 +1,52 @@
+==============================================================================
+T350 RECONCILE DRIVE -- GREEN -- ready-tasks.py with T350 applied
+module under test: .softhouse/bin/ready-tasks.py
+module sha256:     e80196813ea210a04806c6823e944a2518b5b9eedbcb65f607a74fb04bffad92
+==============================================================================
+error: Your local changes to the following files would be overwritten by checkout:
+	.softhouse/tasks.json
+Please commit your changes or stash them before you switch branches.
+Aborting
+
+==============================================================================
+RUN 1 -- T339 (name-only rescue ref) MUST DEMOTE; T351 (content ref) MUST REFUSE   (fixture main ac72956b9a7503356eaca8ffb88fb5c5a911870e)
+==============================================================================
+RECONCILE -- fire T350-DRIVE
+  git:  /usr/bin/git
+  repo: /tmp/t350-fixture
+  lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
+  mode: wrapper   (lock fire id: NONE RECORDED)
+  in_progress tasks found: 2  (out of 2 in tasks.json -- every task was read to get this count, it is not a default)
+  T339     softhouse/T339-review-t270                 WIP=name-only-refs
+           in_progress -> needs_retry
+  T351     softhouse/T351-old-name                    WIP=relocated
+           in_progress -> in_progress   *** REFUSED TO DEMOTE ***
+           REFUSE to demote -- a live ref CARRIES CONTENT for this task's id under another name; `needs_retry` would duplicate a line that still exists
+  T330 REFUSALS: 1 task(s) were NOT demoted because work bearing their id is on main, or a live ref still carries it -- T351. Their status is UNCHANGED and their note now says so. THIS IS THE FIX FOR FU-RECONCILE-1; before T330 every one of these was written `needs_retry` and OFFERED FOR RE-DISPATCH.
+  NOTE: tasks.json is not in this writer's canonical form (indent=2, ensure_ascii=False); the rewrite will REFLOW it. Read the diff before trusting it.
+  RESULT: WROTE /tmp/t350-fixture/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry, 1 REFUSED (T330: work is on main or a live ref carries the id; status left in_progress, note rewritten).
+reconcile exit: 0
+--- tasks.json AFTER, statuses only ---
+  T339     -> needs_retry  note[:150]: worker killed mid-flight by fire T350-DRIVE -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended 
+  T351     -> in_progress  note[:150]: [T330-REFUSED-DEMOTION] This task was NOT demoted by fire T350-DRIVE in `wrapper` mode, and its status is DELIBERATELY LEFT `in_progress`. REFUSE to d
+error: Your local changes to the following files would be overwritten by checkout:
+	.softhouse/tasks.json
+Please commit your changes or stash them before you switch branches.
+Aborting
+
+==============================================================================
+RUN 2 -- T431 branch AT the dispatch commit MUST DEMOTE (was: merged/REFUSE)   (fixture main 280817a1ffed480321ebf6318d5a363457f7ba72)
+==============================================================================
+RECONCILE -- fire T350-DRIVE
+  git:  /usr/bin/git
+  repo: /tmp/t350-fixture
+  lock: no .softhouse/LOCK on disk, AND the caller passed --no-live-session-established-out-of-band, asserting it ran a liveness probe of this checkout itself. This module has no liveness check of its own, so that assertion is the whole basis for the authority and it is the CALLER's to justify.
+  mode: wrapper   (lock fire id: NONE RECORDED)
+  in_progress tasks found: 1  (out of 1 in tasks.json -- every task was read to get this count, it is not a default)
+  T431     softhouse/T431-t407-conditions             WIP=stillborn
+           in_progress -> needs_retry
+  NOTE: tasks.json is not in this writer's canonical form (indent=2, ensure_ascii=False); the rewrite will REFLOW it. Read the diff before trusting it.
+  RESULT: WROTE /tmp/t350-fixture/.softhouse/tasks.json -- 1 task(s) demoted in_progress -> needs_retry.
+reconcile exit: 0
+--- tasks.json AFTER, statuses only ---
+  T431     -> needs_retry  note[:150]: worker killed mid-flight by fire T350-DRIVE -- OBSERVED: this wrapper stopped its own driver and is reconciling its own dispatches. -- the fire ended 

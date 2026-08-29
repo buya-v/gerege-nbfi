@@ -1,0 +1,96 @@
+IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (5)
+  T350     softhouse/T350-reconcile-content
+           WIP: COMMITS  Its branch softhouse/T350-reconcile-content has 1 commit(s) ahead of main, head 2979fdaaf.
+           RECONCILE WOULD: demote to needs_retry
+  T412     softhouse/T412-driver-selfgrading
+           WIP: COMMITS  Its branch softhouse/T412-driver-selfgrading has 1 commit(s) ahead of main, head 0968bd044.
+           RECONCILE WOULD: demote to needs_retry
+  T433     softhouse/T433-t423-c1
+           WIP: COMMITS  Its branch softhouse/T433-t423-c1 has 1 commit(s) ahead of main, head 93f1ec339.
+           RECONCILE WOULD: demote to needs_retry
+  T442     softhouse/T442-t440-conditions
+           WIP: COMMITS  Its branch softhouse/T442-t440-conditions has 2 commit(s) ahead of main, head 97bad8ed9.
+           RECONCILE WOULD: demote to needs_retry
+  T445     softhouse/T445-case-route
+           WIP: COMMITS  Its branch softhouse/T445-case-route has 2 commit(s) ahead of main, head eb795f1dd.
+           RECONCILE WOULD: demote to needs_retry
+  ^ If no fire is running right now, every line above is a DEAD dispatch
+    and this section is lying to you. fire-program.sh runs
+    `ready-tasks.py --reconcile` on its way out and rewrites these to
+    needs_retry with the evidence in a note -- BUT ONLY IF: it exits
+    normally or with enough signal budget left; no live `claude` is
+    working in this checkout (an idle interactive session in the repo
+    root also counts, and REFUSES); and the lock-holder check passes.
+    On any of those the lines above STAND, unrepaired. Do not read their
+    survival as proof a fire is running.
+
+READY (45)
+  T160     opus   code    The store census refuses an INFLATED store and has no equivalent for a DEFLATE
+  T174     opus   ?       mkreq*.py are one float literal away from T163's defect; and two frozen recipe
+  T192     opus   code    The FOURTEEN fail-CLOSED pipefail sites, before the corpus reaches ~135 vector
+  T195     opus   code    T184's two mechanical findings on T173 — the round-trip property is named more
+  T226     opus   code    v3 is wired to nothing — T185's F-4 survives T207 (P-45), and the two original
+  T235     opus   code    `.softhouse/vectors/README.md` is UNREACHABLE BY CONSTRUCTION — the BAR pins t
+  T257     opus   code    manifest.py verify is UNWIRED and was silently RED across two merges — wire it
+  T266     opus   code    T253 deferred the fail-open linter's variable-indirect ownership blind spot to
+  T267     sonnet code    go-env.sh's toolchain-substitution notice goes to STDERR only — 32 lines there
+  T268     opus   code    T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while
+  T286     opus   code    T268 RETRY — repair the fail-open T268's own fix introduced, plus F-2's false 
+           !! WORK BEARING id T286 IS ALREADY ON MAIN: 27 tracked path(s) on main have a component BEGINNING with T286 -- e.g. .softhouse/capture/t286-t268-retry/.gitignore, .softhouse/capture/t286-t268-retry/.t308-mut-4c4uwsr2/N3-void-acknowledgement-printed-but-not-COUNTED-legs.json, .softhouse/capture/t286-t268-retry/check_verdict_predicate_agreement_t292.py
+              This task is NOT terminal, so it is offered above -- but dispatching it
+              would redo work that has landed. READ THAT HISTORY BEFORE DISPATCHING and
+              set the record to its true terminal status. (T421 and T428 both sat
+              non-terminal with their deliverables on main; the branch was pruned after
+              the merge and its absence read as 'nothing was done'.)
+  T303     opus   code    WIRE T284's registry guard into conformance.sh — T284 declined to cite its own
+  T311     opus   code    F-T297-3: guard-probe-expiry.sh IS INVOKED BY NOTHING — three of four T287 pro
+  T313     opus   code    WIRE T256's marker drive — T298 gave the exact site (conformance.sh:2018) and 
+  T333     opus   code    FU-T145-2: wire T145's NARROW two-sided-float-money-comparison guard into conf
+  T335     opus   code    T291's F-T291-1 residual on T286's branch: R-VPA traverses mappings but not LI
+  T343     opus   code    F-B: the seven lock arms partition only inside rules.py, and ONLY BY CONSTRUCT
+  T344     opus   code    T270's widened census: FIFTY-FOUR live in-place invocations of superseded arte
+  T345     opus   code    T258's TIER1B successor and its frontier pin must land in ONE commit — the pin
+  T351     sonnet code    The program's progress accounting credits LOC only on WHOLE-context close, so 
+  T354     opus   code    T340's four conditions on T258 -- a fail-closed diagnostic that is unreachable
+  T355     opus   code    T347's conditions on T336 -- probe residue committed into other workers' trees
+  T356     opus   code    T339's conditions on T270 -- the census under-reports (54 is 55) because its s
+  T366     sonnet code    Land T361's review without turning the bar red -- its _src- evidence snapshots
+  T372     opus   code    INSTALL the PreToolUse push-before-spawn gate under T349's four conditions -- 
+  T394     opus   docs    INDEPENDENT review of T393 -- the population-cardinality pin, and whether F-4 
+  T395     opus   code    G-21: extend the casualty sweep to docs/ -- a ratified DEC carries a cardinal 
+  T399     opus   code    SEVEN guards in this program are BUILT AND WIRED TO NOTHING -- census them, th
+  T403     opus   code    THE RECONCILER CANNOT TELL A KILLED WORKER FROM A WORKER THAT NEVER EXISTED --
+  T413     opus   code    APPLY T401's four census extensions -- the .zsh gap is measured, costed and de
+  T415     opus   code    THE range(1, max(...)) TRAP IS A CLASS AND ONLY ONE FILE HAS BEEN CHECKED
+  T418     opus   code    F-T410-2 and F-T410-3: the single-spelling property is enforced nowhere execut
+  T419     opus   code    THE GREP PORTABILITY DEFECT IS REAL BUT WAS DIAGNOSED WRONG -- and one of the 
+  T420     opus   code    FILE NOW, T411 asks: the T316 dead-path census has no scratch filter and the T
+  T425     opus   code    WIRE verify-capture-integrity.py into the bar -- filed with an owner, because 
+  T426     opus   docs    T414's C1/C2 on T398 -- P-101 breaches its own duty, and does not say why it i
+  T427     opus   code    T386's instrument PRINTS A LIE and the follow-up to fix it is filed NOWHERE EX
+  T430     opus   code    T409's minor conditions: a typed cardinal inside an instrument that preaches '
+  T432     opus   code    FIVE VECTORS CARRY captured_at: "" AND NOTHING DECLARES WHAT THE EMPTY STRING 
+  T434     opus   code    C-T423-2 (MINOR): 78 TRACKED FILES UNDER tierA-a2 ARE GRADED BY NO ARM -- incl
+  T435     opus   code    F-T422-1 (MINOR): verbatimInCapture's doc comment AND ITS REFUSAL MESSAGE stil
+  T436     opus   code    F-T422-2 (MINOR, AND IT IS A FAIL-OPEN ON MONEY TEXT): the new hyphen-as-separ
+  T437     opus   code    THE FOUR RESIDUAL CONDITIONS FROM T422 AND T423 -- each small, and three of th
+  T441     opus   code    T439's conditions on T429 -- a declaration carrying a FALSE MEASUREMENT, and f
+  T443     opus   code    T438's two MAJORs on T417 -- a filtered alias over an unfiltered min (ALREADY 
+
+BLOCKED (8)
+  T269     waiting on: T268 [tasks.json (needs_retry)]
+  T315     waiting on: T313 [tasks.json (pending)]
+  T317     waiting on: T315 [tasks.json (pending)]
+  T338     waiting on: T266 [tasks.json (needs_retry)]
+  T341     waiting on: T335 [tasks.json (needs_retry)]
+  T348     waiting on: T343 [tasks.json (pending)]
+  T373     waiting on: T370 [tasks.json (parked)]
+  T378     waiting on: T370 [tasks.json (parked)], T366 [tasks.json (pending)]
+
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+DEPENDENCY EDGES THAT RESOLVE NOWHERE (0)
+  NONE. Every edge was decided against tasks.json or an archived run file,
+  and this line is printed only after checking both -- it is not a default.
+exit=0

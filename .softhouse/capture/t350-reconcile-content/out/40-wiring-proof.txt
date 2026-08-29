@@ -1,0 +1,82 @@
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ee68bc1d2562d6a
+
+==============================================================================
+1. THE SCHEDULED, UNATTENDED PATH -- launchd -> fire-program.sh
+==============================================================================
+10:  <key>ProgramArguments</key>
+11-  <array>
+12-    <string>/bin/zsh</string>
+13-    <string>-lc</string>
+14-    <string>/Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh</string>
+15-  </array>
+16-
+
+19:  <key>StartCalendarInterval</key>
+20-  <array>
+21-    <dict>
+22-      <key>Hour</key><integer>8</integer>
+23-      <key>Minute</key><integer>0</integer>
+24-    </dict>
+25-    <dict>
+
+==============================================================================
+2. fire-program.sh INVOKES THE CHANGED FILE -- the --reconcile path
+==============================================================================
+2732:  out=$(/usr/bin/python3 "$SCRIPT_DIR/ready-tasks.py" "${args[@]}" 2>&1)
+--- the function that contains it, and who calls that function ---
+285:# `ready-tasks.py` call in `reconcile_tasks_json`; grep `/usr/bin/python3`), so this
+980:# inert filler. It is `run_exit_guard`, `reconcile_tasks_json`, `wt_prune_blindspot_check`
+1988:    # T309 put reconcile_tasks_json on this path, because its first act is
+2124:# Run reconcile_tasks_json under a hard wall-clock bound. Same shape as
+2135:  # `reconcile_tasks_json` is defined, and zsh creates a function body only when the
+2140:  if ! typeset -f reconcile_tasks_json >/dev/null 2>&1; then
+2141:    RECON_VERDICT="FAILED — the signal arrived before reconcile_tasks_json was defined"
+2145:  # RECON_VERDICT is set by reconcile_tasks_json, which has to run in a SUBSHELL to be
+2151:  ( reconcile_tasks_json "$@"; print -r -- "$RECON_VERDICT" > "$vf" ) &
+2549:    # `examined=0` honestly; the return code did not, and `reconcile_tasks_json` reads
+2649:# T288 defined `reconcile_tasks_json` INSIDE run_exit_guard, twenty lines above its only
+2692:reconcile_tasks_json() {
+3242:reconcile_tasks_json "${RESCUE_PAIRS[@]}"
+
+==============================================================================
+3. THE DRIVER'S OWN STEP 1 INVOKES main() -- the READY listing
+==============================================================================
+.claude/skills/softhouse-program/SKILL.md:137:   first worker spawned**, and for those 101 seconds `ready-tasks.py` run against `origin` would have offered
+.claude/skills/softhouse-program/SKILL.md:183:> **Use `python3 .softhouse/bin/ready-tasks.py`** rather than eyeballing `tasks.json`. It prints where every
+
+==============================================================================
+4. THE CHANGED SYMBOLS ARE ON BOTH PATHS -- call sites inside the module
+==============================================================================
+--- landed_evidence() call sites ---
+1098:def landed_evidence(tid):
+1305:    ev, complete, ev_note = landed_evidence(tid)
+1458:        ev, complete, ev_note = landed_evidence(tid)
+1863:        ev, complete, _note = landed_evidence(tid)
+--- refs_carrying_content() call sites ---
+1188:def refs_carrying_content(tid, exclude):
+1306:    carriers, name_only, unprobed, ref_note = refs_carrying_content(tid, branch)
+--- the new kinds, and the ONE function that turns a kind into an action ---
+1002:#     main with unrun probes withholds (`merged-unverified`) -- because "reachable from
+1257:    if base == "merged-unverified":
+1276:    #   `name-only-refs` refs matched the id BY NAME and carry nothing belonging to it.
+1290:      name-only-refs -- refs match the id BY NAME ONLY and carry nothing of it.
+1342:        return "name-only-refs", (
+1374:    kind is one of: none / absent / merged / merged-unverified / stillborn / relocated /
+1375:    name-only-refs / unstarted / indeterminate / commits / unverified -- each optionally
+1380:    T350 added `stillborn` and `name-only-refs` (both DEMOTE; both used to be spelled
+1381:    `merged` and `relocated` respectively and therefore REFUSED) and `merged-unverified`
+1456:        #   probes could not all run  -> merged-unverified, REFUSE (see reconcile_action)
+1469:            return "merged-unverified", (
+1478:        return "stillborn", (
+--- reconcile() consults reconcile_action(), it does not re-derive ---
+1634:        action = reconcile_action(kind)
+1638:        if action.startswith("REFUSE"):
+--- main()'s READY/BLOCKED listing consults it too ---
+1862:    def _landed_flag(tid, pad):
+1886:        _landed_flag(tid, "           ")
+1890:        _landed_flag(tid, "           ")
+
+NOT-FOUND STATEMENTS: the searches above are `grep -n` over
+  .softhouse/launchd/*.plist, .softhouse/bin/fire-program.sh,
+  .claude/skills/softhouse-program/SKILL.md and .softhouse/bin/ready-tasks.py
+in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ee68bc1d2562d6a at the committed tree. No other invoker was looked for outside those.
