@@ -40,10 +40,12 @@ conformance: !!   'record why in the pin'. This guard's own header SANCTIONS it:
 conformance: !!   this file for WHAT A ROW DOES **NOT** MEAN -- 'a dead literal is a
 conformance: !!   SMELL that must be inspected once, by a human, and then either
 conformance: !!   repaired or pinned with its reason. This guard counts; it does not
-conformance: !!   judge.' And this tree TAKES that route twice already: the pin holds
-conformance: !!   the two FU-T299-2 ordered-fallback rows with the reason written
-conformance: !!   above them, and conformance.sh holds T305's four red-drive rows on
-conformance: !!   the same terms -- 'They are pinned here, with the reason.'
+conformance: !!   judge.' And THE PIN ITSELF TAKES THAT ROUTE, repeatedly -- open it
+conformance: !!   and read the reasons: the two FU-T299-2 ordered-fallback rows; the
+conformance: !!   four T305 red-drive rows that MUST NOT exist in a clean tree; and
+conformance: !!   T306's injected-vector row, which T326 ADDED AS A NEW ROW and pinned
+conformance: !!   with 'REPAIR WAS CONSIDERED AND IS NOT AVAILABLE ... Pinning it is
+conformance: !!   the disposition T316's own header prescribes.'
 conformance: !!   It is the EXCEPTION, not the default -- six of six workers in fire
 conformance: !!   20260829-080002 repaired, and not one of them needed it.
 conformance: !! ----------------------------------------------------------------

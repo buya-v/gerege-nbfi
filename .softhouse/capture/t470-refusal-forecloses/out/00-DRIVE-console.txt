@@ -2,7 +2,7 @@
    git      : git version 2.50.1 (Apple Git-155)
    python3  : Python 3.9.6
    SRC      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e
-   HEAD     : 9892d9426b231a3c13e723a842e48435d0dcd53a
+   HEAD     : fa0337e730c2957f1c19e6da87d33a4925a420be
    BASE     : cb148f5941a831eb43fe20cf57e7438166066ebb   (pre-repair control)
    guard    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e/.softhouse/guards/check-dead-path-frontier.sh
 
@@ -13,7 +13,7 @@
    source hits = 3   for: repaired or pinned with its reason
    source hits = 1   for: THE FORBIDDEN FOURTH
 -- CALIBRATION 2: the two MUST-BE-ABSENT strings are gone from the guard's PRINTABLE bytes
-   printable (echo) lines in the guard = 83   (a zero here would make the scan vacuous)
+   printable (echo) lines in the guard = 85   (a zero here would make the scan vacuous)
    echo-line hits = 0   (whole file 1)   for: three, and never a fourth      (expected 0 printable)
    echo-line hits = 0   (whole file 0)   for: in exchange for not pinning the row      (expected 0 printable)
 
@@ -57,7 +57,7 @@
    'corrected FORWARD...'         = 3    (expected >= 2 -- T334's and mine)
    pin route survives in register = 1    (expected >= 1)
    THE FORBIDDEN FOURTH preserved = 5    (expected >= 1)
-   header sentence quoted back    = 2    (expected >= 1)
+   header sentence quoted back    = 1    (expected >= 1)
 3835: **P-103 — A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE, NOT A STRING. SIX
    P-103 definition lines         = 1    (expected exactly 1 -- forward, not in place)
    checker exit                   = 0
