@@ -1,0 +1,50 @@
+############ T464 — run-all.sh AT BOTH REFS, AND THE ADJUDICATED PIN AT BOTH REFS
+  BEFORE = cbc8733c
+  AFTER  = 570115935837a096deab8e670c69ced0279190f2
+
+--- 0. THE PIN, MEASURED FIRST, AT BOTH REFS ---------------------------------------
+    fixed string: sec 9 0 python3 "$DIR/adjudicate-section1.py"
+      cbc8733c : x1  at line(s) 177 
+  OK   the adjudicated pin is present exactly once at cbc8733c = 1
+      570115935837a096deab8e670c69ced0279190f2 : x1  at line(s) 177 
+  OK   the adjudicated pin is present exactly once at 570115935837a096deab8e670c69ced0279190f2 = 1
+      sha256 of the pin line at BEFORE : 68743ce79174dcbc6b9180034c651315401374681175cbb1a3cf97b60e877500
+      sha256 of the pin line at AFTER  : 68743ce79174dcbc6b9180034c651315401374681175cbb1a3cf97b60e877500
+  OK   the pin line is BYTE-IDENTICAL across the two refs = 68743ce79174dcbc6b9180034c651315401374681175cbb1a3cf97b60e877500
+
+--- BEFORE (cbc8733c) -------------------------------------------------------
+      run-all.sh exit = 1
+        SECTION   EXPECTED       ACTUAL    RESULT
+        1         1              1         as adjudicated
+        2         1              1         as adjudicated
+        3         0              0         as adjudicated
+        4         1              1         as adjudicated
+        5         0              0         as adjudicated
+        6         0              0         as adjudicated
+        7         0              0         as adjudicated
+        8         0              0         as adjudicated
+        9         0              1         *** MOVED ***
+        10        0              0         as adjudicated
+        sections run: 10    deviations: 1
+        RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  OK   BEFORE run-all.sh exit = 1
+
+--- AFTER (570115935837a096deab8e670c69ced0279190f2) -------------------------------------------------------
+      run-all.sh exit = 0
+        SECTION   EXPECTED       ACTUAL    RESULT
+        1         1              1         as adjudicated
+        2         1              1         as adjudicated
+        3         0              0         as adjudicated
+        4         1              1         as adjudicated
+        5         0              0         as adjudicated
+        6         0              0         as adjudicated
+        7         0              0         as adjudicated
+        8         0              0         as adjudicated
+        9         0              0         as adjudicated
+        10        0              0         as adjudicated
+        sections run: 10    deviations: 0
+        RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
+  OK   AFTER run-all.sh exit = 0
+
+T464 RUNALL DRIVE: as T455 recorded — 1 -> 0, section 9 MOVED -> as adjudicated, and
+the adjudicated pin is present x1 and byte-identical at BOTH refs. EXIT 0

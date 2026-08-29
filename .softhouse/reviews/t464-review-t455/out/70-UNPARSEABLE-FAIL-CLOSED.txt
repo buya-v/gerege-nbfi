@@ -1,0 +1,33 @@
+############ T464 — THE UNPARSEABLE / FAIL-CLOSED BRANCH OF T455's F-6 REPAIR
+  the tracked non-JSON file already in the vector store : .softhouse/vectors/README.md
+
+--- 1. CALIBRATION: the arm is green before anything is planted --------------------
+      adjudicate-section1.py exit = 0
+        PASS  NO vector in the store USES any of these tokens — as an object KEY or as an iden
+        PASS  NO vector's provenance.capture_ref or request_capture_ref points at a loan-produ
+
+--- 2. PLANT THE TOKEN IN THE NON-JSON FILE. Expected: MATERIAL, named, FAIL. ------
+      adjudicate-section1.py exit = 1
+
+      the last 6 lines it produced:
+              paymentChannelToFundSourceMappings     MATERIAL=1  conformance.sh=False  prose-only=1
+                  PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
+        Traceback (most recent call last):
+          File "/private/tmp/t464/sc3/failclosed/.softhouse/reviews/A2-11/adjudicate-section1.py", line 303, in <module>
+            print("          %-8s %s  at %s" % (kind, rel, where[:70]))
+        TypeError: 'int' object is not subscriptable
+
+      reached the NAMED 'NO vector ... USES any of these tokens' FAIL : x0
+      died on a python traceback instead                             : x1
+      printed its own FAILURES tally                                 : x0
+      checks that reported at all, before -> after                   : 25 -> 10
+
+  FINDING: the unparseable branch is reachable ONLY BY A CRASH. classify_occurrences
+  returns ('UNPARSEABLE', <int count>) where the parsed branch returns
+  ('KIND', <str jsonpath>), and the caller formats it with where[:70] — an int is not
+  subscriptable. The arm never reaches its named assertion, never prints its FAILURES
+  tally, and every downstream check in the file — the T374/T362 provenance arms and
+  section 5's controls (a)-(k) — is SKIPPED. Aggregate direction is still closed
+  (rc=1, run-all.sh reads section 9 as MOVED), so it is not a fail-OPEN; but control
+  (k) drives the FUNCTION and the INTEGRATION is broken, which is the gap P-22 warns
+  about between a control that passes and a guard that works.

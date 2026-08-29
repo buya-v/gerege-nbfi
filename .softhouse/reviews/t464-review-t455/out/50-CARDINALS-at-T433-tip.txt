@@ -1,0 +1,47 @@
+############ T464 — THE CARDINALS, THIRD DERIVATION
+  ref = 3253358d
+
+--- 1. THE MATRIX: HOW MANY CASES, HOW MANY ROWS, HOW MANY ARGUED? ----------------
+      run_case invocations in the SOURCE : 11
+      distinct case names in the OUTPUT  : 11
+      data rows in MATRIX.tsv            : 22
+  OK   matrix cardinality (source vs committed output)          both legs say 11
+  OK   row count is cases x 2 refs                              both legs say 22
+      driven through the whole runner by T433 : ['control', 'f1-13b-postfork-laundered-RESIDUAL']
+      ARGUED = 11 - 2 = 9
+      T433 restated this as a 13-case matrix with eleven argued.
+      It is 11 cases, 22 rows, 9 argued — T455's figures.
+
+--- 2. WHAT INVOKES THE GRADER, AT THIS REF? --------------------------------------
+      invoking files   : 14
+      invocation lines : 18
+      total mentions   : 45   (the figure a bare grep produces)
+      of which T433's OWN instruments under .softhouse/capture/t433-t423-c1/:
+          .softhouse/capture/t433-t423-c1/instruments/20-t433-armf-in-situ-drive.sh                x1
+          .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh                 x2
+          .softhouse/capture/t433-t423-c1/instruments/31-t433-wiring-guard-red-drive.sh            x1
+          -> 3 files / 4 lines
+      ==> PRE-EXISTING : 11 files / 14 lines
+
+      THE LIST, PRINTED BESIDE THE COUNT (a count with no list is the '17' again):
+          .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh                     x4
+          .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh               x1
+          .softhouse/capture/t433-t423-c1/instruments/20-t433-armf-in-situ-drive.sh                x1  (T433's own)
+          .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh                 x2  (T433's own)
+          .softhouse/capture/t433-t423-c1/instruments/31-t433-wiring-guard-red-drive.sh            x1  (T433's own)
+          .softhouse/reviews/A2-11/run-all.sh                                                      x1
+          .softhouse/reviews/t382-review-t374/instruments/10-attack-section10.sh                   x1
+          .softhouse/reviews/t382-review-t374/instruments/30-saturation-audit.sh                   x1
+          .softhouse/reviews/t382-review-t374/instruments/31-saturation-clean-target.sh            x1
+          .softhouse/reviews/t382-review-t374/instruments/60-defeat-arm-a-baseline.sh              x1
+          .softhouse/reviews/t423-review-t393/instruments/10-t423-f4-rerun.sh                      x1
+          .softhouse/reviews/t423-review-t393/instruments/30-t423-extra-drives.sh                  x1
+          .softhouse/reviews/t423-review-t393/instruments/50-t423-fork-tie-defeat.sh               x1
+          .softhouse/reviews/t423-review-t393/instruments/61-t423-armf-red-drive.sh                x1
+
+      LIMIT, STATED: this leg searches .sh and .py only, exactly as T455's two do.
+      An invoker in another language is invisible to all three. That is a property of
+      the SEARCH, not of the world, and it goes stale.
+
+T464 CARDINALS: 11 / 22 / 9, and 14 files / 18 lines -> 11 / 14 pre-existing.
+T448's 11 / 14 is confirmed a second time. EXIT 0
