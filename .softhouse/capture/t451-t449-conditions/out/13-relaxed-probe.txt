@@ -1,0 +1,39 @@
+PLANTED the proposed relaxation: `leading.match` -> `anywhere.search` on the ref's
+own diff paths, and NOWHERE else.  1 site, verified unique before writing.
+  shipped  .softhouse/bin/ready-tasks.py  sha256 da9daeec15d3bb2f
+  relaxed  /tmp/t451/mods/rt_relaxed.py  sha256 b2b1e51aca998448
+
+case     what it is                                                 SHIPPED (leading)        RELAXED (anywhere)
+----------------------------------------------------------------------------------------------------------------------
+A/T339   the INCIDENT ref -- MUST STAY name-only under both         name-only-refs demote    name-only-refs demote
+K/T945   case K -- work under another id's condition dir            name-only-refs demote    relocated      REFUSE   <== the relaxation CHANGES this
+K2/T946  case K with the task branch still parked                   stillborn      demote    stillborn-carried REFUSE   <== the relaxation CHANGES this
+R/T980   T981's committed REVIEW OF T980 -- subject names T980, so  relocated      REFUSE    relocated      REFUSE
+R2/T982  a SWEPT reviewer worktree: boilerplate subject, path is T9 name-only-refs demote    relocated      REFUSE   <== the relaxation CHANGES this
+S/T990   rescue ref touching only a SHARED file -- names no id at a stillborn      demote    stillborn      demote
+E/T351   must-block control -- real owning content                  relocated      REFUSE    relocated      REFUSE
+G/T900   case G -- rescue ref owning the work, branch parked        stillborn-carried REFUSE    stillborn-carried REFUSE
+
+VERDICT ON THE PROPOSED PATCH -- NOT LANDED, and the reason is measured, not felt.
+
+  * It buys K and K2.  It costs R2.  Both are constructible and NEITHER is live on this
+    repo today: over all 705 live refs and all 84 (id, other-ref) pairs the reconciler
+    could be asked about, the relaxation adds EXACTLY 0 carriers
+    [out/21-realrepo-evidence.txt, section B].  It is a trade between two hypotheticals.
+
+  * The tie is broken by the one REAL instance of case K's shape in the live store, and
+    THE SHIPPED ANCHOR ALREADY CATCHES IT.  T428's swept ref carries
+        .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.psql
+    -- T428's work, under T421's directory, exactly case K -- and it reads CARRIES under
+    `leading`, because a path COMPONENT includes the FILENAME and this program names the
+    file for its owner.  T449's case K is invisible only because its fixture filename is
+    `work.txt`, which names nobody.  The premise that the OWNING anchor cannot see work
+    filed under another id's directory is refuted by the only real example of it.
+
+  * The shape the relaxation WOULD newly expose is the dominant one: 69 of 84 pairs are
+    name-only today and the commonest cross-task object in this program is one task's
+    review of another.  R2 is a sweep away.
+
+So the anchor stays and the COMMENT was what was wrong -- it claimed a polarity the code
+never had.  What IS landed is the truthfulness repair: a path that MENTIONS the id is now
+reported, named and declined, where the note used to state that no such path existed.

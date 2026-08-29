@@ -1,0 +1,24 @@
+tasks.json: 344 tasks
+id     owner    status           ref                                            recorded branch
+----------------------------------------------------------------------------------------------------------------------
+T100   T101     NOT IN tasks.json softhouse/T101-review-t100                     - (ABSENT)
+T108   T131     NOT IN tasks.json softhouse/T131-review-t108                     - (ABSENT)
+T109   T127     NOT IN tasks.json softhouse/T127-review-t109                     - (ABSENT)
+T21    T21      NOT IN tasks.json softhouse/T21-pass3-audit-rescued              - (ABSENT)
+T22    T22      NOT IN tasks.json softhouse/T22-pathb-audit-rescued              - (ABSENT)
+T268   T281     needs_retry      softhouse/t281-review-t268                     softhouse/t268-rvpa-failopen (resolves)   <== LIVE FOREIGN-REF REFUSAL
+T268   T286     needs_retry      softhouse/t286-t268-retry                      softhouse/t268-rvpa-failopen (resolves)   <== LIVE FOREIGN-REF REFUSAL
+T351   T369     needs_retry      softhouse/T369-review-t351                     softhouse/T351-progress-accounting (resolves)   <== LIVE FOREIGN-REF REFUSAL
+T351   T370     needs_retry      softhouse/T370-t351-retry                      softhouse/T351-progress-accounting (resolves)   <== LIVE FOREIGN-REF REFUSAL
+T370   T376     parked           softhouse/T376-review-t370                     softhouse/T370-t351-retry (resolves)
+T38    T38      NOT IN tasks.json softhouse/T38-dec1-v7-pass2                    - (ABSENT)
+T38    T38      NOT IN tasks.json softhouse/T38-dec1-v7                          - (ABSENT)
+T428   T428     merged           softhouse/rescued-t428-t421tree-20260828-140005 softhouse/T428-review-t421 (resolves)
+T65    T67      NOT IN tasks.json softhouse/T67-review-t65                       - (ABSENT)
+T78    T79      NOT IN tasks.json softhouse/T79-review-t78                       - (ABSENT)
+
+non-terminal ids blocked by a FOREIGN-owned ref today: 4
+   ('T268', 'softhouse/t281-review-t268', 'T281', 'needs_retry')
+   ('T268', 'softhouse/t286-t268-retry', 'T286', 'needs_retry')
+   ('T351', 'softhouse/T369-review-t351', 'T369', 'needs_retry')
+   ('T351', 'softhouse/T370-t351-retry', 'T370', 'needs_retry')

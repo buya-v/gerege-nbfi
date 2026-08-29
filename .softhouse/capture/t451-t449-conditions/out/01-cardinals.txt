@@ -1,0 +1,23 @@
+=== b102875c ===
+  handoff paths tracked      : 542
+  ending .md                 : 337
+  NOT ending .md (skipped)   : 205   {'.txt': 114, '.py': 30, '.out': 26, '.sh': 18, '.zsh': 11, '.go': 2, '.gitkeep': 1, '.mod': 1, '.patch': 1, '.json': 1}
+  bare  T###.md   (keys)     : 229
+  A2-<n>.md       (keys)     : 29
+  other .md (source 2 INERT) : 79
+  542-229 (the shipped 313)  : 313  <-- counts the 205 non-.md files as handoffs
+
+=== main ===
+  handoff paths tracked      : 547
+  ending .md                 : 342
+  NOT ending .md (skipped)   : 205   {'.txt': 114, '.py': 30, '.out': 26, '.sh': 18, '.zsh': 11, '.go': 2, '.gitkeep': 1, '.mod': 1, '.patch': 1, '.json': 1}
+  bare  T###.md   (keys)     : 229
+  A2-<n>.md       (keys)     : 29
+  other .md (source 2 INERT) : 84
+  542-229 (the shipped 313)  : 318  <-- counts the 205 non-.md files as handoffs
+
+=== C-T449-4: paths on main with a COMPONENT naming t268 ===
+  total                                  : 24
+  under .softhouse/capture/t286-t268-retry/: 23
+  NOT under it                            : 1
+      .softhouse/reviews/t291-review-t286/out/rerun-t268-battery.txt

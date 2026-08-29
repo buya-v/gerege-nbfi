@@ -1,0 +1,93 @@
+RED   /tmp/t451/mods/rt_red.py  sha256 e80196813ea210a0
+GREEN .softhouse/bin/ready-tasks.py  sha256 e80196813ea210a0
+fixture /tmp/t451/fixture
+
+A/T339   INCIDENT ref: name matches, its diff is another task's deletion + T347 marker
+          expectation: MUST STAY name-only-refs/DEMOTE -- relaxing the ref anchor must not resurrect it
+          RED    name-only-refs         DEMOTE
+          GREEN  name-only-refs         DEMOTE
+
+B/T431   task branch parked AT the dispatch commit, nothing anywhere
+          expectation: MUST STAY stillborn/DEMOTE -- this is the case T350 was filed for
+          RED    stillborn              DEMOTE
+          GREEN  stillborn              DEMOTE
+
+C/T421   branch pruned after merge, OWNING paths on main
+          expectation: MUST STAY merged/REFUSE
+          RED    merged                 REFUSE
+          GREEN  merged                 REFUSE
+
+D/T428   branch pruned after merge, review dir on main, subject is a Merge line
+          expectation: MUST STAY merged/REFUSE
+          RED    merged                 REFUSE
+          GREEN  merged                 REFUSE
+
+E/T351   MUST-BLOCK control: branch RENAMED, ref carries real OWNING content
+          expectation: MUST STAY relocated/REFUSE
+          RED    relocated              REFUSE
+          GREEN  relocated              REFUSE
+
+G/T900   ATTACK: task branch parked at dispatch commit AND a rescue ref carries the work
+          expectation: C-T449-1: must REFUSE.  RED demotes while a live ref holds the line
+          RED    stillborn              DEMOTE
+          GREEN  stillborn              DEMOTE
+
+G2/T901  CONTROL for G: byte-identical evidence, recorded branch DELETED
+          expectation: relocated/REFUSE in both -- G and G2 must now AGREE
+          RED    relocated              REFUSE
+          GREEN  relocated              REFUSE
+
+K/T945   ATTACK: genuine work under ANOTHER task's condition-bundle dir, branch deleted
+          expectation: C-T449-2: must REFUSE.  RED prints 'NOT ONE carries any content' -- false
+          RED    name-only-refs         DEMOTE
+          GREEN  name-only-refs         DEMOTE
+
+K2/T946  ATTACK: case K's evidence with the task branch still parked (both defects)
+          expectation: must REFUSE
+          RED    stillborn              DEMOTE
+          GREEN  stillborn              DEMOTE
+
+H/T950   ATTACK: 9 name-matching refs, the only carrier LAST in sort order
+          expectation: C-T449-5: must REFUSE.  RED truncates at the cap and demotes
+          RED    indeterminate          DEMOTE
+          GREEN  indeterminate          DEMOTE
+
+N/T960   CONTROL: stillborn task branch + a NAME-ONLY ref
+          expectation: MUST STAY DEMOTE, but the note must NAME the ref, not deny it
+          RED    stillborn              DEMOTE
+          GREEN  stillborn              DEMOTE
+
+P/T970   CONTROL: truly unstarted -- branch parked, no refs, nothing on main
+          expectation: MUST STAY stillborn/DEMOTE
+          RED    stillborn              DEMOTE
+          GREEN  stillborn              DEMOTE
+
+cases: 12, changed: 0
+
+==============================================================================
+VERBATIM NOTES -- the record a human reads before deciding
+==============================================================================
+
+--- RED   G/T900  [stillborn] ---
+!! Its branch softhouse/T900-work exists at e98cf80f6, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T900 is on main -- no commit subject `T900:` or `Merge T900:`, no tracked path with a component naming T900. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431, while C-T407-1 (a MAJOR) had not been touched. DEMOTED. (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence.)
+
+--- GREEN G/T900  [stillborn] ---
+!! Its branch softhouse/T900-work exists at e98cf80f6, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T900 is on main -- no commit subject `T900:` or `Merge T900:`, no tracked path with a component naming T900. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431, while C-T407-1 (a MAJOR) had not been touched. DEMOTED. (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence.)
+
+--- RED   K/T945  [name-only-refs] ---
+Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T945 IN THEIR NAME -- softhouse/rescued-t945-t944-conditions-20260829 -- and NOT ONE of them carries any content belonging to it. No commit only that ref has names T945 in its subject, and no path in its diff vs main has a component naming T945. A branch NAME is an assertion by whoever created the branch, and in the recorded incident the creator was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after the worktree directory -- so treating the name as corroboration was the reconciler reading its own sibling back to itself. DEMOTED. Do NOT delete the ref(s) on the strength of this line: they may hold another task's WIP (the T339 ref held T347's marker). (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence. Ref store: loose refs walked from /tmp/t451/fixture/.git/refs/heads and packed entries parsed from /tmp/t451/fixture/.git/packed-refs. refs/heads/softhouse/rescued-t945-t944-conditions-20260829 is NAME-ONLY -- refs/heads/softhouse/rescued-t945-t944-conditions-20260829 carries 1 commit(s) main does not and touches 1 path(s) vs its merge-base with main, and nothing in either names T945.)
+
+--- GREEN K/T945  [name-only-refs] ---
+Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T945 IN THEIR NAME -- softhouse/rescued-t945-t944-conditions-20260829 -- and NOT ONE of them carries any content belonging to it. No commit only that ref has names T945 in its subject, and no path in its diff vs main has a component naming T945. A branch NAME is an assertion by whoever created the branch, and in the recorded incident the creator was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after the worktree directory -- so treating the name as corroboration was the reconciler reading its own sibling back to itself. DEMOTED. Do NOT delete the ref(s) on the strength of this line: they may hold another task's WIP (the T339 ref held T347's marker). (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence. Ref store: loose refs walked from /tmp/t451/fixture/.git/refs/heads and packed entries parsed from /tmp/t451/fixture/.git/packed-refs. refs/heads/softhouse/rescued-t945-t944-conditions-20260829 is NAME-ONLY -- refs/heads/softhouse/rescued-t945-t944-conditions-20260829 carries 1 commit(s) main does not and touches 1 path(s) vs its merge-base with main, and nothing in either names T945.)
+
+--- RED   N/T960  [stillborn] ---
+!! Its branch softhouse/T960-work exists at e98cf80f6, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T960 is on main -- no commit subject `T960:` or `Merge T960:`, no tracked path with a component naming T960. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431, while C-T407-1 (a MAJOR) had not been touched. DEMOTED. (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence.)
+
+--- GREEN N/T960  [stillborn] ---
+!! Its branch softhouse/T960-work exists at e98cf80f6, has NO commit ahead of main, and is an ancestor of main ONLY BECAUSE IT IS MAIN: the probes ran and NOTHING bearing id T960 is on main -- no commit subject `T960:` or `Merge T960:`, no tracked path with a component naming T960. This is the shape `git worktree add -b` produces for a worker killed before its first commit: the branch was cut from the driver's own dispatch commit and never moved. It reads as MERGED to `merge-base --is-ancestor` and it is UNSTARTED. Fire 20260829-080002 printed 'The work LANDED' for exactly this on T431, while C-T407-1 (a MAJOR) had not been touched. DEMOTED. (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence.)
+
+--- RED   A/T339  [name-only-refs] ---
+Its recorded branch softhouse/T339-base does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T339 IN THEIR NAME -- softhouse/rescued-t339-base-20260828-080001 -- and NOT ONE of them carries any content belonging to it. No commit only that ref has names T339 in its subject, and no path in its diff vs main has a component naming T339. A branch NAME is an assertion by whoever created the branch, and in the recorded incident the creator was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after the worktree directory -- so treating the name as corroboration was the reconciler reading its own sibling back to itself. DEMOTED. Do NOT delete the ref(s) on the strength of this line: they may hold another task's WIP (the T339 ref held T347's marker). (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence. Ref store: loose refs walked from /tmp/t451/fixture/.git/refs/heads and packed entries parsed from /tmp/t451/fixture/.git/packed-refs. refs/heads/softhouse/rescued-t339-base-20260828-080001 is NAME-ONLY -- refs/heads/softhouse/rescued-t339-base-20260828-080001 carries 1 commit(s) main does not and touches 2 path(s) vs its merge-base with main, and nothing in either names T339.)
+
+--- GREEN A/T339  [name-only-refs] ---
+Its recorded branch softhouse/T339-base does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T339 IN THEIR NAME -- softhouse/rescued-t339-base-20260828-080001 -- and NOT ONE of them carries any content belonging to it. No commit only that ref has names T339 in its subject, and no path in its diff vs main has a component naming T339. A branch NAME is an assertion by whoever created the branch, and in the recorded incident the creator was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after the worktree directory -- so treating the name as corroboration was the reconciler reading its own sibling back to itself. DEMOTED. Do NOT delete the ref(s) on the strength of this line: they may hold another task's WIP (the T339 ref held T347's marker). (Landed index: commit subjects + exact handoff names: 7 of 8 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT `<id>.md` only -- see source 3 for the rest); tracked paths on main: 8 path(s) tracked on main were scanned for a path component naming the id; 0 OWNING (component begins with the id) and 0 MENTIONING (none) -- only OWNING paths were counted as evidence. Ref store: loose refs walked from /tmp/t451/fixture/.git/refs/heads and packed entries parsed from /tmp/t451/fixture/.git/packed-refs. refs/heads/softhouse/rescued-t339-base-20260828-080001 is NAME-ONLY -- refs/heads/softhouse/rescued-t339-base-20260828-080001 carries 1 commit(s) main does not and touches 2 path(s) vs its merge-base with main, and nothing in either names T339.)

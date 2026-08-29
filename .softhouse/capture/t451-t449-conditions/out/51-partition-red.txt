@@ -1,0 +1,19 @@
+D1 arm returns the WRONG POLARITY                    CAUGHT
+      states with NO usable verdict    0
+      states with TWO verdicts         0
+      arm-transcription MISMATCHES     4
+      exceptions raised                0
+D2 arm DELETED -- falls through to the bottom demote CAUGHT
+      states with NO usable verdict    0
+      states with TWO verdicts         0
+      arm-transcription MISMATCHES     4
+      exceptions raised                0
+D3 T312 suffix no longer stripped                    CAUGHT
+      states with NO usable verdict    0
+      states with TWO verdicts         8
+      arm-transcription MISMATCHES     0
+      exceptions raised                0
+
+planted defects: 3, caught: 3, MISSED: 0
+50-partition.py has now been seen to FAIL, so its 0/0/0 on the shipped tree is a
+measurement rather than a hope (P-22).

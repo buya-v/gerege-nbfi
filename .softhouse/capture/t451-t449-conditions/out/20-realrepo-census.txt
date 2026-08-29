@@ -1,0 +1,29 @@
+live refs in the store: 705
+ids nameable from a local head: 218
+(id, own-head) pairs examined     : 225
+ref probes run                    : 84
+fan-out histogram (other refs naming the id): {0: 151, 1: 64, 2: 10}
+MAX fan-out on this repo today    : 2   (shipped cap MAX_REFS_PROBED=8)
+ids AT OR OVER the cap today      : 0
+
+C-T449-2 -- refs that flip name-only -> CARRIER under `anywhere`: 7
+    T100     own=softhouse/T100-g8-two-families                 ref=softhouse/T101-review-t100
+        .softhouse/reviews/T101-review-of-T100.md
+    T108     own=softhouse/T108-grep-adjudication               ref=softhouse/T131-review-t108
+        .softhouse/reviews/T131-review-of-T108.md
+    T109     own=softhouse/T109-fork-point-digest-compare       ref=softhouse/T127-review-t109
+        .softhouse/reviews/T127-review-of-T109.md
+    T268     own=softhouse/t268-rvpa-failopen                   ref=softhouse/t281-review-t268
+        .softhouse/reviews/t281-review-t268/REVIEW.md
+        .softhouse/reviews/t281-review-t268/out/N7-new.txt
+        .softhouse/reviews/t281-review-t268/out/N7-old.txt
+    T351     own=softhouse/T351-progress-accounting             ref=softhouse/T369-review-t351
+        .softhouse/reviews/t369-review-t351/REVIEW.md
+        .softhouse/reviews/t369-review-t351/conformance-t369.txt
+        .softhouse/reviews/t369-review-t351/count-loc.py
+    T370     own=softhouse/T370-t351-retry                      ref=softhouse/T376-review-t370
+        .softhouse/reviews/t376-review-t370/REVIEW.md
+        .softhouse/reviews/t376-review-t370/blindrun-MUTANT-partial-fix.txt
+        .softhouse/reviews/t376-review-t370/blindrun-shipped.txt
+    T78      own=softhouse/T78-fui-marker-d5                    ref=softhouse/T79-review-t78
+        .softhouse/reviews/T79-review-t78.md
