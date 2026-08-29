@@ -303,13 +303,25 @@ Run from a scratch directory **outside** the repository, `bash` (never `sh`/`zsh
 (P-84 — four exit-2 paths run before the probe prints, and absence is not `down`):
 
 ```
-BAR EXIT 0
-grep -c 'probe = '  ->  1
+### git status --porcelain BEFORE the bar (must be 0 lines):
+### lines: 0
+### HEAD: 1afa5dba3f2b52ec68a421911dfa1b4f93784b39
+
+grep -c 'probe = '  ->  1      (PRESENCE tested BEFORE the value was read)
 probe line, verbatim:
 conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+VERDICT: PASS (exit 0) - 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+fail-open frontier : 11, pinned at 11, frontier == pinned
+dead-path frontier : GREEN, rows=108 pinned=108 added=0 removed=0, reconciliation list empty
+dead-path census   : corpus=1687 deadFiles=75 deadOccurrences=108
+BAR EXIT 0
 ```
 
-Full transcript: `.softhouse/capture/t467-t464-conditions/out/40-BAR.txt`.
+Full transcript: `.softhouse/capture/t467-t464-conditions/out/40-BAR.txt`, taken at commit
+`1afa5dba` (commit 3 of 4). Commit 4 adds that transcript and this paragraph and nothing else --
+no tracked file the bar grades moves between them, which the `git status --porcelain -> 0 lines`
+line above is the calibration for.
 
 ---
 
