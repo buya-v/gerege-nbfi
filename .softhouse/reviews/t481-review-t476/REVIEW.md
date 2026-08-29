@@ -30,6 +30,7 @@ repair**, not about the repair.
 | **C-T476-3** | MINOR | "correctly TAGGED quotations wrongly flagged: **0**" is a fact about 249 cases. Member set of 8 shapes at the tip where a *printed, correctly tagged* quotation is flagged, plus 2 constructed. **New since T467: 0** — so a published sentence to correct, not a regression. |
 | **C-T476-4** | LOW | `out/T467-HANDOFF-CORRECTIONS.md:62` cites a measurement "at `07aa5a86`" — a real object that is **not an ancestor of this branch** (an orphaned pre-amend commit). The figures reproduce at the tip; the citation points at a tree no reader can reach. |
 | **C-T476-5** | LOW | §7.1's account of *why* T467 was blind is narrower than the mechanism. An f-string split by a **static** interpolation — nothing computed, all bytes in the source — is clear at T467 too. T476's headline is right; its explanation is not the general one. |
+| **C-T476-6** | LOW | The VACUITY CONTROL's published cardinal moved **2 → 8** and its label still says "quotation **lines**". Measured, it is **8 payloads over 2 source lines** — the same union multiplicity commit `0d15e5c7` deduped for the reported SITES and did not dedupe here. |
 
 **What survives attack, and survives it well:** the repair itself. The union is a superset of
 the rule it replaced **by construction** — `printed_payloads` seeds itself from
@@ -480,6 +481,36 @@ those terms. W4 is open at all three refs, as declared.
   tree no reader can reach and that `git gc` will remove. In a lineage whose recurring LOW is
   "a published cardinal that stopped matching the tree", a cardinal cited against an
   unreachable tree belongs in the same box.
+
+### 9.1 C-T476-6 (LOW) — THE REGENERATED TRANSCRIPT, AND ONE CARDINAL IN IT
+
+The committed `TRANSCRIPT-A2-11.txt` diff between `6a345e4a` and `36e01f25` is a genuine
+regeneration and nothing else: a timestamp, two host paths, the five new checks, the corrected
+`os.write` label — and **one moved number that is not a new check**:
+
+```
+  VACUITY CONTROL … emitted tagged quotation lines: 2   ->   8
+```
+
+`95-t481-vacuity-cardinal.py`, over the four guarded files:
+
+| ref | as the file counts it (per **payload**) | distinct **source lines** |
+|---|---|---|
+| `6a345e4a` | 2 | 2 |
+| `36e01f25` | **8** | **2** |
+
+The check is `> 0` and is unaffected; the **printed cardinal** is. `_emitted_tagged` increments
+once per payload and the union offers one source line as several payloads. Commit `0d15e5c7`
+recognised exactly this multiplicity and deduped the reported **SITES** for `printed_untagged`
+— *"the union offers one line as several payloads, so a count of payloads would read like a
+count of lines and be several times larger"* — and did not apply the same dedupe here, where the
+label still says **lines**. It is the same sentence, one counter over. LOW, and a one-line fix.
+
+### 9.2 THE MERGE ITSELF
+
+No path this branch changes has been touched on `main` since the fork point `3f4e236a`:
+`git log 3f4e236a..main -- <the 23 paths>` is empty. The merge is clean; the branch is simply
+behind `main`, which is why `git diff main..` looks enormous.
 
 ---
 
