@@ -186,7 +186,7 @@ defect this whole lineage is about, one level further out.
 | tree | population | T455 flags | T467 flags | T476 flags |
 |---|---|---|---|---|
 | `6a345e4a` | 1,687 | **0** | **6** | — |
-| `d68f6b97` (my tip) | **1,691** | **0** | **6** | **6** |
+| `0d15e5c7` (the graded tip) | **1,691** | **0** | **6** | **6** |
 
 **T476's delta against T467 is `+0 / −0`.** The set is member-for-member the one T472 named,
 and I print the firing payload with it:
@@ -380,6 +380,23 @@ The third row is the one that answers *"is (l) just (k) renamed"*, and it still 
 _(filled below — taken at the branch tip, `bash`, from a scratch directory outside the
 repository, on a committed clean tree, with the probe line's PRESENCE tested before its value
 was read.)_
+
+### 4.2 COVERAGE — WHICH BYTES THE DRIVES ABOVE ACTUALLY GRADED (F-T464-5, the lesson in play)
+
+All four drives were taken at **`0d15e5c7`**, the last commit that changes any graded byte. A
+transcript cannot be taken at a commit that does not yet exist, so the commit carrying these
+transcripts is necessarily later. The check is one command per file, and the blob ids the
+drives printed are these:
+
+| file | blob at `0d15e5c7`, printed by the drive |
+|---|---|
+| `.softhouse/reviews/A2-11/verify-capture-integrity.py` | `424309f356216c2f0286e5a6ddc7f7261448bc19` |
+| `.softhouse/reviews/A2-11/run-all.sh` | `3aee8cd13690b7fd3eb92ba3caa2a2f58453faa7` (untouched by me) |
+| `.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py` | `ed8a29f6d96a018e9014b8f2d4f8eac0efb2a692` (untouched by me) |
+
+`git rev-parse <branch tip>:<path>` printing the same blob is the whole check. The commits
+after `0d15e5c7` add only `out/` transcripts, the regenerated `TRANSCRIPT-A2-11.txt`, this
+handoff and the bar — no file any drive grades.
 
 ---
 

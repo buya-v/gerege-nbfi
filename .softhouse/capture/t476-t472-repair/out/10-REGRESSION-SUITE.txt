@@ -1,0 +1,63 @@
+===========================================================================
+T476 -- C-T467-1, THE REGRESSION SUITE (end-to-end half)
+  T455 emitter rule : 3f4e236a
+  T467 payload rule : 6a345e4a
+  T476 union        : 0d15e5c7
+===========================================================================
+
+--- SECTION 10's OWN EXIT, THREE CASES x THREE REFS ---
+  case U    section 10 exit:  T455=1  T467=0  T476=1
+  case Q    section 10 exit:  T455=1  T467=1  T476=1
+  case A2   section 10 exit:  T455=1  T467=0  T476=1
+
+--- THE TWO REGRESSIONS T472 NAMED, ASSERTED CASE BY CASE ---
+  OK   U   echo <words UNQUOTED>: CAUGHT at T455 = 1 (expected 1)
+  OK   U   MISSED at T467 -- lost coverage = 0 (expected 0)
+  OK   U   CAUGHT at T476 -- repaired = 1 (expected 1)
+  OK   A2  print(b'..'.decode()): CAUGHT at T455 = 1 (expected 1)
+  OK   A2  MISSED at T467 -- lost coverage = 0 (expected 0)
+  OK   A2  CAUGHT at T476 -- repaired = 1 (expected 1)
+
+--- THE CONTROL: (U) DIFFERS FROM (Q) BY ONE PAIR OF QUOTE CHARACTERS ---
+  OK   Q   the SAME line, words QUOTED, caught at T467 = 1 (expected 1)
+  OK   Q   still caught at T476 = 1 (expected 1)
+
+  If (Q) and (U) had behaved alike at T467 the finding would be about the sentence.
+  They do not: the only difference between the caught line and the missed line is the
+  quoting, because the payload extractor returned [] for a line with no quote character
+  and the trailing-comment tag silenced the binding predicate.
+
+--- THE HARM WHERE IT LANDS: THE WHOLE RUNNER, AND THE READER'S TRANSCRIPT ---
+  runner at ref 6a345e4a: exit=0  sentences UNTAGGED in the transcript=1  transcript verdict PASS=1 FAIL=0
+  runner at ref 0d15e5c7: exit=1  sentences UNTAGGED in the transcript=1  transcript verdict PASS=0 FAIL=1
+  OK   run-all.sh at T467 exits 0 WITH the smuggled sentence live = 0 (expected 0)
+  OK   the reader's transcript at T467 carries it UNTAGGED = 1 (expected 1)
+  OK   and that transcript's own verdict says PASS = 1 (expected 1)
+  OK   run-all.sh at T476 FAILS on the same tree = 1 (expected 1)
+  OK   the transcript STILL carries the sentence untagged at T476 = 1 (expected 1)
+  OK   but that transcript's own verdict now says FAIL = 1 (expected 1)
+  OK   and it does NOT say PASS = 0 (expected 0)
+
+  READ THOSE TWO ROWS TOGETHER, BECAUSE THE OBVIOUS EXPECTATION IS WRONG AND THIS DRIVE
+  WAS WRITTEN WITH IT. Section 10 grades SOURCE; it cannot stop a live emitter from
+  printing. The smuggled echo runs inside run-all.sh's own teed block, so the sentence
+  reaches the transcript at BOTH refs. What changes is what the transcript SAYS ABOUT
+  ITSELF: at T467 it carries a false sentence untagged and calls the run a PASS, which
+  is a publishable record of a lie; at T476 the same bytes are there and the record
+  says FAIL, so nobody can cite it. The harm was never the echo. It was the PASS.
+
+--- CASE G: THE CLEAN TREE AT T476, THROUGH THE WHOLE RUNNER ---
+  OK   clean tree: run-all.sh exit = 0 (expected 0)
+  OK   clean tree: sections run = 10 (expected 10)
+  OK   clean tree: deviations = 0 (expected 0)
+  OK   clean tree: untagged sentences in the transcript = 0 (expected 0)
+  OK   clean tree: section 10's own exit = 0 (expected 0)
+  clean tree: section 10 runs 53 checks
+
+--- COVERAGE (F-T464-5): the bytes graded above, by blob id at 0d15e5c7 ---
+  .softhouse/reviews/A2-11/verify-capture-integrity.py                     424309f356216c2f0286e5a6ddc7f7261448bc19
+  .softhouse/reviews/A2-11/run-all.sh                                      3aee8cd13690b7fd3eb92ba3caa2a2f58453faa7
+  .softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py ed8a29f6d96a018e9014b8f2d4f8eac0efb2a692
+
+RESULT: every case behaved as recorded. EXIT 0
+EXIT10=0
