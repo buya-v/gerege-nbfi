@@ -76,9 +76,19 @@ import (
 // `capabilities.json`, whose schema id is a hard constant naming this context
 // and whose `dec1_revision` is a DEC-1 revision number; the decision and the
 // rejected alternative are recorded in that package's capability.go.
+// T429 adds the ledger context's THIRD store-root file,
+// `oracle-derived-columns.json`. Note what this census does for it, because it
+// is the answer to "what reaches that declaration": a store-root `.json` that is
+// NOT on this list and NOT loaded as a vector REFUSES THE STORE. So the file
+// cannot be added without being named here, and being named here without
+// LoadOracleDerivedRegistry reading it would leave a declaration nothing
+// enforces — which is P-45, the lesson this program has now recorded five times
+// over. The loader is called by name from Run (grade.go), beside LoadPin and
+// LoadCapabilityRegistry, and a load or validation failure is FATAL.
 var storeRootNonVectorFiles = []string{
 	"PIN.json", "capabilities.json",
 	"PIN-ledger.json", "capabilities-ledger.json",
+	"oracle-derived-columns.json",
 }
 
 // caseIDRune reports whether r may appear in a case_id.

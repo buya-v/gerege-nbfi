@@ -416,6 +416,14 @@ type Options struct {
 	ImplementationName string
 	Pin                *Pin
 	Registry           *CapabilityRegistry
+
+	// OracleDerived is the ORACLE-DERIVED COLUMN DECLARATION [T429, G-22]: which
+	// columns of a posted journal-entry row the reference oracle writes by its
+	// own denormalisation, and which this port is therefore RIGHT never to
+	// produce. It is a load-time refusal, not an option: the caller treats a
+	// failure to load it as fatal, because a harness that cannot state the
+	// boundary of its carve-out has an undeclared ungraded region.
+	OracleDerived *OracleDerivedRegistry
 }
 
 // Summary is the ledger half of a conformance run.
@@ -523,6 +531,16 @@ type Summary struct {
 	// measured from those vectors. See notgraded.go.
 	NotGraded []NotGradedCapability
 
+	// OracleDerived is the loaded carve-out declaration, carried onto the summary
+	// so the block renders from the same object the run validated. [T429]
+	OracleDerived *OracleDerivedRegistry
+
+	// CaptureScans is the coverage of A2-29's positive rule on capture, MEASURED
+	// over the loaded corpus: how many cited artefacts were actually read and
+	// scanned, and how many could not be. The unreadable count is carried and
+	// printed because a rule whose coverage is unstated reads as total.
+	CaptureScans []CaptureScan
+
 	Results    []Result
 	LoadErrors []LoadError
 	Fatal      []string
@@ -575,6 +593,18 @@ func Run(opts Options) *Summary {
 	// report state the exemption-census deflation arm reads, and widening it is
 	// a change to the loanschedule reporter rather than to this context.
 	s.NotGraded = notGradedRows(opts.Registry, vectors)
+
+	// THE ORACLE-DERIVED CARVE-OUT IS ATTACHED HERE, ABOVE EVERY EARLY RETURN,
+	// for exactly the reason the not-graded block is [T429]. It is a property of
+	// the DECLARATION, not of whether this run graded anything, and the run that
+	// most needs its carve-out printed is the one that went wrong. A run that
+	// dropped every ledger vector and therefore stopped printing which columns it
+	// deliberately does not compare would be the undeclared-ungraded-region state
+	// in its purest form.
+	s.OracleDerived = opts.OracleDerived
+	for _, v := range vectors {
+		s.CaptureScans = append(s.CaptureScans, opts.OracleDerived.ScanCaptureRule(opts.RepoRoot, v)...)
+	}
 
 	// THE DIVERGENCE POPULATION CENSUS RUNS HERE, ABOVE EVERY EARLY RETURN IN
 	// THIS FUNCTION, and for the same reason the not-graded block does. [T360]
