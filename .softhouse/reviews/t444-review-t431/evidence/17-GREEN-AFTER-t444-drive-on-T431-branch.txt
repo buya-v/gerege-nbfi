@@ -1,0 +1,59 @@
+=== T444 DRIVE -- src=/Users/buv/gerege-nbfi ref=origin/softhouse/T431-t407-conditions arms=ALL work=/tmp/t444/green ===
+git: git version 2.50.1 (Apple Git-155)
+ref HEAD: d459ec82 T431: final bar on the committed tree + handoff completed
+MODE detected from the ref's OWN BLOB: pin=yes empty=yes round-trip=yes
+  -> MODE=FIXED
+
+T444-Z-unmutated                         exit=0 (w 0 ) probe=PRESENT(w PRESENT) dirty=no  >>> PASS
+    census: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+T444-LEGA-ascii-witness                  exit=0 (w 0 ) probe=PRESENT(w PRESENT) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+T444-LEGC-CYRILLIC-witness               exit=2 (w 0 ) probe=ABSENT (w PRESENT) dirty=no  >>> FAIL
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: matched NO INDEX ENTRY when handed straight back to git as a
+T444-LEGM-cyrillic-dir-and-wit           exit=2 (w 0 ) probe=ABSENT (w PRESENT) dirty=no  >>> FAIL
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+T444-X-literal-REFUSED                   exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+T444-XT-top-literal-REFUSED              exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+T444-XI-literal-icase-REFUSED            exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+T444-XQ-CQUOTED-REFUSED                  exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: and THE WITNESS LOOKUP DID NOT ROUND-TRIP. git resolved that
+T444-XQ0-cquoted-no-decoy                exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: matched NO INDEX ENTRY when handed straight back to git as a
+T444-RVQ-kill-roundtrip-REOPENS          exit=0 (w 0 ) probe=PRESENT(w PRESENT) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+    NLMEM: population renders it as: ".softhouse/guards/zz-t444n/zz-t444n\nmember.sh"
+T444-NLMEM-newline-member                exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+    GITL: gitlink mode 160000 IS in the population as .softhouse/guards/zz-t444g/zz-t444g-sub.sh
+T444-GITL-gitlink-member                 exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+    reason: guard_guards_dir_registration: .softhouse/guards/zz-t444g/zz-t444g-sub.sh IS INVOKED BY NOTHING.
+    GITL2: borrowing the basename of an existing member: check-capture-namespace.sh
+    GITL: gitlink mode 160000 IS in the population as .softhouse/guards/zz-t444g/check-capture-namespace.sh
+T444-GITL2-gitlink-known-name            exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+    reason: guard_guards_dir_registration: .softhouse/guards/zz-t444g/check-capture-namespace.sh IS INVOKED BY NOTHING.
+T444-2ROWH-honest-first                  exit=0 (w 0 ) probe=PRESENT(w PRESENT) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    reason: <no registration refusal printed>
+T444-2ROWX-hostile-first                 exit=2 (w 2 ) probe=ABSENT (w ABSENT ) dirty=no  >>> PASS
+    census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    reason: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+=== T444 DRIVE: 13 PASS / 2 FAIL of 15 ===
+
+[exited with code 0]
