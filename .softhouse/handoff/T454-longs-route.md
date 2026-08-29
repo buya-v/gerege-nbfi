@@ -450,7 +450,43 @@ Run from `/tmp/t454/finalbar`, scratch, **outside the repo**, with `bash` (never
 the committed tip. Probe line **PRESENCE** read **before** its value (P-84 — an absent probe line
 is the guard working, not `down`).
 
-<!--FINALBAR-->
+Run from `/tmp/t454/finalbar`, scratch, **outside the repo**, with `bash` (never `sh`/`zsh`), on
+the committed tree `94cb9abc`. `git status --porcelain` was **EMPTY before AND after**.
+Full transcript: `evidence/90-FINAL-BAR-committed-tree-94cb9abc.log`.
+
+```
+EXIT = 0
+grep -c 'probe = ' = 1                     <- PRESENCE read BEFORE the value (P-84)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+| figure | required | measured |
+|---|---|---|
+| exit | 0 | **0** |
+| `probe = ` line count, read before its value | >= 1 | **1** |
+| probe value | — | **`up`** |
+| VERDICT | PASS 46 / 7884 | **PASS 46 / 7884** |
+| guards-dir census | unmoved | **`population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0`** |
+| `deadOccurrences` / `deadFiles` | 108 / 75 | **108 / 75** |
+| fail-open frontier | 11 == 11 | **`frontier 11, pinned at 11`; `frontier == pinned (all 11 rows, by path)`** |
+| dead-path frontier | GREEN | **GREEN, reconciliation list empty** |
+| host-state census | 18 == 18 | **`census == pinned (all 18 site(s), by path and source line)`** |
+| wrong ledger implementations | 16, all dead | **all 16 DIED through this harness** |
+| guards timed | — | **16** (was 15; this branch adds one, and the number is DERIVED by counting, never typed — the hand-written "fifteen guards" in `guard_cost_census`'s own refusal text is deleted in the same commit, P-80) |
+| `guard_harness_text_is_committed` cost | under 60 s | **0–2 s / ceiling 60 s**, `guard-cost: PASS` |
+| registration decisive lines | — | **`10 present EXACTLY ONCE in the body of guard_guards_dir_registration`, 2 evaluated** |
+| HARNESS-TEXT census | 0 substitutions on a clean tree | **`differ from HEAD: 0 — SUBSTITUTED … 0, uncommitted edits 0, deleted 0`**, and `committed 7c543532… / on disk 7c543532…` |
+
+The dead-path CORPUS moved 1613 → 1618 (+5: this task's instruments). Nothing pins it, and
+`deadOccurrences` — which is pinned — did not move: the first committed version of
+`drive-t454.sh` put **five NEW rows on the frontier** by spelling its fixture paths as literals,
+the guard refused the whole bar, and the paths are now assembled at run time. **Repaired rather
+than pinned, which is the rule that guard prints.**
+
+**A second bar, on the tip that carries this transcript.** The commit above cannot contain its own
+transcript, so the delivered tip is one commit later and its bar was run separately; its figures
+are reported in the task's completion message and were identical.
 
 ---
 
