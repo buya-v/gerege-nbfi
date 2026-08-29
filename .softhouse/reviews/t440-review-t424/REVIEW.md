@@ -459,6 +459,25 @@ that is a derived floor, not a pin.
   `capture/t424/` directory. `conformance.sh` and `t381-red-drives.sh` are **not** modified, which
   matches T424's declared restraint and the contention facts I verified.
 
+## 10a. An error of T440's own, recorded rather than quietly fixed
+
+My first draft of `instruments/f-t440-1.sh` **hardcoded** the path of the drive it grades,
+`.softhouse/capture/t424/instruments/t424-comment-claims-drive.sh`. That file exists only on the
+branch under review, so on **T440's own branch** it is a dead repo-path reference:
+`guard_dead_path_frontier` refused, `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1
+removed=0`, and the bar exited **2** [VERIFIED: `out/T440-BAR-own-RED.txt:181,190,219,221`].
+
+The tempting fix was to spell the literal in pieces so the census would not see it. That is
+gaming a guard this program has paid for twice, and it is the same move as a red arm that is red
+for the wrong reason. **The path is now a required argument with no default, and the script
+refuses when it does not resolve** — which is the remedy the guard itself names in its refusal
+text. The transcript in `out/T440-F-T440-1.txt` is a re-run of the corrected instrument, so the
+instrument shipped and the instrument graded are the same file.
+
+Worth stating because it is the branch's own lesson landing on its reviewer: an instrument that
+names an artefact existing only on one branch has made a claim about the world that stops
+reproducing the moment it leaves that branch.
+
 ## 11. What T440 did not do
 
 - `[UNVERIFIED]` **any specific `tee` binary.** No GNU coreutils on this host; T424's bound stands
