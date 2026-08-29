@@ -5,8 +5,15 @@
 **The change is correct, its central claim is true, and I reproduced every fail-open it reports
 plus one it does not. It should merge.** The conditions below are one **MAJOR** (a fifth,
 driven, live fail-open of the same class that survives this fix — a RESIDUAL, present on `main`
-too, not caused by T431), two **MINOR**, and four **LOW**. None of them is a reason to hold the
-merge; the MAJOR is a reason not to let the record say the class is closed.
+too, not caused by T431), three **MINOR** (`C-1`, `C-2`, `C-4`), one **LOW→MINOR** (`C-3`) and
+five **LOW**. None of them is a reason to hold the merge; the MAJOR is a reason not to let the
+record say the class is closed.
+
+**The tree that was barred is commit `3a00ee51`** — `bash .softhouse/conformance.sh` from the
+worktree, `git status --porcelain` **EMPTY before AND after**: `EXIT 0`, `grep -c 'probe = ' = 1`
+then `probe = up`, `VERDICT: PASS 46 / 7884`, **16** wrong ledger implementations all dead,
+`population=6 … reached-by=1 … symlink-members=0`, `deadOccurrences=108`, host state
+`18, pinned at 18`. Only this paragraph and the rating count above it were written afterwards.
 
 Subject: T431's change to `.softhouse/conformance.sh` inside `guard_guards_dir_registration`
 (`C-T407-1`), plus `C-T407-2`, `C-T407-3`, `C-T407-4`. Reviewed as **grading infrastructure**:
