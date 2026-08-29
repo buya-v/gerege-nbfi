@@ -20,7 +20,9 @@
 #
 # NO HOST PATH IS WRITTEN IN THIS FILE (T256/T298):
 #   T448_SRC=<repo>  T448_SCRATCH=<dir OUTSIDE the repo>  T448_OUT=<dir> \
-#   T448_REF=<commit-ish carrying T433's correction>  bash 30-t448-tag-abuse.sh
+#   T448_REF=<commit-ish carrying T433's correction> \
+#   T448_GUARD=<repo-relative location of 30-t433-armf-wiring-guard.sh in THAT tree> \
+#   bash 30-t448-tag-abuse.sh
 #
 # CALIBRATION BEFORE ANY NEGATIVE (P-72; C4): case A runs the guard on an UNMUTATED clone and
 # it must exit 0. A guard that is already red would make every "defeated" verdict below free.
@@ -33,7 +35,15 @@ SCRATCH="${T448_SCRATCH:?T448_SCRATCH must name a scratch directory OUTSIDE the 
 OUT="${T448_OUT:?T448_OUT must name the directory to write transcripts into}"
 REF="${T448_REF:?T448_REF must name the commit-ish carrying the T433 correction}"
 
-GUARD=".softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh"
+# THE GUARD'S OWN LOCATION IS A REQUIRED PARAMETER, AND HERE IS WHY IT CANNOT BE A LITERAL.
+# The guard under test lives on the branch under review and is NOT on `main`, so a repo-relative
+# path spelled here would be a DEAD PATH in this file for as long as T433 is unmerged -- it moves
+# `guard_dead_path_frontier` and turns the bar EXIT 2 with no probe line at all. Measured, not
+# feared: the first draft of this file did exactly that (frontier 108 -> 109). The rule the
+# frontier guard states for this case is "make the path resolve, or make the instrument REFUSE" --
+# so the caller supplies it, and a value that does not resolve is exit 3 in `prepare()` below,
+# never a silent skip and never a pass.
+GUARD="${T448_GUARD:?T448_GUARD must give the path of T433 ARM-F wiring guard, relative to the tree under review}"
 RUNALL=".softhouse/reviews/A2-11/run-all.sh"
 FALSE_SENTENCE="There is no committed baseline older than HEAD for those 632."
 
@@ -49,7 +59,13 @@ prepare() {
   git -C "$D" checkout --quiet --detach "$REF" || return 1
   git -C "$D" reset --quiet --hard "$REF" || return 1
   git -C "$D" clean -qfdx || return 1
-  [ -f "$D/$GUARD" ] || return 1
+  # A T448_GUARD that does not resolve inside the checked-out tree is FATAL here, never a
+  # skipped case. This is the arm the dead-path frontier guard asks for in exchange for not
+  # spelling a path that is absent from `main`.
+  if [ ! -f "$D/$GUARD" ]; then
+    echo "REFUSED: T448_GUARD=$GUARD does not resolve inside the tree checked out at $REF." >&2
+    return 1
+  fi
   [ -f "$D/$RUNALL" ] || return 1
   return 0
 }

@@ -23,7 +23,7 @@ it is a declaration.** T433 says its open fail-open `(iv-a)` is "not closable by
 consistency". I drove that claim and it is false as stated: *detecting* a fabrication does
 need the oracle, but *refusing to exit 0 over a population the arm did not measure* is
 internal, costs nothing on a clean tree, and is the rule the grader already applies to its own
-sibling case eleven lines earlier.
+sibling case nine lines earlier in the same file.
 
 ---
 
@@ -238,8 +238,8 @@ together:
 
 1. **DETECTING that a capture is fabricated.** Genuinely external. T433 is right.
 2. **REFUSING TO EXIT 0 over a population the arm did not measure.** Entirely internal — and
-   `verify-capture-integrity.py` **already states the rule for it**, eleven lines above the
-   born-at-tip branch, for the sibling case of a path with no recorded ADD commit:
+   `verify-capture-integrity.py` **already states the rule for it**, nine lines above the
+   born-at-tip branch (`:754-760` vs `:769`), for the sibling case of a path with no recorded ADD commit:
 
 ```python
 f_noborn = [p for p in f_post if p not in f_birth]
@@ -250,7 +250,7 @@ if f_noborn:
            "REFUSED, never a pass.")
 ```
 
-Eleven lines later, the same category gets the opposite treatment:
+Nine lines later (`:769`), the same category gets the opposite treatment:
 
 ```python
     if b == head_sha:
@@ -358,8 +358,19 @@ purpose is to mark text a reader will see.
 
 ```
 T448_SRC=<clone> T448_SCRATCH=/tmp/t448/scratch T448_OUT=/tmp/t448/tagabuse \
-T448_REF=3253358d bash .softhouse/reviews/t448-review-t433/instruments/30-t448-tag-abuse.sh
+T448_REF=3253358d \
+T448_GUARD=.softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh \
+bash .softhouse/reviews/t448-review-t433/instruments/30-t448-tag-abuse.sh
 ```
+
+`T448_GUARD` is a **parameter and not a literal on purpose**, and the reason is a finding
+against my own first draft: the guard under test lives on `softhouse/T433-t423-c1` and is
+absent from `main`, so spelling its path in a tracked instrument added a row to
+`guard_dead_path_frontier` (108 → 109) and turned the bar **EXIT 2 with no probe line at all**.
+That is the same shape the fire has been repairing in T446 and T447 all iteration. It was
+repaired at the instrument, not pinned: the location is now supplied by the caller and a value
+that does not resolve inside the checked-out tree is `exit 3`, never a skipped case. Measured
+after the repair: `deadOccurrences=108`, frontier `11 == 11`. See §4.
 
 ---
 
