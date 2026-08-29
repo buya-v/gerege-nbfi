@@ -1,0 +1,67 @@
+=== R01.1 clock
+           db_utc           |              pg               
+----------------------------+-------------------------------
+ 2026-08-29 00:41:34.359915 | 18.3 (Debian 18.3-1.pgdg13+1)
+(1 row)
+
+=== R01.2 all columns of acc_gl_journal_entry, ordinal order
+ ordinal_position |          column_name          |          data_type          | is_nullable 
+------------------+-------------------------------+-----------------------------+-------------
+                1 | id                            | bigint                      | NO
+                2 | account_id                    | bigint                      | NO
+                3 | office_id                     | bigint                      | NO
+                4 | reversal_id                   | bigint                      | YES
+                5 | currency_code                 | character varying           | NO
+                6 | transaction_id                | character varying           | NO
+                7 | loan_transaction_id           | bigint                      | YES
+                8 | savings_transaction_id        | bigint                      | YES
+                9 | client_transaction_id         | bigint                      | YES
+               10 | reversed                      | boolean                     | NO
+               11 | ref_num                       | character varying           | YES
+               12 | manual_entry                  | boolean                     | NO
+               13 | entry_date                    | date                        | NO
+               14 | type_enum                     | smallint                    | NO
+               15 | amount                        | numeric                     | NO
+               16 | description                   | character varying           | YES
+               17 | entity_type_enum              | smallint                    | YES
+               18 | entity_id                     | bigint                      | YES
+               19 | created_by                    | bigint                      | NO
+               20 | last_modified_by              | bigint                      | NO
+               21 | created_date                  | timestamp without time zone | YES
+               22 | lastmodified_date             | timestamp without time zone | YES
+               23 | is_running_balance_calculated | boolean                     | NO
+               24 | office_running_balance        | numeric                     | NO
+               25 | organization_running_balance  | numeric                     | NO
+               26 | payment_details_id            | bigint                      | YES
+               27 | share_transaction_id          | bigint                      | YES
+               28 | transaction_date              | date                        | YES
+               29 | created_on_utc                | timestamp with time zone    | NO
+               30 | last_modified_on_utc          | timestamp with time zone    | NO
+               31 | submitted_on_date             | date                        | NO
+(31 rows)
+
+=== R01.3 column count
+ column_count 
+--------------
+           31
+(1 row)
+
+=== R01.4 I-5 re-measurement
+ total | modified | untouched | null_lm | negative 
+-------+----------+-----------+---------+----------
+   109 |       91 |        18 |       0 |        0
+(1 row)
+
+=== R01.5 flag vs modified cross-tab
+ is_running_balance_calculated | modified | count 
+-------------------------------+----------+-------
+ f                             | f        |    18
+ t                             | t        |    91
+(2 rows)
+
+=== R01.6 legacy pair nullness / created_by / last_modified_by
+ cd_null | lmd_null | lmb_2 | cb_1 | cb_2 | refnum_null | reversed_true 
+---------+----------+-------+------+------+-------------+---------------
+     109 |      109 |   109 |   91 |   18 |          72 |             8
+(1 row)
+
