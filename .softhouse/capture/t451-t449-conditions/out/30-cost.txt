@@ -1,0 +1,8 @@
+N = 9 runs each, median reported
+  git ls-tree -r --name-only main  (source 3)    median 0.0911s  min 0.0878s  max 0.0930s
+  git ls-tree -r --name-only main -- .softhouse/handoff (source 2) median 0.0402s  min 0.0345s  max 0.0430s
+  NET ADDITIONAL cost of widening 2 -> 3         +0.0509s
+  main_tree() in-process, cache cleared each run median 0.1009s  min 0.0614s  max 0.1024s
+
+  paths tracked on main today: 10088   (note: 10088 path(s) tracked on main were scanned for a path component naming the id)
+  paths_naming() per task over 10088 paths: 0.00324s

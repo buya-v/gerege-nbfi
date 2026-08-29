@@ -1,0 +1,27 @@
+fixture at /tmp/t451/fixture  (dispatch 40092fbbc68cf73d6210505aa051ec801aabb58e)
+  ref * main
+  ref   softhouse/T351-progress-accounting-renamed
+  ref   softhouse/T431-t407-conditions
+  ref   softhouse/T900-work
+  ref   softhouse/T946-t944-conditions
+  ref   softhouse/T950-decoy-1
+  ref   softhouse/T950-decoy-2
+  ref   softhouse/T950-decoy-3
+  ref   softhouse/T950-decoy-4
+  ref   softhouse/T950-decoy-5
+  ref   softhouse/T950-decoy-6
+  ref   softhouse/T950-decoy-7
+  ref   softhouse/T950-decoy-8
+  ref   softhouse/T960-work
+  ref   softhouse/T970-nothing
+  ref   softhouse/T981-review-t980
+  ref   softhouse/T990-shared-file
+  ref   softhouse/rescued-t339-base-20260828-080001
+  ref   softhouse/rescued-t900-work-20260829
+  ref   softhouse/rescued-t901-work-20260829
+  ref   softhouse/rescued-t945-t944-conditions-20260829
+  ref   softhouse/rescued-t946-t944-conditions-20260829
+  ref   softhouse/rescued-t960-base-20260829
+  ref   softhouse/rescued-t983-review-t982-20260829
+  ref   softhouse/rescued-t990-shared-file-20260829
+  ref   softhouse/zz-t950-real

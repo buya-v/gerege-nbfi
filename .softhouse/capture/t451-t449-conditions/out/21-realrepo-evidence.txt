@@ -1,0 +1,39 @@
+live refs 705 ; ids nameable from a head 218 ; (id, other-ref) pairs 84
+
+A. CARRY under the SHIPPED code -- these already REFUSE today: 15
+   T100   ref=softhouse/T101-review-t100                     ref-owner=T101   FOREIGN
+        commit c7eaa452d on refs/heads/softhouse/T101-review-t100, subject "T101: independent review of T100's G-8 rewrite — REJECTED on three sentences"
+   T108   ref=softhouse/T131-review-t108                     ref-owner=T131   FOREIGN
+        commit 188cdb26d on refs/heads/softhouse/T131-review-t108, subject 'T131: MICRO-FIX on T108 — the ruling holds, and the Bash-tool grep has a SECOND '
+   T109   ref=softhouse/T127-review-t109                     ref-owner=T127   FOREIGN
+        commit c4eff9de6 on refs/heads/softhouse/T127-review-t109, subject 'T127: MICRO-FIX on T109 — the fix is right, and its headline class-sweep finding'
+   T21    ref=softhouse/T21-pass3-audit-rescued              ref-owner=T21    own
+        path .softhouse/capture/out/t21-probe-invariants-output.txt in the diff of refs/heads/softhouse/T21-pass3-audit-rescued vs main
+   T22    ref=softhouse/T22-pathb-audit-rescued              ref-owner=T22    own
+        path .softhouse/capture/pathb/t22-probe/capture.sh in the diff of refs/heads/softhouse/T22-pathb-audit-rescued vs main
+   T268   ref=softhouse/t281-review-t268                     ref-owner=T281   FOREIGN
+        commit b4272ff42 on refs/heads/softhouse/t281-review-t268, subject "T281 REJECTED: T268's F-3 widening restored the fail-open it was fixing — a zero"
+   T268   ref=softhouse/t286-t268-retry                      ref-owner=T286   FOREIGN
+        commit 73483f582 on refs/heads/softhouse/t286-t268-retry, subject 'T286: T268 traded one fail-open for another, and there was a third under the rep'
+   T351   ref=softhouse/T369-review-t351                     ref-owner=T369   FOREIGN
+        commit e10e3f070 on refs/heads/softhouse/T369-review-t351, subject 'T369: independent review of T351 -- REJECTED (2 numbers, 1 fail-open)'
+   T351   ref=softhouse/T370-t351-retry                      ref-owner=T370   FOREIGN
+        commit 4925bbef8 on refs/heads/softhouse/T370-t351-retry, subject 'T370: the retry of T351 -- the headline divided Go lines by Java lines, and the '
+   T370   ref=softhouse/T376-review-t370                     ref-owner=T376   FOREIGN
+        commit 0a674953e on refs/heads/softhouse/T376-review-t370, subject 'T376: independent review of T370 -- REJECTED, the bar exits 2 on its own branch'
+   T38    ref=softhouse/T38-dec1-v7-pass2                    ref-owner=T38    own
+        commit 52c822858 on refs/heads/softhouse/T38-dec1-v7-pass2, subject 'T38 pass 2: handoff - independent re-verification of revision 7; two stale claim'
+   T38    ref=softhouse/T38-dec1-v7                          ref-owner=T38    own
+        commit 7447705f8 on refs/heads/softhouse/T38-dec1-v7, subject 'T38: handoff for DEC-1 revision 7 - periodRatio (P0-T34-1), pre-disbursement bal'
+   T428   ref=softhouse/rescued-t428-t421tree-20260828-140005 ref-owner=T428   own
+        path .softhouse/capture/t421-t406-conditions/out/T428-S01-counters.psql in the diff of refs/heads/softhouse/rescued-t428-t421tree-20260828-140005 vs m
+   T65    ref=softhouse/T67-review-t65                       ref-owner=T67    FOREIGN
+        commit 2186b4e18 on refs/heads/softhouse/T67-review-t65, subject 'T67: independent adversarial review of T65 — REJECTED (P0 0, P1 3, P2 6)'
+   T78    ref=softhouse/T79-review-t78                       ref-owner=T79    FOREIGN
+        commit a14875a45 on refs/heads/softhouse/T79-review-t78, subject 'T79: independent review of T78 -- REJECTED on three textual findings; the closed'
+
+B. CARRY only under the PROPOSED `anywhere` -- what the patch would ADD: 0
+
+C. name-only under both: 69
+
+FOREIGN-OWNED refs blocking a demotion:  shipped 10 of 15   proposed adds 0 of 0
