@@ -1,0 +1,36 @@
+=== 0. THE TREE BEING GRADED ===================================================
+HEAD                                  = 64b730bad7d797bf7dde30c05681c88ae6a9e883
+git status --porcelain (must be empty):
+git rev-parse HEAD:<harness>          = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object --no-filters <harness>= d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object (no flag)  <harness>  = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+ls-files -v, entries NOT in state H   : []
+
+=== 1. THE RUN =================================================================
+command: bash .softhouse/conformance.sh   (bash, not sh, not zsh)
+EXIT = 0
+
+=== 2. PROBE PRESENCE BEFORE PROBE VALUE =======================================
+grep -c 'probe = '  -> 1      <-- PRESENCE, read first
+probe value         -> up
+
+=== 3. VERDICT =================================================================
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== 4. THIS GUARD'S OWN OUTPUT =================================================
+    1:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    5:conformance:   HARNESS-TEXT CENSUS: HEAD 64b730bad7d797bf7dde30c05681c88ae6a9e883; tracked paths whose materialised bytes
+    8:conformance:   RECOMPUTE: 10364 HEAD entries re-hashed from their bytes on disk;
+    13:conformance:   this harness .softhouse/conformance.sh: committed d1c45afc1c037135896bd52b4ee90c47c6843f8b / on disk d1c45afc1c037135896bd52b4ee90c47c6843f8b
+    21:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+    360:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+
+=== 5. GUARD COST ==============================================================
+    207:conformance:   GUARD-COST CENSUS: 16 guards timed, 72s total wall,
+    210:conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
+    231:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+
+=== 6. ANY GUARD REFUSAL =======================================================
+    [nothing listed above = no guard refused]
+
+full transcript: /tmp/T466-FINAL-BAR.log

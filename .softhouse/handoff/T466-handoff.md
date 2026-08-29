@@ -349,8 +349,53 @@ the scratch, and is re-runnable from `/tmp/T466-residue.sh`'s recorded contents.
 
 ## 9. FINAL BAR ON THE COMMITTED TREE
 
-`bash .softhouse/conformance.sh` — `bash`, not `sh`/`zsh`. Full transcript in
-`evidence/90-FINAL-BAR.txt`; the probe-presence check is shown **before** the probe's value is
-read, per the rule.
+`bash .softhouse/conformance.sh` — `bash`, not `sh`/`zsh`. Driver:
+`instruments/finalbar.sh` (derives the repo root from its own location; spells no absolute path).
+Summary in `evidence/90-FINAL-BAR.txt`, full 884-line transcript in
+`evidence/91-FINAL-BAR-full-transcript.log`. **The probe line's PRESENCE is counted before its
+value is read.**
 
-<!-- FINALBAR -->
+Run on commit `64b730ba`, the commit that carries the change. The commit that adds this section
+does **not** touch `.softhouse/conformance.sh`, so the harness text graded below —
+blob `d1c45afc1c037135896bd52b4ee90c47c6843f8b` — is byte-identical on the branch tip. Recompute
+it yourself with `git rev-parse HEAD:.softhouse/conformance.sh`, and the right-hand id with
+`git hash-object --no-filters -- .softhouse/conformance.sh`, **with the flag**.
+
+```
+=== 0. THE TREE BEING GRADED ===================================================
+HEAD                                  = 64b730bad7d797bf7dde30c05681c88ae6a9e883
+git status --porcelain (must be empty):
+git rev-parse HEAD:<harness>          = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object --no-filters <harness>= d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object (no flag)  <harness>  = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+ls-files -v, entries NOT in state H   : []
+
+=== 1. THE RUN =================================================================
+command: bash .softhouse/conformance.sh   (bash, not sh, not zsh)
+EXIT = 0
+
+=== 2. PROBE PRESENCE BEFORE PROBE VALUE =======================================
+grep -c 'probe = '  -> 1      <-- PRESENCE, read first
+probe value         -> up
+
+=== 3. VERDICT =================================================================
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+=== 4. THIS GUARD'S OWN OUTPUT =================================================
+    1:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    5:conformance:   HARNESS-TEXT CENSUS: HEAD 64b730bad7d797bf7dde30c05681c88ae6a9e883; …
+    8:conformance:   RECOMPUTE: 10364 HEAD entries re-hashed from their bytes on disk;
+   13:conformance:   this harness .softhouse/conformance.sh: committed d1c45afc… / on disk d1c45afc…
+   21:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.]
+
+=== 5. GUARD COST ==============================================================
+  207:conformance:   GUARD-COST CENSUS: 16 guards timed, 72s total wall,
+  210:conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
+  231:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+
+=== 6. ANY GUARD REFUSAL =======================================================
+    [nothing listed above = no guard refused]
+```
+
+`16 guards timed` is unchanged — no guard was added or removed, only made to do more work. The
+recompute covered **10,364** HEAD entries at a cost of **4 s** against its new **300 s** ceiling.
