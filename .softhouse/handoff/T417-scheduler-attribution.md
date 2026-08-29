@@ -266,14 +266,18 @@ Note what is **not** excluded: `m_external_event`, job 36's payload table, is **
 
 ## Bar figures
 
-`bash .softhouse/conformance.sh` on the **committed** tree `7626cece`, with `bash`, never `sh`. Transcript `out/BAR-1-clean-tree-7626cece.txt`. All scratch directories were under `/tmp` (`$TMPDIR/t417-drive-$$`, `$TMPDIR/t417-wrap-$$`) and are removed by a trap — nothing nested inside the repository.
+`bash .softhouse/conformance.sh` on the **committed** tree `7626cece`, with `bash`, never `sh`. Transcripts `out/BAR-1-clean-tree-7626cece.txt` and `out/BAR-2-final-head-84253f61.txt`. All scratch directories were under `/tmp` (`$TMPDIR/t417-drive-$$`, `$TMPDIR/t417-wrap-$$`) and are removed by a trap — nothing nested inside the repository.
+
+**Run twice.** `out/BAR-1-clean-tree-7626cece.txt` (tree `7626cece`, before the handoff landed) and
+**`out/BAR-2-final-head-84253f61.txt`** (the final content head, `84253f61`, tree clean). Both **EXIT 0**;
+both figures below are identical across the two runs and are quoted from BAR-2.
 
 | | |
 |---|---|
-| **EXIT** | **0** |
+| **EXIT** | **0** (both runs) |
 | **`probe = ` line PRINTED AT ALL** (presence tested BEFORE value) | **YES — `grep -c 'probe = '` = 1** |
-| its value | `reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = **up**` (line 201) |
-| **`VERDICT:` line** | `VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.` (line 713) |
+| its value | `reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = **up**` |
+| **`VERDICT:` line** | `VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.` |
 
 Pins, every one read from that transcript:
 
