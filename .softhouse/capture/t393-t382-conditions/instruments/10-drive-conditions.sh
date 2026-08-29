@@ -215,11 +215,30 @@ run_case f4a-control-commit-mutate-forkobs mut_commit_mutate_forkobs           1
 run_case f4b-move-fork-constant          mut_move_fork_constant                0 2
 run_case f3-commit-mutate-nonobs         mut_commit_mutate_nonobs              0 1
 run_case f3b-commit-mutate-nonobs-laundered mut_commit_mutate_nonobs_laundered 0 1
-# DISCLOSED RESIDUAL, driven so the boundary statement is a measurement and not a hope.
-# Expected UNDETECTED at BOTH refs: a committed mutation of a post-fork observation whose
-# manifest row is rewritten in the same commit has no baseline older than HEAD anywhere in
-# this repository. The docstring says so; this row is the evidence that it says so truly.
-run_case f1-13b-postfork-laundered-RESIDUAL mut_commit_mutate_postfork_laundered 0 0
+# T433 / C-T423-1 -- THIS ROW USED TO EXPECT `0 0`, AND ITS STATED REASON WAS FALSE.
+# The three lines below are a VERBATIM QUOTE of the false text, kept so the next reader sees
+# exactly what was wrong rather than a negation silently removed. Each is tagged
+# [QUOTED-FALSE-CLAIM] so a guard can tell a quotation from an assertion by grep alone --
+# without the tag, any check for "this file no longer asserts the impossibility" would fire on
+# the correction itself and would have to be deleted, which is how corrections get lost.
+# [QUOTED-FALSE-CLAIM] "Expected UNDETECTED at BOTH refs: a committed mutation of a post-fork
+# [QUOTED-FALSE-CLAIM]  observation whose manifest row is rewritten in the same commit has no
+# [QUOTED-FALSE-CLAIM]  baseline older than HEAD anywhere in this repository. The docstring
+# [QUOTED-FALSE-CLAIM]  says so; this row is the evidence that it says so truly."
+#
+# There IS such a baseline, and it was always in this repository: THE BLOB AT THE COMMIT THAT
+# FIRST ADDED each observation, reachable with `git log --diff-filter=A -- <path>`. T423 found
+# the false claim, the driver re-measured it, and T433 swept the WHOLE 632 -- two independent
+# derivations of the birth commit agreeing 632/632, all 632 born STRICTLY OLDER than the tip,
+# 0 born at the tip, 631 still byte-identical to their birth blob, and exactly one legitimate
+# re-capture (out/A2-370-db-ledger-state.txt) adjudicated by digest.
+# See .softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt.
+#
+# T433 landed that comparison as ARM F, section 8 of verify-capture-integrity.py. So this
+# case is NO LONGER A RESIDUAL: it is now CAUGHT at the AFTER ref and the expectation is
+# `0 1`. A `0 0` here would mean ARM F had been removed or defeated, and this row is the
+# tripwire that says so.
+run_case f1-13b-postfork-laundered-CLOSED-BY-ARM-F mut_commit_mutate_postfork_laundered 0 1
 
 echo
 echo "############ MATRIX"
@@ -232,7 +251,10 @@ if [ "$FAILURES" -ne 0 ]; then
   exit 1
 fi
 echo "DRIVE VERDICT: PASS — every case was RED at $BEFORE and GREEN at $AFTER, except the"
-echo "two rows that are deliberately expected to be unchanged: the f4a control (ARM A caught"
-echo "it at both refs) and the f1-13b disclosed residual (undetected at both, which is what"
-echo "the boundary statement in verify-capture-integrity.py says)."
+echo "f4a control, which is deliberately expected to be unchanged (ARM A caught it at both"
+echo "refs). T433 / C-T423-1: the f1-13b row USED TO BE the second exception — 'the disclosed"
+echo "residual, undetected at both refs, which is what the boundary statement in"
+echo "verify-capture-integrity.py says'. That boundary statement was FALSE. The baseline it"
+echo "said did not exist is the blob at the commit that FIRST ADDED each observation, and"
+echo "T433 landed it as ARM F. f1-13b is now expected 0 -> 1, CAUGHT, like the rest."
 exit 0

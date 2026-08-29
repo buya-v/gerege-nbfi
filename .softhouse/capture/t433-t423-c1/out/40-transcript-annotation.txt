@@ -1,0 +1,21 @@
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/03-runall-after-fix.txt
+  annotated                 .softhouse/capture/t393-t382-conditions/out/05-executable-diff.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-control-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-09-symlink-identical-bytes-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-13-commit-mutate-postfork-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-13b-postfork-laundered-RESIDUAL-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-14-commit-delete-postfork-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-15-commit-add-fabricated-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f1-16-untracked-fabricated-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f3-commit-mutate-nonobs-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f3b-commit-mutate-nonobs-laundered-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f4a-control-commit-mutate-forkobs-AFTER.txt
+  skip (already annotated)  .softhouse/capture/t393-t382-conditions/out/drive/case-f4b-move-fork-constant-AFTER.txt
+  skip (already annotated)  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+
+  files matching the claim in scope : 14
+  annotated this run                : 1
+  already annotated                 : 13
+T433 TRANSCRIPT ANNOTATION: PASS — every file in scope that echoes the claim carries the
+correction in the same file, so a reader who greps the false sentence finds the refutation
+without having to know it exists.

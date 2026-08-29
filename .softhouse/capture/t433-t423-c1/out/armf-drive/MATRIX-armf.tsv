@@ -1,0 +1,17 @@
+case	ref	sec10_rc	verdict	armf_named	armf_at_tip	armf_moved	expected_rc	result
+control	BEFORE	0	PASS	0	0	0	0	as expected
+control	AFTER	0	PASS	0	0	0	0	as expected
+residual-laundered	BEFORE	0	PASS	0	0	0	0	as expected
+residual-laundered	AFTER	1	FAIL	1	0	0	1	as expected
+adjudicated-further	BEFORE	0	PASS	0	0	0	0	as expected
+adjudicated-further	AFTER	1	FAIL	0	0	1	1	as expected
+adjudicated-revert	BEFORE	0	PASS	0	0	0	0	as expected
+adjudicated-revert	AFTER	1	FAIL	0	0	1	1	as expected
+born-at-tip-iv-a	BEFORE	0	PASS	0	0	0	0	as expected
+born-at-tip-iv-a	AFTER	0	PASS	0	1	0	0	as expected
+rename-mutate-iv-b	BEFORE	0	PASS	0	0	0	0	as expected
+rename-mutate-iv-b	AFTER	2	REFUSED	0	0	0	2	as expected
+rename-rewrite-iv-b2	BEFORE	0	PASS	0	0	0	0	as expected
+rename-rewrite-iv-b2	AFTER	0	PASS	0	1	0	0	as expected
+vacuity-armf-grades-0	BEFORE	0	PASS	0	0	0	0	as expected
+vacuity-armf-grades-0	AFTER	1	FAIL	0	10	0	1	as expected

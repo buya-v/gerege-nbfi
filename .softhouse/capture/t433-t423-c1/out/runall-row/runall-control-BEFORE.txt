@@ -1,0 +1,875 @@
+############ A2-11 independent review of A2-7 — full transcript
+generated 2026-08-29T03:38:03Z
+
+READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
+exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
+that should hold. Every failing assertion is printed by name, and the VERDICT block at
+the end compares every section against the exit code adjudicated for it.
+
+############ HISTORY OF THIS FILE — three corrections, each by measurement
+
+T270. Section 8 used to run a SUPERSEDED prover that could not fail. Bytes preserved,
+execution stopped; the successor is READ from the register. See section 8.
+
+T270 also recorded that sections 2, 4, 5, 6 and 7 ABORTED with a traceback, because
+enumerate-corpus.py:22, verify-manifest-independently.py:21, audit-float.py:18,
+prove-resolve7-float-red.py:33 and prove-a2-7-guards-are-falsifiable.py:19 each
+hard-coded ROOT/RIG to the RETIRED worktree path .../agent-a3ac3d56d665ff7da. T270
+left them alone, calling the repair a separate decision.
+
+T357 MADE THAT DECISION AND REPAIRED THEM. Each of the five now derives its root from
+__file__ (parents[3] IS the checkout root), with an A2_11_ROOT env override. The
+substitution was chosen because it is OUTPUT-NEUTRAL in the worktree that produced the
+committed evidence — in agent-a3ac3d56d665ff7da, parents[3] resolved to exactly that
+path — so it RESTORES re-derivability rather than altering the record. That is a
+MEASUREMENT, not a hope: T357 diffed the regenerated transcript against the committed
+one section by section, and sections 1, 2, 3, 6 and 7 came back IDENTICAL, including
+section 2's three findings against A2-7. Sections 4 and 5 differ, for a stated reason
+given at each site: both enumerate the CURRENT capture rig, which has grown since A2-7.
+Section 8 differs because T270 changed it. Evidence:
+.softhouse/capture/t357-a2-11-section1-red/out/40-section-diff-committed-vs-rootfix.txt
+
+T357 also corrected the SECTION 1 LABEL, which read '[ORACLE] live re-observation' and
+was wrong twice: check-shape.py imports only json, sys, decimal and pathlib and replays
+committed bytes under obs/. It never contacts the oracle. In a program that grades
+provenance, a section advertising an offline replay as a live observation is a false
+provenance claim. The corrected label is now itself PROVED, in section 9, from the
+AST — not swapped for a second unchecked adjective.
+
+############ 1. contract shape, replayed OFFLINE from A2-11's committed obs/ bytes
+############    [NO ORACLE CONTACTED — proved from the AST in section 9]
+
+EXPECTED RC 1. This section is PERMANENTLY AND CORRECTLY RED, with three named
+failures, and has been since it was committed on 2026-08-21. They are the executable
+form of A2-11's finding F-1 / patterns.md P-46: A2-7 printed three FABRICATED lines
+claiming the collection-valued mapping fields come back 'present with the value null',
+reasoned a contract rule from them, and fed that rule to the coder A2-8. The lines are
+not in any capture. The oracle omits a null field on the read path. Section 9
+ADJUDICATES this RED and goes red itself if a FOURTH failure ever appears, or if any
+of the three ever disappears.
+
+=== (a) write/read field-name asymmetry on GET /loanproducts/46 ===
+  accountingMappings keys: ['fundSourceAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS  all nine WRITE names present in the POST body and NONE of them in the read
+  PASS  all nine READ names present in accountingMappings and NONE of them in the POST body
+  PASS      fundSourceAccountId (write, id 16) -> fundSourceAccount (read)  -- read id=16
+  PASS      incomeFromFeeAccountId (write, id 9) -> incomeFromFeeAccount (read)  -- read id=9
+  PASS      incomeFromPenaltyAccountId (write, id 10) -> incomeFromPenaltyAccount (read)  -- read id=10
+  PASS      incomeFromRecoveryAccountId (write, id 11) -> incomeFromRecoveryAccount (read)  -- read id=11
+  PASS      interestOnLoanAccountId (write, id 8) -> interestOnLoanAccount (read)  -- read id=8
+  PASS      loanPortfolioAccountId (write, id 4) -> loanPortfolioAccount (read)  -- read id=4
+  PASS      overpaymentLiabilityAccountId (write, id 6) -> overpaymentLiabilityAccount (read)  -- read id=6
+  PASS      transfersInSuspenseAccountId (write, id 17) -> transfersInSuspenseAccount (read)  -- read id=17
+  PASS      writeOffAccountId (write, id 13) -> writeOffAccount (read)  -- read id=13
+
+=== the read value is an OBJECT with exactly {id,name,glCode} ===
+  PASS    fundSourceAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromFeeAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromPenaltyAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    incomeFromRecoveryAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    interestOnLoanAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    loanPortfolioAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    overpaymentLiabilityAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    transfersInSuspenseAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS    writeOffAccount keys == {id,name,glCode}  -- ['glCode', 'id', 'name']
+  PASS  no 'type' key anywhere in accountingMappings
+  PASS  no 'usage' key anywhere in accountingMappings
+  PASS  no 'disabled' / 'manualEntriesAllowed' key anywhere in accountingMappings
+
+=== unmapped optional slots are ABSENT, not null ===
+  PASS    goodwillCreditAccount absent from accountingMappings
+  PASS    goodwillCreditAccount does not occur in the raw bytes at all
+  PASS    chargeOffExpenseAccount absent from accountingMappings
+  PASS    chargeOffExpenseAccount does not occur in the raw bytes at all
+  ... while the COLLECTION-valued mapping fields are PRESENT with value null:
+  FAIL    paymentChannelToFundSourceMappings present and null  -- '<absent>'
+  FAIL    feeToIncomeAccountMappings present and null  -- '<absent>'
+  FAIL    penaltyToIncomeAccountMappings present and null  -- '<absent>'
+
+=== product 22: sparse/slot-keyed, one extra key vs 46 ===
+  22 keys: ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    22 == 46's keys plus exactly {goodwillCreditAccount}
+  PASS    22 goodwillCreditAccount is gl 14 / glCode 50200  -- {'id': 14, 'name': 'Goodwill Credit', 'glCode': '50200'}
+  PASS    22 paymentChannelToFundSourceMappings is a non-empty LIST of {paymentType,fundSourceAccount}  -- [{"paymentType": {"id": 1, "name": "Money Transfer"}, "fundSourceAccount": {"id": 16, "name": "Fund Source Alternate", "glCode": "10300"}}]
+  PASS    22 DEFAULT fundSourceAccount is gl 2 (the retyped one), override is gl 16  -- default={'id': 2, 'name': 'Fund Source', 'glCode': '10100'}, override={'id': 16, 'name': 'Fund Source Alternate', 'glCode': '10300'}
+
+=== product 28: accrual shape, thirteen keys, three receivables ===
+  28 keys (13): ['fundSourceAccount', 'goodwillCreditAccount', 'incomeFromFeeAccount', 'incomeFromPenaltyAccount', 'incomeFromRecoveryAccount', 'interestOnLoanAccount', 'loanPortfolioAccount', 'overpaymentLiabilityAccount', 'receivableFeeAccount', 'receivableInterestAccount', 'receivablePenaltyAccount', 'transfersInSuspenseAccount', 'writeOffAccount']
+  PASS    28 accountingRule is accrual periodic  -- {'id': 3, 'code': 'accountingRuleType.accrual.periodic', 'value': 'ACCRUAL PERIODIC'}
+  PASS    28 has exactly thirteen keys  -- 13
+  PASS    28 carries the three receivables
+
+=== gl 2 is INCOME at the contract boundary, but products serve it silently ===
+  PASS    GET /glaccounts/2 glCode 10100, name 'Fund Source', type INCOME  -- 10100 / Fund Source / {'id': 4, 'code': 'accountType.income', 'value': 'INCOME'}
+  PASS    nameDecorated is '....Fund Source' (four dots per level)  -- '....Fund Source'
+  PASS    the GL read DOES expose type and usage as {id,code,value} objects
+  PASS    'hierarchy' is NOT returned by the GL REST read  -- ['description', 'disabled', 'glCode', 'id', 'manualEntriesAllowed', 'name', 'nameDecorated', 'parentId', 'tagId', 'type', 'usage']
+
+=== how many of the 26 products carry gl 2 in the DEFAULT FUND_SOURCE slot? ===
+  product ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 46]
+  PASS    the list holds 26 products, ids 1-24, 27, 28, 46  -- 27 products
+
+FAILURES: 3
+  -   paymentChannelToFundSourceMappings present and null
+  -   feeToIncomeAccountMappings present and null
+  -   penaltyToIncomeAccountMappings present and null
+exit=1
+
+############ 2. corpus enumeration at A2-7's fork point (offline, counts its skips)
+############    EXPECTED RC 1 — asserts A2-7's claims; three of them are refuted.
+############    Reproduces the committed transcript IDENTICALLY after T357's root fix.
+=== corpus at the fork sha 12a7f8d9a3af ===
+  327 files under out/, by extension: {'http': 108, 'json': 108, 'status': 108, 'txt': 3}
+
+=== every HTTP request recorded in the corpus, by method + endpoint family ===
+  .http files enumerated : 108
+  undecodable (NAMED)    : 0 []
+  no request line (NAMED): 0 []
+  parsed                 : 108
+  PASS  every .http file parsed — nothing was silently skipped
+          parsed=108 of 108
+    DELETE /glaccounts/{id}                               7
+    GET    /financialactivityaccounts                     1
+    GET    /financialactivityaccounts/template            1
+    GET    /glaccounts                                    1
+    GET    /glaccounts/template                           1
+    GET    /glaccounts/{id}                               6
+    GET    /journalentries                                3
+    POST   /financialactivityaccounts                     7
+    POST   /glaccounts                                    37
+    POST   /loanproducts                                  21
+    POST   /loans                                         4
+    POST   /loans/{id}                                    8
+    POST   /loans/{id}/transactions                       1
+    PUT    /financialactivityaccounts/{id}                1
+    PUT    /glaccounts/{id}                               9
+
+  POST .../loanproducts : 21
+  GET  .../loanproducts*: 0  []
+  FAIL  CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+          count=21: ['A2-prod-060-cash-with-channel-override.http', 'A2-prod-061-cash-no-override.http', 'A2-prod-062-map-header-account.http', 'A2-prod-063-map-wrong-type.http', 'A2-prod-064-cash-no-mappings.http', 'A2-prod-065-map-missing-account.http', 'A2-prod-065b-map-missing-account.http', 'A2-prod-066-bad-paymenttype.http', 'A2-prod-067-duplicate-channel.http', 'A2-prod-068-accrual-missing-receivables.http', 'A2-prod-069-accrual-complete.http', 'attempt1-A2-prod-060-cash-with-channel-override.http', 'attempt1-A2-prod-061-cash-no-override.http', 'attempt1-A2-prod-062-map-header-account.http', 'attempt1-A2-prod-063-map-wrong-type.http', 'attempt1-A2-prod-064-cash-no-mappings.http', 'attempt1-A2-prod-065-map-missing-account.http', 'attempt1-A2-prod-066-bad-paymenttype.http', 'attempt1-A2-prod-067-duplicate-channel.http', 'attempt1-A2-prod-068-accrual-missing-receivables.http', 'attempt1-A2-prod-069-accrual-complete.http']
+  PASS  CLAIM 1b — the corpus held ZERO GET on /loanproducts of any form
+          found 0
+
+  GET /glaccounts/{id}  : 6  ['A2-012-read-header-asset', 'A2-013-read-child-asset-detail', 'A2-015-read-grandchild', 'A2-018-read-level3-detail', 'A2-133-read-after-updates', 'A2-135-read-after-delete']
+  FAIL  CLAIM 2a — exactly four GET /glaccounts/{id} existed
+          count=6
+      A2-012-read-header-asset.http            glCode=10000 type=ASSET
+      A2-013-read-child-asset-detail.http      glCode=10100 type=ASSET
+      A2-015-read-grandchild.http              glCode=None type=None
+      A2-018-read-level3-detail.http           glCode=10201 type=ASSET
+      A2-133-read-after-updates.http           glCode=19999 type=ASSET
+      A2-135-read-after-delete.http            glCode=None type=None
+      bodies that would not parse (NAMED): 0 []
+  FAIL  CLAIM 2b — all four are ASSET
+          {'A2-012-read-header-asset.http': ('10000', 'ASSET'), 'A2-013-read-child-asset-detail.http': ('10100', 'ASSET'), 'A2-015-read-grandchild.http': (None, None), 'A2-018-read-level3-detail.http': ('10201', 'ASSET'), 'A2-133-read-after-updates.http': ('19999', 'ASSET'), 'A2-135-read-after-delete.http': (None, None)}
+
+=== CLAIM 3 — distinct GL-code-shaped tokens across ALL out/ bytes at the fork sha ===
+  files read: 327   undecodable (NAMED): 0 []
+  distinct 5-digit tokens: 24 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '19999', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99003', '99008', '99010', '99999']
+  A2-150's acc_gl_account gl_code column: 21 -> ['10000', '10100', '10200', '10201', '10300', '10400', '10500', '19998', '20000', '20100', '30000', '40000', '40100', '40200', '40300', '40400', '50000', '50100', '50200', '99008', '99010']
+  PASS  A2-150 holds exactly 21 gl_code values
+          21
+  tokens present in out/ but NOT live accounts: ['19999', '99003', '99999']
+  live accounts never mentioned in out/ text  : []
+  PASS  CLAIM 3 — 24 distinct tokens, 3 of them non-accounts, 21 == the dump's 21 rows
+          tokens=24 extra=['19999', '99003', '99999'] missing=[]
+
+FAILURES: 3
+  - CLAIM 1a — the corpus held ELEVEN POST /loanproducts
+  - CLAIM 2a — exactly four GET /glaccounts/{id} existed
+  - CLAIM 2b — all four are ASSET
+exit=1
+
+############ 3. double-entry in INTEGER MINOR UNITS (offline)   EXPECTED RC 0
+=== A2-7's committed A2-235 (A2-235-je-after-recovery.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-7's committed A2-235 — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-7's committed A2-235 — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-7's committed A2-235 — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-7's committed A2-235 — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-11's live re-observation (a2-11-get-je-loan5.json) ===
+    je#11   DEBIT  1200000.000000 ->    120000000 minor units  gl 10201
+    je#12   CREDIT 1200000.000000 ->    120000000 minor units  gl 10300
+    je#14   CREDIT  200000.000000 ->     20000000 minor units  gl 10201
+    je#15   DEBIT   200000.000000 ->     20000000 minor units  gl 10300
+    je#16   DEBIT  1000000.000000 ->    100000000 minor units  gl 50100
+    je#17   CREDIT 1000000.000000 ->    100000000 minor units  gl 10201
+    je#18   DEBIT    50000.000000 ->      5000000 minor units  gl 10300
+    je#19   CREDIT   50000.000000 ->      5000000 minor units  gl 40400
+    entries: 8   DEBIT total = 245000000 minor units   CREDIT total = 245000000 minor units
+  PASS  A2-11's live re-observation — every amount is a WHOLE number of minor units (no sub-minor residue)
+          []
+  PASS  A2-11's live re-observation — DEBIT == CREDIT in INTEGER minor units
+          debit=245000000 credit=245000000 delta=0
+  PASS  A2-11's live re-observation — both sides are exactly 245,000,000 minor units == MNT 2,450,000
+          debit=245000000 credit=245000000
+  PASS  A2-11's live re-observation — the totals are Python ints, not floats or Decimals
+          int / int
+
+=== A2-7's capture and my live re-observation must agree entry for entry ===
+  PASS  same entry ids, sides, amounts and GL codes
+          A2-7=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+          A2-11=[(11, 'DEBIT', '1200000.000000', '10201'), (12, 'CREDIT', '1200000.000000', '10300'), (14, 'CREDIT', '200000.000000', '10201'), (15, 'DEBIT', '200000.000000', '10300'), (16, 'DEBIT', '1000000.000000', '50100'), (17, 'CREDIT', '1000000.000000', '10201'), (18, 'DEBIT', '50000.000000', '10300'), (19, 'CREDIT', '50000.000000', '40400')]
+
+FAILURES: 0
+exit=0
+
+############ 4. manifest, hashes RECOMPUTED not trusted (offline)
+############    EXPECTED RC 1 — and the reason is DRIFT, not a defect.
+
+This section pins counts taken AT A2-7'S MOMENT (a 571-entry manifest, 141 added over
+the 430 at the fork sha). The rig has been added to by many tasks since, so it now
+holds 1139, and the count assertions necessarily fail. That is the section measuring
+the passage of time, not finding a defect. READ THE THIRD ARM INSTEAD, which is the
+one that matters: of the 430 files that existed at the fork sha, 428 are still
+BYTE-IDENTICAL, 0 are missing, the current manifest agrees with disk on all 430 (no
+laundering), and the 2 that differ are NAMED — CAPTURE-PLAN.md and cap.sh, which are
+rig tooling and a plan document. NO CAPTURED ORACLE OBSERVATION under out/ or req/ has
+been mutated. If that ever stops being true, this section will say so by name.
+
+T374 / T362 F-1 -- READ THIS BEFORE TRUSTING THE SENTENCE ABOVE. It says so BY NAME,
+in printed text, and until T374 that was ALL it did. This section is adjudicated RED
+for drift, so the integrity arm is SATURATED: it cannot make the section any redder,
+and the VERDICT block below therefore could not see it. T362 PROVED that by appending
+one line to out/A2-000-glaccounts-preexisting.http -- section 4 printed DIFF for it BY
+NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it
+in a scratch clone before repairing it. THE REPAIR IS SECTION 10, which asks the
+integrity question where GREEN is the adjudicated value. Section 4 keeps the drift arm.
+
+T393 / T382 F-3 -- AND THIS SECTION STAYED SATURATED FOR 27 MORE FILES UNTIL NOW.
+T374 lifted the saturation for out/ and req/ ONLY. The fork-sha manifest holds 430
+entries; 403 are observations under out/ or req/, and the other 27 -- cap.sh,
+manifest.py, the mkreq*.py, the run-*.sh, the sql, and the red/green evidence that
+grades them: the scripts that PRODUCED the observations -- were still graded ONLY by
+this saturated arm. T382 drove it: mutate manifest.py, this section prints
+DIFF manifest.py BY NAME, byte-identical 428 -> 427, and run-all.sh still exits 0
+printing RUN-ALL VERDICT: PASS. T362's F-1 verbatim, one directory over.
+THE REPAIR IS SECTION 10's ARM E, which adjudicates those same 27 where GREEN is the
+expected value, with the two known differences (CAPTURE-PLAN.md, cap.sh) adjudicated
+BY DIGEST rather than only by name. SO: NOTHING IN THE FORK-SHA MANIFEST IS COVERED
+BY THIS SATURATED SECTION ALONE ANY MORE. What this section still uniquely carries is
+the DRIFT measurement (the pinned 571-vs-1139 counts) and the branch-shape arm, and
+those are the only reasons it is adjudicated RED.
+=== 0. the baseline is a LITERAL sha, and it is A2-7's real fork point (P-24) ===
+  PASS  prove-a2-7-additive.py hard-codes the literal sha
+  PASS  prove-a2-7-additive.py contains NO `git merge-base` anywhere
+          the only occurrence is the comment explaining why it is NOT used
+  PASS  A2-7's head b3f2d9b26c34 is present in this checkout (it is reachable from origin/main, so a fresh clone has it; the BRANCH NAME it replaced was local-only and a fresh clone did NOT)
+  PASS  the literal sha is a genuine ancestor of A2-7's head
+  PASS  A2-7's head carries exactly 2 commits past that sha
+          count=2
+
+=== 1. entry counts, from the manifest BLOBS themselves ===
+  PASS  manifest at the fork sha holds 430 entries
+          len=430
+  FAIL  manifest on disk today holds 571 entries
+          len=1139
+  FAIL  571 - 430 = 141 added
+          delta=709
+
+=== 2. nothing pre-existing was DROPPED or RENAMED ===
+  PASS  0 pre-existing entries dropped
+          dropped: []
+
+=== 3. RECOMPUTED: every pre-existing file's bytes today == its bytes at the fork sha ===
+      (recomputed from the git blob and from disk; the manifest's recorded hash is
+       used only as a THIRD cross-check, never as the source of truth)
+      enumerated 430 pre-existing entries
+      byte-identical fork-vs-today       : 428
+      DIFFER                             : 2
+      missing on disk (named, not skipped): 0 []
+      not in the fork tree (named)        : 0 []
+      current manifest hash agrees w/ disk: 430
+        DIFF CAPTURE-PLAN.md
+             fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
+             today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+        DIFF cap.sh
+             fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
+             today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+  FAIL  all 430 pre-existing files are byte-identical to the fork sha
+          identical=428 differ=2 missing=0 unreadable=0
+  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=430
+
+=== 4. the git diff agrees: exactly one pre-existing path modified ===
+  PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
+          non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
+
+FAILURES: 3
+  - manifest on disk today holds 571 entries
+  - 571 - 430 = 141 added
+  - all 430 pre-existing files are byte-identical to the fork sha
+exit=1
+
+############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0
+############    Enumerates the CURRENT rig, so its file list grows over time; the
+############    VERDICT is the flag count, and A2-7's two flagged files are stable.
+=== files A2-7 ADDED that are Python (from the literal fork sha, three dots) ===
+   .softhouse/capture/tierA-a2/analyze7.py
+   .softhouse/capture/tierA-a2/mkreq7.py
+   .softhouse/capture/tierA-a2/prove-a2-7-additive.py
+   .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py
+   .softhouse/capture/tierA-a2/resolve7.py
+
+=== (d) the Python A2-7 ADDED — this is the task's question ===
+  CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+            line 39    json.load(parse_float=decimal.Decimal)
+  CLEAN mkreq7.py                                                  loads=0 decimal_imported=False 
+  CLEAN prove-a2-7-additive.py                                     loads=0 decimal_imported=False 
+  FLAG  prove-mkreq7-guard-red.py                                  loads=4 decimal_imported=True json.load WITHOUT parse_float at lines 70,119,126
+            line 148   json.loads(parse_float=decimal.Decimal)
+  FLAG  resolve7.py                                                loads=2 decimal_imported=False json.load WITHOUT parse_float at lines 24,25
+  --- enumerated 5 files, 7 json.load call sites, 2 FLAGGED, 0 UNPARSEABLE
+
+=== context: EVERY .py in the A2 capture rig (A2-7's and everyone else's) ===
+  CLEAN a2-29-retype-path.py                                       loads=1 decimal_imported=True 
+            line 25    json.loads(parse_float=decimal.Decimal)
+  CLEAN analyze7.py                                                loads=1 decimal_imported=True 
+            line 39    json.load(parse_float=decimal.Decimal)
+  FLAG  audit-req-float-roundtrip.py                               loads=3 decimal_imported=True float() call at 73
+            line 65    json.loads(parse_float=hook('float'))
+            line 226   json.loads(parse_float=decimal.Decimal)
+            line 236   json.loads(parse_float=decimal.Decimal)
+  CLEAN census-a2-26.py                                            loads=1 decimal_imported=True 
+            line 49    json.loads(parse_float=D)
+  CLEAN census-json-float-siblings.py                              loads=0 decimal_imported=False 
+  CLEAN guard-parse-float-ast.py                                   loads=0 decimal_imported=False 
+  CLEAN manifest.py                                                loads=0 decimal_imported=False 
+  FLAG  mkje-a2-29.py                                              loads=2 decimal_imported=True float() call at 81,88
+            line 42    json.loads(parse_float=decimal.Decimal)
+            line 151   json.loads(parse_float=decimal.Decimal)
+  CLEAN mkreq-t275.py                                              loads=0 decimal_imported=False 
+  CLEAN mkreq.py                                                   loads=0 decimal_imported=False 
+  CLEAN mkreq2.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq3.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq4.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq5.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq6.py                                                  loads=0 decimal_imported=False 
+  CLEAN mkreq7.py                                                  loads=0 decimal_imported=False 
+  CLEAN prove-a2-7-additive.py                                     loads=0 decimal_imported=False 
+  CLEAN prove-cap-transport-red.py                                 loads=0 decimal_imported=False 
+  CLEAN prove-cap8-wire-bytes.py                                   loads=0 decimal_imported=False 
+  CLEAN prove-manifest-blind-red.py                                loads=0 decimal_imported=False 
+  CLEAN prove-manifest-red.py                                      loads=0 decimal_imported=False 
+  FLAG  prove-mkreq7-guard-red.py                                  loads=4 decimal_imported=True json.load WITHOUT parse_float at lines 70,119,126
+            line 148   json.loads(parse_float=decimal.Decimal)
+  CLEAN prove-parse-float-guard-red.py                             loads=0 decimal_imported=False 
+  FLAG  prove-quit-trap-a226.py                                    loads=0 decimal_imported=False FLOAT LITERAL at 73:0.4
+  FLAG  prove-quit-trap-cap.py                                     loads=0 decimal_imported=False FLOAT LITERAL at 128:0.4
+  FLAG  prove-quit-trap-cap9.py                                    loads=0 decimal_imported=False FLOAT LITERAL at 136:0.4
+  FLAG  prove-resolve8-float-red.py                                loads=2 decimal_imported=True float() call at 178
+            line 107   json.loads(parse_float=_Raw)
+            line 152   json.loads(parse_float=decimal.Decimal)
+  CLEAN prove-t275-reissue.py                                      loads=1 decimal_imported=False 
+            line 242   json.load(parse_float=str)
+  CLEAN rename1.py                                                 loads=0 decimal_imported=False 
+  FLAG  resolve7.py                                                loads=2 decimal_imported=False json.load WITHOUT parse_float at lines 24,25
+  CLEAN resolve8.py                                                loads=2 decimal_imported=True 
+            line 101   json.loads(parse_float=JsonNumber)
+            line 265   json.loads(parse_float=JsonNumber)
+  CLEAN show.py                                                    loads=1 decimal_imported=True 
+            line 14    json.load(parse_float=decimal.Decimal)
+  CLEAN sweep-t164-selfmatch-guards.py                             loads=0 decimal_imported=False 
+  CLEAN t275-mapping-diff.py                                       loads=0 decimal_imported=False 
+  FLAG  verify-provenance-a2-15.py                                 loads=1 decimal_imported=False json.load WITHOUT parse_float at lines 24
+  --- enumerated 35 files, 21 json.load call sites, 9 FLAGGED, 0 UNPARSEABLE
+
+SUMMARY
+  A2-7-added Python with a float defect: 2 ['.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/resolve7.py']
+  whole-rig Python with a float defect : 9 ['.softhouse/capture/tierA-a2/audit-req-float-roundtrip.py', '.softhouse/capture/tierA-a2/mkje-a2-29.py', '.softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py', '.softhouse/capture/tierA-a2/prove-quit-trap-a226.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap.py', '.softhouse/capture/tierA-a2/prove-quit-trap-cap9.py', '.softhouse/capture/tierA-a2/prove-resolve8-float-red.py', '.softhouse/capture/tierA-a2/resolve7.py', '.softhouse/capture/tierA-a2/verify-provenance-a2-15.py']
+  population audited (a zero here would be REFUSED, not passed): A2-7-added=5 whole-rig=35
+exit=0
+
+############ 6. resolve7.py P-25 defect, driven RED (offline)   EXPECTED RC 0
+=== CONTROL: A2-7's ACTUAL template has an INTEGER principal, so THIS run was unharmed ===
+  PASS  a2-7-loan-220.json principal is an int, not a decimal literal
+          principal=1200000 (int)
+  PASS  the RESOLVED body A2-7 actually POSTed carries principal 1200000 exactly
+          principal=1200000
+  PASS  no money value was corrupted by A2-7's own use of resolve7.py
+          the only resolved body in the corpus is a2-7-loan-220-resolved.json, integer principal
+
+=== RETRACTED HYPOTHESIS: 4057599.35 is NOT corrupted in the emitted bytes ===
+  template 4057599.35 -> emitted 4057599.35  (rc=0)
+  PASS  repr() round-trips this one byte-identically — my first RED was wrong
+          recorded, not deleted
+  but the double actually held in memory is 4057599.3500000000931322574615478515625
+  residue (double - exact) = 9.31322574615478515625E-11
+  PASS  the in-memory value IS a lossy double, even where the bytes survive
+
+=== RED, on the literal forms this program actually uses ===
+  template literal           bytes resolve7.py writes   identical  note
+  1200000.00                 1200000.0                  NO         MNT stored to 2 decimals (CLAUDE.md non-negotiable)
+  1200000.000000             1200000.0                  NO         exactly what Fineract's own numeric(19,6) emits
+  0.10                       0.1                        NO         ten mongo
+  12345678901234567890.12    1.2345678901234567e+19     NO         past double precision; MathContext(19,HALF_UP) permits 19 sig digits
+
+  PASS  RED: at least one realistic money literal is NOT byte-preserved
+          1200000.00 -> 1200000.0; 1200000.000000 -> 1200000.0; 0.10 -> 0.1; 12345678901234567890.12 -> 1.2345678901234567e+19
+  PASS  RED: resolve7.py accepts every one of them, exit 0 — it cannot refuse a float
+          there is no guard on the value type at all
+
+FAILURES: 0
+exit=0
+
+############ 7. are A2-7's 16 assertions falsifiable? (offline, sabotage)   EXPECTED RC 0
+=== BASELINE: the unmutated prover on an unmutated copy ===
+  exit=0  ok=16  FAIL=0   last line: 16 assertions, 0 failed
+  PASS  baseline: exit 0 and exactly 16 assertions, none failed
+
+=== SABOTAGE 1 — remove mkreq7.py's D-1 abort (the guard the prover exists for) ===
+  mkreq7.py's abort line: return 1
+  exit=1  FAIL=2
+     FAIL RED  a differing body makes it exit 1  rc=0
+     FAIL RED  it aborts before writing: a deleted sibling is NOT recreated  rc=0
+     FAILED: RED  a differing body makes it exit 1
+     FAILED: RED  it aborts before writing: a deleted sibling is NOT recreated
+  PASS  RED: removing the abort makes A2-7's prover FAIL (assertion is falsifiable)
+          exit=1 fails=2
+
+=== SABOTAGE 2 — make resolve7.py INVENT a value instead of refusing ===
+  exit=1  FAIL=4
+     FAIL RED  a response with no resourceId is refused, not guessed  rc=0
+     FAIL RED  the refusal says there is no observation to resolve from
+     FAIL GREEN an observed resourceId is substituted verbatim  rc=1 body={'clientId': 1, 'productId': 999999}
+     FAIL RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 999999}
+     FAILED: RED  a response with no resourceId is refused, not guessed
+     FAILED: RED  the refusal says there is no observation to resolve from
+     FAILED: GREEN an observed resourceId is substituted verbatim
+     FAILED: RED  it refuses to rewrite an existing resolved body with a different id
+  PASS  RED: an inventing resolve7.py makes the prover FAIL
+          exit=1 fails=4
+
+=== SABOTAGE 3 — drop parse_float from analyze7.py's CODE, leaving its docstring ===
+  NOTE: `parse_float=decimal.Decimal` appears TWICE in analyze7.py — once in the
+  module docstring (line 6) and once in the code (line 39). A2-7's assertion is a
+  substring search over the WHOLE FILE, so mutating only the code leaves it green.
+  exit=0  FAIL=0
+  PASS  KNOWN LIMIT: removing parse_float from the CODE leaves A2-7's assertion GREEN, because it greps the whole file including the docstring
+          exit=0 fails=0 — the assertion is real but is a source grep, not a behaviour test
+
+=== SABOTAGE 4 — the KNOWN-WEAK arm: analyze7.py's float guard is a SOURCE GREP ===
+  A2-7 asserts "it never calls bare float()" by string search on its own source:
+      check("it never calls bare float()", "float(" not in src.replace("parse_float=", ""))
+  So a float introduced by any OTHER spelling is invisible to it. Demonstrating:
+  exit=0  FAIL=0  <- a binary-float expression was inserted into the money script
+  PASS  KNOWN LIMIT (not a defect A2-7 hid — it is stated as a source check): a float reached by an alias is NOT caught
+          the prover still reports 0 failures; recorded as a stated blind spot
+
+FAILURES: 0
+exit=0
+
+############ 8. the float property A2-7's guard prover claimed — RUN FROM ITS
+############    REPLACEMENT, because the original could not fail (offline)  EXPECTED RC 0
+
+T270. Until this change, this section ran prove-mkreq7-guard-red.py unmodified and
+printed 'ok  it parses JSON numbers as Decimal' / '16 assertions, 0 failed' / exit=0.
+That arm is a WHOLE-FILE SOURCE GREP (`"parse_float=decimal.Decimal" in src`), and
+the token occurs twice in its target analyze7.py — at :39 in the code and at :6 in
+the file's OWN DOCSTRING. Delete the keyword from the CALL SITE and the assertion is
+still satisfied, by the prose. T164 reproduced that end to end and replaced the arm.
+
+T114 requires the BYTES of prove-mkreq7-guard-red.py be preserved, so that
+RED-GREEN-A2-7-guards.txt stays re-derivable from the script that made it. It does
+NOT require the file keep being EXECUTED as though it still graded something. Those
+are two different obligations. A superseded guard that still prints PASS is not
+preserved evidence, it is a trap — P-45 inverted: not a guard that never runs, but a
+NON-guard that always runs and always says PASS. Bytes unchanged; execution stopped.
+
+The successor is not named here. It is READ from the register, so this site cannot
+drift out of step with it, and a DELETED register line makes this section REFUSE
+rather than quietly fall back to the trap.
+
+SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
+
+==============================================================================
+T164 -- json.load/loads call-site guard (AST, not source grep)
+==============================================================================
+ROOT: /tmp/t433row/f113b/.softhouse/capture/tierA-a2
+
+SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
+  (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
+
+DECLARATION REGISTER (PARSE-FLOAT-EXEMPT.txt) -- 6 record(s), every one printed, default-deny
+  ALLOW   prove-mkreq7-guard-red.py:70   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+  ALLOW   prove-mkreq7-guard-red.py:119  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+  ALLOW   prove-mkreq7-guard-red.py:126  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced RED-GREEN-A2-7-guards.txt; provenance: evidence NAMES its producer; git: tracked
+          reason: sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+  ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   resolve7.py:25   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced req/a2-7-loan-220-resolved.json; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; register-pinned (survives `manifest.py write`); produced PROVENANCE-A2-15.txt; provenance: ASSERTED ONLY -- the evidence does not name its producer, so this field is a human claim the guard cannot verify; git: tracked
+          reason: reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+
+POPULATION -- both terms (P-67)
+  Python files inspected .................. 35
+  json.load/loads CALL SITES inspected .... 21
+  ... carrying parse_float= ............... 15
+  ... carrying parse_float=float (a dodge)  0
+  ... declared in the register ............ 6
+  ... VIOLATIONS .......................... 0
+
+parse_float= VALUE EXPRESSIONS ACTUALLY PASSED (6 distinct) -- listed so a reader can audit them, not allowlisted
+  D                  1 site(s): census-a2-26.py:49
+  JsonNumber         2 site(s): resolve8.py:101, resolve8.py:265
+  _Raw               1 site(s): prove-resolve8-float-red.py:107
+  decimal.Decimal    9 site(s): a2-29-retype-path.py:25, analyze7.py:39, audit-req-float-roundtrip.py:226, audit-req-float-roundtrip.py:236, mkje-a2-29.py:42, mkje-a2-29.py:151, prove-mkreq7-guard-red.py:148, prove-resolve8-float-red.py:152, show.py:14
+  hook('float')      1 site(s): audit-req-float-roundtrip.py:65
+  str                1 site(s): prove-t275-reissue.py:242
+
+EVERY CALL SITE, GRADED
+  ok          a2-29-retype-path.py            :25   json.loads  parse_float=decimal.Decimal
+  ok          analyze7.py                     :39   json.load   parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :65   json.loads  parse_float=hook('float')
+  ok          audit-req-float-roundtrip.py    :226  json.loads  parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :236  json.loads  parse_float=decimal.Decimal
+  ok          census-a2-26.py                 :49   json.loads  parse_float=D
+  ok          mkje-a2-29.py                   :42   json.loads  parse_float=decimal.Decimal
+  ok          mkje-a2-29.py                   :151  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :70   json.loads  parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :119  json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :126  json.load   parse_float=MISSING
+  ok          prove-mkreq7-guard-red.py       :148  json.loads  parse_float=decimal.Decimal
+  ok          prove-resolve8-float-red.py     :107  json.loads  parse_float=_Raw
+  ok          prove-resolve8-float-red.py     :152  json.loads  parse_float=decimal.Decimal
+  ok          prove-t275-reissue.py           :242  json.load   parse_float=str
+  DECLARED FROZEN-T114 resolve7.py                     :24   json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 resolve7.py                     :25   json.load   parse_float=MISSING
+  ok          resolve8.py                     :101  json.loads  parse_float=JsonNumber
+  ok          resolve8.py                     :265  json.loads  parse_float=JsonNumber
+  ok          show.py                         :14   json.load   parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 verify-provenance-a2-15.py      :24   json.load   parse_float=MISSING
+
+PASS -- 21 call site(s) across 35 file(s): 15 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
+exit=0
+
+NOT COVERED BY THE REPLACEMENT, STATED SO THIS IS NOT READ AS EQUIVALENT (P-40):
+prove-mkreq7-guard-red.py carried 16 assertions. guard-parse-float-ast.py replaces
+only the 3 in its analyze7.py float arm. The other 13 — mkreq7.py's D-1 refusal
+behaviour and resolve7.py's four refusals — are re-run by NOTHING today. They are
+recorded as an open follow-up in the T270 handoff, not silently absorbed.
+
+############ 9. ADJUDICATE section 1's permanent RED (offline)   EXPECTED RC 0
+############    T357. Section 1 has been RED with three named failures since the day
+############    it was written and NOBODY READ THEM. This section pins those three,
+############    proves section 1 is offline and deterministic from the AST, and
+############    MEASURES whether any of them touches a vector graded by
+############    conformance.sh. It goes RED on a fourth failure or a vanished one.
+=== 1. section 1 is OFFLINE — proved from check-shape.py's AST, not from its prose ===
+    run-all.sh advertised this section as '[ORACLE] live re-observation'. It is
+    neither. It replays committed bytes under obs/. Proving that is what makes the
+    corrected label a measurement instead of a second unchecked adjective.
+  PASS  check-shape.py contains NO route to the network (AST-walked: imports, attribute calls, URL literals)
+          hits=[]
+  PASS  check-shape.py's whole import set is {json, sys, decimal, pathlib}
+          ['decimal', 'json', 'pathlib', 'sys']
+
+=== 2. and it is DETERMINISTIC — run twice, compare bytes ===
+  PASS  two consecutive runs of check-shape.py emit byte-identical stdout
+          len=5720 vs 5720
+  PASS  two consecutive runs of check-shape.py return the same exit code
+          rc=1 vs 1
+
+=== 3. the verdict: exit 1, and EXACTLY the three adjudicated failures ===
+  PASS  check-shape.py exits 1 (RED)
+          rc=1
+  PASS  it declares a failure COUNT and names that many
+          declared=3 named=3
+  PASS  NO UNADJUDICATED FAILURE — a fourth failure here is a NEW defect and must be read, not absorbed
+          unexpected=[]
+  PASS  all three adjudicated failures are STILL PRESENT — losing one would mean the checker was edited into agreeing with the fabricated A2-7 claim (P-46)
+          missing=[]
+
+  ADJUDICATION of each, and it is the SAME for all three:
+    VERDICT   NOT a defect in the observed evidence. NOT a defect in the checker's
+              arithmetic. The checker asserts A2-7's REFUTED claim, and the RED is
+              the correct, intended verdict — the executable form of P-46 / A2-11 F-1.
+    EVIDENCE  T357 re-observed GET /loanproducts/{46,22,28} and /glaccounts/2 from the
+              LIVE reference oracle on fire 20260828-140005 and the bytes came back
+              BYTE-IDENTICAL to the committed obs/ files (sha256 match, 4 of 4). The
+              obs bytes are not stale and not corrupt. See
+              .softhouse/capture/t357-a2-11-section1-red/.
+    SOURCE    Fineract's read path serialises through GoogleGsonSerializerHelper,
+              which never calls serializeNulls() [VERIFIED: fineract-core/src/main/
+              java/org/apache/fineract/infrastructure/core/serialization/
+              GoogleGsonSerializerHelper.java — the ONLY serializeNulls() in
+              fineract-core + fineract-provider is CommandProcessingResultJson
+              Serializer.java:38, the COMMAND-RESULT serializer, not the read
+              serializer]. Gson omits null fields by default, so on the read path a
+              null-valued field is ABSENT — uniformly, for scalar mapping slots AND
+              for collection-valued mapping fields alike. A2-7's 'the collection-
+              valued mapping fields behave the opposite way: they are present with
+              the value null' is refuted at the source, not merely at the wire.
+    CONTRAST  Product 22 has a payment-channel override, and there
+              paymentChannelToFundSourceMappings IS present, as a LIST. Set -> present.
+              Unset -> absent. Never null. That is the rule the Go port must encode
+              (`omitempty` / pointer-vs-value), and it is P-46 rule 3.
+    MONEY     Checked and NEGATIVE: none of the three is about rounding, precision or
+              a float-shaped cell. check-shape.py parses every document with
+              parse_float=Decimal (:25, :47) and compares only ids, key sets and
+              strings. No money value is asserted anywhere in section 1, so the
+              MathContext(19, HALF_UP) admissibility rule is not engaged. This is a
+              WIRE-SHAPE finding, graded MATERIAL-TO-THE-PORT and IMMATERIAL-TO-THE-
+              CORPUS — see section 4, which measures the corpus half rather than
+              asserting it.
+
+=== 4. THE CORPUS QUESTION, MEASURED: does any of the three touch a GRADED vector? ===
+    Searched: every file under .softhouse/vectors/ (recursive), and .softhouse/
+    conformance.sh. Tokens: the three key names, 'accountingMappings', 'loanproduct',
+    and the capture files section 1 replays.
+  PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
+          74 files under .softhouse/vectors/
+  PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
+          /private/tmp/t433row/f113b/.softhouse/conformance.sh, 367446 bytes
+      paymentChannelToFundSourceMappings     vectors=1  conformance.sh=False
+      feeToIncomeAccountMappings             vectors=1  conformance.sh=False
+      penaltyToIncomeAccountMappings         vectors=1  conformance.sh=False
+      accountingMappings                     vectors=0  conformance.sh=False
+      loanproduct                            vectors=4  conformance.sh=False
+      A2-211-read-product-nine-mandatory     vectors=0  conformance.sh=False
+      a2-11-get-loanproduct                  vectors=0  conformance.sh=False
+    (population searched: 74 files under .softhouse/vectors/, plus conformance.sh)
+  FAIL  NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
+          paymentChannelToFundSourceMappings v=1 c=False ['.softhouse/vectors/capabilities-ledger.json']; feeToIncomeAccountMappings v=1 c=False ['.softhouse/vectors/capabilities-ledger.json']; penaltyToIncomeAccountMappings v=1 c=False ['.softhouse/vectors/capabilities-ledger.json']; loanproduct v=4 c=False ['.softhouse/vectors/capabilities-ledger.json', '.softhouse/vectors/ledger/LDG-ACC-01-accrual-six-slots-runaccruals-trigger.json', '.softhouse/vectors/ledger/LDG-ACC-02-accrual-six-slots-minor-unit-residue.json', '.softhouse/vectors/ledger/LDG-ACC-03-accrual-six-slots-scheduled-job.json']
+  PASS  POSITIVE CONTROL — provenance refs were actually ENUMERATED; zero distinct refs over zero JSON vectors is a vacuous pass, not a clean corpus. REFUSED
+          73 JSON vectors, 44 distinct capture_ref/request_capture_ref values
+  PASS  NO vector's provenance.capture_ref or request_capture_ref points at a loan-product read
+          44 distinct ref values inspected across 73 JSON vectors (BOTH capture_ref and request_capture_ref); loan-product-shaped: []
+
+=== 5. NEGATIVE CONTROLS — P-22, each arm above driven RED on purpose ===
+  PASS  (a) a FOURTH failure is detected as UNADJUDICATED
+          unexpected=['  something nobody has adjudicated']
+  PASS  (b) an adjudicated failure that VANISHES is detected as missing
+          missing=['  penaltyToIncomeAccountMappings present and null']
+  PASS  (c) a section 1 that went GREEN is detected (rc==0 and all three missing)
+          declared=0
+  PASS  (d) a transcript with NO 'FAILURES:' line yields declared=None, not 0 — an aborted run is never read as a clean run
+          declared=None named=set()
+  PASS  (e) the offline prover TRIPS on a synthetic script that imports urllib and opens a URL
+          hits=["URL literal 'https://localhost:8443/x'", 'call .urlopen(', 'import urllib.request']
+  PASS  (f) the offline prover TRIPS on the subprocess+curl spelling too
+          hits=["URL literal 'https://localhost:8443/x'", 'call .run(', 'import subprocess']
+  PASS  (g) the offline prover does NOT trip on a genuinely offline script (the control discriminates, it does not just always fire)
+          hits=[]
+
+FAILURES: 1
+  - NO vector in the store, and no line of conformance.sh, mentions ANY of these tokens — the three failures touch NOTHING in the graded corpus
+exit=1
+
+############ 10. EVIDENCE INTEGRITY — captured oracle observations (offline)
+############    EXPECTED RC 0. T374, closing T362's F-1.
+
+The corpus this whole program grades against is the captured oracle observations
+under capture/tierA-a2/out/ and req/. Section 4 already compares them byte for byte —
+but section 4 is adjudicated RED for manifest drift, and a status that cannot get
+worse cannot carry new information. So the integrity question is asked HERE, in a
+section adjudicated GREEN, where a mutated or deleted observation MOVES the section
+and fails the aggregate verdict.
+
+T393 / T382 F-1, F-3, F-4 -- FIVE ARMS, NOT TWO, AND A CALIBRATION THAT IS CHECKED.
+T374 shipped two arms: the literal fork sha (403 observations) and HEAD (all 1035,
+including the 632 captured since). T382 measured what they could not see and drove
+every case with a control. Both arms are handed a population by a git listing, so:
+  a COMMITTED DELETION took HEAD's population 1035 -> 1034 and printed VERDICT: PASS;
+  a COMMITTED ADDITION of a fabricated observation took it to 1036, PASS;
+  an UNTRACKED fabricated observation in out/ was never handed to any arm at all;
+  a SYMLINK with identical bytes passed, because open() follows symlinks.
+And section 10's OWN baseline constant was tied to nothing: T382 moved it ONE LINE
+forward to a commit containing a mutation, ARM A's population collapsed 403 -> 1035
+onto ARM B's, the mutation went invisible, and run-all.sh exited 0 printing PASS while
+section 4 printed DIFF out/A2-000-glaccounts-preexisting.http BY NAME.
+T393 closes all of it: ARM C reads the tracked MANIFEST.sha256 as a PATH-SET and as
+RECOMPUTED digests (deletion, addition); ARM D walks the DISK with lstat (untracked,
+symlink); ARM E covers the 27 fork-sha manifest entries outside out/ and req/ that
+section 4's saturated arm was the only thing looking at; the fork sha is CROSS-CHECKED
+against the two tracked files that also carry it; and ARM A's population is PINNED at
+403 -- a property of an immutable commit, so it cannot drift. An empty population, a
+population off its pin, or an untied constant is REFUSED with exit 2, not passed.
+What is still NOT closed is named in the file's docstring, not left to be found: a
+committed change to a POST-FORK observation that ALSO rewrites its manifest row in
+the same commit. There is no committed baseline older than HEAD for those 632.
+=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
+  PASS  the comparator reports IDENTICAL on identical bytes
+          7d432cd60871d25c
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+          7d432cd60871d25c vs 451c230f34f023fe
+  PASS  the manifest parser reads a two-column list, strips the binary-mode star, and skips comments and blank lines
+          {'out/x.http': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'req/y.json': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+
+=== 1. THE BASELINE EXISTS, AND ITS CALIBRATION IS CROSS-CHECKED (T382 FINDING 4) ===
+    T382: 'a tripwire whose calibration is a bare unchecked constant is a tripwire
+    with a switch on it.' Moving FORK forward to a commit that CONTAINS a mutation
+    collapsed ARM A onto ARM B (403 -> 1035) and the mutation went invisible while
+    section 4 printed it BY NAME and run-all.sh printed PASS. So the constant is now
+    tied to tracked files, in the same spelling section 4 already uses for its copy.
+  PASS  literal baseline sha 12a7f8d9a3af is present
+  PASS  prove-a2-7-additive.py carries `BASELINE = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+  PASS  verify-manifest-independently.py carries `FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+
+=== 2. POPULATION — enumerated from the fork tree AND from HEAD, and PINNED ===
+    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
+    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
+    has. An empty census passes everything. REFUSED. (Same spelling as
+    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
+    T382 FINDING 1: applying that rule AT ZERO and stopping is not enough. A
+    population that silently shrank by up to 632, or grew by any number of
+    fabricated files, is the same class of selector failure one step short of empty.
+    ARM A's size is pinned below; ARM B's is pinned by the manifest in ARM C.
+      at the fork sha : 403 observations  {'out': 327, 'req': 76}
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+  PASS  ARM A's population is the pinned 403 (a property of an immutable commit)
+
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
+      enumerated                : 403
+      byte-identical            : 403
+      DIFFER                    : 0
+      MISSING on disk           : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=0
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+          missing=0 unreadable=0
+
+=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
+    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
+    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
+      enumerated     : 1035
+      byte-identical : 1035
+      DIFFER         : 0
+      MISSING on disk: 0
+  PASS  NO captured oracle observation tracked at HEAD differs from its committed bytes
+          differ=0
+  PASS  NO captured oracle observation tracked at HEAD is missing from the working tree
+          missing=0
+
+=== 5. ARM C — the tracked MANIFEST, as a PATH-SET and as RECOMPUTED DIGESTS ===
+    T382 FINDING 1/2. ARMs A and B compare files they were HANDED; neither can see a
+    file that was never handed to them, which is why a committed DELETION took the
+    HEAD population 1035 -> 1034 and a committed ADDITION took it to 1036, both
+    reporting VERDICT: PASS. MANIFEST.sha256 is a TRACKED, per-file digest list
+    whose out/ + req/ row-set is EXACTLY the tracked observation path-set. Comparing
+    the two SETS is what makes a deletion and an addition visible at all.
+      manifest rows total                  : 1139
+      manifest rows under out/ or req/     : 1035
+      observations tracked at HEAD         : 1035
+  PASS  every observation tracked at HEAD has a MANIFEST row — a file ADDED to the corpus without one is a fabrication, not a capture
+          tracked observations with no manifest row: 0 []
+  PASS  every MANIFEST row under out/ or req/ names an observation tracked at HEAD — a row whose file is gone is a DELETION, and the population moving is not a clean tree
+          manifest rows naming no tracked observation: 0 []
+      manifest digest agrees with disk     : 1035
+      DISAGREES                            : 0
+      unreadable                           : 0
+  PASS  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
+          agree=1035 disagree=0 unreadable=0
+
+=== 6. ARM D — THE DISK, walked. Nothing tracked ARMs A-C were never handed. ===
+    T382 FINDING 1, cases 16 and 09. ARMs A, B and C all start from a git or manifest
+    listing, so an UNTRACKED fabricated observation sitting in out/ is invisible to
+    all three — nobody hands it to them. And open(path,'rb') FOLLOWS SYMLINKS, so a
+    regular file replaced by a symlink to identical bytes reports PASS: the bytes are
+    right at that instant, but the file is no longer the tracked object and its
+    content is thereafter controlled from outside the repository. This arm starts
+    from the DISK instead, and uses lstat, which does not follow.
+      files on disk under out/ + req/      : 1035
+      of those that are SYMLINKS           : 0
+      of those that are neither file nor link: 0
+  PASS  the disk holds NOTHING under out/ or req/ that is not tracked at HEAD — an untracked observation is a fabrication no arm reading a git listing can see
+          untracked: 0 []
+  PASS  every observation tracked at HEAD is present on disk as a real directory entry
+          absent: 0 []
+  PASS  every observation on disk is a REGULAR FILE — a symlink is not the tracked object even when its target's bytes are identical today
+          symlinks=0 other=0
+
+=== 7. ARM E — the 27 fork-sha manifest entries OUTSIDE out/ and req/ (T382 F-3) ===
+    These are the scripts that PRODUCED the observations and the red/green evidence
+    that grades them: cap.sh, manifest.py, the mkreq*.py, the run-*.sh, the sql. Until
+    T393 the ONLY thing comparing them to the fork sha was section 4's third arm, and
+    section 4 is adjudicated RED for drift, so that arm was SATURATED — T382 mutated
+    manifest.py, section 4 printed `DIFF manifest.py` BY NAME, and run-all.sh still
+    exited 0 printing RUN-ALL VERDICT: PASS. That is T362's F-1 verbatim, one
+    directory over. The question is asked HERE too, where GREEN is adjudicated.
+      entries in the fork-sha manifest     : 430
+      of those under out/ or req/          : 403
+      NOT under out/ or req/ (ARM E)       : 27
+      byte-identical to the fork sha       : 25
+      adjudicated-different, UNMOVED       : 2
+      DIFFER and are NOT adjudicated       : 0
+      adjudicated but MOVED                : 0
+      missing / unreadable                 : 0
+  PASS  NO capture script or evidence file from the fork-sha manifest has been MUTATED, outside the two differences adjudicated by digest at the top of this file
+          unadjudicated differences: 0
+  PASS  the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
+          unmoved=2 of 2, moved=0
+  PASS  NO entry from the fork-sha manifest is missing from disk or from the fork tree
+          missing=0
+
+=== 8. POSITIVE CONTROLS — every arm actually READ a non-empty population ===
+    T374's F-2 rule, applied to all five arms and not only at zero: an arm that
+    compared nothing reports no differences, and that is the vacuous pass this
+    review exists to make impossible.
+  PASS  ARM A compared a non-empty population
+          403 observations at the fork sha
+  PASS  ARM B compared a non-empty population
+          1035 observations at HEAD
+  PASS  ARM C compared a non-empty manifest population
+          1035 manifest rows under out/ or req/
+  PASS  ARM D walked a non-empty disk population
+          1035 files on disk under out/ + req/
+  PASS  ARM E compared a non-empty population
+          27 non-observation entries in the fork-sha manifest
+  PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
+          in fork but not at HEAD: []
+  PASS  ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the three populations agree and none of them is silently the empty intersection
+          manifest=1035 tracked=1035 disk=1035
+
+FAILURES: 0
+
+VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
+is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;
+the disk under those directories holds exactly the tracked set and nothing else, all
+of it regular files; and the 27 fork-sha manifest entries outside them are unchanged
+apart from the two adjudicated by digest above.
+exit=0
+
+############ VERDICT — every section against its adjudicated exit code
+
+  SECTION   EXPECTED       ACTUAL    RESULT
+  1         1              1         as adjudicated
+  2         1              1         as adjudicated
+  3         0              0         as adjudicated
+  4         1              1         as adjudicated
+  5         0              0         as adjudicated
+  6         0              0         as adjudicated
+  7         0              0         as adjudicated
+  8         0              0         as adjudicated
+  9         0              1         *** MOVED ***
+  10        0              0         as adjudicated
+
+  sections run: 10    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt

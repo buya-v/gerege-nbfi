@@ -87,7 +87,7 @@ them are about THIS FILE and they are the reason for every arm added below.
 
 WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not implied):
   * COVERS   every file under .softhouse/capture/tierA-a2/{out,req}/ — the captured oracle
-             observations and the request bodies that produced them — in FOUR independent
+             observations and the request bodies that produced them — in FIVE independent
              directions:
                ARM A  against the LITERAL fork sha (the historical baseline section 4 uses),
                ARM B  against HEAD (which also covers observations captured since),
@@ -95,7 +95,11 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                       a recomputed digest, which is what makes a committed DELETION or a
                       committed ADDITION visible at all,
                ARM D  against the DISK, which is what makes an UNTRACKED file and a SYMLINK
-                      substitution visible at all.
+                      substitution visible at all,
+               ARM F  against THE BLOB AT THE COMMIT THAT FIRST ADDED each POST-FORK
+                      observation — the baseline this file used to say did not exist. It is
+                      what makes a committed mutation with a LAUNDERED manifest row visible
+                      at all (T423/T433, C-T423-1; section 8 below).
   * COVERS   ARM E: the 27 entries in the fork-sha manifest that are NOT under out/ or req/ —
              the capture scripts and the red/green evidence — against their fork-sha blobs,
              with the two known differences adjudicated BY NAME AND BY DIGEST. This is the
@@ -107,20 +111,70 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
   * DOES NOT CLOSE — stated exactly, because T382's whole finding was that the previous
              disclosure was smaller than the measured gap, and an understated boundary is the
              defect this file exists to punish:
-               (i)  A committed mutation, deletion or addition of a POST-FORK observation
-                    that ALSO rewrites the matching MANIFEST.sha256 row in the same commit.
-                    ARM A cannot see it (no fork blob), ARM B cannot see it (HEAD is the
-                    mutated commit), ARM C cannot see it (the manifest was laundered to
-                    agree), ARM D cannot see it (the file is tracked and regular). Closing
-                    this needs a committed baseline OLDER than HEAD for the post-fork
-                    observations, which does not exist and cannot be manufactured here. What
-                    T393 does change is the COST: it was one file edit, it is now one file
-                    edit plus a matching manifest row, both visible in one diff.
+               (i)  [CLOSED BY ARM F — AND THE SENTENCE THAT USED TO STAND HERE WAS FALSE.
+                    T423 found it, the driver re-measured it, T433 corrected it: C-T423-1.]
+                    THE CASE: a committed mutation of a POST-FORK observation that ALSO
+                    rewrites the matching MANIFEST.sha256 row in the same commit. ARM A
+                    cannot see it (no fork blob), ARM B cannot see it (HEAD *is* the mutated
+                    commit), ARM C cannot see it (the manifest was laundered to agree), ARM D
+                    cannot see it (the file is tracked and regular).
+                    WHAT THIS BLOCK USED TO SAY, VERBATIM — kept rather than deleted, and
+                    TAGGED so a guard can tell a quotation from an assertion by grep alone:
+                    [QUOTED-FALSE-CLAIM] "Closing this needs a committed baseline OLDER than
+                    [QUOTED-FALSE-CLAIM]  HEAD for the post-fork observations, which does not
+                    [QUOTED-FALSE-CLAIM]  exist and cannot be manufactured here."
+                    THAT IS FALSE, and it was
+                    load-bearing rather than a wording slip: T393's handoff reasoned FROM the
+                    impossibility to send the next task to build a substitute artefact, so a
+                    false negation spent a worker's budget and foreclosed the cheap fix.
+                    WHAT THE BASELINE ACTUALLY IS — do not read a bare negation removed:
+                    THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION, reachable with
+                    `git log --diff-filter=A -- <path>`. It is an object inside an
+                    ALREADY-COMMITTED commit, so rewriting MANIFEST.sha256 inside the
+                    mutating commit does not reach it, and nothing short of rewriting main's
+                    history can move it.
+                    MEASURED OVER THE WHOLE POPULATION, NOT A SAMPLE (T433, tip b102875c,
+                    clean tree; `.softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt`,
+                    two independent derivations of the birth commit that agree on 632/632):
+                    632 of 632 post-fork observations were born at a commit STRICTLY OLDER
+                    than the tip and an ancestor of it; 0 were born at the tip; 631 still
+                    equal their birth blob by git OID *and* by sha256; exactly ONE differs —
+                    out/A2-370-db-ledger-state.txt, born aae501b5 and legitimately
+                    re-captured at 32ba0fcd the same day with six further ledger rows. It is
+                    adjudicated by digest in ARM_F_ADJUDICATED below.
+                    ARM F is that comparison, and it is the arm that exits 1 NAMING the file
+                    on the very laundered repository section 10 used to exit 0 / PASS on.
                (ii) A mutation committed to the fork sha itself. Not reachable without
                     rewriting main's history; section 1 checks the constant, not the object.
                (iii) The 403 fork-sha observations are FULLY covered against laundering, by
                     ARM A: it recomputes from the git blob and never reads a recorded digest,
                     so rewriting the manifest does not help (T382 matrix case 17).
+               (iv) WHAT ARM F ITSELF MISSES BY ONE — stated because an arm's own boundary is
+                    the next thing to be found (T433 drove each of these; see
+                    `.softhouse/capture/t433-t423-c1/out/`):
+                    (iv-a) BORN AT THE TIP. An observation whose birth commit IS HEAD has no
+                    baseline older than HEAD, so ARM F CANNOT grade it. It is counted and
+                    printed as ungraded, never folded into the equal count. A FABRICATED
+                    observation added at the tip WITH a matching manifest row is therefore
+                    reached by no arm in this file — internal consistency cannot distinguish
+                    it from a real capture; only the oracle can. DRIVEN by T433.
+                    (iv-b) MOVED/RENAMED — AND THE PREDICTION WAS WRONG, WHICH IS WHY IT WAS
+                    DRIVEN. T433 expected `--diff-filter=A` to record a rename as an ADD at
+                    the new path, resetting the baseline silently. It does not: git reports a
+                    HIGH-SIMILARITY rename as R, so ARM F finds NO ADD record for the new path
+                    and REFUSES with exit 2 — which run-all.sh adjudicates as a MOVE of section
+                    10, never a pass. So rename+mutate+relabel in one commit is CAUGHT.
+                    (iv-b2) …BUT ONLY WHILE THE SIMILARITY HOLDS. Rename the file AND replace
+                    its bytes wholly and git records a genuine ADD at the tip, which lands in
+                    (iv-a): reported UNGRADED, exit 0. This is the real edge, and it is the
+                    same hole as (iv-a) rather than a second one. Both DRIVEN by T433.
+                    (iv-c) DELETED AND RE-ADDED. The earliest ADD still wins, so a re-add
+                    with different bytes IS caught; a re-add with IDENTICAL bytes is caught
+                    by nothing here, because no arm keeps history of the gap. NOT DRIVEN.
+                    (iv-d) LEGITIMATE AMENDMENT. A real re-capture moves ARM F and must be
+                    re-adjudicated by digest in ARM_F_ADJUDICATED, exactly as ARM E's two
+                    are. That is a cost, not a defect: it makes an amendment a visible,
+                    signed act instead of an invisible one. DRIVEN by T433.
 
 P-25: no floating point. The only numbers are counts from len() and sha256 hex digests.
 P-24: the historical baseline is a LITERAL immutable sha, never `git merge-base`.
@@ -129,6 +183,12 @@ P-22: the comparator is driven RED against mutated bytes in memory before it is 
       .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh (T374's seven
       cases) and .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh
       (T393's seven, each run at the PRE-fix bytes and at the POST-fix bytes).
+      ARM F specifically: driven RED then GREEN by T423
+      (.softhouse/reviews/t423-review-t393/instruments/61-t423-armf-red-drive.sh) and
+      re-driven, in situ inside THIS file, by T433
+      (.softhouse/capture/t433-t423-c1/instruments/20-t433-armf-in-situ-drive.sh), whose
+      laundered-residual case requires this file to exit 1 naming the file where it
+      previously exited 0 / PASS. If ARM F cannot be made to fail it is not a guard (P-22).
 
 EXIT CODES
   0  every captured observation is byte-identical in every direction, the manifest agrees
@@ -199,6 +259,27 @@ ADJUDICATED_DIFFERENT = {
     "cap.sh": (
         "67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a",
         "6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62"),
+}
+
+# T433 / C-T423-1 — ARM F's ADJUDICATED POST-FORK DIFFERENCE, by name and by digest.
+# ARM F compares each post-fork observation to the blob at the commit that FIRST ADDED it.
+# Over the whole 632 exactly one differs, and it differs LEGITIMATELY:
+#   out/A2-370-db-ledger-state.txt  born at aae501b5 ("A2-26: raw-only ledger capture
+#   readiness"), re-captured the same day at 32ba0fcd ("A2-26: close the last two mandatory
+#   cash slots") with six further ledger rows, 48 -> 54, and the double-entry table still
+#   balancing in INTEGER MINOR UNITS.
+# Adjudicated in BOTH directions, in ARM E's spelling: a further mutation moves this entry,
+# and so does a revert to the birth bytes. A vanished adjudicated difference is a move too.
+# TO RE-ADJUDICATE after a deliberate re-capture: run
+#   T433_TARGET=<repo> python3 \
+#     .softhouse/capture/t433-t423-c1/instruments/00-t433-whole-632-birth-sweep.py
+# which prints both digests for every post-fork observation that differs, and record the new
+# value HERE with the reason. Do not delete the entry.
+#                                   [birth blob sha256,  disk sha256]
+ARM_F_ADJUDICATED = {
+    "out/A2-370-db-ledger-state.txt": (
+        "1ea4927a59068d0a5ec45773dbc50a4c80d9eaa0457f0cecdc820e4b8ed5f857",
+        "1c23375b0f010cf5bb65b6fead9c9ec063fcafe9e4f16d713b34f367f41716e2"),
 }
 
 fails = []
@@ -628,8 +709,127 @@ check("NO entry from the fork-sha manifest is missing from disk or from the fork
       not e_missing, "missing=%d" % len(e_missing))
 
 print()
-print("=== 8. POSITIVE CONTROLS — every arm actually READ a non-empty population ===")
-print("    T374's F-2 rule, applied to all five arms and not only at zero: an arm that")
+print("=== 8. ARM F — every POST-FORK observation vs the blob at the commit that FIRST ADDED it ===")
+print("    T423 / T433, C-T423-1. Until T433 this file asserted, in its own docstring and in")
+print("    run-all.sh's section-10 banner, that NO committed baseline older than HEAD existed")
+print("    for the post-fork observations, and concluded from that impossibility that a")
+print("    committed mutation which ALSO launders the manifest row could not be caught here.")
+print("    THE ASSERTION WAS FALSE. `git log --diff-filter=A -- <path>` yields, for every one")
+print("    of them, the commit that FIRST ADDED it; the blob there sits inside an ALREADY-")
+print("    COMMITTED commit, so rewriting MANIFEST.sha256 in the mutating commit does not")
+print("    reach it. That is the baseline. This is the arm. On T393's own 'unclosable'")
+print("    laundered residual, ARMs A-E exit 0 / PASS and ARM F exits 1 naming the file.")
+f_post = sorted(set(head_paths) - set(fork_paths)) if have_fork else []
+try:
+    head_sha = git("rev-parse", "HEAD").decode().strip()
+except subprocess.CalledProcessError as exc:
+    head_sha = ""
+    refuse("HEAD could not be resolved: %r. ARM F has no tip to compare against. REFUSED."
+           % exc)
+
+print("      post-fork population (HEAD minus the fork sha) : %d" % len(f_post))
+if have_fork and not f_post:
+    refuse("ARM F's population is EMPTY.",
+           "Every observation tracked at HEAD also existed at the fork sha, which means",
+           "either the selector broke or FORK moved forward onto HEAD — the exact collapse",
+           "T382 drove against ARM A. A zero-difference table over an empty population is a",
+           "vacuous pass, and that is the defect this whole section exists to remove.",
+           "REFUSED.")
+
+# Birth commit per path, from ONE walk: newest-first, so the LAST assignment is the EARLIEST
+# add. Cross-checked per-path against an independent derivation by T433's standalone sweep,
+# .softhouse/capture/t433-t423-c1/instruments/00-t433-whole-632-birth-sweep.py, which REFUSES
+# on any disagreement; it agreed on 632/632 at tip b102875c.
+f_birth, _cur = {}, None
+for _line in git("log", "HEAD", "--diff-filter=A", "--name-only", "--format=%H",
+                 "--", CAPREL).decode().split("\n"):
+    _line = _line.rstrip()
+    if not _line:
+        continue
+    if len(_line) == 40 and all(c in "0123456789abcdef" for c in _line):
+        _cur = _line
+        continue
+    f_birth[_line] = _cur
+
+f_noborn = [p for p in f_post if p not in f_birth]
+if f_noborn:
+    refuse("%d post-fork observations have NO recorded ADD commit: %s"
+           % (len(f_noborn), [p[len(CAPREL) + 1:] for p in f_noborn[:5]]),
+           "ARM F's baseline is not derivable for them, so ARM F did not grade them.",
+           "An arm that could not measure part of its own population has not passed on it.",
+           "REFUSED, never a pass.")
+
+f_same, f_adjudicated, f_diff, f_moved = 0, 0, [], []
+f_at_tip, f_unreadable = [], []
+for rel in f_post:
+    b = f_birth.get(rel)
+    if b is None:
+        continue
+    name = rel[len(CAPREL) + 1:]
+    if b == head_sha:
+        # (iv-a) NO baseline older than HEAD exists for this one. Counted as UNGRADED, never
+        # as equal: folding it into f_same is exactly the vacuous pass this file punishes.
+        f_at_tip.append(name)
+        continue
+    try:
+        at_birth = git("show", b + ":" + rel)
+    except subprocess.CalledProcessError as exc:
+        f_unreadable.append((name, b, repr(exc)))
+        continue
+    try:
+        with open(os.path.join(ROOT, rel), "rb") as fh:
+            today = fh.read()
+    except OSError as exc:
+        f_unreadable.append((name, b, repr(exc)))
+        continue
+    h_birth, h_today = sha(at_birth), sha(today)
+    if name in ARM_F_ADJUDICATED:
+        if (h_birth, h_today) == ARM_F_ADJUDICATED[name]:
+            f_adjudicated += 1
+        else:
+            f_moved.append((name, ARM_F_ADJUDICATED[name], (h_birth, h_today)))
+    elif h_birth == h_today:
+        f_same += 1
+    else:
+        f_diff.append((name, b, h_birth, h_today))
+
+f_graded = f_same + f_adjudicated + len(f_diff) + len(f_moved)
+print("      GRADED against a birth blob older than HEAD     : %d" % f_graded)
+print("        equal to their birth blob                    : %d" % f_same)
+print("        adjudicated-different, UNMOVED               : %d" % f_adjudicated)
+print("        DIFFER and are NOT adjudicated               : %d" % len(f_diff))
+print("        adjudicated but MOVED                        : %d" % len(f_moved))
+print("      UNGRADED, born AT THE TIP (boundary iv-a)       : %d" % len(f_at_tip))
+print("      unreadable at their own birth commit            : %d" % len(f_unreadable))
+for name in f_at_tip[:10]:
+    print("        UNGRADED-BORN-AT-TIP %s" % name)
+if len(f_at_tip) > 10:
+    print("        ... and %d more born at the tip" % (len(f_at_tip) - 10))
+for name, b, h0, h1 in f_diff:
+    print("        LAUNDERED-OR-MUTATED %s" % name)
+    print("                             born at %s" % b)
+    print("                             birth   %s" % h0)
+    print("                             disk    %s" % h1)
+for name, want, got in f_moved:
+    print("        ADJUDICATION MOVED %s\n                           birth adjudicated %s got %s"
+          "\n                           disk  adjudicated %s got %s"
+          % (name, want[0], got[0], want[1], got[1]))
+for name, b, exc in f_unreadable:
+    print("        UNREADABLE %s  born at %s  %s" % (name, b, exc))
+
+check("NO post-fork captured oracle observation differs from the blob at the commit that "
+      "FIRST ADDED it — the baseline a laundered MANIFEST.sha256 row cannot reach",
+      not f_diff, "unadjudicated differences: %d" % len(f_diff))
+check("ARM F's ONE adjudicated difference is still exactly the difference adjudicated — a "
+      "further mutation moves it, and so does a revert to the birth bytes",
+      not f_moved and f_adjudicated == len(ARM_F_ADJUDICATED),
+      "unmoved=%d of %d, moved=%d" % (f_adjudicated, len(ARM_F_ADJUDICATED), len(f_moved)))
+check("EVERY post-fork observation ARM F was handed was readable at its own birth commit",
+      not f_unreadable, "unreadable=%d" % len(f_unreadable))
+
+print()
+print("=== 9. POSITIVE CONTROLS — every arm actually READ a non-empty population ===")
+print("    T374's F-2 rule, applied to all six arms and not only at zero: an arm that")
 print("    compared nothing reports no differences, and that is the vacuous pass this")
 print("    review exists to make impossible.")
 check("ARM A compared a non-empty population", have_fork and len(fork_paths) > 0,
@@ -642,6 +842,18 @@ check("ARM D walked a non-empty disk population", len(disk_rel) > 0,
       "%d files on disk under out/ + req/" % len(disk_rel))
 check("ARM E compared a non-empty population", len(fork_nonobs) > 0,
       "%d non-observation entries in the fork-sha manifest" % len(fork_nonobs))
+# T433: ARM F's population CANNOT be pinned the way ARM A's 403 is — it grows with every
+# legitimate capture. What CAN be asserted is that it is non-empty and that ARM F actually
+# GRADED it. Those are different claims, and only the second one is falsified by the way ARM
+# F fails open: if history were rewritten so that every post-fork observation were born at
+# the tip, ARM F would report 632 ungraded, 0 differences, and read exactly like a pass.
+check("ARM F compared a non-empty post-fork population", len(f_post) > 0,
+      "%d observations tracked at HEAD that did not exist at the fork sha" % len(f_post))
+check("ARM F actually GRADED a non-empty population against a baseline OLDER than HEAD — "
+      "an arm whose whole population was born at the tip grades nothing and reads as a pass",
+      f_graded > 0,
+      "graded=%d of %d post-fork; ungraded because born at the tip=%d"
+      % (f_graded, len(f_post), len(f_at_tip)))
 check("ARM B's population is a SUPERSET of ARM A's — every historical observation is still "
       "tracked, so neither arm is silently narrower than it reads",
       set(fork_paths) <= set(head_paths),
@@ -679,6 +891,12 @@ print("VERDICT: PASS (exit 0). Every captured oracle observation under %s/{out,r
       % CAPREL)
 print("is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;")
 print("the disk under those directories holds exactly the tracked set and nothing else, all")
-print("of it regular files; and the 27 fork-sha manifest entries outside them are unchanged")
-print("apart from the two adjudicated by digest above.")
+print("of it regular files; the 27 fork-sha manifest entries outside them are unchanged")
+print("apart from the two adjudicated by digest above; and %d of the %d POST-FORK"
+      % (f_graded, len(f_post)))
+print("observations still equal the blob at the commit that FIRST ADDED them, apart from the")
+print("one adjudicated by digest above. %d were born at the tip and ARM F could not grade"
+      % len(f_at_tip))
+print("them — that number is a BOUNDARY (iv-a), not a pass, and it is stated so it cannot be")
+print("read as one.")
 sys.exit(0)

@@ -1305,3 +1305,71 @@ index 2ba79a73..955b0377 100644
 +print("of it regular files; and the 27 fork-sha manifest entries outside them are unchanged")
 +print("apart from the two adjudicated by digest above.")
  sys.exit(0)
+
+================================================================================
+T433 / C-T423-1 — CORRECTION APPENDED, NOT REWRITTEN
+================================================================================
+This file is a `git diff` of T393's own commit. It is a HISTORICAL OBJECT: rewriting
+it would destroy the evidence that this program shipped a false claim in tracked
+executable files, which is the very thing C-T423-1 exists to record. So the false
+lines are LEFT AS THEY WERE PRINTED and corrected here, in band, by name.
+
+Four added lines in the diff above assert an impossibility that is FALSE:
+
+  line 489  +# manifest row is rewritten in the same commit has no baseline older than HEAD anywhere in
+  line 607  +        committed baseline older than HEAD for those 632 observations. Driving it is how
+  line 757  +  echo "the same commit. There is no committed baseline older than HEAD for those 632."
+  line 862  +                    observations, which does not exist and cannot be manufactured here. What
+
+THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each
+observation, `git log --diff-filter=A -- <path>`. It is an object inside an
+ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating commit
+cannot reach it.
+
+MEASURED OVER THE WHOLE 632, NOT A SAMPLE (T433, tip b102875c, clean tree, two
+independent derivations of the birth commit agreeing 632/632):
+  632 of 632 born at a commit STRICTLY OLDER than the tip and an ancestor of it
+    0 born at the tip
+  631 still byte-identical to their birth blob, by git OID and by sha256
+    1 differs -- out/A2-370-db-ledger-state.txt, a legitimate re-capture, adjudicated
+      by digest in ARM_F_ADJUDICATED in verify-capture-integrity.py
+Evidence: .softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt
+
+The claim was LOAD-BEARING, not a wording slip: T393's handoff reasoned FROM the
+impossibility to send the next task to build a substitute artefact this repository
+already contained.
+
+T433 landed the comparison as ARM F, section 8 of
+`.softhouse/reviews/A2-11/verify-capture-integrity.py`. On T393's own "unclosable"
+laundered residual, ARMs A-E exit 0 / PASS and ARM F exits 1 NAMING the file.
+
+Full index of every corrected and every surviving echo: out/T433-CORRECTION.md
+================================================================================
+
+================================================================================
+T433 / C-T423-1 -- CORRECTION APPENDED TO A RECORD
+================================================================================
+This transcript is a RECORD of what the tooling printed. Above, it echoes T393's
+claim that no committed baseline older than HEAD exists for the 632 post-fork
+captured oracle observations. THAT CLAIM IS FALSE. The bytes are left exactly as
+they were printed, because deleting them would destroy the evidence that this
+program shipped a false claim in tracked executable files.
+
+THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each
+observation, `git log --diff-filter=A -- <path>`. It is an object inside an
+ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating commit
+cannot reach it.
+
+MEASURED OVER THE WHOLE 632, NOT A SAMPLE (T433, two independent derivations of the
+birth commit agreeing 632/632): 632 born STRICTLY OLDER than the tip, 0 born at the
+tip, 631 still byte-identical to their birth blob, 1 legitimate re-capture
+(out/A2-370-db-ledger-state.txt) adjudicated by digest.
+  -> .softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt
+
+T433 landed the comparison as ARM F, section 8 of
+.softhouse/reviews/A2-11/verify-capture-integrity.py. Driven RED then GREEN in situ:
+  -> .softhouse/capture/t433-t423-c1/out/20-ARMF-IN-SITU-DRIVE.txt
+
+Index of every corrected site and every surviving echo:
+  -> .softhouse/capture/t393-t382-conditions/out/T433-CORRECTION.md
+================================================================================

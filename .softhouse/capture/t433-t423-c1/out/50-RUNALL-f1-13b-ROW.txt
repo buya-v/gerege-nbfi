@@ -1,0 +1,36 @@
+T433 — the f1-13b ROW, through the WHOLE run-all.sh
+  BEFORE = b102875c7e0d1b7f1ba4339180cedc5e207dfb11   (section 10 WITHOUT ARM F)
+  AFTER  = 7df613d1   (section 10 WITH ARM F)
+  laundered target = out/A2-200-glaccounts-live-precheck.http  (MEASURED by 11-pick-targets.py, never typed)
+
+  control    BEFORE sec10=0      sec10row=as-adjudicated armf-named=0  sec9=1    runall-rc=1 verdict=FAIL  expected sec10=0  as expected
+  control    AFTER  sec10=0      sec10row=as-adjudicated armf-named=0  sec9=1    runall-rc=1 verdict=FAIL  expected sec10=0  as expected
+  f1-13b     BEFORE sec10=0      sec10row=as-adjudicated armf-named=0  sec9=1    runall-rc=1 verdict=FAIL  expected sec10=0  as expected
+  f1-13b     AFTER  sec10=1      sec10row=MOVED          armf-named=1  sec9=1    runall-rc=2 verdict=FAIL  expected sec10=1  as expected
+
+############ REASONS, not just colours
+  OK   BEFORE: section 10 PASSED the laundered tree — T393's residual is REAL (section 10 = 0)
+  OK   BEFORE: nothing named the laundered file (there was no ARM F) (x0)
+  OK   AFTER: section 10 is 1 — ARM F reddened it (section 10 = 1)
+  OK   AFTER: ARM F NAMES the laundered file (x1)
+  OK   AFTER: section 10's row in the VERDICT table is marked MOVED (x1)
+  OK   AFTER: the aggregate verdict is FAIL (verdict FAIL)
+  OK   control BEFORE: section 10 passes a clean tree (section 10 = 0)
+  OK   control AFTER: section 10 STILL passes a clean tree — ARM F does not redden the control (section 10 = 0)
+
+############ PRE-EXISTING, MEASURED HERE, AND NOT CAUSED BY ARM F
+  run-all.sh's PROCESS exit code is 1 on an UNMUTATED tree at BOTH refs, because
+  SECTION 9 (adjudicate-section1.py) is adjudicated 0 and exits 1. That is true at
+  b102875c7e0d1b7f1ba4339180cedc5e207dfb11 — unmodified main, with no ARM F in the tree at all — so it
+  is a condition T433 MEASURED, not one T433 introduced. It is asserted here in both
+  directions so the claim is falsifiable rather than an excuse:
+  OK   section 9 already moves on the CONTROL at BEFORE (no ARM F anywhere) (section 9 = 1)
+  OK   section 9 moves identically on the CONTROL at AFTER (section 9 = 1)
+  OK   section 10 is UNAFFECTED by it on the control at AFTER (section 10 = 0)
+
+T433 f1-13b ROW DRIVE: PASS. The row's new expectation 0 -> 1 in 10-drive-conditions.sh
+is a MEASUREMENT taken in T393's own column: through the WHOLE run-all.sh, section 10
+exits 0 at b102875c7e0d1b7f1ba4339180cedc5e207dfb11 on the laundered tree and 1 at 7df613d1, its
+VERDICT-table row marked *** MOVED ***, with ARM F naming the file — while the control's
+section 10 stays 0 at both refs. Section 9's pre-existing move is measured, disclosed,
+and shown to be present at the ref that has no ARM F.
