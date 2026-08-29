@@ -1,0 +1,15 @@
+############ T433 WIRING-GUARD RED DRIVE
+  src /Users/buv/gerege-nbfi/.claude/worktrees/agent-a392fe984e236aff8
+
+--- GREEN control: unmutated, the guard must PASS -------------------------------
+  OK   control                    exit 0, and it says why: WIRING GUARD: PASS
+
+--- RED: each mutation removes ONE protected thing, for a DIFFERENT reason -------
+  OK   R1-armf-deleted            exit 1, and it says why: carries ARM F as section 8
+  OK   R2-false-claim-back        exit 1, and it says why: still asserts the impossibility
+  OK   R3-quote-deleted           exit 1, and it says why: no longer quotes the false text
+  OK   R4-row-reverted            exit 1, and it says why: the f1-13b row expects 0 -> 1
+
+T433 WIRING-GUARD RED DRIVE: PASS. The wiring guard passes an unmutated tree and goes
+RED on all four removals, each naming a DIFFERENT assertion — so it is four checks, not
+one check printed four times, and none of them is a negative that cannot fail.

@@ -1,0 +1,86 @@
+############ T433 ARM-F WIRING GUARD
+root: /tmp/t433wir/wiring
+
+--- 1. THE ARM EXISTS, INSIDE THE SHIPPED GRADER (not beside it) -------------------
+  OK   verify-capture-integrity.py carries ARM F as section 8  (x1)
+  OK   ARM F names its baseline: the commit that FIRST ADDED each observation  (x4, at least 1)
+  OK   ARM F has an adjudication table it can find MOVED  (x8, at least 4)
+  OK   ARM F reports born-at-tip as UNGRADED, never as equal  (x1)
+  OK   section 9 asserts ARM F actually GRADED something (the vacuity control)  (x1)
+
+--- 2. THE FALSE IMPOSSIBILITY IS GONE FROM EVERY EXECUTABLE IN SCOPE --------------
+    C-T423-1. These are NEGATIVE assertions, and P-35 says every vacuous guard in this
+    repo is a negative one — so each is paired with a POSITIVE assertion that the
+    replacement text is present. A file that was deleted would fail the positive half.
+    Each corrected file QUOTES the false text verbatim, so the check must distinguish a
+    quotation from an assertion: quoted lines carry the literal tag [QUOTED-FALSE-CLAIM]
+    and are excluded, and the tag's PRESENCE is asserted too — dropping the quote to
+    silence the guard would fail the positive half.
+  OK   verify-capture-integrity.py ASSERTS the impossibility on x0 untagged line(s)
+  BAD  verify-capture-integrity.py no longer quotes the false text (x0 tagged lines) — a bare negation removed
+  OK   run-all.sh ASSERTS the impossibility on x0 untagged line(s)
+  OK   run-all.sh still QUOTES the false text, tagged (x3 lines)
+  OK   10-drive-conditions.sh ASSERTS the impossibility on x0 untagged line(s)
+  OK   10-drive-conditions.sh still QUOTES the false text, tagged (x5 lines)
+  OK   12-relaunder-manifest.py ASSERTS the impossibility on x0 untagged line(s)
+  OK   12-relaunder-manifest.py still QUOTES the false text, tagged (x5 lines)
+  OK   verify-capture-integrity.py says what the baseline IS  (x1)
+  OK   run-all.sh's banner says what the baseline IS  (x1)
+  OK   10-drive-conditions.sh says what the baseline IS  (x1)
+  OK   12-relaunder-manifest.py says what the baseline IS  (x1)
+
+--- 3. THE DRIVE MATRIX NOW EXPECTS THE RESIDUAL TO BE CAUGHT ----------------------
+    T393 expected `0 0` (undetected at both refs) and gave a FALSE reason. If ARM F is
+    removed or defeated this row goes back to 0 and 10-drive-conditions.sh fails.
+  OK   the f1-13b row expects 0 -> 1, CAUGHT  (x1)
+
+--- 4. WIRING — WHAT AUTOMATICALLY INVOKES ARM F, ESTABLISHED BY GREP ---------------
+    ARM F is INSIDE verify-capture-integrity.py, so every executable that runs that
+    grader now runs ARM F. Enumerated, not asserted:
+      .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh:31:INT="$A211/verify-capture-integrity.py"
+      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:100:( cd "$R" && python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$SCRATCH/c1a.txt" 2>&1
+      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:117:( cd "$R" && python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$SCRATCH/c2.txt" 2>&1
+      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:130:( cd "$R" && python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$SCRATCH/c3.txt" 2>&1
+      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:145:( cd "$R" && A2_11_ROOT="$SCRATCH/bare" python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$SCRATCH/c4a.txt" 2>&1
+      .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh:31:INT="$ROOT/.softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh:111:     "$RUNALL" 'sec 10 0 python3 "$DIR/verify-capture-integrity.py"' 1
+      .softhouse/capture/t433-t423-c1/instruments/31-t433-wiring-guard-red-drive.sh:23:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/capture/t433-t423-c1/instruments/20-t433-armf-in-situ-drive.sh:34:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/reviews/t423-review-t393/instruments/10-t423-f4-rerun.sh:26:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/reviews/t423-review-t393/instruments/50-t423-fork-tie-defeat.sh:36:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/reviews/t423-review-t393/instruments/61-t423-armf-red-drive.sh:21:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/reviews/t423-review-t393/instruments/30-t423-extra-drives.sh:23:INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
+      .softhouse/reviews/A2-11/run-all.sh:229:  sec 10 0 python3 "$DIR/verify-capture-integrity.py"
+      .softhouse/reviews/t382-review-t374/instruments/30-saturation-audit.sh:56:( cd "$SC" && python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$O/sat-02-sec10-only.txt" 2>&1
+      .softhouse/reviews/t382-review-t374/instruments/60-defeat-arm-a-baseline.sh:26:INT="$A2DIR/verify-capture-integrity.py"
+      .softhouse/reviews/t382-review-t374/instruments/31-saturation-clean-target.sh:44:( cd "$SC" && python3 .softhouse/reviews/A2-11/verify-capture-integrity.py ) > "$O/sat31-03-sec10-mutated.txt" 2>&1
+      .softhouse/reviews/t382-review-t374/instruments/10-attack-section10.sh:27:INT="$A2DIR/verify-capture-integrity.py"
+
+  OK   run-all.sh invokes it as ADJUDICATED section 10 (exit code 0 is graded)  (x1)
+
+--- 5. RUN IT. A wiring proof that never executes the guard is P-22 ----------------
+      grader exit                          : 0
+      ARM F post-fork population           : 632
+      ARM F GRADED (baseline older than HEAD): 632
+      ARM F ungraded, born at the tip      : 0
+      ARM F unadjudicated differences      : 0
+      ARM F adjudications MOVED            : 0
+  OK   ARM F graded a non-empty population against a baseline older than HEAD
+  OK   no unadjudicated post-fork difference
+  OK   ARM F's adjudication has not moved
+  OK   the shipped grader exits 0 on this tree
+
+--- 6. THE GAP THIS SCRIPT DOES NOT CLOSE, NAMED ----------------------------------
+      .softhouse/conformance.sh references this chain on 0 line(s).
+      DISCLOSED, NOT CLOSED: the bar does not invoke ARM F. T433 does not own
+      conformance.sh (T445 holds it this wave) and conformance.sh invokes no script
+      under .softhouse/ today, so there was no existing hook to join. The exact line
+      a follow-up must add, inside run_guards() beside the other HARD guards:
+
+        hard 'ARM F: post-fork observations vs their birth blob (C-T423-1)' \
+             bash .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh
+
+      This is a DISCLOSURE, not a failure of this script: it is exactly the P-45
+      condition, stated by name rather than left for the next reader to discover.
+
+T433 ARM-F WIRING GUARD: FAIL (1 assertion(s)). ARM F is missing, unwired, or red.
