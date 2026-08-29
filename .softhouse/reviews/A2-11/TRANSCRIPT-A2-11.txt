@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-29T07:05:26Z
+generated 2026-08-29T09:44:06Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -499,7 +499,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0f9e6e17cedc71ae/.softhouse/capture/tierA-a2
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a660476f28f01ec65/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -658,11 +658,29 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
     field names that would have to be maintained and would rot. A file that does NOT
     parse as JSON, and every non-JSON file, keeps the raw substring search and any hit
     is MATERIAL: unparseable fails CLOSED, never skipped. Driven both ways in section
-    5, controls (h)-(k).
+    5, controls (h)-(m).
+
+    T467 / F-T464-2 — THE FAIL-CLOSED DIRECTION IS NOW REACHABLE BY A VALUE. As T455
+    shipped it, the unparseable branch returned an INT where every other branch
+    returns a JSON path, and the renderer slices that field. So on any tree carrying
+    a non-JSON file with one of these tokens the arm died with a TypeError BEFORE the
+    named assertion below ran: 10 of this file's checks executed, 15 were SKIPPED —
+    section 5's controls (a)-(k) among them, including (k), the control for this very
+    branch — and no FAILURES: tally printed. A fail-closed rule reachable only as a
+    traceback is not fail-closed, it is unreached. The branch now returns a STRING,
+    the arm FAILS on the named assertion, and every control still runs. (k) passed
+    throughout, because it inspected the classifier and never the CONSUMER; control
+    (l) drives the consumer, which is where the defect was.
+    T467 / F-T464-6 — THE MATERIAL/PROSE DISCRIMINATOR IS A SHAPE TEST, and its limit
+    is published beside it in classify_occurrences (P-29) rather than left to be
+    found: the value is STRIPPED before interior whitespace is looked for, so a
+    trailing space no longer launders an identifier into prose (control l2); a token
+    inside a genuinely MULTI-WORD value is still graded PROSE and would not redden
+    this arm (control m). That is a known limit of the shape rule, stated.
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           74 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0f9e6e17cedc71ae/.softhouse/conformance.sh, 395816 bytes
+          /Users/buv/gerege-nbfi/.claude/worktrees/agent-a660476f28f01ec65/.softhouse/conformance.sh, 423556 bytes
       paymentChannelToFundSourceMappings     MATERIAL=0  conformance.sh=False  prose-only=1
           PROSE    .softhouse/vectors/capabilities-ledger.json  at $.capabilities[6].evidence
       feeToIncomeAccountMappings             MATERIAL=0  conformance.sh=False  prose-only=1
@@ -709,7 +727,15 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  (j) a token inside a PROSE sentence is NOT material, and IS counted — this is the exact shape of the F-6 false positive (T391's `evidence` field), and a classifier that called everything material would be the instrument that produced it
           material=[] prose=[('PROSE', '$.evidence')]
   PASS  (k) a file that does NOT parse as JSON falls back to the raw search and its hit is MATERIAL — an instrument that cannot read a file has not cleared it, so the unparseable case fails CLOSED
-          material=[('UNPARSEABLE', 1)]
+          material=[('UNPARSEABLE', '<raw substring, 1 hit(s), JSONDecodeError>')]
+  PASS  (l) the UNPARSEABLE branch is reached BY A VALUE, not by a traceback: the consumer (census + render_rows, the code the live arm actually runs) yields a MATERIAL row for a non-JSON corpus member and RENDERS it without raising. A fail-closed rule that fires only as an exception is unreached, and it takes the rest of the grader with it
+          material=[('UNPARSEABLE', 'synthetic/note.md', '<raw substring, 1 hit(s), JSONDecodeError>')] rendered=['          UNPARSEABLE synthetic/note.md  at <raw substring, 1 hit(s), JSONDecodeError>'] render-exception=None
+  PASS  (l1) EVERY location this file emits is a STRING — the type the renderer slices. An int in the `where` slot is the exact defect (l) exists to prevent, and a type is cheaper to assert than a traceback is to read
+          unparseable-where='synthetic/note.md' prose-where='$.evidence'
+  PASS  (l2) an identifier-shaped value with ONE TRAILING SPACE is still MATERIAL — the discriminator strips the value before it looks for interior whitespace, so the evasion is not one whitespace character wide
+          material=[('VALUE-ID', '$.provenance.capture_ref')]
+  PASS  (m) THE LIMIT, ASSERTED SO IT CANNOT DRIFT SILENTLY: a token inside a value with INTERIOR whitespace is graded PROSE. That is the shape rule this arm is built on, it is published in classify_occurrences's docstring, and a harness that ever compares a multi-word value would need a different rule — not a wider one here
+          material=[] prose=[('PROSE', '$.provenance.note')]
 
 FAILURES: 0
 exit=0
@@ -975,9 +1001,19 @@ grep and never reaches the transcript a reader actually sees.
   PASS  SELF-DRIVE — the classifier ACCEPTS a quotation WRAPPED across two lines, where no single line carries the claim. Rejecting it would make the guard unusable on the real files, which is how a guard gets deleted rather than fixed (P-29)
           quoted-claims=1 untagged-statements=0
   PASS  SELF-DRIVE — the classifier REJECTS abuse (B): the claim re-asserted as a LIVE echo with the tag in a TRAILING COMMENT. NOTE WHICH PREDICATE CATCHES IT — the binding half does NOT (the source line carries the tag); only the PRINTED half does. That is why there are two, and it is where T448's one-predicate repair stops short
-          untagged-statements=0 quoted-claims=2 printed-untagged=1 ['echo "There is no committed baseline older than head for those 632."  # QUOTED-FALSE-CLAIM']
+          untagged-statements=0 quoted-claims=2 printed-untagged=1 ['fixture.sh:3 echo "There is no committed baseline older than head for those 632."  # QUOTED-FALSE-CLAIM']
   PASS  SELF-DRIVE — the classifier REJECTS abuse (C): the quotation deleted, bare tags kept (the outcome T433's third red drive claims to prevent, but never separates from the text because it deletes tag and text together)
           quoted-claims=0 tags=3 — bare tags satisfy a TAG COUNT and fail a BINDING
+  PASS  SELF-DRIVE — the classifier REJECTS abuse (B) spelled with `printf` — the emitter T455's matcher did not know and the guarded files already use 17 times between them
+          printed-untagged=1 ['fixture.sh:3 printf \'%s\\n\' "There is no committed baseline older than head for those 632."  # QUOTED-FA']
+  PASS  SELF-DRIVE — the classifier REJECTS abuse (B) spelled `>&2 echo`, where the emitter T455 DID know about is not the first token on the line
+          printed-untagged=1 ['fixture.sh:3 >&2 echo "There is no committed baseline older than head for those 632."  # QUOTED-FALSE-C']
+  PASS  SELF-DRIVE — the classifier REJECTS abuse (B) spelled `sys.stdout.write(...)` in a python file, which is neither `print(` nor `echo `
+          printed-untagged=1 ['fixture.py:2 sys.stdout.write("There is no committed baseline older than head for those 632.\\n")  # QUO']
+  PASS  SELF-DRIVE — and it REJECTS a spelling NOBODY IN THIS REPOSITORY HAS USED: the claim bound to a variable and written to fd 1 by `os.write`. This is the class claim under test — the predicate names no emitter, so an emitter it has never seen is not a hole
+          printed-untagged=1 ['fixture.py:2 _msg = "There is no committed baseline older than head for those 632."  # QUOTED-FALSE-CLA']
+  PASS  SELF-DRIVE — the PRINTED predicate does NOT fire on a COMMENT that quotes the claim with the tag outside the quotes, and does NOT fire on a DOCSTRING that does the same. Those print nothing, predicate 1 already grades them, and a predicate that flagged them would redden every corrected file for carrying its own correction
+          comment-printed=0 docstring-printed=0
       verify-capture-integrity.py                untagged-statements=0 quoted-claims=2 printed-untagged=0
       run-all.sh                                 untagged-statements=0 quoted-claims=3 printed-untagged=0
       10-drive-conditions.sh                     untagged-statements=0 quoted-claims=1 printed-untagged=0

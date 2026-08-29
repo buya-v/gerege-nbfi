@@ -1,6 +1,6 @@
 ############ T467 / F-T464-2 -- FAIL-CLOSED BY A VALUE, NOT BY A TRACEBACK
   BEFORE = 3f4e236ad458dd945bac26243a90ccc950924164   (the branch returns an int)
-  AFTER  = c8b828f1   (the branch returns a location string)
+  AFTER  = a729a5db   (the branch returns a location string)
 
   CALIBRATION, unmutated tree:
     BEFORE exit=0 checks=25 controls(a)-(k)=11
@@ -51,7 +51,7 @@ planted a JSON vector whose capture_ref is identifier-shaped apart from ONE TRAI
       value is still graded PROSE. Control (m) asserts that, so it cannot drift silently.)
 
 ############ COVERAGE -- the graded bytes, named
-  graded ref (AFTER) resolves to: c8b828f159ac09a594c26b9db051ff9e39508bc4
+  graded ref (AFTER) resolves to: a729a5db7d70722a9fc4183a3ff1d6bd021206f4
   .softhouse/reviews/A2-11/adjudicate-section1.py                blob dbaf35248d41af1c848f05d7896a1f6ab6ea4d78
                                                                  last touched at this ref by c8b828f1 softhouse T467: T464's conditions on T455 -- the emitter CLASS, and a fail-closed branch reachable by a VALUE
   A reader confirms this transcript covers the merged bytes with one command:

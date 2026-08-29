@@ -1,7 +1,7 @@
 # T467 / F-T464-4 — a misattribution in T455's handoff, corrected in the in-grant record
 
 **The wrong sentence is QUOTED, not deleted.** T455's handoff, section 10 ("WHAT I COULD NOT
-CLOSE"), says:
+CLOSE"), at **line 300** of `.softhouse/handoff/T455-t448-conditions.md`, says:
 
 > * **T448's own instrument `30-t448-tag-abuse.sh` records `all=2, both=1` for case B.** That is
 >   wrong (§3). It is in `.softhouse/reviews/t448-review-t433/`, outside my grant, and reviews are

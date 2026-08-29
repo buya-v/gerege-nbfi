@@ -1,0 +1,27 @@
+############ T467 / F-T464-3 -- (iv-b2): WHAT ACTUALLY HAPPENS, AT THIS REF
+  ref = a729a5db
+
+  0  clean tree: exit=0  born-at-tip=0
+  OK   0 the clean tree is GREEN = 0 (expected 0)
+renamed out/A2-408-glaccounts-fetchrunningbal.http -> out/A2-997-t467-renamed-and-rewritten.txt with WHOLLY NEW BYTES, manifest row moved
+  1  git's account of the mutating commit: ADDs=1  renames=0
+  OK   1 git records an ADD, x1 -- the PREMISE of the sentence = 1 (expected 1)
+  OK   1 and NOT a rename = 0 (expected 0)
+  2  the (iv-b2) tree: grader exit=1  named assertion fired=1  UNGRADED lines=1
+  OK   2 THE OUTCOME IS EXIT 1, not exit 0 as the docstring said = 1 (expected 1)
+  OK   2 on the named section-9 assertion, x1 = 1 (expected 1)
+     (the observation is still REPORTED UNGRADED -- that half of the old sentence was
+      right and is kept. What moved is the CONSEQUENCE: reporting it is no longer a pass.)
+
+  3  the docstring itself: stale sentence x0  corrected sentence x1
+  OK   3 the stale sentence is GONE from the shipped file = 0 (expected 0)
+  OK   3 and the corrected one is present, x1 = 1 (expected 1)
+
+############ COVERAGE -- the graded bytes, named (T467 / F-T464-5)
+  graded ref resolves to: a729a5db7d70722a9fc4183a3ff1d6bd021206f4
+  .softhouse/reviews/A2-11/verify-capture-integrity.py           blob f233ff56b22fbffcf9478fe9c3b95ba3cec268af
+                                                                 last touched at this ref by c8b828f1 softhouse T467: T464's conditions on T455 -- the emitter CLASS, and a fail-closed branch reachable by a VALUE
+
+T467 (iv-b2) DRIVE: PASS. git records an ADD, the file lands in (iv-a), and at this ref
+that is EXIT 1 on the named assertion -- which is what the docstring now says.
+INSTRUMENT EXIT=0
