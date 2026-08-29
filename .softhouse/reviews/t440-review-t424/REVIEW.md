@@ -445,8 +445,12 @@ that is a derived floor, not a pin.
 - `FU-T386-7` is marked **SUPERSEDED** in `T402-t386-conditions.md`'s follow-up table, with the
   replacement path inline. [VERIFIED: diff]
 - Every T424 instrument extracts the text it grades **by content** and refuses unless the anchor
-  matches exactly once — I checked this holds by feeding a non-unique anchor path and by reading
-  each extraction guard. No line numbers are load-bearing anywhere in the branch.
+  matches exactly once. [VERIFIED by reading each extraction guard: `t424-f2-true-cause.sh`,
+  `t424-buffered-writer-drive.sh` (both patches, plus a truncation check on each extraction),
+  `t424-k8-discrimination.sh`, `t424-comment-claims-drive.sh`'s `locate()`. I did **not** feed
+  each one a deliberately non-unique anchor; that is `[UNVERIFIED]` and the refusals are read,
+  not driven.] No line numbers are load-bearing anywhere in the branch, which is the point
+  `T404`'s +75-line insertion had already made expensively.
 - No money path, no ledger code, no vector, no schema and no Go source is touched by this branch.
   It is entirely harness, capture artefacts and documentation. No non-negotiable is engaged:
   no float, no balance write, no deposit string, no currency handling, no US rail, no non-Postgres
