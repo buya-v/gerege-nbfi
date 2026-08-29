@@ -271,6 +271,25 @@ barred.
 implementations — internally consistent with its fork point, and the merge takes `main`'s 16
 because T431 never touched that line.
 
+**This review branch's own bar**, run from the worktree with `bash`, at commit `92c40c0d`
+[VERIFIED: `evidence/20-BAR-this-review-branch-figures.txt`, full transcript
+`evidence/19-BAR-this-review-branch.txt`]:
+
+```
+EXIT=0        grep -c 'probe = ' = 1        probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+CENSUS wrong ledger implementations — discovered 16 … all 16 … DIED through this harness
+GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+T316-DEADPATH-CENSUS: corpus=1528 deadFiles=75 deadOccurrences=108 resolving=1445 indeterminate=117 prose=387
+CENSUS host state … 192 repo-wide search instrument(s) … 18, pinned at 18
+```
+
+Corpus `1524 → 1528` is my four tracked `.sh` instruments; `deadOccurrences` is **unmoved at
+108** because every planted repo-rooted path in them is assembled at run time from a directory
+variable plus a leaf, and **the host-state census is unmoved at `18 == 18`** because every
+instrument takes its work root as an argument. Only `REVIEW.md` prose changed after that
+commit.
+
 ---
 
 # CONDITIONS

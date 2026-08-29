@@ -1,0 +1,31 @@
+=== HEAD ===
+92c40c0d T444: GREEN-AFTER drive on T431 -- 13 PASS / 2 FAIL of 15; the 2 FAILs are the honest-Cyrillic arms, which fail identically on main
+=== status BEFORE ===
+=== BAR ===
+EXIT=0
+-- P-84: PRESENCE first --
+   grep -c 'probe = ' = 1
+-- value --
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+-- VERDICT --
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+-- wrong ledger impls --
+conformance: CENSUS wrong ledger implementations — discovered 16 registered as DELIBERATELY
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+-- guards-dir census --
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+-- dead-path --
+conformance:   T316-DEADPATH-CENSUS: corpus=1528 deadFiles=75 deadOccurrences=108 resolving=1445 indeterminate=117 prose=387
+-- host state --
+conformance: CENSUS host state in the lint corpus — 192 repo-wide search instrument(s)
+conformance:   read from git grep over tracked *.sh/*.py under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a242f3f8ca552692d; sites that assign a
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+-- fail-open frontier --
+conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
+-- namespace --
+conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+=== status AFTER ===
+ M .softhouse/reviews/t444-review-t431/REVIEW.md
+
+[exited with code 0]
