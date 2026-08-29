@@ -1,0 +1,49 @@
+==============================================================================
+T447 F-T447-2 -- the K8 decomposition IS in T424's handoff
+==============================================================================
+repo   : /private/tmp/t447/clone-green
+commit : c223a16bb246d99b4162c87629dbfd2c193f5410
+
+-- T442's recipe, run verbatim ------------------------------------------------
+   git grep -c 'all sixteen' -- .softhouse/handoff/T424-t408-conditions.md   ->   0
+  T442's search really does return 0 on the handoff          expected=0          actual=0          OK
+   So the search T442 ran could not have found it. That is a fact about the SEARCH.
+
+-- the same claim, searched for as the handoff actually spells it --------------
+   'Sixteen are the `sel` calls'        -> 1   233 
+   'Eight are `SWEEP_*=$((' ...          -> 1   235 
+   'Six are parent-side assignments'      -> 1   236 
+  the handoff carries the SIXTEEN cell                       expected=1          actual=1          OK
+  the handoff carries the EIGHT cell                         expected=1          actual=1          OK
+  the handoff carries the SIX cell                           expected=1          actual=1          OK
+
+   the sentence, verbatim:
+     **All 29 adjudicated, and none is a live defect.** Sixteen are the `sel` calls, in the wide list only
+     because each carries a `|` **inside its own quoted ERE** — the same deliberate over-inclusion `K2`
+     and `K3` have. Eight are `SWEEP_*=$((…))` counters, matched on the `$(` of an arithmetic expansion,
+     which is not a subshell. Six are parent-side assignments (`SWEEP_ERRF=$(mktemp …)`,
+
+-- the measured partition, for contrast ---------------------------------------
+   sel "S…" calls in the subject file            : 16
+   of those whose pattern carries no '|'          : 3
+   therefore reaching the wide K8 list            : 13
+   SWEEP_*=$((…)) increment lines                 : 10
+   distinct counter variables                     : 3
+  sel calls in the file                                      expected=16         actual=16         OK
+  of those, no pipe in their pattern                         expected=3          actual=3          OK
+  16 - 3 == the census's sel rows                            expected=13         actual=13         OK
+  increment lines today                                      expected=10         actual=10         OK
+  distinct counter variables                                 expected=3          actual=3          OK
+   13 + 10 + 6 = 29  (the census's own printed total is 29)
+  the measured partition sums to 29                          expected=29         actual=29         OK
+
+-- the erratum's acceptance test does not reach the handoff --------------------
+   the erratum's check   git grep -c 'all sixteen `sel' -- AUDIT-CLASS.md  ->  1
+   the erratum mentions T424-t408-conditions.md         : 1  (to DENY it, not to fix it)
+   its Acceptance test block mentions the handoff       : 0
+  the acceptance test never checks the handoff               expected=0          actual=0          OK
+  the erratum's denial of the second site is present         expected=yes        actual=yes        OK
+
+==============================================================================
+T447-K8-HANDOFF-SITE-RESULT: disagreements=0
+F-T447-2 reproduces: TWO sites carry the wrong decomposition, not one.

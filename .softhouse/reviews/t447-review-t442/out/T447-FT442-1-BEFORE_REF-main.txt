@@ -1,0 +1,12 @@
+============================================================================
+T381 RED DRIVES -- R1..R4 of T379's review of T371
+repo      : 4e48b7e8   date: 2026-08-29T02:52:26Z
+engine    : git version 2.50.1 (Apple Git-155)
+corpus    : 9730 tracked files (non-empty, asserted before grading)
+target    : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+BEFORE_REF: main     AFTER_REF: HEAD
+============================================================================
+BEFORE sha256: 63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77   (718 lines)
+AFTER  sha256: 63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77    (718 lines)
+DRIVE ABORT (exit 2): BEFORE and AFTER are the SAME FILE. There is nothing to drive,
+  and every drive below would report 'no difference' for the wrong reason.

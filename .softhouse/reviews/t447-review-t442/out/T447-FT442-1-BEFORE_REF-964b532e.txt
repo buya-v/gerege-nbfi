@@ -1,0 +1,17 @@
+============================================================================
+T381 RED DRIVES -- R1..R4 of T379's review of T371
+repo      : 4e48b7e8   date: 2026-08-29T02:52:35Z
+engine    : git version 2.50.1 (Apple Git-155)
+corpus    : 9730 tracked files (non-empty, asserted before grading)
+target    : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+BEFORE_REF: 964b532e     AFTER_REF: HEAD
+============================================================================
+BEFORE sha256: 1fa6acfe6a24588cfdab967caa3a1710695f3ac503ad2e2c061b0429ba88e923   (449 lines)
+AFTER  sha256: 63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77    (718 lines)
+CALIBRATE comparator: PASS -- it sees a planted difference and sees a planted sameness.
+
+============================================================================
+D-R2  the ANTI-CALIBRATION on a search that ERRORED  (T379 R2, the near-rejection)
+============================================================================
+D-R2 patch: expected 1 anti-calibration search line in BEFORE, found 0
+  D-R2: could not patch BEFORE. DRIVE FAILED.

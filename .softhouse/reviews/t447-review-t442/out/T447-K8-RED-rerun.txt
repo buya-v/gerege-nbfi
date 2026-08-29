@@ -1,0 +1,59 @@
+census  : .softhouse/capture/t424/out/T424-CENSUS-after-with-K8.txt
+          sha256 cdb606e4b0bdf331
+subject : .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+          sha256 63e05208fa871628
+
+K8 rows extracted from the transcript : 29
+K8 total the census itself printed    : 29
+  extracted rows == the census's own total             expected=29       actual=29       OK
+
+MEASURED PARTITION OF THE 29 K8 ROWS
+  rows that are a `sel` call                  : 13
+  rows that are SWEEP_*=$((...)) counters     : 10
+  rows that are neither (parent-side assigns) : 6
+                                        total : 29
+
+  the 'neither' rows, in full, so the residual cell is not a black box:
+    | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+    | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+    | if ! SWEEP_COMMIT=$(git rev-parse --short HEAD); then SWEEP_COMMIT="UNMEASURED"; fi
+    | if ! SWEEP_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ); then SWEEP_DATE="UNMEASURED"; fi
+    | SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .); _unt_rc=$?
+    | case "$SWEEP_UNTRACKED_N" in ''|*[!0-9]*) SWEEP_UNTRACKED_N="UNMEASURED" ;; esac
+
+  *** MODE: grading against the PUBLISHED decomposition 16 + 8 + 6 = 30 (RED ARM)
+  sel rows                                             expected=16       actual=13       *** DRIVE DISAGREES
+  SWEEP counter rows                                   expected=8        actual=10       *** DRIVE DISAGREES
+  neither                                              expected=6        actual=6        OK
+  the partition is EXHAUSTIVE                          expected=30       actual=29       *** DRIVE DISAGREES
+
+WHY THE PUBLISHED CELL SAID 16 -- the count is of the FILE, not of the census
+  `sel` calls in the subject file            : 16
+  of those, carrying NO `|` in their pattern : 3
+  so `sel` calls that can reach the wide K8  : 13
+  the three that carry no pipe:
+    | 692:sel "S1  the literal row/maxid pin '60/64'" -n -F '60/64'
+    | 694:sel "S3  string-equality comparison of a standing counter" -n -F 'STANDING ORACLE MOVED'
+    | 702:sel "S7  the captured distinct_currency_codes projection" -n -F 'distinct_currency_codes'
+  sel calls in the file                                expected=16       actual=16       OK
+  of those, no pipe in their pattern                   expected=3        actual=3        OK
+  16 - 3 == the census's sel rows                      expected=13       actual=13       OK
+
+WHY THE PUBLISHED CELL SAID 8 -- it matches neither end of this file's history
+  SWEEP_*=$((...)) lines in the file TODAY            : 10
+  distinct counter VARIABLES today                   : 3
+  the same lines at 8fa677a6 (last commit pre-T402)  : 3
+  increment lines today                                expected=10       actual=10       OK
+  distinct counter variables today                     expected=3        actual=3        OK
+  increment lines before T402                          expected=3        actual=3        OK
+  So 8 is neither the before-count (3), the after-count (10), nor the number of distinct
+  counters (3). Unlike the 16, it has no conflation to explain it; it is simply wrong, and
+  it is wrong in TWO places -- AUDIT-CLASS.md's K8 row AND its K1+K7 row, which also says x8.
+
+==============================================================================
+CORRECTED DECOMPOSITION: 13 + 10 + 6 = 29   (published: 16 + 8 + 6 = 30, wrong
+in both non-six cells and in its own total). VERDICTS ARE UNAFFECTED -- every
+one of the 29 is still NOT state-loss; what was wrong is the table a maintainer
+would use to check the census had been fully adjudicated.
+T442-K8-DECOMPOSITION-RESULT: disagreements=3
+*** THIS DRIVE FAILED.
