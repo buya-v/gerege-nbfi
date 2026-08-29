@@ -394,4 +394,46 @@ store, every Go path.
 Re-run after this handoff and the drive transcripts were committed, so that the graded tree and
 the delivered tree are the same bytes.
 
-<!-- T458-FINAL-BAR-BLOCK -->
+Taken at **`963fe613`**, on a tree measured clean **before** the run (`git status --porcelain`
+= **0 paths**). Full transcript committed at
+`.softhouse/capture/t458-fixture-literal-reflex/out/90-FINAL-BAR-963fe613.txt`.
+
+```
+$ git status --porcelain | grep -ac ''
+0                                            <- clean BEFORE the run
+
+$ bash .softhouse/conformance.sh            # bash, never sh/zsh
+BAR EXIT = 0
+
+$ grep -c 'probe = ' barFINAL.txt
+1                                            <- PRESENCE TESTED FIRST. 0 would be a failed HARD
+                                                guard (exit 2 precedes the probe line), never `down`.
+$ grep 'probe = ' barFINAL.txt
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+```
+
+```
+conformance:   frontier == pinned (all 11 rows, by path).                       <- fail-open, unmoved
+conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2
+conformance:   PNUMBER-CITATIONS: sites=14056 definition=103 consistent=719 bare=13050
+                                  misdirecting=81 undefined=45 negative-control=58
+conformance:   PNUMBER-CITATIONS: declared-dangling ids = [131, 261]
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1686 deadFiles=75 deadOccurrences=108
+                                     resolving=1594 indeterminate=126 prose=428
+conformance:   GUARD-COST CENSUS: 16 guards timed, 66s total wall, ceiling breaches 0,
+                                  unbudgeted guards 0.
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+`ids=102 gaps=none` with `P-103` defined, `definition=103`, **0 fatal** — the hard guard that
+reads `patterns.md` is green on my entry. `deadOccurrences=108` and the fail-open frontier
+`11 == 11`: **neither pin moved, and neither instrument I shipped is on either frontier.**
+
+**One honest note on ordering.** This transcript is committed *after* the run that produced it,
+so the commit carrying it is by construction one commit later than the tree it grades. The graded
+sha is stated above and the tree was clean at that sha; every byte of the deliverable — the
+pattern entry, both message changes, both drives, all their transcripts, and this handoff — was
+present and committed at `963fe613`. The only thing added afterwards is this section and the
+transcript file it quotes.
