@@ -350,28 +350,31 @@ the scratch, and is re-runnable from `/tmp/T466-residue.sh`'s recorded contents.
 ## 9. FINAL BAR ON THE COMMITTED TREE
 
 `bash .softhouse/conformance.sh` — `bash`, not `sh`/`zsh`. Driver:
-`instruments/finalbar.sh` (derives the repo root from its own location; spells no absolute path).
-Summary in `evidence/90-FINAL-BAR.txt`, full 884-line transcript in
-`evidence/91-FINAL-BAR-full-transcript.log`. **The probe line's PRESENCE is counted before its
-value is read.**
+`instruments/finalbar.sh` (enters the repository once, fatally, at the top; derives the repo root
+from its own location; spells no absolute path). Summary in `evidence/90-FINAL-BAR.txt`, full
+884-line transcript in `evidence/91-FINAL-BAR-full-transcript.log`. **The probe line's PRESENCE is
+counted before its value is read**, and the refusal grep prints its MATCH COUNT so that an empty
+list is a number rather than an absence a reader has to interpret.
 
-Run on commit `64b730ba`, the commit that carries the change. The commit that adds this section
-does **not** touch `.softhouse/conformance.sh`, so the harness text graded below —
-blob `d1c45afc1c037135896bd52b4ee90c47c6843f8b` — is byte-identical on the branch tip. Recompute
-it yourself with `git rev-parse HEAD:.softhouse/conformance.sh`, and the right-hand id with
-`git hash-object --no-filters -- .softhouse/conformance.sh`, **with the flag**.
+Run on commit `08684284`. The commit that adds this section touches only this handoff and the two
+evidence files — **not `.softhouse/conformance.sh` and not any instrument** — so the harness text
+graded below, blob `d1c45afc1c037135896bd52b4ee90c47c6843f8b`, is byte-identical on the branch
+tip. Recompute it yourself: `git rev-parse HEAD:.softhouse/conformance.sh`, and the right-hand id
+with `git hash-object --no-filters -- .softhouse/conformance.sh`, **with the flag** — the
+unflagged form is the one arm SMUDGE defeats.
 
 ```
 === 0. THE TREE BEING GRADED ===================================================
-HEAD                                  = 64b730bad7d797bf7dde30c05681c88ae6a9e883
+repository root                        = /Users/buv/gerege-nbfi/.claude/worktrees/agent-abca32bc26a9f29f5
+HEAD                                   = 086842849c8d8bf6853809c7db77ec500e5708df
 git status --porcelain (must be empty):
-git rev-parse HEAD:<harness>          = d1c45afc1c037135896bd52b4ee90c47c6843f8b
-git hash-object --no-filters <harness>= d1c45afc1c037135896bd52b4ee90c47c6843f8b
-git hash-object (no flag)  <harness>  = d1c45afc1c037135896bd52b4ee90c47c6843f8b
-ls-files -v, entries NOT in state H   : []
+git rev-parse HEAD:<harness>           = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object --no-filters <harness> = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+git hash-object (no flag)   <harness>  = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+ls-files -v, entries NOT in state H    : []
 
 === 1. THE RUN =================================================================
-command: bash .softhouse/conformance.sh   (bash, not sh, not zsh)
+command: bash <harness>   (bash, not sh, not zsh)
 EXIT = 0
 
 === 2. PROBE PRESENCE BEFORE PROBE VALUE =======================================
@@ -383,19 +386,32 @@ VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 
 
 === 4. THIS GUARD'S OWN OUTPUT =================================================
     1:conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
-    5:conformance:   HARNESS-TEXT CENSUS: HEAD 64b730bad7d797bf7dde30c05681c88ae6a9e883; …
-    8:conformance:   RECOMPUTE: 10364 HEAD entries re-hashed from their bytes on disk;
-   13:conformance:   this harness .softhouse/conformance.sh: committed d1c45afc… / on disk d1c45afc…
-   21:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.]
+    5:conformance:   HARNESS-TEXT CENSUS: HEAD 086842849c8d8bf6853809c7db77ec500e5708df; tracked paths whose materialised bytes
+    8:conformance:   RECOMPUTE: 10368 HEAD entries re-hashed from their bytes on disk;
+    13:conformance:   this harness .softhouse/conformance.sh: committed d1c45afc1c037135896bd52b4ee90c47c6843f8b / on disk d1c45afc1c037135896bd52b4ee90c47c6843f8b
+    21:conformance:    SUBSTITUTION and a SUPPRESSION are refused. [T454, T446 MAJOR-1, T466.])
+    360:        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
 
 === 5. GUARD COST ==============================================================
-  207:conformance:   GUARD-COST CENSUS: 16 guards timed, 72s total wall,
-  210:conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
-  231:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+    207:conformance:   GUARD-COST CENSUS: 16 guards timed, 72s total wall,
+    210:conformance:     COST 3s / ceiling 300s   guard_harness_text_is_committed
+    231:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
 
-=== 6. ANY GUARD REFUSAL =======================================================
-    [nothing listed above = no guard refused]
+=== 6. EVERY GUARD REFUSAL, AND THE COUNT IS PRINTED SO AN EMPTY LIST IS A NUMBER
+    refusal lines matched: 0
+
+full transcript: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//T466-FINAL-BAR.log
 ```
 
 `16 guards timed` is unchanged — no guard was added or removed, only made to do more work. The
-recompute covered **10,364** HEAD entries at a cost of **4 s** against its new **300 s** ceiling.
+recompute covered **10,368** HEAD entries at a cost of **3 s** against its new **300 s** ceiling,
+and `guard-cost: PASS — every guard timed, every ceiling row used, none breached`.
+
+### One repair the final bar itself forced, recorded because it is the point of the bar
+
+The first version of `finalbar.sh` and `residue-check.sh` entered the repository with
+`( cd "$R" && … )` inside command substitutions. The T238 fail-open linter caught them **on the
+run they were written to record** and moved the frontier 11 → 13 at TIER 2: a `cd` whose failure
+is swallowed, followed by prints a reader takes as measurements. `FAILOPEN_PIN_FILE_LIST` was
+left alone and both scripts were repaired — one fatal `cd` at the top, no per-line subshell —
+and the frontier went back to 11. Repair at the instrument, never move the pin.
