@@ -376,9 +376,30 @@ toolchain (go1.23.4), and the bar is green with it, so `guard_gofmt`'s populatio
 5. **Declare the savings shape when a savings vector is promoted.**
    `m_savings_account_transaction.running_balance_derived` is the identical defect one context over,
    and the declaration already names it as deferred with the reason.
-6. **`internal/apps/loanschedule/contract/contract.go` is not gofmt-clean** on go1.23.4 and the bar
+6. ~~**`internal/apps/loanschedule/contract/contract.go` is not gofmt-clean** on go1.23.4 and the bar
    does not notice. Either widen `guard_gofmt`'s population or format the file — but decide it, since
-   a formatting guard whose population is narrower than the module is a guard with an unstated limit.
+   a formatting guard whose population is narrower than the module is a guard with an unstated limit.~~
+
+   **RETRACTED BY THE DRIVER AT MERGE, 2026-08-29 — DO NOT ACT ON IT.** Raised by T439 (F-T439, MINOR)
+   and re-verified by the driver from the primary sources before the retraction was written.
+
+   **Both halves of it are wrong, and one of them is dangerous.**
+
+   * **"format the file" is forbidden by a RATIFIED GATE.** `G-3` is **CLOSED, Option A**, decided at
+     local fire `20260820-110001` [VERIFIED: `.softhouse/gates.md:25`, `:915`, `:919`]:
+     `nexus/internal/apps/loanschedule/contract/contract.go` is **never** `gofmt`'d. It is a frozen
+     DEC-1 artefact. Acting on this follow-up means rewriting it, which no agent may do — an agent may
+     not amend a ratified decision. Left standing, this line is a committed instruction to violate one.
+   * **"an unstated limit" is false — the limit is stated on every single run.** `conformance.sh:973`
+     prints `gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole module;
+     contract.go exempt, gate G-3)` [VERIFIED: driver's own read of `.softhouse/conformance.sh:973`,
+     and the explanatory comment at `:934`]. So `guard_gofmt`'s population is **not** narrower than the
+     module by omission; it is the whole module with **one declared exemption that names its own gate
+     in the output**. That is the opposite of an unstated limit — it is precisely the "declare the
+     ungraded region" discipline this very task was created to apply to journal-entry columns.
+
+   The `[UNVERIFIED]` note above it — *"what `guard_gofmt`'s exact file population is"* — was correctly
+   marked unverified, and this is its answer. **Nothing here is work. There is no defect.**
 7. **The shadow-parity diff must read this file.** When a row-level diff of the two systems is built,
    its column exclusions must be **derived from `oracle-derived-columns.json`**, not retyped into a
    diff script. A second copy of this list is a second place for it to be wrong.
