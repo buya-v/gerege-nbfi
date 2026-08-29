@@ -1,0 +1,217 @@
+==============================================================================
+SUBJECT   /tmp/t462/green/rt_green.py   (refs_carrying_content arity 5)
+==============================================================================
+probe bound constants : MAX_REFS_PROBED=512, MIN_REFS_ALWAYS_PROBED=8, REF_PROBE_SECONDS=6
+floor invariant       : OK (8 <= MIN_REFS_ALWAYS_PROBED < MAX_REFS_PROBED)
+states enumerated : 288   (8 branch x 4 landed x 9 ref)
+
+ARM A -- PER-STATE EXPECTED KIND (a CORRECTNESS check; a transcription, and
+         it can be edited into agreement with a defect -- see ARM B)
+   states disagreeing with the expected kind : 0
+   of which in the WORK-DESTROYING direction (want REFUSE, got demote): 0
+
+ARM B -- TABLE-FREE POLARITY INVARIANTS (no reference to ARM A's table)
+   B1 carriers present => never demote   (T451/C-T449-1)
+   B2 work on main     => never demote   (T324/T319)
+   B3 all probes ran, nothing found => MUST demote (T330)
+   DEFINED ON the 72 of 288 states whose branch coordinate actually consults
+   the evidence (absent/zero-ancestor); in the other 216 the probes never run and the LANDED /
+   REFS coordinates are cross-product artefacts, not worlds.
+   violations : 0
+
+ARM C -- T451's FIVE CRITERIA, RELABELLED AS WHAT THEY ARE:
+         WELL-FORMEDNESS OF THE VERDICT SPACE, not correctness of the routing
+   states with NO usable verdict     : 0
+   states with TWO DISAGREEING arms  : 0
+   arm-transcription mismatches      : 0
+   exceptions raised                 : 0
+   kind -> polarity:
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           11 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+   ARMS RED on this file: NONE -- all arms green
+
+##############################################################################
+# PLANT rt_d4.py -- T456's ROUTING defect: the two new arms of _branch_wip_core swapped, so a state with a CARRIER and an unprobed ref demotes. Well-formed throughout.
+##############################################################################
+==============================================================================
+D4-PLANTED   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t462-plant-6az7e1x1/rt_d4.py   (refs_carrying_content arity 5)
+==============================================================================
+probe bound constants : MAX_REFS_PROBED=512, MIN_REFS_ALWAYS_PROBED=8, REF_PROBE_SECONDS=6
+floor invariant       : OK (8 <= MIN_REFS_ALWAYS_PROBED < MAX_REFS_PROBED)
+states enumerated : 288   (8 branch x 4 landed x 9 ref)
+
+ARM A -- PER-STATE EXPECTED KIND (a CORRECTNESS check; a transcription, and
+         it can be edited into agreement with a defect -- see ARM B)
+   states disagreeing with the expected kind : 2
+      ('zero-ancestor', 'none+complete', 'carr1 name0 unpr1')    want stillborn-carried    got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('zero-ancestor', 'none+complete', 'carr1 name1 unpr1')    want stillborn-carried    got indeterminate         REFUSE -> demote  DESTRUCTIVE
+   of which in the WORK-DESTROYING direction (want REFUSE, got demote): 2
+
+ARM B -- TABLE-FREE POLARITY INVARIANTS (no reference to ARM A's table)
+   B1 carriers present => never demote   (T451/C-T449-1)
+   B2 work on main     => never demote   (T324/T319)
+   B3 all probes ran, nothing found => MUST demote (T330)
+   DEFINED ON the 72 of 288 states whose branch coordinate actually consults
+   the evidence (absent/zero-ancestor); in the other 216 the probes never run and the LANDED /
+   REFS coordinates are cross-product artefacts, not worlds.
+   violations : 2
+      B1: 2
+      ('zero-ancestor', 'none+complete', 'carr1 name0 unpr1')    B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('zero-ancestor', 'none+complete', 'carr1 name1 unpr1')    B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+
+ARM C -- T451's FIVE CRITERIA, RELABELLED AS WHAT THEY ARE:
+         WELL-FORMEDNESS OF THE VERDICT SPACE, not correctness of the routing
+   states with NO usable verdict     : 0
+   states with TWO DISAGREEING arms  : 0
+   arm-transcription mismatches      : 0
+   exceptions raised                 : 0
+   kind -> polarity:
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           13 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            2 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+   ARMS RED on this file: A, B
+
+##############################################################################
+# PLANT rt_d5.py -- T462's own ROUTING defect, in the caller D4 does not touch: the `relocated` arm removed from _absent_verdict, so a carrier on a PRUNED branch demotes.
+##############################################################################
+==============================================================================
+D5-PLANTED   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t462-plant-6az7e1x1/rt_d5.py   (refs_carrying_content arity 5)
+==============================================================================
+probe bound constants : MAX_REFS_PROBED=512, MIN_REFS_ALWAYS_PROBED=8, REF_PROBE_SECONDS=6
+floor invariant       : OK (8 <= MIN_REFS_ALWAYS_PROBED < MAX_REFS_PROBED)
+states enumerated : 288   (8 branch x 4 landed x 9 ref)
+
+ARM A -- PER-STATE EXPECTED KIND (a CORRECTNESS check; a transcription, and
+         it can be edited into agreement with a defect -- see ARM B)
+   states disagreeing with the expected kind : 8
+      ('absent', 'none+complete', 'carr1 name0 unpr0')           want relocated            got unstarted             REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+complete', 'carr1 name0 unpr1')           want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+complete', 'carr1 name1 unpr0')           want relocated            got name-only-refs        REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+complete', 'carr1 name1 unpr1')           want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+incomplete', 'carr1 name0 unpr0')         want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+incomplete', 'carr1 name0 unpr1')         want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+incomplete', 'carr1 name1 unpr0')         want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+      ('absent', 'none+incomplete', 'carr1 name1 unpr1')         want relocated            got indeterminate         REFUSE -> demote  DESTRUCTIVE
+   of which in the WORK-DESTROYING direction (want REFUSE, got demote): 8
+
+ARM B -- TABLE-FREE POLARITY INVARIANTS (no reference to ARM A's table)
+   B1 carriers present => never demote   (T451/C-T449-1)
+   B2 work on main     => never demote   (T324/T319)
+   B3 all probes ran, nothing found => MUST demote (T330)
+   DEFINED ON the 72 of 288 states whose branch coordinate actually consults
+   the evidence (absent/zero-ancestor); in the other 216 the probes never run and the LANDED /
+   REFS coordinates are cross-product artefacts, not worlds.
+   violations : 8
+      B1: 8
+      ('absent', 'none+complete', 'carr1 name0 unpr0')           B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=unstarted) -- C-T449-1's fail-open
+      ('absent', 'none+complete', 'carr1 name0 unpr1')           B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('absent', 'none+complete', 'carr1 name1 unpr0')           B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=name-only-refs) -- C-T449-1's fail-open
+      ('absent', 'none+complete', 'carr1 name1 unpr1')           B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('absent', 'none+incomplete', 'carr1 name0 unpr0')         B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('absent', 'none+incomplete', 'carr1 name0 unpr1')         B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('absent', 'none+incomplete', 'carr1 name1 unpr0')         B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+      ('absent', 'none+incomplete', 'carr1 name1 unpr1')         B1 a live ref CARRIES CONTENT and the verdict DEMOTES (kind=indeterminate) -- C-T449-1's fail-open
+
+ARM C -- T451's FIVE CRITERIA, RELABELLED AS WHAT THEY ARE:
+         WELL-FORMEDNESS OF THE VERDICT SPACE, not correctness of the routing
+   states with NO usable verdict     : 0
+   states with TWO DISAGREEING arms  : 0
+   arm-transcription mismatches      : 0
+   exceptions raised                 : 0
+   kind -> polarity:
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           17 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            2 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            2 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+   ARMS RED on this file: A, B
+
+##############################################################################
+# PLANT rt_dnull.py -- NEGATIVE CONTROL: the two unconditional probe calls at the top of _absent_verdict swapped. A real edit, behaviour-preserving. EVERY ARM MUST STAY GREEN -- an instrument that reddens here is crying wolf and its greens are worthless too.
+##############################################################################
+==============================================================================
+D-NULL (must stay GREEN)   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t462-plant-6az7e1x1/rt_dnull.py   (refs_carrying_content arity 5)
+==============================================================================
+probe bound constants : MAX_REFS_PROBED=512, MIN_REFS_ALWAYS_PROBED=8, REF_PROBE_SECONDS=6
+floor invariant       : OK (8 <= MIN_REFS_ALWAYS_PROBED < MAX_REFS_PROBED)
+states enumerated : 288   (8 branch x 4 landed x 9 ref)
+
+ARM A -- PER-STATE EXPECTED KIND (a CORRECTNESS check; a transcription, and
+         it can be edited into agreement with a defect -- see ARM B)
+   states disagreeing with the expected kind : 0
+   of which in the WORK-DESTROYING direction (want REFUSE, got demote): 0
+
+ARM B -- TABLE-FREE POLARITY INVARIANTS (no reference to ARM A's table)
+   B1 carriers present => never demote   (T451/C-T449-1)
+   B2 work on main     => never demote   (T324/T319)
+   B3 all probes ran, nothing found => MUST demote (T330)
+   DEFINED ON the 72 of 288 states whose branch coordinate actually consults
+   the evidence (absent/zero-ancestor); in the other 216 the probes never run and the LANDED /
+   REFS coordinates are cross-product artefacts, not worlds.
+   violations : 0
+
+ARM C -- T451's FIVE CRITERIA, RELABELLED AS WHAT THEY ARE:
+         WELL-FORMEDNESS OF THE VERDICT SPACE, not correctness of the routing
+   states with NO usable verdict     : 0
+   states with TWO DISAGREEING arms  : 0
+   arm-transcription mismatches      : 0
+   exceptions raised                 : 0
+   kind -> polarity:
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           11 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+   ARMS RED on this file: NONE -- all arms green
+
+==============================================================================
+SUMMARY -- WHICH ARM CATCHES WHICH
+==============================================================================
+plant          ARM A    A-destr  ARM B    ARM C   
+clean          green    green    green    green   
+D4             RED      RED      RED      green   
+D5             RED      RED      RED      green   
+D-NULL         green    green    green    green   
+
+RESULT: both routing defects caught by ARM A and by ARM B; ARM C stayed
+        GREEN on both, which is the C-T456-2 finding REPRODUCED -- T451's
+        criteria cannot see a routing defect, by construction. The negative
+        control stayed green on every arm, so the population is no longer
+        self-selected: 3 planted (2 defects + 1 non-defect), 2 caught, 1
+        correctly ignored.

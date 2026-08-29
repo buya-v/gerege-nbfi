@@ -1057,18 +1057,79 @@ def landed_index():
 #     the moment the budget is gone and lands each remaining ref in `unprobed` WITH THE
 #     REASON NAMED; and
 #   * REF_PROBE_SECONDS, a ceiling on this probe's OWN wall clock, for the unbudgeted
-#     path (`--deadline-secs` is optional: fire-program.sh:2729 passes it only when
-#     RECONCILE_DEADLINE_SECS is set).
+#     path (`--deadline-secs` is optional: fire-program.sh passes it only when
+#     RECONCILE_DEADLINE_SECS is set, which today is only on the signal path -- cited by
+#     the VARIABLE NAME, not a line number, because T462 measured every line-number
+#     citation in this file rotting: 2729 is now 2792 and 3127 is now 3188).
 # MAX_REFS_PROBED survives only as a runaway guard against a pathological ref store; at
 # 512 it is three orders of magnitude above the measured maximum of 2, so it cannot be
 # reached by the population that exists, and if it ever IS reached that is itself the
 # finding.  Truncation still degrades to `indeterminate` (which DEMOTES) -- what changed
 # is that truncation now requires time to have actually run out.
 # See .softhouse/capture/t350-reconcile-content/out/30-budget.txt.
+#
+# ===================================================================== T462 ==========
+# C-T456-1 -- AND THE PARAGRAPH ABOVE ARGUED THE COUNT AXIS ABOUT A TIME-AXIS BOUND.
+# "512 is three orders of magnitude above the measured maximum of 2" is true and it is
+# about the wrong axis.  On the TIME axis a fan-out of 2 is not far outside anything: it
+# needs ONE SLOW PROBE, not eight refs.  Driven, on this repo's own resolver, by slowing
+# the HOST (a git wrapper that sleeps before exec'ing the real git) rather than by
+# touching the code -- so the predicate under test is unmodified and the only variable
+# moved is the one a loaded CI box moves:
+#
+#     case                                       CAP8       REF_PROBE_SECONDS alone
+#     fan-out 2, carrier 2nd, branch PRUNED      REFUSE     demote
+#     fan-out 2, carrier 2nd, branch STANDING    REFUSE     demote
+#
+# [VERIFIED: .softhouse/capture/t462-t456-conditions/out/11-RED-baseline.txt, where CAP8
+# is the pre-T451 count cap rebuilt from these very bytes by a transform whose liveness
+# the instrument proves before reporting.]  A SLOW MACHINE PROCEEDED WHERE A FAST ONE
+# REFUSED, in the one predicate that decides whether merged work may be destroyed, and
+# BOTH callers of this probe were affected -- `_absent_verdict` (which T456 drove) and
+# the ancestor-of-main arm returning `stillborn-carried` (which nobody had).
+#
+# MIN_REFS_ALWAYS_PROBED IS A FLOOR **UNDER** THE CEILING, and the guarantee it buys is
+# exactly one sentence, no larger:
+#
+#     the set of refs this probe leaves UNPROBED is a SUBSET of the set the count cap
+#     it replaced would have left unprobed, on every host and every budget.
+#
+# Because: for i < MIN_REFS_ALWAYS_PROBED neither bound can truncate, so both probe
+# (unless `_run` itself returns rc=None, which the count cap suffered identically); and
+# for i >= MIN_REFS_ALWAYS_PROBED the count cap ALWAYS truncated while this may not.
+# Subset of the truncated set => no verdict can move REFUSE->demote for want of a probe
+# the old bound would have made.  It does NOT say the clock can never destroy work: at
+# fan-out > 8 with a slow host a carrier at position 9 is still demoted, which is the
+# case F9 in that transcript, and CAP8 demotes it too.  What the floor kills is the
+# regression; the residual it does not kill is declared in the T462 handoff.
+#
+# WHY NOT SIMPLY REVERT TO THE COUNT CAP: the same transcript, fast host, case F9 --
+# CAP8 demotes a fan-out-9 population whose only carrier sorts ninth, and both the
+# ceiling and the ceiling-with-floor REFUSE it.  T451's fail-open is real and a revert
+# reinstates it.  The floor is the only shape that keeps both.
+#
+# WHY THE PER-CALL `timeout=15` IN ref_content_evidence IS **NOT** TIGHTENED TO FIT UNDER
+# REF_PROBE_SECONDS, though it is 2.5x it and one call can therefore blow the whole
+# budget by itself.  Every second cut off that timeout converts a slow-but-successful
+# probe into rc=None, which lands the ref in `unprobed`, which DEMOTES.  Tightening it
+# would break the subset guarantee above in the destructive direction -- it would make
+# this probe do LESS than the count cap did, not more.  The correct lever for bounding
+# total wall clock is `--deadline-secs`, which is a genuine resource bound, is enforced
+# inside `_run` for every call, and is the caller's to set; fire-program.sh currently
+# passes it only on the signal path (RECONCILE_DEADLINE_SECS), which is a fire-program.sh
+# question and out of this file's scope.  The cost of the floor on the UNBUDGETED path is
+# therefore real and is stated rather than hidden: worst case rises from roughly one
+# ceiling plus one hung call to MIN_REFS_ALWAYS_PROBED hung calls.
+#
+# INVARIANT, checked by the instrument rather than asserted here (a module-level raise in
+# the resolver the driver runs every fire is a worse failure than the thing it guards):
+# MIN_REFS_ALWAYS_PROBED < MAX_REFS_PROBED.  A floor at or above the runaway guard is not
+# a floor -- the guard fires first and the floor never runs.
 _MAINTREE = ("uncached", None)
 _IDPAT = {}
 MAX_REFS_PROBED = 512
 REF_PROBE_SECONDS = 6.0
+MIN_REFS_ALWAYS_PROBED = 8
 
 
 def id_pattern(tid):
@@ -1227,13 +1288,31 @@ def ref_content_evidence(tid, ref):
     leaving the T339 incident ref `name-only`.  T451 was told to re-derive that patch
     rather than paste it, DROVE IT ACROSS THE WHOLE REF STORE, AND IT IS THE WRONG FIX.
 
-    MEASUREMENT 1 -- what the patch does to the LIVE ref store.  Over all 705 live refs
-    and all 84 (id, other-ref) pairs the reconciler could ever be asked about, the
-    relaxation adds **exactly 0** carriers.  15 pairs already carry under the shipped
-    code and the relaxation moves none of them
-    [VERIFIED: .softhouse/capture/t451-t449-conditions/out/21-realrepo-evidence.txt].
-    So it is not a fix with a cost; it is a trade between two things neither of which
-    happens here today, and it must be decided on which one this repo will produce.
+    MEASUREMENT 1 -- what the patch does to the LIVE ref store.  CALL THE SET B: the
+    (id, other-ref) pairs that carry ONLY under the relaxation, i.e. exactly what the
+    patch would ADD.
+
+    THIS PARAGRAPH USED TO PUBLISH |B| AS A CARDINAL -- "the relaxation adds exactly 0
+    carriers" -- AND THE CARDINAL AGED BADLY IN ONE DAY (T462/C-T456-4).  Measured:
+      * 2026-08-28, T451           B = { }                                    |B| = 0
+      * 2026-08-29 (morning), T456 B = { (T448, softhouse/T455-t448-conditions) } |B| = 1
+      * 2026-08-29 (afternoon), T462  B = { }                                 |B| = 0
+    and the predicate did not change once in that window.  T455's branch was CREATED
+    (making the pair), MERGED, and PRUNED; |B| tracked the ref store's weather.  A
+    cardinal over a live ref store is a measurement, not a fact, and this docstring
+    printed it as a fact
+    [VERIFIED: .softhouse/capture/t462-t456-conditions/out/20-relaxation-members.txt,
+    which prints B as a MEMBER SET with the tree it was taken at, plus a named-pair
+    audit that says WHY each previously-cited member is or is not in B today].
+
+    WHAT DID NOT AGE, AND IT IS THE ARGUMENT: every member B has ever had is FOREIGN
+    work that merely names the id.  T455's branch carried T455's work ABOUT T448's
+    conditions; under `anywhere` T448 would have refused to demote forever on the
+    strength of somebody else's branch.  The one live instance the cardinal's rot
+    produced therefore BACKS the adjudication rather than undermining it.  Re-check the
+    SHAPE ("is every member of B foreign-owned?"), which the instrument prints, and not
+    the number.  15 pairs carry under the shipped code and the relaxation moved none of
+    them on any of the three trees above.
 
     MEASUREMENT 2 -- AND IT DECIDES IT.  The one REAL instance of case K's shape in the
     live store is ALREADY CAUGHT by the OWNING anchor.  T428's swept ref carries
@@ -1245,12 +1324,16 @@ def ref_content_evidence(tid, ref):
     anchor cannot see work filed under another id's directory is refuted by the only
     real example of it this repo has.
 
-    MEASUREMENT 3 -- what the patch WOULD newly expose is the dominant shape here.  69
-    of the 84 pairs are name-only today, and the commonest cross-task object this
-    program makes is one task's REVIEW of another.  10 of the 15 current carriers are
-    foreign-owned review/retry branches, caught by the generous SUBJECT half.  A
-    reviewer's worktree swept by fire-program.sh:3127 gets the sweep's boilerplate
-    subject, which names nobody -- so under `anywhere` its path
+    MEASUREMENT 3 -- what the patch WOULD newly expose is the dominant shape here.  The
+    large majority of pairs are name-only (69 of 84 on T451's tree, 62 of 77 on T462's;
+    the ratio is the durable part, the counts are weather), and the commonest cross-task
+    object this program makes is one task's REVIEW of another.  10 of the 15 current
+    carriers are foreign-owned review/retry branches, caught by the generous SUBJECT
+    half.  A reviewer's worktree swept by fire-program.sh's rescue step
+    (`git -C "$W" checkout -q -b "$WB"` -- cited by its TEXT, not its line number, which
+    was 3127 for T451, 3125 for T456 and 3188 for T462 without the line ever being
+    edited) gets the sweep's boilerplate subject, which names nobody -- so under
+    `anywhere` its path
     `.softhouse/reviews/t983-review-t982/REVIEW.md` would make T982 REFUSE forever on
     the strength of somebody else's review of it.  Driven, both directions, as fixture
     case R2 [out/13-relaxed-probe.txt].  That is T339's defect restated one level in:
@@ -1291,12 +1374,29 @@ def ref_content_evidence(tid, ref):
         retry branches whose commit subject names the task they are ABOUT
         ("T369: independent review of T351 -- REJECTED") -- so a `relocated` REFUSAL for
         T351 would be bought with T369's line.  NOT changed here, on two measurements
-        and one rule: every affected id either is absent from tasks.json or has a branch
-        with commits ahead of main, so the ref arm is unreachable for all of them today
-        [out/22-liveness.txt]; and narrowing the subject half is a behaviour change
-        nobody has reviewed, which is the T306 defect class this task was told not to
-        repeat.  It is a condition to be filed, not a change to be smuggled in beside
-        two MAJORs.
+        and one rule: every affected id either is absent from tasks.json, or is
+        terminal, or has a branch with commits ahead of main, so the arm that consults
+        the ref store is NOT REACHED for any of them today; and narrowing the subject
+        half is a behaviour change nobody has reviewed, which is the T306 defect class
+        this task was told not to repeat.  It is a condition to be filed, not a change
+        to be smuggled in beside two MAJORs.
+
+        THE CITATION FOR THAT WAS WRONG UNTIL T462 (C-T456-3).  It pointed at
+        `.softhouse/capture/t451-t449-conditions/out/22-liveness.txt`, which keys on
+        STATUS ALONE and whose own last line reads "non-terminal ids blocked by a
+        FOREIGN-owned ref today: 4", with four rows marked LIVE FOREIGN-REF REFUSAL --
+        the literal opposite of the sentence citing it.  Status cannot answer this
+        question: reachability is decided by the KIND `branch_wip` returns, and a task
+        whose branch has commits ahead of main returns `commits` long before any ref is
+        looked at.  The correct evidence CALLS `branch_wip` for every (id, foreign-ref)
+        pair and reports the member set where the ref arm is REACHED and the polarity is
+        REFUSE:
+        [VERIFIED: .softhouse/capture/t462-t456-conditions/out/21-liveness.txt -- that
+        set is EMPTY on this tree; the two non-terminal ids with foreign refs (T268,
+        T351) both return `commits`, so the ref store is never asked].  It is empty
+        ON THIS TREE, which is not the same as unreachable: each of those ids becomes
+        reachable the moment its recorded branch is pruned or parked at a dispatch
+        commit, and this program's own sweep does that routinely.
     """
     anywhere, leading = id_pattern(tid)
     rc, out, err = _run([GIT, "log", "--format=%H%x09%s", "main..%s" % ref], timeout=15)
@@ -1354,11 +1454,17 @@ def refs_carrying_content(tid, exclude):
     They buy NOTHING -- they exist so the caller can report what was declined rather
     than print that nothing was found (T451/C-T449-2).
 
-    THE BOUND IS TIME, NOT A COUNT (T451/C-T449-5, reasoned at MAX_REFS_PROBED above).
-    Every name-matching ref is probed until the process's `--deadline-secs` budget or
-    this probe's own REF_PROBE_SECONDS ceiling is gone; only then do refs go unprobed,
-    and the note says which bound stopped it.  A count cap made a real carrier at
-    position 9 invisible and turned a REFUSAL into a demotion.
+    THE BOUND IS TIME WITH A COUNT FLOOR UNDER IT (T451/C-T449-5, then T462/C-T456-1;
+    both reasoned at MAX_REFS_PROBED above).  Every name-matching ref is probed until
+    the process's `--deadline-secs` budget or this probe's own REF_PROBE_SECONDS ceiling
+    is gone -- except that the first MIN_REFS_ALWAYS_PROBED refs are probed REGARDLESS
+    of the ceiling.  Only then do refs go unprobed, and the note says which bound
+    stopped it.  A count cap made a real carrier at position 9 invisible and turned a
+    REFUSAL into a demotion; a bare ceiling made a real carrier at position 2 invisible
+    on a slow host and did the same thing, which is worse because it is a fan-out this
+    repo actually has.  The floor is what makes the truncated set a SUBSET of the count
+    cap's, on every host
+    [.softhouse/capture/t462-t456-conditions/out/12-GREEN-drive.txt].
     """
     refs, note = refs_naming(tid, exclude)
     if refs is None:
@@ -1371,9 +1477,16 @@ def refs_carrying_content(tid, exclude):
         if i >= MAX_REFS_PROBED:
             stopped = ("the runaway guard MAX_REFS_PROBED=%d was hit -- a ref store this "
                        "shape is itself the finding" % MAX_REFS_PROBED)
-        elif time.monotonic() - started > REF_PROBE_SECONDS:
+        elif (i >= MIN_REFS_ALWAYS_PROBED
+                and time.monotonic() - started > REF_PROBE_SECONDS):
+            # T462/C-T456-1.  THE FLOOR IS THE FIRST CONJUNCT AND IT IS THE WHOLE FIX.
+            # Without it a single slow git call truncated a fan-out of TWO and demoted
+            # work the count cap this replaced would have refused to demote.
             stopped = ("this probe's own %.1fs ceiling (REF_PROBE_SECONDS) was reached "
-                       "after %d ref(s)" % (REF_PROBE_SECONDS, i))
+                       "after %d ref(s) -- the first %d are probed REGARDLESS of the "
+                       "clock (MIN_REFS_ALWAYS_PROBED), so this probe never truncates "
+                       "earlier than the count cap it replaced would have"
+                       % (REF_PROBE_SECONDS, i, MIN_REFS_ALWAYS_PROBED))
         if stopped:
             unprobed.append(ref)
             truncated.append(ref)
@@ -1435,7 +1548,7 @@ def reconcile_action(kind):
     base = (kind or "").split("/")[0]
     if base == "stillborn-carried":
         # T451/C-T449-1. The task branch is parked at the dispatch commit AND a live ref
-        # CARRIES CONTENT for the id -- which is what fire-program.sh:3127's sweep
+        # CARRIES CONTENT for the id -- which is what fire-program.sh's rescue step
         # leaves behind, since it rescues the WIP onto a new branch without deleting the
         # old one. Tested by EQUALITY and placed FIRST, deliberately: the tests below are
         # `startswith`, and a kind that merely began with "stillborn" would have fallen
@@ -1692,7 +1805,7 @@ def _branch_wip_core(branch, tid=None):
         # against, surviving inside T350's own fix.
         #
         # AND THE STANDING-BRANCH HALF IS THE ONE THE SHIPPED SWEEP PRODUCES.
-        # fire-program.sh:3127 is `git -C "$W" checkout -q -b "$WB"`: it moves the dead
+        # fire-program.sh's rescue step `git -C "$W" checkout -q -b "$WB"` moves the dead
         # worktree's uncommitted WIP onto a NEW branch and DOES NOT DELETE the task
         # branch, which `git worktree add -b` left parked at the driver's dispatch
         # commit. So "stillborn task branch" and "rescue ref carrying the work" are not
@@ -1751,7 +1864,8 @@ def _branch_wip_core(branch, tid=None):
                 stem + "BUT IT IS NOT UNSTARTED, AND THIS ARM USED TO SAY IT WAS. %d "
                 "live ref(s) CARRY CONTENT for id %s under another name -- %s. That is "
                 "what this program's own worktree sweep leaves behind: "
-                "fire-program.sh:3127 moves a dead worker's uncommitted WIP onto a "
+                "fire-program.sh's rescue step (`git -C \"$W\" checkout -q -b "
+                "\"$WB\"`) moves a dead worker's uncommitted WIP onto a "
                 "rescue branch and does NOT delete the task branch, so the parked "
                 "branch and the carried work are the SAME incident. NOT DEMOTED: "
                 "`needs_retry` would offer for re-dispatch a line that still exists, "
@@ -1774,7 +1888,16 @@ def _branch_wip_core(branch, tid=None):
                 "-- but `needs_retry` here means SOMEBODY MUST LOOK, not 'nothing was "
                 "done'. (Landed index: %s.)" % (ref_note, ev_note))
         return "stillborn", (
-            stem + "AND IT IS UNSTARTED -- MEASURED, not assumed: %s%s This is the case "
+            stem + "AND NO EVIDENCE OF WORK FOR IT WAS FOUND ANYWHERE THIS FUNCTION CAN "
+            "LOOK -- which is what was MEASURED, and it is deliberately weaker than the "
+            "sentence that used to stand here ('AND IT IS UNSTARTED'). T462/C-T456-5: "
+            "that sentence was the one T451 was filed to remove, and it survived in this "
+            "arm. TWO SHAPES MAKE IT FALSE, and both are recorded rather than papered "
+            "over: (i) a rescue ref whose diff touches only SHARED files -- a worker "
+            "scoped to one already-tracked module and killed before its first commit "
+            "leaves a diff naming no id in any path component, so real rescued work "
+            "reads as silence here (T451 residual (a)); and (ii) a worker that is ALIVE "
+            "RIGHT NOW. Here is exactly what WAS looked at: %s%s This is the case "
             "fire 20260829-080002 printed 'The work LANDED' for on T431, while C-T407-1 "
             "(a MAJOR) had not been touched. DEMOTED. NOTE FOR THE READER (T451/"
             "C-T449-7): a worker that is ALIVE RIGHT NOW and has not yet made its first "

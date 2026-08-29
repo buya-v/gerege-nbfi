@@ -1,0 +1,23 @@
+T462 -- resolver OUTPUT on the LIVE repo, RED (main's bytes) vs GREEN (this tree).
+
+report lines : 97
+diff lines   : 16
+
+The whole diff is the C-T456-5 sentence rewrite inside the `stillborn` note,
+on the 4 branches parked at this fire's dispatch commit. No verdict, no kind
+and no ACTION moved. Full diff: out/60-readylist-RED-vs-GREEN.diff
+
+VERDICT-KIND CENSUS, RED:
+   1 WIP: COMMITS
+   4 WIP: STILLBORN
+VERDICT-KIND CENSUS, GREEN:
+   1 WIP: COMMITS
+   4 WIP: STILLBORN
+
+IDENTICAL kind census.
+
+NOTE, and it is the C-T456-1 point restated: the 288-state enumeration STUBS
+`refs_carrying_content`, so the whole of the MIN_REFS_ALWAYS_PROBED change is
+INVISIBLE to it -- out/52-t456-direction-rerun.txt reports 0 transitions of any
+kind between RED and GREEN. The evidence that the fix works is the SLOW-HOST
+drive in out/12-GREEN-drive.txt, not the enumeration.

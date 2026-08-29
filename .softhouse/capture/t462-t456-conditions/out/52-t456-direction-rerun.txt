@@ -1,0 +1,16 @@
+RED   /tmp/t462/red/rt_red.py   (arity 5)  states=288
+GREEN /tmp/t462/green/rt_green.py   (arity 5)  states=288
+states raising           : 0 []
+states with polarity NONE: 0
+
+POLARITY TRANSITIONS over all 288 states:
+   REFUSE   -> REFUSE   :  57
+   demote   -> demote   : 231
+
+REFUSE -> demote (work-destroying) : 0
+demote -> REFUSE (conservative)    : 0
+
+KIND REDISTRIBUTION (same state, kind changed but polarity may not have):
+
+RED   kind census: {'absent': 36, 'commits': 36, 'indeterminate': 11, 'merged': 36, 'merged-unverified': 9, 'name-only-refs': 1, 'relocated': 8, 'stillborn': 2, 'stillborn-carried': 4, 'unstarted': 1, 'unverified': 144}  total=288
+GREEN kind census: {'absent': 36, 'commits': 36, 'indeterminate': 11, 'merged': 36, 'merged-unverified': 9, 'name-only-refs': 1, 'relocated': 8, 'stillborn': 2, 'stillborn-carried': 4, 'unstarted': 1, 'unverified': 144}  total=288
