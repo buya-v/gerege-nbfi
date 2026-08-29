@@ -1,0 +1,51 @@
+OLD guard patch sha256: f3c67070ad883a64   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t402-t386-conditions/patches/FU-T386-7-red-drive-must-report-failure.patch
+NEW guard patch sha256: 2256f9864ed80375   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch
+host tee              : /usr/bin/tee
+buffered stand-in     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t424/instruments/t424-buffered-tee-standin.py
+runs per arm          : 8
+
+OLD guard extracted: 20 lines
+NEW guard extracted: 73 lines
+
+==============================================================================
+PART 1 -- RED. T402's SHIPPED guard, on both writers.
+  exit 1 = the failing arm was seen (correct). exit 0 = FAIL-OPEN.
+==============================================================================
+OLD guard / failing arm / host tee (BSD)      [control]    8/8  exits: 1 1 1 1 1 1 1 1  want 1  OK
+OLD guard / failing arm / BUFFERED stand-in   [the bug]    8/8  exits: 0 0 0 0 0 0 0 0  want 0  OK
+OLD guard / healthy     / host tee            [control]    8/8  exits: 0 0 0 0 0 0 0 0  want 0  OK
+OLD guard / healthy     / BUFFERED stand-in                8/8  exits: 0 0 0 0 0 0 0 0  want 0  OK
+OLD guard / drive dies early (exit 4)                      8/8  exits: 4 4 4 4 4 4 4 4  want 4  OK
+  note: the 'exit 0' rows are opposite things. Row 2 is THE FAIL-OPEN -- a failing arm on
+        screen and exit 0 from the guard. Rows 3-4 are correct passes.
+  note: row 5 is NOT a fail-open and is recorded so as not to overstate the finding. The
+        real drive's aborts all use a non-zero `exit`, and T402's tail guard is simply
+        NEVER REACHED -- the script exits 4 on its own. What it does mean is that on this
+        tree the T402 guard is never exercised at all (PART 3), so its buffering
+        dependence would have been discovered by nobody.
+
+==============================================================================
+PART 2 -- GREEN. T424's amended guard, on the SAME writers and the SAME bodies.
+==============================================================================
+NEW guard / failing arm / BUFFERED stand-in  [the proof]   8/8  exits: 1 1 1 1 1 1 1 1  want 1  OK
+NEW guard / failing arm / host tee (BSD)     [control]     8/8  exits: 1 1 1 1 1 1 1 1  want 1  OK
+NEW guard / healthy     / BUFFERED stand-in  [not vacuous] 8/8  exits: 0 0 0 0 0 0 0 0  want 0  OK
+NEW guard / healthy     / host tee           [not vacuous] 8/8  exits: 0 0 0 0 0 0 0 0  want 0  OK
+NEW guard / ABORTED run / BUFFERED stand-in  [refuses]     8/8  exits: 2 2 2 2 2 2 2 2  want 2  OK
+NEW guard / ABORTED run / host tee           [refuses]     8/8  exits: 2 2 2 2 2 2 2 2  want 2  OK
+
+==============================================================================
+PART 3 -- END-TO-END on the REAL t381-red-drives.sh, each guard actually applied.
+  The real drive aborts on this tree (BEFORE_REF=964b532e; its D-R2 BEFORE specimen
+  has rotted), so this is a real early death, not a synthetic one. The point is WHERE the
+  grader sits: T402's is the last statement of the drive and is skipped by every abort;
+  T424's is in the PARENT and grades the run whatever the child did.
+==============================================================================
+  REAL drive, unpatched, its own exit status        -> 4  (it aborts at D-R2)
+  REAL drive + T402 guard   (host tee)              -> 4  <- the guard was NEVER REACHED; this is the drive own exit
+  REAL drive + T424 guard   (host tee)              -> 2  <- REFUSES: inner exited 4, no END-OF-DRIVES sentinel
+  REAL drive + T424 guard   (BUFFERED stand-in)     -> 2  <- REFUSES, same verdict, different writer
+
+==============================================================================
+T424-BUFFERED-WRITER-DRIVE-RESULT: arms_failed=0 runs_per_arm=8
+Every arm met its declared expectation.

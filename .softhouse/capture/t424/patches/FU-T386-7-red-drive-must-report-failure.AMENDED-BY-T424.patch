@@ -1,0 +1,124 @@
+diff --git a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh b/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
+index 6b244ab7..921b720a 100644
+--- a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
++++ b/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
+@@ -33,6 +33,109 @@
+ # =============================================================================================
+ set -uo pipefail
+ 
++# =============================================================================================
++# [T424, closing F-T408-4 and superseding T402's FU-T386-7 tail guard.] THIS DRIVE USED TO END
++# ON AN `echo` AND SO EXITED 0 WHATEVER ITS ARMS SAID -- P-45 applied to the very instrument
++# written to enforce P-45. T402 fixed that by re-reading the drive's own transcript instead of
++# threading a counter through eleven branches, which is the right instinct and is kept here.
++#
++# BUT T402's version RE-READ A LOG `tee` WAS STILL WRITING. Whether the last
++# `DID NOT REPRODUCE` line had reached the file when the guard grepped it was a property of the
++# `tee` binary, not of the guard. T408 measured it: this host's BSD `tee` -> 8/8 correct; a
++# stdio-buffered `tee` -> 3/3 FAIL-OPEN, guard exit 0 with a failing arm on screen. A guard that
++# is correct by accident of the local writer's buffering IS NOT A GUARD (P-53, P-96).
++#
++# THE FIX IS STRUCTURAL, NOT A BIGGER BUFFER AND NOT A SLEEP. This script now OWNS its own
++# transcript: the outer invocation re-execs itself, captures the run, and grades the file only
++# after the WRITER HAS EXITED. `bash` waits for every member of a pipeline, so by the line after
++# it, `tee` -- whatever its buffering, whoever built it -- has flushed and closed. There is no
++# concurrent writer to race, so there is no buffering behaviour left to depend on.
++#
++# TWO further fail-closed checks, because "found no bad lines" and "read no lines" must not
++# look alike:
++#   * the transcript must carry the drive's own END-OF-DRIVES sentinel exactly once. A truncated
++#     transcript has no sentinel, and stdio flushes IN ORDER, so a transcript that reaches the
++#     sentinel has necessarily carried every arm's verdict printed before it.
++#   * the inner run's own exit status is read, and every `grep` status here is read.
++# `| tee` is no longer prescribed to the caller and no longer load-bearing; piping this script
++# anywhere is now the caller's business, not the guard's.
++# =============================================================================================
++if [ -z "${T381_DRIVE_INNER:-}" ]; then
++  _t424_self=${BASH_SOURCE[0]}
++  case "$_t424_self" in /*) ;; *) _t424_self="$PWD/$_t424_self" ;; esac
++  if [ ! -r "$_t424_self" ]; then
++    echo "*** T424 GUARD: cannot re-read this script at [$_t424_self], so it cannot grade" >&2
++    echo "*** itself. That is not a pass." >&2
++    exit 2
++  fi
++  if [ -n "${T381_DRIVE_LOG:-}" ]; then
++    _t424_log=$T381_DRIVE_LOG
++  else
++    _t424_log=$(mktemp "${TMPDIR:-/tmp}/t381-red-drives-transcript.XXXXXXXX") || {
++      echo "*** T424 GUARD: no transcript file could be created, so this drive cannot grade" >&2
++      echo "*** itself. That is not a pass." >&2; exit 2; }
++  fi
++  if ! : > "$_t424_log"; then
++    echo "*** T424 GUARD: the transcript [$_t424_log] will not open for writing, so this drive" >&2
++    echo "*** cannot grade itself. That is not a pass." >&2
++    exit 2
++  fi
++
++  T381_DRIVE_INNER=1 bash "$_t424_self" "$@" 2>&1 | tee "$_t424_log"
++  # BOTH statuses are copied in ONE statement. `x=${PIPESTATUS[0]}` is itself a command, and it
++  # REPLACES PIPESTATUS with a one-element array -- so reading [1] on the next line is an
++  # unbound variable, and under `set -u` that kills the script with status 1. A guard that dies
++  # with status 1 looks exactly like a guard that caught a failing arm; this drive's healthy
++  # control is what caught it. [T424, my own error 1]
++  _t424_pipe=( "${PIPESTATUS[@]}" )
++  _t424_inner_rc=${_t424_pipe[0]:-1}
++  _t424_tee_rc=${_t424_pipe[1]:-1}
++  # ---- from here the writer has EXITED. Nothing below races anything. ----
++
++  if [ "${_t424_tee_rc:-1}" -ne 0 ]; then
++    echo "*** T424 GUARD: the transcript writer exited $_t424_tee_rc, so the transcript is not" >&2
++    echo "*** known to be complete. That is not a pass." >&2
++    exit 2
++  fi
++  if [ "${_t424_inner_rc:-1}" -ne 0 ]; then
++    echo "*** T424 GUARD: the drive itself exited $_t424_inner_rc before finishing. That is not" >&2
++    echo "*** a pass." >&2
++    exit 2
++  fi
++  _t424_end=$(grep -c -F 'END OF DRIVES.' "$_t424_log"); _t424_end_rc=$?
++  if [ "$_t424_end_rc" -ge 2 ]; then
++    echo "*** T424 GUARD: the transcript could not be read (grep rc=$_t424_end_rc), so this" >&2
++    echo "*** drive cannot report on itself. That is not a pass." >&2
++    exit 2
++  fi
++  if [ "$_t424_end" != "1" ]; then
++    echo "*** T424 GUARD: the transcript does not carry exactly one END-OF-DRIVES sentinel" >&2
++    echo "*** (found $_t424_end). It is truncated or doubled, so the arms it does not show are" >&2
++    echo "*** UNMEASURED -- not passed. That is not a pass." >&2
++    exit 2
++  fi
++  _t424_bad=$(grep -c -E 'DID NOT REPRODUCE|IS NOT PROVEN|DID NOT REFUSE' "$_t424_log")
++  _t424_bad_rc=$?
++  if [ "$_t424_bad_rc" -ge 2 ]; then
++    echo "*** T424 GUARD: the transcript could not be re-read (grep rc=$_t424_bad_rc), so this" >&2
++    echo "*** drive cannot report on itself. That is not a pass." >&2
++    exit 2
++  fi
++  case "$_t424_bad" in ''|*[!0-9]*)
++    echo "*** T424 GUARD: the bad-arm count is not a number ([$_t424_bad]). A count that is not" >&2
++    echo "*** a number is not a count. That is not a pass." >&2
++    exit 2 ;;
++  esac
++  if [ "$_t424_bad" -gt 0 ]; then
++    echo "*** $_t424_bad ARM(S) DID NOT REPRODUCE OR ARE NOT PROVEN. This drive reports that" >&2
++    echo "*** through its exit status. [T402 FU-T386-7, hardened by T424 F-T408-4]" >&2
++    exit 1
++  fi
++  echo "T424 GUARD: transcript complete (END-OF-DRIVES seen once), every arm reproduced;"
++  echo "T424 GUARD: DRIVE EXIT 0 now means something, and does not depend on any writer's buffering."
++  exit 0
++fi
++
+ BEFORE_REF="${BEFORE_REF:-main}"
+ AFTER_REF="${AFTER_REF:-HEAD}"
+ TARGET='.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh'
+@@ -446,3 +549,9 @@ else
+ fi
+ echo
+ echo "END OF DRIVES."
++
++# [T424] The INNER run ends here and exits 0 deliberately: it is not the grader. The outer
++# invocation above owns the transcript, waits for the writer to exit, and turns the arms'
++# verdicts into this script's exit status. An inner run that died early is caught there, by its
++# own status and by the missing END-OF-DRIVES sentinel -- not by hoping a buffer was flushed.
++exit 0
