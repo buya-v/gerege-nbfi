@@ -1,0 +1,15 @@
+t465-cheap-root: model    cheap-subset.sh still exports GIT_DIR/GIT_INDEX_FILE/GIT_WORK_TREE and materialises
+t465-cheap-root:          with read-tree + checkout-index. The environment below is that environment.
+t465-cheap-root: CONTROL  caller's tree /private/tmp/t471-scratch/tip
+t465-cheap-root:          exit=0  NAMESPACE-CENSUS: dirs=238 prefixed=215 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+t465-cheap-root: ARM      materialised tree of HEAD~40 at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t465-cheaproot.pvFtDFn2V1/tree
+t465-cheap-root:          rev-parse --show-toplevel -> /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-cheaproot.pvFtDFn2V1/tree
+t465-cheap-root:          exit=0  NAMESPACE-CENSUS: dirs=220 prefixed=197 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+t465-cheap-root: 
+t465-cheap-root: DISTINGUISHABLE: the guard reports dirs=220 under the cheap-subset environment and
+t465-cheap-root:   dirs=238 in the caller's tree. The figure it reports is a property of the
+t465-cheap-root:   MATERIALISED tree, so FU-T453-1's stated blocker DOES NOT REPRODUCE: the three exports
+t465-cheap-root:   already redirect `git rev-parse --show-toplevel`, and a cheap tier that ran this guard
+t465-cheap-root:   would be grading the PUSHED tree. What remains true from T453 is the OBLIGATION, not the
+t465-cheap-root:   blocker -- T165/T201 require the root to be READ BACK and asserted, not assumed.
+t465-cheap-root: T465-CHEAP-ROOT: rev=HEAD~40 control=238 arm=220 distinguishable=YES

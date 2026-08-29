@@ -304,10 +304,21 @@ file's only `$FIRE_MKTEMP` uses are `:678` and `:1046`; the reconcile block was 
 Those three are exactly what redirects `git rev-parse --show-toplevel`, so a `read-tree` +
 `checkout-index` materialisation is **not** invisible to git — it is a work tree declared by
 environment instead of by `.git`. T453's stated blocker is therefore not there, and "small
-change, not design change" is the right characterisation. **[NOT RE-DRIVEN]** I did not
-re-measure the `219` / `237` cardinals themselves; they are window- and host-dependent and the
-mechanism is the load-bearing half. That T465's instrument *refuses* when the arms agree — and
-did so on its own first run — is the right shape and is visible in its source.
+change, not design change" is the right characterisation. That T465's instrument *refuses* when
+the arms agree — and did so on its own first run — is the right shape and is visible in its
+source.
+
+**RE-DRIVEN** (`out/cheap-root-T471.txt`), against `HEAD~40` of the tip worktree:
+
+```
+T465-CHEAP-ROOT: rev=HEAD~40 control=238 arm=220 distinguishable=YES
+   rev-parse --show-toplevel -> /private/var/.../t465-cheaproot.<...>/tree
+```
+
+**The delta is 18, exactly as T465 measured; the absolute pair is `238/220` where T465 reports
+`237/219`.** That is the caller's own tree moving by one directory between their run and mine —
+the same nightly rot that produced this review's other cardinal findings — and it does not touch
+the conclusion, because the conclusion is the *difference*.
 
 ### C-T461-7 — **CONFIRMED, and my own base-released bar is the evidence**
 
@@ -394,10 +405,12 @@ be asked about. **File it.** (LOW-2.)
 
 ### OPEN #2, #3, #9 — confirmed as stated
 
-* `reachability.sh` still carries `echo "  live line 224: $LIVE_LINE"` and `sed -n '224p'` at
-  `b9b37f9c`. P-86 exactly. The file is **unwired** (`grep -c check-lock-exclusion-anchor
-  conformance.sh` → 0 for its sibling; nothing in `guards/` or `bin/` references either). Flagging
-  rather than fixing is right for archived, unreachable review evidence.
+* `reachability.sh` still carries, at `b9b37f9c`, `:60 LIVE_LINE=$(sed -n '224p' ".../bin/fire-program.sh")`
+  and `:61 echo "  live line 224: $LIVE_LINE"`. P-86 exactly. **Both this file and
+  `check-lock-exclusion-anchor.sh` are UNWIRED**: `grep -c` for either name over
+  `.softhouse/conformance.sh` is **0**, and nothing under `guards/`, `bin/` or `hooks/` references
+  them. Flagging rather than fixing is right for archived, unreachable review evidence, and it is
+  why MINOR-3 is MINOR and not MAJOR.
 * `run-move-demo.sh` still writes `${HERE}/fire-program.sh.MOVE-scratch-copy.sh` **inside the
   repo**. T299 class. Untouched and declared.
 * Clause (k) unmodelled: correct, and my independent re-derivation carries and prints the same
@@ -475,9 +488,6 @@ catches a wrong or empty reconstruction. Worth repairing so the arm means what i
 * **`provenance-graded=7 / unknown=21 / drift=0` on the live ledger.** The window derives from the
   live reflog and I did not run a modified hook against the live repository. I re-derived the
   premise instead: 45 rows, 33 CHEAP + 12 FULL, 12 rows carry `gate=`, all 12 CHEAP, zero FULL.
-* **`dirs=219` vs `237` for C-T461-3.** Window- and host-dependent. I confirmed the mechanism
-  (`cheap-subset.sh:78-80` exports the three git env vars), which is the half the conclusion rests
-  on.
 * **The mid-repair `patch.py` defect as it actually existed.** It was never committed. I confirmed
   the final bytes round-trip to base exactly, and reproduced the instrument's reaction to that
   defect class — same file, same message, `assignment #5 differs`.
@@ -502,3 +512,43 @@ catches a wrong or empty reconstruction. Worth repairing so the arm means what i
 3. I did not attempt a fifth bar cell (tip HELD → released → HELD again across one worktree), i.e.
    a full fire cycle rather than two static states. The guard-level `C2` arm covers the return
    leg; the bar-level return leg is untested.
+
+---
+
+## 9. The bar on THIS review's own committed tree
+
+Run with `bash`, never `sh`/`zsh`. Probe-line **presence** tested before its value (P-84).
+Transcript at `out/bar-T471-own-tree.txt`.
+
+```
+$ bash .softhouse/conformance.sh ; echo "BAR_EXIT=$?"
+BAR_EXIT=0
+
+$ grep -c 'probe = ' <transcript>          # PRESENCE first
+1
+
+$ grep -a 'probe = ' <transcript>          # only then the value
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+$ grep -a 'VERDICT' <transcript>
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+  dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+  T316-DEADPATH-CENSUS: corpus=1693 deadFiles=75 deadOccurrences=108 resolving=1594
+                        indeterminate=126 prose=428
+  NAMESPACE-CENSUS: dirs=240 prefixed=217 unprefixed=23 collidingIds=2 declared=2
+                    unclaimed=2 shortfallIds=0
+```
+
+**The pin was not touched**: `108` before, `108` after, `added=0 removed=0`. The corpus reads
+1693 because this review adds seven tracked `.py`/`.sh` instruments; **none of them adds a dead
+row** — every path they name under the softhouse directory is assembled from a variable at run
+time (P-103, which is the pattern the work under review exists to serve). `.softhouse/LOCK` was
+never deleted, moved or modified in this repository; every lock-state drive ran in a throwaway
+clone materialised outside it.
+
+**ORACLE NOTE.** The reference oracle was reachable for every bar in this review. The one `exit 2`
+recorded here — `out/bar-base-RELEASED.txt` — is **not** an outage: it prints **no** probe line,
+it is preceded by `T316-DEADPATH-FRONTIER: REFUSED rows=125 pinned=108 added=17 removed=0` and
+`guard_dead_path_frontier FAILED`, and it is the guard working exactly as P-84 describes. No PASS
+is reported anywhere in this review on a run where the oracle was down.
