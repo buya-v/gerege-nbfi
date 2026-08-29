@@ -6714,7 +6714,7 @@
     },
     {
       "id": "T452",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "role": "coder",
@@ -6728,7 +6728,7 @@
         ".softhouse/reviews/a2-33-dec2-rev5/"
       ],
       "description": "FILED 2026-08-29 by fire 20260829-080002 iter5 from T447's independent review of T442. Both are merged; these are residuals on main. RE-DERIVE EVERYTHING -- do not inherit T447's numbers.\n\n## F-T447-1 (MAJOR) -- `0 fail-OPEN` IS NOT ESTABLISHED, and note the exact epistemic status\n`.softhouse/reviews/a2-33-dec2-rev5/sweep.sh:61` is a P-72 positive calibration -- an ENFORCED PRESENT-assertion (`exit 92`) -- that is FAMILY-ONLY (0 matching files outside its own task dir) over 17 tracked files, while the sweep it calibrates searches 9,730. That is exactly the shape the census prints a fail-open warning for. T442 flagged 3 family-only rows, all absent-direction, and never saw this fourth because the probe is `$CAL_RE` (variable-indirect -- the T253/T266 blind-spot class).\nT447 IS SCRUPULOUS ABOUT WHAT IT PROVED: its first hypothesis -- that the calibration is strictly vacuous -- was FALSIFIED BY ITS OWN DRIVE (10 sibling files carry the token) and it KEPT that run. So the headline `0 fail-OPEN` is NOT FALSIFIED, but NOT ESTABLISHED either. Settle it: is this row a real fail-open or not? Drive it both ways.\n\n## F-T447-2 (MAJOR) -- T442 OVERTURNED A CORRECT REVIEWER FINDING ON A SEARCH ARTEFACT\nT442's erratum claims the wrong 16/8/6 decomposition sits in ONE site, because `git grep \\'all sixteen\\'` over `.softhouse/handoff/` returns nothing. But `.softhouse/handoff/T424-t408-conditions.md:233,235,236` DOES carry it, spelled as WORDS: \\'Sixteen are the sel calls ... Eight are SWEEP_*=$((...)) counters ... Six are parent-side assignments\\'. **T440 WAS RIGHT.** The erratum\\'s acceptance test mentions the handoff ZERO times, so applying it as written GOES GREEN WITH THE DEFECT STILL ON MAIN.\nThis is \\'not found is a statement about the search, never about the world\\' -- the rule T442 invokes correctly elsewhere in the same handoff. Correct the erratum, fix BOTH sites, and make the acceptance test cover the handoff.\n\n## F-T447-3 (MAJOR) -- THE CENSUS IS A MEMBER OF THE CLASS IT CENSUSES\nThe published sweep counts DO NOT REPRODUCE on the tree they ship on. At T442\\'s branch tip: `self_only 2->0, family_only 3->0, searches 399->401, scripts 1704->1707`. Measured cause: publishing the transcript, adjudication and handoff made them NEW TRACKED CARRIERS of `zzq-t379-nothing` and `zzz-no-such-string-t367`. Partially mitigated -- the transcript names its commit -- but the adjudication table, the handoff and the marker file all quote the numbers UNQUALIFIED. Every published count from a self-referential census must carry the tree it was taken on, or be taken in a way that excludes its own publication.\n\n## MINOR / LOW\n- F-T447-4 (MINOR): `immunised = 0` holds only for the `:!` pathspec spelling. THREE rows in 2 files self-exclude by post-pipe `grep -v <own task dir>`, which `cut_at_pipe()` makes structurally invisible.\n- F-T447-5 (MINOR): `matching_files()` re-runs every row as `git grep -l -F` (case-sensitive), DISCARDING the row\\'s own flags; for a2-33 that is 2 files vs the row\\'s real 11. The A1/A2 split is drawn with the wrong instrument.\n- F-T447-6 (LOW): C-T440-5\\'s guard has NO OWNER (P-45) -- 0 live occurrences, 5 in the patch, FU-T386-7 appears once in tasks.json inside a MERGED task. T447 accepts the disposition; the residual is ownership. Give it one.\n- F-T447-7 (LOW): 2 citations to `t442-selfmatching-probe-census.sh`; the file is `.py`.\n\n## ALSO CARRY FORWARD -- three live unowned class members T447 CONFIRMED at the exact lines, plus one T442 missed\n`t379-anticalibration-drive.sh:49,51` (rc=0, sole match is itself, legend says \\'1 == a MEASURED zero\\'); `t367 drive-sweep-failopen.sh:34,44` (2 files); `t245-oracle-pin/measure.sh:131` (CALIB negative prints 5, must print 0) AND an unmentioned second site `t245 measure.sh:119`. None is in T442\\'s or T452\\'s natural grant -- FILE THEM WITH OWNERS rather than leaving them to be rediscovered.\n\n## SETTLED -- do not re-drive\nC-T440-1 is genuinely closed (T447 re-drove RED at b102875c and GREEN at c223a16b in its own fresh clones, 0 dirty). The red/green harness is NON-VACUOUS under two mutations T442 did not run. The class-sweep transcript reproduces BYTE-FOR-BYTE at 97bad8ed. K8 = 13+10+6 = 29 re-derived by hand. The 131 `runtime` rows: the real blind spot is 14, NOT 131 -- T447 read every one. The 23 `unparsed` rows contain 0 class members. Corpus restriction to .softhouse/ costs nothing: 1704 candidates repo-wide, 0 outside.\n\n## F-T442-1 IS ADJUDICATED AND CLOSED -- THE AUTHOR WAS RIGHT, T440 WAS WRONG\n`casualty-sweep.sh` last changed at 1c71a1a2, which reached main with c5a8b5c5 \\'Merge T424\\' -- AFTER all of T440\\'s working commits. So on T440\\'s tree the two refs genuinely differed and the drive DID die at D-R2; on the merged tree they are identical and it aborts exit 2 SAME FILE. C-T440-6 WITHDRAWN, T424\\'s original wording stands ONCE TREE-QUALIFIED. T440\\'s branch is deleted so its tree cannot be re-run -- which is itself the argument for tree-qualified wording. Do not reopen this.\n\nSCOPE: your own capture dir plus the named sites. conformance.sh belongs to whoever holds it -- check tasks.json before editing. Bar on the finished committed tree, scratch OUTSIDE the repo, probe PRESENCE before value.",
-      "note": "FILED 2026-08-29 by fire 20260829-080002 iter5 from T447's review of T442. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 WAVE 2 on softhouse/T452-t447-conditions. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, PASS 46/7884, ATTESTED FULL."
+      "note": "FILED 2026-08-29 by fire 20260829-080002 iter5 from T447's review of T442. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 WAVE 2 on softhouse/T452-t447-conditions. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, PASS 46/7884, ATTESTED FULL. || COMPLETE 2026-08-29 iter5 wave2, 3 commits, tip dda1f031, bar EXIT 0 probe PRESENT x1 up PASS 46/7884, deadOccurrences 108, frontier 11==11. Scope clean. ANSWERED F-T447-1: a2-33 sweep.sh:61 IS a real fail-open, narrowly, on the CORPUS-REACH limb -- driven both ways, and family-only there is true BY CONSTRUCTION (the pathspec confines it), which is STRONGER than T447 family-only-today. Repaired with a second enforced limb calibrating on the sweep own corpus. ITS OWN FAIL-OPEN COUNT IS 2, NOT 0 -- and member 1 is NEW, found by NEITHER T442 NOR T447: capture/t388-accrual-capture/30-casualty-sweep-t388.sh:83, SELF-ONLY, 1 carrier in a 194-file corpus and it is the script itself, enforced exit 3, STRICTLY VACUOUS. F-T447-3 decided PIN not exclude, argued: excluding your own publication IS the immunisation anti-pattern the document itself names as the wrong repair. HELD for T457."
     },
     {
       "id": "T453",
@@ -6833,6 +6833,40 @@
         ".softhouse/reviews/t456-review-t451/"
       ],
       "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 wave2."
+    },
+    {
+      "id": "T457",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "role": "reviewer",
+      "target": "docs",
+      "title": "INDEPENDENT review of T452 -- a NEW strictly-vacuous fail-open neither prior pass found, a fail-open count that went 0 to 2, and a self-declared uncloseable clause exposing 34 rows",
+      "branch": "softhouse/T457-review-t452",
+      "dependencies": [
+        "T452"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/t457-review-t452/"
+      ],
+      "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 wave2."
+    },
+    {
+      "id": "T458",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "role": "coder",
+      "target": "code",
+      "title": "SIX WORKERS IN ONE FIRE WERE REFUSED BY guard_dead_path_frontier FOR THE SAME REFLEX -- spelling a real .softhouse/ path as a literal in a fixture. Record the pattern and make the refusal teach the fix",
+      "branch": null,
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/patterns.md",
+        ".softhouse/capture/t458-fixture-literal-reflex/"
+      ],
+      "description": "FILED 2026-08-29 by the driver of fire 20260829-080002 iter5 from SIX first-hand instances in a single fire. This is a MEASURED recurrence, not a hypothesis.\n\nWorkers T440, T446, T447, T448, T451 and T452 each had their FIRST committed bar REFUSED, and in every case by the same reflex: an instrument or fixture spelled a real `.softhouse/...` path as a LITERAL, and the dead-path census correctly read it as a reference to this tree that does not resolve. Representative refusals: `rows=109 pinned=108 added=1` (T447), `rows=120 pinned=108 added=12` (T451), `rows=109 pinned=108` (T452). T446 was refused by the sibling guard `guard_no_fail_open_instruments` for the adjacent reflex -- a drive whose `|| echo \"(none)\"` cannot distinguish 'line absent' from 'log absent'.\n\nEVERY ONE OF THE SIX REPAIRED AT THE INSTRUMENT RATHER THAN GROWING THE PIN, which is the correct outcome and is worth recording as much as the defect is. The remedy is always the same and always small: build the path from a variable (`S='.softhouse'`), or make the location a required parameter whose non-resolution is a hard exit, and adopt T238's `sweeplib.sh` shape so an instrument cannot print a negative it did not measure.\n\nWHAT TO DO:\n1. Write the pattern into `.softhouse/patterns.md` with the next free P-number, citing all six instances BY TASK AND BY MEASURED ROW COUNT. Do not invent a P-number -- read the register, and note that `check-pnumber-citations.py` treats `patterns.md` as the register and RESUME.md as a DIRECTIVE zone, so a citation to a number that does not exist yet is FATAL to the bar (this is exactly how the driver reddened main for three pushed commits in fire 20260828-140005).\n2. MAKE THE REFUSAL TEACH THE FIX. The guard currently names the added rows. It should also name the remedy, because six workers in one fire did not know it and the knowledge existed. A refusal that says WHAT is wrong but not WHAT TO DO costs every future worker the same rediscovery. Drive the new message RED and GREEN.\n3. Ask whether the guard can distinguish a fixture literal from a genuine dead path AT ALL, and say so honestly. If it cannot, the pattern entry is the whole remedy and you should say that rather than building a detector that guesses.\n\nSCOPE: patterns.md and your own capture dir. patterns.md is READ BY A HARD GUARD -- run the bar on your own committed tree before handing off, probe PRESENCE before value, and do not move the dead-path pin.",
+      "note": "FILED 2026-08-29 by the driver from six first-hand instances in one fire. The driver observed all six; T452 independently proposed the same patterns.md entry."
     }
   ],
   "cross_corroboration": {
