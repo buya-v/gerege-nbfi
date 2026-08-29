@@ -287,10 +287,16 @@ stillborn 8 demote · unstarted 1 demote · unverified 128 demote
 
 **No state with no verdict. No state with two verdicts. Every kind maps to exactly one of
 REFUSE / demote.** This is not the seven-arm-lock situation and the author's design is sound in
-that respect. (The 7 `AttributeError` states my first pass reported were **my artifact** — the
-module copy had no `branch_sweep.py` beside it, which forces `carriers is None` in the real code
-and makes those combinations unreachable. Recorded here so the first transcript
-`out/20-partition-t350.txt` is not misread.)
+that respect.
+
+The 7 `AttributeError` states my first pass reported were **my artifact**, and I measured that
+rather than reasoning it away: with `branch_sweep` forced to `None`, `ref_index()` → `None` →
+`refs_naming()` → `None` → `refs_carrying_content()` → `(None, None, None)`, and
+`_absent_verdict` returns **`indeterminate` / demote** on `carriers is None` *before* it can
+reach `branch_sweep.short()`. No `AttributeError` is reachable; my stub had supplied a
+non-`None` `carriers` alongside a `None` `branch_sweep`, which the real code cannot produce.
+[`bin/22-artifact-check.py`, `out/22-artifact-check.txt`] Recorded so the first transcript
+`out/20-partition-t350.txt` is not misread.
 
 What does *not* hold is that the polarity is a function of the evidence: **4 of 4** evidence
 groups contain both polarities once branch state varies (PASS 3). Two of those splits are the
@@ -424,6 +430,7 @@ and the single `!! WORK BEARING id T286 IS ALREADY ON MAIN` flag (correct — 27
 | `bin/10-calibrate.py` | calibration over all 689 local heads, my own id regex |
 | `bin/11-explain-175.py` | the same with T350's population definition — reconciles 175 → 174 |
 | `bin/20-partition.py`, `bin/21-partition-passes34.py` | the 256-state enumeration, passes 1–4 |
+| `bin/22-artifact-check.py` | proves pass 1's 7 `AttributeError` states are unreachable in the real code |
 | `bin/30-fixture.sh`, `bin/31-drive.py` | synthetic repo; cases A–J RED vs GREEN |
 | `bin/32-case-k.sh`, `bin/33-drive-k.py` | case K — work under another task's directory |
 | `bin/34-proposed-fix-probe.py` | the C-T449-2 repair, verified not to reintroduce T339 |
