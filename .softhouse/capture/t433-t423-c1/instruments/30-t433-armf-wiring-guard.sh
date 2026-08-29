@@ -62,11 +62,22 @@ echo "--- 2. THE FALSE IMPOSSIBILITY IS GONE FROM EVERY EXECUTABLE IN SCOPE ----
 echo "    C-T423-1. These are NEGATIVE assertions, and P-35 says every vacuous guard in this"
 echo "    repo is a negative one — so each is paired with a POSITIVE assertion that the"
 echo "    replacement text is present. A file that was deleted would fail the positive half."
+echo "    Each corrected file QUOTES the false text verbatim, so the check must distinguish a"
+echo "    quotation from an assertion: quoted lines carry the literal tag [QUOTED-FALSE-CLAIM]"
+echo "    and are excluded, and the tag's PRESENCE is asserted too — dropping the quote to"
+echo "    silence the guard would fail the positive half."
+IMPOSS="there is no committed baseline older than HEAD|no baseline older than HEAD anywhere|does not exist and cannot be manufactured here|committed baseline older than HEAD for those 632"
 for f in "$INT" "$RUNALL" "$DRIVE" "$LAUNDER"; do
   n="$(basename "$f")"
-  got="$(grep -c "there is no committed baseline older than HEAD\|no baseline older than HEAD anywhere\|There is no committed baseline older than HEAD for those 632\." "$f")"
-  if [ "$got" = "0" ]; then ok "$n no longer ASSERTS the impossibility (x0)"
-  else bad "$n still asserts the impossibility (x$got)"; fi
+  got="$(grep -Ei "$IMPOSS" "$f" | grep -vc "QUOTED-FALSE-CLAIM")"
+  if [ "$got" = "0" ]; then ok "$n ASSERTS the impossibility on x0 untagged line(s)"
+  else
+    bad "$n still asserts the impossibility on x$got untagged line(s):"
+    grep -nEi "$IMPOSS" "$f" | grep -v "QUOTED-FALSE-CLAIM" | sed 's/^/         /'
+  fi
+  q="$(grep -c "QUOTED-FALSE-CLAIM" "$f")"
+  if [ "$q" -ge 3 ]; then ok "$n still QUOTES the false text, tagged (x$q lines)"
+  else bad "$n no longer quotes the false text (x$q tagged lines) — a bare negation removed"; fi
 done
 want "verify-capture-integrity.py says what the baseline IS" "$INT" "THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION" 1
 want "run-all.sh's banner says what the baseline IS" "$RUNALL" "BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION" 1

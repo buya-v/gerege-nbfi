@@ -11,10 +11,14 @@ are about laundering, and they point in opposite directions:
 
   f1-13b  mutate a POST-FORK observation AND rewrite its manifest row.
         [CORRECTED BY T433 / C-T423-1 — WHAT STOOD HERE WAS FALSE, IN A TRACKED EXECUTABLE.]
-        This paragraph used to read, verbatim: "Nothing catches it, at either ref. That is
-        the DISCLOSED RESIDUAL: there is no committed baseline older than HEAD for those 632
-        observations. Driving it is how the boundary statement in
-        verify-capture-integrity.py's docstring becomes a measurement instead of a hope."
+        This paragraph used to read, verbatim -- kept so the next reader sees what was wrong
+        rather than a negation silently removed, and TAGGED so a guard can tell a quotation
+        from an assertion by grep alone:
+        [QUOTED-FALSE-CLAIM] "Nothing catches it, at either ref. That is the DISCLOSED
+        [QUOTED-FALSE-CLAIM]  RESIDUAL: there is no committed baseline older than HEAD for
+        [QUOTED-FALSE-CLAIM]  those 632 observations. Driving it is how the boundary
+        [QUOTED-FALSE-CLAIM]  statement in verify-capture-integrity.py's docstring becomes a
+        [QUOTED-FALSE-CLAIM]  measurement instead of a hope."
         The last claim was not a measurement and not a hope — it was FALSE, and it was
         load-bearing: T393's handoff reasoned FROM the impossibility to send the next task
         to build a substitute artefact this repository already contained.

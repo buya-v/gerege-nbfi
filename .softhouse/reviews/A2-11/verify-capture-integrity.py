@@ -118,9 +118,12 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                     cannot see it (no fork blob), ARM B cannot see it (HEAD *is* the mutated
                     commit), ARM C cannot see it (the manifest was laundered to agree), ARM D
                     cannot see it (the file is tracked and regular).
-                    WHAT THIS BLOCK USED TO SAY, VERBATIM: "Closing this needs a committed
-                    baseline OLDER than HEAD for the post-fork observations, which does not
-                    exist and cannot be manufactured here." THAT IS FALSE, and it was
+                    WHAT THIS BLOCK USED TO SAY, VERBATIM — kept rather than deleted, and
+                    TAGGED so a guard can tell a quotation from an assertion by grep alone:
+                    [QUOTED-FALSE-CLAIM] "Closing this needs a committed baseline OLDER than
+                    [QUOTED-FALSE-CLAIM]  HEAD for the post-fork observations, which does not
+                    [QUOTED-FALSE-CLAIM]  exist and cannot be manufactured here."
+                    THAT IS FALSE, and it was
                     load-bearing rather than a wording slip: T393's handoff reasoned FROM the
                     impossibility to send the next task to build a substitute artefact, so a
                     false negation spent a worker's budget and foreclosed the cheap fix.

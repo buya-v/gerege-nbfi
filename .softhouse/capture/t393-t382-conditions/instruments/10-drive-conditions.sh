@@ -216,9 +216,15 @@ run_case f4b-move-fork-constant          mut_move_fork_constant                0
 run_case f3-commit-mutate-nonobs         mut_commit_mutate_nonobs              0 1
 run_case f3b-commit-mutate-nonobs-laundered mut_commit_mutate_nonobs_laundered 0 1
 # T433 / C-T423-1 -- THIS ROW USED TO EXPECT `0 0`, AND ITS STATED REASON WAS FALSE.
-# It read: "Expected UNDETECTED at BOTH refs: a committed mutation of a post-fork observation
-# whose manifest row is rewritten in the same commit has no baseline older than HEAD anywhere
-# in this repository. The docstring says so; this row is the evidence that it says so truly."
+# The three lines below are a VERBATIM QUOTE of the false text, kept so the next reader sees
+# exactly what was wrong rather than a negation silently removed. Each is tagged
+# [QUOTED-FALSE-CLAIM] so a guard can tell a quotation from an assertion by grep alone --
+# without the tag, any check for "this file no longer asserts the impossibility" would fire on
+# the correction itself and would have to be deleted, which is how corrections get lost.
+# [QUOTED-FALSE-CLAIM] "Expected UNDETECTED at BOTH refs: a committed mutation of a post-fork
+# [QUOTED-FALSE-CLAIM]  observation whose manifest row is rewritten in the same commit has no
+# [QUOTED-FALSE-CLAIM]  baseline older than HEAD anywhere in this repository. The docstring
+# [QUOTED-FALSE-CLAIM]  says so; this row is the evidence that it says so truly."
 #
 # There IS such a baseline, and it was always in this repository: THE BLOB AT THE COMMIT THAT
 # FIRST ADDED each observation, reachable with `git log --diff-filter=A -- <path>`. T423 found

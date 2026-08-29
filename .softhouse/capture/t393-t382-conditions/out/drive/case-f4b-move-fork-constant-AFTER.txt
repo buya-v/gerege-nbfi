@@ -909,3 +909,31 @@ NOTE (T374 / T362 F-5): this run REWROTE the tracked file
 so your working tree is now dirty. That is expected — the transcript carries a
 generation timestamp — and it is NOT a finding. To restore it:
   git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+
+================================================================================
+T433 / C-T423-1 -- CORRECTION APPENDED TO A RECORD
+================================================================================
+This transcript is a RECORD of what the tooling printed. Above, it echoes T393's
+claim that no committed baseline older than HEAD exists for the 632 post-fork
+captured oracle observations. THAT CLAIM IS FALSE. The bytes are left exactly as
+they were printed, because deleting them would destroy the evidence that this
+program shipped a false claim in tracked executable files.
+
+THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each
+observation, `git log --diff-filter=A -- <path>`. It is an object inside an
+ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating commit
+cannot reach it.
+
+MEASURED OVER THE WHOLE 632, NOT A SAMPLE (T433, two independent derivations of the
+birth commit agreeing 632/632): 632 born STRICTLY OLDER than the tip, 0 born at the
+tip, 631 still byte-identical to their birth blob, 1 legitimate re-capture
+(out/A2-370-db-ledger-state.txt) adjudicated by digest.
+  -> .softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt
+
+T433 landed the comparison as ARM F, section 8 of
+.softhouse/reviews/A2-11/verify-capture-integrity.py. Driven RED then GREEN in situ:
+  -> .softhouse/capture/t433-t423-c1/out/20-ARMF-IN-SITU-DRIVE.txt
+
+Index of every corrected site and every surviving echo:
+  -> .softhouse/capture/t393-t382-conditions/out/T433-CORRECTION.md
+================================================================================
