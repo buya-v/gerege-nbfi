@@ -1,0 +1,68 @@
+-- s4-digest-feasibility  captured 2026-08-29T00:11:18Z  container=fineract-db-1 db=fineract_gerege
+-- statement sha256 4067e7ddf1e7ba4381ed0edd57fdb970002ba959f6d7703176015c7b0e3c3a9a
+-- oracle pinned 426a23544 ; PostgreSQL only (CLAUDE.md)
+
+== s4a: how many base tables, and how many carry ANY audit column ==
+ base_tables 
+-------------
+         281
+(1 row)
+
+ tables_with_any_audit_column 
+------------------------------
+                           92
+(1 row)
+
+== s4b: total live row count across every base table, from the planner-independent count -- the digest cost driver ==
+ total_rows_all_base_tables | tables_counted 
+----------------------------+----------------
+                      98509 |            281
+(1 row)
+
+== s4c: the ten largest base tables by live row count ==
+          table_name          |  cnt  
+------------------------------+-------
+ batch_job_execution_params   | 13373
+ batch_step_execution         | 13331
+ batch_step_execution_context | 13331
+ job_run_history              | 13330
+ batch_job_instance           | 13330
+ batch_job_execution          | 13330
+ batch_job_execution_context  | 13330
+ databasechangelog            |  1922
+ m_permission                 |   964
+ m_portfolio_command_source   |   379
+(10 rows)
+
+== s4d: sequences -- exception class (a), a CONSUMED sequence leaves no row ==
+ sequences 
+-----------
+       254
+(1 row)
+
+ schemaname |               sequencename               | last_value 
+------------+------------------------------------------+------------
+ public     | acc_gl_account_id_seq                    |         47
+ public     | acc_gl_closure_id_seq                    |          1
+ public     | acc_gl_financial_activity_account_id_seq |          7
+ public     | acc_gl_journal_entry_id_seq              |        113
+ public     | acc_product_mapping_id_seq               |        189
+ public     | batch_job_execution_seq                  |      13330
+ public     | batch_job_seq                            |      13330
+ public     | batch_step_execution_seq                 |      13331
+ public     | c_configuration_id_seq                   |         79
+ public     | job_id_seq                               |         43
+ public     | job_run_history_id_seq                   |      13330
+ public     | m_batch_business_steps_id_seq            |         13
+ public     | m_charge_id_seq                          |         18
+ public     | m_client_id_seq                          |          3
+ public     | m_code_id_seq                            |         49
+ public     | m_code_value_id_seq                      |         22
+ public     | m_command_id_seq                         |          1
+ public     | m_loan_charge_id_seq                     |          4
+ public     | m_loan_charge_paid_by_id_seq             |         15
+ public     | m_loan_id_seq                            |          8
+(20 rows)
+
+
+-- psql rc=0
