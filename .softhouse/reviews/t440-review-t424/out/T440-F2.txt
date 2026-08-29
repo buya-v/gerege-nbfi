@@ -1,0 +1,72 @@
+T440 F-2 DRIVE
+bash: 3.2.57(1)-release   uname: Darwin 25.5.0 arm64   git: git version 2.50.1 (Apple Git-155)
+
+== PART 0: the primitives that decide it ==
+  true | grep -c .                 -> captured=[0] rc=1
+  [OK]   grep -c . PRINTS 0 for an empty stream
+  [OK]   and its rc is 1
+  git(FAILS rc=129) | grep -c .     -> captured=[0] rc=1
+  [OK]   a FAILING git ls-files STILL yields the string 0 -- the stream is NOT empty
+  PIPEFAIL git(129) | grep -c .(1)  -> captured=[0] rc=1
+  [OK]   pipefail returned grep's 1, NOT git's 129 -- RIGHTMOST non-zero wins
+  REAL grep, INVALID REGEX         -> captured=[] rc=2
+  [OK]   stdout EMPTY when grep ITSELF fails
+  [OK]   rc >= 2 (2) when grep ITSELF fails
+  [ "0" -lt 1 ]                    -> TRUE (test rc=0)
+  [OK]   the abort FIRES on "0"
+  [ "" -lt 1 ]                     -> FALSE (test rc=2)
+  [OK]   malformed test returns 2 -> if reads FALSE -> FALLS THROUGH
+
+== PART 0b: pipefail rightmost, isolated from git ==
+  pipefail  (exit 128) | (exit 1)  -> rc=1
+  [OK]   rightmost non-zero (1) wins over the left arm's 128
+  pipefail  (exit 1) | (exit 128)  -> rc=128
+  [OK]   and reversed, the rightmost (128) wins -- it is POSITION, not magnitude
+  pipefail  (exit 3) | (exit 0)    -> rc=3
+  [OK]   rightmost NON-ZERO: a trailing 0 does not mask an earlier failure
+
+== PART 1: OLD block (pre-T402), extracted BY CONTENT, driven under PATH shims ==
+  OLD anchor occurrences in casualty-sweep.PRE-T402.sh: 1
+    | if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+    |   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
+    |   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
+    |   exit 2
+    | fi
+  OLD + failing git ls-files  -> [SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/.;  A sweep over nothi|2]
+  [OK]   OLD ABORTS rc2 on a failing git ls-files -- T402'S STATED CAUSE DOES NOT REPRODUCE
+  OLD + failing grep          -> [bash: line 1: [: : integer expression expected;FELL THROUGH|0]
+  [OK]   OLD FALLS THROUGH rc0 when grep ITSELF fails -- THE TRUE CAUSE, REPRODUCED
+  OLD healthy                 -> [FELL THROUGH|0]
+  [OK]   OLD healthy passes through (arm is non-vacuous)
+
+== PART 2: SHIPPED block, extracted BY CONTENT from casualty-sweep.sh ==
+  NEW anchor occurrences in casualty-sweep.T424.sh: 1
+    | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+    | if [ "$_corpus_rc" -ge 2 ]; then
+    |   echo "SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=$_corpus_rc). There is no" >&2
+    |   echo "  denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'." >&2
+    |   exit 2
+    | fi
+    | case "$SWEEP_CORPUS_N" in ''|*[!0-9]*)
+    |   echo "SWEEP ABORT (exit 2): the corpus count is not a number ([$SWEEP_CORPUS_N]). A count that" >&2
+    |   echo "  is not a number is not a count, and every zero below would be denominated in it." >&2
+    |   exit 2 ;;
+    | esac
+    | if [ "$SWEEP_CORPUS_N" -lt 1 ]; then
+    |   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
+    |   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
+    |   exit 2
+    | fi
+    | 
+    | # T402, THE K1/K6 CLASS: provenance cardinals are computed with their statuses read, and print
+    | # the word UNMEASURED rather than an empty field when they cannot be taken. An empty field
+    | # reads as a zero, or worse as nothing at all -- and `commit=` is the one cardinal on the
+  NEW + failing git ls-files  -> [SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/.;  A sweep over nothi|2]
+  [OK]   NEW aborts rc2 on a failing git ls-files (through the VALUE test)
+  [OK]   and it does NOT claim 'the count did not run' -- the message matches the cause
+  NEW + failing grep          -> [SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=2). There is no;  denominator, so there is no|2]
+  [OK]   NEW aborts rc2 on a failing grep, naming 'the corpus COUNT DID NOT RUN'
+  NEW healthy                 -> [FELL THROUGH|0]
+  [OK]   NEW healthy passes through (arm is non-vacuous)
+
+T440-F2-DRIVE-RESULT: arms_failed=0

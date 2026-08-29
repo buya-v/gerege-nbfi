@@ -1,0 +1,21 @@
+ref=HEAD  sha256=63e05208fa871628dbb74db8c429d55c5760cd95ab5cfd59bd9a5954a4975d77
+
+executable lines: 340
+
+=== calls to sel(): 16
+    -> non-bare call sites: 0
+=== calls to calibrate(): 1
+    -> non-bare call sites: 0
+=== calls to _calib_refuse(): 7
+    -> non-bare call sites: 0
+=== calls to engine_count(): 9
+    -> non-bare call sites: 0
+
+=== SWEEP_* assignments, and where the ASSIGNMENT itself happens
+  total lines carrying a SWEEP_* assignment: 32
+  assignments that execute in a CHILD (real STATE-LOSS): 0
+
+=== function bodies: is any state-mutating function invoked from inside $( ) anywhere?
+  none
+
+T440-K8-ADJUDICATION: state-loss sites found = 0 unless a *** line appears above

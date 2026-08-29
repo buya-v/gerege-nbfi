@@ -1,0 +1,20 @@
+      .softhouse/capture/t177-so-nondeterminism/run-t177b.sh                                   1 mention(s)
+      .softhouse/capture/t219-g8-residual/src/bar-t219.sh                                      1 mention(s)
+      .softhouse/capture/t239-r11-rerun/instruments/90-bar.sh                                  3 mention(s)
+      .softhouse/capture/t272-goenv-graft/instruments/50-shells-and-build.sh                   1 mention(s)
+      .softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh       1 mention(s)
+      .softhouse/capture/t312-branch-case-collision/drive-wrapper-probe.sh                     1 mention(s)
+      .softhouse/capture/t424/instruments/t424-buffered-writer-drive.sh                        2 mention(s)
+      .softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch 2 mention(s)
+      .softhouse/guards/repo-state-attest.sh                                                   1 mention(s)
+      .softhouse/reviews/T155-probe/prove-viii-compiles-on-main.sh                             1 mention(s)
+      .softhouse/reviews/a2-33-dec2-rev5/redgreen.sh                                           1 mention(s)
+      .softhouse/reviews/t254-harness-portability/instruments/10-mktemp-census.sh              2 mention(s)
+      .softhouse/reviews/t380-review-t377/bin/t380-alpine.sh                                   2 mention(s)
+
+  SAFE whole-array copies `( "${PIPESTATUS[@]}" )`: 1
+      .softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch:65  +  _t424_pipe=( "${PIPESTATUS[@]}" )
+
+  DEFECTIVE SHAPE (a second PIPESTATUS read with no intervening pipeline): 0
+
+T440-PS-CENSUS-RESULT: scanned=1468 withps=19 defective=0 safe_whole=1

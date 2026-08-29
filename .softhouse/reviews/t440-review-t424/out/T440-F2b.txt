@@ -1,0 +1,6 @@
+== git ls-files fails at rc 128 but HAS ALREADY PRINTED 3 lines ==
+  pipefail git(128,3 lines)|grep -c .(0) -> captured=[3] rc=128
+  -> pipefail's rightmost NON-ZERO is git's own 128 here, because grep SUCCEEDED.
+  SHIPPED block -> rc=2
+    | SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=128). There is no
+    |   denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'.
