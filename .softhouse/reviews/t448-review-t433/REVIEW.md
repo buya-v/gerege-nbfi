@@ -115,10 +115,21 @@ CONFIRMED.**
   move fails `RUN-ALL VERDICT`. Confirmed.
 * `10-drive-conditions.sh:241` now reads
   `run_case f1-13b-postfork-laundered-CLOSED-BY-ARM-F mut_commit_mutate_postfork_laundered 0 1`.
-  I measured that the `1` is *caused by ARM F*: at the T433 ref the laundered residual grades
-  section 10 = 1 with ARM F naming the file; remove the arm and it is 0. So removing ARM F does
-  fail T393's own drive. Confirmed.
-* **Correction (LOW-1 below):** the handoff's invoker table is not the complete set, and the
+  **The `1` is ATTRIBUTED, not assumed.** T433's branch changes four files, so "it is 1 now" is
+  not by itself an attribution. `instruments/60-t448-f113b-attribution.sh` builds T393's f1-13b
+  mutation (post-fork observation mutated **and** its `MANIFEST.sha256` row rewritten in the
+  same commit, via T393's own `12-relaunder-manifest.py`) and grades section 10 on it at **two
+  refs**, transcript `out/61-F113B-ATTRIBUTION.txt`:
+
+  | ref | section 10 | ARM F named it |
+  |---|---|---|
+  | `b102875c` — unmodified `main`, no ARM F | **0** | **0** |
+  | `3253358d` — T433 tip, ARM F present | **1** | **1** |
+
+  Both halves are load-bearing: a red BEFORE would mean T393's residual was never real, and a
+  green AFTER would mean the arm does not reach it. So **removing ARM F does fail T393's own
+  drive.** Confirmed.
+* **Correction (C-T448-5 below):** the handoff's invoker table is not the complete set, and the
   figure "17 existing invocation sites" is not 17 pre-existing sites.
 
 ### 1.4 The vacuity control — RE-DRIVEN RED, independently
@@ -141,7 +152,7 @@ the control that catches it has now been seen to fail by two independent hands.
 `out/60-WIRING-GUARD-RED-DRIVE.txt`. I removed the `=== 8. ARM F` marker from the grader in a
 scratch clone and ran `30-t433-armf-wiring-guard.sh` against it: **EXIT 1**, on
 `BAD  verify-capture-integrity.py carries ARM F as section 8 — expected x1, got x0`.
-P-22 satisfied at first hand. (Two further red-drive attempts of my own are MINOR-2 below —
+P-22 satisfied at first hand. (Two further red-drive attempts of my own are C-T448-2 below —
 they did **not** go red, and that is the finding.)
 
 ### 1.6 F-6 — CONFIRMED, and attributed
@@ -161,7 +172,7 @@ says in terms that the capability is still UNGRADED. Nothing about the graded co
 the search cannot tell a graded cell from a sentence about one.
 
 T433's decision **not** to regenerate `TRANSCRIPT-A2-11.txt` over this is the right call and I
-endorse it. Its stated *reason* for not fixing section 9 is wrong — see MINOR-1.
+endorse it. Its stated *reason* for not fixing section 9 is wrong — see C-T448-3.
 
 ### 1.7 F-5's nine argued rows — MEASURED, and the argument HOLDS
 
@@ -192,7 +203,7 @@ not twenty-six. `instruments/50-t448-f5-argued-rows.sh`, transcript `out/50-F5-A
 | `f3b-commit-mutate-nonobs-laundered` | 1 | **1** |
 
 **Nine for nine. T433's argument was correct.** F-5 should now be closed as measured rather
-than carried as a debt — see MINOR-3 for the two cardinals it got wrong on the way.
+than carried as a debt — see C-T448-4 for the two cardinals it got wrong on the way.
 
 ### 1.8 `(iv-c)` — DRIVEN four ways, and it is not a hole
 
@@ -496,15 +507,42 @@ VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 
 all 16 wrong ledger implementations DIED through this harness, not by hand.
 
 fail-open frontier   : 11, pinned at 11, frontier == pinned (all 11 rows, by path)
-dead-path census     : corpus=1581 deadFiles=75 deadOccurrences=108 resolving=1481 …
+dead-path census     : corpus=1581 deadFiles=75 deadOccurrences=108 resolving=1491 …
+dead-path frontier   : GREEN, T323 reconciliation list empty
 ```
 
-**My own six instruments move neither.** The fail-open linter, run separately with my files
-tracked, reports corpus **1575 → 1581** (+6, my six files) and frontier **11 → 11**, with zero
-`t448` rows on the frontier: `out/81-FAILOPEN-LINT.txt`. `deadOccurrences` stays **108**. Every
-instrument I wrote takes its locations as required parameters (`${VAR:?…}`), writes no host
-path, calibrates on a known positive before reporting any negative, and exits 2 rather than 0
-when it cannot measure.
+**My own seven instruments move neither figure — but only after a repair.** The fail-open
+linter, run separately with my files tracked, reports corpus **1575 → 1581** and frontier
+**11 → 11**, with zero `t448` rows on the frontier: `out/81-FAILOPEN-LINT.txt`.
+`deadOccurrences` stays at **108**.
+
+**THE FIRST RUN OF THE BAR ON MY OWN COMMITTED TREE WAS `EXIT 2` WITH `probe = ` PRINTED ZERO
+TIMES**, and it was my instrument that did it: `out/79-BAR-FIRST-RUN-REFUSED-BY-MY-OWN-INSTRUMENT.txt`.
+
+```
+> .softhouse/reviews/t448-review-t433/instruments/30-t448-tag-abuse.sh | .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh
+T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
+BAR EXIT 2      grep -c 'probe = ' -> 0
+```
+
+`30-t448-tag-abuse.sh:36` spelled the path of the guard it tests as a literal. That guard is on
+`softhouse/T433-t423-c1` and **not on `main`**, so a tracked instrument on my branch carried a
+dead path and moved `guard_dead_path_frontier` 108 → 109 — the same shape the fire has spent
+this whole iteration repairing in T446 and T447, reproduced by the reviewer who was warned
+about it. **Repaired at the instrument, not pinned** (commit `83d3c9c3`): the guard's location
+is now a required caller-supplied parameter `T448_GUARD`, and a value that does not resolve
+inside the checked-out tree is `exit 3` in `prepare()` — never a skipped case and never a pass,
+which is the arm the frontier guard's own message asks for in exchange. Re-measured after the
+repair: frontier `11 == 11`, `deadOccurrences=108`, dead-path frontier GREEN, bar `EXIT 0`.
+
+Every instrument here takes its locations as required parameters (`${VAR:?…}`), writes no host
+path, declares its engine, calibrates on a known positive before reporting any negative, and
+exits 2 or 3 rather than 0 when it cannot measure.
+
+**One note for the merger:** `main` advanced while this review ran (`ef97f3e3`, T445 + T446
+merged), and that merge changes `.softhouse/conformance.sh`. My bar figures are against the
+`conformance.sh` at my fork point `00b9f6d7`. The merge result must be re-barred against the
+newer one; nothing in this branch touches `conformance.sh`, so no conflict is expected.
 
 ---
 

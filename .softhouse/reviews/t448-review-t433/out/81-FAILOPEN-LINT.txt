@@ -1,5 +1,5 @@
 T238 FAIL-OPEN LINT
-commit    : 00b9f6d74ad8cc5b214f275550458814b372a404
+commit    : 83d3c9c3b7f10a105128740f583e05f1ddd605e1
 corpus    : 1581 tracked .sh/.py; 178 are repo-wide search instruments
 scope     : whole repository
 
