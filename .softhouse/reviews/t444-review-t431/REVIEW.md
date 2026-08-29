@@ -514,6 +514,35 @@ graded. One line either way.
 
 ---
 
+# FOLLOW-UPS TO FILE
+
+* **`FU-T444-1` (from M-1, MAJOR).** Close the index-versus-filesystem divergence in
+  `guard_guards_dir_registration`'s witness direction by making the closing `grep` read the
+  TRACKED BLOB (`self_blob`, already in hand) instead of `"$REPO_ROOT/$self_norm"`. Driven
+  remedy and driven defect both in `.softhouse/reviews/t444-review-t431/evidence/`. Keep the
+  P-57 no-pipeline discipline: write the blob to a temporary and grep the file, the shape
+  `guard_pnumber_citations` and `guard_dead_path_frontier` already use. Amend `FU-T431-1`'s
+  honest citation at the same time — newline and gitlink are now **driven fail-closed**, the
+  multiple-row route is **driven and not a fail-open**, and the case route is **driven and
+  live**, not unreached.
+* **`FU-T444-2` (from C-1).** One-sentence correction to the `C-T407-3` block: `member_multi`
+  is not unreachable-by-construction; a conflicted index reaches it on a conforming git.
+* **`FU-T444-3` (from C-2).** Give `guard_guards_dir_registration` a selftest, in the shape the
+  file already uses three times, so the round-trip line cannot be deleted silently.
+* **`FU-T444-4` (from C-3).** Rewrite `.softhouse/RESUME.md:52` to name
+  `guard_guards_dir_registration` instead of `conformance.sh:3677`, in the merge commit. Same
+  remedy as `FU-T431-2` for `fire-program.sh:1406`.
+* **`FU-T444-5` (from C-4).** Record in `patterns.md`: paths under `.softhouse/` must be plain
+  ASCII, with no backslash, quote, control character or newline — and the three places that
+  break otherwise (`guard_guards_dir_registration` member side, its witness side, and
+  `guard_dead_path_frontier`'s census, which crashes rather than diagnosing).
+* **`FU-T444-6` (from LOW-5).** Either refuse a member carrying more than one `REACHED-BY` row,
+  or say in the code that only the first is graded.
+* **`FU-T444-7` (from T431's `FU-T431-4`, seconded).** `patterns.md` still has no entry for
+  "freeze the drive before you run it". T431 adopted the discipline and I adopted it from T431
+  (`sha256 b173219c…` recorded before both of my runs, `chmod a-w` applied); two generations
+  have now paid for the lesson and nobody has written the P-number.
+
 # WHAT I CHECKED AND FOUND CLEAN
 
 So that silence is distinguishable from not looking.
