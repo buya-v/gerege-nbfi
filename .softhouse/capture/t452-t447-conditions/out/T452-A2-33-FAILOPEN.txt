@@ -1,8 +1,8 @@
 ==============================================================================
 T452 A2-33 CALIBRATION FAIL-OPEN DRIVE   [F-T447-1]
 repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7e5b6561c3ff56ca
-commit  : cbc8733c46cff515a2e48b5f3389ffbf514dc674
-dirty   : 16 path(s)
+commit  : 0c0794e62797961cf9b0f9871d30249c7df0c9cc
+dirty   : 2 path(s)
 live    : .softhouse/reviews/a2-33-dec2-rev5/sweep.sh            sha256 7b6856c6157e1d77
 shipped : .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh  sha256 57a611fde83188eb  (PINNED BY CONTENT)
 ==============================================================================
@@ -13,11 +13,11 @@ ARM A -- the row measured on the LIVE TREE, with the ROW'S OWN FLAGS (-c -I -i -
    of those, files OUTSIDE the task dir        : 0   <-- FAMILY-ONLY, BY CONSTRUCTION
                                                   (the pathspec confines it; the corpus
                                                    cannot make it otherwise)
-   files carrying the token in the SWEEP's     : 608   <-- the row never looks here
+   files carrying the token in the SWEEP's     : 611   <-- the row never looks here
      corpus but outside the task dir
    matches in the SEARCHER ALONE               : 9   <-- would satisfy it by itself
    files the CENSUS reports for this row (-l -F): 2   <-- vs the row's own 11 [F-T447-5]
-   calibration corpus / sweep corpus           : 17 / 10094 tracked files
+   calibration corpus / sweep corpus           : 17 / 10098 tracked files
   the row's own result set is FAMILY-ONLY                    expected=0          actual=0          OK
   the searcher alone would satisfy it                        expected=yes        actual=yes        OK
   the calibration corpus is a STRICT SUBSET                  expected=yes        actual=yes        OK
@@ -30,7 +30,7 @@ ARM B -- FOR the fail-open. A corpus of ONE FILE: the searcher itself. AS-SHIPPE
    SWEEP CORPUS               : 1 tracked file(s)
    positive calibration PASSed: 1
    'MEASURED ZERO' lines       : 13 of 34 patterns
-   SWEEP-RESULT: commit=f328516 corpus_files=1 patterns=34 hit_lines=26 calibration=PASS
+   SWEEP-RESULT: commit=e38ff00 corpus_files=1 patterns=34 hit_lines=26 calibration=PASS
   B: as-shipped EXITS 0 over a 1-file corpus                 expected=0          actual=0          OK
   B: corpus really is one file                               expected=1          actual=1          OK
   B: the calibration CERTIFIED that run                      expected=1          actual=1          OK
@@ -39,6 +39,7 @@ ARM B -- FOR the fail-open. A corpus of ONE FILE: the searcher itself. AS-SHIPPE
        deleted-worktree defect the T238 block was written to remove.
 
 ARM C -- AGAINST. The guard is NOT unfireable: move the task directory and it aborts 92.
+   relocated to: .softhouse/reviews/t452-relocated-78433/sweep.sh
    exit 92 ; 'SWEEP ABORT (92)' lines: 1
   C: the calibration CAN fire                                expected=92         actual=92         OK
   C: and says so                                             expected=1          actual=1          OK
@@ -60,7 +61,7 @@ ARM D -- THE REPAIR, on the SAME specimen as arm B. Only the script differs.
 
 ARM E -- the repaired script on the REAL tree must still measure, not refuse.
    exit 0 ; patterns run 34 ; limbs: pos=1 neg=1 reach=1
-   SWEEP-RESULT: commit=cbc8733c corpus_files=10094 patterns=34 hit_lines=31138 calibration=PASS calib_corpus=17 reach_files=9827
+   SWEEP-RESULT: commit=0c0794e6 corpus_files=10098 patterns=34 hit_lines=31152 calibration=PASS calib_corpus=17 reach_files=9831
   E: real tree exits 0                                       expected=0          actual=0          OK
   E: positive limb PASS                                      expected=1          actual=1          OK
   E: anti-calibration PASS                                   expected=1          actual=1          OK

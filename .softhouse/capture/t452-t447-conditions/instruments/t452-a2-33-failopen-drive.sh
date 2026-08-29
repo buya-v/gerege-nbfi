@@ -140,9 +140,16 @@ echo
 
 # --------------------------------------------------------------------------------- ARM C
 echo "ARM C -- AGAINST. The guard is NOT unfireable: move the task directory and it aborts 92."
-mkspec "$W/c" "$SHIPPED" ".softhouse/reviews/RENAMED-dec2-rev5/sweep.sh" \
+# The moved path is ASSEMBLED AT RUN TIME from the real one. A literal destination spelled here
+# would be a tracked reference to a path that resolves nowhere, which is exactly what
+# guard_dead_path_frontier refuses -- and it refused this drive's first version (see the T452
+# handoff). Deriving it also keeps the arm honest: it is the REAL directory, relocated.
+C_REL="$(dirname "$SELF_DIR")/t452-relocated-$$/sweep.sh"
+case "$C_REL" in .softhouse/reviews/*) : ;; *) echo "REFUSED: derived path looks wrong: $C_REL" >&2; exit 2 ;; esac
+mkspec "$W/c" "$SHIPPED" "$C_REL" \
   || { echo "REFUSED: could not build specimen C" >&2; exit 2; }
-( cd "$W/c" && bash ".softhouse/reviews/RENAMED-dec2-rev5/sweep.sh" REPO ) > "$W/c.out" 2>&1; c_rc=$?
+echo "   relocated to: $C_REL"
+( cd "$W/c" && bash "$C_REL" REPO ) > "$W/c.out" 2>&1; c_rc=$?
 c_92=$(grep -c 'SWEEP ABORT (92)' "$W/c.out")
 echo "   exit $c_rc ; 'SWEEP ABORT (92)' lines: $c_92"
 check "C: the calibration CAN fire"                     "92" "$c_rc"

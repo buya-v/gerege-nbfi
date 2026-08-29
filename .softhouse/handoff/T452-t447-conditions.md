@@ -400,4 +400,24 @@ Run with `bash`, never `sh`/`zsh`; scratch in `/tmp`, **outside the repository**
 **committed** tree. **Presence of the probe line was tested before its value was read** —
 `grep -c 'probe = '` first, because absence is a harness failure and is not `down`.
 
-_(transcript: `capture/t452-t447-conditions/out/T452-BAR.txt`; figures filled in from that run)_
+**The bar refused my first committed attempt, and that is recorded rather than hidden.** Arm C of
+the `a2-33` drive spelled its relocated specimen path as a literal —
+`.softhouse/reviews/…-dec2-rev5/sweep.sh` under a name that exists nowhere — so
+`guard_dead_path_frontier` refused: `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1
+removed=0`, **BAR EXIT=2**, on a clean tree (0 dirty). The guard's own prescription is *"repair it
+rather than pinning it"*, so the destination is now **assembled at run time** from the real
+directory (`$(dirname "$SELF_DIR")/t452-relocated-$$`) and the arm sanity-checks the derived path
+before using it. **The pin is untouched and the frontier is back at 108.** This is the same
+repair T447 made to its own hard-coded path, and the same one T440 made before that — the third
+time this exact guard has caught this exact reflex, which is worth a `patterns.md` note.
+
+BAR TRANSCRIPT: `capture/t452-t447-conditions/out/T452-BAR.txt`
+
+```
+grep -c 'probe = ' -> 1     (PRESENCE tested FIRST; absence would be a harness failure, not `down`)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+T316-DEADPATH-FRONTIER: rows=108 pinned=108
+deadOccurrences 108   frontier 11 == 11
+VERDICT: PASS (exit 0)
+BAR EXIT=0
+```
