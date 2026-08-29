@@ -6853,7 +6853,7 @@
   },
   {
    "id": "T458",
-   "status": "done",
+   "status": "merged",
    "executor": "agent",
    "model": "opus",
    "role": "coder",
@@ -6866,7 +6866,7 @@
     ".softhouse/capture/t458-fixture-literal-reflex/"
    ],
    "description": "FILED 2026-08-29 by the driver of fire 20260829-080002 iter5 from SIX first-hand instances in a single fire. This is a MEASURED recurrence, not a hypothesis.\n\nWorkers T440, T446, T447, T448, T451 and T452 each had their FIRST committed bar REFUSED, and in every case by the same reflex: an instrument or fixture spelled a real `.softhouse/...` path as a LITERAL, and the dead-path census correctly read it as a reference to this tree that does not resolve. Representative refusals: `rows=109 pinned=108 added=1` (T447), `rows=120 pinned=108 added=12` (T451), `rows=109 pinned=108` (T452). T446 was refused by the sibling guard `guard_no_fail_open_instruments` for the adjacent reflex -- a drive whose `|| echo \"(none)\"` cannot distinguish 'line absent' from 'log absent'.\n\nEVERY ONE OF THE SIX REPAIRED AT THE INSTRUMENT RATHER THAN GROWING THE PIN, which is the correct outcome and is worth recording as much as the defect is. The remedy is always the same and always small: build the path from a variable (`S='.softhouse'`), or make the location a required parameter whose non-resolution is a hard exit, and adopt T238's `sweeplib.sh` shape so an instrument cannot print a negative it did not measure.\n\nWHAT TO DO:\n1. Write the pattern into `.softhouse/patterns.md` with the next free P-number, citing all six instances BY TASK AND BY MEASURED ROW COUNT. Do not invent a P-number -- read the register, and note that `check-pnumber-citations.py` treats `patterns.md` as the register and RESUME.md as a DIRECTIVE zone, so a citation to a number that does not exist yet is FATAL to the bar (this is exactly how the driver reddened main for three pushed commits in fire 20260828-140005).\n2. MAKE THE REFUSAL TEACH THE FIX. The guard currently names the added rows. It should also name the remedy, because six workers in one fire did not know it and the knowledge existed. A refusal that says WHAT is wrong but not WHAT TO DO costs every future worker the same rediscovery. Drive the new message RED and GREEN.\n3. Ask whether the guard can distinguish a fixture literal from a genuine dead path AT ALL, and say so honestly. If it cannot, the pattern entry is the whole remedy and you should say that rather than building a detector that guesses.\n\nSCOPE: patterns.md and your own capture dir. patterns.md is READ BY A HARD GUARD -- run the bar on your own committed tree before handing off, probe PRESENCE before value, and do not move the dead-path pin.",
-   "note": "FILED 2026-08-29 by the driver from six first-hand instances in one fire. The driver observed all six; T452 independently proposed the same patterns.md entry. || local fire 20260829-080002 iter6: DISPATCHED (wave 1) at 2026-08-29T08:50:30Z, isolated worktree, model opus, branch softhouse/T458-fixture-literal-pattern. || local fire 20260829-080002 iter6: DONE on softhouse/T458-fixture-literal-pattern (4 commits, tip 0db7538b, 17 files, +3112). Took P-103. CORRECTED ITS OWN BRIEF: only 2 of 6 instances are fixture literals; 3 (T440,T447,T448) are cross-branch artefact references genuinely dead on the author tree, so the census had ZERO false positives, and T446 is the sibling guard. Answered item 3 NO -- the guard cannot distinguish a fixture literal from a genuine dead path and should not try; no detector built. DECLARED OVERREACH: touched .softhouse/conformance.sh (+13) because the message six workers actually read lives in guards/check-dead-path-frontier.sh, not conformance.sh; re-specifiable from handoff section 3b if it conflicts with T466. Own bar at 963fe613: exit 0, probe PRESENT x1 up, PASS 46/7884, pin unmoved."
+   "note": "FILED 2026-08-29 by the driver from six first-hand instances in one fire. The driver observed all six; T452 independently proposed the same patterns.md entry. || local fire 20260829-080002 iter6: DISPATCHED (wave 1) at 2026-08-29T08:50:30Z, isolated worktree, model opus, branch softhouse/T458-fixture-literal-pattern. || local fire 20260829-080002 iter6: DONE on softhouse/T458-fixture-literal-pattern (4 commits, tip 0db7538b, 17 files, +3112). Took P-103. CORRECTED ITS OWN BRIEF: only 2 of 6 instances are fixture literals; 3 (T440,T447,T448) are cross-branch artefact references genuinely dead on the author tree, so the census had ZERO false positives, and T446 is the sibling guard. Answered item 3 NO -- the guard cannot distinguish a fixture literal from a genuine dead path and should not try; no detector built. DECLARED OVERREACH: touched .softhouse/conformance.sh (+13) because the message six workers actually read lives in guards/check-dead-path-frontier.sh, not conformance.sh; re-specifiable from handoff section 3b if it conflicts with T466. Own bar at 963fe613: exit 0, probe PRESENT x1 up, PASS 46/7884, pin unmoved. || MERGED in fire 20260829-080002 iter6, graded ON THE MERGE RESULT, ATTESTED FULL tree 373bf176ad10806f047ad6d2ced6ca07ef3aac95 (exit 0, probe PRESENT x1 up, PASS 46/7884, deadOccurrences 108 pin unmoved, ids=102 gaps=none)."
   },
   {
    "id": "T459",
@@ -7027,7 +7027,7 @@
   },
   {
    "id": "T468",
-   "status": "in_progress",
+   "status": "merged",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -7041,7 +7041,7 @@
     "T458"
    ],
    "description": "Independent adversarial review of T458 (softhouse/T458-fixture-literal-pattern, tip 0db7538b). Re-derive from source and from the tree; do not read T458's conclusions as evidence.",
-   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T458) at 2026-08-29T09:13:35Z, isolated worktree, model opus, branch softhouse/T468-review-t458."
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T458) at 2026-08-29T09:13:35Z, isolated worktree, model opus, branch softhouse/T468-review-t458. || DONE and MERGED: APPROVED WITH CONDITIONS (1 MAJOR non-blocking, 4 LOW). Re-derived the register two ways with the checkers own regexes; P-103 free; all six citations open at the cited line; re-ran the bar at 963fe613 AND at the delivered tip 0db7538b which T458 never graded. ENDORSED item 3s honest NO with a drive -- refuted the briefs argument-vs-heredoc discriminator on the actual specimen (T451s pre-repair literals ARE arguments)."
   },
   {
    "id": "T469",
@@ -7060,6 +7060,23 @@
    ],
    "description": "Independent adversarial review of T462 (softhouse/T462-wallclock-refusal, tip 04956e8b). Re-derive; do not inherit T462's or T456's numbers.",
    "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T462) at 2026-08-29T09:29:17Z, isolated worktree, model opus, branch softhouse/T469-review-t462."
+  },
+  {
+   "id": "T470",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "title": "C-T468-1 (MAJOR): the new dead-path refusal text and P-103 FORECLOSE a disposition the same message offers four lines above and the guard itself sanctions",
+   "files_hint": [
+    ".softhouse/guards/check-dead-path-frontier.sh",
+    ".softhouse/patterns.md",
+    ".softhouse/capture/t470-refusal-forecloses/"
+   ],
+   "dependencies": [],
+   "description": "FILED 2026-08-29 by fire 20260829-080002 iter6 from T468's independent review of T458 (both merged, tree 373bf176). RE-DERIVE; do not inherit T468's reading.\n\nT458's new refusal text and the P-103 entry it wrote into the PERMANENT REGISTER both push the reader toward 'repair at the instrument' in terms that FORECLOSE 'pin the row with its reason' -- a disposition that the SAME refusal message offers four lines above, and that check-dead-path-frontier.sh:55-61 explicitly sanctions ('either repaired or PINNED WITH ITS REASON'). So the guard now argues with itself inside one message, and the narrower half is the one carved into patterns.md.\n\nT468 judged this the same species as the T358 erratum ALREADY RECORDED in that file -- and worse, because this one also lands in the register, which is the artefact every future worker reads as settled. T468 specified an exact one-clause repair in section 6 of its REVIEW.md and DELIBERATELY DID NOT APPLY IT: reviewer-proposed patches have been refuted by their assigned workers twice in this program, and both refutations were independently confirmed.\n\nWHAT TO DO:\n1. Read T468's section 6 repair, then RE-DERIVE whether the foreclosure is real. Quote both dispositions from the shipped bytes at their line numbers. If T468 is wrong, say so with the drive -- that outcome is fully acceptable and has precedent.\n2. If it is real, repair BOTH sites: the refusal message and the P-103 entry. patterns.md is APPEND-ONLY and corrected FORWARD, never edited in place -- so the register repair is a forward correction, not an edit. Get this right; the P-number checker is a HARD guard.\n3. Drive the repaired message RED and GREEN, and show that the pin-with-reason disposition survives as a legitimate route in both the message and the register.\n4. Also carry C-T468-2 (LOW): T458's handoff self-reports its conformance.sh hunk as +9 twice; measured +13 (7 warn + 6 comment). Its section 6 re-specification says 'seven warn lines' and IS correct. Correct the self-report.\n\nSCOPE: the guard, a FORWARD correction in patterns.md, and your own capture dir. Do not move the dead-path pin. Do not spell a real .softhouse/... path as a literal in a fixture -- P-103 is the pattern you are repairing and you must obey it. Bar on your own committed tree, probe PRESENCE before value.",
+   "note": "Filed by the driver of fire 20260829-080002 iter6 from T468's C-T468-1 (MAJOR, non-blocking) and C-T468-2 (LOW)."
   }
  ],
  "cross_corroboration": {
