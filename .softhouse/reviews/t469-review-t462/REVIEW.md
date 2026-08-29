@@ -629,5 +629,30 @@ review's instruments is empty — as it is over T462's, which I verified.
 
 # 9. Bar on my own committed tree
 
-See the foot of `out/91-bar-t469-committed-tree.txt`; the probe line was tested for **presence**
-before its value was read.
+```
+$ git status --short              # empty: nothing uncommitted
+$ git log --oneline -1
+ef717b46 T469: independent review of T462 -- APPROVED WITH CONDITIONS
+
+$ bash .softhouse/conformance.sh > /tmp/t469/bar-own.txt 2>&1 ; echo "BAR EXIT=$?"
+BAR EXIT=0
+
+PROBE PRESENCE CHECKED BEFORE ITS VALUE WAS READ:
+$ grep -c 'probe = ' /tmp/t469/bar-own.txt
+1
+$ grep -n 'probe = ' /tmp/t469/bar-own.txt
+220:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+conformance:   HARNESS-TEXT CENSUS: HEAD ef717b465d36f15a73b82d081fbdbfef184da47e; tracked paths
+conformance:   whose materialised bytes differ from HEAD: 0 …
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+         IT EXCLUDES 1 RECORDED DIVERGENCE(S) — see THE DIVERGENCE CENSUS above.
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+```
+
+Full transcript: `out/91-bar-t469-committed-tree.txt`, added in the follow-up commit, so the tree
+the bar graded is the one named above and this section is not self-referential. `bash`, never
+`sh`/`zsh`. The oracle was reachable and `up`; no exit-2 leg occurred.
