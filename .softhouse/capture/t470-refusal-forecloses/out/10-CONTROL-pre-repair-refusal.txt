@@ -1,0 +1,39 @@
+conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+conformance:   selector and per-bucket counts are printed by the census itself:
+T316-DEADPATH-CENSUS: corpus=1755 deadFiles=76 deadOccurrences=109 resolving=1577 indeterminate=126 prose=427
+conformance:   frontier 109 row(s), pinned at 108
+conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+conformance: !! THE DEAD-PATH FRONTIER MOVED.
+conformance: !! 1 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
+conformance: !! rather than pinning it. Either make the path resolve, or -- if the
+conformance: !! reference is a deliberate fallback candidate -- make the instrument
+conformance: !! REFUSE when no candidate resolves, and record why in the pin.
+> .softhouse/capture/t470-red-drive-specimen/planted-dead-literal.sh | .softhouse/capture/t470-no-such-directory/no-such-file.txt
+conformance: !! ----------------------------------------------------------------
+conformance: !! THE REMEDY, because SIX workers in one fire each rediscovered it:
+conformance: !!   T440, T446, T447, T448, T451, T452 -- every one of them repaired
+conformance: !!   the INSTRUMENT, and not one of them grew the pin. Do ONE of these
+conformance: !!   three, and never a fourth:
+conformance: !!   1. ASSEMBLE the path at run time from a variable -- S='.softhouse'
+conformance: !!      and build downward. This census reads QUOTED LITERALS ONLY, so
+conformance: !!      an assembled path is not a row. That is not evasion: it STATES
+conformance: !!      that the path is COMPUTED rather than REFERENCED, which is
+conformance: !!      exactly what a fixture or a scratch destination means.
+conformance: !!   2. MAKE THE LOCATION A REQUIRED PARAMETER -- no default, and a
+conformance: !!      HARD EXIT when it does not resolve. Never a skipped case,
+conformance: !!      never a warning, never a pass. This is the arm this guard asks
+conformance: !!      for in exchange for not pinning the row.
+conformance: !!   3. If the failure arm PRINTS instead of exiting, adopt T238's
+conformance: !!      sweeplib shape too, so the instrument cannot print a negative
+conformance: !!      it never measured. That is the sibling defect T446 was caught
+conformance: !!      by, in the same fire, for the same underlying reason.
+conformance: !! THE FORBIDDEN FOURTH: do NOT split or concatenate the literal to
+conformance: !! slip past the selector. That leaves the false claim standing and
+conformance: !! removes the only instrument that would ever have found it.
+conformance: !! FULL RULE, the six measured row counts, and the three sub-classes:
+conformance: !! grep patterns.md for this SENTENCE -- the line number moves, and an
+conformance: !! id is a cardinal that rots, but the sentence relocates with its text:
+conformance: !!   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
+conformance: !! ----------------------------------------------------------------
+conformance:   The pin is /tmp/t470-scratch/base-clone/.softhouse/guards/dead-path-frontier.pin
+T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0

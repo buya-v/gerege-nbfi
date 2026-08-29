@@ -120,11 +120,24 @@ for needle in "$OFFER" "$ROUTE_HEAD" "$ROUTE_BODY" "$HEADER_SENT" "$FORBIDDEN"; 
 done
 [ "$cal" -eq 0 ] || die2 "the repaired guard does not contain the text this drive grades."
 
-echo "-- CALIBRATION 2: the two MUST-BE-ABSENT strings are gone from the repaired guard SOURCE"
+echo "-- CALIBRATION 2: the two MUST-BE-ABSENT strings are gone from the guard's PRINTABLE bytes"
+# SCOPED TO `echo` LINES ON PURPOSE, and the scoping is the finding, not a convenience. The
+# repaired guard still QUOTES the removed clause once, inside its own T470 comment block, so a
+# reader can see what was wrong. A whole-file scan cannot tell an `echo` from a comment ABOUT
+# an `echo` -- exactly the distinction T468 had to make for T446's surviving `|| echo`
+# occurrences, which are likewise comments about a removed defect. What must be gone is the
+# ability to PRINT it, and that lives in the echo lines. The refusal OUTPUT is asserted
+# separately in the RED arm below, which is the assertion that actually binds.
+ECHOES="$TMP/guard-echo-lines.txt"
+LC_ALL=C grep -E '^[[:space:]]*echo ' "$GUARD" >"$ECHOES" 2>/dev/null
+nech=$(LC_ALL=C grep -ac '' "$ECHOES" 2>/dev/null || true); [ -n "$nech" ] || nech=0
+echo "   printable (echo) lines in the guard = $nech   (a zero here would make the scan vacuous)"
+[ "$nech" -ge 1 ] || die2 "no echo lines found in the guard. The scan would be vacuous (P-22/P-98)."
 for needle in "$FORECLOSE_A" "$FORECLOSE_B"; do
-  n=$(cnt "$needle" "$GUARD")
-  echo "   source hits = $n   for: $needle      (expected 0)"
-  [ "$n" -eq 0 ] || { echo "   !! the foreclosing clause is STILL IN THE SOURCE"; fail=1; }
+  n=$(cnt "$needle" "$ECHOES")
+  w=$(cnt "$needle" "$GUARD")
+  echo "   echo-line hits = $n   (whole file $w)   for: $needle      (expected 0 printable)"
+  [ "$n" -eq 0 ] || { echo "   !! the foreclosing clause can still be PRINTED"; fail=1; }
 done
 echo
 
@@ -289,8 +302,29 @@ echo "   header sentence quoted back    = $e_s    (expected >= 1)"
 # The register is corrected FORWARD: P-103 must still be DEFINED EXACTLY ONCE. A second
 # definition line would be an in-file collision and would move the checker's cardinals.
 PDEF="$TMP/p103-defs.txt"
-LC_ALL=C grep -n -E '^(#{2,4}[[:space:]]+|([-*>][[:space:]]+)?\*\*)P-103[[:space:]]*[.-]' "$REGISTER" >"$PDEF" 2>/dev/null
+# The two DEFINITION regexes are copied VERBATIM from the HARD guard's own source
+# (`check-pnumber-citations.py`, DEFN_HEAD / DEFN_BOLD), and the line is `strip()`ped first
+# because `build_register` does -- T468 measured that the strict and stripped scans disagree
+# (97 vs 102 distinct ids). Grading with anything other than the checker's own predicate would
+# be grading a different question. python3, not grep, because the separator class contains
+# EM DASH and EN DASH and a byte-oriented bracket expression gets them wrong: the first draft
+# of this drive did exactly that and reported 0 definitions for a P-103 that is plainly there.
+python3 - "$REGISTER" >"$PDEF" <<'PY'
+import re, sys
+DEFN_HEAD = re.compile(r'^#{2,4}\s+P-([1-9][0-9]*)\s*[.·—–-]\s+(.+)$')
+DEFN_BOLD = re.compile(r'^(?:[-*>]\s+)?\*\*P-([1-9][0-9]*)\s*[.·—–-]\s+(.+)$')
+for i, raw in enumerate(open(sys.argv[1], encoding="utf-8"), 1):
+    s = raw.strip()
+    for rx in (DEFN_HEAD, DEFN_BOLD):
+        m = rx.match(s)
+        if m:
+            if int(m.group(1)) == 103:
+                print("%d: %s" % (i, s[:90]))
+            break
+PY
+if [ $? -ne 0 ]; then die2 "could not scan the register for P-103 definitions."; fi
 ndef=$(LC_ALL=C grep -ac '' "$PDEF" 2>/dev/null || true); [ -n "$ndef" ] || ndef=0
+LC_ALL=C sed -n '1,4p' "$PDEF"
 echo "   P-103 definition lines         = $ndef    (expected exactly 1 -- forward, not in place)"
 [ "$ndef" -eq 1 ] || { echo "   !! REGISTER: P-103 is defined $ndef time(s); a forward correction must not redefine it"; fail=1; }
 
