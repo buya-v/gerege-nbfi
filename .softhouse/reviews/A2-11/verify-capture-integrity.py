@@ -1277,8 +1277,10 @@ def emitter_payloads(text):
     reason and it is the reason T472 raised a MAJOR: T467 replaced this rule with a wider one
     WITHOUT EVER MEASURING THE TWO AGAINST EACH OTHER, and the replacement was not a superset.
     Keeping this arm inside `printed_payloads` makes the superset relation STRUCTURAL — true
-    by construction, not by whichever fixtures the next author happens to think of. Control
-    (n) below asserts it and goes RED if this arm is ever unwired.
+    by construction, not by whichever fixtures the next author happens to think of. The
+    SUPERSET CONTROL below is the wiring tripwire on it and goes RED if the arm is unwired —
+    and DRIVEN, it is the ONLY check that does, because the widened arms cover the eight
+    regression spellings on their own. The arm is here for the guarantee, not for catches.
     """
     out = []
     for i, line in enumerate(text.split("\n"), 1):
@@ -1327,11 +1329,15 @@ def printed_payloads(text, rel):
     expressible at all.
 
     THE COST, MEASURED AT SCALE, NOT ON THE GUARDED FOUR. Over every tracked .py/.sh in the
-    repository (1,687 files) this rule flags SIX files that T455's rule flags ZERO, and all
-    six are tag-guard instruments from this lineage that hold the sentence in a variable or a
-    grep pattern. T476's three widenings and the union add NONE of them: the set is the same
-    six as T467's, re-derived. It is a MEASUREMENT and it goes stale — re-run
-    `20-t476-population-cost.py`, do not trust this paragraph.
+    repository — 1,687 files at `6a345e4a`, 1,691 once T476's own four instruments are in it —
+    this rule flags SIX files that T455's rule flags ZERO, and all six are tag-guard
+    instruments from this lineage that hold the sentence in a variable or a grep pattern.
+    T476's three widenings and the union add NONE of them: the set is the same six as T467's,
+    re-derived, and the four files T476 adds to the population are flagged ZERO times because
+    they assemble the sentence from words. THE FOUR GUARDED FILES ARE FLAGGED ZERO TIMES ON A
+    CLEAN TREE, which is the number that decides whether the guard is usable at all. All of
+    this is a MEASUREMENT and it goes stale — re-run `20-t476-population-cost.py`, do not
+    trust this paragraph.
 
     WHAT IS STILL OPEN, DECLARED RATHER THAN ARGUED SHUT:
       * a fragment of the claim COMPUTED at runtime — `f"...{chr(72)}EAD..."`, or
@@ -1410,7 +1416,13 @@ def grade_binding(text, rel):
     for lineno, payload in printed_payloads(text, rel):
         if states_a_false_claim(squeeze(payload)) and TAG not in payload:
             src_line = lines[lineno - 1].strip()[:90] if 0 < lineno <= len(lines) else ""
-            printed_untagged.append("%s:%d %s" % (os.path.basename(rel), lineno, src_line))
+            site = "%s:%d %s" % (os.path.basename(rel), lineno, src_line)
+            # DEDUPED BY SITE. The union offers the same line as several payloads (whole code
+            # text under two comment rules, plus each quoted segment), so a count of payloads
+            # would read like a count of lines and be several times larger. What a reader
+            # needs is the set of SITES.
+            if site not in printed_untagged:
+                printed_untagged.append(site)
     quoted_claims = sum(1 for c in FALSE_CLAIMS
                         if any(c in b.lower() for b in tagged_blocks(text)))
     return stated_untagged, quoted_claims, printed_untagged

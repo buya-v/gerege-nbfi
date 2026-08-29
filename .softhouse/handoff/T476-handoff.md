@@ -143,14 +143,23 @@ opens.
 | **U** `echo <words, UNQUOTED>  # <tag>`, section 10 | **exit 1** | **exit 0** | **exit 1** |
 | **Q** the same line, words QUOTED, section 10 | exit 1 | exit 1 | exit 1 |
 | **A2** `print(b"<claim>".decode())  # <tag>`, section 10 | **exit 1** | **exit 0** | **exit 1** |
-| **U** through the whole runner | — | `run-all.sh` **exit 0**, transcript **UNTAGGED ×1** | `run-all.sh` **exit 1**, transcript untagged ×**0** |
+| **U** through the whole runner | — | `run-all.sh` **exit 0**; transcript carries the sentence **UNTAGGED ×1** and its own verdict says **PASS** | `run-all.sh` **exit 1**; transcript carries it untagged ×1 and its own verdict says **FAIL** |
 | **G** clean tree, whole runner | — | — | exit **0**, sections run **10**, deviations **0**, untagged ×**0** |
 
 **Case Q is the control that gives case U its meaning**: the only difference between the caught
 line and the missed line is one pair of quote characters. **Case G is the load-bearing green** —
 a predicate that reddens honest trees is a freeze, not a guard.
 
-#### 3.3.1 A defect in MY OWN instrument, found by driving it, and what it now refuses
+**THE OBVIOUS EXPECTATION IS WRONG, AND I WROTE IT BEFORE I DROVE IT.** Section 10 grades
+SOURCE; it cannot stop a live emitter from printing. The smuggled `echo` runs inside
+`run-all.sh`'s own teed block, so the sentence reaches the transcript at BOTH refs. What
+changes is what the transcript says about ITSELF: at T467 it carries a false sentence untagged
+and calls the run a **PASS** — a publishable record of a lie; at T476 the same bytes are there
+and the record says **FAIL**, so nobody can cite it. **The harm was never the echo. It was the
+PASS.** My drive originally asserted `untagged ×0` at T476 and went BAD on it; the assertion
+was wrong, not the repair, and it is now written the way the mechanism actually works.
+
+#### 3.3.1 TWO defects in MY OWN instrument, found by driving it, and what it now refuses
 
 The first run of this drive reported case A2 as `T455=0 T467=1` — **the finding inverted**. It
 was not a finding. `PYANCHOR` was built with `$(printf 'import hashlib\nimport os\nimport
@@ -162,7 +171,8 @@ names, and it said so by producing the wrong answer rather than by staying silen
 the only reason it was caught.
 
 Two changes: the anchor is `$'…'` (ANSI-C quoting, which keeps the byte), and the mutation now
-**REFUSES with exit 3 unless the mutated `.py` still parses**. A mutation that breaks the parse
+**REFUSES with exit 3 unless the mutated `.py` still parses**. The second defect is the
+transcript expectation immediately above. A mutation that breaks the parse
 measures the fallback, not the spelling, and a case that measures the wrong thing must not be
 able to report a number at all. Recorded here because a drive that is not itself driven is the
 defect this whole lineage is about, one level further out.
