@@ -16,6 +16,19 @@
 # Exit 0 = every claim I drove came out as this drive declares. A claim coming out FALSE is a
 # FINDING, and is declared as such below -- it does not fail the drive; a claim coming out
 # differently from what this drive DECLARES does.
+#
+# ---------------------------------------------------------------------------------------------
+# [T442, 2026-08-29 -- AMENDED, closing C-T440-1 (MAJOR).] AS SHIPPED ON `main` THIS DRIVE DID
+# NOT PRODUCE THE TRANSCRIPT THAT SHIPPED BESIDE IT. CLAIM 3's no-match control spelled its probe
+# as a literal in this file, so once the file was committed `git grep` matched the instrument's
+# own source, the control inverted, and the drive printed `disagreements=1` and exited 1 while
+# the committed transcript said `disagreements=0`. The claim under test was and is TRUE; what was
+# wrong was a record on `main` asserting a result the code does not produce.
+#   RED  (committed bytes, clean detached checkout) : out/T442-C1-RED.txt   -> disagreements=1, exit 1
+#   GREEN(this file, clean detached checkout)       : out/T442-C1-GREEN-detached.txt -> disagreements=0, exit 0
+# The repair is in CLAIM 3 below: the probe is assembled at RUN TIME. The class was then swept --
+# instruments/t442-selfmatching-probe-census.sh, out/T442-CLASS-SWEEP.txt.
+# ---------------------------------------------------------------------------------------------
 # =============================================================================================
 set -uo pipefail
 REPO=${T424_REPO:-$(git rev-parse --show-toplevel)}
@@ -100,20 +113,69 @@ echo "            ABSENCE and not a failure.'"
 echo "  at line(s): $(locate 'git grep\` exits 1 on NO MATCH')"
 echo "=============================================================================="
 cd "$REPO" || exit 2
-git grep -q 'zzq-no-such-token-t424' -- .softhouse > /dev/null 2>&1; g_absent=$?
+# ---------------------------------------------------------------------------------------------
+# [T442, closing C-T440-1.] THE NO-MATCH CONTROL BELOW USED TO SPELL ITS PROBE AS A LITERAL IN
+# THIS FILE. While this instrument was untracked that worked and the drive printed
+# `disagreements=0`. The moment it was committed, `git grep` found the probe IN THIS VERY
+# SOURCE, the control that exists to prove "no match returns 1" scored rc=0, and the drive
+# printed `disagreements=1` and exited 1 -- so the transcript shipped on `main` recorded a
+# result the shipped code cannot produce. [RED reproduced from committed bytes on a clean
+# detached checkout: .softhouse/capture/t424/out/T442-C1-RED.txt]
+#
+# THE REPAIR IS NOT TO RESPELL THE TOKEN IN PIECES TO SLIP PAST `git grep` -- that hides the
+# control from the census instead of repairing it, and this program has already ruled that a
+# guard which works by evading its own instrumentation is not a guard. The probe is ASSEMBLED AT
+# RUN TIME out of the pid, $RANDOM and the epoch second, so no byte sequence equal to it exists
+# in any tracked file, in this one or any other, at any commit.
+#
+# GENERAL RULE, and the reason this is worth thirty lines: a control whose probe is spelled in
+# tracked bytes CHANGES MEANING WHEN IT IS COMMITTED. Here it inverted fail-CLOSED (a red that
+# should be green). The dangerous inversion is the other one -- a POSITIVE control satisfied by
+# the instrument's own copy of the token passes VACUOUSLY and says nothing about the corpus.
+# The class census is `t442-selfmatching-probe-census.sh`.
+# ---------------------------------------------------------------------------------------------
+g_tok="zzq-$$-${RANDOM}-$(date +%s)-t442-runtime-assembled"
+# CONTROL ON THE CONTROL (the C-T440-1 regression check): if a future editor ever hard-codes the
+# probe back into this file, this is what catches it. `grep -c -F` over this instrument's own
+# source must be 0, and it is 0 BY CONSTRUCTION, not by luck -- the token carries this process's
+# pid and this second.
+g_self=$(LC_ALL=C /usr/bin/grep -c -F "$g_tok" "${BASH_SOURCE[0]}"); g_self_rc=$?
+if [ "$g_self_rc" -ge 2 ]; then
+  echo "REFUSED: cannot read this instrument to check its own source (rc=$g_self_rc)" >&2; exit 2
+fi
+# ...and the probe must be absent from the whole tracked corpus, otherwise the no-match arm is
+# not a no-match arm. This is checked, printed and graded, never assumed.
+git grep -q -F -e "$g_tok" > /dev/null 2>&1; g_absent_all=$?
+git grep -q -F -e "$g_tok" -- .softhouse > /dev/null 2>&1; g_absent=$?
 git grep -q -E '[' -- .softhouse > /dev/null 2>&1; g_error=$?
 # A token that is REALLY in CLAUDE.md. My first spelling of this arm used 'CLAUDE', which is
 # not in that file's body, so the healthy control scored rc=1 and looked like the no-match arm.
 # Recorded because it is the same defect as everything else here: a control that cannot tell a
 # real absence from a broken probe.
 git grep -q 'Gerege' -- CLAUDE.md > /dev/null 2>&1; g_hit=$?
+# THE TRAP, DEMONSTRATED RATHER THAN ASSERTED: a probe that IS spelled in tracked source. The
+# string below is built from a literal that this file genuinely contains (its own shebang line),
+# so `git grep` must find it -- which is precisely why it would be worthless as a no-match
+# control. Printed so the reader can see the inversion happen instead of taking it on trust.
+g_literal='#!/usr/bin/env bash'
+git grep -q -F -e "$g_literal" -- .softhouse > /dev/null 2>&1; g_selfmatch=$?
+printf '  runtime probe   : %s\n' "$g_tok"
+printf '  spelled in this instrument? count=%s (0 = built at run time, never in tracked bytes)\n' "$g_self"
+printf '  no match (repo) : rc=%s\n' "$g_absent_all"
 printf '  no match        : rc=%s\n' "$g_absent"
 printf '  invalid pattern : rc=%s\n' "$g_error"
 printf '  match           : rc=%s\n' "$g_hit"
-check "no match -> 1"         "1"   "$g_absent"
-check "error   -> >1"         "yes" "$( if [ "$g_error" -gt 1 ]; then echo yes; else echo no; fi )"
-check "match   -> 0"          "0"   "$g_hit"
+printf '  literal probe spelled in tracked source : rc=%s  <- THE C-T440-1 INVERSION\n' "$g_selfmatch"
+check "probe not spelled in this file"  "0"   "$g_self"
+check "no match, whole repo -> 1"       "1"   "$g_absent_all"
+check "no match -> 1"                   "1"   "$g_absent"
+check "error   -> >1"                   "yes" "$( if [ "$g_error" -gt 1 ]; then echo yes; else echo no; fi )"
+check "match   -> 0"                    "0"   "$g_hit"
+check "a tracked literal DOES self-match -> 0" "0" "$g_selfmatch"
 echo "  VERDICT: reproduces. git $(git --version | awk '{print $3}')"
+echo "  C-T440-1 CLOSED: the no-match control is now assembled at run time, so committing this"
+echo "  instrument cannot change what it measures. The last arm above shows what the old"
+echo "  literal probe did: rc=0 -- a match -- where the control needed rc=1."
 echo
 
 echo "=============================================================================="
