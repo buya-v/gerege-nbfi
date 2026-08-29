@@ -1,0 +1,14 @@
+T428 BAR FIGURE DIFF
+A = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aba498d1a28770847/.softhouse/reviews/t428-review-t421/out/T428-BAR-01-main-baseline.txt
+B = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aba498d1a28770847/.softhouse/reviews/t428-review-t421/out/T428-BAR-02-t421-tree.txt
+
+--- lines present in A but not B  (< A) and B but not A (> B) ---
+13a14
+> conformance:   KILLED  ledger-wrong-mapping-key-ignored — exit 1, ledger parity FAIL 3 + oracle-refusal FAIL 0
+22,23c23,24
+< conformance:   T316-DEADPATH-CENSUS: corpus=1451 deadFiles=75 deadOccurrences=108 resolving=1387 indeterminate=114 prose=378
+< conformance:   all 15 wrong ledger implementations DIED through this harness, not by hand.
+---
+> conformance:   T316-DEADPATH-CENSUS: corpus=1433 deadFiles=75 deadOccurrences=108 resolving=1356 indeterminate=106 prose=371
+> conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+(empty means every graded figure is identical)

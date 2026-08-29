@@ -1,0 +1,60 @@
+T428 TIMESTAMP SWEEP -- 2026-08-28T19:06:29Z
+tree: /tmp/t428-t421tree   HEAD: ffb52921c15b8ea87b6aafb38a1b53965c0dbcf6
+
+=== 1. T421's own sweep, re-run by T428 ===
+SWEEP RUN AT UTC: 2026-08-28T19:06:29Z
+ROOT: .softhouse/vectors
+FILES SCANNED: 72
+FILES WITH >=1 capture timestamp: 63  timestamps found: 63
+FILES WITH NONE (listed, not skipped): 9
+   none: .softhouse/vectors/PIN-ledger.json
+   none: .softhouse/vectors/PIN.json
+   none: .softhouse/vectors/_selftest/SELFTEST-01-two-period-zero-rate.json
+   none: .softhouse/vectors/capabilities-ledger.json
+   none: .softhouse/vectors/capabilities.json
+   none: .softhouse/vectors/loanschedule/REFUSE-01-actual-actual-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-02-half-even-ungraded.json
+   none: .softhouse/vectors/loanschedule/REFUSE-03-annual-fixed30360-precedence.json
+   none: .softhouse/vectors/loanschedule/REFUSE-04-disbursement-after-maturity.json
+
+ROUND-HOUR (mm:ss == 00:00): 0
+FUTURE (> run instant): 0
+
+VERDICT: CLEAN
+
+=== 2. INDEPENDENT CROSS-CHECK: raw grep, no JSON parser, no float ===
+every ...T..:..:..Z token anywhere under .softhouse/vectors, deduplicated:
+   2026-08-18T15:20:53.441500460Z
+   2026-08-19T13:11:58.415371634Z
+   2026-08-19T14:53:56.179360716Z
+   2026-08-19T14:54:02.568804760Z
+   2026-08-20T00:45:17.643015291Z
+   2026-08-20T03:46:47.390851471Z
+   2026-08-20T09:38:27.945779543Z
+   2026-08-21T06:16:10Z
+   2026-08-22T02:12:59Z
+   2026-08-22T02:21:18Z
+   2026-08-22T02:21:52.908029054Z
+   2026-08-22T02:23:27Z
+   2026-08-23T00:11:57Z
+   2026-08-23T00:17:56Z
+   2026-08-23T02:02:47Z
+   2026-08-27T15:40:58Z
+   2026-08-27T17:33:38Z
+   2026-08-27T17:33:42Z
+   2026-08-28T06:59:25Z
+   2026-08-28T17:10:23Z
+   2026-08-28T17:10:28Z
+   2026-08-28T18:33:42Z
+   2026-08-29T09:00:00Z
+   DISTINCT INSTANTS: 23
+   ROUND HOURS among them (mm:ss == 00:00): 1
+   (listed:)
+      2026-08-29T09:00:00Z
+   NOW: 2026-08-28T19:06:30Z
+   FUTURE among them (string compare against NOW):
+      FUTURE 2026-08-29T09:00:00Z
+   (no line above means none)
+
+=== 3. FILE COUNT under .softhouse/vectors ===
+   .json files: 72

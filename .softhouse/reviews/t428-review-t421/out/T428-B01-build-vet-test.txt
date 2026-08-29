@@ -1,0 +1,17 @@
+T428 BUILD + TEST -- 2026-08-28T19:12:47Z
+tree: /tmp/t428-t421tree
+
+=== go build -C /tmp/t428-t421tree/nexus ./... ===
+go build EXIT=0
+
+=== go vet -C /tmp/t428-t421tree/nexus ./... ===
+go vet EXIT=0
+
+=== go test -count=1 -C /tmp/t428-t421tree/nexus ./... ===
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.757s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	4.884s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	3.580s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	29.557s
+go test EXIT=0

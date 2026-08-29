@@ -1,0 +1,218 @@
+### arm-CONTROL-ledger-go.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 0
+    cells: 
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-accounting-closed-echoes-transaction-date.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 5    FAIL 1
+    want/got cell differences: 1
+    cells:    1 refusal.arg0_value;
+    FAILCASE     LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal ledger_rest_posting    FAIL              4 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 5    FAIL 1   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-closure-boundary-exclusive.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 5    FAIL 1
+    want/got cell differences: 4
+    cells:    1 refusal.arg0_value;   1 refusal.code;   1 refusal.http_status;   1 refusal.message;
+    FAILCASE     LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    FAIL              4 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 5    FAIL 1   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-code-ignored.txt
+    parity: PASS 0    FAIL 10 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 43
+    cells:   43 legs[i].gl_account_code;
+    FAILCASE     LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+    FAILCASE     LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-04-header-account-accepted                 parity         ledger_db_readback     FAIL             13 cells (4 money)
+    FAILCASE     LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             33 cells (8 money)
+    FAILCASE     LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     ledger parity           PASS 0    FAIL 10
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-date-rules-always-refusing.txt
+    parity: PASS 8    FAIL 2 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 2
+    cells:    2 leg_count;
+    FAILCASE     LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL              1 cells (0 money)
+    FAILCASE     LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL              1 cells (0 money)
+    FAILCASE     ledger parity           PASS 8    FAIL 2
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-future-date-ignored.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 5    FAIL 1
+    want/got cell differences: 4
+    cells:    1 refusal.arg0_value;   1 refusal.code;   1 refusal.http_status;   1 refusal.message;
+    FAILCASE     LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    FAIL              4 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 5    FAIL 1   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-header-refusing.txt
+    parity: PASS 9    FAIL 1 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 1
+    cells:    1 leg_count;
+    FAILCASE     LDG-04-header-account-accepted                 parity         ledger_db_readback     FAIL              1 cells (0 money)
+    FAILCASE     ledger parity           PASS 9    FAIL 1
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-manual-permission-ignored.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 5    FAIL 1
+    want/got cell differences: 3
+    cells:    1 refusal.code;   1 refusal.http_status;   1 refusal.message;
+    FAILCASE     LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 5    FAIL 1   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-mapping-key-ignored.txt
+    parity: PASS 7    FAIL 3 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 36
+    cells:   18 legs[i].gl_account_code;  18 legs[i].gl_account_id;
+    FAILCASE     LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     ledger parity           PASS 7    FAIL 3
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-netting-totals.txt
+    parity: PASS 0    FAIL 10 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 0
+    cells: 
+    FAILCASE     LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+    FAILCASE     LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-04-header-account-accepted                 parity         ledger_db_readback     FAIL             13 cells (4 money)
+    FAILCASE     LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             33 cells (8 money)
+    FAILCASE     LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     ledger parity           PASS 0    FAIL 10
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-openingbalance-always-refusing.txt
+    parity: PASS 9    FAIL 1 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 1
+    cells:    1 leg_count;
+    FAILCASE     LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL              1 cells (0 money)
+    FAILCASE     ledger parity           PASS 9    FAIL 1
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-openingbalance-no-contra.txt
+    parity: PASS 9    FAIL 1 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 7
+    cells:    1 leg_count;   2 legs[i].entry_side;   2 legs[i].gl_account_code;   2 legs[i].gl_account_id;
+    FAILCASE     LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     ledger parity           PASS 9    FAIL 1
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-openingbalance-posted-entries-ignored.txt
+    parity: PASS 10   FAIL 0 | refusal: PASS 5    FAIL 1
+    want/got cell differences: 2
+    cells:    1 refusal.code;   1 refusal.message;
+    FAILCASE     LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    FAIL              3 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 0
+    FAILCASE     ledger oracle-refusal   PASS 5    FAIL 1   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-residue-rounding.txt
+    parity: PASS 10   FAIL 1 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 2
+    cells:    1 divergence.port_outcome;   1 divergence.port_refusal_marker;
+    FAILCASE     LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    FAIL              2 cells (0 money)
+    FAILCASE     ledger parity           PASS 10   FAIL 1
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 0    FAIL 1   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-slot-family-blind.txt
+    parity: PASS 7    FAIL 3 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 9
+    cells:    9 legs[i].slot_name;
+    FAILCASE     LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     ledger parity           PASS 7    FAIL 3
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-split-drift.txt
+    parity: PASS 8    FAIL 2 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 0
+    cells: 
+    FAILCASE     LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     ledger parity           PASS 8    FAIL 2
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+### arm-ledger-wrong-truncating.txt
+    parity: PASS 1    FAIL 9 | refusal: PASS 6    FAIL 0
+    want/got cell differences: 0
+    cells: 
+    FAILCASE     LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    FAIL             18 cells (5 money)
+    FAILCASE     LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    FAIL             23 cells (6 money)
+    FAILCASE     LDG-04-header-account-accepted                 parity         ledger_db_readback     FAIL             13 cells (4 money)
+    FAILCASE     LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     FAIL             33 cells (8 money)
+    FAILCASE     LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     FAIL             18 cells (5 money)
+    FAILCASE     LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    FAIL             33 cells (8 money)
+    FAILCASE     ledger parity           PASS 1    FAIL 9
+    FAILCASE     ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+    FAILCASE       divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+    FAILCASE     parity vectors          PASS 46   FAIL 0
+    FAILCASE     contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    FAILCASE     self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
