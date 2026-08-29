@@ -2903,9 +2903,10 @@ guard_dead_path_frontier() {
     # would otherwise get the WHAT without the WHAT-TO-DO.
     warn "conformance: THE REMEDY, in one line: build the path from a variable at run time, or"
     warn "conformance: make the location a REQUIRED PARAMETER whose non-resolution is a HARD"
-    warn "conformance: EXIT. Repair the instrument; do not grow the pin, and do not split the"
-    warn "conformance: literal to hide it. The guard's own transcript above states all three"
-    warn "conformance: steps and the forbidden fourth. Full rule and the six measured row"
+    warn "conformance: EXIT. Repair the instrument; grow the pin ONLY for a deliberate ordered-"
+    warn "conformance: fallback candidate, WITH ITS REASON. Never split the literal to hide it."
+    warn "conformance: The guard's transcript has all three steps, the one sanctioned non-repair"
+    warn "conformance: route and the forbidden fourth. Full rule and the six measured row"
     warn "conformance: counts: grep patterns.md for the SENTENCE (the line number moves) --"
     warn "conformance:   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE"
     bad=1
