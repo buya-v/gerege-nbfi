@@ -1,0 +1,24 @@
+REPOSITORY UNDER TEST: /Users/buv/gerege-nbfi/.claude/worktrees/agent-abca32bc26a9f29f5
+
+--- 1. INDEX BITS: every tracked entry whose ls-files -v state is not H
+    (S = --skip-worktree, a LOWERCASE letter = --assume-unchanged)
+    entries not in state H: 0
+
+--- 2. THIS CLONE'S PRIVATE ATTRIBUTES FILE
+    git-dir: /Users/buv/gerege-nbfi/.git/worktrees/agent-abca32bc26a9f29f5
+    the private attributes file DOES NOT EXIST.
+
+--- 3. CONFIGURED CONTENT FILTERS
+    filter config rows: 0
+
+--- 4. WORKING TREE
+    git status --porcelain:
+       M .softhouse/capture/t466-t459-conditions/evidence/40-residue-check.txt
+       M .softhouse/capture/t466-t459-conditions/instruments/finalbar.sh
+       M .softhouse/capture/t466-t459-conditions/instruments/residue-check.sh
+
+--- 5. SCRATCH LOCATION (must be OUTSIDE the repository)
+    T466_WORK is unset, so this run makes NO claim about the scratch tree.
+
+--- 6. ANY T466 FIXTURE LEFT IN A TRACKED PATH
+    tracked paths matching zz-t466: 0

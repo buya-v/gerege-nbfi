@@ -1,0 +1,26 @@
+=== ARM NOPY  (run tag FNOPY) ================================================================
+source repository : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+clone             : /tmp/t477-work.zAhOxLeGA9/clone-FNOPY
+checked out       : abfe785c = abfe785cf1daf56358d76d92091590410d3fb963
+harness blob      : eeae56b76f0697a046c8fb16d6da22035ae977d0
+mutation          : nopy
+  invocation lines matching the recompute pattern, before=0 after=0
+  the line now reads:
+    5672:  ( cd "$REPO_ROOT" && "$recpython" -I -S -c "$recpy" "$selfrel" <"$headlist" ) \
+recompute framing : nul
+git status --porcelain lines      : 1
+     M .softhouse/conformance.sh
+git diff-index --name-only lines  : 1
+ls-files -v entries NOT in state H: 0
+PATH shim         : 0 file(s) in /tmp/t477-work.zAhOxLeGA9/bin-FNOPY
+PYTHONPATH        : []
+
+EXIT = 2
+probe line PRESENCE (grep -c 'probe = ') = 0     <-- PRESENCE, read FIRST
+VERDICT lines: 0
+shim fired    : 0 time(s)
+guard_harness_text_is_committed REFUSAL lines: 1
+    conformance: guard_harness_text_is_committed: /usr/bin/python3 is absent. The
+the guard's own census lines: 1
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+full log kept at: /tmp/t477-work.zAhOxLeGA9/log-FNOPY.txt

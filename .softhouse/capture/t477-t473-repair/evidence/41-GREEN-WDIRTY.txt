@@ -1,0 +1,31 @@
+=== ARM WDIRTY  (run tag FWDIRTY) ================================================================
+source repository : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+clone             : /tmp/t477-work.zAhOxLeGA9/clone-FWDIRTY
+checked out       : abfe785c = abfe785cf1daf56358d76d92091590410d3fb963
+harness blob      : eeae56b76f0697a046c8fb16d6da22035ae977d0
+recompute framing : nul
+git status --porcelain lines      : 1
+     M .softhouse/conformance.sh
+git diff-index --name-only lines  : 1
+ls-files -v entries NOT in state H: 0
+PATH shim         : 0 file(s) in /tmp/t477-work.zAhOxLeGA9/bin-FWDIRTY
+PYTHONPATH        : []
+
+EXIT = 0
+probe line PRESENCE (grep -c 'probe = ') = 1     <-- PRESENCE, read FIRST
+probe value = up 
+VERDICT lines: 1
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+shim fired    : 0 time(s)
+guard_harness_text_is_committed REFUSAL lines: 0
+the guard's own census lines: 9
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    conformance:     HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk 8346b8dee49da483942b63c38fbbe8f51da107b9)
+    conformance:     HARNESS-TEXT: this harness is edited but not committed — git agrees,
+    conformance:   HARNESS-TEXT CENSUS: HEAD abfe785cf1daf56358d76d92091590410d3fb963; tracked paths whose materialised bytes
+    conformance:   RECOMPUTE: 10377 HEAD entries re-hashed from their bytes on disk;
+    conformance:   this harness .softhouse/conformance.sh: committed eeae56b76f0697a046c8fb16d6da22035ae977d0 / on disk 8346b8dee49da483942b63c38fbbe8f51da107b9
+    conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:
+    conformance:    copy of that number is evidence on its face. RECOMPUTE THE RIGHT-HAND ONE
+            EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+full log kept at: /tmp/t477-work.zAhOxLeGA9/log-FWDIRTY.txt

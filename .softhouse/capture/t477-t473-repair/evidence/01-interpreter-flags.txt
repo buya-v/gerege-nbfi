@@ -1,0 +1,13 @@
+interpreter : /usr/bin/python3
+-rwxr-xr-x  78 root  wheel  118928 May 21 16:57 /usr/bin/python3
+hijack dir  : /tmp/t477-work.zAhOxLeGA9/flagprobe  (2 line(s))
+
+=== absolute /usr/bin/python3, PYTHONPATH pointing at the hostile sitecustomize ===
+flags=[NONE  ] hijack lines = 1   output = [HIJACKED-BY-SITECUSTOMIZE|program ran]
+flags=[-E    ] hijack lines = 0   output = [program ran]
+flags=[-S    ] hijack lines = 0   output = [program ran]
+flags=[-I    ] hijack lines = 0   output = [program ran]
+flags=[-I_-S ] hijack lines = 0   output = [program ran]
+
+=== and the recompute's own imports still work under -I -S ===
+11f6ad8ec52a2984abaafd7c3b516503785c2072

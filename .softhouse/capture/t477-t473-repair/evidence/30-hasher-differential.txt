@@ -1,0 +1,22 @@
+hasher extracted from the harness on disk : 46 line(s)
+harness blob (on disk, --no-filters)      : 7ae908fd2b1df0412696b92779ba9b31278f6c7b
+
+corpus committed. HEAD entries by mode:
+      13 100644
+       1 100755
+       5 120000
+hasher exit=0  stderr bytes=0
+
+paths in the HEAD listing = 19
+paths compared            = 19
+MISMATCHES                = 0
+SCANNED reported          = 19
+CALIB row                 = b'CALIB e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
+rows the hasher OMITTED   = 0
+differential exit=0
+
+--- PERTURBATION LEG: every regular file is altered by one byte; each must be DETECTED
+DIFFERS rows before perturbation: 0
+regular files perturbed         : 14
+DIFFERS rows after perturbation : 14
+PERTURBATION LEG: PASS -- every perturbed file was detected, symlinks untouched.
