@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/S03-denormalisation-survey.sql
+query-bytes-artefact: T429-S03-denormalisation-survey.sql
+query-sha256: 87625af42d905301222539786dc5e4cbdb35de35ecc69597efb117a4c402e863
+query-bytes: 1427
+psql-exit-status: 0
+captured-at-utc: 2026-08-29T00:09:51Z

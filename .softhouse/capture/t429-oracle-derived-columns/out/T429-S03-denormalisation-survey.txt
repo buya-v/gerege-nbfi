@@ -1,0 +1,233 @@
+=== S03.1 how many base tables are in this tenant schema at all ===
+ base_tables 
+-------------
+         281
+(1 row)
+
+=== S03.2 EVERY column in the tenant schema whose name ends _derived ===
+                  table_name                   |                column_name                | data_type | numeric_precision | numeric_scale 
+-----------------------------------------------+-------------------------------------------+-----------+-------------------+---------------
+ m_client_charge                               | amount_paid_derived                       | numeric   |                19 |             6
+ m_client_charge                               | amount_waived_derived                     | numeric   |                19 |             6
+ m_client_charge                               | amount_writtenoff_derived                 | numeric   |                19 |             6
+ m_client_charge                               | amount_outstanding_derived                | numeric   |                19 |             6
+ m_client_charge                               | is_paid_derived                           | boolean   |                   |              
+ m_external_asset_owner_transfer_details       | total_outstanding_derived                 | numeric   |                19 |             6
+ m_external_asset_owner_transfer_details       | principal_outstanding_derived             | numeric   |                19 |             6
+ m_external_asset_owner_transfer_details       | interest_outstanding_derived              | numeric   |                19 |             6
+ m_external_asset_owner_transfer_details       | fee_charges_outstanding_derived           | numeric   |                19 |             6
+ m_external_asset_owner_transfer_details       | penalty_charges_outstanding_derived       | numeric   |                19 |             6
+ m_external_asset_owner_transfer_details       | total_overpaid_derived                    | numeric   |                19 |             6
+ m_guarantor_funding_details                   | amount_released_derived                   | numeric   |                19 |             6
+ m_guarantor_funding_details                   | amount_remaining_derived                  | numeric   |                19 |             6
+ m_guarantor_funding_details                   | amount_transfered_derived                 | numeric   |                19 |             6
+ m_loan                                        | total_charges_due_at_disbursement_derived | numeric   |                19 |             6
+ m_loan                                        | principal_disbursed_derived               | numeric   |                19 |             6
+ m_loan                                        | principal_repaid_derived                  | numeric   |                19 |             6
+ m_loan                                        | principal_writtenoff_derived              | numeric   |                19 |             6
+ m_loan                                        | principal_outstanding_derived             | numeric   |                19 |             6
+ m_loan                                        | interest_charged_derived                  | numeric   |                19 |             6
+ m_loan                                        | interest_repaid_derived                   | numeric   |                19 |             6
+ m_loan                                        | interest_waived_derived                   | numeric   |                19 |             6
+ m_loan                                        | interest_writtenoff_derived               | numeric   |                19 |             6
+ m_loan                                        | interest_outstanding_derived              | numeric   |                19 |             6
+ m_loan                                        | fee_charges_charged_derived               | numeric   |                19 |             6
+ m_loan                                        | fee_charges_repaid_derived                | numeric   |                19 |             6
+ m_loan                                        | fee_charges_waived_derived                | numeric   |                19 |             6
+ m_loan                                        | fee_charges_writtenoff_derived            | numeric   |                19 |             6
+ m_loan                                        | fee_charges_outstanding_derived           | numeric   |                19 |             6
+ m_loan                                        | penalty_charges_charged_derived           | numeric   |                19 |             6
+ m_loan                                        | penalty_charges_repaid_derived            | numeric   |                19 |             6
+ m_loan                                        | penalty_charges_waived_derived            | numeric   |                19 |             6
+ m_loan                                        | penalty_charges_writtenoff_derived        | numeric   |                19 |             6
+ m_loan                                        | penalty_charges_outstanding_derived       | numeric   |                19 |             6
+ m_loan                                        | total_expected_repayment_derived          | numeric   |                19 |             6
+ m_loan                                        | total_repayment_derived                   | numeric   |                19 |             6
+ m_loan                                        | total_expected_costofloan_derived         | numeric   |                19 |             6
+ m_loan                                        | total_costofloan_derived                  | numeric   |                19 |             6
+ m_loan                                        | total_waived_derived                      | numeric   |                19 |             6
+ m_loan                                        | total_writtenoff_derived                  | numeric   |                19 |             6
+ m_loan                                        | total_outstanding_derived                 | numeric   |                19 |             6
+ m_loan                                        | total_overpaid_derived                    | numeric   |                19 |             6
+ m_loan                                        | total_recovered_derived                   | numeric   |                19 |             6
+ m_loan                                        | guarantee_amount_derived                  | numeric   |                19 |             6
+ m_loan                                        | principal_adjustments_derived             | numeric   |                19 |             6
+ m_loan                                        | capitalized_income_derived                | numeric   |                19 |             6
+ m_loan                                        | capitalized_income_adjustment_derived     | numeric   |                19 |             6
+ m_loan                                        | total_principal_derived                   | numeric   |                19 |             6
+ m_loan                                        | fee_adjustments_derived                   | numeric   |                19 |             6
+ m_loan                                        | penalty_adjustments_derived               | numeric   |                19 |             6
+ m_loan_arrears_aging                          | principal_overdue_derived                 | numeric   |                19 |             6
+ m_loan_arrears_aging                          | interest_overdue_derived                  | numeric   |                19 |             6
+ m_loan_arrears_aging                          | fee_charges_overdue_derived               | numeric   |                19 |             6
+ m_loan_arrears_aging                          | penalty_charges_overdue_derived           | numeric   |                19 |             6
+ m_loan_arrears_aging                          | total_overdue_derived                     | numeric   |                19 |             6
+ m_loan_arrears_aging                          | overdue_since_date_derived                | date      |                   |              
+ m_loan_charge                                 | amount_paid_derived                       | numeric   |                19 |             6
+ m_loan_charge                                 | amount_waived_derived                     | numeric   |                19 |             6
+ m_loan_charge                                 | amount_writtenoff_derived                 | numeric   |                19 |             6
+ m_loan_charge                                 | amount_outstanding_derived                | numeric   |                19 |             6
+ m_loan_charge                                 | is_paid_derived                           | boolean   |                   |              
+ m_loan_installment_charge                     | amount_paid_derived                       | numeric   |                19 |             6
+ m_loan_installment_charge                     | amount_waived_derived                     | numeric   |                19 |             6
+ m_loan_installment_charge                     | amount_writtenoff_derived                 | numeric   |                19 |             6
+ m_loan_installment_charge                     | amount_outstanding_derived                | numeric   |                19 |             6
+ m_loan_installment_charge                     | is_paid_derived                           | boolean   |                   |              
+ m_loan_repayment_schedule                     | principal_completed_derived               | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | principal_writtenoff_derived              | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | interest_completed_derived                | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | interest_writtenoff_derived               | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | interest_waived_derived                   | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | accrual_interest_derived                  | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | fee_charges_completed_derived             | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | fee_charges_writtenoff_derived            | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | fee_charges_waived_derived                | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | accrual_fee_charges_derived               | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | penalty_charges_completed_derived         | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | penalty_charges_writtenoff_derived        | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | penalty_charges_waived_derived            | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | accrual_penalty_charges_derived           | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | total_paid_in_advance_derived             | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | total_paid_late_derived                   | numeric   |                19 |             6
+ m_loan_repayment_schedule                     | completed_derived                         | boolean   |                   |              
+ m_loan_transaction                            | principal_portion_derived                 | numeric   |                19 |             6
+ m_loan_transaction                            | interest_portion_derived                  | numeric   |                19 |             6
+ m_loan_transaction                            | fee_charges_portion_derived               | numeric   |                19 |             6
+ m_loan_transaction                            | penalty_charges_portion_derived           | numeric   |                19 |             6
+ m_loan_transaction                            | overpayment_portion_derived               | numeric   |                19 |             6
+ m_loan_transaction                            | outstanding_loan_balance_derived          | numeric   |                19 |             6
+ m_loan_transaction_repayment_schedule_mapping | principal_portion_derived                 | numeric   |                19 |             6
+ m_loan_transaction_repayment_schedule_mapping | interest_portion_derived                  | numeric   |                19 |             6
+ m_loan_transaction_repayment_schedule_mapping | fee_charges_portion_derived               | numeric   |                19 |             6
+ m_loan_transaction_repayment_schedule_mapping | penalty_charges_portion_derived           | numeric   |                19 |             6
+ m_mandatory_savings_schedule                  | deposit_amount_completed_derived          | numeric   |                19 |             6
+ m_mandatory_savings_schedule                  | total_paid_in_advance_derived             | numeric   |                19 |             6
+ m_mandatory_savings_schedule                  | total_paid_late_derived                   | numeric   |                19 |             6
+ m_mandatory_savings_schedule                  | completed_derived                         | boolean   |                   |              
+ m_savings_account                             | lockedin_until_date_derived               | date      |                   |              
+ m_savings_account                             | total_deposits_derived                    | numeric   |                19 |             6
+ m_savings_account                             | total_withdrawals_derived                 | numeric   |                19 |             6
+ m_savings_account                             | total_withdrawal_fees_derived             | numeric   |                19 |             6
+ m_savings_account                             | total_fees_charge_derived                 | numeric   |                19 |             6
+ m_savings_account                             | total_penalty_charge_derived              | numeric   |                19 |             6
+ m_savings_account                             | total_annual_fees_derived                 | numeric   |                19 |             6
+ m_savings_account                             | total_interest_earned_derived             | numeric   |                19 |             6
+ m_savings_account                             | total_interest_posted_derived             | numeric   |                19 |             6
+ m_savings_account                             | total_overdraft_interest_derived          | numeric   |                19 |             6
+ m_savings_account                             | total_withhold_tax_derived                | numeric   |                19 |             6
+ m_savings_account                             | account_balance_derived                   | numeric   |                19 |             6
+ m_savings_account                             | on_hold_funds_derived                     | numeric   |                19 |             6
+ m_savings_account_charge                      | amount_paid_derived                       | numeric   |                19 |             6
+ m_savings_account_charge                      | amount_waived_derived                     | numeric   |                19 |             6
+ m_savings_account_charge                      | amount_writtenoff_derived                 | numeric   |                19 |             6
+ m_savings_account_charge                      | amount_outstanding_derived                | numeric   |                19 |             6
+ m_savings_account_charge                      | is_paid_derived                           | boolean   |                   |              
+ m_savings_account_transaction                 | overdraft_amount_derived                  | numeric   |                19 |             6
+ m_savings_account_transaction                 | balance_end_date_derived                  | date      |                   |              
+ m_savings_account_transaction                 | balance_number_of_days_derived            | integer   |                32 |             0
+ m_savings_account_transaction                 | running_balance_derived                   | numeric   |                19 |             6
+ m_savings_account_transaction                 | cumulative_balance_derived                | numeric   |                19 |             6
+ m_share_account_charge                        | amount_paid_derived                       | numeric   |                19 |             6
+ m_share_account_charge                        | amount_waived_derived                     | numeric   |                19 |             6
+ m_share_account_charge                        | amount_writtenoff_derived                 | numeric   |                19 |             6
+ m_share_account_charge                        | amount_outstanding_derived                | numeric   |                19 |             6
+ m_share_account_charge                        | is_paid_derived                           | boolean   |                   |              
+(125 rows)
+
+=== S03.3 EVERY column whose name contains running_balance, anywhere ===
+          table_name           |          column_name          | data_type 
+-------------------------------+-------------------------------+-----------
+ acc_gl_journal_entry          | is_running_balance_calculated | boolean
+ acc_gl_journal_entry          | office_running_balance        | numeric
+ acc_gl_journal_entry          | organization_running_balance  | numeric
+ m_savings_account_transaction | running_balance_derived       | numeric
+(4 rows)
+
+=== S03.4 EVERY column whose name contains balance / total_ / cumulative / outstanding / summary ===
+               table_name                |                column_name                | data_type 
+-----------------------------------------+-------------------------------------------+-----------
+ acc_gl_journal_entry                    | is_running_balance_calculated             | boolean
+ acc_gl_journal_entry                    | office_running_balance                    | numeric
+ acc_gl_journal_entry                    | organization_running_balance              | numeric
+ acc_gl_journal_entry_annual_summary     | opening_balance_amount                    | numeric
+ m_client_charge                         | amount_outstanding_derived                | numeric
+ m_deposit_account_recurring_detail      | total_overdue_amount                      | numeric
+ m_external_asset_owner_transfer_details | total_outstanding_derived                 | numeric
+ m_external_asset_owner_transfer_details | principal_outstanding_derived             | numeric
+ m_external_asset_owner_transfer_details | interest_outstanding_derived              | numeric
+ m_external_asset_owner_transfer_details | fee_charges_outstanding_derived           | numeric
+ m_external_asset_owner_transfer_details | penalty_charges_outstanding_derived       | numeric
+ m_external_asset_owner_transfer_details | total_overpaid_derived                    | numeric
+ m_import_document                       | total_records                             | bigint
+ m_loan                                  | total_charges_due_at_disbursement_derived | numeric
+ m_loan                                  | principal_outstanding_derived             | numeric
+ m_loan                                  | interest_outstanding_derived              | numeric
+ m_loan                                  | fee_charges_outstanding_derived           | numeric
+ m_loan                                  | penalty_charges_outstanding_derived       | numeric
+ m_loan                                  | total_expected_repayment_derived          | numeric
+ m_loan                                  | total_repayment_derived                   | numeric
+ m_loan                                  | total_expected_costofloan_derived         | numeric
+ m_loan                                  | total_costofloan_derived                  | numeric
+ m_loan                                  | total_waived_derived                      | numeric
+ m_loan                                  | total_writtenoff_derived                  | numeric
+ m_loan                                  | total_outstanding_derived                 | numeric
+ m_loan                                  | total_overpaid_derived                    | numeric
+ m_loan                                  | max_outstanding_loan_balance              | numeric
+ m_loan                                  | total_recovered_derived                   | numeric
+ m_loan                                  | total_principal_derived                   | numeric
+ m_loan_arrears_aging                    | total_overdue_derived                     | numeric
+ m_loan_charge                           | amount_outstanding_derived                | numeric
+ m_loan_installment_charge               | amount_outstanding_derived                | numeric
+ m_loan_installment_delinquency_tag      | outstanding_amount                        | numeric
+ m_loan_repayment_schedule               | total_paid_in_advance_derived             | numeric
+ m_loan_repayment_schedule               | total_paid_late_derived                   | numeric
+ m_loan_transaction                      | outstanding_loan_balance_derived          | numeric
+ m_mandatory_savings_schedule            | total_paid_in_advance_derived             | numeric
+ m_mandatory_savings_schedule            | total_paid_late_derived                   | numeric
+ m_product_loan                          | max_outstanding_loan_balance              | numeric
+ m_savings_account                       | min_required_opening_balance              | numeric
+ m_savings_account                       | total_deposits_derived                    | numeric
+ m_savings_account                       | total_withdrawals_derived                 | numeric
+ m_savings_account                       | total_withdrawal_fees_derived             | numeric
+ m_savings_account                       | total_fees_charge_derived                 | numeric
+ m_savings_account                       | total_penalty_charge_derived              | numeric
+ m_savings_account                       | total_annual_fees_derived                 | numeric
+ m_savings_account                       | total_interest_earned_derived             | numeric
+ m_savings_account                       | total_interest_posted_derived             | numeric
+ m_savings_account                       | total_overdraft_interest_derived          | numeric
+ m_savings_account                       | total_withhold_tax_derived                | numeric
+ m_savings_account                       | account_balance_derived                   | numeric
+ m_savings_account                       | min_required_balance                      | numeric
+ m_savings_account                       | enforce_min_required_balance              | boolean
+ m_savings_account                       | min_balance_for_interest_calculation      | numeric
+ m_savings_account                       | total_savings_amount_on_hold              | numeric
+ m_savings_account_charge                | amount_outstanding_derived                | numeric
+ m_savings_account_transaction           | balance_end_date_derived                  | date
+ m_savings_account_transaction           | balance_number_of_days_derived            | integer
+ m_savings_account_transaction           | running_balance_derived                   | numeric
+ m_savings_account_transaction           | cumulative_balance_derived                | numeric
+ m_savings_product                       | min_required_opening_balance              | numeric
+ m_savings_product                       | min_required_balance                      | numeric
+ m_savings_product                       | enforce_min_required_balance              | boolean
+ m_savings_product                       | min_balance_for_interest_calculation      | numeric
+ m_share_account                         | total_approved_shares                     | bigint
+ m_share_account                         | total_pending_shares                      | bigint
+ m_share_account_charge                  | amount_outstanding_derived                | numeric
+ m_share_account_transactions            | total_shares                              | bigint
+ m_share_product                         | total_shares                              | bigint
+ m_trial_balance                         | closing_balance                           | numeric
+ m_wc_loan                               | total_payment_volume                      | numeric
+ m_wc_loan_balance                       | total_disbursement                        | numeric
+ m_wc_loan_balance                       | total_discount_fee                        | numeric
+ m_wc_loan_balance                       | total_discount_fee_adjustment             | numeric
+ m_wc_loan_breach_schedule               | outstanding_amount                        | numeric
+ m_wc_loan_delinquency_range_schedule    | outstanding_amount                        | numeric
+ m_wc_loan_range_delinquency_tag         | outstanding_amount                        | numeric
+(77 rows)
+
+=== S03.5 the audit-metadata quartet: which tables carry created_on_utc / last_modified_on_utc ===
+ tables_with_created_on_utc 
+----------------------------
+                         69
+(1 row)
+
