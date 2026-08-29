@@ -1,0 +1,896 @@
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /tmp/t468.pKBxwr/t458/.softhouse/toolchain
+    /tmp/t468.pKBxwr/t458/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /tmp/t468.pKBxwr/t458/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /Users/buv/.local/bin/go
+go-env.sh:   go version go1.23.4 darwin/arm64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+conformance:   HARNESS-TEXT CENSUS: HEAD 0db7538b5fb693093b70d75aed423566a86937b5; tracked paths whose materialised bytes
+conformance:   differ from HEAD: 0 — SUBSTITUTED by another index entry's blob
+conformance:   0, uncommitted edits 0, deleted 0.
+conformance:   this harness .softhouse/conformance.sh: committed db313f98153126d7024401542a3ba5bc14407828 / on disk db313f98153126d7024401542a3ba5bc14407828
+conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:
+conformance:    git rev-parse HEAD:.softhouse/conformance.sh — a transcript that disagrees with your own
+conformance:    copy of that number is evidence on its face. An uncommitted edit is
+conformance:    ACCEPTED and printed; a SUBSTITUTION is refused. [T454, T446 MAJOR-1.])
+conformance: no-float guard — inspected 73 .json files under /tmp/t468.pKBxwr/t458/.softhouse/vectors
+conformance: no-float guard — inspected 6 Go packages / 70 .go files under /tmp/t468.pKBxwr/t458/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 70 .go files under /tmp/t468.pKBxwr/t458/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 13 cases (10 drive it RED on a planted
+conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
+conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /tmp/t468.pKBxwr/t458/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 372 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 73 *.json in /tmp/t468.pKBxwr/t458/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/OB-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B1-ACCEPT-06-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t327-closure-accepting-side/throwaway/out/B2-ACCEPT-01-readback-db.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-344-manual-je-unbalanced.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t294-openingbalance-refusal/out/OB-01-openingbalance-after-posted-entries.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A2-01-preclosure-on-date.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A1-02-future-boundary-plus1.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/t287-closure-refusals/out/A2-02-preclosure-before.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   NOT COVERED BY THE RECORDED-REQUEST ARM: .softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json — cited by 1 vector(s), carries no `inputs`/`request` block. Its request body is a separate artefact and is graded only if it lies in the req/ population above.
+conformance: CENSUS   READ BUT NOT GRADED: 4755 numeric tokens in cited capture records sit OUTSIDE any recorded-request block; 104 of them are NOT byte-preserved (.softhouse/capture/pathb/t149/out/gerege/T149-TIE-P9-raw.json x59; .softhouse/capture/t352-a2-next-tranche/out/T352-A09-residue-3dp-readback-cited.json x2; .softhouse/capture/t391-accrual-promotion/out/T391-A01-je-L29.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A02-je-L30.json x6; .softhouse/capture/t391-accrual-promotion/out/T391-A04-je-L32.json x6; .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json x8; .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json x3; .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json x14). These are ORACLE OBSERVATIONS and T186 §7 A4 forbids rewriting, re-emitting or scale-normalising one, so byte-fidelity is not the verdict property for them — the count is printed so the blind spot is STATED, not implied. Example: $.pageItems[0].amount 100000.250000 -> 100000.25
+conformance:   census figure READ: inspected 574 >= 574 tracked by git (floor DERIVED, not pinned)
+conformance: narrow-catch guard — selftest OK, 8 cases (5 drive it RED on a planted
+conformance:   defect, 3 stay GREEN on the clean equivalent; both directions READ)
+conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /tmp/t468.pKBxwr/t458 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /tmp/t468.pKBxwr/t458/.softhouse/toolchain
+    /tmp/t468.pKBxwr/t458/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /tmp/t468.pKBxwr/t458/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /Users/buv/.local/bin/go
+go-env.sh:   go version go1.23.4 darwin/arm64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
+ledger-invariants: CENSUS ledger-invariants — inspected 70 Go files / 6 packages / 760 funcs (1 hold-named) / 1286 assignment or inc-dec statements / 704 write targets / 7795 string literals in 6545 concatenation groups / 7748 calls under /tmp/t468.pKBxwr/t458/nexus (recursive, whole Go tree)
+ledger-invariants: CENSUS ledger-invariants SQL surface — 236 SQL-shaped literals, of which 10 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 2 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+ledger-invariants: CENSUS   covered: internal/apps/ledger
+ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance/cmd/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/contract
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/admit.go:1924:5  citationNameOnlyPin carries %q, but part two of that citation resolved %s on this run, not FILE-NAME-ONLY. The pin excuses a weakness tha...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived.go:743:3  balance ON the posted row and job 9 'Update Accounting Running Balances' rewrites it in
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived.go:744:3  place, nightly, by raw UPDATE ... WHERE id=?, outside the command bus. A port that
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived_test.go:410:13  %s.%s names writer %q, which does not mention job 9. Every column in this carve-out was measured to move under 'Update Accounting Running...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:62:13  %d is creatable but NOT settable on update
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:67:13  %d should be settable on update
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:523:8  invariant_exemptions switches off %q, BUT THAT INVARIANT HOLDS OUTRIGHT ON THE SCHEDULE THIS VECTOR ITSELF RECORDED, with no assertion wi...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1130:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
+ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
+ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+ledger-invariants:   census figure READ: inspected 70 >= 70 tracked by git (floor DERIVED, not pinned)
+ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
+ledger-invariants:   1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
+ledger-invariants:      builder's own AST) is not readable as text. The guard converts that blind spot into a
+ledger-invariants:      REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
+ledger-invariants:      the call. A mutating call through an interface method it does not name, or through
+ledger-invariants:      reflection, is invisible.
+ledger-invariants:   2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
+ledger-invariants:      Position that IS a stored balance is not detected: the surface is the NAME, because
+ledger-invariants:      without a type checker there is nothing else to key on. Renaming a balance defeats it.
+ledger-invariants:   3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
+ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+ledger-invariants:      and the schema is Fineract's, which HAS such objects.
+ledger-invariants:   4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
+ledger-invariants:      decidable once a leg type and a correction path exist in the Go tree. Neither does. The
+ledger-invariants:      mechanical half (a write to a committed row, a write to a balance) IS covered; the
+ledger-invariants:      semantic half is not, and is not claimed.
+ledger-invariants:   5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
+ledger-invariants:      returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
+ledger-invariants:      covers the package-level case). A struct-field cache inside a service object with a
+ledger-invariants:      non-balance name is not.
+ledger-invariants:   6. NON-GO CALLERS. Anything that reaches the database without going through this module.
+ledger-invariants:   7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+ledger-invariants:      test fires on English prose: on nexus/ at the commit this guard was written, all three
+ledger-invariants:      DML-classified literals are message text, not SQL — which is why every one is PRINTED
+ledger-invariants:      with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+ledger-invariants:      count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
+ledger-invariants:      nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
+ledger-invariants:      as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
+ledger-invariants:      additionally requires a protected table, a balance column, or a balance write — so both
+ledger-invariants:      are noise in a count, never a false rejection.
+ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+ledger-invariants:      FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
+ledger-invariants:      fixture ever trips it, the fix is a constructor, not an exemption.
+ledger-invariants: PASS — I-3 (balances are derived) and I-4 (append-only) hold over the
+ledger-invariants:   Go tree AS FAR AS A SOURCE-LEVEL GUARD CAN SEE. Read the CANNOT-CATCH
+ledger-invariants:   block and the NIL-COVERAGE lines before quoting this as coverage.
+conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is
+conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its
+conformance:   head prints IN FULL ABOVE since T209 — so this is a redundant restatement):
+conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;
+conformance:   dynamic SQL is caught only through the call set it recognises; triggers,
+conformance:   migrations and stored procedures are not walked at all; I-5's semantic half
+conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible
+conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'.
+conformance: CENSUS fail-open instruments — inspected 1686 tracked .sh/.py file(s) under
+conformance:   /tmp/t468.pKBxwr/t458 (git ls-files, whole repository); frontier 11, pinned at 11
+conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed).
+conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
+conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
+conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance: CENSUS host state in the lint corpus — 236 repo-wide search instrument(s)
+conformance:   read from git grep over tracked *.sh/*.py under /tmp/t468.pKBxwr/t458; sites that assign a
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+conformance:   (DERIVED from HOSTSTATE_PIN_TEMP_ASSIGN_LIST by counting it, never typed).
+conformance:   Such a path is host state — shared across worktrees, absent from every commit,
+conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS.
+conformance:   census == pinned (all 18 site(s), by path and source line).
+conformance:   PNUMBER-CITATIONS: declared-dangling ids (recorded in the .softhouse/patterns.md errata with their repair) = [131, 261]
+conformance:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=102 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+conformance:   PNUMBER-CITATIONS: sites=14061 definition=103 consistent=719 bare=13055 misdirecting=81 undefined=45 negative-control=58
+conformance:   PNUMBER-CITATIONS: skipped self-output-files=22 self-source-files=2 (stated, not silent -- both contain deliberately drifted text)
+conformance:   PNUMBER-CITATIONS:   directive MISDIRECTING 2
+conformance:   PNUMBER-CITATIONS:   directive UNDEFINED    4
+conformance:   PNUMBER-CITATIONS:   evidence  MISDIRECTING 68
+conformance:   PNUMBER-CITATIONS:   evidence  UNDEFINED    41
+conformance:   PNUMBER-CITATIONS:   orchestrator MISDIRECTING 10
+conformance:   PNUMBER-CITATIONS:   ratified  MISDIRECTING 1
+conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never
+conformance:   fatal, and is corrected FORWARD in the patterns.md errata — never in place).
+conformance:   ACCEPTING-SIDE GAP: accepting opening-balance vector found: LDG-05-openingbalance-accepted-empty-ledger.json
+conformance: CENSUS opening-balance ACCEPTING side — accepting vectors 1,
+conformance:   capabilities-ledger declaration ABSENT.
+conformance:   CLOSED, and the declaration was removed with it.
+conformance:   no tracked disposability attestation — nothing authorises an irreversible
+conformance:   accepting capture in this tree.
+conformance:   registration decisive lines: 10 present EXACTLY ONCE in the body of
+conformance:   guard_guards_dir_registration (not merely somewhere in this file, not in a
+conformance:   trailing comment, not on a ':' no-op), 2 evaluated on an input they must
+conformance:   refuse AND an input they must accept [T445 closing T444 C-2 — P-45; T454
+conformance:   closing T446 MAJOR-2/MINOR-1: three of them pin the USE, not the read].
+conformance:     INVOKED    .softhouse/guards/check-capture-namespace.sh
+conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+conformance:     INVOKED    .softhouse/guards/check-ledger-invariants.sh
+conformance:     DECLARED   .softhouse/guards/drive-red-ledger-invariants.sh — not a guard: the red drive for ledgerguard (verified
+conformance:                in its COMMITTED bytes)
+conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+conformance:                .softhouse/guards/check-ledger-invariants.sh (verified: it names main.go)
+conformance:     DECLARED   .softhouse/guards/repo-state-attest.sh — run by .softhouse/bin/fire-program.sh (verified: its COMMITTED bytes
+conformance:                name repo-state-attest.sh)
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance:   (selector: git ls-files with ':(glob)' magic over the TRACKED '*.sh', '*.py'
+conformance:   and '*.go' files at ANY DEPTH under .softhouse/guards, from $REPO_ROOT. NOT closed over
+conformance:   other languages or committed binaries — this is a count over that search.)
+conformance:   (INVOKED means the member's REPO-RELATIVE PATH appears on a NON-COMMENT line
+conformance:   of this file — NOT its bare basename. [T375, closing T364 F-T364-1: a
+conformance:   basename is shared, so a mention of ANOTHER file absolved this one, and an
+conformance:   unwired checker named 'main.go' read INVOKED with the bar GREEN.] It is
+conformance:   still a NAMING test and still NOT proof of execution: two of the three
+conformance:   members that read INVOKED today are named on a 'local g=' assignment and the
+conformance:   call is a variable expansion this test cannot see. [T337 F-T337-4, corrected
+conformance:   by T358 — the old wording said 'never a mention', which overstated it.] What
+conformance:   remains open, stated so nobody concludes more than was closed: a non-comment
+conformance:   line spelling THIS member's own path without calling it still absolves it.)
+conformance:   (symlink-members COUNTS, and the count is now readable. [T404, C-T384-2.]
+conformance:   Until T404 it was read off a pathspec lookup, so a symlink member with an
+conformance:   honestly-registered decoy sorting ahead of it printed symlink-members=0
+conformance:   while sitting in the population — the field reporting the opposite of the
+conformance:   tree. The lookup is pinned to ':(literal)' and a member resolving to more
+conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+conformance:   guards-dir registration: PASS — every member of .softhouse/guards is invoked by this
+conformance:   file, DECLARED against a verified witness, or carries a verified REACHED-BY.
+conformance:   namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+conformance:   namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+conformance:   namespace:   root    /private/tmp/t468.pKBxwr/t458
+conformance:   namespace:   corpus  10361 tracked paths -> 238 evidence directories
+conformance:   namespace:           215 carry a t<n> id prefix; 23 do not and CANNOT collide this way
+conformance:   namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+conformance:   namespace:   T255 -> 2 directories; ownership records required 1, present 1
+conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+conformance:   namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+conformance:   namespace:   T256 -> 2 directories; ownership records required 1, present 1
+conformance:   namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+conformance:   namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+conformance:   NAMESPACE-CENSUS: dirs=238 prefixed=215 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+conformance:   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1686 deadFiles=75 deadOccurrences=108 resolving=1594 indeterminate=126 prose=428
+conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+conformance:   (the planted T309 single-term predicate drives cell B-prime RED; the shipped
+conformance:   tool keeps it GREEN. Both legs ran here — --selftest is not optional.)
+conformance:   GUARD-COST CENSUS: 16 guards timed, 43s total wall,
+conformance:   ceiling breaches 0, unbudgeted guards 0.
+conformance:     COST 0s / ceiling 60s   guard_graded_root_is_this_tree
+conformance:     COST 0s / ceiling 60s   guard_harness_text_is_committed
+conformance:     COST 1s / ceiling 60s   guard_no_float_in_vectors
+conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+conformance:     COST 0s / ceiling 60s   guard_gofmt
+conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+conformance:     COST 1s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+conformance:     COST 2s / ceiling 300s   guard_ledger_invariants
+conformance:     COST 3s / ceiling 60s   guard_no_fail_open_instruments
+conformance:     COST 1s / ceiling 60s   guard_no_host_state_in_lint_corpus
+conformance:     COST 13s / ceiling 300s   guard_pnumber_citations
+conformance:     COST 0s / ceiling 60s   guard_accepting_side_gap_declared
+conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+conformance:     COST 1s / ceiling 60s   guard_capture_namespace
+conformance:     COST 1s / ceiling 60s   guard_dead_path_frontier
+conformance:     COST 17s / ceiling 500s   guard_reconciler_ownership
+conformance:   (RESOLUTION 1 s, from bash SECONDS; a 0 means UNDER ONE SECOND. The elapsed
+conformance:   figures are RECORDED and NOT PINNED — wall clock is a fact about the host as
+conformance:   well as the tree. What is pinned, by NAME: every guard has a ceiling row,
+conformance:   every ceiling row was timed, and at least one guard was timed. The ceiling is
+conformance:   read AFTER the guard returns, so it turns a spin that RETURNS into a named
+conformance:   refusal; it does not interrupt one that never does. [T375, FU-T358-1.])
+conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    repo root       /tmp/t468.pKBxwr/t458
+                    resolved from the BUILD ANCHOR — the tree this binary was compiled from
+                    anchor: /tmp/t468.pKBxwr/t458/nexus/internal/apps/loanschedule/conformance/reporoot.go
+                    cwd cross-check: SAME — cwd /tmp/t468.pKBxwr/t458 resolves to the graded root
+    store           /tmp/t468.pKBxwr/t458/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+P-00                         parity           path_a_e... PASS             47        2  
+P-01                         parity           path_a_e... PASS            131        2  
+P-02                         parity           path_a_e... PASS             47        2  
+P-02b                        parity           path_a_e... PASS             47        2  
+P-03                         parity           path_a_e... PASS             47        2  
+P-04f                        parity           path_a_e... PASS             47        2  
+P-04t                        parity           path_a_e... PASS             47        2  
+P-DRIFT-A                    parity           path_a_e... PASS             47        2  
+P-DRIFT-B                    parity           path_a_e... PASS             47        2  
+P-DRIFT-C                    parity           path_a_e... PASS             89        2  
+P-DRIFT-D                    parity           path_a_e... PASS            257        2  
+P-DRIFT-E                    parity           path_a_e... PASS             47        2  
+P-DRIFT-F                    parity           path_a_e... PASS             47        2  
+P-DRIFT-G                    parity           path_a_e... PASS             47        2  
+P-DRIFT-H                    parity           path_a_e... PASS             47        2  
+P-EMI-36-127704              parity           path_a_e... PASS            257        2  
+P-EMI-6-1M014632             parity           path_a_e... PASS             47        2  
+P-LAT-MID                    parity           path_a_e... PASS             47        2  
+P-LAT-Q0a                    parity           path_a_e... PASS             47        2  
+P-ME-A                       parity           path_a_e... PASS             47        2  
+P-ME-B                       parity           path_a_e... PASS             47        2  
+P-ME-C                       parity           path_a_e... PASS             47        2  
+P-ME-D                       parity           path_a_e... PASS             47        2  
+P-MNT-1M2                    parity           path_a_e... PASS             89        2  
+P-MNT-4M999                  parity           path_a_e... PASS            131        2  
+P-MNT-50M                    parity           path_a_e... PASS            257        2  
+P-MNT-5M                     parity           path_a_e... PASS            131        2  
+P-RND-S1-21021587pt50-6x2... parity           path_a_e... PASS             47        2  
+P-RND-S2-3139845pt86-6x7pct  parity           path_a_e... PASS             47        2  
+REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+REFUSE-02-half-even-ungraded contract-refusal none        PASS              1        0  
+REFUSE-03-annual-fixed303... contract-refusal none        PASS              1        0  
+REFUSE-04-disbursement-af... contract-refusal none        PASS              1        0  
+T116-G8-CLEAN-N103           parity           path_a_e... PASS            726        2  
+T116-G8-FAMB-N104            parity           path_a_e... PASS            733        2  
+T116-G8-FAMB-N108            parity           path_a_e... PASS            761        2  
+T149-PATHB-TIE               parity           path_b_s... PASS             88        3  
+T61-HE-A                     parity           path_a_e... PASS             47        2  
+T61-HE-B                     parity           path_a_e... PASS             47        2  
+T61-HE-C                     parity           path_a_e... PASS             47        2  
+T64-ZP-A                     parity           path_a_e... PASS            397        2  
+T64-ZP-B                     parity           path_a_e... PASS            390        2  
+T64-ZP-C                     parity           path_a_e... PASS            243        2  
+T64-ZP-D                     parity           path_a_e... PASS            509        2  
+T74-E-P340                   parity           path_a_e... PASS            257        2  
+T74-E-P4                     parity           path_a_e... PASS            257        2  
+T74-E-P426                   parity           path_a_e... PASS            257        2  
+T74-E-P59                    parity           path_a_e... PASS            257        2  
+T74-E-P6940                  parity           path_a_e... PASS            257        2  
+T74-E-P72                    parity           path_a_e... PASS            257        2  
+
+--- WHAT THIS RUN ACTUALLY GRADES (named wrong implementations killed) ---
+    Gradeability is NOT "two captures differing only in a setting differ in some cell". That test is
+    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and
+    still kills a no-arm port by 6,015 minor units (finding T55-N1). An all-products-identical capture
+    is therefore not evidence of non-gradeability.
+    counterfactuals named by GRADED vectors: 113  (106 money kills, 7 structural kills)
+    kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+    kills carried by HARNESS-ERROR vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+        An errored vector is the strongest case of "graded nothing": a refusal is at least a
+        decision about the vector, an error is the absence of one. Before A2-27 these credited
+        the count above, so a run with NO implementation registered — 0 cells compared — printed
+        113 kills and no UNBACKED claim at all. Reachable, not hypothetical: it is the standing
+        state of cmd/conformance/impl_hook.go until a port is registered (finding A2-22-F3).
+        A refusal is not a pass and not a failure: it says no discriminating vector exists here, or
+        the seam is blind to the behaviour. A vector that graded nothing kills nothing, so its named
+        kills do not enter the count above and do not remove a capability from the UNBACKED list.
+        Until A2-22 they did both, and a refusal therefore made this report QUIETER — the one case
+        with LESS evidence going silent (finding A2-19 F3).
+    The two are NEVER merged. A MONEY kill separates the oracle from a wrong implementation by a
+    non-zero minor-unit margin. A STRUCTURAL kill separates it by a cell that carries no money at
+    all — a due date, a period boundary, a row kind, the row order — and its margin is honestly 0.
+    P-02's month-end re-anchor and P-03's row ordering are graded ONLY structurally: every money
+    column is identical to the baseline and the port is still wrong. A store of nothing but
+    structural kills grades no amount, and this line is how a reader can tell (finding D-4).
+    monthend.reanchor                          killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28 [structural]
+    schedule.core                              killed by EMI-DENOMINATOR-USES-NUMBER-OF-REPAYMENTS-NOT-PERIODS-AFTER-DISBURSEMENT, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, EMI-SMOOTHING-LOOP-OMITTED, G8-FINAL-ROW-SETTLES-THE-BALANCE, G8-FINAL-ROW-SETTLES-THE-BALANCE, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO, INTEREST-SEGMENT-TEXTBOOK-BALANCE-TIMES-RATEFACTOR, INTEREST-SEGMENT-TEXTBOOK-BALANCE-TIMES-RATEFACTOR, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, MONEY-QUANTIZATION-HALF-EVEN, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, PERIODRATIO-SEED-ALWAYS-SCHEDULE-START, RATE-FACTOR-WITHOUT-TRAILING-SETSCALE, ROW-ORDER-SORT-BY-DATE-DISBURSEMENT-FIRST [structural], STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, STRAIGHT-LINE-PRINCIPAL-DIVISION, ZP-GUARD-NONSTRICT, ZP-GUARD-NONSTRICT, ZP-GUARD-NONSTRICT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-GUARD-SCALES-THE-INSTALLMENT, ZP-RESIDUAL-NO-RECURSION, ZP-RESIDUAL-NO-RECURSION-AT-THE-G8-BOUNDARY
+
+--- WHAT THIS RUN DOES NOT GRADE, EVEN THOUGH IT RECORDS IT ---
+    The MathContext every parity vector records — (19, HALF_UP) — is PROVENANCE AND COMPARABILITY,
+    not a graded claim. T55 witnessed no shape separating precision 19 from 12, or HALF_UP from
+    HALF_EVEN (29 of 36 periods agree at all of them; precision 8 does separate, 22 of 36). Recording
+    the setting stays mandatory; claiming a vector PROVES it would be false.
+    RATE_FACTOR: TRANSCRIBED-ROUNDED at 12 decimal places, parity status TO_BE_CAPTURED.
+        a Go port diverging from the oracle in digits 13 and beyond would compare EQUAL to the transcription and pass silently. Exact rate-factor parity is therefore TO_BE_CAPTURED from the oracle, and no vector may claim it.
+        the rateFactor argument asserted by checkPeriod is compared AFTER value.setScale(MoneyHelper.getMathContext().getPrecision(), MoneyHelper.getRoundingMode()) [VERIFIED: ProgressiveEMICalculatorTest.java:5241; applyMathContext at :5256-5258], and the tests mock MoneyHelper's precision to 12, so every rate factor in the corpus is a 12-decimal-place rounding of the engine's value rather than the value.
+    rate-factor observations carried by this run: 0 — recorded, NEVER compared.
+    money cells whose wire text is over-scaled and declared as such: 0 (T17-F5; an UNDECLARED one
+        is inadmissible, because a rig that silently rounded it would grade the port against a
+        number the oracle never produced).
+
+--- CROSS-CHECK SOURCES, AND THE COLUMNS THEY DO NOT COVER (T17-F2) ---
+    A second attestation of the same output corroborates only the columns it actually prints. This
+    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+    so that a partial match is never read as a whole-row match.
+    corroboration claims made by GRADED vectors: 0 (a further 0 are carried by REFUSED vectors and 0 by HARNESS-ERROR vectors, counted nowhere)
+        The claim itself SURVIVES a refusal — a corroboration is a fact about the RECORD, checked
+        offline at admission, and no refusal reason impugns it. It is scoped to the graded
+        population anyway, because this report scopes by POLARITY: hazards (rate factors,
+        over-scaled cells) take the widest population, SUPPORT takes the narrowest, and a
+        corroboration can only ever make the corpus look better attested. Add the numbers above to
+        recover the corpus total; none of them is ever hidden (A2-22, adjudicated A2-24).
+    embeddable-readme-ci-stdout — fineract-progressive-loan-embeddable-schedule-generator/README.md:48-63 @ 426a23544e8426a38ae43ae404670a0a7e85b9eb
+        DISBURSEMENT attests 2 of 10: due_date, principal
+                     SILENT on: period_number, from_date, interest, fee, penalty, total_due, outstanding_balance, total_outstanding_balance
+        REPAYMENT    attests 6 of 10: period_number, due_date, outstanding_balance, principal, interest, total_due
+                     SILENT on: from_date, fee, penalty, total_outstanding_balance
+        caveat: SIX of the ten period columns on a REPAYMENT row, TWO on the disbursement row. A capture matching this block is NOT a whole-row match: from_date, fee, penalty and total_outstanding_balance are not printed at all.
+        caveat: The block is STALE with respect to the code that produced it: misc/Main.java:86 prints a seventh field, "Total Outstanding Balance", which the committed block does not show. So the block attests what an OLDER build emitted, and only the six columns it shows may be relied on.
+        caveat: "Number of Periods: 6" is a FILTERED count — Main.java:73 excludes disbursement periods — while the corpus's getPeriods().size() is 7. They are different quantities and cross-checking one against the other is a defect, not a corroboration.
+        caveat: No DOWN_PAYMENT row appears in the block (the sample runs with down payment disabled), so this source attests nothing about that row kind.
+
+--- STRUCTURAL COVERAGE GAPS IN THE CORPUS (closed by capture, never by code) ---
+    [OPEN] T17-F4-rate-schedule-from-origination — Rate variation is only ever observed as mid-term rescheduling
+        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+        owner: Tier A (loan product / schedule lifecycle)
+        all 12 call sites are changeInterestRate on an existing schedule model [VERIFIED: ProgressiveEMICalculatorTest.java:410, 459, 505, 549, 1725, 1726, 1770, 1771, 1772, 1773, 1814, 1815 — grep over the in-seam test tree returns exactly these 12, and every one is emiCalculator.changeInterestRate(model, date, value)]. The seam is structurally incapable of the origination form: LoanRepaymentScheduleModelData carries ONE scalar annualNominalInterestRate and no rate schedule at all [VERIFIED: LoanRepaymentScheduleModelData.java:32-39, the record header, 19 components]. Raised as T17 follow-up F4 against docs/analysis/tier0-vector-capture-plan.md section 3.4.
+
+--- STANDING CLAIMS THIS HARNESS'S RULES DEPEND ON ---
+    T17-F3 [NARROWED-BY-OBSERVATION]
+        On the Path A embeddable seam, MoneyHelper's tenant-scoped ambient MathContext is not observed to be reached WHEN allowFullTermForTranche IS FALSE. It IS reached when the flag is true. Nothing here licenses treating the ambient context as unreachable, unrecordable or irrelevant on any capture.
+        originally: T17 follow-up F3 as written: "add to C-00 an assertion that MoneyHelper is NEVER statically initialised on the embeddable path — instrument or stub it to throw".
+        REFUTED BY OBSERVATION. Capture pass 1's D-04 ran the embeddable path with allowFullTermForTranche = true and died with IllegalStateException: "No tenant context available. MoneyHelper requires a valid tenant context" — which is MoneyHelper being reached, on this path, in process. An assertion written as F3 states it would have fired on a true statement about the flag-true branch and been recorded as a harness fault.
+        evidence: .softhouse/capture/PASS2-REPORT.md:34 (the pass-1 D-04 failure, MoneyHelper.java:178-179) and :59-77 (pass 2 supplies a tenant, T-04t completes, and the flag is confirmed live and schedule-neutral on a single-disbursement loan: T-04f vs T-04t identical on all 7 periods, T-04f-big vs T-04t-big identical on all 19). Ambient precision was read from the running oracle as 19.
+
+--- INVARIANT COVERAGE (checked against what the implementation RETURNED) ---
+    principal_portions_sum_to_disbursed    hold 45   violated 0    exempt 2    n/a 0    not-asserted 0
+    principal_amortizes_to_zero            hold 45   violated 0    exempt 2    n/a 0    not-asserted 0
+    balance_roll_forward                   hold 47   violated 0    exempt 0    n/a 0    not-asserted 0
+    splits_sum_to_whole                    hold 47   violated 0    exempt 0    n/a 0    not-asserted 0
+    monotonic_due_dates                    hold 47   violated 0    exempt 0    n/a 0    not-asserted 0
+    contract_row_ordering                  hold 47   violated 0    exempt 0    n/a 0    not-asserted 0
+
+--- INVARIANT ASSERTIONS DELIBERATELY EXEMPTED BY A VECTOR (the vector says why, here) ---
+    An exemption is a check the VECTOR switched off, not one the harness could not run. It is
+    admissible only for a shape where the REFERENCE ORACLE ITSELF violates the invariant and the
+    implementation reproduces it, because there the assertion would be a claim about the oracle
+    rather than about the port — and that is a graded-domain question, not a harness one. Every
+    exemption below is named, scoped to one vector, and carries its own reason in full.
+    THAT SENTENCE HAS TWO CONJUNCTS AND BOTH ARE NOW ASSERTED, in different places and with
+    different consequences. (1) THE ORACLE CONJUNCT is decided OFFLINE, from the vector file
+    alone, in the EXEMPTION GROUNDING section below: the exempted invariant is re-run against the
+    schedule the CAPTURE recorded and must come back VIOLATED there, or the vector is refused.
+    (2) THE PORT CONJUNCT is a statement about THIS RUN and is measured in the PORT CONJUNCT
+    section below: the exempted invariant is run again, against the schedule THE IMPLEMENTATION
+    RETURNED, and what it said is printed beside every exemption here. It is REPORTED, never
+    refused — a port that satisfies an invariant the oracle violates has DIVERGED, and a
+    divergence is the cell diff's finding, not a second admissibility verdict that could disagree
+    with it. Until this run it was asserted by nothing, and the sentence above claimed it anyway.
+    T116-G8-FAMB-N104 — principal_portions_sum_to_disbursed [EXEMPT]
+        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+        PORT CONJUNCT: REPRODUCED — the schedule the implementation RETURNED violates
+            this invariant too, which is the second half of the sentence above: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+    T116-G8-FAMB-N104 — principal_amortizes_to_zero [EXEMPT]
+        REASON: GATE G-8, FAMILY B, same shape and same reason. The final row's outstanding balance is 1 minor unit because the loan was never repaid, not because a balance memo went stale: the balance column is 0.01 on EVERY row, the principal column is 0.00 on every row, and the port returns exactly that. Family A -- where the principal column DOES sum to the disbursement and only the final balance is stale -- is a different phenomenon, is a CELL DIFF rather than an invariant failure, and is NOT covered by this exemption; an exemption cannot cure a parity diff and T116 does not attempt one.
+        PORT CONJUNCT: REPRODUCED — the schedule the implementation RETURNED violates
+            this invariant too, which is the second half of the sentence above: final row (REPAYMENT, due 2032-09-01) leaves 1 minor units outstanding, not 0
+    T116-G8-FAMB-N108 — principal_portions_sum_to_disbursed [EXEMPT]
+        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+        PORT CONJUNCT: REPRODUCED — the schedule the implementation RETURNED violates
+            this invariant too, which is the second half of the sentence above: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+    T116-G8-FAMB-N108 — principal_amortizes_to_zero [EXEMPT]
+        REASON: GATE G-8, FAMILY B, same shape and same reason. The final row's outstanding balance is 1 minor unit because the loan was never repaid, not because a balance memo went stale: the balance column is 0.01 on EVERY row, the principal column is 0.00 on every row, and the port returns exactly that. Family A -- where the principal column DOES sum to the disbursement and only the final balance is stale -- is a different phenomenon, is a CELL DIFF rather than an invariant failure, and is NOT covered by this exemption; an exemption cannot cure a parity diff and T116 does not attempt one.
+        PORT CONJUNCT: REPRODUCED — the schedule the implementation RETURNED violates
+            this invariant too, which is the second half of the sentence above: final row (REPAYMENT, due 2033-01-01) leaves 1 minor units outstanding, not 0
+
+--- EXEMPTION GROUNDING (every exemption re-run against the schedule ITS OWN VECTOR recorded) ---
+    An exemption is admissible only where the REFERENCE ORACLE ITSELF violates the invariant. That
+    is asserted, not assumed: each exempted invariant is re-run against the vector's own recorded
+    schedule, honouring that vector's unrecorded_fields, and must come back VIOLATED there. This
+    section reports the ORACLE conjunct only; whether the PORT reproduces the oracle's behaviour is
+    a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused
+    in Admit and never a warning: DECORATION (the invariant holds OUTRIGHT on the oracle's own
+    numbers, with no assertion withheld, so the exemption silences nothing and only inflates the
+    count above), NOT-EVALUABLE (the invariant has nothing to assert here at all, with nothing
+    withdrawn) and SCHEDULE-UNREADABLE (the recorded rows do not parse into a schedule). A fourth,
+    UNDETERMINED-ON-THE-RECORD, is REPORTED AND ADMITTED: this vector's own unrecorded_fields
+    withdrew a cell the invariant reads, so the record is SILENT — which is not evidence against
+    the exemption, and refusing it would kill a legitimate vector for a gap in the CAPTURE
+    (finding T225-F1). It is counted apart from GROUNDED because it is not evidence either way.
+    INSPECTED 51 loaded vector(s); 2 of them exempt at least one invariant; 4 exemption declaration(s) examined.
+    4 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.
+    0 UNDETERMINED-ON-THE-RECORD (a cell the invariant reads was never recorded; admitted, not evidence).
+
+--- EXEMPTION CITATIONS (which observation each admissible exemption rests on) ---
+    An exemption's whole argument is that THE REFERENCE ORACLE WAS OBSERVED TO BEHAVE THIS WAY.
+    Its `reason` is free prose and always was; until finding T222-F4 was closed, nothing required
+    that prose to point at anything, so an OBSERVATION and an ASSERTION were indistinguishable to
+    this harness. The citation is MINTED by the harness, not read from the vector, and it is
+    refused in Admit unless all three components resolve: the committed capture ARTEFACT exists
+    in this repository and is non-empty; the capture CASE ID occurs inside that artefact's bytes
+    (a bundle citation that names no case in the bundle is a page that is not in the book); and
+    the RECORD'S OWN SENTENCE — the exempted invariant re-run against the captured schedule — is
+    non-empty. The byte offsets below are the proof the artefact was opened.
+    MINTED 4 citation(s) for 4 admissible exemption(s) (4 GROUNDED + 0 UNDETERMINED-ON-THE-RECORD) out of 4 declared.
+    4 of 4 RESOLVED in full; 0 did not (each one's refusal is printed above and the vector
+    carrying it is INADMISSIBLE).
+        T116-G8-FAMB-N104 — principal_portions_sum_to_disbursed [GROUNDED]
+            ARTEFACT: .softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json (128710 bytes); CASE T116-FAMB-R600p0-N104-B1 found at byte offset 38174
+            THE RECORD SAYS: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+        T116-G8-FAMB-N104 — principal_amortizes_to_zero [GROUNDED]
+            ARTEFACT: .softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json (128710 bytes); CASE T116-FAMB-R600p0-N104-B1 found at byte offset 38174
+            THE RECORD SAYS: final row (REPAYMENT, due 2032-09-01) leaves 1 minor units outstanding, not 0
+        T116-G8-FAMB-N108 — principal_portions_sum_to_disbursed [GROUNDED]
+            ARTEFACT: .softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json (128710 bytes); CASE T116-FAMB-R600p0-N108-B1 found at byte offset 97739
+            THE RECORD SAYS: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+        T116-G8-FAMB-N108 — principal_amortizes_to_zero [GROUNDED]
+            ARTEFACT: .softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json (128710 bytes); CASE T116-FAMB-R600p0-N108-B1 found at byte offset 97739
+            THE RECORD SAYS: final row (REPAYMENT, due 2033-01-01) leaves 1 minor units outstanding, not 0
+
+--- PORT CONJUNCT (every exempted invariant re-run against the schedule THE IMPLEMENTATION RETURNED) ---
+    The exemption sentence has two conjuncts: the oracle violates the invariant, AND the
+    implementation reproduces it. The section above asserts the first, offline, and refuses when
+    it fails. This asserts the second, on THIS run's output, and REPORTS rather than refuses: a
+    port that SATISFIES an invariant the oracle violates has diverged from the oracle, which is a
+    parity finding the cell diff owns. Nothing in this section can fail a vector, and nothing in
+    it is a licence: DIVERGED here means the exemption is excusing a behaviour the port does not
+    actually have, which is worth a reader's attention even when every graded cell matched.
+    INSPECTED 4 exempted assertion(s) on the graded vectors.
+    4 REPRODUCED (the returned schedule violates the exempted invariant too), 0 DIVERGED, 0 COULD NOT SAY.
+
+--- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---
+    An invariant reads the schedule the implementation RETURNED. Where the implementation could not
+    compute a cell — only the self-test replay ever can't, and only for a cell the vector's own
+    unrecorded_fields withdrew — the assertions that read it are DECLARED not-applicable here rather
+    than run against the stand-in. Both directions of that defect were live before this section
+    existed: balance_roll_forward went RED on a placeholder, and principal_amortizes_to_zero went
+    quietly GREEN on one, which is the worse half. A check that stops checking says so, in writing.
+    NONE — every invariant assertion ran, on cells somebody actually observed.
+
+--- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
+    implementation          ledger-go
+    LDG-01-manual-je-3leg-minor-units              parity         ledger_rest_posting    PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 12500062 == credits 12500062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 12500062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-02-repayment-split-4leg-minor-units        parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 30000000 == credits 30000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 30000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-03-overpayment-4leg-minor-units            parity         ledger_rest_posting    PASS             23 cells (6 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 100000000 == credits 100000000 (minor units), over 4 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), INDEPENDENT)  the REQUESTED transaction amount against the CREDIT splits: 100000000 == sum of 3 splits (minor units). INDEPENDENT of double_entry_balances: the whole comes from the recorded REQUEST, not from a leg
+    LDG-04-header-account-accepted                 parity         ledger_db_readback     PASS             13 cells (4 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 10000025 == credits 10000025 (minor units), over 2 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 1 debit and 1 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-05-openingbalance-accepted-empty-ledger    parity         ledger_db_readback     PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 70000124 == credits 70000124 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-06-postclosure-entry-accepted-one-day-a... parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-07-entry-on-the-business-date-accepted     parity         ledger_db_readback     PASS             18 cells (5 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 35000062 == credits 35000062 (minor units), over 3 legs
+        INVARIANT splits_sum_to_whole      HOLD (1 assertion(s), DEPENDENT)  one CREDIT whole against the DEBIT splits: 35000062 == sum of 2 splits (minor units). ⚠ DEPENDENT ON double_entry_balances, NOT a second piece of evidence: the whole here IS one of the entry's own legs, so this equation is character-for-character the one I-1 already asserted on this shape, and no implementation can fail one and pass the other. It is independent only where the recorded request carries its own transaction amount
+    LDG-ACC-01-accrual-six-slots-runaccruals-tr... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2770000 == credits 2770000 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-02-accrual-six-slots-minor-unit-res... parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 2389538 == credits 2389538 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-ACC-03-accrual-six-slots-scheduled-job     parity         ledger_rest_posting    PASS             33 cells (8 money)
+        INVARIANT double_entry_balances    HOLD (2 assertion(s), INDEPENDENT)  debits 1605634 == credits 1605634 (minor units), over 6 legs
+        INVARIANT splits_sum_to_whole      N/A  (0 assertion(s), —)  the entry has 3 debit and 3 credit legs, which is not a split shape: this invariant needs exactly one leg on one side and more than one on the other. A 2-leg entry would make the assertion `whole == split`, identical to double_entry_balances and true for every implementation that satisfies it, so it is declared not-applicable rather than reported as a hold that nothing could fail
+    LDG-DIV-01-oracle-accepts-sub-minor-unit-re... divergence     ledger_rest_posting    PASS              2 cells (0 money)
+    LDG-REFUSE-01-unbalanced-by-one-minor-unit     oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-02-manual-adjustments-not-permitted oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-03-openingbalance-after-posted-e... oracle-refusal ledger_rest_posting    PASS              3 cells (0 money)
+    LDG-REFUSE-04-preclosure-entry-on-closing-date oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-05-future-dated-entry-one-day-af... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    LDG-REFUSE-06-preclosure-entry-before-closi... oracle-refusal ledger_rest_posting    PASS              4 cells (0 money)
+    ledger parity           PASS 10   FAIL 0
+    ledger oracle-refusal   PASS 6    FAIL 0   (an HTTP status and error code the ORACLE returned
+                                              and a capture recorded — NOT a contract sentinel)
+    ledger inadmissible     0
+    ledger harness errors   0
+    ledger cells compared   268 graded, of which 63 are MONEY cells in int64 minor units
+    ledger kills named      15 money, 31 structural
+    ledger invariants       0 violation(s), 25 non-vacuous assertion(s) made, of which 22 are
+                            INDEPENDENT (able to go RED while every other invariant on the same
+                            entry stays GREEN). A DEPENDENT hold is not a second piece of evidence.
+    ledger exemptions       0 DECLARED (this schema ADMITS NONE; a declared exemption is
+                                        INADMISSIBLE, so this figure is pinned at 0 by
+                                        conformance.sh and both directions of drift are gated)
+    ledger citations        34 PART-TWO resolutions over the loaded corpus: 4 ARTEFACT-BYTES,
+                            27 HTTP-SIDECAR, 3 FILE-NAME-ONLY (pinned 3), 0 UNRESOLVED.
+                            FILE-NAME-ONLY reads NO byte of the artefact: it checks that the ref
+                            this vector wrote contains the case id this vector wrote. It is not
+                            evidence about the artefact, it is pinned by (case_id, field) in
+                            ledger/conformance/admit.go, and a fourth is INADMISSIBLE.
+                            FILE-NAME-ONLY: LDG-01-manual-je-3leg-minor-units provenance.capture_ref -> .softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json
+                            FILE-NAME-ONLY: LDG-02-repayment-split-4leg-minor-units provenance.capture_ref -> .softhouse/capture/tierA-a2/out/A2-338-je-after-repayment-coverage.json
+                            FILE-NAME-ONLY: LDG-03-overpayment-4leg-minor-units provenance.capture_ref -> .softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json
+
+    THE DIVERGENCE CENSUS — where THIS PORT AND THE REFERENCE ORACLE ARE KNOWN TO DISAGREE.
+      divergence vectors      PASS 1    FAIL 0   (pinned 1; a `divergence` vector records
+                                                the ORACLE ACCEPTING a request THIS PORT
+                                                REFUSES — an OPEN, GATED disagreement)
+
+    WHAT THE DIVERGENCE COUNT IS AND IS NOT — the honest limit of the number above it.
+
+      A DIVERGENCE IS NOT A PARITY PASS, and it is counted NOWHERE in `ledger parity PASS`.
+      On these vectors the port did NOT match the oracle: it REFUSED where the oracle
+      ACCEPTED. `ledger parity PASS n` still means exactly n vectors on which this port
+      reproduced the reference oracle's output, and this line cannot inflate it.
+
+      A DIVERGENCE FAIL *IS* ADDED TO `ledger parity FAIL`, deliberately and asymmetrically.
+      A divergence never counts as evidence FOR the port and always counts as evidence
+      AGAINST it when it moves, so the bar goes red the moment a recorded disagreement
+      stops behaving as recorded. The fold is visible here beside the un-folded figure.
+
+      A GREEN DIVERGENCE VECTOR MEANS 'THE DISAGREEMENT IS STILL EXACTLY AS RECORDED'. It is
+      NOT progress, NOT a fix, and NOT evidence the port is right — the gate named on each
+      row below is open and only a `user` gate closes it.
+
+      WHAT THIS CORPUS STILL CANNOT EXPRESS, stated because a claim limit that is not
+      printed is not a limit. This class records THAT the oracle accepted and WHICH
+      CHARACTERS it returned. It does NOT grade the oracle's value against anything, because
+      there is no int64 count of minor units equal to a sub-minor-unit residue and this
+      program will not store money any other way. So a port that refused for the right
+      reason and a port that refused for the right reason WHILE ALSO being wrong about what
+      the oracle's amount was are indistinguishable here. Closing that needs a decided rule
+      for over-scale money, not a wider schema.
+
+      * LDG-DIV-01-oracle-accepts-sub-minor-unit-residue — PASS
+
+    WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails.
+    EVERY ONE OF THE 6 CAPABILITIES capabilities-ledger.json MARKS in_graded_domain:false IS
+    LISTED BELOW — the list is DERIVED FROM THAT FILE, so a row added there prints itself here
+    and a gap cannot go unprinted (A2-34 F-5: this block was hand-written and printed 6 of 8).
+
+      * ledger.slot.resolution — NOT IN THE GRADED DOMAIN
+          Resolving a loan product's placeholder slot to a GL account through
+          acc_product_mapping, including the payment-type precedence chain and the cash/accrual
+          family selection.
+          WHY NOT: PARTIALLY GRADED SINCE T391, AND THE ROW STAYS FALSE BECAUSE THE PART THAT IS
+          GRADED IS THE SMALLER PART. What IS graded now: the (product, slot) -> GL account
+          resolution on the ACCRUAL family, for slot codes 3, 4, 5, 7, 8 and 9 on product 63,
+          keyed through that product's own observed thirteen-row acc_product_mapping table, plus
+          the DECODE of each code to its AccrualAccountsForLoan name. LDG-ACC-01/02/03 assert
+          it, and ledger-wrong-slot-family-blind -- a port that decodes every code through
+          CashAccountsForLoan whatever the accounting rule says -- dies to it on
+          legs[i].slot_name while producing the RIGHT account on every leg. WHAT IS STILL
+          UNGRADED, and it is why in_graded_domain stays FALSE: (a) THE PAYMENT-TYPE PRECEDENCE
+          CHAIN -- product 63 has NO paymentChannelToFundSourceMappings,
+          feeToIncomeAccountMappings or penaltyToIncomeAccountMappings at all [T391, GET
+          /loanproducts/63, out/T391-04-product63-mapping-rest.txt], so STEP 2 of
+          resolveProductAccount is never entered and G-06's contested null-payment-type question
+          is untouched; (b) THE CASH FAMILY -- no cash-based accounting-path vector exists; (c)
+          the financial-activity STEP 0 branch, which no loan placeholder code reaches; (d) the
+          charge and reason precedence levels. A vector claiming THIS capability would be
+          claiming all of that, so it is still refused. The accrual vectors claim
+          `ledger.accrual.entry` instead, which is scoped to what they actually exercised. [T391
+          MOVED unposted_slots ONTO THIS ROW. It used to hang off ledger.accrual.entry, which is
+          now in the graded domain -- and the harness prints the SLOT lines only for rows marked
+          in_graded_domain false, so leaving them there would have SILENTLY STOPPED PRINTING a
+          measurement that has already been wrong once in this file's history. They belong here
+          on the merits too: an unposted slot is a gap in SLOT RESOLUTION coverage. Nothing else
+          about them changed. THE THREE PRODUCT-28 ROWS ARE UNCHANGED AND STILL TRUE,
+          re-measured live by T391: slot 7 -> gl 18 (0 rows), slot 8 -> gl 22 (0 rows), slot 9
+          -> gl 16 (21 rows on the ACCOUNT and ZERO through product 28)
+          [out/T391-S01-slot-resolution.txt section 8]. THE FIVE PRODUCT-63 ROWS ARE NEW and are
+          the five accrual slots T388 left unposted and T391 DELIBERATELY DID NOT POST: 6
+          LOSSES_WRITTEN_OFF -> gl 40, 10 TRANSFERS_SUSPENSE -> gl 44, 11 OVERPAYMENT -> gl 45,
+          12 INCOME_FROM_RECOVERY -> gl 46, 13 GOODWILL_CREDIT -> gl 47, all five reading ZERO
+          journal entries [T391-S01 section 7]. They need a write-off, a transfer, an
+          overpayment, a recovery and a goodwill credit respectively -- five further MOVES OF
+          SHARED ORACLE STATE, each with its own blast radius, while T388's twenty
+          command-source rows are STILL UNATTRIBUTED in PROBES.tsv (T390's open obligation).
+          Declaring them here costs nothing and makes the gap print on every run; posting them
+          would have deepened an open obligation to buy evidence this task did not need.]
+          SLOT product 28 / ACCRUAL slot 7 = INTEREST_RECEIVABLE -> gl 18
+            and NO VECTOR IN THIS STORE carries a leg on gl 18. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 28 / ACCRUAL slot 8 = FEES_RECEIVABLE -> gl 22
+            and NO VECTOR IN THIS STORE carries a leg on gl 22. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 28 / ACCRUAL slot 9 = PENALTIES_RECEIVABLE -> gl 16
+            but gl 16 IS NOT AN UNUSED ACCOUNT: 3 vector(s) in this store carry a leg on it
+            (LDG-01-manual-je-3leg-minor-units, LDG-02-repayment-split-4leg-minor-units,
+            LDG-03-overpayment-4leg-minor-units), through a DIFFERENT slot. THE SLOT IS
+            UNPOSTED; THE ACCOUNT IS NOT EMPTY — these are different claims wherever one GL
+            account backs several slots, and conflating them is exactly how this block came to
+            print a false sentence on every run (A2-34 F-4).
+          SLOT product 63 / ACCRUAL slot 6 = LOSSES_WRITTEN_OFF -> gl 40
+            and NO VECTOR IN THIS STORE carries a leg on gl 40. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 10 = TRANSFERS_SUSPENSE -> gl 44
+            and NO VECTOR IN THIS STORE carries a leg on gl 44. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 11 = OVERPAYMENT -> gl 45
+            and NO VECTOR IN THIS STORE carries a leg on gl 45. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 12 = INCOME_FROM_RECOVERY -> gl 46
+            and NO VECTOR IN THIS STORE carries a leg on gl 46. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+          SLOT product 63 / ACCRUAL slot 13 = GOODWILL_CREDIT -> gl 47
+            and NO VECTOR IN THIS STORE carries a leg on gl 47. (This harness does not read the
+            reference oracle's database when it renders a report, so this says the ACCOUNT is
+            untouched BY THE PROMOTED CORPUS. It is not a claim that the account has zero
+            journal entries in the oracle.)
+      * ledger.transfers.suspense — NOT IN THE GRADED DOMAIN
+          TRANSFERS_SUSPENSE (gl 17) reached through the ACCOUNTING PATH, i.e. by an account
+          transfer.
+          WHY NOT: gl 17 has rows in this corpus only as a MANUAL target (A2-343, and LDG-01
+          promotes it as one). It has NO accounting-path entry at all. The path that reaches it
+          is account transfers, which slice A2 never exercised. A vector claiming this
+          capability would be claiming coverage of a code path no capture has ever entered.
+      * ledger.charge.off — NOT IN THE GRADED DOMAIN
+          Charge-off, and the charge-off income slots.
+          WHY NOT: UNMAPPED ON BOTH ADMISSIBLE PRODUCTS. Product 55 does not map
+          chargeOffExpenseAccountId, so command=charge-off would 404 exactly as A2-224 did on
+          product 46. The charge-off income slots (14, 15, 18 in CashAccountsForLoan) are
+          unreachable without a NEW product.
+      * ledger.multi.currency.entry — NOT IN THE GRADED DOMAIN
+          A journal entry whose legs are denominated in more than one currency.
+          WHY NOT: UNTOUCHED. Every journal entry in the corpus is MNT [re-confirmed by A2-15
+          against the live oracle: sql/q4-a2-26-ledger-state.sql, every row currency_code =
+          MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT
+          and this capability refuses. [CORRECTED BY OBSERVATION AND BY SOURCE, T352, fire
+          20260828-140005. Two things above need separating, because they are not the same claim
+          and only one of them survives. (1) 'There is NO OBSERVATION of a multi-currency entry'
+          -- still true, and now known to be true FOR A STRUCTURAL REASON rather than for want
+          of a probe. A journal-entry LEG HAS NO CURRENCY FIELD: SingleDebitOrCreditEntryCommand
+          carries exactly glAccountId, amount and comments [VERIFIED:
+          SingleDebitOrCreditEntryCommand.java:33-35 at 426a23544], and currencyCode is a single
+          scalar on the enclosing JournalEntryCommand [:40]. AN ENTRY WHOSE LEGS ARE DENOMINATED
+          IN MORE THAN ONE CURRENCY IS NOT EXPRESSIBLE AT THE ledger_rest_posting SEAM AT ALL.
+          So this capability is not merely unexercised, it names a shape this seam cannot
+          produce, and no capture campaign will ever close it here. (2) 'Every journal entry in
+          the corpus is MNT' -- still true of the CORPUS, but it is a fact about the PROBES and
+          NOT about the oracle, and T352 measured the difference. The tenant has TWO selected
+          currencies, MNT and USD [out/T352-P01-currencies.json], and a journal entry posted in
+          USD on the same two GL accounts was ACCEPTED, HTTP 200, txn a29bcb5d6fcf, read back
+          with currency USD decimalPlaces 2 and amount 12.340000 [out/T352-A07-usd-entry.json,
+          out/T352-A08-usd-readback.json]. THE LEDGER IS CURRENCY-GENERAL; THE STORE IS NOT.
+          G-07's MNT pin is therefore a STORE POLICY enforced at admit.go:156-162, not a
+          constraint the oracle imposes, and the sentence 'there is NO OBSERVATION ... so G-07
+          pins MNT' inverts that: the pin came first. Whether to widen G-07 is a schema question
+          and a DEC-2 amendment, not a capture question. Raised as FU-T352-2. This capability
+          stays out of the graded domain, with a corrected reason.]
+      * ledger.reversal.entry — NOT IN THE GRADED DOMAIN
+          A correction posted as a reversing entry (I-5).
+          WHY NOT: A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction
+          a28f573f34c7 and A2-349 read the three legs back carrying reversed = true -- which
+          CORRECTS DEC-2 §4.4's stated reason ('the A2 corpus contains no reversal'), written
+          before that capture was taken. What is still missing is the other half of I-5's
+          statement: 'a correction ADDS a leg pair; it never MUTATES one'. The read-back shows
+          the reversed FLAG SET on the original rows, and distinguishing 'flags and adds' from
+          'flags and rewrites' needs the WRITE path, not a snapshot. So this stays out of the
+          graded domain with a corrected reason, and no reversal vector is promoted.
+      * ledger.running.balance — NOT IN THE GRADED DOMAIN
+          acc_gl_journal_entry.office_running_balance / organization_running_balance, and the
+          endpoints that serve them.
+          WHY NOT: PERMANENTLY REFUSED WHILE GATE G-12 IS OPEN, and the ledger vector schema has
+          no field for either column so a vector could not express one anyway. A2-29 MEASURED
+          the stored balance to be a SECOND SOURCE OF TRUTH rather than a cache: made to
+          disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four
+          organisation-wide recomputes, propagating into a FRESHLY COMPUTED row because the
+          recompute seeds from its own prior output, and served at the contract boundary flagged
+          runningBalanceComputed: true. Also /glaccounts?fetchRunningBalance=true is HTTP 500 on
+          PostgreSQL (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by
+          ... desc'), so that reader has never worked on the only database this program permits.
+          Balances are DERIVED, never written, and never read back.
+
+    THE ORACLE-DERIVED COLUMN CARVE-OUT — where THIS PORT IS RIGHT NOT TO MATCH THE ORACLE.
+      oracle-derived columns  3    (pinned 3)   provenance 7   graded 3   graded-gap 18
+      graded cell vocabulary  14   (pinned 14)   MEASURED from the comparator, not declared
+
+      CLAUDE.md, non-negotiable: THE LEDGER IS DOUBLE-ENTRY AND APPEND-ONLY; BALANCES ARE
+      DERIVED, NEVER WRITTEN. The reference oracle does the opposite — it stores a running
+      balance ON the posted row and job 9 'Update Accounting Running Balances' rewrites it in
+      place, nightly, by raw UPDATE ... WHERE id=?, outside the command bus. A port that
+      honours the non-negotiable will NEVER produce these columns, so it can never match
+      them, AND THAT MISMATCH IS THE PORT BEING RIGHT. They are excluded BY DESIGN:
+
+      * acc_gl_journal_entry.organization_running_balance  ->  wire "organizationRunningBalance"
+          WRITTEN BY: scheduled job 9 'Update Accounting Running Balances' ->
+          AccountRunningBalanceUpdateTasklet ->
+          JournalEntryRunningBalanceUpdateServiceImpl.updateOrganizationRunningBalance, raw
+          batched `UPDATE acc_gl_journal_entry SET ... WHERE id=?` at :163-181, outside the
+          command bus. Also reachable by hand through POST
+          /journalentries?command=updateRunningBalance (UpdateRunningBalanceCommandHandler); 7
+          such command rows exist in this tenant.
+      * acc_gl_journal_entry.office_running_balance  ->  wire "officeRunningBalance"
+          WRITTEN BY: job 9 -> the same service at :163-181 (organisation sweep, which sets all
+          three columns) and :211-217 (per-office sweep, which writes office_running_balance
+          ALONE and sets neither the flag nor the organisation column)
+      * acc_gl_journal_entry.is_running_balance_calculated  ->  wire "runningBalanceComputed"
+          WRITTEN BY: job 9 -> the same service at :163-181; it is also the job's own WORK QUEUE
+          -- the date finder at :72-73 selects MIN(entry_date) WHERE
+          is_running_balance_calculated=false, and the job never revisits an entry older than
+          the earliest uncalculated one
+
+      WHAT IS NOT IN THIS CARVE-OUT, said because a carve-out that nobody bounds grows.
+      MONEY AND STRUCTURE ARE GRADED, ALWAYS — leg amounts, GL account ids and codes,
+      debit/credit sense, transaction linkage. Those 19 columns are protected IN GO
+      (moneyAndStructureColumns, ledger/conformance/oraclederived.go): declaring one of them
+      ORACLE_DERIVED or PROVENANCE REFUSES THE RUN AT EXIT 2, and editing the JSON cannot
+      reach that rule. A money column can be GRADED or a printed GRADED_GAP; it can never
+      be exempt.
+
+      18 COLUMNS ARE GRADED_GAP — money or structure with NO CELL YET. THAT IS A COVERAGE
+      GAP, NOT AN EXEMPTION, and it is printed here so the two never collapse into one:
+        - acc_gl_journal_entry.office_id
+        - acc_gl_journal_entry.currency_code
+        - acc_gl_journal_entry.transaction_id
+        - acc_gl_journal_entry.reversed
+        - acc_gl_journal_entry.reversal_id
+        - acc_gl_journal_entry.manual_entry
+        - acc_gl_journal_entry.entry_date
+        - acc_gl_journal_entry.transaction_date
+        - acc_gl_journal_entry.submitted_on_date
+        - acc_gl_journal_entry.entity_type_enum
+        - acc_gl_journal_entry.entity_id
+        - acc_gl_journal_entry.loan_transaction_id
+        - acc_gl_journal_entry.savings_transaction_id
+        - acc_gl_journal_entry.client_transaction_id
+        - acc_gl_journal_entry.share_transaction_id
+        - acc_gl_journal_entry.payment_details_id
+        - acc_gl_journal_entry.description
+        - acc_gl_journal_entry.ref_num
+
+      THE SAME SHAPE ELSEWHERE IN THE TENANT SCHEMA, found and DELIBERATELY NOT DECLARED —
+      recorded because 'not found' is a statement about the search, never about the world:
+        - m_savings_account_transaction (running_balance_derived, cumulative_balance_derived, balance_end_date_derived, balance_number_of_days_derived, overdraft_amount_derived)
+            SAME SHAPE, OUT OF THE GRADED SURFACE. It is the savings ledger's denormalised
+            running balance on a posted transaction row. Savings is ported-but-DISABLED under
+            the NBFI licence gate (Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4),
+            no savings vector exists, and declaring columns for a surface nothing grades would
+            be a declaration with no bar behind it. Filed as a follow-up, to be declared in this
+            same shape the day a savings vector is promoted.
+        - m_loan_transaction (outstanding_loan_balance_derived, principal_portion_derived, interest_portion_derived, fee_charges_portion_derived, penalty_charges_portion_derived, overpayment_portion_derived)
+            SAME SHAPE, DIFFERENT CONTEXT. These are loan-lifecycle denormalisations, not ledger
+            ones. Measured 2026-08-29: 125 columns in this tenant schema end in `_derived`,
+            across 15 tables. Enumerating them is a loan-context task with its own vectors and
+            its own comparator, and pre-empting it here would be a declaration written by
+            somebody who is not grading them.
+        - m_trial_balance (closing_balance, amount)
+            SAME SHAPE, UNPOPULATED. Written by job 30 'Update Trial Balance Details' (is_active
+            TRUE, last ran 2026-08-28 16:01:00.003). Measured 2026-08-29T00:08Z: ZERO rows. A
+            declaration about a table whose behaviour has never been observed would be
+            reasoning, not measurement.
+        - acc_gl_journal_entry_annual_summary (opening_balance_amount)
+            SAME SHAPE, UNPOPULATED AND THE JOB IS OFF. Written by job 40 'Journal Entry
+            Aggregation', is_active FALSE, last ran 2026-08-18 16:01:00.053. Measured: ZERO
+            rows.
+        - acc_gl_account (no such column — searched and found clean)
+            SEARCHED AND FOUND CLEAN. acc_gl_account carries NO stored balance column at all --
+            the organisationRunningBalance a GLAccountData carries is projected at read time
+            from acc_gl_journal_entry when fetchRunningBalance=true, and that route is HTTP 500
+            on PostgreSQL (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only `group
+            by ... desc`) [A2-29]. Recorded because a table searched and found clean and a table
+            never searched are different states.
+
+      THE POSITIVE RULE ON CAPTURE — A2-29 §6.1, checked rather than promised since T429.
+      cited artefacts scanned  CLEAN 34   FORBIDDEN 0    UNREADABLE 0
+      A ledger vector may not be captured with runningBalance=true or fetchRunningBalance=true. The scanner looks for
+      organizationRunningBalance, officeRunningBalance, runningBalanceComputed in the cited bytes:
+      those fields appear in an oracle response IF AND ONLY IF the parameter was set
+      [MEASURED T429: GET /journalentries/78 carries none of them; the same GET with
+      ?runningBalance=true carries all three]. A vector citing such a body is INADMISSIBLE.
+
+      OBSERVED FROM THE LIVE ORACLE 2026-08-29T00:08:40Z, fineract 426a23544, tenant gerege, database fineract_gerege.
+      Evidence: .softhouse/capture/t429-oracle-derived-columns/
+      THE DECLARATION IS NOT A RATIFIED DEC. It is raised under G-22; DEC-2 is ratified and
+      an agent may not amend it. See docs/adr/DEC-2-PROPOSED-REVISION-T429-oracle-derived-columns.md.
+
+--- SUMMARY ---
+    parity vectors          PASS 46   FAIL 0
+    contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+    refused                 0   (no discriminating vector / seam blind — not a pass, not a failure)
+    inadmissible            0
+    harness errors          0
+    cells compared          7884 graded, 93 ungraded (never recorded by the capture)
+    kills named             106 money, 7 structural (zero-margin by construction, never merged)
+    recorded, never graded  0 rate factors (TRANSCRIBED-ROUNDED), 0 declared over-scaled money cells
+    invariant violations    0
+    invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+    invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
+    no-float census         6 Go packages / 70 Go files / 150990 tokens / 296 import specs inspected under nexus (recursive)
+                            0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 forbidden imports, 0 unscannable files
+                            covered: nexus/internal/apps/ledger
+                            covered: nexus/internal/apps/ledger/conformance
+                            covered: nexus/internal/apps/loanschedule
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /tmp/t468.pKBxwr/t458/nexus
+
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+         This means "matches the reference oracle on captured vectors, within the graded domain".
+         IT EXCLUDES 1 RECORDED DIVERGENCE(S) — see THE DIVERGENCE CENSUS above. On those
+         captured vectors this port does NOT match the reference oracle: the oracle ACCEPTED
+         a request this port REFUSES. Each is an OPEN disagreement held at the gate named on
+         its row, and a green line there means only "the disagreement is still exactly as
+         recorded" — never that it has been fixed, and never that the port is right.
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+
+conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
+conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
+conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
+conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+conformance:   exemption census READ: LEDGER parity vectors        = 10 == pinned 10
+conformance:   exemption census READ: LEDGER oracle-refusal vector = 6 == pinned 6
+conformance:   exemption census READ: LEDGER money cells compared  = 63 == pinned 63
+conformance: CENSUS wrong ledger implementations — discovered 16 registered as DELIBERATELY
+conformance:   WRONG from the binary's own -list-implementations; pinned at
+conformance:   16.
+conformance:   KILLED  ledger-wrong-accounting-closed-echoes-transaction-date — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-closure-boundary-exclusive — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-code-ignored — exit 1, ledger parity FAIL 10 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-date-rules-always-refusing — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-future-date-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-header-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-manual-permission-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-mapping-key-ignored — exit 1, ledger parity FAIL 3 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-netting-totals — exit 1, ledger parity FAIL 10 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-openingbalance-always-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-openingbalance-no-contra — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-openingbalance-posted-entries-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-residue-rounding — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-slot-family-blind — exit 1, ledger parity FAIL 3 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-split-drift — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-truncating — exit 1, ledger parity FAIL 9 + oracle-refusal FAIL 0
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+BAR EXIT = 0

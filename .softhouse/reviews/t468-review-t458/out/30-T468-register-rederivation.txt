@@ -1,0 +1,58 @@
+T468 -- INDEPENDENT RE-DERIVATION OF THE P-103 REGISTER CLAIM
+=============================================================
+Method: the two definition regexes are copied VERBATIM out of
+capture/t282-pnumber-drift/bin/check-pnumber-citations.py:100-101.
+Two scans were run: a STRICT one (regex applied to the raw line, which is what
+T458 says it used) and a CHECKER-EQUIVALENT one (regex applied to line.strip(),
+which is what build_register() at :233,246 actually does).
+
+STRICT SCAN (regex on the raw line)
+  main    @ 3f4e236a : distinct=97  MAX=102  gaps=[14, 63, 64, 65, 99]  has-103=False
+  T458    @ 0db7538b : distinct=98  MAX=103  gaps=[14, 63, 64, 65, 99]  has-103=True
+  -> reproduces T458's "defined ids = 97 distinct, MAX = 102, interior gaps 14/63/64/65/99,
+     next free = 103" EXACTLY.
+
+CHECKER-EQUIVALENT SCAN (regex on line.strip(), as build_register does)
+  T458    @ 0db7538b : distinct=102  MAX=103  gaps=[99]  in-file collisions=[12, 13]
+  P-14  -> defined, patterns.md:324   "- **P-14 - a mutation that no vector can distinguish ..."
+  P-63  -> defined, patterns.md:2043  "- **P-63 - the driver validates against TEXT ..."
+  P-64  -> defined, patterns.md:2044  "- **P-64 - an INCONCLUSIVE run is indistinguishable ..."
+  P-65  -> defined, patterns.md:2045  "- **P-65 - 'zero stranded' answered a narrower question ..."
+  P-99  -> NOT DEFINED anywhere; reserved as the permanent NEGATIVE CONTROL at
+           check-pnumber-citations.py:203-206, keyed to
+           capture/t255-dec2-rev8/instruments/15-p5-probe.py:59,73 (file present, both
+           lines verified). This is why gaps=[99] renders as gaps=none.
+  -> T458's reason for NOT reusing an interior gap is CORRECT and re-derived:
+     14/63/64/65 are live indented-bullet definitions, 99 is permanently reserved.
+     103 is the only free cardinal.
+
+FRESHNESS OF P-103, measured on the tree, not asserted
+  At the fork point 3f4e236a, `git grep -c P-103` over all tracked files:
+      capture/fire-20260829-080002/60-BAR-RED-p102-first-draft-FATAL-undefined-citation.txt:1
+      -- ONE line, whole repository. Not a definition.
+  That one line carries TWO P-103 tokens (`grep -o | wc -l` = 2), which is why the
+  checker retires exactly two UNDEFINED sites.
+
+UNDEFINED 47 -> 45, re-derived by RUNNING the checker on both trees
+  @ 3f4e236a : ids=101 gaps=none ... undefined=47   VERDICT PASS -- 0 fatal
+  @ 963fe613 : ids=102 gaps=none ... undefined=45   VERDICT PASS -- 0 fatal
+  @ 0db7538b : ids=102 gaps=none ... undefined=45   VERDICT PASS -- 0 fatal
+  -> T458's claim is exact.
+
+COLLISION CHECK ACROSS THE FOUR LIVE SIBLINGS, at the time of this review
+  softhouse/T462-wallclock-refusal  -> 3f4e236a  (NO commits; still at the fork point)
+  softhouse/T465-lock-frontier      -> 3f4e236a  (NO commits)
+  softhouse/T466-skipwt-smudge      -> 3f4e236a  (NO commits)
+  softhouse/T467-t464-conditions    -> 3f4e236a  (NO commits)
+  `git grep P-103 <branch> -- .softhouse/patterns.md` returns rc=1 (no hit) on all four.
+  -> NO COLLISION EXISTS. Nor is there any conformance.sh contention: T466 has produced
+     no commit at all, so its diff against conformance.sh is empty.
+     This is a SNAPSHOT. It is true of these four shas and of nothing later.
+
+FINDINGS ATTRIBUTED TO patterns.md ITSELF (T458 sec.5 claims zero)
+  Two, both pre-existing and both DECLARED:
+    report DECLARED-AMBIGUOUS REGISTER COLLISION P-12 defined twice ... :315 vs :1385
+    report DECLARED-AMBIGUOUS REGISTER COLLISION P-13 defined twice ... :320 vs :1412
+  Neither is fatal, neither is new, and T458 discloses both in its own sec.7 item 4.
+  The sec.5 wording "zero findings of any severity" is imprecise; the substance
+  ("nothing NEW, 0 fatal") is correct.
