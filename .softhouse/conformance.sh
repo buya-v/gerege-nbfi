@@ -5803,7 +5803,13 @@ out.flush()
     warn "conformance: interpreter that echoes the two ids it was handed passes P-72 and fails"
     warn "conformance: here [T473 M-2, re-driven by T477]. A recompute that did not answer it"
     warn "conformance: did not hash this tree, and its census of zero suppressions is not a"
-    warn "conformance: measurement. INSTRUMENT failure — and never a clean tree. REFUSED."
+    warn "conformance: measurement."
+    warn "conformance: THE ONE HONEST WAY TO REACH THIS LINE: the challenge path was REWRITTEN"
+    warn "conformance: WHILE THE BAR WAS RUNNING, between this guard hashing it and the"
+    warn "conformance: recompute reading it. The window is seconds and the remedy is to run the"
+    warn "conformance: bar again — the path is chosen afresh each run, so a second refusal at a"
+    warn "conformance: different path is a finding and not a race."
+    warn "conformance: INSTRUMENT failure — and never a clean tree. REFUSED."
     return 1
   fi
   # The challenge record is this guard's own, so it is removed from the population before the
