@@ -7010,7 +7010,7 @@
   },
   {
    "id": "T467",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "role": "coder",
@@ -7023,7 +7023,7 @@
     ".softhouse/capture/t467-t464-conditions/"
    ],
    "description": "FILED 2026-08-29 by fire 20260829-080002 iter5 wave2 from T464's independent review of T455. Both merged. NONE of these reverses a T455 claim. RE-DERIVE; do not inherit.\n\n## F-T464-1 (MINOR) -- ABUSE B RE-OPENS THROUGH `printf`\nT455 closed the `echo` route for abuse B. `printf`, `>&2 echo` and `sys.stdout.write` ALL STILL GET THROUGH: section 10 exits 0, run-all.sh exits 0, and the REGENERATED TRANSCRIPT CARRIES THE FALSE SENTENCE UNTAGGED x1. This is not theoretical reach -- `printf` is ALREADY USED 12 times in one of the four guarded files and 5 times in another. Close the class rather than the spelling: the predicate must reason about what a line PRINTS, not which builtin prints it.\n\n## F-T464-2 (MINOR) -- A FAIL-CLOSED BRANCH THAT ONLY A CRASH CAN REACH\nThe new section-4 classifier's fail-closed direction (unparseable => material) is reachable ONLY BY AN EXCEPTION. A tracked non-JSON vector file containing a token raises `TypeError: 'int' object is not subscriptable`; THE NAMED ASSERTION NEVER RUNS, the `FAILURES:` tally never prints, and **15 OF 25 CHECKS ARE SKIPPED -- including section 5's own controls (a)-(k), and control (k) itself.** A fail-closed rule that fires only as a traceback is not fail-closed; it is unreached, and it takes two thirds of the grader down with it. Make the branch reachable by a VALUE, drive it, and keep the controls running.\n\n## LOW\n- F-T464-3: the shipped grader's own docstring still says (iv-b2) 'lands in (iv-a): reported UNGRADED, exit 0'. At this ref it exits 1 -- T455 measured that itself as its case 5. A stale sentence in the file whose whole subject is stale sentences.\n- F-T464-4: T455's handoff section 10 attributes T448's wrong `all=2, both=1` figure to `30-t448-tag-abuse.sh`. It is not in that instrument; it is in `reviews/t448-review-t433/REVIEW.md:364`.\n- F-T464-5: NONE of T455's four committed drive transcripts was taken at the branch tip -- they record 21a47a26 (commit 2) and d41a018e (commit 7) of 9. The three graded files are byte-identical from commit 1 onward SO THE EVIDENCE DOES COVER THE MERGED BYTES, but a reader cannot tell without running `git log -- <file>`. Say so in the transcript, or take them at the tip.\n- F-T464-6: the MATERIAL/PROSE discriminator is 'the value contains any whitespace', so an identifier-shaped value with ONE TRAILING SPACE is reclassified PROSE, i.e. immaterial. The limit is not published beside the classifier (P-29).\n\n## SETTLED -- do not reopen\nTHE T455-vs-T448 ADJUDICATION IS CLOSED IN T455'S FAVOUR, under two engines sharing no primitive: all=both=2, T448's predicate PASSES case B. AND STRONGER THAN T455 CLAIMED: on an UNMUTATED tree, 10-drive-conditions.sh and verify-capture-integrity.py both score all=0 both=0 and FAIL, so T448's patch shipped as written would have been RED ON A CLEAN TREE for two of the four files it guards (P-98). T448 IS right about case C (both=0).\nrun-all.sh: BEFORE exit 1 / section 9 MOVED; AFTER exit 0. The pin is present x1 AT BOTH REFS, same line 177, sha256 68743ce7 identical -- green bought at the SEARCH, not the pin.\n(iv-a): BEFORE fail-open reproduced (graded 632 of 633, at-tip 1, exit 0); AFTER exit 1 on the named assertion; AFTER CLEAN TREE exit 0, 632 of 632, at-tip 0, identical to the BEFORE control. Adjudication table falsifiable THREE ways.\nCardinals re-counted under a THIRD primitive: 11/22/9, and 14 files/18 lines -> 11/14 pre-existing.\nTHE `want_min` EDIT IS THE RIGHT CALL: reverted to exact `want` the guard is RED ON A CLEAN TREE; as shipped it STILL FIRES when the token is gone. Presence is the whole claim, so it is not a weakening. Do not revert it.\n\nBar on the finished committed tree, scratch OUTSIDE the repo, probe PRESENCE before value. Assemble fixture paths from a variable.",
-   "note": "FILED 2026-08-29 by fire 20260829-080002 iter5 wave2 from T464's review of T455. || local fire 20260829-080002 iter6: DISPATCHED (wave 1) at 2026-08-29T08:50:30Z, isolated worktree, model opus, branch softhouse/T467-t464-conditions."
+   "note": "FILED 2026-08-29 by fire 20260829-080002 iter5 wave2 from T464's review of T455. || local fire 20260829-080002 iter6: DISPATCHED (wave 1) at 2026-08-29T08:50:30Z, isolated worktree, model opus, branch softhouse/T467-t464-conditions. || local fire 20260829-080002 iter6: DONE on softhouse/T467-t464-conditions (4 commits, tip 6a345e4a, 12 files, all in grant). F-T464-1 CONFIRMED AND EXTENDED -- re-derived printf 12x in 10-drive-conditions.sh and 5x in run-all.sh (T464 figures confirmed), >&2 5x, sys.stdout.write 0x at BEFORE; and found a FIFTH spelling T464 did not list, os.write, which nothing in this repo uses. CLOSED THE CLASS, NOT THE SPELLING: printed_payloads names no emitter -- python payloads come from the AST (every non-docstring non-bare-statement string constant), shell payloads are quoted segments after the out-of-quote comment, an unparsable .py falls back to the shell rule; over-approximating toward IT PRINTED is the fail-closed direction and costs ZERO false positives on the four guarded files. F-T464-2 CONFIRMED with T464 cardinals reproduced exactly -- non-JSON vector with a token gives TypeError int object is not subscriptable, 10 of 25 checks run, 15 SKIPPED, 0 of 11 controls (a)-(k) reached INCLUDING (k), FAILURES: never printed. Repaired so the branch fails BY A VALUE: 29 of 29 checks and 11 of 11 controls now run. WHY CONTROL (k) PASSED WHILE THE BRANCH WAS UNREACHABLE: it inspected classify_occurrences return value and never the consumer that slices it; consumer now factored out and driven by control (l). F-T464-3/6 fixed; F-T464-4 corrected in the in-grant record only (T455 handoff line 300 is outside the grant) -- DECLARED. Own bar from scratch outside the repo on clean committed tree 1afa5dba: EXIT 0, probe count 1 checked BEFORE the value, up, 46/7884, both frontiers at their pins."
   },
   {
    "id": "T468",
@@ -7095,6 +7095,24 @@
    ],
    "description": "Independent adversarial review of T465 (softhouse/T465-lock-frontier, tip b9b37f9c). Re-derive; do not inherit T465's or T461's numbers.",
    "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T465) at 2026-08-29T09:44:40Z, isolated worktree, model opus, branch softhouse/T471-review-t465."
+  },
+  {
+   "id": "T472",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "role": "reviewer",
+   "title": "INDEPENDENT review of T467 -- the emitter-CLASS closure and its zero-false-positive claim, and whether the fail-closed branch is now genuinely value-reachable",
+   "branch": "softhouse/T472-review-t467",
+   "files_hint": [
+    ".softhouse/reviews/t472-review-t467/"
+   ],
+   "dependencies": [
+    "T467"
+   ],
+   "description": "Independent adversarial review of T467 (softhouse/T467-t464-conditions, tip 6a345e4a). Re-derive; do not inherit T467's or T464's numbers.",
+   "note": "local fire 20260829-080002 iter6: DISPATCHED (reviewer pair for T467) at 2026-08-29T09:51:01Z, isolated worktree, model opus, branch softhouse/T472-review-t467."
   }
  ],
  "cross_corroboration": {
