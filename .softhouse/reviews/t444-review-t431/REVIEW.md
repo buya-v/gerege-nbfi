@@ -1,165 +1,174 @@
 # T444 — INDEPENDENT REVIEW of T431 (`softhouse/T431-t407-conditions`)
 
-**Status: PROVISIONAL — the two remaining arm blocks (`NLMEM`/`GITL`/`GITL2`/`2ROW` on both
-trees) are still running. The verdict below is stable for everything already driven and will be
-finalised, not reversed, unless one of those arms is a live fail-open.**
+# VERDICT: `APPROVED WITH CONDITIONS`
 
-**PROVISIONAL VERDICT: `APPROVED WITH CONDITIONS`.**
+**The change is correct, its central claim is true, and I reproduced every fail-open it reports
+plus one it does not. It should merge.** The conditions below are one **MAJOR** (a fifth,
+driven, live fail-open of the same class that survives this fix — a RESIDUAL, present on `main`
+too, not caused by T431), two **MINOR**, and four **LOW**. None of them is a reason to hold the
+merge; the MAJOR is a reason not to let the record say the class is closed.
 
 Subject: T431's change to `.softhouse/conformance.sh` inside `guard_guards_dir_registration`
-(`C-T407-1`), plus `C-T407-2`, `C-T407-3`, `C-T407-4`. Reviewed as GRADING INFRASTRUCTURE: this
-function decides whether every other task in this program passes.
+(`C-T407-1`), plus `C-T407-2`, `C-T407-3`, `C-T407-4`. Reviewed as **grading infrastructure**:
+this function decides whether every other task in this program passes.
 
 Honesty rule: every material claim is `[VERIFIED: <source>]` or `[UNVERIFIED]`.
-Every scratch worktree is under a shared temporary root **taken as an argument** by every
-instrument in `evidence/`; no instrument in this review binds a literal shared-temp path to a
-name, so none of them adds a row to `HOSTSTATE_PIN_TEMP_ASSIGN_LIST`.
+Every instrument in `evidence/` takes its work root **as an argument**; none binds a literal
+shared-temp path to a name, so none adds a row to `HOSTSTATE_PIN_TEMP_ASSIGN_LIST` — the merge
+bar shows the host-state census still `18 == pinned 18` [VERIFIED].
 
 ---
 
-## 1. THE HEADLINE — re-derived from git, not from T431's report. IT HOLDS.
+## 1. THE HEADLINE — re-derived from git, and IT HOLDS
 
-T407 prescribed the one-token pin `":(literal)$self_norm"`. T431 reports that the pin **alone
-does not close the hole**. I re-derived this from git's behaviour before reading T431's
-evidence [VERIFIED: `evidence/01-git-quoting.txt`, git 2.50.1 (Apple Git-155),
-`core.ignorecase=true`]:
-
-```
-=== ls-files (default quotePath) ===
-d/plain.txt
-"d/q\".txt"
-"d/w\\x.txt"
-"d/w\303\251.txt"
-"d/\320\266\320\260\320\263\321\201\320\260\320\260\320\273\321\202.txt"
-=== ls-files with -c core.quotePath=false ===
-d/plain.txt
-"d/q\".txt"
-"d/w\\x.txt"
-d/wé.txt
-d/жагсаалт.txt
-```
-
-So `git ls-files` C-quotes a non-ASCII byte, a backslash and a double quote, and prints the
-result **wrapped in literal double quotes**. `self_norm` is the OUTPUT of a pathspec lookup,
-therefore **`self_norm` is a rendering, not a path** — and feeding that rendering back as
-`":(literal)$self_norm"` matches **nothing** [VERIFIED: same file, the round-trip section].
-`core.quotePath=false` removes the non-ASCII quoting but **not** the backslash or dquote
-quoting [VERIFIED: same file] — exactly as T431 states.
-
-**The 8-way necessity matrix, evaluated with the guard's own expressions transcribed verbatim**
-[VERIFIED: `evidence/03-necessity-redundancy-matrix.txt`]:
+T407 diagnosed the hole and prescribed the one-token pin `":(literal)$self_norm"`. T431 reports
+that **the pin alone does not close it**. I derived this from git before reading T431's evidence
+[VERIFIED: `evidence/01-git-quoting.txt`, git 2.50.1 (Apple Git-155), `core.ignorecase=true`]:
 
 ```
---- XQ   typed witness: g/zz/wé.txt      self_norm = ["g/zz/w\303\251.txt"]
+=== ls-files (default quotePath) ===          === ls-files with -c core.quotePath=false ===
+d/plain.txt                                   d/plain.txt
+"d/q\".txt"                                   "d/q\".txt"
+"d/w\\x.txt"                                  "d/w\\x.txt"
+"d/w\303\251.txt"                             d/wé.txt
+"d/\320\266\320\260\320\263…\321\202.txt"     d/жагсаалт.txt
+```
+
+`git ls-files` C-quotes a non-ASCII byte, a backslash and a double quote and wraps the result in
+**literal double quotes**. `self_norm` is the OUTPUT of a pathspec lookup, so **`self_norm` is a
+rendering, not a path**, and handing it back as `":(literal)$self_norm"` matches nothing
+[VERIFIED: same file]. `core.quotePath=false` removes the non-ASCII quoting but **not** the
+backslash or dquote quoting [VERIFIED] — exactly as T431 states.
+
+**The 8-way matrix over (pin, empty-result, round-trip), evaluated with the guard's own
+expressions transcribed verbatim** [VERIFIED: `evidence/03-necessity-redundancy-matrix.txt`]:
+
+```
+--- XQ   typed witness g/zz/wé.txt      self_norm = ["g/zz/w\303\251.txt"]
         pin=no  empty=no  rt=no  -> ACCEPT
         pin=no  empty=yes rt=no  -> ACCEPT
-        pin=yes empty=no  rt=no  -> ACCEPT          <-- THE RATIFIED PIN, AND IT ACCEPTS
-        pin=yes empty=yes rt=no  -> ACCEPT          <-- PIN + EMPTY, AND IT STILL ACCEPTS
-        pin=no  empty=no  rt=yes -> REFUSE:round-trip
-        pin=no  empty=yes rt=yes -> REFUSE:round-trip
-        pin=yes empty=no  rt=yes -> REFUSE:round-trip
-        pin=yes empty=yes rt=yes -> REFUSE:round-trip
+        pin=yes empty=no  rt=no  -> ACCEPT      <-- THE RATIFIED PIN, AND IT ACCEPTS
+        pin=yes empty=yes rt=no  -> ACCEPT      <-- PIN + EMPTY-RESULT, AND IT STILL ACCEPTS
+        (all four rt=yes rows) -> REFUSE:round-trip
 ```
 
-**T431's headline is correct and it is a result about this program's own review process: a
-remedy an independent reviewer had already approved, and which the driver ratified, was
-insufficient, and the insufficiency is not a corner — it is four out of eight configurations.**
-The pin is the right *primary* fix (it makes the lookup semantically correct) but it does not,
-on its own, close `C-T407-1`. Anyone who had applied T407's prescription and stopped would have
-shipped a still-open hole with a review signature on it.
+**This is a result about this program's own review process and it should be stated plainly: a
+remedy an independent reviewer had already approved was insufficient, and not marginally — in
+four of eight configurations.** Anyone who had applied T407's prescription and stopped would
+have shipped a still-open hole with a review signature on it. T431 found this by probing git's
+behaviour *before* trusting the one-token change; that is the method, and it worked.
 
-One thing worth adding that T431 does not state: after the fix, `self_norm` reaching the closing
-`grep` is **guaranteed to be a real path**, because no C-quoted rendering can round-trip — the
-rendering starts with `"`, and `"` is itself a character git quotes, so any tracked file
-literally named that rendering renders differently again. That invariant, not the arm count, is
-what makes the repair a class fix rather than a spelling fix.
+One thing T431 does not state and which is worth adding, because it is what makes this a class
+fix rather than a spelling fix: **after the change, the `self_norm` that reaches the closing
+`grep` is guaranteed to be a real path.** No C-quoted rendering can round-trip — a rendering
+begins with `"`, and `"` is itself a character git quotes, so a tracked file literally named
+that rendering renders differently again. The fixed point of the round-trip test is exactly the
+set of unquoted renderings.
 
-## 2. THE FOUR FAIL-OPENS — reproduced on TODAY's `main`, with my own construction
+## 2. THE FOUR FAIL-OPENS — all four reproduced on TODAY's `main`, with my own construction
 
-Driven with my own instrument (`evidence/drive-t444.sh`, different directory leaves, different
-member names, written from my reading of the guard), cloning `main` at **`290d8f84`** — *newer*
-than either tree T431 measured [VERIFIED: `evidence/10-RED-BEFORE-t444-drive-on-main.txt`].
+Driven with my own instrument `evidence/drive-t444.sh` (my own directory leaves, member names
+and arm set, written from my reading of the guard), cloning `main` at **`290d8f84`** — newer
+than either tree T431 measured [VERIFIED: `evidence/10-RED-BEFORE-t444-drive-on-main.txt`,
+`evidence/15-RED-decisive-lines-per-arm.txt`]. Probe PRESENCE is counted before any value is
+read, in the runner itself.
 
-`T444-X-literal-FAILOPEN` on today's `main` [VERIFIED:
-`evidence/11-RED-arm-X-full-bar-on-main.txt`]:
+| my arm | typed witness spelling | `main` @ `290d8f84` |
+|---|---|---|
+| `T444-X` | `:(literal)P` | **exit 0 / probe PRESENT ×1 / VERDICT PASS 46/7884** |
+| `T444-XT` | `:(top,literal)P` | **exit 0 / probe PRESENT ×1 / VERDICT PASS 46/7884** |
+| `T444-XI` | `:(literal,icase)P` | **exit 0 / probe PRESENT ×1 / VERDICT PASS 46/7884** |
+| `T444-XQ` | the **C-QUOTED** witness + a decoy at the quoted literal name | **exit 0 / probe PRESENT ×1 / VERDICT PASS 46/7884** |
+
+Every one at `population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0
+symlink-members=0`, with the guard printing, over a witness that is a symlink to the member
+itself [VERIFIED: `evidence/11-RED-arm-X-full-bar-on-main.txt`]:
 
 ```
 conformance:     REACHED-BY .softhouse/guards/zz-t444x/zz-t444x-member.sh — declared in its own header, reached by
-conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
-conformance: reference oracle (…/actuator/health) probe = up
+conformance:   GUARDS-DIR-REGISTRATION: population=7 … reached-by=2 … symlink-members=0
 VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
 ```
 
-An unwired planted checker, ACCEPTED at `reached-by=2`, vouched for by a symlink to itself,
-whole bar exit 0.
+**All four are real, and all four are refused on T431's branch** [VERIFIED: my GREEN drive]:
+`X`, `XT`, `XI` by `THAT WITNESS IS A SYMLINK` (the pin lands the lookup on the real witness,
+which round-trips, so the mode test does its job); `XQ` by `DID NOT ROUND-TRIP`; `XQ0` by
+`matched NO INDEX ENTRY`. Exit 2, probe ABSENT, every one.
 
-*(XT / XI / XQ / XQ0 rows: see §RESULTS below — filled from the running drive.)*
+## 3. NECESSITY AND REDUNDANCY — checked both ways; T431's honesty is verified
 
-## 3. NECESSITY AND REDUNDANCY — checked BOTH ways, and the answer is sharper than T431's
-
-`evidence/03` gives the full matrix. Reading it:
-
-| line | independently necessary for a REFUSAL? | covered by |
+| line | independently necessary for a REFUSAL? | if removed, what covers it |
 |---|---|---|
-| round-trip | **YES** — `XQ` is ACCEPTED in all four `rt=no` configurations | nothing |
-| pin | **no** | round-trip catches `X` (the de-magicked lookup returns two lines, so `self_path` carries the decoy path and a newline) |
-| empty-result | **no** | round-trip (`self_path` is empty, `self_norm` is not) |
+| **round-trip** | **YES** | **nothing** — `XQ` is ACCEPTED in all four `rt=no` configurations |
+| pin | no | round-trip: the de-magicked lookup returns two lines, so `self_path` carries the decoy path and an embedded newline |
+| empty-result | no | round-trip: `self_path` is empty, `self_norm` is not |
 
-T431 reports exactly this and does not dress it up. **Verified, both directions.**
+Driven end-to-end, not only modelled: `T444-RVQ` (kill the round-trip line alone on the fixed
+tree) reaches **exit 0, probe PRESENT, `VERDICT: PASS 46/7884`, `reached-by=2`** [VERIFIED:
+`evidence/16-GREEN-arm-RVQ-hole-reopens.txt`]. **The hole reopens. Round-trip is independently
+necessary and T431's report of that is exact.**
 
-**The adversarial question: two parts are redundant only because of a neighbour — what happens
-when the neighbour moves?** The neighbour that covers for both is the round-trip line, and it is
-the one line with no automated arm anywhere in the harness. See condition **C-2**.
+**The adversarial question — two parts are redundant only because of a neighbour; what happens
+when the neighbour moves?** The neighbour covering both is the round-trip line, and it is the
+one line in this repair with no automated arm anywhere in the harness. See **C-2**.
 
-I also looked for a case in which the pin is independently necessary on the *healthy* side — a
-legitimate witness the pin ACCEPTS and the un-pinned lookup would make round-trip refuse. I could
-not construct one: a legitimate witness legitimately named `w[1].txt` is ACCEPTED under all eight
-configurations, and one with a colliding honest sibling `w1.txt` is refused as `self_multi` under
-all eight, at the FIRST (still-unpinned) lookup [VERIFIED: `evidence/03`, scenarios `LEGG`,
-`LEGG2`]. So the pin's justification is correctness of the lookup, not coverage — which is what
-T431 says, and I could not improve on it.
+I also went looking for a case where the pin is independently necessary *on the healthy side* —
+a legitimate witness the pin accepts and the un-pinned lookup would make round-trip refuse. **I
+could not construct one.** A legitimate witness named `w[1].txt` is ACCEPTED under all eight
+configurations; the same name with a colliding honest sibling `w1.txt` is refused as
+`self_multi` under all eight, at the FIRST (still unpinned) lookup [VERIFIED: `evidence/03`,
+scenarios `LEGG`, `LEGG2`]. So the pin's justification is that it makes the lookup *correct*,
+not that it covers anything — which is precisely what T431 says, and I could not improve on it.
 
-## 4. THE CONVERSE RISK — does the fix now REFUSE TOO MUCH? **No. But the tree already did.**
+## 4. THE CONVERSE RISK — does it now refuse too much? **No.**
 
-This is the point the brief flagged as a potential MAJOR, so it is driven with the whole bar on
-BOTH trees, not modelled.
+Driven with the whole bar on BOTH trees, because this is the point the brief flagged as a
+possible MAJOR.
 
-* `T444-LEGA` — honest member, witness an independent tracked regular ASCII file:
-  **ACCEPTED on `main` AND on T431's branch**, exit 0, probe PRESENT,
-  `population=7 … reached-by=2 … symlink-members=0` [VERIFIED: both drives].
-* `T444-LEGC` — **the same thing with a Cyrillic witness filename `гэрчилгээ.txt`**:
-  **REFUSED on `main`** (exit 2, probe ABSENT, `…THAT REACHED-BY WITNESS DOES NOT NAME
-  zz-t444c-member.sh`) **and REFUSED on T431's branch** (exit 2, probe ABSENT, the NEW
-  `matched NO INDEX ENTRY` branch, printing the C-quoted rendering) [VERIFIED: full-bar
-  transcripts on both trees].
+Eight legitimate witness spellings under the fixed configuration, **all eight ACCEPTED**
+[VERIFIED: `evidence/07-healthy-witness-spellings-under-the-fix.txt`] — including the
+`./`-spelled form T375 kept an arm for, a `..`-normalised form, spaces, glob characters and `+`.
 
-**So the over-refusal is PRE-EXISTING and T431 does not cause it.** What T431 changes is the
-*message*, from a misleading "that witness does not name the member" — which sends the next
-worker to inspect the file's contents — to an accurate one that names the cause. That is an
-improvement, not a regression, and **the MAJOR the brief anticipated is NOT realised.**
+Full-bar arms:
 
-It is still a real constraint on this program and it is broader than the witness path: a Cyrillic
-**directory** under `.softhouse/guards/` additionally makes `guard_dead_path_frontier`'s census
-instrument crash — `unreadable corpus member ".softhouse/guards/\321\205\320\260\320\273\321\202/…":
-[Errno 2] No such file or directory` [VERIFIED: `T444-LEGM` transcript, on `main`]. It refuses
-rather than passing (P-81 respected), but nothing anywhere records that **the harness cannot
-grade a tree carrying non-ASCII paths under `.softhouse/`** — in a program whose CLAUDE.md is
-about Mongolia. See condition **C-4**.
+| arm | `main` @ `290d8f84` | T431's branch |
+|---|---|---|
+| `T444-Z` unmutated | exit 0, PRESENT, `population=6 … reached-by=1` | **identical** |
+| `T444-LEGA` honest ASCII witness | **exit 0, PRESENT, `reached-by=2`** | **exit 0, PRESENT, `reached-by=2`** |
+| `T444-LEGC` honest **Cyrillic** witness `гэрчилгээ.txt` | **exit 2, ABSENT** (`…DOES NOT NAME…`) | **exit 2, ABSENT** (`matched NO INDEX ENTRY`) |
+| `T444-LEGM` Cyrillic directory **and** witness | **exit 2, ABSENT** | **exit 2, ABSENT** |
 
-## 5. THE DISCLOSED BOUNDS — driven, not accepted
+**The over-refusal of non-ASCII witness paths is PRE-EXISTING. T431 does not cause it, and the
+MAJOR the brief anticipated is NOT realised.** What T431 changes is the *message* — from a
+misleading "that witness does not name the member", which sends the next worker to inspect file
+contents, to an accurate one naming the C-quoting as the cause and printing the rendering. That
+is strictly better.
 
-*(filled from the running drive — `NLMEM`, `GITL`, `GITL2`, `2ROWH`, `2ROWX`.)*
+It is still a real standing constraint, and broader than the witness path: a Cyrillic
+**directory** under `.softhouse/guards/` additionally crashes `guard_dead_path_frontier`'s
+census instrument — `unreadable corpus member ".softhouse/guards/\321\205\320\260\320\273\321\202/…":
+[Errno 2] No such file or directory` [VERIFIED: `T444-LEGM` transcript]. It refuses rather than
+passing (P-81 honoured), but the cause it prints is not the cause. See **C-4**.
 
-One bound T431 listed as reasoned-not-driven, I drove: **a conflicted index.** See **C-1** — it
-falsifies a sentence T431 wrote into the shipped source.
+## 5. THE DISCLOSED BOUNDS — five driven, and one of them is a live fail-open
 
-## 6. THE ROTTED CARDINALS — `C-T407-2`, `C-T407-3`, `C-T407-4`
+T431 lists six bounds as *unreached, not unreachable*. I drove five.
 
-All verified independently.
+| T431's bound | driven as | result |
+|---|---|---|
+| 1 — a path containing a literal NEWLINE, and the member enumeration `while IFS= read -r rel` | `T444-NLMEM` | **fail-CLOSED.** `git ls-files` C-quotes the newline, so the enumeration reads one whole line; the member then hits the member-side `RESOLVES TO NO INDEX ENTRY` refusal (T404's arm N branch). exit 2, probe ABSENT, on **both** trees [VERIFIED] |
+| 2 — a GITLINK entry ending in `.sh` | `T444-GITL`, `T444-GITL2` | **fail-CLOSED.** A mode-`160000` entry DOES enter the population; it is refused `IS INVOKED BY NOTHING`, even when its basename is borrowed from a genuinely invoked member (`check-capture-namespace.sh`). exit 2, probe ABSENT [VERIFIED] |
+| 3 — a case-sensitive host | `T444-CASE` (the *other* direction) | **LIVE FAIL-OPEN — see M-1** |
+| 6 — a member carrying MULTIPLE `REACHED-BY` rows | `T444-2ROWH`, `T444-2ROWX` | **not a fail-open, but the second row is never graded.** `grep -m1` takes row 1: honest-first is ACCEPTED at `reached-by=2` and the hostile row-2 (a symlink to the member) is silently ignored; hostile-first is REFUSED `THAT WITNESS IS A SYMLINK` [VERIFIED]. See LOW-5 |
+| "conflicted index" (T431's own `## Unverified`, reasoned not driven) | `evidence/02` | **driven, and it falsifies a sentence T431 shipped — see C-1** |
+
+Not driven by me either: a **second git binary**, and an actual **case-SENSITIVE filesystem**.
+**[UNVERIFIED — bounds on my search.]**
+
+## 6. THE ROTTED CARDINALS — `C-T407-2`, `C-T407-3`, `C-T407-4` all verified
 
 * **All seven cited cardinals are rotted on today's `main`, and `:4090` is a bare double quote
   mid-string** [VERIFIED: `awk` on `main`]:
-
   ```
   4090: "
   4109:     warn "conformance: guard-cost: NOT ONE guard was timed. …"
@@ -169,70 +178,159 @@ All verified independently.
   4610:   if [ "$bad" -ne 0 ]; then
   4611:   warn "conformance:"
   ```
-  The three identifiers actually live at `run_guards` defined `:4165` / called `:4660`,
-  `probe_oracle` defined `:4637` / invoked `:4685`, `guard_cost_census` defined `:4106` /
-  called `:4215` [VERIFIED: `grep -n` on `main`]. The replacement `grep -n` command regenerates
-  the block and cannot go stale.
-* **Line-count neutrality holds and the citation it protects still resolves**:
+  The three identifiers actually live at `run_guards` defined `:4165` / called `:4660`;
+  `probe_oracle` defined `:4637` / invoked `:4685`; `guard_cost_census` defined `:4106` / called
+  `:4215` [VERIFIED: `grep -n` on `main`]. The replacement `grep -n 'run_guards\|probe_oracle\|
+  guard_cost_census'` regenerates the block in one command and cannot go stale. **Deleting rather
+  than refreshing is the right call and the cost argument for declining a guard is sound.**
+* **Line-count neutrality holds and the citation it protects still resolves.**
   `patterns.md:3426` cites `conformance.sh:3271`; `sed -n 3271p` prints the same
-  `population is EMPTY` refusal on `main`, on T431's tree, **and in the merge result**
-  [VERIFIED: all three].
+  `population is EMPTY` refusal on `main`, on T431's tree **and in the merge result**
+  [VERIFIED: three separate checks].
+* **`C-T407-3`'s substance is right** — `member_multi` must not be deleted as dead code and `R1`
+  must not be cited as coverage — **but one sentence in it is false. See C-1.**
 * **`C-T407-4`'s two corrections are true.** `…/t404-t384-conditions/evidence/10-…txt` lines 15
-  and 23 both score `marker=NO census=NO … >>> FAIL` [VERIFIED: read the file], and
+  and 23 both score `marker=NO census=NO dirty=no >>> FAIL` [VERIFIED: read the file];
   `evidence/11-…txt` lines 11 and 14 carry `line 501: r: command not found` and
-  `line 521: syntax error near unexpected token 'fi'` [VERIFIED: read the file]. T431's added
-  point — that T407's own citation pointed at the wrong directory — is consistent with what I
-  found.
-* **The freeze claim is checkable and it checks out.** `sha256(drive-t431.sh)` as COMMITTED is
-  `f4f0e5845774fe8864019f878868e5aee995f6b60656974457048f7c2283ba2a`, and that is the
-  `FROZEN drive: … sha256=` recorded in the headers of **both** `evidence/40` (RED) and
-  `evidence/50` (GREEN) [VERIFIED: `shasum -a 256` on the committed blob vs the two headers].
-  The committed instrument is byte-identical to the one that produced both transcripts. That is
-  a provenance claim reviewers usually cannot check, and this one holds.
-* **T431's two new `patterns.md` line citations resolve**: `:1654` is P-57 and `:2775` is P-80
+  `line 521: syntax error near unexpected token 'fi'` [VERIFIED: read the file].
+* **The freeze claim is checkable, and it checks out.** `sha256` of the COMMITTED
+  `drive-t431.sh` is `f4f0e5845774fe8864019f878868e5aee995f6b60656974457048f7c2283ba2a`, and
+  that is the `FROZEN drive: … sha256=` in the headers of **both** `evidence/40` (RED) and
+  `evidence/50` (GREEN) [VERIFIED: `shasum -a 256` vs the two headers]. The committed instrument
+  is byte-identical to the one that produced both transcripts. Reviewers rarely get to check a
+  provenance claim; this one holds.
+* **T431's two new `patterns.md` citations resolve**: `:1654` is P-57, `:2775` is P-80
   [VERIFIED]. See LOW-2.
+
+---
 
 ## BAR
 
-**The merge result is the bar that matters, and I built it rather than reasoning about it.**
+**T431's tree AND the merge result. I built the merge rather than reasoning about it.**
 
-`git merge origin/softhouse/T431-t407-conditions` onto `main` — **rc=0, no conflict rows from
-`git ls-files -u`, clean worktree** [VERIFIED: `evidence/05-BAR-MERGE-RESULT-main-plus-T431.txt`
-and the merge log]. T431's argument that the merge is clean because `main`'s only
-`conformance.sh` change since its fork is far from its edits is **correct in substance**
-(`683c8aff..main` on `conformance.sh` is exactly `EXEMPTION_PIN_LEDGER_WRONGIMPLS=15 → 16`
-[VERIFIED: the diff is that one line]) — but I did not accept it, I merged.
+`git merge origin/softhouse/T431-t407-conditions` onto `main`: **rc=0, `git ls-files -u` empty,
+clean worktree** [VERIFIED]. T431's argument that the merge is clean is correct in substance —
+`git diff 683c8aff main -- .softhouse/conformance.sh` is exactly the one line
+`EXEMPTION_PIN_LEDGER_WRONGIMPLS=15 → 16` [VERIFIED] — but I did not accept it, I merged and
+barred.
 
-| figure | `main` @ `cab6be41` | MERGE RESULT | required |
+| figure | `main` @ `cab6be41` | **MERGE RESULT** | required |
 |---|---|---|---|
 | exit | 0 | **0** | 0 |
-| `probe = ` line PRESENT (count read BEFORE its value, P-84) | 1 | **1** | ≥1 |
+| `probe = ` line count, read BEFORE its value (P-84) | 1 | **1** | ≥1 |
 | probe value | `up` | **`up`** | — |
 | VERDICT | PASS 46 / 7884 | **PASS — 46 parity vectors, 7884 cells** | unmoved |
 | **wrong ledger implementations** | 16 | **16, all 16 died through the harness** | **16** |
 | `EXEMPTION_PIN_LEDGER_WRONGIMPLS` | 16 | **16** (at `:4694`) | 16 |
 | guards-dir census | `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` | **identical** | unmoved |
 | `deadOccurrences` | 108 | **108** | unmoved |
-| dead-path corpus | 1524 | **1525** (+1 = `drive-t431.sh`) | no pin |
 | `deadFiles` / `resolving` / `indeterminate` | 75 / 1444 / 117 | **75 / 1444 / 117** | unmoved |
-| host-state census | 18 == pinned 18 | **18 == pinned 18** | unmoved |
+| dead-path corpus | 1524 | **1525** (+1 = `drive-t431.sh`) | no pin on it |
+| host-state census | 18 == pinned 18 (189 instruments) | **18 == pinned 18** (190) | unmoved |
 | exemption grounding | 4 GROUNDED / 0 UNGROUNDED | **4 / 0** | unmoved |
 | `guard_guards_dir_registration` cost | — | **1 s / ceiling 60 s**, 0 breaches | under ceiling |
-| the three fix lines present | 0/0/0 | **1/1/1** | 1 each |
+| the three fix lines, by content | 0 / 0 / 0 | **1 / 1 / 1** | 1 each |
 | `patterns.md:3426` → `conformance.sh:3271` | resolves | **resolves** | resolves |
 | tree clean after the run | yes | **yes** | yes |
 
-**`main` is 16 and the merge result is 16.** T431's own tree shows 15 with pin 15 — internally
-consistent with its fork point, and the merge takes `main`'s 16 without conflict because T431
-never touched that line.
+**`main` is 16 and the merge result is 16.** T431's own tree carries pin 15 with 15
+implementations — internally consistent with its fork point, and the merge takes `main`'s 16
+because T431 never touched that line.
 
 ---
 
-## CONDITIONS
+# CONDITIONS
 
-*(final ratings and the remaining arms land in the next revision of this file)*
+## M-1 (MAJOR) — A FIFTH ROUTE IS LIVE, IT SURVIVES ALL THREE NEW LINES, AND IT IS DRIVEN
 
-### C-1 (MINOR) — the fix reintroduces the exact "unreachable-by-construction" claim this task exists to punish, and it is measurably false
+**This is a RESIDUAL, not a regression: it is a fail-open on `main` too, and T431 listed the
+case bound as unreached.** It is filed MAJOR because the record must not be allowed to say the
+witness side is closed, and because the remedy is known and cheap.
+
+**The construction.** T431 records "a case-SENSITIVE filesystem" as its unreached bound. The
+live route is the *other* direction — on a case-INSENSITIVE host, which is the host this whole
+program runs on, the INDEX can hold two entries differing only in case while the FILESYSTEM
+holds one file:
+
+```
+index:   .softhouse/guards/zz-t444k/W.txt  100644  DECOY blob        <- the path the member DECLARES
+         .softhouse/guards/zz-t444k/w.txt  120000  symlink -> member <- sorts AFTER 'W', so it WINS
+                                                                       the checkout collision
+filesystem after a FRESH CLONE:  w.txt -> zz-t444k-member.sh   (only)
+```
+
+Every test in this direction that reads the INDEX grades `W.txt`; the closing `grep`, which
+reads the FILESYSTEM, opens `w.txt` — the symlink — and dereferences it to the member itself.
+
+**What it defeats, one by one** [VERIFIED at git level:
+`evidence/09-case-symlink-route-model.txt`, `evidence/11-case-attacker-chosen-order-ACCEPT.txt`]:
+
+* the **pin** — `:(literal)W.txt` resolves that exact entry;
+* the **empty-result branch** — the lookup is non-empty;
+* **the round-trip test — `self_path == self_norm` EXACTLY.** This is the point: round-trip
+  compares two *renderings of the same lookup*, and both lookups agree. It cannot see that the
+  filesystem resolves the agreed path somewhere else;
+* the **symlink refusal** — `self_mode` is `100644`, read from the index at the declared path;
+* the **blob refusal** — `self_blob` is the decoy's, not the member's.
+
+**Driven through the WHOLE BAR, on T431's own fixed tree, in a FRESH CLONE** [VERIFIED:
+`evidence/12-CASE-full-bar-on-T431-branch-ACCEPTED.txt`]:
+
+```
+EXIT=0
+grep -c 'probe = ' = 1        (presence read before value)
+probe = up
+GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    REACHED-BY .softhouse/guards/zz-t444k/zz-t444k-member.sh — declared in its own header, reached by
+               .softhouse/guards/zz-t444k/W.txt (verified: it names zz-t444k-member.sh)
+(no registration refusal printed)
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+An unwired planted checker ACCEPTED at `reached-by=2`, `symlink-members=0`, with the guard
+printing its own *"(verified: it names …)"* sentence over a witness that is a symlink to the
+member itself. **Identical on `main`** [VERIFIED:
+`evidence/13-CASE-full-bar-on-MAIN-ACCEPTED.txt`] — so it is pre-existing.
+
+**Two honest mitigations, stated so this is not overrated.** git prints a loud
+`warning: the following paths have collided` on checkout, and `git status --porcelain` reports
+` T .softhouse/guards/zz-t444k/W.txt` on every checkout of that commit — so the tree is
+permanently dirty. Neither is read by `conformance.sh`, and the bar passes anyway. Also, the
+order matters: if the attacker lets the *decoy* win the collision the guard refuses
+`DOES NOT NAME` [VERIFIED: `evidence/10-case-fresh-clone-order-matters.txt`] — but the attacker
+chooses the order, and choosing it is one character.
+
+**THE REMEDY, DRIVEN** [VERIFIED: `evidence/14-remedy-read-the-tracked-blob.txt`]:
+
+```
+HONEST   grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=NAMES-IT
+CASE     grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=does-not-name
+```
+
+**Read the TRACKED BLOB, not the filesystem.** T375 wrote the argument itself, for the blob
+test, and never applied it to the `grep` that actually decides:
+
+> *"Comparing object ids compares what is COMMITTED, not what is on this host, so it is stable
+> across checkouts."*
+
+The closing `grep -qF -- "$base" "$REPO_ROOT/$self_norm"` is the last test in this direction
+still reading the host. Replacing it with a read of `self_blob` — which is already in hand from
+the pinned lookup — closes the case route, refuses nothing legitimate (`HONEST` is unchanged),
+and removes the entire index-versus-filesystem divergence family from this direction at once.
+**Note the P-57 constraint honestly:** the naive form is a pipeline
+(`git cat-file blob … | grep -q`), which this function avoids everywhere; the in-idiom form
+writes the blob to a temporary and greps the file, as `guard_pnumber_citations` and
+`guard_dead_path_frontier` already do.
+
+**What must change in the record, at minimum:** `FU-T431-1`'s "honest citation" currently reads
+*"T404 + T431 close the pathspec-ambiguity and pathspec-quoting routes on the witness side,
+driven; the newline, gitlink, case-sensitive-host and multiple-row routes are unreached, not
+unreachable."* After this review: newline and gitlink are **driven and fail-closed**; the
+multiple-row route is **driven and not a fail-open**; and **the CASE route is not "unreached" —
+it is DRIVEN AND LIVE, on the case-insensitive host this program actually runs on, on `main` and
+on this branch.** File it as `FU-T444-1`.
+
+## C-1 (MINOR) — the fix ships the exact "unreachable-by-construction" claim this task exists to punish, and it is measurably false
 
 T431's new `C-T407-3` block says of `member_multi`:
 
@@ -245,151 +343,171 @@ T431's new `C-T407-3` block says of `member_multi`:
 revert of anything]:
 
 ```
-=== git ls-files -s -- ':(literal)<path>' ===
+=== git ls-files -s -- ':(literal).softhouse/guards/zz/c.sh' ===
 100644 df967b96… 1	.softhouse/guards/zz/c.sh
 100644 351be5bf… 2	.softhouse/guards/zz/c.sh
 100644 e45c9c26… 3	.softhouse/guards/zz/c.sh
 === line count === 3
 ```
 
-A conflicted index carries three stages for ONE path, and `:(literal)` honours the path, not the
-stage. The branch has a live, non-synthetic route on a conforming git.
+A conflicted index carries three stages for one path; `:(literal)` pins the path, not the stage.
+The branch has a live, non-synthetic route on a conforming git.
 
-**Direction of failure is safe** — `member_multi` refuses — so there is no hole. The finding is
-that the SENTENCE is the same sentence that produced this whole task: `T404` rated
-`FU-T404-1` unreachable, `T407` reached it, and T431's headline is that a remedy prescribed on
-that reasoning was insufficient. T431 also records the conflicted-index case for the *witness*
-side in its own `## Unverified` list, so **two statements in one commit cannot both be true.**
+**The direction of failure is safe** (`member_multi` refuses), so there is no hole. The finding
+is the sentence. `T404` rated `FU-T404-1` unreachable, `T407` reached it, and T431's own
+headline is that a remedy prescribed on that reasoning was insufficient — and then T431 wrote
+"CANNOT FIRE" about a branch it had not exhausted. T431 also records the conflicted-index case
+for the *witness* side in its own `## Unverified` section, so **two statements in one commit
+cannot both be true.**
 
-**Remedy (in-grant, one sentence):** replace "THIS BRANCH CANNOT FIRE … unreachable-by-construction"
-with "this branch has one known live route on a conforming git — a CONFLICTED INDEX, where
-`git ls-files -s` prints one line per stage for a single path (driven, T444) — and it is
-fail-closed on it."
+**Remedy (in-grant, one sentence):** replace "THIS BRANCH CANNOT FIRE … deliberately
+unreachable-by-construction" with "this branch has one known live route on a conforming git — a
+CONFLICTED INDEX, where `git ls-files -s` prints one line per stage for a single path (driven,
+T444) — and it is fail-closed on it."
 
-### C-2 (MINOR) — the only independently necessary line is the one with no automated arm
+## C-2 (MINOR) — the only independently necessary line is the one with no automated arm
 
-The matrix in §3 shows the round-trip test is the sole line that closes `XQ`; the pin and the
-empty-result branch are redundant *for refusal*. `conformance.sh` executes **no**
-registration-forgery drive — the only capture drive it runs is
-`drive-red-ledger-invariants.sh`, via its own declared row [VERIFIED: `grep` for every
-`drive-*` reference in `conformance.sh`]. So T431's 18-arm drive is capture-only, and a later
-edit that removes the round-trip line takes the whole bar to **exit 0** — which is precisely
-what arm `RVQ` measures. Four paragraphs above that line, this same function quotes P-45,
-"a guard that only works when someone remembers to run it enforces nothing."
+§3 shows round-trip is the sole line that closes `XQ`. `conformance.sh` executes **no**
+registration-forgery drive: everything it runs is
+`check-ledger-invariants.sh`, `check-capture-namespace.sh`, `check-dead-path-frontier.sh`,
+`50-failopen-lint.py`, `check-pnumber-citations.py`, `run-ownership-matrix.py` and the
+`capture/lib` census scripts [VERIFIED: every external invocation in the file]. T431's 18-arm
+drive is capture-only. A later edit that deletes the round-trip line takes the whole bar to
+**exit 0 / probe PRESENT / VERDICT PASS** — driven, as arm `RVQ`. Four paragraphs above that
+line, this same function quotes P-45: *"a guard that only works when someone remembers to run it
+enforces nothing."*
 
-**Remedy of record (choose one, argue it down if you disagree):** (a) wire a red-drive row the
-way `guard_ledger_invariants` already does for `drive-red-ledger-invariants.sh`; or (b) the
-cheap structural version — a guard that asserts the three lines are present in
-`guard_guards_dir_registration` by content, which is what T431 itself did to locate the site.
-Not blocking: it is a class-level gap that predates T431 and applies to every refusal in this
-family since T375. It is filed here because T431 is the commit that made one of those lines
-load-bearing and alone.
+**Remedy of record — the file already knows how to do this, in three places.**
+`guard_pnumber_citations`, `guard_dead_path_frontier` and `guard_reconciler_ownership` each run
+their checker's `--selftest` before trusting its verdict. Either (a) give
+`guard_guards_dir_registration` the same shape — one synthetic fixture, one refusal expected —
+or (b) the cheap structural version: assert the three lines are present **by content**, which is
+how T431 itself located the site. Not blocking: the gap predates T431 and applies to every
+refusal in this family since T375. It is filed here because T431 is the commit that made one of
+those lines load-bearing and alone.
 
-### C-3 (LOW→MINOR) — the neutrality analysis checked one citation; a second live one rots
+## C-3 (LOW→MINOR) — the neutrality analysis checked one citation; a second live one rots
 
 `.softhouse/RESUME.md:52` cites `conformance.sh:3677` for "the witness-side lookup". On today's
-`main`, `:3677` **is** that lookup [VERIFIED]; on T431's tree the pinned lookup is at `:3782`
-and `:3677` is a comment about blob comparison [VERIFIED]. T431's neutrality argument covered
-`patterns.md:3426` only.
+`main`, `:3677` **is** that lookup; on T431's tree the pinned lookup is at `:3782` and `:3677`
+is a comment about blob comparison [VERIFIED: both].
 
-A repo-wide sweep of `conformance.sh:NNNN` citations restricted to **live directive files**
+A repo-wide sweep of `conformance.sh:NNNN` citations restricted to live directive files
 (`patterns.md`, `RESUME.md`, `obligations.md`, `gates.md`, `.softhouse/bin/`, `.claude/skills/`,
-`docs/`, `CLAUDE.md`) finds exactly **two** citations into or above the changed region — and
-T431 protected one and rotted the other [VERIFIED: the sweep is in
-`evidence/06-conformance-line-citation-sweep.txt`]. Nothing grades `RESUME.md`, so it does not
-redden `main`; and `RESUME.md`'s T431 row is stale anyway now that T431 is complete. **The
-finding is the method, not the damage:** "I checked the citation I knew about" is how this file
-has now rotted three times.
+`docs/`, `CLAUDE.md`) returns 24 rows, of which exactly **two** point into or above T431's
+changed region — and T431 protected one and rotted the other [VERIFIED:
+`evidence/06-conformance-line-citation-sweep.txt`]. Nothing grades `RESUME.md`, so `main` does
+not redden, and the row is stale anyway now that T431 is complete. **The finding is the method,
+not the damage:** "I checked the citation I knew about" is how this file has now rotted three
+times, and one `grep` over the tree finds the whole set.
 
-**Remedy:** in the merge commit, rewrite `RESUME.md:52` to cite
-`guard_guards_dir_registration` by name — the same remedy T431 records for `FU-T431-2`.
+**Remedy:** in the merge commit rewrite `RESUME.md:52` to name
+`guard_guards_dir_registration` — the same remedy T431 records for `FU-T431-2`.
 
-### C-4 (MINOR) — "plain ASCII paths under `.softhouse/`" is now a printed instruction and still not a recorded constraint
+## C-4 (MINOR) — "plain ASCII paths under `.softhouse/`" is now a printed instruction and still not a recorded constraint
 
 Driven in §4. The refusal is pre-existing and T431 improves the message, so this is not a
-condition *against* the change — it is the condition that the constraint T431's new warn text
-now instructs workers to obey (`Name a witness with a plain ASCII path`) be written down where
-workers read it, together with the second, undocumented consequence: a non-ASCII path under
-`.softhouse/guards/` also crashes `guard_dead_path_frontier`'s census.
+condition against the change. It is the condition that the constraint T431's new warn text now
+instructs workers to obey — *"Name a witness with a plain ASCII path"* — be written where
+workers read it, together with the second consequence nothing documents: a non-ASCII path under
+`.softhouse/guards/` also crashes `guard_dead_path_frontier`'s census, and so does a newline
+path (`[Errno 2]`) and a gitlink (`[Errno 21] Is a directory`) [VERIFIED: three transcripts].
+In a program whose `CLAUDE.md` is about Mongolia, this is worth one paragraph in `patterns.md`.
 
-**Remedy of record:** add the constraint to `patterns.md` (both consequences), and note the
-measured repair if anyone wants to lift it — `-c core.quotePath=false` on BOTH witness lookups
+**Remedy of record, with the measured limit:** `-c core.quotePath=false` on both witness lookups
 un-quotes non-ASCII while still quoting backslash and dquote [VERIFIED: `evidence/01`], so it
 narrows the constraint from "no non-ASCII" to "no backslash, quote, control character or
-newline" but does not remove it.
+newline" — it does not remove it.
 
-### LOW-1 — a wording slip in a bar-figure justification
+## LOW-1 — a wording slip in a bar-figure justification
+"the merge is clean: that line is ~850 lines below my lowest edit."
+`EXEMPTION_PIN_LEDGER_WRONGIMPLS` is at old `:4548`; T431's **lowest** edited line is `:3164`
+(distance 1384), its **last** is `:3724` (distance 824). The number matches the *last* edit, not
+the lowest. The merge is clean regardless — I performed it [VERIFIED].
 
-"The merge is clean: that line is ~850 lines below my lowest edit." `EXEMPTION_PIN_LEDGER_WRONGIMPLS`
-is at old `:4548`; T431's **lowest** edited line is `:3164` (distance 1384) and its **last** is
-`:3724` (distance 824). The number matches the *last* edit, not the lowest. The merge is clean
-regardless — I performed it [VERIFIED].
-
-### LOW-2 — `C-T407-2` argues "have no numbers to grade", then adds two numbers
-
+## LOW-2 — `C-T407-2` argues "have no numbers to grade", then adds two numbers
 The replacement text cites `patterns.md:1654` (P-57) and `patterns.md:2775` (P-80). Both resolve
 today [VERIFIED]. Neither is graded: `guard_pnumber_citations` matches a cited P-number against
-the RULE SENTENCE `patterns.md` defines under that number, and never against a line number
-[VERIFIED: read the guard at `:1833`-`:1896`]. `patterns.md` grows every fire.
+the RULE SENTENCE `patterns.md` defines under it, never against a line number [VERIFIED: read
+the guard]. `patterns.md` grows every fire.
 
-### LOW-3 — the committed tip was not itself barred
-
+## LOW-3 — the committed tip was not itself barred
 T431's final bar is recorded on `20018d18`; the branch tip is `d459ec82`, which adds
 `evidence/60`, `evidence/61` and the handoff. Evidence-only, but the barred tree is not the
 merged tree. I barred the **merge of the tip**: EXIT 0 [VERIFIED].
 
-### LOW-4 — the `-f` test now grades a different file from everything downstream
-
-`[ ! -f "$REPO_ROOT/$self_wit" ]` runs on the TYPED spelling. For any magic-prefixed spelling
-that is an ordinary relative path the attacker created, and it is NOT the file the mode, blob and
+## LOW-4 — the `-f` test grades a different file from everything downstream
+`[ ! -f "$REPO_ROOT/$self_wit" ]` runs on the TYPED spelling. For a magic-prefixed spelling that
+is an ordinary relative path the attacker created, and it is not the file the mode, blob and
 grep tests read. After the fix that is harmless — grading is consistent on `self_norm` — but the
 test is decorative for exactly the family that motivated this task, and T404's stated reason for
-it has now been measured wrong twice (once by T431 for the backslash route, once here).
+it has now been measured wrong twice (once by T431 for the backslash route; once here).
+
+## LOW-5 — a member's SECOND `REACHED-BY` row is never graded by anything
+`grep -m1` takes the first row. Driven: honest-first is ACCEPTED at `reached-by=2` with a
+hostile second row (a symlink to the member) sitting in the file ungraded; hostile-first is
+REFUSED [VERIFIED: `T444-2ROWH`, `T444-2ROWX`]. Not a fail-open — the member really is witnessed
+by row 1 — but a reviewer reading the file sees two declarations and the harness graded one.
+**Remedy:** count the rows and refuse more than one, or say in the code that only the first is
+graded. One line either way.
 
 ---
 
-## WHAT I CHECKED AND FOUND CLEAN
+# WHAT I CHECKED AND FOUND CLEAN
 
-So that silence is distinguishable from not looking:
+So that silence is distinguishable from not looking.
 
-1. The diff contains **no arithmetic, no floating point, no money, no ledger, no vector, no
-   DEC-n, no contract change, no database driver and no pin change** [VERIFIED: read the whole
-   `conformance.sh` diff].
-2. `self_path="${self_stat#*"$CONF_TAB"}"` is correct and fail-closed in every degenerate case I
-   could construct: `git ls-files -s` separates the path with a single TAB and C-quotes any TAB
-   *in* a path, so the field split cannot be fooled; if `CONF_TAB` were ever empty the expansion
-   returns the whole line, which cannot equal `self_norm`, so the guard refuses.
-3. **Branch ORDER is correct.** `-z "$self_stat"` precedes the round-trip test, which precedes
-   the `120000` mode test — so an empty `self_stat` cannot reach a `self_path` comparison against
-   an empty string, and neither new branch shadows the symlink or blob refusals. Arms `X`/`XT`/`XI`
-   are refused by the SYMLINK refusal on the fixed tree (the pin makes the lookup land on the real
-   witness, which round-trips), which is the correct reason, not an accident.
-4. `CONF_TAB` is spelled once, beside `CONF_LF`, with the same `printf`/strip idiom, and is
-   declared `local` on the same line — no new global.
+1. **No non-negotiable is touched.** The `conformance.sh` diff contains no arithmetic, no
+   floating point, no money, no ledger, no vector, no DEC-n, no contract change, no database
+   driver, no pin change [VERIFIED: read the whole diff].
+2. **`self_path="${self_stat#*"$CONF_TAB"}"` is correct and fail-closed in every degenerate case
+   I could construct.** `git ls-files -s` separates the path with exactly one TAB and C-quotes
+   any TAB *inside* a path, so the field split cannot be fooled; if `CONF_TAB` were ever empty
+   the expansion returns the whole line, which cannot equal `self_norm`, so the guard refuses.
+   A conflicted index makes the pinned lookup multi-line, `self_path` then carries an embedded
+   newline and refuses.
+3. **Branch ORDER is right and nothing is shadowed** [VERIFIED: read the chain on T431's tree]:
+   `-z self_wit` → `self_multi` → self-reference → `! -f typed` → `-z self_norm` →
+   **`-z self_stat`** → **round-trip** → `120000` → blob → grep. An empty `self_stat` cannot
+   reach a `self_path` comparison, and neither new branch shadows the symlink or blob refusals.
+   `X`/`XT`/`XI` are refused by the SYMLINK refusal on the fixed tree, which is the correct
+   reason and not an accident.
+4. **`CONF_TAB` is spelled once**, beside `CONF_LF`, with the same `printf`/strip idiom, declared
+   `local` on the same line — no new global.
 5. **No pipeline is introduced.** Both field extractions are parameter expansion (P-57).
-6. The new `warn` blocks print no attacker-controlled string in a way that could be mistaken for
-   a harness verdict, and every one sets `bad=1` before printing.
-7. The comment block edits are line-count-neutral where they claim to be (25 → 25) and the whole
-   diff is `+201/−29` on `conformance.sh` [VERIFIED].
-8. **The healthy population is unchanged**: `population=6 invoked=3 declared=2 reached-by=1
-   invoked-by-nothing=0 symlink-members=0` on `main`, on the T431 arm `Z`, and on the merge
-   result [VERIFIED: three separate runs].
-9. `guard_pnumber_citations` VERDICT PASS on the merge result — T431's P-57/P-80 usages match
-   the sentences `patterns.md` defines [VERIFIED].
-10. No new host-state row, no dead-path frontier movement, no fail-open frontier movement in the
-    merge result [VERIFIED].
+6. **Every new branch sets `bad=1` before printing**, and no `warn` prints an
+   attacker-controlled string in a shape that could be mistaken for a harness verdict.
+7. **The comment hunk is line-count-neutral where it claims to be** (25 → 25); the whole
+   `conformance.sh` change is `+201 / −29`.
+8. **The healthy population is unchanged** — `population=6 invoked=3 declared=2 reached-by=1
+   invoked-by-nothing=0 symlink-members=0` on `main`, on arm `Z` of both drives, and on the merge
+   result [VERIFIED: four separate runs].
+9. **`guard_pnumber_citations` VERDICT PASS on the merge result** — T431's P-57 and P-80 usages
+   match the sentences `patterns.md` defines [VERIFIED].
+10. **No new host-state row, no dead-path frontier movement, no fail-open frontier movement, no
+    exemption movement, no guard-cost breach in the merge result** [VERIFIED].
+11. **The instrument provenance claim holds** — see §6, the frozen-drive sha256.
+12. **T431's `## Unverified` section is honest.** Everything in it that I could check was true,
+    and the one item I drove (conflicted index) confirms its reasoning while contradicting a
+    different sentence in the same commit (C-1).
 
-## WHAT I DID NOT CHECK
+# WHAT I DID NOT CHECK
 
-* **T431's own two RED clones (`ec285e17`, `e864dd3d`).** They are gone. I did not re-verify that
-  those were the SHAs. **[UNVERIFIED by me]** — superseded: I reproduced the fail-opens on
-  `290d8f84`, newer than both.
-* **A second git binary, and a case-sensitive filesystem.** Same bound T404, T407 and T431 all
-  recorded. This host is git 2.50.1, `core.ignorecase=true`. **[UNVERIFIED — a bound on my
-  search.]**
-* **The pinned toolchain.** Every arm here ran under the announced FALLBACK toolchain, as T431's
-  did. RED and GREEN are like-for-like; neither is graded under the pinned toolchain.
+* **T431's own two RED clones (`ec285e17`, `e864dd3d`).** They are gone; I did not re-verify the
+  SHAs. **[UNVERIFIED by me]** — superseded: I reproduced all four fail-opens on `290d8f84`,
+  newer than both.
+* **A second git binary, and a genuinely case-SENSITIVE filesystem.** Same bound T404, T407 and
+  T431 all recorded. This host is git 2.50.1 with `core.ignorecase=true`. Note that M-1 is a
+  *consequence* of case-insensitivity, so a case-sensitive host is where M-1 would NOT reproduce
+  — and where a commit carrying it would materialise both files and refuse. **The verdict of
+  this guard is therefore host-dependent for that commit, which is itself the objection.**
+  **[UNVERIFIED — bound on my search.]**
+* **The pinned toolchain.** Every arm ran under the announced FALLBACK toolchain, as T431's did.
+  RED and GREEN are like-for-like; neither is graded under the pinned toolchain.
   **[UNVERIFIED for the pinned toolchain.]**
-* **Machine contention.** Two of my drives and other agents' runs shared this host. No guard
-  breached its ceiling in the merge bar (worst `guard_reconciler_ownership` 27 s / 500 s), but no
-  timing here is a cost measurement. **[UNVERIFIED as a cost claim.]**
+* **Machine contention.** Two of my drives plus other agents' runs shared this host. No guard
+  breached its ceiling in the merge bar (worst: `guard_reconciler_ownership` 27 s / 500 s), but
+  no timing here is a cost measurement. **[UNVERIFIED as a cost claim.]**
+* **`FU-T375-5` (the `DECLARED` direction), `guard_graded_root_is_this_tree`'s short-circuit, and
+  the `member_none` branch on a git that genuinely lacks `:(literal)`** — restated from T431's
+  list so silence is not read as completion. Not touched by T431 and not driven by me.
