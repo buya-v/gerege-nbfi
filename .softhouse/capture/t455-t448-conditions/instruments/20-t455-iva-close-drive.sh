@@ -104,7 +104,7 @@ fabricate_at_tip() {
 import hashlib, os, sys
 root, fab, man = sys.argv[1], sys.argv[2], sys.argv[3]
 body = (b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n"
-        b'{"t455":"FABRICATED AT THE TIP — this file was never observed from any oracle"}\n')
+        b'{"t455":"FABRICATED AT THE TIP - never observed from any oracle"}\n')
 p = os.path.join(root, fab)
 if os.path.exists(p):
     print("REFUSED: %s already exists; the case would not be a NEW birth." % fab)
