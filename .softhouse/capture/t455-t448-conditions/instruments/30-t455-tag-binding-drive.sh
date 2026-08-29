@@ -47,13 +47,26 @@ set -u
 SRC="${T455_SRC:?T455_SRC must name the source repository}"
 SCRATCH="${T455_SCRATCH:?T455_SCRATCH must name a scratch directory OUTSIDE the repository}"
 OUT="${T455_OUT:?T455_OUT must name the directory to write transcripts into}"
-REF="${T455_REF:?T455_REF must name the commit-ish carrying T455's section 10}"
-OLD_GUARD="${T455_OLD_GUARD:?T455_OLD_GUARD must give the repo-relative path of T433's ARM-F wiring guard}"
+# NO APOSTROPHE MAY APPEAR IN A `${VAR:?message}` WORD IN THIS REPOSITORY, and the reason is a
+# defect this file hit and had to diagnose. bash 3.2 (the host bash) treats a single quote
+# inside `"${VAR:?word}"` as opening a quoted region. The first draft read
+#     REF="${T455_REF:?... carrying T455's section 10}"
+#     OLD_GUARD="${T455_OLD_GUARD:?... path of T433's ARM-F wiring guard}"
+# and the two apostrophes PAIRED ACROSS THE TWO LINES: the second statement was swallowed into
+# the first one's default word, `OLD_GUARD` was never assigned, and because `T455_REF` WAS set
+# the `:?` word was never evaluated, so nothing complained until `set -u` fired 58 lines later.
+# A required-parameter idiom that silently fails to require is the same class as an instrument
+# that emits a negative it did not measure — it just fails at a different time.
+REF="${T455_REF:?T455_REF must name the commit-ish carrying the T455 section 10}"
+OLD_GUARD="${T455_OLD_GUARD:?T455_OLD_GUARD must give the repo-relative path of the T433 ARM-F wiring guard}"
 
 INT=".softhouse/reviews/A2-11/verify-capture-integrity.py"
 RUNALL=".softhouse/reviews/A2-11/run-all.sh"
 TAG="QUOTED-FALSE-CLAIM"
-SENTENCE="There is no committed baseline older than HEAD for those 632."
+# THE SENTENCE UNDER TEST IS ASSEMBLED, NOT TYPED. A literal here would be an UNTAGGED
+# assertion of the false claim in a tracked executable — the exact thing this file drives
+# against — and it would be one that no guard currently scans, which is worse.
+SENTENCE="$(printf 'There is no committed baseline older than %s for those 632.' HEAD)"
 
 mkdir -p "$OUT" "$SCRATCH" || exit 3
 D="$SCRATCH/t455-tag"
