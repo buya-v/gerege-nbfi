@@ -234,7 +234,10 @@ that limit is now stated in `drive-arms.sh` beside the function instead of being
 
 ## 3. THE FINAL BAR, probe PRESENCE shown before its value
 
-Run on the committed tree of this branch:
+Run on the committed tree of this branch, `ec709ee4`, working tree clean. (The census
+corpus reads 1690 here and 1689 in the run one commit earlier: the sixth instrument,
+`60-bar-on-a-released-tree.sh`, is a tracked `.sh` and joined the corpus between them.
+It adds no dead row -- every path in it is assembled from `$SH_NAME`.)
 
 ```
 $ bash .softhouse/conformance.sh ; echo "BAR_EXIT=$?"
@@ -250,7 +253,7 @@ $ grep -a 'VERDICT' <transcript>
 VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
 
   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-  T316-DEADPATH-CENSUS: corpus=1689 deadFiles=75 deadOccurrences=108 resolving=1577
+  T316-DEADPATH-CENSUS: corpus=1690 deadFiles=75 deadOccurrences=108 resolving=1577
                         indeterminate=126 prose=427
   NAMESPACE-CENSUS: dirs=238 prefixed=215 unprefixed=23 collidingIds=2 declared=2
                     unclaimed=2 shortfallIds=0
