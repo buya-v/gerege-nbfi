@@ -1,0 +1,41 @@
+=== T433 WHOLE-632 BIRTH-BLOB SWEEP -- re-established, not inherited ===
+    target           /Users/buv/gerege-nbfi/.claude/worktrees/agent-a392fe984e236aff8
+    HEAD             d26c599ad94249f7022437bee5385ee1df4bb695
+    fork constant    12a7f8d9a3af4665fd5281a9f9c001d4f1276a53  (literal sha, never merge-base -- P-24/T423)
+    population       every path under .softhouse/capture/tierA-a2/{out,req} present at HEAD, ABSENT at fork
+    working tree     1 dirty path(s)
+    at HEAD 1035   at fork 403   POST-FORK POPULATION 632
+
+    METHOD A (per-path git log)  resolved 632/632   unresolved 0
+    METHOD B (bulk walk)         resolved 632/632   unresolved 0
+    A vs B disagreements         0
+    distinct birth commits       7
+
+--- (3) WHERE EACH OBSERVATION WAS BORN -------------------------------------
+    born at a commit STRICTLY OLDER than the tip and an ANCESTOR of it : 632
+    born AT THE TIP itself                                            : 0
+    born at a commit that is NOT an ancestor of the tip               : 0
+
+--- (1) GIT BLOB OID: birth tree vs HEAD tree (no bytes read) ---------------
+    equal to the birth blob                                           : 631
+    DIFFER from the birth blob                                        : 1
+      DIFFERS out/A2-370-db-ledger-state.txt
+        born at   aae501b576ecca1d70881c3cff49c43d2576b0f6
+        birth oid 368483a4136f180f3ed78cd4f004091ce9dbfd7f (mode 100644)
+        HEAD  oid 72b368e11792ee82fd0aaec3efeea08f869df1ca (mode 100644)
+
+--- (2) SHA256: bytes at birth vs bytes on disk ------------------------------
+    equal to the birth blob                                           : 631
+    DIFFER from the birth blob                                        : 1
+      DIFFERS out/A2-370-db-ledger-state.txt
+        born at      aae501b576ecca1d70881c3cff49c43d2576b0f6
+        birth sha256 1ea4927a59068d0a5ec45773dbc50a4c80d9eaa0457f0cecdc820e4b8ed5f857
+        disk  sha256 1c23375b0f010cf5bb65b6fead9c9ec063fcafe9e4f16d713b34f367f41716e2
+
+    NON-BLOB entries (symlink/gitlink)                                : 0
+
+CONCLUSION OF THE SWEEP
+  A committed baseline older than HEAD EXISTS for 632 of the 632 post-fork
+  observations: the blob at the commit that first added each one. The claim that
+  no such baseline exists is FALSE, measured over the WHOLE population, not a sample.
+  Non-equal observations, by name: ['out/A2-370-db-ledger-state.txt']
