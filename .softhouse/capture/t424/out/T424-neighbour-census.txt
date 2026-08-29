@@ -1,0 +1,34 @@
+corpus: 1457 tracked .sh/.py files under .softhouse/
+
+=== S-A  scripts that TEE to a file and then READ THAT SAME FILE ===========
+  files containing a `tee <file>`: 23 ; of those, files that also read the target: 0
+
+=== S-B  background jobs, and whether anything waits for them =============
+  .softhouse/bin/fire-program.sh : 3 background job line(s), 8 wait/wait_bounded statement(s)
+        2151:  ( reconcile_tasks_json "$@"; print -r -- "$RECON_VERDICT" > "$vf" ) &
+        2448:    | /usr/bin/jq -r --unbuffered "$DIGEST" 2>/dev/null ) &
+        2460:      print -r -- $? > "$DRIVER_RC_FILE" } ) &
+  .softhouse/capture/t309-sigterm-reconcile-bypass/patch5.py : 1 background job line(s), 2 wait/wait_bounded statement(s)
+        90:  ( reconcile_tasks_json "$@" ) &
+  .softhouse/capture/t309-sigterm-reconcile-bypass/patch6.py : 2 background job line(s), 0 wait/wait_bounded statement(s)
+        9:  ( reconcile_tasks_json "$@" ) &
+        34:  ( reconcile_tasks_json "$@"; print -r -- "$RECON_VERDICT" > "$vf" ) &
+  files with a background job: 3
+
+=== S-D  SHIPPED PATCHES -- where the defect actually lived ===============
+  corpus: 9 tracked .patch files under .softhouse/
+  HIT .softhouse/capture/t402-t386-conditions/patches/FU-T386-7-red-drive-must-report-failure.patch
+        22:+if [ -n "${T381_DRIVE_LOG:-}" ] && [ -f "${T381_DRIVE_LOG:-}" ]; then
+        23:+  _t402_bad=$(grep -c -E 'DID NOT REPRODUCE|IS NOT PROVEN|DID NOT REFUSE' "$T381_DRIVE_LOG"); _t402_rc=$?
+        38:+echo "***   T381_DRIVE_LOG=<file> bash t381-red-drives.sh 2>&1 | tee \$T381_DRIVE_LOG"
+        39:+echo "*** so its exit status can report on its own arms. Without T381_DRIVE_LOG this script"
+  HIT .softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch
+        44:+  if [ -n "${T381_DRIVE_LOG:-}" ]; then
+        45:+    _t424_log=$T381_DRIVE_LOG
+        57:+  T381_DRIVE_INNER=1 bash "$_t424_self" "$@" 2>&1 | tee "$_t424_log"
+  patches whose ADDED lines mention a tee/transcript log: 2
+
+=== S-C  the harness's own bar: does conformance.sh have either shape? ====
+  .softhouse/conformance.sh : tee sites = 0 ; background jobs = 0
+
+T424-NEIGHBOUR-CENSUS: complete. Adjudication is in the handoff, by name.

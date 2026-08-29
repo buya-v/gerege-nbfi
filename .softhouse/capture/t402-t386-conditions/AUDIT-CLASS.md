@@ -36,9 +36,27 @@ is printed beside the wide list and is explicitly **not** the census.
 | **K5** | assignment-masked status `local x=$(…)` | 0 | 0 |
 | **K6** | substitution in an ARGUMENT — `printf "$(…)"`, structurally unreadable | **3** | **0** |
 | **K7** | arithmetic / numeric test on unvalidated input | 28 | 44 |
+| **K8** | **state loss in a subshell** — a state-mutating call (`sel`, `calibrate`, `_calib_refuse`, `engine_count`, or a `SWEEP_*=` assignment) inside a pipeline, `$( )`, `( )` or `&`. **Added by T424, `F-T408-2`.** | **17** | **29** |
 
 **`K2` and part of `K3` were T381's two buckets. `K1`, `K5`, `K6` and `K7` had no row — and two
 of those four were carrying live defects.**
+
+**AND `K8` HAD NO ROW IN THIS TAXONOMY — the same lesson, one level up.** `K1..K7` all enumerate
+ways an **exit status** is lost. `sel()`'s integrity also rests on **state written into globals**
+(`SWEEP_REFUSED`, `SWEEP_RC`, `SWEEP_DIDNOTRUN`, `SWEEP_SELECTORS`) that the `SWEEP-RESULT` line
+and `exit "$SWEEP_RC"` later read; a subshell discards those. T408 drove it — same selector, same
+corpus, same commit:
+
+```
+sel "S16 ..." -n -E '\bstatus\b'          -> exit=3  refused=1  selectors=15   (correct)
+sel "S16 ..." -n -E '\bstatus\b' | cat    -> exit=0  refused=0  selectors=15   (LOST)
+```
+
+The census **did** list that line — as a `K2` pipeline — but the verdict vocabulary below had no
+verdict that fits, so an adjudicator working the list would have written DIAGNOSTIC and moved on.
+So `T424` added both the kind **and** the verdict. **`K1..K8` counts re-measured by T424 on the
+same two refs: `K1..K7` reproduce T402 exactly, cell for cell** (`out/T424-CENSUS-before-with-K8.txt`,
+`out/T424-CENSUS-after-with-K8.txt` under `.softhouse/capture/t424/`).
 
 ---
 
@@ -46,7 +64,12 @@ of those four were carrying live defects.**
 
 Verdicts are **FAIL-OPEN** (can print a number or an absence nobody measured), **FAIL-CLOSED**
 (a lost status makes the run refuse), **PROVENANCE** (a lost status corrupts the record of what
-was graded, not the grade), or **READ** (the status is consulted).
+was graded, not the grade), **READ** (the status is consulted), or — **added by T424,
+`F-T408-2`** — **STATE-LOSS** (the construct runs in a subshell, so a global it writes is
+discarded; the status may be read correctly and the *verdict* still evaporate). **STATE-LOSS is
+not a flavour of FAIL-OPEN and must not be recorded as one:** the fail-open verdicts here are all
+"a status was not consulted", and a `STATE-LOSS` site can consult every status it has and still
+lose the answer. That distinction is the whole reason `F-T408-2` had no row to be written on.
 
 Sites are named by **content**, not by line number. T386 measured **14 of 16** of T381's audited
 line numbers as having moved within one fire; `f3bf5563` ratified the rule.
@@ -80,6 +103,10 @@ line numbers as having moved within one fire; `f3bf5563` ratified the rule.
 | every `[ "$rc" -ge 2 ]`, `[ "$ec" -eq 0 ]`, `[ "$ENGINE_N" -lt 1 ]` … | K7 | **READ.** Each operand is a `$?` captured on the preceding line, or `ENGINE_N`, which `engine_count()` only sets after validating its shape. **The one K7 operand that was NOT validated was the corpus assertion — F-2.** |
 | the 7 new `if ! <cmd>` sites | K4 | **READ.** Five call `_errf_prime`/`_errf_read`, which return only 0 or 1 by explicit `return`. Two are `if ! VAR=$(cmd)`, where the assignment's status **is** the substitution's; both fall back to `UNMEASURED`. |
 | `K5` | K5 | **0 sites, before and after.** `local x=$(…)` — where the builtin's status masks the substitution's — does not occur. Checked rather than assumed. |
+| all sixteen `sel "S…" …` calls | K8 | **NOT state-loss.** All sixteen are bare at column 0. They appear in the wide `K8` list only because each carries a `\|` **inside its own quoted ERE**, exactly the over-inclusion `K2`/`K3` have by design. The de-noised `K8s` view lists **none** of them. |
+| the eight `SWEEP_*=$((SWEEP_*+1))` counters | K8 | **NOT state-loss.** `$((` is arithmetic expansion, not a subshell; the wide `K8` matches them on the `$(` prefix. `K8s` excludes `$((` explicitly and lists none of them. |
+| `SWEEP_ERRF=$(mktemp …)`, `SWEEP_CORPUS_N=$(… \| grep -c .)`, `SWEEP_UNTRACKED_N=$(…)`, `if ! SWEEP_COMMIT=$(…)`, `if ! SWEEP_DATE=$(…)`, `case "$SWEEP_UNTRACKED_N" …` | K8 | **NOT state-loss — the six `K8s` sites.** Each *runs* a command in a subshell but **assigns in the parent**; the global survives. Listed so the intersection is visibly non-empty: a `K8s` of zero and a `K8s` of six-benign must not look alike. |
+| **live `STATE-LOSS` sites** | K8 | **ZERO, before and after** — measured, not assumed. The kind is latent. `t424-k8-discrimination.sh` shows `K8s` moving `6 → 7` the moment one selector is spelled `sel … \| cat`, so the row is not decorative. |
 
 ---
 
@@ -99,9 +126,33 @@ $ bash -c 'x=""; [ "$x" -lt 1 ]; echo "[ ] returned $?"'
 ```
 
 `[` returns **2** on a malformed comparison; `if` reads any non-zero as **false**; the abort does
-not fire. So had `git ls-files` failed, the corpus assertion would have **passed the sweep
-through on a corpus nobody counted** — and every `MEASURED ZERO` below it would have been
-denominated in a number that was never taken.
+not fire. The corpus assertion would then have **passed the sweep through on a corpus nobody
+counted** — and every `MEASURED ZERO` below it would have been denominated in a number that was
+never taken.
+
+> ### THE CAUSE THIS SECTION USED TO GIVE WAS WRONG — corrected by T424, `F-T408-5`
+>
+> It said: *"So had `git ls-files` failed, …"*. **A failing `git ls-files` ABORTS.** `grep -c .`
+> prints `0` for an empty stream, so the substitution captures `"0"`, `[ "0" -lt 1 ]` is **true**,
+> and the abort fires. T408 drove it; T424 re-derived it independently
+> (`.softhouse/capture/t424/instruments/t424-f2-true-cause.sh`, `arms_failed=0`):
+>
+> | sabotage | captured | old block | new block |
+> |---|---|---|---|
+> | `git ls-files` exits 128 | `[0]` rc 1 | **ABORT** — stated cause does not reproduce | ABORT |
+> | `grep` exits 2, no stdout | `[]` rc 2 | **FELL THROUGH** — the true cause | ABORT |
+> | real `grep`, invalid regex | `[]` rc 2 | — | — |
+> | healthy | `[9237]` rc 0 | passes | passes |
+>
+> **The fall-through needs `grep` ITSELF to fail** — invalid pattern, broken locale, missing
+> binary, EMFILE. Mechanism right, exploit path right, **attribution wrong**, and the wrong
+> attribution had been committed into `casualty-sweep.sh`'s own comment, where the next reader
+> would have reasoned from it. Both sites are corrected.
+>
+> **Also do not infer that `pipefail` covers the `git ls-files` case** (T408 says it does; T424
+> drove that false too): `pipefail` returns the **rightmost** non-zero status, which is
+> `grep -c .`'s `1`, not git's `128`. The failing-`git` case is caught by the **value** test, as
+> before. The status read adds the `grep`-failed case, which is the one that used to fall through.
 
 It is `K1` inside `K7`: a command substitution in a numeric test. Neither of T381's two buckets
 contains it, and neither did T386's list of six unaudited `$(…)` sites. **It was found by
@@ -120,6 +171,15 @@ created by the repair for `R3`. That is not a property of `casualty-sweep.sh` �
 property of the repairs.**
 
 The next task to touch this file should audit its **own diff** for discarded statuses across all
-seven kinds, and re-run `t402-status-class-census.sh` on BEFORE and AFTER. **If a kind's count
+**eight** kinds, and re-run `t402-status-class-census.sh` on BEFORE and AFTER. **If a kind's count
 moves, every new site in it needs a row here.** That is a cheaper obligation than the audit that
 missed `C-1`, and it is the one that would have caught it.
+
+**T424 adds two clauses, both of which this file has now been bitten by:**
+
+1. **Audit the diff for lost STATE as well as lost status.** `K8` exists because seven kinds of
+   status loss did not describe a refusal evaporating in a subshell. When you add a kind, add the
+   **verdict** that fits it too — `F-T408-2` had no row *and* no word.
+2. **When you write down a CAUSE, drive the cause, not only the effect.** `F-2`'s repair was
+   right and its explanation was wrong, and the explanation is what shipped in the source comment.
+   An attribution nobody drove is a claim, and the next reader will fix the wrong thing with it.

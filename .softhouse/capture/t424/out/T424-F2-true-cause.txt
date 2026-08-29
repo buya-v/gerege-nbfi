@@ -1,0 +1,78 @@
+SUBJECT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh
+sha256 : fdfe8d06087ec51c
+
+NEW block extracted by content, 16 lines:
+    | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+    | if [ "$_corpus_rc" -ge 2 ]; then
+    |   echo "SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=$_corpus_rc). There is no" >&2
+    |   echo "  denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'." >&2
+    |   exit 2
+    | fi
+    | case "$SWEEP_CORPUS_N" in ''|*[!0-9]*)
+    |   echo "SWEEP ABORT (exit 2): the corpus count is not a number ([$SWEEP_CORPUS_N]). A count that" >&2
+    |   echo "  is not a number is not a count, and every zero below would be denominated in it." >&2
+    |   exit 2 ;;
+    | esac
+    | if [ "$SWEEP_CORPUS_N" -lt 1 ]; then
+    |   echo "SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/." >&2
+    |   echo "  A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass." >&2
+    |   exit 2
+    | fi
+
+==============================================================================
+PART 0 -- THE PRIMITIVE. Why the attribution fails: grep -c PRINTS 0 ON EMPTY.
+==============================================================================
+  true | grep -c .            -> captured=[0] rc=1
+fatal
+  git-that-fails | grep -c .  -> captured=[0] rc=1   <- NOT EMPTY. This is the point.
+  REAL grep, INVALID REGEX    -> captured=[] rc=2   <- EMPTY. This is the true cause.
+  [ "0" -lt 1 ] -> TRUE  -- the abort FIRES
+  [ ""  -lt 1 ] -> FALSE -- the abort does NOT fire ([ ] returned 2)
+
+fatal
+  pipefail: git(128) | grep -c .(1)  -> captured=[0] rc=1   <- rc is GREP's 1, not 128.
+
+==============================================================================
+PART 1 -- FALSIFICATION: with git ls-files FAILING, the OLD form ABORTS.
+          T402's stated cause does NOT reproduce.
+==============================================================================
+OLD form / git ls-files fails (rc 128)         rc=2    -> ABORT        expected ABORT        OK
+        fatal: not a git repository (T424 shim)
+        SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/.
+        note: grep -c . printed 0 for the empty stream; [ 0 -lt 1 ] is TRUE; the abort fired.
+
+NEW form / git ls-files fails (rc 128)         rc=2    -> ABORT        expected ABORT        OK
+        fatal: not a git repository (T424 shim)
+        SWEEP ABORT (exit 2): corpus reachable but tracks ZERO files under .softhouse/.
+          A sweep over nothing proves nothing (P-35); a denominator of zero is an ERROR, not a pass.
+        note: the shipped form aborts too -- but by the VALUE (0 -lt 1), NOT by the status: see PART 0, pipefail returns grep's 1.
+
+==============================================================================
+PART 2 -- THE TRUE CAUSE: grep ITSELF failing empties the substitution.
+==============================================================================
+OLD form / grep fails (rc 2, no stdout)        rc=0    -> FELLTHROUGH  expected FELLTHROUGH  OK
+        grep: T424 shim: induced failure
+        /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t424-f2.xAIyWaex/old-block.sh: line 1: [: : integer expression expected
+        FELL THROUGH -- SWEEP PROCEEDS ON AN UNCOUNTED CORPUS
+        note: captured=[] ; [ "" -lt 1 ] returns 2 ; if reads non-zero as false ; NO ABORT.
+
+NEW form / grep fails (rc 2, no stdout)        rc=2    -> ABORT        expected ABORT        OK
+        grep: T424 shim: induced failure
+        SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=2). There is no
+          denominator, so there is no sweep. This is not 'zero files'; it is 'nobody counted'.
+        note: rc>=2 is read -> 'the corpus COUNT DID NOT RUN'. The repair closes the TRUE cause.
+
+==============================================================================
+PART 3 -- CONTROLS. A guard that refuses everything is the same defect, inverted.
+==============================================================================
+OLD form / healthy                             rc=0    -> FELLTHROUGH  expected FELLTHROUGH  OK
+        FELL THROUGH -- SWEEP PROCEEDS ON AN UNCOUNTED CORPUS
+        note: healthy pass-through is CORRECT: the block only aborts on an empty or uncounted corpus.
+
+NEW form / healthy                             rc=0    -> FELLTHROUGH  expected FELLTHROUGH  OK
+        FELL THROUGH -- SWEEP PROCEEDS ON AN UNCOUNTED CORPUS
+        note: the shipped block passes a healthy tree through.
+
+==============================================================================
+T424-F2-DRIVE-RESULT: arms_failed=0
+Every arm met its declared expectation.

@@ -628,13 +628,34 @@ echo "CASUALTY SWEEP for the T352+T359 oracle-state movement"
 #     FELL THROUGH
 #
 # `[` returns 2 on a malformed comparison, `if` reads any non-zero as FALSE, and the abort does
-# not fire. So if `git ls-files` had failed, THE CORPUS ASSERTION WOULD HAVE PASSED THE SWEEP
-# THROUGH ON A CORPUS IT NEVER COUNTED -- and T386's review cites this very assertion as the
-# BOUND on FU-T381-1's residual. The bound was fail-open. [T402 F-2]
+# not fire. THE CORPUS ASSERTION WOULD HAVE PASSED THE SWEEP THROUGH ON A CORPUS IT NEVER
+# COUNTED -- and T386's review cites this very assertion as the BOUND on FU-T381-1's residual.
+# The bound was fail-open. [T402 F-2]
+#
+# **BUT NOT FOR THE REASON THIS COMMENT USED TO GIVE, AND THE WRONG REASON WAS SHIPPED HERE.**
+# It said: "So if `git ls-files` had failed, ...". T408 drove that FALSE (F-T408-5) and T424
+# re-derived it independently (`t424-f2-true-cause.sh`, all arms OK):
+#
+#     git-that-fails | grep -c .   ->  captured=[0] rc=1   ->  [ 0 -lt 1 ] is TRUE  ->  ABORTS
+#     REAL grep, invalid regex     ->  captured=[]  rc=2   ->  [ "" -lt 1 ] returns 2 -> FALLS THROUGH
+#
+# `grep -c .` PRINTS `0` for an empty stream, so a failing `git ls-files` still yields the
+# string "0" and the old abort FIRED. Emptying the substitution needs **`grep` ITSELF** to fail
+# (rc >= 2, nothing on stdout): a broken locale, an invalid pattern, a missing binary, EMFILE.
+# Mechanism right, exploit path right, ATTRIBUTION WRONG -- and a comment that misexplains a
+# guard is how the next fix lands in the wrong place. [T424, closing F-T408-5]
+#
+# One more thing NOT to infer from the repair below: `set -o pipefail` does NOT surface a
+# failing `git ls-files` here. pipefail returns the RIGHTMOST non-zero status, and that is
+# `grep -c .`'s 1, not git's 128 -- driven in the same instrument. What catches a failing
+# `git ls-files` is still the VALUE test (`0` -lt 1), exactly as before; what the status read
+# adds is the `grep`-failed case, which is the one that used to fall through.
 #
 # The count is now taken ONCE, its status read, its shape validated, and every later consumer
-# reads the variable. `git ls-files | grep -c .`: rc 0 means one or more, rc 1 means a genuine
-# zero, rc >= 2 means the count did not run.
+# reads the variable. `git ls-files | grep -c .` under pipefail: rc 0 means one or more, rc 1
+# means the stream was empty -- either a genuine zero OR a failed `git ls-files`, and the VALUE
+# test below separates neither because both are the same "0" and both must abort -- and rc >= 2
+# means THE COUNT ITSELF DID NOT RUN, which is the case that used to fall through.
 SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
 if [ "$_corpus_rc" -ge 2 ]; then
   echo "SWEEP ABORT (exit 2): the corpus COUNT DID NOT RUN (rc=$_corpus_rc). There is no" >&2
