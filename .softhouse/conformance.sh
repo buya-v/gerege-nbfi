@@ -2385,7 +2385,7 @@ guard_accepting_side_gap_declared() {
 #   not only from the Go test, because `conformance.sh` never invokes `go test` — a test-only
 #   fix would have left the third silent green standing while looking fixed. Rule: when
 #   hardening a check, verify the path that ACTUALLY EXECUTES in CI/conformance calls it, not
-#   merely that a test does."   [VERIFIED: .softhouse/patterns.md:1472]
+#   merely that a test does."   [VERIFIED: .softhouse/patterns.md, P-45]
 #
 # The root was measured by T302, re-run by T319, and re-run again by T323 on this branch:
 #     grep -c 'fire-program\|ready-tasks\|reconcile\|in_progress' .softhouse/conformance.sh
@@ -2407,7 +2407,7 @@ guard_accepting_side_gap_declared() {
 # is called on main_grade's second line; probe_oracle is not reached for ~25 lines after it. So
 # a refusal from any guard here exits 2 with the `reference oracle (…) probe = up|down` line
 # ABSENT — not `down`. "P-84 — 'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ THE
-# ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md:2782]. The driver's park condition
+# ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md, P-84]. The driver's park condition
 # is `exit 2` AND a probe line PRESENT AND reading `down`; test the line's PRESENCE first, or a
 # guard refusal gets parked as somebody else's server being down.
 #
@@ -2488,7 +2488,7 @@ guard_accepting_side_gap_declared() {
 # So there is nothing left here to correct, only something to delete. A cardinal restated in a
 # comment beside a guard that MEASURES IT LIVE is a second source of truth with no owner — P-80,
 # "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the
-# line number." [VERIFIED: .softhouse/patterns.md:2775]. The guard prints
+# line number." [VERIFIED: .softhouse/patterns.md, P-80]. The guard prints
 # "corpus <N> tracked paths -> <D> evidence directories", "<P> carry a t<n> id prefix", and one
 # line per colliding id with the OWNER*.md that claims it, a few lines into its own output.
 # READ THAT. Any figure a task needs belongs in that task's own dated handoff, never here.
@@ -2663,7 +2663,7 @@ guard_capture_namespace() {
 #
 # THE PIN AND THIS TREE DISAGREE, AND THE DISAGREEMENT IS P-83 EXACTLY — MEASURED, NOT COMPUTED.
 #   P-83 — "TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY
-#   ARITHMETIC."   [VERIFIED: .softhouse/patterns.md:2775]
+#   ARITHMETIC."   [VERIFIED: .softhouse/patterns.md, P-80]
 # T316 re-derived its pin at 98 rows in commit 5b4f6702. T305's red drive
 # `.softhouse/capture/t305-openingbalance-accepting-side/red-drive-conformance-guard.sh` landed
 # separately in bb72b57b and names FOUR paths that do not resolve. T323 verified the two could
@@ -2730,7 +2730,7 @@ guard_capture_namespace() {
 # this wiring inherits that restraint rather than widening the predicate. P-95: "a dead literal
 # is equally consistent with a fail-open and with an announced fallback, so it can never be
 # classified by reading — only by removing every candidate and observing the exit."
-# [VERIFIED: .softhouse/patterns.md:3084]. This guard COUNTS; it does not classify.
+# [VERIFIED: .softhouse/patterns.md, P-95]. This guard COUNTS; it does not classify.
 #
 # WHY THIS GUARD GETS NO ROOT READBACK AND guard_capture_namespace DOES. A fair reviewer question,
 # because the asymmetry looks like an oversight and is not. T299's guard resolves its root from
@@ -3027,7 +3027,7 @@ guard_reconciler_ownership() {
 # workers in one fire each built a guard, drove it red and green, and shipped it reaching
 # nothing. That is P-45 — "A test-only guard is not a guard. … Rule: when hardening a check,
 # verify the path that actually executes in CI/conformance calls it, not merely that a test
-# does." [VERIFIED: .softhouse/patterns.md:1503]. The three were wired above, one at a time, by
+# does." [VERIFIED: .softhouse/patterns.md, P-45]. The three were wired above, one at a time, by
 # hand. NOTHING IN THIS FILE STOPPED A FOURTH, and the fix for "someone must remember" is never
 # a better memo.
 #
@@ -3043,7 +3043,7 @@ guard_reconciler_ownership() {
 # SELECTOR, PRINTED BESIDE THE FIGURE, because a count is a statement about a search and never
 # about the world — P-70, "'Latent', 'not promoted', 'can never resolve', 'no guard exists' —
 # four ways this program stated a search result as a world fact, in one fire"
-# [VERIFIED: .softhouse/patterns.md:1931]:
+# [VERIFIED: .softhouse/patterns.md, P-70]:
 #
 #     POPULATION = git ls-files, ':(glob)' magic, over the TRACKED '*.sh' / '*.py' / '*.go'
 #                  files at ANY DEPTH under the canonical guards directory, from $REPO_ROOT.
@@ -3184,7 +3184,7 @@ guard_reconciler_ownership() {
 #   T404's handoff warned other tasks about that shift and applied delete-don't-refresh to
 #   somebody else's cardinals. NOTHING CATCHES IT: the P-number guard grades patterns.md
 #   tokens, not this file's self-citations, so all three rots ran GREEN. "A CORRECTED
-#   CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED" [VERIFIED: .softhouse/patterns.md:2775].
+#   CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED" [VERIFIED: .softhouse/patterns.md, P-80].
 #   SHOULD A GUARD EXIST, AND WHAT WOULD IT COST? It would have to grade each comment-borne
 #   `:NNN` against an EXPECTED ANCHOR — a second register, kept in step by hand, which is the
 #   same class of artefact that just rotted three times. Cheaper and permanent: HAVE NO
@@ -3193,7 +3193,7 @@ guard_reconciler_ownership() {
 # This returns 1 into run_guards' tally, which exits EXIT_UNUSABLE
 # BEFORE probe_oracle prints, so a failure here is exit 2 with NO probe line — "'EXIT 2 WITH NO
 # PROBE LINE' IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE."
-# [VERIFIED: .softhouse/patterns.md:2813]. That is a failed HARD guard and NOT an oracle outage;
+# [VERIFIED: .softhouse/patterns.md, P-84]. That is a failed HARD guard and NOT an oracle outage;
 # the driver's park condition needs exit 2 AND a probe line PRESENT reading down. P-84 draws
 # that one distinction and says nothing about money in either direction.
 #
@@ -3670,7 +3670,7 @@ INNER
       # marker is long enough that no file mentions it by accident. `grep -m1` here is NOT in
       # a pipeline, and that is the same discipline the rest of this function keeps — P-57,
       # "THE MACHINERY THAT EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON
-      # EXACTLY THE INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md:1654], whose worked
+      # EXACTLY THE INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md, P-57], whose worked
       # example is a `printf … | grep -q` that reports a MISS on a MATCH because grep exits
       # first, printf takes EPIPE and `pipefail` propagates the 141. That family already cost
       # this guard its first graded run. A miss here is a plain exit 1 that `|| self_row=""`
@@ -3734,7 +3734,7 @@ INNER
         # first, which is not a measurement — the same reasoning `_census_one` uses for an
         # ambiguous sed match. No pipeline is used to count them (P-57 — "THE MACHINERY THAT
         # EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON EXACTLY THE
-        # INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md:1654]); a `case` on an
+        # INPUTS THAT MATTER" [VERIFIED: .softhouse/patterns.md, P-57]); a `case` on an
         # embedded newline starts no second process at all.
         self_norm=""
         if [ -n "$self_wit" ]; then
@@ -3788,7 +3788,7 @@ INNER
         # `./`-spelled witness, which stays ACCEPTED.
         #
         # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
-        # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
+        # [VERIFIED: .softhouse/patterns.md, P-57]. `git ls-files -s` prints
         # `<mode> <objectid> <stage>\t<path>`; the two fields are taken with shell parameter
         # expansion, which starts no second process and cannot EPIPE.
         # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
@@ -3874,7 +3874,7 @@ INNER
         #       the healthy control `Y` is ACCEPTED under it [T431 arm Y].
         #
         # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
-        # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
+        # [VERIFIED: .softhouse/patterns.md, P-57]. `git ls-files -s` prints
         # `<mode> <objectid> <stage>\t<path>`; the two fields are taken with shell parameter
         # expansion, which starts no second process and cannot EPIPE.
         # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
@@ -3964,18 +3964,34 @@ INNER
             warn "conformance: T375 — so a leading './', an interior '/../' or an absolute path"
             warn "conformance: is the same self-reference and is refused as one.)"
           fi
-        elif [ ! -f "$REPO_ROOT/$self_wit" ]; then
-          bad=1
-          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
-          warn "conformance: and THAT REACHED-BY WITNESS DOES NOT EXIST. A declaration whose"
-          warn "conformance: witness is gone is an amnesty, not a record. REFUSED."
+        # THE FILESYSTEM EXISTENCE TEST ON THE TYPED SPELLING IS GONE, AND ITS REMOVAL IS THE
+        # LAST STEP OF THIS REPAIR. [T445, closing T444's LOW-4.]
+        #
+        # It read `[ ! -f "$REPO_ROOT/$self_wit" ]` — the TYPED spelling, on THIS HOST — while
+        # every test that follows grades `$self_norm` out of the INDEX. So it graded a
+        # DIFFERENT FILE from everything downstream, which is the exact confusion this whole
+        # commit exists to remove, and T404's stated reason for it ("a magic-prefixed spelling
+        # cannot exist on disk") has now been measured wrong twice: once by T431 for the
+        # backslash route, once by T444.
+        #
+        # IT COULD NOT FAIL OPEN — it only ever refuses — so this is not a hole being closed.
+        # What it COULD do is refuse honest work: a witness that is tracked and committed but
+        # not materialised in THIS checkout (a sparse checkout, or the loser of a case
+        # collision) has a perfectly readable blob, and `-f` refused it for a fact about the
+        # host. DRIVEN as arm WGONE: with the witness deleted from the working tree and the
+        # commit untouched, `main` refuses at exit 2 and this tree accepts — correctly, because
+        # nothing about the record changed.
+        #
+        # A WITNESS THAT IS ABSENT FROM THE INDEX IS STILL REFUSED, one branch down, by the
+        # untracked refusal — which is the accurate sentence for it.
         elif [ -z "$self_norm" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
           warn "conformance: which is NOT TRACKED. An untracked witness is host state — it is"
           warn "conformance: absent from every commit and cannot be reviewed. REFUSED."
-          warn "conformance: (READ THIS BEFORE CONCLUDING THE GUARD IS WRONG. The file EXISTS on"
-          warn "conformance: disk — the existence test above passed — yet git will not resolve"
+          warn "conformance: (READ THIS BEFORE CONCLUDING THE GUARD IS WRONG. The file may well"
+          warn "conformance: EXIST on disk — this guard no longer asks, because the answer is a"
+          warn "conformance: fact about this host [T445] — yet git will not resolve"
           warn "conformance: the spelling. The usual cause is CASE: this program's macOS hosts"
           warn "conformance: mount a case-INSENSITIVE filesystem, so '-f' accepts a wrong-case"
           warn "conformance: path that git, which indexes case-SENSITIVELY, does not. Spell the"
@@ -4328,6 +4344,17 @@ STALE
 # guard_registration_decisive_lines: THE LINES THAT DECIDE ARE THEMSELVES GRADED, AND THEY
 # ARE GRADED BY BEING RUN.                       [T445, closing T444's C-2 — P-45.]
 # ===========================================================================================
+# CITATION HYGIENE, RECORDED HERE BECAUSE THIS COMMIT IS WHERE IT WAS MEASURED. T444's C-3
+# found one rotted `conformance.sh:NNNN` citation in a directive file and named the method,
+# not the damage: "I checked the citation I knew about" is how that file has now rotted three
+# times. T445 ran the sweep in the other direction — every `patterns.md:NNNN` citation inside
+# THIS file — and found NINE distinct line numbers, of which THREE were rotted by exactly 31
+# lines (`:1472` and `:2782` and `:3084` were P-45, P-84 and P-95; those rules are at :1503,
+# :2813 and :3115 today). Nothing grades them, so nothing was ever going to say so.
+# EVERY ONE OF THEM IS NOW CITED BY RULE ID AND SENTENCE AND BY NO LINE NUMBER, which is
+# P-80's own prescription — "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The
+# count is the same defect as the line number." A rule id does not move when patterns.md
+# grows, and `guard_pnumber_citations` grades the SENTENCE under the id, never a line.
 # WHY THIS EXISTS. T444 evaluated an 8-way matrix over the three lines T431 added to the
 # witness direction and found that exactly ONE of them is INDEPENDENTLY NECESSARY: with the
 # round-trip equality removed, the C-quoted witness forgery is ACCEPTED again in all four
@@ -4496,7 +4523,7 @@ guard_registration_decisive_lines() {
 # 0.23 s and whose real cost was unbounded was caught by A HUMAN NOTICING that a 75-second run
 # had not returned in ten minutes. That is P-45 in its purest form: "A test-only guard is not a
 # guard. … when hardening a check, verify the path that actually executes in CI/conformance
-# calls it, not merely that a test does." [VERIFIED: .softhouse/patterns.md:1503]. A comment is
+# calls it, not merely that a test does." [VERIFIED: .softhouse/patterns.md, P-45]. A comment is
 # not even a test-only guard; it is a claim with no arm at all. And the consequence is the one
 # this file already argues about severity, one level down: A GRADING INSTRUMENT NOBODY WILL WAIT
 # FOR GETS BYPASSED, which is indistinguishable from switching it off.
@@ -4554,7 +4581,7 @@ guard_registration_decisive_lines() {
 # added here executes INSIDE run_guards, which is called at exactly one site as a bare command,
 # strictly upstream of the single site that prints the oracle probe line. A cost refusal is
 # therefore exit 2 with NO probe line — "'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ
-# THE ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md:2813]. The two call sites are
+# THE ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md, P-84]. The two call sites are
 # re-cited by line at the foot of guard_cost_census, AFTER these lines shifted them.
 GUARD_COST_BUDGETS="guard_graded_root_is_this_tree|60
 guard_no_float_in_vectors|60
@@ -4621,7 +4648,7 @@ COSTBUDGETS
 # The census. Prints EVERY row on EVERY run, pass or fail — a guard that speaks only when it
 # fires cannot be told apart from one that never ran (P-22 — "A guard, a canary, or a control
 # that cannot fail is worse than none — because it is believed"
-# [VERIFIED: .softhouse/patterns.md:473]).
+# [VERIFIED: .softhouse/patterns.md, P-22]).
 guard_cost_census() {
   local row name elapsed budget bad=0 stale=0 rows=0 seen
   if [ "$GUARD_COST_TIMED" -eq 0 ]; then
@@ -4725,7 +4752,7 @@ run_guards() {
   # beside an instrument that MEASURES IT LIVE is a second source of truth with no owner — the
   # identical defect T358 removed from guard_capture_namespace one iteration earlier, and P-80's
   # own prescription: "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the
-  # same defect as the line number." [VERIFIED: .softhouse/patterns.md:2775]. The costs are now
+  # same defect as the line number." [VERIFIED: .softhouse/patterns.md, P-80]. The costs are now
   # PRINTED, EVERY RUN, by guard_cost_census below. READ THAT.
   timed_guard guard_guards_dir_registration       || failed=1   # T323 iter 2, T358, T375
   timed_guard guard_capture_namespace             || failed=1   # T299, wired by T323

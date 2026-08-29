@@ -136,6 +136,40 @@ dirty_WDIRTY() {
   printf 'the fire driver runs zz-t445w-member.sh\n' > "$R/$D/witness.txt"
 }
 
+# ---- WGONE: an honest, committed registration whose WITNESS FILE is not in the checkout.
+# The commit is untouched; only this host's working tree lacks the file — a sparse checkout,
+# or the loser of a case collision, looks exactly like this. Nothing about the record changed,
+# so the record must still be gradeable.
+plant_WGONE() {
+  local R="$1" D="$GDR/zz-t445g"
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445g-member.sh"
+  printf 'the fire driver runs zz-t445g-member.sh\n' > "$R/$D/witness.txt"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm WGONE' >/dev/null
+}
+dirty_WGONE() {
+  local R="$1" D="$GDR/zz-t445g"
+  rm -f "$R/$D/witness.txt"
+}
+
+# ---- GITLW: the declared WITNESS is a GITLINK (mode 160000). Its object is a COMMIT, not a
+# blob, so a tracked-blob read cannot return anything. Must fail CLOSED.
+plant_GITLW() {
+  local R="$1" D="$GDR/zz-t445l" c
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445l-member.sh"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm GITLW base' >/dev/null
+  c="$( git -C "$R" rev-parse HEAD )"
+  git -C "$R" update-index --add --cacheinfo "160000,$c,$D/witness.txt"
+  git -C "$R" commit -q -m 'T445 arm GITLW gitlink witness' >/dev/null
+}
+
 # ---- CDIRTY: the DECLARED witness stops naming its token IN THE WORKING TREE ONLY. ----
 # The reverse discrimination: the committed bytes still name the token, the checkout does
 # not. A guard reading the FILESYSTEM refuses; a guard reading the INDEX accepts, and is
@@ -163,7 +197,8 @@ plant_2ROW() {
 
 # ---- RVQ: delete the round-trip line. C-2's subject. ---------------------------------
 plant_RVQ() {
-  local R="$1" f="$R/.softhouse/conformance.sh" n
+  local R f n
+  R="$1"; f="$R/.softhouse/conformance.sh"
   n="$(printf '%s' '[ "$self_path" '; printf '%s' '!= "$self_norm" ]')"
   LC_ALL=C grep -vF -- "$n" "$f" > "$f.new" && mv "$f.new" "$f"
   git -C "$R" commit -q -am 'T445 arm RVQ: delete the round-trip line' >/dev/null
@@ -171,7 +206,8 @@ plant_RVQ() {
 
 # ---- RWB: revert the M-1 remedy (witness grep back to the filesystem). ----------------
 plant_RWB() {
-  local R="$1" f="$R/.softhouse/conformance.sh" n
+  local R f n
+  R="$1"; f="$R/.softhouse/conformance.sh"
   n="$(printf '%s' 'git cat-file blob "$self_blob"')"
   LC_ALL=C grep -vF -- "$n" "$f" > "$f.new" && mv "$f.new" "$f"
   git -C "$R" commit -q -am 'T445 arm RWB: delete the witness tracked-blob read' >/dev/null
