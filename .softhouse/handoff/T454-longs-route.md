@@ -27,6 +27,24 @@ close the class, and the thing that can is not in this file.
 
 ---
 
+## PER-ITEM DISPOSITION
+
+| item | disposition | where | driven? |
+|---|---|---|---|
+| `MAJOR-1` — the sixth route forges the harness itself | **REPRODUCED on unmutated `main`, then CLOSED** for the forgery that does not also strip the guard. New `guard_harness_text_is_committed`, wired second in `run_guards` | §1 | RED `LONGSCTL`/`LONGS` on `main`; GREEN `LONGS` refuses on the tip |
+| — its residual | **`LONGSTRIP` — the SEVENTH route. OPEN, and driven rather than argued** | §2 | `LONGSTRIP` reaches EXIT 0 on the delivered tip |
+| `MAJOR-2` — the watch pins the reads, not the uses | **REPRODUCED, then CLOSED.** Three new needles pin the haystack of each deciding `grep`; the watch now reports 10 | §5 | RED `RWB3CTL`/`RWB3` on `main`; GREEN `RWB3` refuses **by name** on the tip |
+| `MINOR-1` — presence is a substring over the whole file; `discriminates` grades the first match | **CLOSED.** Haystack scoped to the deciding function's body; each needle must occur **exactly once**, not in a trailing comment, not on a `:` no-op; an uncuttable body REFUSES | §6 | the uniqueness and absence arms are the guard's own two refusals; `RWB3` exercises the absence one |
+| `MINOR-2` — four working-tree reads, not one | **CORRECTED to four, and one REMOVED** (the stripped text is passed in). The corrected audit is now in the file, not only in a handoff | §7 | n/a — an enumeration, re-derived |
+| `LOW-1` — the `-f` deletion moved a boundary silently | **STATED IN THE FILE.** The deletion stays; T364's DIRECTORY and PATHSPEC-MAGIC refusals went with it and now say so | §8 | not driven, and said so |
+| `LOW-2` — the citation sweep was one pin deep | **RE-RUN TWO PINS DEEP, and it changed what I shipped**: my first commit rotted `patterns.md`'s live pin, so I moved my own comment block | §8 | `evidence/04-citation-sweep.txt`, both trees |
+| `LOW-3` — the handoff's own line-number citation rotted | **AVOIDED.** No `conformance.sh:NNNN` citation in this handoff except the one pin it is about | §8 | n/a |
+| `NFD/NFC` | **REFUTED, confirmed cheaply, not re-spent on** | §3 | `core.precomposeunicode=true` verified |
+| "how many other folds?" | **MEASURED: four across all printable ASCII, one for this path.** And T446's `U+212A` negative is corrected | §3 | `evidence/00`, `01`, `02` |
+| "census what else inherits it" | **MEASURED: 27 filesystem-touching sites, 26 on foldable paths** | §4 | `evidence/03` |
+
+---
+
 ## 1. MAJOR-1 — RE-DERIVED ON MY OWN INSTRUMENT, ON UNMUTATED `main`
 
 `instruments/drive-t454.sh` clones the tree under test, plants, commits **without a subsequent
