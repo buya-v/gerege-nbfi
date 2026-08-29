@@ -6578,7 +6578,7 @@
     },
     {
       "id": "T442",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -6589,7 +6589,7 @@
       ],
       "title": "C-T440-1 (MAJOR, CONFIRMED): T424's comment-claims drive FAILS ON THE TREE IT SHIPS IN, and its committed transcript records the opposite -- plus T440's five remaining conditions",
       "description": "**Both T424 and T440 are merged. A marker file sits beside the transcript on `main`; read it first:** `.softhouse/capture/t424/out/T424-comment-claims.TRANSCRIPT-IS-NOT-REPRODUCIBLE.md`.\n\n## 1. C-T440-1 -- MAJOR, and the driver re-verified it by RUNNING the instrument, not reading it\n\n```\ntranscript on main : T424-COMMENT-CLAIMS-RESULT: disagreements=0\nwhat the code does : T424-COMMENT-CLAIMS-RESULT: disagreements=1, exit 1\n```\nLine 103 of `t424-comment-claims-drive.sh` is the **no-match control**, and it spells its probe token in the instrument's **own tracked source**. Once committed, `git grep` FINDS it, so the control that exists to prove *'no match returns 1'* gets a match, returns 0, and the drive counts a disagreement. **The shipped transcript can only have been taken while the instrument was still untracked.**\n\n**The claim under test is TRUE** -- T440 established it independently with a runtime-assembled token (`1` no match, `128` invalid pattern, `0` match). No money figure and no vector is affected. What is wrong is that a record on `main` asserts a result the code does not produce.\n\n**DO NOT fix it by respelling the token in pieces to slip past `git grep`.** That hides the control from the census instead of repairing it, and this program has already ruled that a guard which works by evading its own instrumentation is not a guard. **Assemble the probe at runtime, as T440 did.** Then regenerate the transcript and confirm the regenerated one reproduces **from committed bytes on a clean detached checkout** -- that is the property that failed, so that is the property to test.\n\n**THEN SWEEP THE CLASS, because this is the point.** A control whose probe is spelled in tracked bytes changes meaning the moment it is committed. Census every instrument in `.softhouse/` for a literal sentinel/probe token that the instrument itself would match, and say how many you found and how many invert. Note the direction differs: here it inverted fail-CLOSED (a red that should be green); a 'token must be ABSENT' probe inverts fail-OPEN. **The fail-open ones are the dangerous half** -- look for those specifically.\n\n## 2. C-T440-2 (MINOR) -- an arithmetic that is wrong three ways\nThe K8 decomposition says `16+8+6=30`, which is **neither the measured partition nor its own total of 29**. T440 measured **13 / 10 / 6**. Verdicts are unaffected. Re-measure and correct.\n\n## 3. C-T440-3 (MINOR) -- `F-T424-N1` is filed NOWHERE\n`conformance.sh`'s claim that `CONFORMANCE_REPO_ROOT` *'occurs ZERO times'* no longer reproduces its own recipe (stale, written in the present tense). T424 was **right** not to edit it -- `conformance.sh` was contended and T431 held that region, which T440 verified. But it exists only in prose. **File it as work with its evidence, or close it with a re-measurement.** T431 has since landed; check whether the region is now free.\n\n## 4. C-T440-4/5/6 (LOW) -- close each on its own evidence, report per item\n* the `pipefail` sentence is **over-broad**: a git failure *with output* does surface as 128, and the abort then **misattributes**. Narrow the sentence to what is true.\n* an exported **`T381_DRIVE_INNER` disables the amended guard entirely** -- an environment variable that switches a guard off is the fail-open shape this whole chain is about. Judge whether it should be reachable at all.\n* `BEFORE_REF=main` **aborts at D-R2 exit 4**, it does not 'refuse' as stated. Correct the wording.\n\n## What is settled -- do not re-litigate or re-drive\nT440 re-derived T424's substance and **falsified none of it**: both F-2 halves reproduce from primitives; `pipefail` is the RIGHTMOST NON-ZERO status, verified three ways, position not magnitude; all four buffered-writer matrices reproduce 8/8; **zero live STATE-LOSS sites**, confirmed by T440's own adjudicator and proven non-vacuous against an injected `sel … | cat` specimen; and the 'bash waits for every pipeline member' construction survived a writer that writes **one second after its producer dies**. There is **no GNU `tee` on this host**, so the `[UNVERIFIED]` bound on GNU `tee` stands for you too -- do not claim to have closed it.\n\n**BAR:** run it on your finished COMMITTED tree; scratch **OUTSIDE the repo, in /tmp**; test the `probe = ` line's PRESENCE before its value.",
-      "note": "FILED 2026-08-29 by fire 20260829-080002 from T440's review of T424. The MAJOR was confirmed by the driver running the instrument on a detached scratch checkout of T424's own branch. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T442-t440-conditions. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 from T440's review of T424. The MAJOR was confirmed by the driver running the instrument on a detached scratch checkout of T424's own branch. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T442-t440-conditions. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. || COMPLETE 2026-08-29 iter5, 6 commits, bar EXIT 0 probe PRESENT x1 up VERDICT PASS 46/7884 (run 3x identical). Scope verified clean by the driver against the MERGE-BASE (a two-dot main..branch diff misattributes once main advances). C-T440-1 MAJOR FIXED, probe assembled at runtime, transcript re-captured on a clean detached clone. Class sweep: 4 instruments spell a self-matching probe, all 4 invert, all 4 fail-CLOSED, 0 fail-OPEN; 3 are live and unowned. C-T440-6 does NOT reproduce -- filed as F-T442-1 against the reviewer. HELD for T447.",
       "branch": "softhouse/T442-t440-conditions"
     },
     {
@@ -6660,6 +6660,23 @@
         ".softhouse/reviews/t449-review-t350/"
       ],
       "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5, immediately on T350 going terminal."
+    },
+    {
+      "id": "T447",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "role": "reviewer",
+      "target": "docs",
+      "title": "INDEPENDENT review of T442 -- a control repaired at runtime, a class sweep claiming 0 fail-OPEN, and a reviewer condition the author says does not reproduce",
+      "branch": "softhouse/T447-review-t442",
+      "dependencies": [
+        "T442"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/t447-review-t442/"
+      ],
+      "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5, immediately on T442 going terminal."
     }
   ],
   "cross_corroboration": {
