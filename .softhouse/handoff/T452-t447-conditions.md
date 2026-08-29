@@ -411,7 +411,8 @@ before using it. **The pin is untouched and the frontier is back at 108.** This 
 repair T447 made to its own hard-coded path, and the same one T440 made before that — the third
 time this exact guard has caught this exact reflex, which is worth a `patterns.md` note.
 
-BAR TRANSCRIPT: `capture/t452-t447-conditions/out/T452-BAR.txt`
+BAR TRANSCRIPT: `capture/t452-t447-conditions/out/T452-BAR.txt`, taken on the clean committed
+tree at **`6606254d`** (`git status --porcelain` = 0 paths, before and after).
 
 ```
 grep -c 'probe = ' -> 1     (PRESENCE tested FIRST; absence would be a harness failure, not `down`)
