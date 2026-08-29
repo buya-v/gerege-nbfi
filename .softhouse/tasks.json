@@ -4906,10 +4906,10 @@
       ],
       "context": null,
       "dependencies": [],
-      "status": "needs_review",
+      "status": "merged",
       "attempts": null,
       "description": "MEASURED BY THE DRIVER OF FIRE 20260828-140005, not hypothesised. `ready-tasks.py --reconcile` REFUSED to demote T339 with the reason 'a live ref carrying this task's id exists under another name; needs_retry would duplicate a line that still exists'. The ref it found was `softhouse/rescued-t339-base-20260828-080001`. Its ENTIRE content is: a 219-line DELETION from .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt, and `.t347-postcheckout-marker` -- which belongs to T347, a DIFFERENT task. `git ls-tree -r --name-only` on that ref matches NOTHING containing 't339'. The branch is named for the WORKTREE (`/private/tmp/t339-base`), not for work T339 did. T339 had produced no review at all, and the refusal left it `in_progress` -- which STEP 5.5 item 4 names exactly: 'Leaving it in_progress tells the next fire that work is happening when nothing is.' The driver had to override the reconciler by hand.\n\nT330 is not wrong to refuse on evidence; it is wrong about what counts as evidence. A branch NAME is an assertion by whoever created the branch -- and the creator here was the WRAPPER'S OWN SWEEP, which names rescue branches after the worktree directory. So the reconciler is reading its own sibling's naming convention back as independent corroboration. That is a self-confirming signal, the same shape as P-80.\n\nYOUR JOB: make the refusal turn on CONTENT. At minimum a ref should only block demotion if it carries a diff-vs-main that plausibly belongs to the task -- e.g. a tracked path naming the id, a handoff for the id, or a commit subject naming the id. DECIDE AND ARGUE the predicate; do not silently drop the refusal, because T330 was filed against a REAL incident where a demotion destroyed merged work. The failure modes point in OPPOSITE directions and you must state which way you chose to fail and why.\n\nDRIVE IT RED FIRST against the real ref `softhouse/rescued-t339-base-20260828-080001` (still present, deliberately unpruned as evidence) and against at least one ref that SHOULD block demotion. A guard you have not seen fail is not a guard (P-22). Establish by grep what automatic path invokes the changed code (P-45).\n\nSCOPE: ready-tasks.py and your own capture dir. Do NOT touch conformance.sh (held by T323) or fire-program.sh.",
-      "note": "Filed by the driver of fire 20260828-140005 from a first-hand override it had to perform. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T350-reconcile-content. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. || COMPLETE 2026-08-29 iter5. Bar EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. Scope verified clean by the driver (git diff --name-only main..branch: 0 paths outside files_hint). Predicate: a ref/name/ancestry withholds demotion only by carrying CONTENT plausibly belonging to the task. Calibrated 175 heads: 173 keep merged, 2 flip to stillborn (both live T431-defect instances). HELD for T449.",
+      "note": "Filed by the driver of fire 20260828-140005 from a first-hand override it had to perform. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T350-reconcile-content. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. || COMPLETE 2026-08-29 iter5. Bar EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. Scope verified clean by the driver (git diff --name-only main..branch: 0 paths outside files_hint). Predicate: a ref/name/ancestry withholds demotion only by carrying CONTENT plausibly belonging to the task. Calibrated 175 heads: 173 keep merged, 2 flip to stillborn (both live T431-defect instances). HELD for T449. || MERGED 2026-08-29 iter5 with T449. Merge result graded BEFORE main was touched (scratch worktree outside the repo): EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884, frontier 11==11, deadOccurrences 108 unmoved, reconciler ownership GREEN 13/13 RED 8/13. Tree identity verified: pushed tree == graded tree == 4d7e1f91. T449 conditions filed as T451.",
       "branch": "softhouse/T350-reconcile-content"
     },
     {
@@ -6646,7 +6646,7 @@
     },
     {
       "id": "T449",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "role": "reviewer",
@@ -6659,7 +6659,7 @@
       "files_hint": [
         ".softhouse/reviews/t449-review-t350/"
       ],
-      "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5, immediately on T350 going terminal."
+      "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5, immediately on T350 going terminal. || MERGED 2026-08-29 iter5. VERDICT: APPROVED WITH CONDITIONS -- 2 MAJOR, 1 MINOR, 4 LOW. Partition enumeration: 256 states driven by RUNNING the predicates, 0 with no verdict and 0 with two -- it partitions, unlike the seven-arm lock rules. Calibration re-derived independently: 174 heads today, 173 keep merged (reproduces EXACTLY), 1 flips; the delta from T350 175/173/2 is explained -- T350 and T412 branches gained commits and left the population, and T449 OWN REVIEW BRANCH entered it as a THIRD live T431-shape instance."
     },
     {
       "id": "T447",
@@ -6694,6 +6694,23 @@
         ".softhouse/reviews/t450-review-t412/"
       ],
       "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5. NOTE FOR THE REVIEWER: this gate is LIVE on the driver's own repo right now, running from an install-time SNAPSHOT because the tracked gate is not yet on main. It is the only worker output this fire that is already enforcing before merge."
+    },
+    {
+      "id": "T451",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "role": "coder",
+      "target": "code",
+      "title": "T449's two MAJORs on T350 -- the stillborn arm NEVER CONSULTS THE REF STORE, and the ref side argues for generosity then applies the strict anchor",
+      "branch": null,
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/bin/ready-tasks.py",
+        ".softhouse/capture/t451-t449-conditions/"
+      ],
+      "description": "FILED 2026-08-29 by fire 20260829-080002 iter5 from T449's independent review of T350. BOTH MAJORS ARE COVERAGE DEFECTS IN A MERGED FIX, NOT REGRESSIONS -- main before T350 was strictly worse. Re-derive both; do not inherit T449's cases.\n\n## C-T449-1 (MAJOR) -- the new `stillborn` arm never consults the ref store\n`refs_carrying_content` has exactly ONE caller (`_absent_verdict:1306`), so once `rev-parse` resolves the recorded branch the refs are out of the picture. IDENTICAL CONTENT EVIDENCE therefore yields OPPOSITE verdicts depending only on whether the branch was deleted: REFUSE if deleted, DEMOTE if it still stands at the dispatch commit (T449 fixture cases G vs G2). The emitted note asserts 'it is UNSTARTED' while a live ref carries the work -- a record that says the reverse of the truth, which is the entire class T350 was filed against. Produced by the SHIPPED sweep: `fire-program.sh:3127` `checkout -b` does NOT delete the task branch, and `rescue_map` only annotates. T449 measured ZERO live instances today, so this is latent, not burning.\n\n## C-T449-2 (MAJOR) -- the ref side argues generosity in its own comment, then applies the strict OWNING anchor\n`ref_content_evidence` states in its own comment that the ref side must be GENEROUS, then applies the strict OWNING anchor to the ref's diff. A sweep-rescued ref whose boilerplate subject names no id, and whose work sits under ANOTHER task's condition-bundle directory, reads `name-only-refs` -> DEMOTE while printing 'NOT ONE of them carries any content belonging to it' -- which is FALSE (T449 case K). T449 verified a one-test relaxation to `anywhere` fixes K AND STILL LEAVES THE T339 INCIDENT REF `name-only` (evidence: t449 out/34-proposed-fix.txt). T405/T408 are the on-main analogue, instantiated. THE DRIVER DELIBERATELY DID NOT HAND-APPLY THIS FIX -- an unreviewed driver edit is its own defect class (T306). Re-derive it, drive it, and land it with both directions shown.\n\n## MINOR / LOW, close each on its own evidence\n- C-T449-3 (MINOR): the shipped cardinal '313 handoffs use <id>-<slug>.md' is 542-229 and wrongly counts 205 NON-.md files. At b102875c: 337 .md, 229 bare, 108 other (29 of them A2-n.md, which DO key). The module's own runtime note already prints 337 -- so ready-tasks.py ships a number its own code contradicts.\n- C-T449-4 (LOW): '24 paths, every one under t286-t268-retry/' is 23 there + 1 under .softhouse/reviews/t291-review-t286/.\n- C-T449-5 (LOW): MAX_REFS_PROBED=8 -- a carrier past position 8 turns REFUSE into DEMOTE (case H). Max fan-out on the real repo is 3. Judge whether a cap on a SAFETY refusal is acceptable at all.\n- C-T449-6 (LOW): main_tree() cost is 0.070s in the code and 0.083s in the handoff.\n- C-T449-7 (LOW): a live worker before its first commit loses an accidental protection -- T449 observed this on its OWN branch.\n\nSCOPE: ready-tasks.py and your own capture dir. Bar on the finished committed tree, scratch OUTSIDE the repo, probe PRESENCE before value.",
+      "note": "FILED 2026-08-29 by fire 20260829-080002 iter5 from T449's review. T350 and T449 are both MERGED; these are residuals on main."
     }
   ],
   "cross_corroboration": {
