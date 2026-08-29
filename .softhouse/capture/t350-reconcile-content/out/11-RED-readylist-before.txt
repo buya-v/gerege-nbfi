@@ -1,0 +1,34 @@
+==============================================================================
+T350 READY-LIST DRIVE -- RED -- ready-tasks.py as it stands on main (3d7fef80)
+module under test: /tmp/t350-ready-tasks-RED.py
+module sha256:     3d7fef805a55bf21f233db911232272fd50b1aa18b5b81e30b0444fb5ba43dbb
+fixture main:      b102875c7e0d1b7f1ba4339180cedc5e207dfb11
+  T421 needs_review, branch softhouse/T421-t406-conditions -- DELETED in fixture
+  T428 needs_retry,  branch softhouse/T428-review-t421     -- DELETED in fixture
+  T351 needs_retry,  branch softhouse/T351-old-name        -- never existed;
+       softhouse/T351-progress-accounting is live and carries t351 content
+  T339x needs_retry, branch softhouse/T339x-never-existed  -- truly nothing
+tracked on fixture main:
+  paths naming t421: 70
+  paths naming t428: 36
+  paths naming t351: 0
+  paths naming t339x: 0
+==============================================================================
+IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (0)
+
+READY (4)
+  T339x    opus   code    CONTROL -- genuinely unstarted, must stay silently READY
+  T351     opus   code    CONTROL -- work lives on a live ref, NOT on main
+  T421     opus   review  T406's six conditions on T391
+  T428     opus   review  INDEPENDENT review of T421
+
+BLOCKED (0)
+
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+DEPENDENCY EDGES THAT RESOLVE NOWHERE (0)
+  NONE. Every edge was decided against tasks.json or an archived run file,
+  and this line is printed only after checking both -- it is not a default.
+==============================================================================
+resolver exit: 0
