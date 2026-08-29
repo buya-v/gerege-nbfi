@@ -10,10 +10,26 @@ are about laundering, and they point in opposite directions:
         rather than being a restatement of ARM C.
 
   f1-13b  mutate a POST-FORK observation AND rewrite its manifest row.
-        Nothing catches it, at either ref. That is the DISCLOSED RESIDUAL: there is no
-        committed baseline older than HEAD for those 632 observations. Driving it is how
-        the boundary statement in verify-capture-integrity.py's docstring becomes a
-        measurement instead of a hope.
+        [CORRECTED BY T433 / C-T423-1 — WHAT STOOD HERE WAS FALSE, IN A TRACKED EXECUTABLE.]
+        This paragraph used to read, verbatim: "Nothing catches it, at either ref. That is
+        the DISCLOSED RESIDUAL: there is no committed baseline older than HEAD for those 632
+        observations. Driving it is how the boundary statement in
+        verify-capture-integrity.py's docstring becomes a measurement instead of a hope."
+        The last claim was not a measurement and not a hope — it was FALSE, and it was
+        load-bearing: T393's handoff reasoned FROM the impossibility to send the next task
+        to build a substitute artefact this repository already contained.
+        THE BASELINE EXISTS AND ALWAYS DID: the blob at the commit that FIRST ADDED each
+        observation, `git log --diff-filter=A -- <path>`. It is an object inside an
+        ALREADY-COMMITTED commit, so laundering MANIFEST.sha256 inside the mutating commit
+        cannot reach it. T433 swept the WHOLE 632 — two independent derivations of the birth
+        commit agreeing 632/632; all 632 born STRICTLY OLDER than the tip; 0 born at the
+        tip; 631 still byte-identical to their birth blob; exactly one legitimate re-capture,
+        out/A2-370-db-ledger-state.txt, adjudicated by digest
+        (.softhouse/capture/t433-t423-c1/out/00-whole-632-sweep.txt).
+        f1-13b IS NOW CAUGHT, by ARM F — section 8 of verify-capture-integrity.py — which
+        exits 1 naming the laundered file. This script still LAUNDERS the row, because
+        laundering is exactly what ARM F must survive; what changed is the expected colour,
+        from `0 0` to `0 1` in 10-drive-conditions.sh.
 
 argv: <clone root> <capture-relative name>.  REFUSES (exit 2) if the row is not there —
 a laundering step that silently did nothing would turn a residual case into a caught one
