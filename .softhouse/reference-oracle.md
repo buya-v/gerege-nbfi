@@ -1217,3 +1217,30 @@ appends and it does that correctly. They are the **shape of the probe that would
 are written here so that "the baseline ran green" is quoted with its scope attached. Do not fire any of
 them at this tenant; if you must, none of the recording obligations in § 3 is waived by the instrument's
 blindness — they are made *more* important by it.
+
+## Oracle incidents — local fire `20260829-080002`, iteration 6 (2026-08-29)
+
+Two unexplained terminations of `fineract-fineract-1` in one fire, **both `Exited (143)` — SIGTERM**, not a crash
+and not an OOM kill (137). Neither was caused by any task; both were observed by workers mid-run.
+
+| # | Observed by | Symptom | Recovery |
+|---|---|---|---|
+| 1 | `T462` | first bar on its committed tree returned `exit 2 / UNUSABLE`; **all guards green, only reachability failed**; the pre-commit run had read `up` | worker restarted both containers, re-ran to PASS |
+| 2 | `T479` | oracle down mid-review and did not return; **the Docker daemon itself was gone** (`unix:///Users/buv/.docker/run/docker.sock` absent), Postgres 5432 closed | driver relaunched Docker Desktop (daemon up in 10 s, 29.6.2), `docker start fineract-db-1 fineract-fineract-1`, healthy after 90 s |
+
+**Both were correctly diagnosed as outages rather than corpus faults**, because the probe line was *printed* and
+read `down` — the presence-before-value discipline is what distinguishes this from a HARD-guard failure, which
+also exits 2 but prints **no** probe line at all.
+
+**T479 did not claim a PASS for its own final bar**, reporting `probe presence 1 / value down / VERDICT: UNUSABLE /
+exit 2` with 0 guard refusals, and said so explicitly. That is the correct handling and is recorded here as the
+worked example: **exit 2 is never a pass, and an outage is never reported as a green bar.**
+
+**Unresolved:** what sends the SIGTERM. Not investigated this fire — it is a host-level question (Docker Desktop
+lifecycle, resource pressure, or a desktop session event), not a migration question. Filed as a standing note so
+the next fire that sees `Exited (143)` recognises it as recurring rather than novel. Parity is unaffected: the
+bar was re-run green after each recovery, 46 vectors / 7884 cells against the pinned oracle.
+
+Connection facts unchanged: `https://localhost:8443/fineract-provider/actuator/health`, PostgreSQL `localhost:5432`,
+pinned Fineract checkout `/Users/buv/fineract @ 426a23544`. **PostgreSQL only** — no MySQL/MariaDB/Oracle Database
+image was started at any point.
