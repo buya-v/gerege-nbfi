@@ -552,3 +552,23 @@ recorded here — `out/bar-base-RELEASED.txt` — is **not** an outage: it print
 it is preceded by `T316-DEADPATH-FRONTIER: REFUSED rows=125 pinned=108 added=17 removed=0` and
 `guard_dead_path_frontier FAILED`, and it is the guard working exactly as P-84 describes. No PASS
 is reported anywhere in this review on a run where the oracle was down.
+
+### 9a. Re-read on the branch tip
+
+The bar in §9 ran on `b3d92c31`. It was re-run on `f102a68f`, the tip that carries the
+cheap-root drive, and is green there too (`out/bar-T471-branch-tip.txt`):
+
+```
+BAR_EXIT=0
+grep -c 'probe = '  ->  1
+conformance: reference oracle (https://localhost:8443/...) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+T316-DEADPATH-CENSUS: corpus=1693 deadFiles=75 deadOccurrences=108 resolving=1594
+                      indeterminate=126 prose=428
+```
+
+The corpus does not move between the two runs, and that is a property rather than a
+coincidence: the census selector is `git ls-files '<dot>/*.py' '<dot>/*.sh'`, and everything
+`f102a68f` adds is `.md` or `.txt`. The final commit below adds only this paragraph and one
+transcript, so the same argument covers it — which is exactly the reasoning I checked and
+confirmed for T465's own `1689 → 1690` explanation in §1.
