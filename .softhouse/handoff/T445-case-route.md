@@ -31,9 +31,11 @@ Condition-by-condition disposition is `evidence/02-condition-by-condition.md`.
 
 ## WHAT CHANGED IN `conformance.sh`
 
-`+~470 / −~60`, entirely inside `guard_guards_dir_registration`, plus one new function beneath it.
-No arithmetic, no money, no float, no ledger, no vector, no DEC-n, no contract, no database driver,
-no pin change [VERIFIED: read the whole diff].
+Entirely inside `guard_guards_dir_registration`, plus one new function beneath it. **No line count
+is restated here** — `git diff --stat main...HEAD -- .softhouse/conformance.sh` derives it, and a
+count restated beside the thing that derives it is P-80's own defect. No arithmetic, no money, no
+float, no ledger, no vector, no DEC-n, no contract, no database driver, no pin change
+[VERIFIED: read the whole diff].
 
 1. **The member's own `REACHED-BY` row is read from its TRACKED BLOB** (`git cat-file blob
    "$member_blob"`, already in hand from the pinned lookup that decided the mode) instead of from
