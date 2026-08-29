@@ -1,24 +1,12 @@
-# T424-comment-claims -- RE-CAPTURED BY T442 (C-T440-1), on committed bytes.
-#
-# The transcript this replaces recorded disagreements=0 while the committed code produced
-# disagreements=1 and exit 1: CLAIM 3's no-match control spelled its probe as a literal in
-# the instrument's own tracked source, so `git grep` matched the instrument itself. The
-# probe is now ASSEMBLED AT RUN TIME. This capture was taken the way the old one was not:
-# on an independent, CLEAN, DETACHED clone of the commit, not in the author's worktree.
-#
-#   commit          : 1294b95d38001d3417283a3f2fd7695864ce66fc
-#   checkout        : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t442-cap.5ORuOjvG/wt  (clone, detached, 0 modified path(s))
-#   host            : Darwin 25.5.0 arm64  bash 3.2.57(1)-release  git version 2.50.1 (Apple Git-155)
-#   date            : 2026-08-29T02:09:53Z (UTC)
-#
-# NOT BYTE-REPRODUCIBLE, BY DESIGN, AND THIS IS THE POINT: the run-time probe carries the
-# pid, $RANDOM and the epoch second, so it differs every run -- which is exactly why no
-# tracked file can ever contain it. What reproduces is the VERDICT. The machine check for
-# that is instruments/t442-c1-reproduction-drive.sh (ARM A green / ARM B red), transcript
-# out/T442-C1-REPRODUCTION.txt.
-# =============================================================================================
+### T442 RED -- C-T440-1
+### subject : .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh (as committed)
+### where   : /tmp/t442/red  (clean clone, detached)
+### commit  : b102875c7e0d1b7f1ba4339180cedc5e207dfb11
+### dirty   : [0] modified paths (0 = committed bytes only)
+### host    : Darwin 25.5.0 arm64  bash 3.2.57(1)-release  git version 2.50.1 (Apple Git-155)
+### expect  : the CONTROL at line 103 spells its probe in tracked source, so git grep FINDS it
 
-subject: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t442-cap.5ORuOjvG/wt/.softhouse/conformance.sh  (5500 lines, sha256 a6888119b0ae1ca1)
+subject: /private/tmp/t442/red/.softhouse/conformance.sh  (5500 lines, sha256 a6888119b0ae1ca1)
 
 ==============================================================================
 CLAIM 1 -- 'In a UTF-8 locale BSD grep goes blind to the part of ONE LINE at and
@@ -61,26 +49,16 @@ CLAIM 3 -- '`git grep` exits 1 on NO MATCH and >1 on ERROR, so the 1 is an
             ABSENCE and not a failure.'
   at line(s): 2134 
 ==============================================================================
-  runtime probe   : zzq-68681-3494-1787969394-t442-runtime-assembled
-  spelled in this instrument? count=0 (0 = built at run time, never in tracked bytes)
-  no match (repo) : rc=1
-  no match        : rc=1
+  no match        : rc=0
   invalid pattern : rc=128
   match           : rc=0
-  literal probe spelled in tracked source : rc=0  <- THE C-T440-1 INVERSION
-  probe not spelled in this file                       expected=0          actual=0          OK
-  no match, whole repo -> 1                            expected=1          actual=1          OK
-  no match -> 1                                        expected=1          actual=1          OK
+  no match -> 1                                        expected=1          actual=0          *** DRIVE DISAGREES
   error   -> >1                                        expected=yes        actual=yes        OK
   match   -> 0                                         expected=0          actual=0          OK
-  a tracked literal DOES self-match -> 0               expected=0          actual=0          OK
   VERDICT: reproduces. git 2.50.1
-  C-T440-1 CLOSED: the no-match control is now assembled at run time, so committing this
-  instrument cannot change what it measures. The last arm above shows what the old
-  literal probe did: rc=0 -- a match -- where the control needed rc=1.
 
 ==============================================================================
-T424-COMMENT-CLAIMS-RESULT: disagreements=0
-Every claim came out as declared.
+T424-COMMENT-CLAIMS-RESULT: disagreements=1
+*** THIS DRIVE FAILED.
 
-ACTUAL EXIT=0
+ACTUAL EXIT=1
