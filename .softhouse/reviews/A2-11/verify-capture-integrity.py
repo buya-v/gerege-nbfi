@@ -247,6 +247,7 @@ import ast
 import hashlib
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -1005,6 +1006,11 @@ FALSE_CLAIMS = tuple(" ".join(w) for w in (
     ("not", "closable", "by", "internal", "consistency"),
 ))
 TAG = "QUOTED-" + "FALSE-CLAIM"
+# The `%` conversions and `{}` fields `_fold` DELETES when their arguments do not
+# fold statically. Deleting is the fail-closed choice: it leaves the surrounding
+# literal text intact as a payload rather than guessing what would be substituted.
+_CONVERSION = re.compile(r"%[-#0 +]*[0-9*]*(?:\.[0-9*]+)?[hlL]?[diouxXeEfFgGcrsa%]")
+_FIELD = re.compile(r"\{[^{}]*\}")
 # file -> the POSITIVE half: the replacement text that must still be present. P-35: every
 # vacuous guard in this repo is a negative one, so each negative is paired with a positive. A
 # file that was simply DELETED, or emptied, fails the positive half.
@@ -1054,6 +1060,39 @@ def strip_trailing_comment(line):
     return "".join(out)
 
 
+def strip_trailing_comment_posix(line):
+    """As `strip_trailing_comment`, but `#` opens a comment only at the START OF A WORD.
+
+    That is the shell's own rule, and it is the whole difference between `${VAR#prefix}` (a
+    parameter expansion) and ` # tag` (a comment). T467 declared the bare-`${VAR#prefix}`
+    route OPEN because the naive rule truncates the line at the expansion and loses any
+    payload after it. T476 drives that route (fixture V2) and closes it.
+
+    THIS IS EMITTED AS AN ADDITIONAL PAYLOAD, NEVER AS A REPLACEMENT. In python `#` really
+    does open a comment mid-word (`x = "..."#tag`), so a rule that only used the POSIX
+    spelling would read the tag INTO the payload and fall silent — fail-OPEN. Two spellings,
+    both emitted, and a claim has to survive both to get through.
+    """
+    out, quote, i = [], None, 0
+    while i < len(line):
+        ch = line[i]
+        if quote:
+            if ch == "\\" and i + 1 < len(line):
+                out.append(ch)
+                out.append(line[i + 1])
+                i += 2
+                continue
+            if ch == quote:
+                quote = None
+        elif ch in "\"'":
+            quote = ch
+        elif ch == "#" and (i == 0 or line[i - 1] in " \t;&|()"):
+            break
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
 def quoted_segments(line):
     """Every string-literal BODY on one line, after any out-of-quote comment is cut.
 
@@ -1084,16 +1123,125 @@ def quoted_segments(line):
     return segs
 
 
+def join_continuations(text):
+    """(joined line, first lineno) for every LOGICAL shell line, backslash-newlines folded.
+
+    A command wrapped with a trailing backslash is ONE command and prints ONE sentence.
+    Reading it as two lines is reading the wrong artefact, which is this section's whole
+    subject. T467 declared the wrapped route open and asserted predicate 1 catches it; T476
+    measured that and it does NOT (fixtures W2, W3 — see the checks below), so it is closed
+    here instead of mitigated by a sentence.
+    """
+    out, cur, start = [], [], None
+    for i, line in enumerate(text.split("\n"), 1):
+        if start is None:
+            start = i
+        if line.endswith("\\"):
+            cur.append(line[:-1])
+            continue
+        cur.append(line)
+        out.append(("".join(cur), start))
+        cur, start = [], None
+    if cur:
+        out.append(("".join(cur), start or 1))
+    return out
+
+
+def squeeze(s):
+    """Collapse runs of whitespace to one space.
+
+    A sentence printed across a continuation reaches the reader with the second line's
+    INDENTATION inside it. Matching raw bytes would miss the claim by the width of an indent,
+    which is not a distinction any reader makes. Applied to the PAYLOAD before it is compared
+    to the claim patterns; NOT applied to the tag test, where the raw payload is the stricter
+    question (a tag that is only present after normalisation is not present).
+    """
+    return " ".join(s.split())
+
+
+def _fold(node, depth=0):
+    """The static VALUE of an expression, or None. Reads the AST; never executes anything.
+
+    Constants (str AND bytes), f-strings, `+` concatenation, `%` formatting, `.format()`,
+    `.join()` and the identity-ish string methods. This exists because T472 measured three
+    families that carry the whole claim in literals on one line and were invisible to a rule
+    that only collected bare `str` Constants: `b"..."`, `"...%s..." % "..."`, `"a" + "b"`.
+    Where the arguments do not fold, a `%` conversion or a `{}` field is DELETED rather than
+    guessed, so the surrounding literal text is still offered as a payload.
+    """
+    if depth > 12:
+        return None
+    if isinstance(node, ast.Constant):
+        if isinstance(node.value, str):
+            return node.value
+        if isinstance(node.value, bytes):
+            return node.value.decode("utf-8", "replace")
+        return None
+    if isinstance(node, ast.JoinedStr):
+        parts = []
+        for v in node.values:
+            if isinstance(v, ast.Constant):
+                parts.append(_fold(v, depth + 1) or "")
+            elif isinstance(v, ast.FormattedValue):
+                parts.append(_fold(v.value, depth + 1) or "")
+            else:
+                parts.append("")
+        return "".join(parts)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        left, right = _fold(node.left, depth + 1), _fold(node.right, depth + 1)
+        if left is None or right is None:
+            return None
+        return left + right
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mod):
+        fmt = _fold(node.left, depth + 1)
+        if fmt is None:
+            return None
+        vals = node.right.elts if isinstance(node.right, ast.Tuple) else [node.right]
+        folded = [_fold(a, depth + 1) for a in vals]
+        if all(f is not None for f in folded):
+            try:
+                return fmt % tuple(folded)
+            except Exception:
+                pass
+        return _CONVERSION.sub("", fmt)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+        recv = _fold(node.func.value, depth + 1)
+        if recv is None:
+            return None
+        attr = node.func.attr
+        if attr in ("decode", "encode", "strip", "lstrip", "rstrip",
+                    "lower", "upper", "title", "casefold"):
+            return recv
+        if attr == "format":
+            folded = [_fold(a, depth + 1) for a in node.args]
+            if node.args and all(f is not None for f in folded):
+                try:
+                    return recv.format(*folded)
+                except Exception:
+                    pass
+            return _FIELD.sub("", recv)
+        if attr == "join":
+            if node.args and isinstance(node.args[0], (ast.Tuple, ast.List)):
+                folded = [_fold(a, depth + 1) for a in node.args[0].elts]
+                if folded and all(f is not None for f in folded):
+                    return recv.join(folded)
+    return None
+
+
 def python_payloads(text):
-    """Every string CONSTANT in a python file that is not inert, as (lineno, value).
+    """Every string a python file CARRIES to a reader, as (lineno, value).
 
     INERT means "cannot reach a reader": a module/class/function DOCSTRING, and any bare
     string EXPRESSION STATEMENT. Comments are not in the AST at all, so they are excluded by
-    construction. EVERYTHING ELSE IS A PAYLOAD — this never asks whether the constant is
-    passed to `print`, to `sys.stdout.write`, to a logger, to `printf` through subprocess, or
-    stored in a variable that is printed forty lines later. That is the whole point (T467 /
-    F-T464-1): the question is what a line CARRIES to a reader, not which builtin carries it.
-    Over-approximating in the payload direction is the FAIL-CLOSED direction.
+    construction. EVERYTHING ELSE IS A PAYLOAD — this never asks whether the value is passed
+    to `print`, to `sys.stdout.write`, to a logger, to `printf` through subprocess, or stored
+    in a variable printed forty lines later. The question is what a line CARRIES to a reader,
+    not which builtin carries it.
+
+    T476 widened this past `str` Constants, because T472 measured that a `bytes` Constant is
+    not a `str` Constant and the rule was BLIND to it — `os.write(1, b"<claim>")` went
+    through. Bytes literals, f-strings, `%`-formatting, `+` concatenation and `.format()` are
+    all folded by `_fold` and offered as payloads.
     """
     tree = ast.parse(text)
     inert = set()
@@ -1109,53 +1257,103 @@ def python_payloads(text):
             inert.add(id(node.value))
     out = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and isinstance(node.value, str) \
-                and id(node) not in inert:
-            out.append((getattr(node, "lineno", 0), node.value))
+        if id(node) in inert:
+            continue
+        if isinstance(node, ast.Constant):
+            v = _fold(node)
+            if v is not None:
+                out.append((getattr(node, "lineno", 0), v))
+        elif isinstance(node, (ast.JoinedStr, ast.BinOp, ast.Call)):
+            v = _fold(node)
+            if v:
+                out.append((getattr(node, "lineno", 0), v))
+    return out
+
+
+def emitter_payloads(text):
+    """T455's `emitted_payload`, KEPT — the rule the payload rule replaced, as its own arm.
+
+    `echo ...` / `print(...)`, whole line minus the out-of-quote comment. It is here for one
+    reason and it is the reason T472 raised a MAJOR: T467 replaced this rule with a wider one
+    WITHOUT EVER MEASURING THE TWO AGAINST EACH OTHER, and the replacement was not a superset.
+    Keeping this arm inside `printed_payloads` makes the superset relation STRUCTURAL — true
+    by construction, not by whichever fixtures the next author happens to think of. Control
+    (n) below asserts it and goes RED if this arm is ever unwired.
+    """
+    out = []
+    for i, line in enumerate(text.split("\n"), 1):
+        stripped = line.lstrip()
+        if stripped.startswith("echo ") or stripped.startswith("echo\t") \
+                or stripped.startswith("print("):
+            out.append((i, strip_trailing_comment(line)))
     return out
 
 
 def printed_payloads(text, rel):
-    """Every reader-visible payload in one file, as (lineno, payload).
+    """Every reader-visible payload in one file, as (lineno, payload). THREE ARMS, UNIONED.
 
-    T467 / F-T464-1 — THE EMITTER CLASS, CLOSED. T455 shipped an `emitted_payload` that
-    recognised exactly two spellings: a line whose first token is `echo` and a line whose
-    first token is `print(`. THREE OTHER SPELLINGS WENT STRAIGHT THROUGH, measured at T455's
-    own merge commit, each smuggling the tagged-away sentence back as a live untagged
-    assertion with section 10 at EXIT 0:
+    WHAT IS CLOSED, WHAT IS NOT, AND WHAT REGRESSED — the honest version. T467 shipped this
+    docstring saying "THE EMITTER CLASS, CLOSED". That sentence was FALSE, and it was an
+    UNTAGGED FALSE CLAIM INSIDE THE FILE WHOSE SUBJECT IS UNTAGGED FALSE CLAIMS. T472
+    measured two spellings that reproduce the original harm at T467's tip AND THAT T455's
+    narrower rule had CAUGHT — `echo <words, UNQUOTED>  # <tag>` (no quote character on the
+    line, so the quoted-segment extractor returned nothing) and
+    `print(b"<claim>".decode())  # <tag>` (a bytes Constant is not a str Constant). T476
+    re-derived both at first hand and repaired them. NO CLASS IS CLAIMED CLOSED HERE.
 
-        printf '%s\\n' "<the claim>"     # <tag>
-        >&2 echo "<the claim>"           # <tag>
-        sys.stdout.write("<the claim>")  # <tag>
+      ARM 1  `emitter_payloads` — T455's rule, kept verbatim. The union is therefore a
+             PROVABLE superset of the rule this replaced: the regression T472 found cannot
+             recur by construction; the SUPERSET CONTROL below is the wiring tripwire on
+             that, and it is the ONLY check that reddens when the arm is removed.
+      ARM 2  `python_payloads` — for a .py that parses: every non-inert string it CARRIES,
+             including bytes literals, f-strings, `%`-formatting, `+` concatenation and
+             `.format()`, folded statically by `_fold`.
+      ARM 3  the lexical shell reading — for .sh, and as the fallback for a .py that will
+             not parse. Over CONTINUATION-JOINED logical lines, under BOTH comment rules
+             (naive `#` and POSIX word-start `#`), it offers the quoted segments AND the
+             whole code text of the line. The whole-code-text half is what catches an
+             UNQUOTED word; the POSIX half is what survives `${VAR#prefix}`.
 
-    and this is not a hypothetical reach: `printf` is already used 12 times in
-    10-drive-conditions.sh and 5 times in run-all.sh, two of the four files this section
-    guards. An enumeration of emitter names is a list that the next author extends without
-    reading, so the repair is NOT to add three names. It is to stop asking which builtin
-    prints and start asking what the line CARRIES:
+    THE FALLBACK CATCHES `ValueError` AS WELL AS `SyntaxError`. `ast.parse` raises
+    ValueError, not SyntaxError, on a NUL byte, so before T476 a guarded .py containing one
+    took the grader down by traceback — the F-T464-2 defect one file over. T472 reasoned it;
+    T476 drove it (fixture D5) and closed it.
 
-      * python  -> every string CONSTANT that is not a docstring or a bare string statement
-                   (ast; comments are absent from the tree, so they cost nothing to exclude);
-      * shell   -> every quoted SEGMENT left after the out-of-quote `#` comment is cut;
-      * a .py that will not PARSE -> the shell rule, so a syntax error cannot buy silence.
+    ARM 3 IS DELIBERATELY *NOT* RUN ON A .py THAT PARSES, AND THAT IS A MEASUREMENT, NOT A
+    CONVENIENCE. Running it there raises the false-positive count over the 1,687 tracked
+    .py/.sh from 6 to 9, flags THIS FILE (a guarded file — the guard would be red on a clean
+    tree), and fires on the inert-DOCSTRING control, which is precisely how a guard gets
+    deleted instead of fixed (P-29). The AST arm is what makes "a docstring prints nothing"
+    expressible at all.
 
-    FAIL-CLOSED BY CONSTRUCTION: a non-emitting line that merely CARRIES a quoted claim (a
-    grep pattern, a comparison string) is judged as if it printed. The cost of that is
-    measured, not assumed — on the four guarded files at this ref it is ZERO false positives.
-    WHAT IS DELIBERATELY NOT COVERED, and stays open: a claim assembled at RUNTIME and printed
-    through a VARIABLE (`printf '%s' "$SENTENCE"`) carries no literal, so no static reader of
-    the source can see it; and a claim WRAPPED across two payloads is caught by predicate 1
-    (which de-wraps) but not by this one, which is per-payload.
+    THE COST, MEASURED AT SCALE, NOT ON THE GUARDED FOUR. Over every tracked .py/.sh in the
+    repository (1,687 files) this rule flags SIX files that T455's rule flags ZERO, and all
+    six are tag-guard instruments from this lineage that hold the sentence in a variable or a
+    grep pattern. T476's three widenings and the union add NONE of them: the set is the same
+    six as T467's, re-derived. It is a MEASUREMENT and it goes stale — re-run
+    `20-t476-population-cost.py`, do not trust this paragraph.
+
+    WHAT IS STILL OPEN, DECLARED RATHER THAN ARGUED SHUT:
+      * a fragment of the claim COMPUTED at runtime — `f"...{chr(72)}EAD..."`, or
+        `printf '%s' "$SENTENCE"`. The bytes are not in the source, so no static reader of
+        the source can see them. Open by construction, and the ONLY fixture in the suite
+        below that this rule misses.
+      * the population is the four files in `CORRECTED` and nothing else.
+      * a payload split across two SEPARATE commands (not a continuation) — de-wrapping
+        across statement boundaries would join unrelated payloads into a claim neither makes.
     """
+    out = list(emitter_payloads(text))
     if rel.endswith(".py"):
         try:
-            return python_payloads(text)
-        except SyntaxError:
+            return out + python_payloads(text)
+        except (SyntaxError, ValueError):
             pass
-    out = []
-    for i, line in enumerate(text.split("\n"), 1):
+    for line, lineno in join_continuations(text):
+        for cut in (strip_trailing_comment(line), strip_trailing_comment_posix(line)):
+            if cut.strip():
+                out.append((lineno, cut))
         for seg in quoted_segments(line):
-            out.append((i, seg))
+            out.append((lineno, seg))
     return out
 
 
@@ -1196,7 +1394,13 @@ def grade_binding(text, rel):
     the tag INSIDE THE PAYLOAD. Closes (B): a tag in a trailing comment is never printed, so
     the source carries it and the reader's transcript does not. The source is not the artefact
     the reader sees, and the tag exists for the reader. `printed_payloads` decides what a
-    payload IS without naming a single emitter — see its docstring (T467 / F-T464-1).
+    payload IS by UNIONING three arms, one of which is the rule it replaced — see its
+    docstring (T467 / F-T464-1, repaired by T476 / C-T467-1).
+
+    THE PAYLOAD IS WHITESPACE-NORMALISED (`squeeze`) BEFORE IT IS COMPARED TO THE CLAIM, AND
+    NOT BEFORE THE TAG TEST. A sentence printed across a line continuation reaches the reader
+    with the second line's indentation inside it; matching raw bytes would miss it by the
+    width of an indent. The tag test stays on the raw payload, which is the stricter question.
     """
     lines = text.split("\n")
     stated_untagged, printed_untagged = [], []
@@ -1204,7 +1408,7 @@ def grade_binding(text, rel):
         if states_a_false_claim(line) and TAG not in line:
             stated_untagged.append(line.strip()[:90])
     for lineno, payload in printed_payloads(text, rel):
-        if states_a_false_claim(payload) and TAG not in payload:
+        if states_a_false_claim(squeeze(payload)) and TAG not in payload:
             src_line = lines[lineno - 1].strip()[:90] if 0 < lineno <= len(lines) else ""
             printed_untagged.append("%s:%d %s" % (os.path.basename(rel), lineno, src_line))
     quoted_claims = sum(1 for c in FALSE_CLAIMS
@@ -1230,8 +1434,10 @@ _WRAPPED = ('  # [%s] "Expected UNDETECTED at BOTH refs ... has no\n'
 # T467 / F-T464-1 — THE THREE SPELLINGS THAT WENT THROUGH T455's `echo`/`print(` matcher,
 # each built the same way as _ABUSE_B: a LIVE emitter with the tag in a trailing comment. They
 # are fixtures for the CLASS, not a list to be extended — the predicate they drive names no
-# emitter at all. `_ABUSE_OSWRITE` is deliberately a spelling nobody has used in this
-# repository, so the class claim is tested against something that is not on any list.
+# emitter at all. T476 / C-T467-5 — THE PRECISE CLAIM, since the loose one was false: at
+# 6a345e4a there are FOUR pre-existing tracked uses of `os.write` (t248 x2, t270, t41-probe),
+# and every one of them writes to a `mkstemp` fd. NONE writes to FD 1. It is the fd-1 spelling
+# that is unused here, not `os.write`, and it is the fd-1 spelling this fixture drives.
 _ABUSE_PRINTF = _GOOD + ("  printf '%%s\\n' \"%s\"  # %s\n" % (_SENTENCE, TAG))
 _ABUSE_STDERR = _GOOD + ('  >&2 echo "%s"  # %s\n' % (_SENTENCE, TAG))
 _ABUSE_SYSWRITE = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
@@ -1295,9 +1501,11 @@ check("SELF-DRIVE — the classifier REJECTS abuse (B) spelled `sys.stdout.write
       "python file, which is neither `print(` nor `echo `",
       bool(_sw_printed) and not _sw_bad and _sw_q >= 1,
       "printed-untagged=%d %s" % (len(_sw_printed), _sw_printed[:1]))
-check("SELF-DRIVE — and it REJECTS a spelling NOBODY IN THIS REPOSITORY HAS USED: the claim "
-      "bound to a variable and written to fd 1 by `os.write`. This is the class claim under "
-      "test — the predicate names no emitter, so an emitter it has never seen is not a hole",
+check("SELF-DRIVE — and it REJECTS a claim bound to a variable and written to FD 1 by "
+      "`os.write` — a spelling that appears NOWHERE in this repository in that form (the "
+      "four tracked uses of `os.write` all write to a mkstemp fd). The predicate names no "
+      "emitter, so an emitter it has never seen is not automatically a hole — but see the "
+      "REGRESSION SUITE below for the two spellings where exactly that reasoning failed",
       bool(_ow_printed) and not _ow_bad and _ow_q >= 1,
       "printed-untagged=%d %s" % (len(_ow_printed), _ow_printed[:1]))
 check("SELF-DRIVE — the PRINTED predicate does NOT fire on a COMMENT that quotes the claim "
@@ -1306,6 +1514,134 @@ check("SELF-DRIVE — the PRINTED predicate does NOT fire on a COMMENT that quot
       "them would redden every corrected file for carrying its own correction",
       not _ic_printed and not _id_printed,
       "comment-printed=%d docstring-printed=%d" % (len(_ic_printed), len(_id_printed)))
+
+# =========================================================================================
+# T476 / C-T467-1 (MAJOR) — THE REGRESSION SUITE. NO SPELLING THAT T455's RULE CAUGHT MAY BE
+# MISSED HERE. T467 replaced T455's emitter rule with a wider-looking payload rule and never
+# measured the two against each other; two spellings T455 CAUGHT went through T467's tip with
+# `run-all.sh` at exit 0 and the false sentence untagged in the reader's transcript. Every
+# fixture below is a spelling, built the same way as _ABUSE_B — a LIVE emitter with the tag
+# in a TRAILING COMMENT — and every sentence is ASSEMBLED FROM THE PATTERN TABLE, never
+# typed, so this file is not itself an untagged assertion of the claim it grades.
+_C = FALSE_CLAIMS[3].split()          # the graded claim, as words
+_HALF1, _HALF2 = " ".join(_C[:4]), " ".join(_C[4:])
+# (U)  the MAJOR: an `echo` with NO QUOTE CHARACTER anywhere on the line. `bash` prints the
+#      words; T467's quoted-segment extractor returned [] and saw no payload at all.
+_ABUSE_UNQUOTED = _GOOD + ("  echo %s  # %s\n" % (_SENTENCE, TAG))
+# (U2) the same, where the emitter is not the first token — T455's arm does not reach this
+#      one either, so it is the ARM 3 whole-code-text half that has to catch it.
+_ABUSE_UNQ_STDERR = _GOOD + ("  >&2 echo %s  # %s\n" % (_SENTENCE, TAG))
+# (A2) the second regression: a BYTES constant is not a STR constant.
+_ABUSE_BYTES_DECODE = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                       + 'print(b"%s".decode())  # %s\n' % (_SENTENCE, TAG))
+# (A1) the same literal written straight to fd 1 — missed by BOTH earlier rules.
+_ABUSE_BYTES_FD1 = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                    + 'os.write(1, b"%s\\n")  # %s\n' % (_SENTENCE, TAG))
+# (A3) `%`-formatting: the claim exists on one line but no single literal holds it.
+_ABUSE_PERCENT = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                  + 'print("There is no %s." %% "%s")  # %s\n'
+                  % (FALSE_CLAIMS[3].replace(_C[4], "%s"), _C[4], TAG))
+# (A8) constant + constant.
+_ABUSE_CONCAT = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                 + 'print("There is no %s" + " %s.")  # %s\n' % (_HALF1, _HALF2, TAG))
+# (V2) a BARE `${VAR#prefix}` earlier on the line truncates the naive comment lexer.
+_ABUSE_PARAMEXP = _GOOD + ('  X=abc\n  echo ${X#a} "%s"  # %s\n' % (_SENTENCE, TAG))
+# (W3) wrapped across a CONTINUATION, with NO tag anywhere. T467 declared this route open and
+#      said predicate 1 catches it. MEASURED: predicate 1 does NOT — its negative half is
+#      per-line, and de-wrapping happens only for TAGGED blocks, which this is not.
+_ABUSE_WRAPPED = _GOOD + ('  echo "There is no %s \\\n  %s."\n' % (_HALF1, _HALF2))
+# (D5) a .py carrying a NUL byte. `ast.parse` raises ValueError, NOT SyntaxError.
+_NUL_PY = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)) + 'x = "\x00"\n'
+# (A4) THE DECLARED BLIND SPOT, asserted so it cannot drift silently (the discipline T467
+#      applied to F-T464-6's limit). A fragment of the claim is COMPUTED at runtime, so the
+#      bytes are not in the source and no static reader can see them. If a future widening
+#      catches this, THIS CHECK GOES RED and the declaration above must be updated — that is
+#      the point of asserting a limit rather than only writing it down.
+_BLIND_RUNTIME = ('print("  [%s] %s")\n' % (TAG, _SENTENCE)
+                  + 'print(f"There is no %s.")  # %s\n'
+                  % (FALSE_CLAIMS[3].replace(_C[4], "{chr(%d)}%s"
+                                             % (ord(_C[4][0].upper()), _C[4][1:].upper())),
+                     TAG))
+
+_T476 = (
+    ("U   echo <words, UNQUOTED>  # <tag>  — CAUGHT by T455, MISSED by T467. The MAJOR",
+     _ABUSE_UNQUOTED, "fixture.sh"),
+    ("U2  >&2 echo <words, UNQUOTED>  # <tag> — the same shape, emitter not first token",
+     _ABUSE_UNQ_STDERR, "fixture.sh"),
+    ("A2  print(b\"<claim>\".decode())  # <tag> — CAUGHT by T455, MISSED by T467",
+     _ABUSE_BYTES_DECODE, "fixture.py"),
+    ("A1  os.write(1, b\"<claim>\")  # <tag> — a bytes literal straight to fd 1",
+     _ABUSE_BYTES_FD1, "fixture.py"),
+    ("A3  print(\"...%s...\" % \"...\")  # <tag> — the claim on one line, in no one literal",
+     _ABUSE_PERCENT, "fixture.py"),
+    ("A8  print(\"<half>\" + \"<half>\")  # <tag> — constant + constant",
+     _ABUSE_CONCAT, "fixture.py"),
+    ("V2  echo ${VAR#prefix} \"<claim>\"  # <tag> — a BARE parameter expansion first",
+     _ABUSE_PARAMEXP, "fixture.sh"),
+    ("W3  a claim wrapped across a CONTINUATION, NO tag anywhere on either line",
+     _ABUSE_WRAPPED, "fixture.sh"),
+)
+_t476_missed = []
+for _label, _text, _rel in _T476:
+    _u, _q, _p = grade_binding(_text, _rel)
+    if not _p:
+        _t476_missed.append(_label)
+check("T476 / C-T467-1 — THE REGRESSION SUITE. Eight spellings of abuse (B), including the "
+      "TWO that T455's narrower rule CAUGHT and T467's replacement MISSED, are all caught by "
+      "the PRINTED predicate. A guard that is not a superset of the guard it replaced is a "
+      "regression however much wider it looks",
+      not _t476_missed, "spellings the PRINTED predicate does not see: %s" % _t476_missed)
+
+_t476_p1 = [lab for lab, txt, rel in _T476 if grade_binding(txt, rel)[0]]
+check("T476 — and every one of those eight is caught by PREDICATE 2, not by predicate 1. The "
+      "source line carries the tag in its trailing comment, so the binding half must NOT "
+      "fire; if it did, the two predicates would have collapsed into one and the reason "
+      "there are two would be gone",
+      not _t476_p1, "spellings predicate 1 also fired on: %s" % _t476_p1)
+
+_superset_bad = []
+for _label, _text, _rel in _T476 + ((("GOOD", _GOOD, "fixture.sh"),
+                                     ("ABUSE-B", _ABUSE_B, "fixture.sh"),
+                                     ("PRINTF", _ABUSE_PRINTF, "fixture.sh"),
+                                     ("STDERR", _ABUSE_STDERR, "fixture.sh"),
+                                     ("SYSWRITE", _ABUSE_SYSWRITE, "fixture.py"),
+                                     ("OSWRITE", _ABUSE_OSWRITE, "fixture.py"),
+                                     ("COMMENT", _INERT_COMMENT, "fixture.py"),
+                                     ("DOCSTRING", _INERT_DOCSTRING, "fixture.py"))):
+    if not set(emitter_payloads(_text)) <= set(printed_payloads(_text, _rel)):
+        _superset_bad.append(_label)
+check("SUPERSET CONTROL — a WIRING TRIPWIRE on the structural guarantee: on every fixture "
+      "in this file, every payload the REPLACED rule (`emitter_payloads`, T455's "
+      "`echo`/`print(` matcher) sees is also seen by `printed_payloads`. DRIVEN: unwire ARM 1 "
+      "and this goes RED on a clean tree while the REGRESSION SUITE above still PASSES — the "
+      "widened arms cover those eight spellings on their own, so this is the ONLY check in "
+      "the tree that sees the guarantee go. The SEMANTIC half — everything the replaced rule "
+      "CATCHES, this one catches — is measured over a generated cross product of emitter x "
+      "literal-spelling x tag-placement by 20-t476-population-cost.py, because a relation "
+      "asserted only over the fixtures its author thought of is how T467 came to believe it "
+      "had closed a class",
+      not _superset_bad, "fixtures where the replaced rule sees a payload the union does not: %s"
+      % _superset_bad)
+
+try:
+    _nul_p = grade_binding(_NUL_PY, "fixture.py")[2]
+    _nul_raised = ""
+except Exception as _exc:
+    _nul_p, _nul_raised = None, type(_exc).__name__
+check("FAIL-CLOSED, NOT FAIL-CRASH — a guarded .py containing a NUL BYTE is graded rather "
+      "than crashing the grader. `ast.parse` raises ValueError, not SyntaxError, on a NUL, "
+      "and the fallback used to catch only SyntaxError: that is the F-T464-2 defect one file "
+      "over, reasoned by T472 and driven here",
+      _nul_raised == "", "exception from the payload extractor: %s" % (_nul_raised or "none"))
+
+_blind_p = grade_binding(_BLIND_RUNTIME, "fixture.py")[2]
+check("THE DECLARED BLIND SPOT, ASSERTED SO IT CANNOT DRIFT SILENTLY — a claim with a "
+      "fragment COMPUTED AT RUNTIME is not in the source bytes and no static reader of the "
+      "source can see it. It is the ONE spelling in this suite that goes through, it is "
+      "declared in `printed_payloads`'s docstring, and this check pins the declaration to "
+      "the behaviour: if a later widening catches it, THIS GOES RED and the docstring is "
+      "wrong until someone updates it",
+      not _blind_p, "runtime-assembled claim caught after all: %s" % _blind_p)
 
 _bind_bad, _print_bad, _pos_bad, _missing = [], [], [], []
 _emitted_tagged = 0
