@@ -446,9 +446,10 @@ VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 
 BAR EXIT=0
 ```
 
-**`deadOccurrences` = 108** and **frontier `11 == 11`** — both at their pins, unmoved. The corpus
-grew from 1,614 to **1,616** tracked `.sh`/`.py` under the instrument root (my two committed
-scripts) and `deadFiles` / `deadOccurrences` did **not** move, which is the measurement that says
+**`deadOccurrences` = 108** and **frontier `11 == 11`** — both at their pins, unmoved. The census
+corpus went from **1,613** tracked `.sh`/`.py` under the instrument root at `cbc8733c` to
+**1,616** here — my three committed instruments, measured, not assumed — and `deadFiles` /
+`deadOccurrences` did **not** move, which is the measurement that says
 this review's own instruments added no dead literal. That is not luck: every path they name is
 assembled from `S='.softhouse'` and both relocated destinations are built at run time, precisely
 because this guard has refused the first committed bar of five workers this fire on that reflex.
