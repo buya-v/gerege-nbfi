@@ -55,7 +55,27 @@ materialised at that path         62cda497…           8bfafdda…   <- *** NOT
 guard reads. `git status --porcelain` of the graded clone reported ` M .softhouse/conformance.sh`.
 Neither channel is inside the harness.
 
-Transcripts: `evidence/10-RED-arm-LONGSCTL.txt`, `evidence/11-RED-arm-LONGS.txt`.
+Transcripts: `evidence/09-RED-arm-Z-control-on-main.txt`, `evidence/10-RED-arm-LONGSCTL.txt`,
+`evidence/11-RED-arm-LONGS.txt`.
+
+### GREEN, on the delivered tip, same instrument, same fixtures
+
+| arm | result | reading |
+|---|---|---|
+| `Z` | **EXIT 0**, probe PRESENT ×1 `up`, `PASS 46 / 7884`, census `population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0` | a clean tree is still accepted |
+| `LONGSCTL` | **EXIT 2**, probe count **0**, `invoked-by-nothing=1` | still refuses |
+| **`LONGS`** | **EXIT 2**, probe count **0**, **`guard_harness_text_is_committed FAILED: 1 substituted path(s)`** | **CLOSED** |
+| **`WDIRTY`** | **EXIT 0**, probe PRESENT ×1 `up`, `PASS 46 / 7884`, census unmoved, and `HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk a69d8006…)` | **an honest dirty tree is still accepted, and the edit is named** |
+
+The refusal, verbatim from `evidence/40-barlog-arm-LONGS-refusal.log`:
+
+```
+conformance: guard_harness_text_is_committed: THE FILE ON DISK AT .softhouse/conformance.sh IS NOT THE FILE
+conformance: COMMITTED THERE — IT IS THE COMMITTED BLOB OF ANOTHER INDEX ENTRY.
+conformance:   path graded by everything downstream : .softhouse/conformance.sh
+conformance:   object id materialised at that path  : e84808aeed70474d491f62b3f7181383e78a5f16
+conformance:   the index entry that blob belongs to : .softhouse/conformance.ſh
+```
 
 ### THE REMEDY — `guard_harness_text_is_committed`
 
@@ -112,12 +132,22 @@ Arm `LONGSTRIP` is `LONGS` with three extra lines deleted from the forged blob: 
 `timed_guard guard_harness_text_is_committed` and the `GUARD_COST_BUDGETS` row
 `guard_harness_text_is_committed|60`.
 
-**What the remedy still buys, stated exactly:**
+**MEASURED ON THE DELIVERED TIP: `LONGSTRIP` reaches EXIT 0, probe PRESENT ×1 `up`,
+`VERDICT: PASS … 46 parity vectors … 7884 cells`, `declared=3`, with the planted checker
+absolved** — `evidence/34-OPEN-arm-LONGSTRIP-seventh-route.txt`. The committed harness reads
+`7c543532…`; the harness that ran is `f863ce3f…`. I am not writing "cannot" about it. It works.
+
+**What the remedy still buys, stated exactly and measured:**
 
 1. it closes the forgery that does **not** also strip it — which is precisely the forgery T446
-   drove, whose forged blob differed from the honest one by ONE table row;
-2. it makes the surviving attack **larger and louder**: the forged blob must now delete a whole
-   named guard, so `git diff` of the two objects shows a deleted function rather than an added row;
+   drove, whose forged blob differed from the honest one by ONE table row (`LONGS`: EXIT 2);
+2. it makes the surviving attack **larger and louder**, and by an amount the harness already
+   enforces. **Arm `LONGSTRIP1` deletes only the `timed_guard` line and leaves the
+   `GUARD_COST_BUDGETS` row: EXIT 2, probe count 0** —
+   `guard-cost: GUARD_COST_BUDGETS carries a row for guard_harness_text_is_committed, which this
+   run NEVER TIMED … 1 stale budget row(s)` [`evidence/42-barlog-arm-LONGSTRIP1-stale-budget-row.log`].
+   So the smallest working forgery is now **two deletions in two separate places** plus the row it
+   wanted, not one row — and `git diff` of the two blobs shows a deleted guard;
 3. it makes the *honest* case self-reporting, on every run, in a form a reader can recompute.
 
 **What can actually close it, and it is not in this file:** a verifier OUTSIDE the text — the fire
@@ -243,6 +273,24 @@ symlink to the member, sorting last and winning the checkout.
 
 Transcripts: `evidence/12-RED-arm-RWB3CTL.txt`, `evidence/13-RED-arm-RWB3.txt`.
 
+### GREEN, on the delivered tip — and the attribution, because the refusal is over-determined
+
+`RWB3` refuses on the tip at **EXIT 2, probe count 0**. But `guard_harness_text_is_committed`
+**also** fires on this fixture (the `W.txt` / `w.txt` symlink collision is a substitution in exactly
+its sense), so "it refused" would not by itself show that the needle did the work. **It did, and
+the guard says which needle**, from `evidence/41-barlog-arm-RWB3-refusal.log`:
+
+```
+conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS GONE —
+conformance:   the WITNESS naming test USES the tracked blob as its HAYSTACK [T454, arm RWB3]
+…
+conformance: guard_registration_decisive_lines FAILED: 1 of 10 decisive
+conformance: line(s) ABSENT and 0 NOT UNIQUE, in the body of
+conformance: guard_guards_dir_registration as deployed in …
+```
+
+**Two independent refusals, and I am claiming only the second for `MAJOR-2`.**
+
 ### THE REMEDY
 
 Three new needles pin the **step that consumes** each tracked blob, so the haystack of each
@@ -326,10 +374,13 @@ non-blank and non-comment), so a row that still "resolves" is **not** evidence t
 means what it meant; and the sweep sees only citations spelled `conformance.sh:NNNN`.
 `evidence/04-citation-sweep.txt`.
 
-**`LOW-3` — line-number citations in a handoff rot in the commit that moves them.** **This handoff
-contains no `conformance.sh:NNNN` citation at all.** Every reference is by function name, by needle
-text, or by arm name. That is P-80's own prescription and it is the only remedy that does not need
-maintaining.
+**`LOW-3` — line-number citations in a handoff rot in the commit that moves them.** T446 found
+T445's own wiring citation `:4757` had become `:4760` on the tip it shipped, in the very commit
+that removed seventeen line-number citations. **This handoff cites nothing in `conformance.sh` by
+line number.** Every reference to the file's contents is by function name, by needle text, or by
+arm name. `grep -c 'conformance\.sh:[0-9]'` over this file returns **1**, and that one occurrence
+is `patterns.md:3426 → conformance.sh:3271` — the pin this section is *about*, quoted as data.
+That is P-80's own prescription and it is the only remedy that does not need maintaining.
 
 ---
 
