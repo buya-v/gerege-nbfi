@@ -1,4 +1,4 @@
--- s3-ledger-now  captured 2026-08-29T00:09:30Z  container=fineract-db-1 db=fineract_gerege
+-- s3-ledger-now  captured 2026-08-29T00:27:22Z  container=fineract-db-1 db=fineract_gerege
 -- statement sha256 a08a4b0572cb66b442dd7cd4746af4c4cc2e5c2cb55ae75bb757a3412390652b
 -- oracle pinned 426a23544 ; PostgreSQL only (CLAUDE.md)
 

@@ -1,0 +1,200 @@
+==============================================================================
+ARM: GREEN-1 a real read-only capture inside a witnessed window -> quiescent, provenance written    (expected rc 0)
+------------------------------------------------------------------------------
+WITNESS OPEN  label=WRAP-GREEN
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:27:22.315793
+  jrh max id    = 13349
+  jobs in flight= 0  (job.currently_running)
+  witness       -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-GREEN.open.tsv
+-----------------------------------------------------------------------------
+RUNNING THE CAPTURE: bash /Users/buv/gerege-nbfi/.claude/worktrees/agent-a609da9cdb9ba5dbc/.softhouse/capture/t417-scheduler-attribution/capsql.sh s3-ledger-now
+-----------------------------------------------------------------------------
+captured -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a609da9cdb9ba5dbc/.softhouse/capture/t417-scheduler-attribution/out/s3-ledger-now.txt (rc=0)
+-----------------------------------------------------------------------------
+capture command exit = 0
+WITNESS CLOSE label=WRAP-GREEN
+  window (UTC, database clock): 2026-08-29 00:27:22.315793  ->  2026-08-29 00:27:23.132417
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ok   nothing moved. rollup open == close == 4c0adcae1804d88464265fc0f7661891
+-----------------------------------------------------------------------------
+VERDICT: QUIESCENT (exit 0). No job ran inside the window and no graded content moved.
+  A capture taken inside this window is reproducible against this oracle state.
+-----------------------------------------------------------------------------
+PROVENANCE -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-GREEN.provenance.tsv
+  # capture provenance v1 -- written by capture-under-witness.sh
+  label	WRAP-GREEN
+  command	bash /Users/buv/gerege-nbfi/.claude/worktrees/agent-a609da9cdb9ba5dbc/.softhouse/capture/t417-scheduler-attribution/capsql.sh s3-ledger-now
+  command_exit	0
+  fineract_commit	426a23544e8426a38ae43ae404670a0a7e85b9eb
+  window_open_db_utc	2026-08-29 00:27:22.315793
+  window_close_db_utc	2026-08-29 00:27:23.132417
+  jrh_high_water_open	13349
+  jrh_high_water_close	13349
+  jobs_active	31
+  runs_in_window	0
+  graded_tables	273
+  graded_sequences	249
+  rollup_open	4c0adcae1804d88464265fc0f7661891
+  rollup_close	4c0adcae1804d88464265fc0f7661891
+  witness_verdict	QUIESCENT
+  witness_exit	0
+  shelf_life_check	bash instruments/oracle-window-witness.sh verify WRAP-GREEN
+-----------------------------------------------------------------------------
+capture-under-witness: OK. The capture was taken against a still oracle, and the
+  provenance above records exactly which state that was.
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=0)
+
+==============================================================================
+ARM: GREEN-2 the provenance block carries a rollup, a run count and a verdict    (expected rc 0)
+------------------------------------------------------------------------------
+  witness_verdict = QUIESCENT
+  rollup_open     = 4c0adcae1804d88464265fc0f7661891
+  runs_in_window  = 0
+  graded_tables   = 273
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=0)
+
+==============================================================================
+ARM: RED-1 clean window but the capture command fails -> refused, not OK    (expected rc 1)
+------------------------------------------------------------------------------
+WITNESS OPEN  label=WRAP-CMDFAIL
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:27:24.156467
+  jrh max id    = 13349
+  jobs in flight= 0  (job.currently_running)
+  witness       -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CMDFAIL.open.tsv
+-----------------------------------------------------------------------------
+RUNNING THE CAPTURE: bash -c echo "pretend capture"; exit 7
+-----------------------------------------------------------------------------
+pretend capture
+-----------------------------------------------------------------------------
+capture command exit = 7
+WITNESS CLOSE label=WRAP-CMDFAIL
+  window (UTC, database clock): 2026-08-29 00:27:24.156467  ->  2026-08-29 00:27:24.733583
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ok   nothing moved. rollup open == close == 4c0adcae1804d88464265fc0f7661891
+-----------------------------------------------------------------------------
+VERDICT: QUIESCENT (exit 0). No job ran inside the window and no graded content moved.
+  A capture taken inside this window is reproducible against this oracle state.
+-----------------------------------------------------------------------------
+PROVENANCE -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CMDFAIL.provenance.tsv
+  # capture provenance v1 -- written by capture-under-witness.sh
+  label	WRAP-CMDFAIL
+  command	bash -c echo "pretend capture"; exit 7
+  command_exit	7
+  fineract_commit	426a23544e8426a38ae43ae404670a0a7e85b9eb
+  window_open_db_utc	2026-08-29 00:27:24.156467
+  window_close_db_utc	2026-08-29 00:27:24.733583
+  jrh_high_water_open	13349
+  jrh_high_water_close	13349
+  jobs_active	31
+  runs_in_window	0
+  graded_tables	273
+  graded_sequences	249
+  rollup_open	4c0adcae1804d88464265fc0f7661891
+  rollup_close	4c0adcae1804d88464265fc0f7661891
+  witness_verdict	QUIESCENT
+  witness_exit	0
+  shelf_life_check	bash instruments/oracle-window-witness.sh verify WRAP-CMDFAIL
+-----------------------------------------------------------------------------
+capture-under-witness: the window was quiescent, but THE CAPTURE COMMAND FAILED (7).
+  A clean window is not a successful capture.
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=1)
+
+==============================================================================
+ARM: RED-2 malformed invocation (no --) -> refuses rather than guessing    (expected rc 1)
+------------------------------------------------------------------------------
+usage: capture-under-witness.sh <label> -- <command> [args...]
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=1)
+
+==============================================================================
+ARM: RED-3 no command after -- -> refuses    (expected rc 1)
+------------------------------------------------------------------------------
+REFUSING: no capture command given after --.
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=1)
+
+==============================================================================
+ARM: RED-4 invoked as sh -> exit 3, not exit 2    (expected rc 3)
+------------------------------------------------------------------------------
+REFUSING: bash in POSIX mode (you ran 'sh').
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=3)
+
+==============================================================================
+ARM: RED-5 the oracle moved while the capture was open -> REFUSED, capture not promotable    (expected rc 1)
+------------------------------------------------------------------------------
+WITNESS OPEN  label=WRAP-CONTAM
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:27:25.701771
+  jrh max id    = 13349
+  jobs in flight= 0  (job.currently_running)
+  witness       -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CONTAM.open.tsv
+-----------------------------------------------------------------------------
+RUNNING THE CAPTURE: bash -c sed -i.bak 's/^tbl\tm_office\t[0-9]*\t.*/tbl\tm_office\t1\tMOVEDUNDERTHECAPTURE000000000000/' "/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CONTAM.open.tsv"; echo 'the oracle moved under this capture'
+-----------------------------------------------------------------------------
+the oracle moved under this capture
+-----------------------------------------------------------------------------
+capture command exit = 0
+WITNESS CLOSE label=WRAP-CONTAM
+  window (UTC, database clock): 2026-08-29 00:27:25.701771  ->  2026-08-29 00:27:26.356183
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ***  m_office  rows 1 -> 1   digest MOVEDUNDERTH -> 4d323c221dbb   MOVED
+-----------------------------------------------------------------------------
+VERDICT: CAPTURE CONTAMINATED (exit 1). The oracle MOVED while the capture was open.
+  Anything captured inside this window may be a photograph of a moving target. Do not
+  promote it to a vector: re-capture inside a window this instrument calls QUIESCENT.
+  ATTRIBUTION: NO job run overlaps this window. The scheduler did not do this. Something
+  else wrote to the SHARED reference oracle -- find it, and register it.
+-----------------------------------------------------------------------------
+PROVENANCE -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CONTAM.provenance.tsv
+  # capture provenance v1 -- written by capture-under-witness.sh
+  label	WRAP-CONTAM
+  command	bash -c sed -i.bak 's/^tbl\tm_office\t[0-9]*\t.*/tbl\tm_office\t1\tMOVEDUNDERTHECAPTURE000000000000/' "/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t417-wrap-45969/witness/WRAP-CONTAM.open.tsv"; echo 'the oracle moved under this capture'
+  command_exit	0
+  fineract_commit	426a23544e8426a38ae43ae404670a0a7e85b9eb
+  window_open_db_utc	2026-08-29 00:27:25.701771
+  window_close_db_utc	2026-08-29 00:27:26.356183
+  jrh_high_water_open	13349
+  jrh_high_water_close	13349
+  jobs_active	31
+  runs_in_window	0
+  graded_tables	273
+  graded_sequences	249
+  rollup_open	36055efde3c8e7936f2acc3773ac2cc9
+  rollup_close	4c0adcae1804d88464265fc0f7661891
+  witness_verdict	CAPTURE
+  witness_exit	1
+  shelf_life_check	bash instruments/oracle-window-witness.sh verify WRAP-CONTAM
+-----------------------------------------------------------------------------
+capture-under-witness: REFUSED (exit 1). THE ORACLE MOVED WHILE THIS CAPTURE WAS OPEN.
+  Do not promote anything captured in this window to a vector. Re-capture in a window
+  the witness certifies QUIESCENT, and read the run list above for the candidate author.
+------------------------------------------------------------------------------
+ARM RESULT: PASS  (rc=1)
+
+==============================================================================
+DRIVE SUMMARY: 7 passed, 0 failed
+NOTHING WAS WRITTEN TO THE REFERENCE ORACLE BY THIS DRIVE.
