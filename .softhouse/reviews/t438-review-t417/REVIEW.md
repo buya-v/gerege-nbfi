@@ -663,6 +663,15 @@ takes the tree to scan as `$1` and binds no host path at all.
 | repo-state attest frontier | 11, pinned at 11 |
 | guard cost | PASS — none breached |
 
+**Run a fourth time at the final head** `[out/BAR-D-final-head.txt]`, after the two transcripts
+above were themselves committed — because a bar transcript changes the tree it graded:
+HEAD `1095d139` (`main e4bde474` + `T438 b9cdfffc`), **EXIT 0**, probe PRESENT ×1 `up`,
+`VERDICT: PASS` 46/7884, **16 wrong ledger implementations, all 16 KILLED**, host-state census
+**18 == 18**, dead-path `corpus=1502 deadOccurrences=108` — **frontier still moved by zero**,
+frontier 11 == 11, guard-cost PASS. The only thing not covered by a bar run is *this
+paragraph's own commit*, which no transcript can ever cover; it adds one `.md` file, and `.md`
+is not in the `.sh`/`.py` corpus that either census reads.
+
 Recorded rather than tidied away, for the same reason T417 kept its own two failures: **a
 reviewer whose evidence turns the bar red and who quietly deletes the evidence has learned
 nothing and told nobody.** The finding it produces is that `.softhouse/reviews/**` `.sh`
