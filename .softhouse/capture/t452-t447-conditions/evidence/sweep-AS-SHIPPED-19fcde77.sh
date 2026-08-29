@@ -27,39 +27,7 @@
 # committed transcripts are untouched (T114/T176).
 #
 # EXIT CODES: 0 measured | 90 corpus unreachable | 91 corpus empty | 92 calibration missed
-#             93 engine error | 94 corpus REACH failed (T452, below).
-#             "Zero hits" and "could not look" are no longer the same answer.
-#
-# ============================================================================================
-# T452 CORPUS-REACH REPAIR, 2026-08-29.  `F-T447-1`.  READ THIS WITH THE BLOCK ABOVE.
-#
-# WHAT WAS STILL WRONG.  The P-72 calibration below is an ENFORCED PRESENT-assertion (`exit 92`)
-# whose corpus is `-- .softhouse/reviews/a2-33-dec2-rev5` -- **this task's own directory** --
-# while the sweep it certifies searches `-- .`, the whole tracked tree. T447 found it in the
-# variable-indirect blind spot (the pattern is spelled `$CAL_RE`, so T442's class census counted
-# it safe on syntax alone) and left the question open: NOT FALSIFIED, but NOT ESTABLISHED.
-#
-# T452 SETTLED IT BY DRIVING IT BOTH WAYS, and the answer is YES, A REAL FAIL-OPEN -- narrowly,
-# on the CORPUS-REACH limb, which is the exact limb the T238 repair above exists for:
-#
-#   * a scratch git repo containing NOTHING BUT THIS SCRIPT runs green. NFILES=1 clears the 91
-#     guard, the calibration matches the script's OWN name 7 times and passes, the
-#     anti-calibration passes, all 34 patterns report over a corpus of one file, and the run
-#     EXITS 0 with `calibration=PASS`. That is the same reader-facing outcome as the deleted-
-#     worktree defect this file was repaired for, now CERTIFIED by a calibration.
-#   * the guard is not unfireable -- move the task directory and it does exit 92 -- but what it
-#     fires on is the reachability of 17 files, never of the 9,7xx the sweep actually reads.
-#   * the ENGINE and PATTERN-LANGUAGE limbs of the old calibration are sound and are kept: a
-#     small corpus is enough to prove `git grep -i -E` runs and does not fabricate.
-#
-# THE REPAIR.  A second, enforced limb that calibrates on THE SWEEP'S OWN CORPUS and requires
-# the engine to match **outside this searcher's own task directory**. It uses no hard-coded
-# foreign path and no external token -- both of those are what rotted in 2026-08-22 -- only the
-# tree the sweep is about to read, minus the family that cannot vouch for it. It fails CLOSED
-# (exit 94) and it fires on exactly the specimen above.
-#
-# Drive: .softhouse/capture/t452-t447-conditions/instruments/t452-a2-33-failopen-drive.sh
-# ALL 34 PATTERNS REMAIN BYTE-IDENTICAL, and the drive asserts that.
+#             93 engine error.  "Zero hits" and "could not look" are no longer the same answer.
 # ============================================================================================
 set -u
 MODE="${1:-REPO}"
@@ -89,9 +57,8 @@ fi
 # legitimately be pointed at.  A MISS aborts: a sweep that cannot find a string it is standing
 # on has unknown, possibly zero, recall, and none of its negatives is interpretable.
 CAL_RE='a2-33'
-SELF_DIR='.softhouse/reviews/a2-33-dec2-rev5'
 if [ "$MODE" = "REPO" ]; then
-  CAL_N=$(git grep -c -I -i -E "$CAL_RE" -- "$SELF_DIR" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  CAL_N=$(git grep -c -I -i -E "$CAL_RE" -- .softhouse/reviews/a2-33-dec2-rev5 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
 else
   # NB: no `|| echo 0` here. That idiom is the very fail-open shape this repair removes, and
   # T238's linter flagged it in this line on its first run. `|| CAL_N=0` assigns without printing.
@@ -104,39 +71,6 @@ if [ "${CAL_N:-0}" -lt 1 ]; then
   exit 92
 fi
 echo "SWEEP CALIBRATE+: PASS — known positive '$CAL_RE' matched $CAL_N time(s)"
-if [ "$MODE" = "REPO" ]; then
-  CAL_CORPUS_N=$(git ls-files -- "$SELF_DIR" 2>/dev/null | wc -l | tr -d ' ')
-  case "${CAL_CORPUS_N:-}" in ''|*[!0-9]*) CAL_CORPUS_N=0 ;; esac
-  echo "SWEEP CALIB SCOPE: the line above was measured over $CAL_CORPUS_N file(s) in $SELF_DIR;"
-  echo "                   the sweep below reads $NFILES. A calibration confined to the searcher's"
-  echo "                   OWN task directory cannot vouch for the corpus the sweep actually reads,"
-  echo "                   so the reach limb underneath is the one that certifies the negatives."
-fi
-
-# ---- P-72b CORPUS-REACH CALIBRATION (T452, F-T447-1).  Prove the engine reaches THE SWEEP'S
-# OWN CORPUS, not just the searcher's family.  A known positive that matches only inside this
-# task's directory is satisfied by the author's own artefacts -- and, at the limit, by this file
-# alone -- so it cannot tell "the tree is reachable" from "I can read myself".  The reach probe
-# is therefore: does the engine match ANY non-blank byte in a tracked text file OUTSIDE this
-# directory?  No hard-coded foreign path (that is what rotted in 2026-08-22) and no external
-# token: only the tree the sweep is about to read, minus the family that cannot vouch for it.
-# A MISS ABORTS.  Zero reach is not zero hits.
-if [ "$MODE" = "REPO" ]; then
-  REACH_N=$(git grep -l -I -i -E '[^[:space:]]' -- . ":(exclude)$SELF_DIR" 2>/dev/null | wc -l | tr -d ' ')
-  case "${REACH_N:-}" in ''|*[!0-9]*) REACH_N=0 ;; esac
-  if [ "$REACH_N" -lt 1 ]; then
-    echo "SWEEP ABORT (94): CORPUS REACH FAILED. The engine matched text in 0 tracked files" >&2
-    echo "                  outside $SELF_DIR, yet the positive calibration passed on this" >&2
-    echo "                  task's own $CAL_CORPUS_N file(s). Every 'MEASURED ZERO' below would" >&2
-    echo "                  describe the searcher's own family and NOT the repository." >&2
-    echo "                  NO NEGATIVE FROM THIS RUN IS INTERPRETABLE (P-72)." >&2
-    exit 94
-  fi
-  echo "SWEEP CALIBRATE+R: PASS — engine reached $REACH_N tracked file(s) OUTSIDE $SELF_DIR"
-else
-  echo "SWEEP CALIBRATE+R: N/A — single-file mode. The calibration corpus and the swept corpus"
-  echo "                   are the same one file, so there is no reach gap to close."
-fi
 
 # ---- ANTI-CALIBRATION.  Prove the engine does not FABRICATE, not only that it can find.
 # The driver measured at main 8275f8b that `git grep -E '\bmain\b'` MATCHED the line `bmainb`.
@@ -195,7 +129,7 @@ trailer() {
     echo "SWEEP-RESULT: ABORTED rc=91 zero patterns ran; there is nothing to report."
     exit 91
   fi
-  echo "SWEEP-RESULT: commit=$(git rev-parse --short HEAD 2>/dev/null || echo n/a) corpus_files=$NFILES patterns=$NPAT hit_lines=$NHIT calibration=PASS calib_corpus=${CAL_CORPUS_N:-n/a} reach_files=${REACH_N:-n/a}"
+  echo "SWEEP-RESULT: commit=$(git rev-parse --short HEAD 2>/dev/null || echo n/a) corpus_files=$NFILES patterns=$NPAT hit_lines=$NHIT calibration=PASS"
 }
 trap trailer EXIT
 

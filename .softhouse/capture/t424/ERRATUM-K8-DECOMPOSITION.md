@@ -4,27 +4,88 @@
 Drive `instruments/t442-k8-decomposition.sh` · transcript `out/T442-K8-DECOMPOSITION.txt`
 (GREEN arm `disagreements=0`, RED arm `disagreements=3`).
 
-> **T442 did not apply the correction.** The text lives in
-> `.softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md`, which is outside this task's grant
-> (`.softhouse/capture/t424/` only). The exact replacement text is below so that applying it is a
-> paste. **Verdicts are unaffected** — every one of the 29 is still NOT state-loss, established
-> independently by T440's own adjudicator.
+> ## ERRATUM TO THE ERRATUM — **T452, 2026-08-29. `F-T447-2`.**
+>
+> **The paragraph this erratum originally carried — *"So there is **one** site to correct, not
+> two"* — was WRONG, and it was wrong for the reason this program keeps writing down and then
+> forgetting: "not found" is a statement about the search, never about the world.**
+>
+> T442 searched `.softhouse/handoff/` for the adjective phrase `all sixteen` — the spelling used
+> in `AUDIT-CLASS.md`'s *table cell* — and found nothing. The handoff spells the same
+> decomposition as **words in running prose**, at
+> `.softhouse/handoff/T424-t408-conditions.md:233,235,236`, so that search could never have
+> reached it. **T440's `C-T440-2` stands as written: two sites.**
+>
+> The operational consequence was worse than the wording. This erratum's original acceptance
+> test mentioned the handoff **zero** times, so applying the erratum as written would have gone
+> **green with the defect still on `main`**.
+>
+> **T452 re-derived the partition rather than inheriting it** — from the subject file
+> (`16` `sel` calls, `S1`/`S3`/`S7` carry no `|` → `13`; `10` counter lines; `3` distinct
+> counters) and, independently, from the K8 block of the census transcript (`13` `sel` rows,
+> `10` counter rows, `6` residual). Both routes give **`13 + 10 + 6 = 29`**, equal to the
+> census's own printed `== K8 SITES: 29`. T442's arithmetic is right in every cell; only its
+> *site count* was wrong.
+>
+> **Site 2 is now REPAIRED** in `.softhouse/handoff/T424-t408-conditions.md`. Site 1
+> (`AUDIT-CLASS.md`) remains outside T452's grant, exactly as it was outside T442's, and its
+> paste-ready replacement text is unchanged below.
+>
+> Drive: `.softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh`
+> · transcript `.softhouse/capture/t452-t447-conditions/out/T452-K8-SITES.txt`.
 
-## Where the wrong arithmetic actually lives
+> **T442 did not apply the correction to `AUDIT-CLASS.md`.** The text lives in
+> `.softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md`, which is outside T442's grant and
+> outside T452's (`.softhouse/capture/t424/`, `.softhouse/capture/t452-t447-conditions/`, the
+> `a2-33` sweep site and this handoff only). The exact replacement text is below so that
+> applying it is a paste. **Verdicts are unaffected** — every one of the 29 is still NOT
+> state-loss, established independently by T440's own adjudicator.
 
-`git grep -n 'all sixteen\|the eight \`SWEEP'` over `.softhouse/` returns the decomposition in
-**one file only**: `AUDIT-CLASS.md:106-108`. T440's condition says *"`AUDIT-CLASS.md` and the
-handoff both"*; **I looked in `.softhouse/handoff/` and the sentence is not there** — `git grep`
-for `all sixteen` under `.softhouse/handoff/` returns only unrelated T39/T242/T379 matches, and
-T424's own handoff `T424-t408-conditions.md` states the K8 total (29) without decomposing it.
-So there is **one** site to correct, not two.
+## Where the wrong arithmetic actually lives — the DECLARED SITE SET
+
+The drive asserts **set equality** against this table; it does not count. A site that is
+repaired must lose its row **in the same commit**, or the table starts excusing a defect that is
+no longer there — the same discipline `conformance.sh`'s fail-open frontier pin uses. A site
+that appears and is not in the table turns the drive RED.
+
+<!-- T452-SITE-TABLE-BEGIN — parsed by t452-k8-sites-drive.sh. Rows are `path` in backticks. -->
+
+| site | lines | state |
+|---|---|---|
+| `.softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md` | 102, 106, 107 | **OPEN** — outside every grant so far; paste-ready text below |
+
+<!-- T452-SITE-TABLE-END -->
+
+**Repaired and therefore absent from the table above:**
+`.softhouse/handoff/T424-t408-conditions.md:233-236` — corrected by T452, 2026-08-29. It is not
+excluded from the search; it drops out **by measurement**, because the corrected prose no longer
+carries the defect shape.
+
+### Files that QUOTE the wrong cardinals in order to correct or to test them
+
+These are not sites. The list is declared here rather than inside the drive so that it cannot be
+widened by an author trying to go green, and the drive REFUSES a stale entry — one that matches
+no file — so the exclusion list cannot outlive what it excuses.
+
+<!-- T452-QUOTING-FILES-BEGIN -->
+
+- `.softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md`
+- `.softhouse/capture/t424/instruments/t442-k8-decomposition.sh`
+- `.softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh`
+- `.softhouse/capture/t452-t447-conditions/out/T452-K8-SITES.txt`
+- `.softhouse/reviews/t447-review-t442/REVIEW.md`
+- `.softhouse/reviews/t447-review-t442/instruments/t447-k8-handoff-site.sh`
+- `.softhouse/reviews/t447-review-t442/out/T447-K8-HANDOFF-SITE.txt`
+- `.softhouse/tasks.json`
+
+<!-- T452-QUOTING-FILES-END -->
 
 ## The measurement
 
 Partition of the 29 rows in the `--- K8` block of `out/T424-CENSUS-after-with-K8.txt`,
 taken by pattern from the transcript, not by eye:
 
-| what | published | **measured (T442, and T440 independently)** |
+| what | published | **measured (T442; re-derived independently by T440 and by T452)** |
 |---|---|---|
 | rows that are a `sel "S…"` call | 16 | **13** |
 | rows that are `SWEEP_*=$((…))` counters | 8 | **10** |
@@ -81,11 +142,42 @@ Add, wherever the three rows are totalled: **`13 + 10 + 6 = 29`, which is the ce
 `== K8 SITES: 29`.** A decomposition that does not sum to its own total cannot do the job it
 exists for — telling a maintainer that the census has been *fully* adjudicated.
 
-## Acceptance test
+## Replacement text for `.softhouse/handoff/T424-t408-conditions.md:233-236` — **APPLIED by T452**
+
+Recorded so the correction is auditable without a diff. The original read
+*"… are the `sel` calls … are `SWEEP_*=$((…))` counters … are parent-side assignments"* with the
+cardinals sixteen / eight / six. It now reads:
 
 ```
-bash .softhouse/capture/t424/instruments/t442-k8-decomposition.sh          # must exit 0
-T442_K8_PUBLISHED=1 bash .softhouse/capture/t424/instruments/t442-k8-decomposition.sh   # must exit 1
+**All 29 adjudicated, and none is a live defect.** Thirteen of the sixteen `sel` calls reach the
+wide list, because each of those carries a `|` **inside its own quoted ERE** — the same deliberate
+over-inclusion `K2` and `K3` have; `S1`, `S3` and `S7` use `-F` patterns with no `|` and never
+reach it, so **16 is a count of the FILE and 13 is the count IN THE CENSUS**.
+Ten are `SWEEP_*=$((…))` counter rows over three distinct counters, matched on the `$(` of an
+arithmetic expansion, which is not a subshell. Six are parent-side assignments (…) whose command
+runs in a subshell but whose **assignment happens in the parent**. `13 + 10 + 6 = 29`, which is
+the census's own printed `== K8 SITES: 29`.
+```
+
+## Acceptance test — **it must reach BOTH sites, and it must search WORDS as well as digits**
+
+The original acceptance test below mentioned the handoff zero times. That is the defect
+`F-T447-2` names, so the site-set drive is now the primary check and the two `git grep` lines are
+kept only as a cheap smoke test of site 1.
+
+```
+# PRIMARY — set equality over ALL tracked .softhouse/ files, both spellings, calibrated:
+bash .softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh     # must exit 0
+
+# the partition itself, by T442's independent transcript route:
+bash .softhouse/capture/t424/instruments/t442-k8-decomposition.sh                    # must exit 0
+T442_K8_PUBLISHED=1 bash .softhouse/capture/t424/instruments/t442-k8-decomposition.sh  # must exit 1
+
+# site 1 smoke test, valid ONLY once AUDIT-CLASS.md is corrected (it is not, yet):
 git grep -c 'all sixteen `sel' -- .softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md  # must be 0
 git grep -c 'x8\|×8' -- .softhouse/capture/t402-t386-conditions/AUDIT-CLASS.md            # must be 0
+
+# site 2, already applied by T452 — and note it is asserted by SHAPE, not by phrase:
+bash .softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh 2>&1 \
+  | grep 'handoff is NOT a live site'                                               # must say OK
 ```

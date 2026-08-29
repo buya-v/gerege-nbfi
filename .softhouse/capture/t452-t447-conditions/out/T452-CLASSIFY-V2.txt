@@ -1,0 +1,949 @@
+================================================================================================
+T452 SELF-MATCHING PROBE CLASSIFICATION v2  --  T442's class, three holes closed
+================================================================================================
+repo                      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7e5b6561c3ff56ca
+TREE THIS WAS TAKEN ON    : cbc8733c+17 dirty
+                            (F-T447-3: every count below is a fact about THIS tree. A
+                            self-referential census changes what it measures the moment
+                            it is committed, so no count from it may be quoted bare.)
+tracked files .softhouse/ : 10009
+of them, scripts          : 1791
+scripts with >=1 search   : 161
+search invocations found  : 454
+  of those, rows whose pattern was VARIABLE-INDIRECT and RESOLVED to a same-file
+  literal (T442 counted these safe on syntax alone)            : 4
+
+WHERE I LOOKED, AND WHERE I DID NOT. Corpus: TRACKED files under `.softhouse/` only --
+T447 measured 0 candidate searchers outside it, so the restriction costs nothing. A
+search counts only in COMMAND POSITION (shell) or on a line that also executes a
+subprocess (python). BLIND SPOTS STILL OPEN, named: a search continued onto the next
+line; TWO levels of dataflow (one is resolved here, two is not); a pathspec built at run
+time; `find -exec grep`; a search performed by a non-script; `git grep` reached through a
+shell helper whose name I do not know.
+
+------------------------------------------------------------------------------------------------
+A1. SELF-ONLY -- the searching file is the ONLY corpus file containing the probe  (1 rows, 1 files)
+   Every row here is in the class, in one direction or the other.
+------------------------------------------------------------------------------------------------
+
+.softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:83   [pathspec '.softhouse/capture/t388-accrual-capture/' covers it]
+  probe    : 'WHERE I LOOKED for things the T388 oracle-state movement'   ($CALIB_POS_STR resolved to 'WHERE I LOOKED for things the T388 oracle-state movement' (same-file literal))
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 1 file(s)  ['.softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh']
+  direction: PRESENT   enforced: YES
+  *** FAMILY-ONLY: every match lies inside .softhouse/capture/t388-accrual-capture.
+      A PRESENT-assertion here is satisfied by the author's own artefacts.
+         81| calibrate() {
+         82|   local n
+         83|   n=$(git grep -c -F "$CALIB_POS_STR" -- "$CALIB_POS_PATH" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+         84|   if [ "${n:-0}" -lt 1 ]; then
+         85|     echo "SWEEP ABORT (exit 3): CALIBRATION MISSED. '$CALIB_POS_STR' found 0 in $CALIB_POS_PATH," >&2
+         86|     echo "  where it is KNOWN present. Either this file is not tracked yet -- git grep sees only" >&2
+         87|     echo "  TRACKED files, so run 'git add -A' first -- or the engine is broken. Either way no" >&2
+         88|     echo "  negative below would be interpretable, so nothing is printed." >&2
+         89|     exit 3
+
+------------------------------------------------------------------------------------------------
+A2. SELF + OTHERS -- the searcher matches, and so do other files  (35 rows, 21 files)
+   Inverts an ABSENT-assertion; a PRESENT-assertion is safe ONLY if a non-family file carries it.
+------------------------------------------------------------------------------------------------
+
+.softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh:99   [pathspec . covers it]
+  probe    : 'unique rev4 lines'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 8 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json', '.softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '.softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt', '...']
+  direction: PRESENT   enforced: no
+         97| echo "     flags   : (nothing)                                            [NOT DECLARED]"
+         98| echo "  Instrument that computed either number:"
+         99| git grep -l 'unique rev4 lines' -- . | sed 's/^/     /'
+        100| echo "     ^^ these are the two TRANSCRIPTS and T234's census index. NO SCRIPT computes it."
+        101| echo
+        102| echo "=== 4. VERDICT ==="
+        103| echo "  See the handoff. In one line: the git-grep leg is re-derivable and the ugrep leg is not,"
+        104| echo "  because the ugrep transcript records neither its engine version nor its flags nor its"
+        105| echo "  command -- which is P-72 corollary 2 exactly: a sweep whose commands were not committed"
+
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:28   [pathspec . covers it]
+  probe    : 'corpus contains no reversal'   (literal in source)
+  matcher  : git grep -l -I -P   <- THE ROW'S OWN FLAGS
+  matches  : 418 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: PRESENT   enforced: no
+         26| echo "################ CALIBRATION — POSITIVE **AND** NEGATIVE ################"
+         27| echo "-- known POSITIVE: 'corpus contains no reversal' (DEC-2:823). Must be >= 1 everywhere."
+         28| printf '  git grep -P      : %s\n' "$(git grep -c -P 'corpus contains no reversal' -- . 2>/dev/null | wc -l | tr -d ' ') file(s)"
+         29| printf '  BSD grep -E      : %s\n' "$(/usr/bin/grep -rlE 'corpus contains no reversal' --exclude-dir=.git . 2>/dev/null | wc -l | tr -d ' ') file(s)"
+         30| echo
+         31| echo "-- known NEGATIVE (driver point 1): a token that is NOWHERE in the tree."
+         32| echo "   Chosen so it cannot self-match: it is built at runtime and never written to disk."
+         33| NEG="zzq$(printf '%s' T244)NEVERPRESENT$(printf '%s' XQ)"
+         34| printf '  token            : %s\n' "$NEG"
+
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:40   [pathspec . covers it]
+  probe    : '\\brevers\\b'   (literal in source)
+  matcher  : git grep -l -I -P   <- THE ROW'S OWN FLAGS
+  matches  : 26 file(s)  ['.softhouse/capture/t244-dec2-rev6/engine-table.txt', '.softhouse/capture/t244-dec2-rev6/mlsweep.py', '.softhouse/capture/t244-dec2-rev6/sweep-output.txt', '.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh', '...']
+  direction: UNDECIDED enforced: no
+         38| echo "-- FABRICATION PROBE: the \\b trap, run against the REAL tree, both engines."
+         39| echo "   If an engine fabricates, these two counts will DISAGREE."
+         40| printf '  git grep -P  \\brevers\\b   : %s hit line(s)\n' "$(git grep -n -P '\brevers\b' -- . 2>/dev/null | wc -l | tr -d ' ')"
+         41| printf '  BSD grep -E  \\brevers\\b   : %s hit line(s)\n' "$(/usr/bin/grep -rnE '\brevers\b' --exclude-dir=.git . 2>/dev/null | wc -l | tr -d ' ')"
+         42| printf '  git grep -E  \\brevers\\b   : %s hit line(s)  <-- UNSOUND ENGINE, shown for contrast\n' "$(git grep -n -E '\brevers\b' -- . 2>/dev/null | wc -l | tr -d ' ')"
+         43| echo
+         44| 
+         45| echo "################ THE LOAD-BEARING RESULT, UNDER SOUND ENGINES ################"
+         46| echo "The claim: the stale reason survives at exactly TWO live sites, both in DEC-2."
+
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:66   [pathspec . covers it]
+  probe    : 'contains no revers|no reversal appears'   (literal in source)
+  matcher  : git grep -l -I -P   <- THE ROW'S OWN FLAGS
+  matches  : 424 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: UNDECIDED enforced: no
+         64| echo
+         65| echo "  git grep -P files:"
+         66| git grep -l -P 'contains no revers|no reversal appears' -- . 2>/dev/null | sed 's/^/    /'
+         67| echo "  BSD grep -E files:"
+         68| /usr/bin/grep -rlE 'contains no revers|no reversal appears' --exclude-dir=.git . 2>/dev/null | sed 's/^/    /'
+         69| 
+
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:58   [whole tracked tree (no pathspec)]
+  probe    : 'ls-files)'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 32 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py', '.softhouse/capture/t238-failopen/instruments/10-failopen-census.py', '.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py', '.softhouse/capture/t244-dec2-rev6/sweep-output.txt', '...']
+  direction: UNDECIDED enforced: no
+         56| # ---- SCOPE, stated per P-66/P-70 BEFORE any negative is recorded ----
+         57| echo "--- SCOPE (stated before any negative, P-66/P-70) ---"
+         58| echo "tracked files (git ls-files)      : $(git ls-files | wc -l | tr -d ' ')"
+         59| echo "all files on disk excl .git       : $(find . -type f -not -path './.git/*' | wc -l | tr -d ' ')"
+         60| echo "  of which .md                    : $(find . -type f -name '*.md' -not -path './.git/*' | wc -l | tr -d ' ')"
+         61| echo "  of which .json                  : $(find . -type f -name '*.json' -not -path './.git/*' | wc -l | tr -d ' ')"
+         62| echo "SEARCH SCOPE = the whole worktree on disk, excluding .git only."
+         63| echo
+         64| 
+
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:69   [pathspec . covers it]
+  probe    : 'corpus contains no reversal'   (literal in source)
+  matcher  : git grep -l -I -i -E   <- THE ROW'S OWN FLAGS
+  matches  : 418 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: PRESENT   enforced: no
+         67| C1=$($G -rniE 'corpus contains no reversal' --exclude-dir=.git . 2>/dev/null | wc -l | tr -d ' ')
+         68| echo "engine 1 BSD grep  'corpus contains no reversal' -> hit lines: $C1"
+         69| C2=$(git grep -niE 'corpus contains no reversal' -- . 2>/dev/null | wc -l | tr -d ' ')
+         70| echo "engine 2 git grep  'corpus contains no reversal' -> hit lines: $C2"
+         71| C3=$(python3 "$SELF_DIR/mlsweep.py" --count 'corpus contains no reversal' 2>/dev/null)
+         72| echo "engine 3 python3   'corpus contains no reversal' -> hit lines: $C3"
+         73| C4=$($G -rniE 'revers' --exclude-dir=.git . 2>/dev/null | wc -l | tr -d ' ')
+         74| echo "engine 1 unanchored stem 'revers'                -> hit lines: $C4"
+         75| if [ "${C1:-0}" -lt 1 ] || [ "${C2:-0}" -lt 1 ] || [ "${C3:-0}" -lt 1 ] || [ "${C4:-0}" -lt 1 ]; then
+
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:125   [pathspec . covers it]
+  probe    : 'contains no revers'   (literal in source)
+  matcher  : git grep -l -I -i -E   <- THE ROW'S OWN FLAGS
+  matches  : 422 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: UNDECIDED enforced: no
+        123| $G -rniE 'contains no revers' --exclude-dir=.git . 2>/dev/null | cut -c1-200 | sed 's/^/    /'
+        124| echo "--- engine 2 git grep (tracked only):"
+        125| git grep -niE 'contains no revers' -- . 2>/dev/null | cut -c1-200 | sed 's/^/    /'
+        126| echo
+        127| 
+        128| echo "================ SWEEP COMPLETE ================"
+        129| 
+
+.softhouse/capture/t248-failopen-widen/shapes/C0-a2-33-covered-shape.txt:12   [pathspec . covers it]
+  probe    : 'pattern'   (literal in source)
+  matcher  : git grep -l -I -i -E   <- THE ROW'S OWN FLAGS
+  matches  : 1196 file(s)  ['.claude/skills/softhouse-plan/SKILL.md', '.claude/skills/softhouse-program/SKILL.md', '.claude/skills/softhouse-uat/SKILL.md', '.claude/skills/softhouse/SKILL.md', '...']
+  direction: UNDECIDED enforced: no
+         10| set -u
+         11| WT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef
+         12| ( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) || echo "   (no hits)"
+         13| 
+
+.softhouse/capture/t248-failopen-widen/shapes/N1-negative-fatal-cd.txt:10   [pathspec . covers it]
+  probe    : 'vendor'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 98 file(s)  ['.softhouse/capture/PASS3B-REPORT.md', '.softhouse/capture/actualactual/src/CaptureActualActual.java', '.softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java', '.softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java', '...']
+  direction: UNDECIDED enforced: no
+          8| set -u
+          9| cd /srv/t248-vendor-audit || exit 2
+         10| git grep -n -E 'vendor' -- .
+         11| echo "   (no hits)"
+         12| 
+
+.softhouse/capture/t248-failopen-widen/shapes/R1-r11-real-shape.txt:10   [pathspec . covers it]
+  probe    : 'some claim|another claim'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 5 file(s)  ['.softhouse/capture/t248-failopen-widen/shapes/R1-r11-real-shape.txt', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '.softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt', '.softhouse/reviews/t447-review-t442/out/T447-CLASS-SWEEP-rerun-at-97bad8ed.txt', '...']
+  direction: UNDECIDED enforced: no
+          8| echo "--- every other restatement of the claim anywhere in the merged tree:"
+          9| cd /tmp/T248-merge-does-not-exist 2>/dev/null && \
+         10|   git grep -n -a -E 'some claim|another claim' -- . | sed 's/^/   /'
+         11| echo "   (searched the MERGED tree)"
+         12| 
+
+.softhouse/capture/t248-failopen-widen/shapes/R2-swallow-search-then-claim.txt:11   [pathspec . covers it]
+  probe    : 'vendor'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 98 file(s)  ['.softhouse/capture/PASS3B-REPORT.md', '.softhouse/capture/actualactual/src/CaptureActualActual.java', '.softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java', '.softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java', '...']
+  direction: UNDECIDED enforced: no
+          9| set -u
+         10| cd /srv/t248-vendor-audit || true
+         11| git grep -n -E 'vendor' -- .
+         12| 
+         13| # report
+         14| printf '   %s\n' "0 violations across the vendor tree"
+         15| 
+
+.softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:121   [whole tracked tree (no pathspec)]
+  probe    : 'ls-files,'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 403 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: PRESENT   enforced: YES
+        119| {
+        120|   echo '  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."'
+        121|   echo '  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."'
+        122| } >"$cal"
+        123| c1="$(LC_ALL=C grep -cE "$SEL_PRINT" "$cal")"
+        124| c2="$(LC_ALL=C grep -cE "$SEL_PINNED" "$cal")"
+        125| echo "CALIBRATION on the two PRE-FIX spellings (P-72):"
+        126| echo "  selector 1 sees          : $c1 / 2"
+        127| echo "  selector 4 sees          : $c2 / 2"
+
+.softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:95   [pathspec '.softhouse/' covers it]
+  probe    : 'CASUALTY SWEEP for the T352'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 12 file(s)  ['.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh', '.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt', '.softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh', '.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt', '...']
+  direction: UNDECIDED enforced: YES
+         93| git grep -n -F "$ABSENT" -- .softhouse/ >/dev/null 2>&1; printf '    git grep EMPTY-RESULT rc = %s\n' "$?"
+         94| git grep -n -E "$BAD"    -- .softhouse/ >/dev/null 2>&1; printf '    git grep MALFORMED    rc = %s\n' "$?"
+         95| git grep -n -F 'CASUALTY SWEEP for the T352' -- .softhouse/ >/dev/null 2>&1; printf '    git grep HITTING      rc = %s\n' "$?"
+         96| printf "    'git grep' occurrences in BEFORE: %s ; exit statuses inspected: %s\n" \
+         97|   "$(grep -c 'git grep' "$W/BEFORE.sh")" "$(grep -c 'rc=\$?' "$W/BEFORE.sh")"
+         98| printf "    'git grep' occurrences in AFTER : %s ; exit statuses inspected: %s\n" \
+         99|   "$(grep -c 'git grep' "$W/AFTER.sh")"  "$(grep -c 'rc=\$?' "$W/AFTER.sh")"
+        100| 
+        101| # ---------------------------------------------------------------- E/F: calibration
+
+.softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh:1708   [whole tracked tree (no pathspec)]
+  probe    : 'ls-files,'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 403 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: PRESENT   enforced: YES
+       1706|   fi
+       1707|   say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
+       1708|   say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+       1709|   say "conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed)."
+       1710|   say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a"
+       1711|   say "conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 ="
+       1712|   say "conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count."
+       1713|   if ! diff -u "$want" "$got" >"$out.diff" 2>&1; then
+       1714|     warn "conformance:"
+
+.softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:161   [pathspec '.softhouse' covers it]
+  probe    : '#!/usr/bin/env bash'   ($g_literal resolved to '#!/usr/bin/env bash' (same-file literal))
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 372 file(s)  ['.softhouse/bin/build-oracle-image.sh', '.softhouse/capture/actualactual/src/negative-tests.sh', '.softhouse/capture/actualactual/src/run-actualactual.sh', '.softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh', '...']
+  direction: PRESENT   enforced: no
+        159| # control. Printed so the reader can see the inversion happen instead of taking it on trust.
+        160| g_literal='#!/usr/bin/env bash'
+        161| git grep -q -F -e "$g_literal" -- .softhouse > /dev/null 2>&1; g_selfmatch=$?
+        162| printf '  runtime probe   : %s\n' "$g_tok"
+        163| printf '  spelled in this instrument? count=%s (0 = built at run time, never in tracked bytes)\n' "$g_self"
+        164| printf '  no match (repo) : rc=%s\n' "$g_absent_all"
+        165| printf '  no match        : rc=%s\n' "$g_absent"
+        166| printf '  invalid pattern : rc=%s\n' "$g_error"
+        167| printf '  match           : rc=%s\n' "$g_hit"
+
+.softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:104   [pathspec '.softhouse' covers it]
+  probe    : 'SWEEP CALIBRATE+'   ($CTRL resolved to 'SWEEP CALIBRATE+' (same-file literal))
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 31 file(s)  ['.softhouse/capture/t238-failopen/evidence/red-drive/90-green-live-EXCERPT.txt', '.softhouse/capture/t238-failopen/instruments/sweeplib.sh', '.softhouse/capture/t238-failopen/transcripts/40-red-drive.txt', '.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh', '...']
+  direction: UNDECIDED enforced: YES
+        102| # as self-only, or the check above would fire on anything.
+        103| CTRL='SWEEP CALIBRATE+'
+        104| c_files=$(git grep -l -F "$CTRL" -- .softhouse 2>/dev/null | grep -c '')
+        105| echo "control: a string that IS widely carried ('$CTRL') -> $c_files file(s)"
+        106| check "control is NOT self-only"                       "yes" "$( [ "$c_files" -gt 1 ] && echo yes || echo no )"
+        107| echo
+        108| 
+        109| echo "VERDICT: a P-72 positive calibration, PRESENT-direction and ENFORCED, whose only carrier"
+        110| echo "         is the searcher. STRICTLY VACUOUS: it would pass over an empty corpus. This is"
+
+.softhouse/conformance.sh:1708   [whole tracked tree (no pathspec)]
+  probe    : 'ls-files,'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 403 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: PRESENT   enforced: YES
+       1706|   fi
+       1707|   say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
+       1708|   say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+       1709|   say "conformance:   (DERIVED from FAILOPEN_PIN_FILE_LIST by counting it, never typed)."
+       1710|   say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a"
+       1711|   say "conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 ="
+       1712|   say "conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count."
+       1713|   if ! diff -u "$want" "$got" >"$out.diff" 2>&1; then
+       1714|     warn "conformance:"
+
+.softhouse/reviews/T138-evidence/r11-hygiene.sh:78   [pathspec . covers it]
+  probe    : '17 capture scripts|17 callers|seventeen capture'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 23 file(s)  ['.softhouse/capture/charges/bin/preconditions.sh', '.softhouse/capture/driver-20260822-060013/T243-REDDRIVE-GAP.md', '.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json', '.softhouse/capture/t239-r11-rerun/transcripts/51-run-r11-verbatim.txt', '...']
+  direction: UNDECIDED enforced: no
+         76| echo "--- every other restatement of '17 capture scripts' anywhere in the merged tree:"
+         77| cd /tmp/T138-merge 2>/dev/null && \
+         78|   git grep -n -a -E '17 capture scripts|17 callers|seventeen capture' -- . | sed 's/^/   /'
+         79| echo "   (searched the MERGED tree)"
+         80| 
+
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94   [pathspec '.softhouse/reviews/a2-33-dec2-rev5' covers it]
+  probe    : 'a2-33'   ($CAL_RE resolved to 'a2-33' (same-file literal))
+  matcher  : git grep -l -I -i -E   <- THE ROW'S OWN FLAGS
+  matches  : 11 file(s)  ['.softhouse/reviews/a2-33-dec2-rev5/CORRECTION.md', '.softhouse/reviews/a2-33-dec2-rev5/REVIEW.md', '.softhouse/reviews/a2-33-dec2-rev5/fineract-citations.md', '.softhouse/reviews/a2-33-dec2-rev5/i4builder-redgreen.txt', '...']
+  direction: UNDECIDED enforced: YES
+  *** FAMILY-ONLY: every match lies inside .softhouse/reviews/a2-33-dec2-rev5.
+      A PRESENT-assertion here is satisfied by the author's own artefacts.
+         92| SELF_DIR='.softhouse/reviews/a2-33-dec2-rev5'
+         93| if [ "$MODE" = "REPO" ]; then
+         94|   CAL_N=$(git grep -c -I -i -E "$CAL_RE" -- "$SELF_DIR" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+         95| else
+         96|   # NB: no `|| echo 0` here. That idiom is the very fail-open shape this repair removes, and
+         97|   # T238's linter flagged it in this line on its first run. `|| CAL_N=0` assigns without printing.
+         98|   CAL_N=$(/usr/bin/grep -c -i -E 'PATTERN|pass|the' "$MODE" 2>/dev/null); [ -n "$CAL_N" ] || CAL_N=0
+         99| fi
+        100| if [ "${CAL_N:-0}" -lt 1 ]; then
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:130   [pathspec '.softhouse/' covers it]
+  probe    : 'fineract_gerege'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 338 file(s)  ['.softhouse/capture/actualactual/src/pathb-capture.sh', '.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md', '.softhouse/capture/charges/ATTESTATION-T46.md', '.softhouse/capture/charges/REPRODUCE-T46.md', '...']
+  direction: UNDECIDED enforced: no
+        128| 
+        129| echo "=== CLAIM (4): tracked-file counts. git grep -F, CALIBRATED, cross-checked against an independent python byte scan ==="
+        130| echo -n "  CALIB positive  'fineract_gerege' @HEAD .softhouse/  : "; git grep -F -l -a "fineract_gerege" HEAD -- .softhouse/ | wc -l
+        131| echo -n "  CALIB negative  'zzq_nonexistent' @HEAD .softhouse/  : "; git grep -F -l -a "zzq_nonexistent" HEAD -- .softhouse/ | wc -l || true
+        132| for c in c0be92b 358c3b9 HEAD; do
+        133|   g=$(git grep -F -l -a "fineract_gerege"  "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:131   [pathspec '.softhouse/' covers it]
+  probe    : 'zzq_nonexistent'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 13 file(s)  ['.softhouse/capture/t304-evidence-destruction/evidence/10-raw-sites.tsv', '.softhouse/capture/t323-wire-the-unwired-guards/evidence/70-t304-census-rerun-iter3.tsv', '.softhouse/capture/t424/out/T442-CLASS-SWEEP-ADJUDICATION.md', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '...']
+  direction: UNDECIDED enforced: no
+        129| echo "=== CLAIM (4): tracked-file counts. git grep -F, CALIBRATED, cross-checked against an independent python byte scan ==="
+        130| echo -n "  CALIB positive  'fineract_gerege' @HEAD .softhouse/  : "; git grep -F -l -a "fineract_gerege" HEAD -- .softhouse/ | wc -l
+        131| echo -n "  CALIB negative  'zzq_nonexistent' @HEAD .softhouse/  : "; git grep -F -l -a "zzq_nonexistent" HEAD -- .softhouse/ | wc -l || true
+        132| for c in c0be92b 358c3b9 HEAD; do
+        133|   g=$(git grep -F -l -a "fineract_gerege"  "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+        137|   echo "  $c  under .softhouse/: gerege=$g default=$d   | whole tree: gerege=$ga default=$da"
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:133   [pathspec '.softhouse/' covers it]
+  probe    : 'fineract_gerege'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 338 file(s)  ['.softhouse/capture/actualactual/src/pathb-capture.sh', '.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md', '.softhouse/capture/charges/ATTESTATION-T46.md', '.softhouse/capture/charges/REPRODUCE-T46.md', '...']
+  direction: UNDECIDED enforced: no
+        131| echo -n "  CALIB negative  'zzq_nonexistent' @HEAD .softhouse/  : "; git grep -F -l -a "zzq_nonexistent" HEAD -- .softhouse/ | wc -l || true
+        132| for c in c0be92b 358c3b9 HEAD; do
+        133|   g=$(git grep -F -l -a "fineract_gerege"  "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+        137|   echo "  $c  under .softhouse/: gerege=$g default=$d   | whole tree: gerege=$ga default=$da"
+        138| done
+        139| echo
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:134   [pathspec '.softhouse/' covers it]
+  probe    : 'fineract_default'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 111 file(s)  ['.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md', '.softhouse/capture/audit-t44/charges/out/PRECOND-default.txt', '.softhouse/capture/charges/out/t51/NEGATIVE-TESTS.txt', '.softhouse/capture/charges/out/t51/negative/n1-preconditions-default.txt', '...']
+  direction: UNDECIDED enforced: no
+        132| for c in c0be92b 358c3b9 HEAD; do
+        133|   g=$(git grep -F -l -a "fineract_gerege"  "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+        137|   echo "  $c  under .softhouse/: gerege=$g default=$d   | whole tree: gerege=$ga default=$da"
+        138| done
+        139| echo
+        140| 
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:135   [whole tracked tree (no pathspec)]
+  probe    : 'fineract_gerege'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 341 file(s)  ['.softhouse/capture/actualactual/src/pathb-capture.sh', '.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md', '.softhouse/capture/charges/ATTESTATION-T46.md', '.softhouse/capture/charges/REPRODUCE-T46.md', '...']
+  direction: UNDECIDED enforced: no
+        133|   g=$(git grep -F -l -a "fineract_gerege"  "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+        137|   echo "  $c  under .softhouse/: gerege=$g default=$d   | whole tree: gerege=$ga default=$da"
+        138| done
+        139| echo
+        140| 
+        141| echo "=== THE FINDING THE DRIVER'S EDIT DID NOT REACH: the pin file's OPERATIVE instruction table ==="
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:136   [whole tracked tree (no pathspec)]
+  probe    : 'fineract_default'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 111 file(s)  ['.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md', '.softhouse/capture/audit-t44/charges/out/PRECOND-default.txt', '.softhouse/capture/charges/out/t51/NEGATIVE-TESTS.txt', '.softhouse/capture/charges/out/t51/negative/n1-preconditions-default.txt', '...']
+  direction: UNDECIDED enforced: no
+        134|   d=$(git grep -F -l -a "fineract_default" "$c" -- .softhouse/ | wc -l | tr -d ' ')
+        135|   ga=$(git grep -F -l -a "fineract_gerege"  "$c" | wc -l | tr -d ' ')
+        136|   da=$(git grep -F -l -a "fineract_default" "$c" | wc -l | tr -d ' ')
+        137|   echo "  $c  under .softhouse/: gerege=$g default=$d   | whole tree: gerege=$ga default=$da"
+        138| done
+        139| echo
+        140| 
+        141| echo "=== THE FINDING THE DRIVER'S EDIT DID NOT REACH: the pin file's OPERATIVE instruction table ==="
+        142| /usr/bin/grep -n -A7 '^## Connection facts for vector capture' .softhouse/reference-oracle.md || true
+
+.softhouse/reviews/t245-oracle-pin/measure.sh:144   [whole tracked tree (no pathspec)]
+  probe    : 'tenantIdentifier=default'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 14 file(s)  ['.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt', '.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt', '.softhouse/capture/t388-accrual-capture/out/T388-SW01-casualty-sweep.txt', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '...']
+  direction: UNDECIDED enforced: no
+        142| /usr/bin/grep -n -A7 '^## Connection facts for vector capture' .softhouse/reference-oracle.md || true
+        143| echo -n "  tracked files in the WHOLE repo carrying the string 'tenantIdentifier=default': "
+        144| git grep -F -l -a "tenantIdentifier=default" HEAD | wc -l || true
+        145| echo
+        146| 
+        147| echo "=== SWEEP (task item 5): files naming a tenant DATABASE without naming a tenant IDENTIFIER ==="
+        148| python3 - <<'PY'
+        149| import subprocess,re
+        150| files=[f.decode() for f in subprocess.run(['git','ls-files','-z'],capture_output=True).stdout.split(b'\0') if f]
+
+.softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:44   [pathspec '.softhouse/' covers it]
+  probe    : 'zzz-no-such-string-t367'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 10 file(s)  ['.softhouse/capture/t424/out/T442-CLASS-SWEEP-ADJUDICATION.md', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '.softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt', '.softhouse/handoff/T452-t447-conditions.md', '...']
+  direction: UNDECIDED enforced: no
+         42| git grep -n -E 'gl (16|17' -- .softhouse/ >/dev/null 2>&1
+         43| echo "     git grep rc for the MALFORMED pattern = $?"
+         44| git grep -n -F 'zzz-no-such-string-t367' -- .softhouse/ >/dev/null 2>&1
+         45| echo "     git grep rc for the EMPTY-RESULT pattern = $?"
+         46| git grep -n -F 'acc_gl_journal_entry' -- .softhouse/ >/dev/null 2>&1
+         47| echo "     git grep rc for the HITTING pattern      = $?"
+         48| echo
+         49| echo "  If rc for MALFORMED differs from rc for EMPTY-RESULT, the information needed to"
+         50| echo "  distinguish B from C exists and casualty-sweep.sh discards it."
+
+.softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:46   [pathspec '.softhouse/' covers it]
+  probe    : 'acc_gl_journal_entry'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 778 file(s)  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/bar-fire-close-20260822-060013.log', '.softhouse/capture/bar-g14-closure.log', '.softhouse/capture/bar-merge-2bec865.log', '...']
+  direction: UNDECIDED enforced: no
+         44| git grep -n -F 'zzz-no-such-string-t367' -- .softhouse/ >/dev/null 2>&1
+         45| echo "     git grep rc for the EMPTY-RESULT pattern = $?"
+         46| git grep -n -F 'acc_gl_journal_entry' -- .softhouse/ >/dev/null 2>&1
+         47| echo "     git grep rc for the HITTING pattern      = $?"
+         48| echo
+         49| echo "  If rc for MALFORMED differs from rc for EMPTY-RESULT, the information needed to"
+         50| echo "  distinguish B from C exists and casualty-sweep.sh discards it."
+         51| 
+         52| echo
+
+.softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:51   [pathspec '.softhouse/' covers it]
+  probe    : 'zzq-t379-nothing'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 10 file(s)  ['.softhouse/capture/t424/out/T442-CLASS-SWEEP-ADJUDICATION.md', '.softhouse/capture/t424/out/T442-CLASS-SWEEP.txt', '.softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt', '.softhouse/handoff/T442-t440-conditions.md', '...']
+  direction: PRESENT   enforced: no
+         49| git grep -c -F "zzq-t379-nothing" -- ":(bogusmagic)x" >/dev/null 2>&1
+         50| printf '    git grep -c -F <absent> -- ":(bogusmagic)x"   rc = %s   (>=2 == DID NOT RUN)\n' "$?"
+         51| git grep -c -F "zzq-t379-nothing" -- .softhouse/ >/dev/null 2>&1
+         52| printf '    git grep -c -F <absent> -- .softhouse/          rc = %s   (1 == a MEASURED zero)\n' "$?"
+         53| 
+         54| # Substitute ONLY the anti-calibration's pathspec. Selectors are commented out so the drive reads
+         55| # the calibration's behaviour and not 16 selectors of noise (and finishes in seconds, not 96 s).
+         56| sed 's|n=\$(git grep -c -F "\$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null|n=$(git grep -c -F "$CALIB_NEG_STR" -- ":(bogusmagic)x" 2>/dev/null|' \
+         57|   "$W/AFTER.sh" | sed 's/^sel "S/#sel "S/' > "$W/ac-broken.sh"
+
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:90   [pathspec '.softhouse/' covers it]
+  probe    : '\\bmain\\b'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 56 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md', '.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh', '.softhouse/capture/t234-sweep-instrument-audit/transcripts/21-r11-recall-loss.txt', '.softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt', '...']
+  direction: UNDECIDED enforced: no
+         88| printf '    T232/T238 hazards are -E hazards. Demonstrated against THIS host:\n'
+         89| git grep -c -E 'bmainb'   -- "$SUT" >/dev/null 2>&1; printf '      git grep -E %-14s rc=%s\n' "'bmainb'" "$?"
+         90| printf '      git grep -E %-14s hits=%s\n' "'\\\\bmain\\\\b'" "$(git grep -c -E '\bmain\b' -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         91| printf '      git grep -E %-14s hits=%s   <- if these two agree, -E is reading \\\\b as literal b\n' "'bmainb'" "$(git grep -c -E 'bmainb' -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         92| printf '      git grep -F %-14s hits=%s   <- what the calibration actually exercises\n' "'main'" "$(git grep -c -F 'main' -- "$SUT" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         93| 
+         94| echo
+         95| echo "########## Z  stderr folded into the HIT set on the rc=0 path"
+         96| printf '    the fold: %s\n' "$(grep -n 'all=\$(git grep' "$W/AFTER.sh" | sed 's/^ *//')"
+
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:91   [pathspec '.softhouse/' covers it]
+  probe    : 'bmainb'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 56 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md', '.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh', '.softhouse/capture/t234-sweep-instrument-audit/transcripts/21-r11-recall-loss.txt', '.softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt', '...']
+  direction: UNDECIDED enforced: no
+         89| git grep -c -E 'bmainb'   -- "$SUT" >/dev/null 2>&1; printf '      git grep -E %-14s rc=%s\n' "'bmainb'" "$?"
+         90| printf '      git grep -E %-14s hits=%s\n' "'\\\\bmain\\\\b'" "$(git grep -c -E '\bmain\b' -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         91| printf '      git grep -E %-14s hits=%s   <- if these two agree, -E is reading \\\\b as literal b\n' "'bmainb'" "$(git grep -c -E 'bmainb' -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         92| printf '      git grep -F %-14s hits=%s   <- what the calibration actually exercises\n' "'main'" "$(git grep -c -F 'main' -- "$SUT" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')"
+         93| 
+         94| echo
+         95| echo "########## Z  stderr folded into the HIT set on the rc=0 path"
+         96| printf '    the fold: %s\n' "$(grep -n 'all=\$(git grep' "$W/AFTER.sh" | sed 's/^ *//')"
+         97| printf '    it is unconditional -- rc is read AFTER the fold, so a warning on a HITTING\n'
+
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:33   [pathspec '.softhouse' covers it]
+  probe    : '\\bmain\\b'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 56 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md', '.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh', '.softhouse/capture/t234-sweep-instrument-audit/transcripts/21-r11-recall-loss.txt', '.softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt', '...']
+  direction: PRESENT   enforced: no
+         31| echo '=== ARM B: are the three OUTPUTS byte-identical, or only their counts? ============='
+         32| T=$(mktemp -d "${TMPDIR:-/tmp}/t386-r3.XXXXXX"); trap 'rm -rf "$T"' EXIT
+         33| git grep -n -E '\bmain\b' -- .softhouse > "$T/esc" 2>/dev/null
+         34| git grep -n -E 'bmainb'   -- .softhouse > "$T/lit" 2>/dev/null
+         35| git grep -n -F 'bmainb'   -- .softhouse > "$T/fix" 2>/dev/null
+         36| for f in esc lit fix; do printf '  %-4s %s lines  sha256 %s\n' "$f" "$(grep -c . "$T/$f")" "$(shasum -a 256 < "$T/$f" | cut -d' ' -f1)"; done
+         37| if cmp -s "$T/esc" "$T/fix"; then
+         38|   echo '  >>> BYTE-IDENTICAL. `-E "\bmain\b"` IS `-F "bmainb"` on this engine -- not a similar'
+         39|   echo '  >>> count, the same bytes. The escape compiles to the literal letters.'
+
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:34   [pathspec '.softhouse' covers it]
+  probe    : 'bmainb'   (literal in source)
+  matcher  : git grep -l -I -E   <- THE ROW'S OWN FLAGS
+  matches  : 56 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md', '.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh', '.softhouse/capture/t234-sweep-instrument-audit/transcripts/21-r11-recall-loss.txt', '.softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt', '...']
+  direction: PRESENT   enforced: no
+         32| T=$(mktemp -d "${TMPDIR:-/tmp}/t386-r3.XXXXXX"); trap 'rm -rf "$T"' EXIT
+         33| git grep -n -E '\bmain\b' -- .softhouse > "$T/esc" 2>/dev/null
+         34| git grep -n -E 'bmainb'   -- .softhouse > "$T/lit" 2>/dev/null
+         35| git grep -n -F 'bmainb'   -- .softhouse > "$T/fix" 2>/dev/null
+         36| for f in esc lit fix; do printf '  %-4s %s lines  sha256 %s\n' "$f" "$(grep -c . "$T/$f")" "$(shasum -a 256 < "$T/$f" | cut -d' ' -f1)"; done
+         37| if cmp -s "$T/esc" "$T/fix"; then
+         38|   echo '  >>> BYTE-IDENTICAL. `-E "\bmain\b"` IS `-F "bmainb"` on this engine -- not a similar'
+         39|   echo '  >>> count, the same bytes. The escape compiles to the literal letters.'
+         40| else
+
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:35   [pathspec '.softhouse' covers it]
+  probe    : 'bmainb'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 56 file(s)  ['.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md', '.softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh', '.softhouse/capture/t234-sweep-instrument-audit/transcripts/21-r11-recall-loss.txt', '.softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt', '...']
+  direction: PRESENT   enforced: no
+         33| git grep -n -E '\bmain\b' -- .softhouse > "$T/esc" 2>/dev/null
+         34| git grep -n -E 'bmainb'   -- .softhouse > "$T/lit" 2>/dev/null
+         35| git grep -n -F 'bmainb'   -- .softhouse > "$T/fix" 2>/dev/null
+         36| for f in esc lit fix; do printf '  %-4s %s lines  sha256 %s\n' "$f" "$(grep -c . "$T/$f")" "$(shasum -a 256 < "$T/$f" | cut -d' ' -f1)"; done
+         37| if cmp -s "$T/esc" "$T/fix"; then
+         38|   echo '  >>> BYTE-IDENTICAL. `-E "\bmain\b"` IS `-F "bmainb"` on this engine -- not a similar'
+         39|   echo '  >>> count, the same bytes. The escape compiles to the literal letters.'
+         40| else
+         41|   echo '  >>> NOT identical -- the T238 framing would need re-deriving.'
+
+.softhouse/reviews/t414-review-t398/drives/t414-drive-gap-guard.sh:43   [whole tracked tree (no pathspec)]
+  probe    : 'ls-files`'   (literal in source)
+  matcher  : git grep -l -I -F   <- THE ROW'S OWN FLAGS
+  matches  : 165 file(s)  ['.softhouse/bin/ready-tasks.py', '.softhouse/capture/lib/attest_population.py', '.softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh', '.softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py', '...']
+  direction: UNDECIDED enforced: no
+         41|   git -C "$REPO" archive "$1" | tar -x -C "$2" 2>/dev/null
+         42| }
+         43| seal() { # <dest> -- make it a git repo so `git ls-files` answers
+         44|   git -C "$1" init -q . >/dev/null 2>&1
+         45|   git -C "$1" add -A >/dev/null 2>&1
+         46|   git -C "$1" -c user.email=t414@local -c user.name=T414 commit -qm scratch >/dev/null 2>&1
+         47| }
+         48| say() { LC_ALL=C grep -aE '^PNUMBER-CITATIONS: (register=|FATAL|VERDICT)' "$1" | sed 's/^/    /'; }
+         49| run() { ( cd "$1" && python3 "$CHK" ) > "$2" 2>&1; echo $?; }
+
+------------------------------------------------------------------------------------------------
+FAMILY-ONLY rows (every match inside the searcher's own task directory) : 2
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:83  probe 'WHERE I LOOKED for things the T388 oracle-state movement'  1 file(s)  direction=PRESENT enforced=YES
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94  probe 'a2-33'  11 file(s)  direction=UNDECIDED enforced=YES
+
+------------------------------------------------------------------------------------------------
+FAIL-OPEN by the definition stated at the head of this file : 1
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:83  probe 'WHERE I LOOKED for things the T388 oracle-state movement'
+UNDECIDED direction, requiring HAND adjudication (NOT counted safe) : 1
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94  probe 'a2-33'
+
+------------------------------------------------------------------------------------------------
+B1. RUN-TIME ASSEMBLED PATTERN -- the CORRECT shape  (13 rows)
+   No tracked byte sequence can equal the probe. Not in the class.
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:35  [$NEG := "zzq$(printf '%s' T244)NEVERPRESENT$(printf '%s' XQ)"]
+      printf '  git grep -P      : %s hit(s)  [expect 0]\n' "$(git grep -c -P "$NEG" -- . 2>/dev/null | wc -l | tr -d ' ')"
+  .softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:93  [$ABSENT := "zzq-t371-drive-absent-$$-${RANDOM}-$(date -u +%s)"]
+      git grep -n -F "$ABSENT" -- .softhouse/ >/dev/null 2>&1; printf '    git grep EMPTY-RESULT rc = %s\n' "$?"
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:92  [$CALIB_NEG_STR := "zzq-t388-anticalibration-sentinel-$$-${RANDOM}-$(date -u +%s)"]
+      n=$(git grep -c -F "$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:148  [$g_tok := "zzq-$$-${RANDOM}-$(date +%s)-t442-runtime-assembled"]
+      git grep -q -F -e "$g_tok" > /dev/null 2>&1; g_absent_all=$?
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:149  [$g_tok := "zzq-$$-${RANDOM}-$(date +%s)-t442-runtime-assembled"]
+      git grep -q -F -e "$g_tok" -- .softhouse > /dev/null 2>&1; g_absent=$?
+  .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh:85  [$ANTI_RE := "$(printf 'zzq%snoSUCHtokenzzq' 'T238')"]
+      ANTI_N=$(git grep -c -I -i -E "$ANTI_RE" -- . 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:68  [$POS := $(LC_ALL=C sed -n "s/^CALIB_POS_STR='\(.*\)'\$/\1/p" "$SUT" | head -1)]
+      f_tree=$(git grep -l -F "$POS" -- . 2>/dev/null | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:90  [$POS := $(LC_ALL=C sed -n "s/^CALIB_POS_STR='\(.*\)'\$/\1/p" "$SUT" | head -1)]
+      extra=$(git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:91  [$POS := $(LC_ALL=C sed -n "s/^CALIB_POS_STR='\(.*\)'\$/\1/p" "$SUT" | head -1)]
+      foreign=$(git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null \
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:94  [$POS := $(LC_ALL=C sed -n "s/^CALIB_POS_STR='\(.*\)'\$/\1/p" "$SUT" | head -1)]
+      git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null | sed 's/^/       /'
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:151  [$ANTI_RE := "$(printf 'zzq%snoSUCHtokenzzq' 'T238')"]
+      ANTI_N=$(git grep -c -I -i -E "$ANTI_RE" -- . 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:38  [$SENT := $(grep -oE "zzq-no-such-token-[a-z0-9]+" "$DRIVE" | head -1)]
+      git grep -q "$SENT" -- .softhouse >/dev/null 2>&1; a=$?
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:40  [$SENT := $(grep -oE "zzq-no-such-token-[a-z0-9]+" "$DRIVE" | head -1)]
+      git grep -n "$SENT" -- .softhouse | sed 's/^/    hit: /'
+
+------------------------------------------------------------------------------------------------
+B2. VARIABLE NOT RESOLVABLE IN THIS FILE -- the residual blind spot  (29 rows)
+   Two levels of dataflow, or a value from the environment. Read these by hand.
+------------------------------------------------------------------------------------------------
+  .softhouse/bin/fire-program.sh:2884  [UNPARSED by shlex]
+      print -r -- "REFUSE: could not read the index of $W (git ls-files -v rc=$LSV_RC) — an unreadable index is not evidence of an unmarked one"
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh:16  [UNPARSED by shlex]
+      echo "  what \\bmain\\b WOULD have contributed if the engine honoured it (git grep -P, five vs four):"
+  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh:14  [$re not resolvable in this file]
+      ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
+  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh:50  [UNPARSED by shlex]
+      echo "RED DRIVE — the ORIGINAL instrument (git grep -E) against the plant"
+  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh:61  [UNPARSED by shlex]
+      echo "GREEN CONTROL — the SOUND instrument (git grep -P) against the same tree"
+  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh:25  [UNPARSED by shlex]
+      echo "   38 hit lines exist (git grep -P, BSD grep -E and python3 re all agree)."
+  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh:27  [UNPARSED by shlex]
+      echo "   'cd /tmp/T138-merge 2>/dev/null && git grep ...' short-circuited on a missing"
+  .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh:188  [UNPARSED by shlex]
+      printf '  ( cd "$WT" && git grep -n -I -E "$re" -- . ) %s echo "   (no hits)"\n' "$OR"
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:62  [UNPARSED by shlex]
+      echo "  (BSD searches the tree on disk incl. untracked; git grep searches TRACKED files."
+  .softhouse/capture/t248-failopen-widen/shapes/R5-arm-on-continuation.txt:10  [UNPARSED by shlex]
+      ( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) \
+  .softhouse/capture/t304-evidence-destruction/instruments/refuse-if-tracked.sh:147  [UNPARSED by shlex]
+      echo "  holds  : $t304__n TRACKED files (git ls-files)"
+  .softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:94  [$BAD not resolvable in this file]
+      git grep -n -E "$BAD"    -- .softhouse/ >/dev/null 2>&1; printf '    git grep MALFORMED    rc = %s\n' "$?"
+  .softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh:167  [UNPARSED by shlex]
+      echo "  BEFORE, anti-calibration search FORCED TO ERROR (git grep rc=128):"; say_rc "$rc_bb"
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:116  [UNPARSED by shlex]
+      printf '    *** SELECTOR DID NOT RUN (git grep rc=%s). THIS IS NOT "ZERO HITS".\n' "$rc"
+  .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh:106  [$re not resolvable in this file]
+      out=$(git grep -n -I -i -E "$re" -- . 2>&1); rc=$?
+  .softhouse/guards/check-ledger-invariants.sh:166  [UNPARSED by shlex]
+      warn "ledger-invariants: the POPULATION FLOOR did not derive (git ls-files over nexus returned"
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:172  [$re not resolvable in this file]
+      out=$(git grep -n -I -i -E "$re" -- . 2>&1); rc=$?
+  .softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh:94  [UNPARSED by shlex]
+      echo "    what a HUMAN following the recipe sees (git grep -n -F, status classified):"
+  .softhouse/reviews/t260-dec2-rev8/instruments/70-spotcheck-stale-sites.sh:113  [UNPARSED by shlex]
+      echo "  AMBIG   $c matches, exit 0 (git grep SUCCEEDS) — $path :: ${needle:0:70}"; n_amb=$((n_amb+1))
+  .softhouse/reviews/t367-review-t363/drive-independent-sweep.sh:18  [UNPARSED by shlex]
+      printf '\n=== %s\n    *** SELECTOR DID NOT RUN (git grep rc=%s). This is NOT "zero hits".\n%s\n' "$label" "$rc" "$all"
+  .softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:70  [UNPARSED by shlex]
+      echo "---------- R2: the ANTI-CALIBRATION's search cannot run (git grep rc=128)"
+  .softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:85  [UNPARSED by shlex]
+      grep -n 'n=\$(git grep' "$W/AFTER.sh" | sed 's/^/      /'
+  .softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:96  [UNPARSED by shlex]
+      printf '    the fold: %s\n' "$(grep -n 'all=\$(git grep' "$W/AFTER.sh" | sed 's/^ *//')"
+  .softhouse/reviews/t411-review-t401/instruments/20-t411-census-enumeration.sh:32  [UNPARSED by shlex]
+      git grep -nE "endswith\(\(|ls-files[^|]*\*\.|git grep[^|]*-- *'\*\.|--include=?'?\*\.|:\(glob\)|-name *'\*\." \
+  .softhouse/reviews/t411-review-t401/instruments/21-t411-live-census-reachability.sh:42  [UNPARSED by shlex]
+      hits="$($GREP -nE "endswith\(\(|ls-files[^|]*\*\.|ls-files[^|]*['\"]\.softhouse/\*|git grep .*-- *'\*\.|:\(glob\)|--include=?'?\*\." "$f" 2>/dev/null \
+  .softhouse/reviews/t411-review-t401/instruments/60-t411-citation-check.sh:32  [UNPARSED by shlex]
+      chk 3048 "POPULATION = git ls-files" "prose block 1"
+  .softhouse/reviews/t440-review-t424/instruments/f2b.sh:18  [UNPARSED by shlex]
+      echo "== git ls-files fails at rc 128 but HAS ALREADY PRINTED 3 lines =="
+  .softhouse/reviews/t446-review-t445/instruments/collision-order.sh:30  [UNPARSED by shlex]
+      echo "index order (git ls-files, C-quoted):"
+  .softhouse/reviews/t447-review-t442/instruments/t447-failopen-a2-33.sh:68  [$re not resolvable in this file]
+      a3=$(grep -c -F 'out=$(git grep -n -I -i -E "$re" -- . 2>&1)' "$SUT")
+
+------------------------------------------------------------------------------------------------
+B3. NO SELF-MATCHING LITERAL in pattern position  (127 rows)
+   Pathspec-only calls, short literals, and rows whose literal is not in their own body.
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh:35  [pathspec '.softhouse/capture/t234-sweep-instrument-audit' covers it]
+      o=$(git grep -E -c -- "$p" -- .softhouse/capture/t234-sweep-instrument-audit 2>&1); rc=$?
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh:71  [pathspec '.softhouse' covers it]
+      "$(git grep -E -l -- 'balance column' -- .softhouse | wc -l | tr -d ' ')" \
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh:72  [pathspec '.softhouse' covers it]
+      "$(git grep -E -c -- 'balance column' -- .softhouse | awk -F: '{s+=$NF} END{print s+0}')"
+  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh:14  [pathspec . covers it]
+      ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
+  .softhouse/capture/t238-failopen/instruments/sweeplib.sh:54  [whole tracked tree (no pathspec)]
+      SWEEP_CORPUS_FILES=$(git ls-files | wc -l | tr -d ' ')
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:35  [pathspec . covers it]
+      printf '  git grep -P      : %s hit(s)  [expect 0]\n' "$(git grep -c -P "$NEG" -- . 2>/dev/null | wc -l | tr -d ' ')"
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:42  [pathspec . covers it / no self-matching literal]
+      printf '  git grep -E  \\brevers\\b   : %s hit line(s)  <-- UNSOUND ENGINE, shown for contrast\n' "$(git grep -n -E '\brevers\b' -- . 2>/dev/null | wc -l | tr -d ' ')"
+  .softhouse/capture/t248-failopen-widen/instruments/20-rule-candidates.py:15  [whole tracked tree (no pathspec)]
+      ENGINE (P-33/P-53): python3 `re` only. File list from `git ls-files` via subprocess
+  .softhouse/capture/t248-failopen-widen/instruments/20-rule-candidates.py:184  [whole tracked tree (no pathspec)]
+      print("engine  : python3 re; git ls-files via list-argv subprocess; no grep, no pipe")
+  .softhouse/capture/t248-failopen-widen/shapes/N2-negative-live-corpus.txt:10  [whole tracked tree (no pathspec)]
+      n="$(git ls-files | wc -l)"
+  .softhouse/capture/t248-failopen-widen/shapes/R3-dead-root-via-variable.txt:9  [whole tracked tree (no pathspec)]
+      git ls-files
+  .softhouse/capture/t255-frontier-rot/instruments/20-cardinal-restatement-census.py:92  [whole tracked tree (no pathspec)]
+      `git ls-files -z` via `subprocess.run(..., check=True)`; a failure RAISES rather than yielding an
+  .softhouse/capture/t256-toolchain-population/instruments/10-population-census.sh:57  [whole tracked tree (no pathspec)]
+      TOTAL=$(git ls-files | wc -l | tr -d ' ')
+  .softhouse/capture/t284-schema2-callsites/instruments/30-red-drive.sh:100  [whole tracked tree (no pathspec)]
+      ( cd "$REAL" && git ls-files -z ) > "$WORK/filelist"
+  .softhouse/capture/t299-namespace-and-default-safety/instruments/50-final-state.sh:43  [whole tracked tree (no pathspec)]
+      git ls-files >"${TMPDIR:-/tmp}/t299-final-tracked.$$"
+  .softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:63  [whole tracked tree (no pathspec)]
+      sel="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' | wc -l | tr -d ' ')"
+  .softhouse/capture/t328-date-rule-promotion/instruments/95-frontier-delta.sh:64  [whole tracked tree (no pathspec)]
+      t328="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' | LC_ALL=C grep -c 't328-date-rule-promotion' || true)"
+  .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:310  [whole tracked tree (no pathspec)]
+      out=$(git grep "$@" 2>"$SWEEP_ERRF"); rc=$?
+  .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:542  [pathspec '.softhouse' covers it]
+      all=$(git grep "$@" -- .softhouse 2>"$SWEEP_ERRF"); rc=$?
+  .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:659  [whole tracked tree (no pathspec)]
+      SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+  .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:682  [whole tracked tree (no pathspec)]
+      SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .); _unt_rc=$?
+  .softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:93  [pathspec '.softhouse/' covers it]
+      git grep -n -F "$ABSENT" -- .softhouse/ >/dev/null 2>&1; printf '    git grep EMPTY-RESULT rc = %s\n' "$?"
+  .softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:94  [pathspec '.softhouse/' covers it]
+      git grep -n -E "$BAD"    -- .softhouse/ >/dev/null 2>&1; printf '    git grep MALFORMED    rc = %s\n' "$?"
+  .softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh:47  [whole tracked tree (no pathspec)]
+      TRACKED=$(git ls-files | grep -c .) || TRACKED=0
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:92  [pathspec '.softhouse/' covers it]
+      n=$(git grep -c -F "$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:113  [pathspec '.softhouse/' covers it]
+      all=$(git grep "$@" -- .softhouse/ 2>&1); rc=$?
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:122  [whole tracked tree (no pathspec)]
+      "$(git ls-files .softhouse | grep -c .)"
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:135  [whole tracked tree (no pathspec)]
+      echo "population: $(git ls-files .softhouse | wc -l | tr -d ' ') tracked files under .softhouse/"
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:136  [whole tracked tree (no pathspec)]
+      echo "untracked under .softhouse/: $(git ls-files --others --exclude-standard .softhouse | wc -l | tr -d ' ')"
+  .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:139  [whole tracked tree (no pathspec)]
+      if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:24  [whole tracked tree (no pathspec)]
+      tot="$(git ls-files | LC_ALL=C grep -c '' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:27  [whole tracked tree (no pathspec)]
+      n="$(git ls-files | LC_ALL=C grep -c "\\.${e}\$" || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:32  [whole tracked tree (no pathspec)]
+      git ls-files | LC_ALL=C grep '\.zsh$' > /tmp/t401-zsh-list.txt || true
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:53  [whole tracked tree (no pathspec)]
+      n="$(git ls-files | LC_ALL=C grep -cE '\.(sh|py)$' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:55  [whole tracked tree (no pathspec)]
+      n="$(git ls-files | LC_ALL=C grep -cE '\.(sh|py|zsh)$' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:57  [whole tracked tree (no pathspec)]
+      n="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' | LC_ALL=C grep -c '' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:59  [whole tracked tree (no pathspec)]
+      n="$(git ls-files '.softhouse/*.py' '.softhouse/*.sh' '.softhouse/*.zsh' | LC_ALL=C grep -c '' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:63  [whole tracked tree (no pathspec)]
+      a="$(git ls-files '.softhouse/*.py' | LC_ALL=C grep -c '/' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:64  [whole tracked tree (no pathspec)]
+      b="$(git ls-files '.softhouse/*.py' | LC_ALL=C grep -c '^\.softhouse/[^/]*$' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/10-measure-counts.sh:77  [whole tracked tree (no pathspec)]
+      n="$(git ls-files '.softhouse/*.sh' | LC_ALL=C grep -c '\.zsh$' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/40-red-drive-planted-zsh.sh:105  [whole tracked tree (no pathspec)]
+      staged="$(git ls-files | LC_ALL=C grep -c 't401-plant' || true)"
+  .softhouse/capture/t401-zsh-census-gap/instruments/45-red-drive-conformance-selectors.sh:86  [whole tracked tree (no pathspec)]
+      staged="$(git ls-files | LC_ALL=C grep -c 't401-plant34' || true)"
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:148  [whole tracked tree (no pathspec)]
+      git grep -q -F -e "$g_tok" > /dev/null 2>&1; g_absent_all=$?
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:149  [pathspec '.softhouse' covers it]
+      git grep -q -F -e "$g_tok" -- .softhouse > /dev/null 2>&1; g_absent=$?
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:150  [pathspec '.softhouse' covers it]
+      git grep -q -E '[' -- .softhouse > /dev/null 2>&1; g_error=$?
+  .softhouse/capture/t424/instruments/t424-f2-true-cause.sh:45  [whole tracked tree (no pathspec)]
+      _start=$(grep -c -F 'SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?' "$SWEEP")
+  .softhouse/capture/t424/instruments/t424-f2-true-cause.sh:50  [whole tracked tree (no pathspec)]
+      awk 'index($0,"SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?")==1 {o=1}
+  .softhouse/capture/t424/instruments/t424-f2-true-cause.sh:68  [whole tracked tree (no pathspec)]
+      if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then
+  .softhouse/capture/t424/instruments/t424-neighbour-census.sh:28  [whole tracked tree (no pathspec)]
+      FILES=$(git ls-files '.softhouse/*.sh' '.softhouse/*.py'); _rc=$?
+  .softhouse/capture/t424/instruments/t424-neighbour-census.sh:83  [whole tracked tree (no pathspec)]
+      PATCHES=$(git ls-files '.softhouse/*.patch'); _prc=$?
+  .softhouse/capture/t424/instruments/t442-t440-lows-drive.sh:54  [whole tracked tree (no pathspec)]
+      start=$(grep -n -F -- 'SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .)' "$SWEEP" | head -1 | cut -d: -f1)
+  .softhouse/capture/t424/instruments/t442-t440-lows-drive.sh:57  [whole tracked tree (no pathspec)]
+      sed 's|git ls-files \.softhouse|eval "$T442_PRODUCER"|' "$W/block.raw" > "$W/block.sh"
+  .softhouse/capture/t431-t407-conditions/evidence/20-probe-magic-neighbourhood.instrument.txt:26  [whole tracked tree (no pathspec)]
+      git ls-files -s
+  .softhouse/capture/t431-t407-conditions/evidence/21-probe-backslash-and-cquoting.instrument.txt:14  [whole tracked tree (no pathspec)]
+      echo "=== index ==="; git ls-files -s
+  .softhouse/capture/t431-t407-conditions/evidence/21-probe-backslash-and-cquoting.instrument.txt:35  [whole tracked tree (no pathspec)]
+      echo "=== index ==="; git ls-files -s
+  .softhouse/capture/t445-case-route/instruments/probe-collision-order.sh:24  [whole tracked tree (no pathspec)]
+      printf 'index:\n'; ( cd "$W/$tag-clone" && git ls-files -s )
+  .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh:39  [whole tracked tree (no pathspec)]
+      NFILES=$(git ls-files | wc -l | tr -d ' ')
+  .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh:85  [pathspec . covers it]
+      ANTI_N=$(git grep -c -I -i -E "$ANTI_RE" -- . 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh:106  [pathspec . covers it]
+      out=$(git grep -n -I -i -E "$re" -- . 2>&1); rc=$?
+  .softhouse/capture/t452-t447-conditions/instruments/t452-a2-33-failopen-drive.sh:98  [pathspec . covers it / no self-matching literal]
+      tree_out=$(git grep -l -I -i -E 'a2-33' -- . ":(exclude)$SELF_DIR" 2>/dev/null | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-a2-33-failopen-drive.sh:102  [whole tracked tree (no pathspec)]
+      sweep_corpus=$(git ls-files | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh:198  [pathspec '.softhouse' covers it]
+      git ls-files -- .softhouse > "$W/corpus" || { echo "REFUSED: git ls-files failed" >&2; exit 2; }
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:68  [pathspec . covers it]
+      f_tree=$(git grep -l -F "$POS" -- . 2>/dev/null | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:70  [whole tracked tree (no pathspec)]
+      tree_n=$(git ls-files | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:90  [pathspec . covers it]
+      extra=$(git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null | grep -c '')
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:91  [pathspec . covers it]
+      foreign=$(git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null \
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:94  [pathspec . covers it]
+      git grep -l -F "$POS" -- . ":(exclude)$PTH" 2>/dev/null | sed 's/^/       /'
+  .softhouse/guards/check-capture-namespace.sh:77  [whole tracked tree (no pathspec)]
+      git ls-files >"$WORK/tracked" 2>"$WORK/tracked.err"
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh:11  [whole tracked tree (no pathspec)]
+      echo "tracked files searched: $(git ls-files | wc -l | tr -d ' ')"
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh:15  [pathspec . covers it]
+      pat() { echo "--- pattern: $1"; git grep -n -i -E "$1" -- . || echo "    (no hits)"; }
+  .softhouse/hooks/cheap-subset.sh:86  [whole tracked tree (no pathspec)]
+      git ls-files >"$D/index-listing" \
+  .softhouse/reviews/T158-compare-enumerators.sh:11  [pathspec '.softhouse' covers it]
+      echo "enumerator 3  git ls-files .sh/py: $(git ls-files -- .softhouse | grep -cE '\.(sh|py)$')"
+  .softhouse/reviews/T158-compare-enumerators.sh:12  [pathspec '.softhouse' covers it]
+      echo "enumerator 3  git ls-files all   : $(git ls-files -- .softhouse | wc -l | tr -d ' ')"
+  .softhouse/reviews/T158-compare-enumerators.sh:15  [pathspec '.softhouse' covers it]
+      echo "  untracked .sh/.py present on disk but absent from the index : $(git ls-files --others --exclude-standard -- .softhouse | grep -cE '\.(sh|py)$')"
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:71  [whole tracked tree (no pathspec)]
+      NFILES=$(git ls-files | wc -l | tr -d ' ')
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:108  [pathspec '.softhouse/reviews/a2-33-dec2-rev5' covers it]
+      CAL_CORPUS_N=$(git ls-files -- "$SELF_DIR" 2>/dev/null | wc -l | tr -d ' ')
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:125  [pathspec . covers it / no self-matching literal]
+      REACH_N=$(git grep -l -I -i -E '[^[:space:]]' -- . ":(exclude)$SELF_DIR" 2>/dev/null | wc -l | tr -d ' ')
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:151  [pathspec . covers it]
+      ANTI_N=$(git grep -c -I -i -E "$ANTI_RE" -- . 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:172  [pathspec . covers it]
+      out=$(git grep -n -I -i -E "$re" -- . 2>&1); rc=$?
+  .softhouse/reviews/t254-harness-portability/instruments/10-mktemp-census.sh:32  [whole tracked tree (no pathspec)]
+      git ls-files > "$OUT/.files.all"
+  .softhouse/reviews/t254-harness-portability/instruments/80-instrument-audit.sh:56  [whole tracked tree (no pathspec)]
+      if ! has '(/usr/bin/grep|git grep|"\$G"|\$\{G\})' "$local_tmp"; then
+  .softhouse/reviews/t262-verdict-predicate/bar_check_t262.sh:63  [whole tracked tree (no pathspec)]
+      live=$(git ls-files '*.sh' '*.py' | /usr/bin/grep -c . || true)
+  .softhouse/reviews/t340-review-t258/probe/10-independent-cardinal-sweep.sh:17  [whole tracked tree (no pathspec)]
+      git ls-files '.softhouse/*.sh' '.softhouse/*.py' > /tmp/t340-corpus.txt || exit 2
+  .softhouse/reviews/t340-review-t258/probe/10-independent-cardinal-sweep.sh:19  [whole tracked tree (no pathspec)]
+      git ls-files '.softhouse/*.md' '.softhouse/*.json' > /tmp/t340-corpus2.txt || exit 2
+  .softhouse/reviews/t367-review-t363/drive-independent-sweep.sh:16  [pathspec '.softhouse/' covers it]
+      all=$(git grep "$@" -- .softhouse/ 2>&1); rc=$?
+  .softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:22  [pathspec '.softhouse/' covers it]
+      all=$(git grep "$@" -- .softhouse/ 2>/dev/null)
+  .softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:42  [pathspec '.softhouse/' covers it / no self-matching literal]
+      git grep -n -E 'gl (16|17' -- .softhouse/ >/dev/null 2>&1
+  .softhouse/reviews/t367-review-t363/drive-t305-t327-pins.sh:43  [whole tracked tree (no pathspec)]
+      printf '       committed files under out/: %s\n' "$(git ls-files ".softhouse/capture/$rig/throwaway/out/" | wc -l | tr -d ' ')"
+  .softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:56  [pathspec '.softhouse/' covers it]
+      sed 's|n=\$(git grep -c -F "\$CALIB_NEG_STR" -- .softhouse/ 2>/dev/null|n=$(git grep -c -F "$CALIB_NEG_STR" -- ":(bogusmagic)x" 2>/dev/null|' \
+  .softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:22  [whole tracked tree (no pathspec)]
+      echo "corpus  : $(git ls-files .softhouse | grep -c .) tracked files under .softhouse/"
+  .softhouse/reviews/t411-review-t401/instruments/20-t411-census-enumeration.sh:30  [whole tracked tree (no pathspec)]
+      echo "          corpus builder (ls-files | git grep -- | --include | glob | endswith | find -name)"
+  .softhouse/reviews/t411-review-t401/instruments/20-t411-census-enumeration.sh:41  [whole tracked tree (no pathspec)]
+      | $GREP -E "endswith|ls-files|git grep|--include|glob|-name" | sort
+  .softhouse/reviews/t411-review-t401/instruments/21-t411-live-census-reachability.sh:59  [whole tracked tree (no pathspec)]
+      $GREP -E "endswith|ls-files|git grep|--include|glob" "$W/zsh.raw" > "$W/zsh.hits" 2>/dev/null || true
+  .softhouse/reviews/t411-review-t401/instruments/30-t411-cost-rederive.sh:159  [whole tracked tree (no pathspec)]
+      echo -n "     "; git ls-files '*.zsh' | while read -r f; do LC_ALL=C $GREP -HnE "$HS_RE" "$f" || true; done | $GREP -c . || true
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:34  [whole tracked tree (no pathspec)]
+      BAIT_SRC="$(git ls-files | $GREP -E 'red-drive/sweep-ORIGINAL\.sh$' | head -1)"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:66  [whole tracked tree (no pathspec)]
+      CTRL_SRC="$(git ls-files | $GREP -E '^\.softhouse/guards/check-capture-namespace\.sh$' | head -1)"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:75  [whole tracked tree (no pathspec)]
+      BAIT_DP_SRC="$(git ls-files | $GREP -E 'bin/fire-program\.sh$' | head -1)"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:86  [whole tracked tree (no pathspec)]
+      PLANTED="$(git ls-files | $GREP -c 'drive-scratch' || true)"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:94  [whole tracked tree (no pathspec)]
+      "$(git ls-files | $GREP -E '50-failopen-lint\.py$' | head -1)" > "$S1W"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:95  [whole tracked tree (no pathspec)]
+      cmp -s "$(git ls-files | $GREP -E '50-failopen-lint\.py$' | head -1)" "$S1W" && { echo "REFUSE: S1 widening was a no-op."; exit 1; }
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:96  [whole tracked tree (no pathspec)]
+      CEN="$(git ls-files | $GREP -E 'census_dead_paths\.py$' | head -1)"
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:110  [whole tracked tree (no pathspec)]
+      python3 "$(git ls-files | $GREP -E '50-failopen-lint\.py$' | head -1)" > "$W/s1a.txt" 2>&1
+  .softhouse/reviews/t411-review-t401/instruments/40-t411-discrimination-drive.sh:151  [whole tracked tree (no pathspec)]
+      echo -n "     "; $GREP -c 'drive-scratch' <(git ls-files '.softhouse/*.zsh') || true
+  .softhouse/reviews/t411-review-t401/instruments/50-t411-bre-blast-radius.sh:42  [whole tracked tree (no pathspec)]
+      echo "corpus: tracked *.sh / *.zsh (BRE is a shell-tool concern), $(git ls-files '*.sh' '*.zsh' | $GREP -c .) files"
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:38  [pathspec '.softhouse' covers it]
+      git grep -q "$SENT" -- .softhouse >/dev/null 2>&1; a=$?
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:40  [pathspec '.softhouse' covers it]
+      git grep -n "$SENT" -- .softhouse | sed 's/^/    hit: /'
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:51  [pathspec '.softhouse' covers it]
+      git grep -q -- "$tok" -- .softhouse >/dev/null 2>&1; b=$?
+  .softhouse/reviews/t440-review-t424/instruments/f-t440-1.sh:53  [pathspec '.softhouse' covers it]
+      git grep -q -E '[' -- .softhouse >/dev/null 2>&1; c=$?
+  .softhouse/reviews/t440-review-t424/instruments/f2.sh:25  [whole tracked tree (no pathspec)]
+      ( git ls-files --no-such-flag-zzz >/dev/null 2>&1 ); gitrc=$?
+  .softhouse/reviews/t440-review-t424/instruments/f2.sh:26  [whole tracked tree (no pathspec)]
+      out=$(git ls-files --no-such-flag-zzz 2>/dev/null | grep -c .); rc=$?
+  .softhouse/reviews/t440-review-t424/instruments/f2.sh:31  [whole tracked tree (no pathspec)]
+      out=$( set -o pipefail; git ls-files --no-such-flag-zzz 2>/dev/null | grep -c . ); rc=$?
+  .softhouse/reviews/t440-review-t424/instruments/f2.sh:67  [whole tracked tree (no pathspec)]
+      OLDANCH='if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]; then'
+  .softhouse/reviews/t440-review-t424/instruments/f2.sh:102  [whole tracked tree (no pathspec)]
+      NEWANCH='SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?'
+  .softhouse/reviews/t440-review-t424/instruments/f2b.sh:15  [whole tracked tree (no pathspec)]
+      ANCH='SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?'
+  .softhouse/reviews/t440-review-t424/instruments/f2b.sh:19  [whole tracked tree (no pathspec)]
+      out=$( set -o pipefail; PATH="$SHIM:$PATH" git ls-files .softhouse 2>/dev/null | grep -c . ); rc=$?
+  .softhouse/reviews/t444-review-t431/evidence/merge-bar-t444.sh:18  [whole tracked tree (no pathspec)]
+      git ls-files -u | head -20
+  .softhouse/reviews/t444-review-t431/evidence/probe1-git-quoting.sh.txt:23  [whole tracked tree (no pathspec)]
+      git ls-files
+  .softhouse/reviews/t444-review-t431/evidence/probe2-conflicted-index.sh.txt:22  [whole tracked tree (no pathspec)]
+      git ls-files -u
+  .softhouse/reviews/t444-review-t431/evidence/probe5-case-index-entries.sh.txt:18  [whole tracked tree (no pathspec)]
+      git ls-files -s
+  .softhouse/reviews/t444-review-t431/evidence/probe5-case-index-entries.sh.txt:26  [whole tracked tree (no pathspec)]
+      git ls-files -s
+  .softhouse/reviews/t444-review-t431/evidence/probe6-case-symlink-route.sh.txt:29  [whole tracked tree (no pathspec)]
+      git ls-files -s
+  .softhouse/reviews/t444-review-t431/evidence/probe7-case-fresh-clone.sh.txt:30  [whole tracked tree (no pathspec)]
+      git ls-files -s
+  .softhouse/reviews/t444-review-t431/evidence/probe8-case-attacker-order.sh.txt:28  [whole tracked tree (no pathspec)]
+      echo "--- index in the clone ---"; git ls-files -s
+  .softhouse/reviews/t446-review-t445/instruments/collision-order.sh:31  [whole tracked tree (no pathspec)]
+      git ls-files | sed 's/^/    /'
+  .softhouse/reviews/t446-review-t445/instruments/symlink-collision.sh:22  [whole tracked tree (no pathspec)]
+      echo "  index:"; git ls-files -s | sed 's/^/    /'
+  .softhouse/reviews/t447-review-t442/instruments/t447-failopen-a2-33.sh:68  [pathspec . covers it]
+      a3=$(grep -c -F 'out=$(git grep -n -I -i -E "$re" -- . 2>&1)' "$SUT")
+  .softhouse/reviews/t447-review-t442/instruments/t447-failopen-a2-33.sh:102  [whole tracked tree (no pathspec)]
+      SWP_N=$(git ls-files | grep -c '.')
+
+------------------------------------------------------------------------------------------------
+C1. IMMUNISED BY `:!` / `:(exclude)` PATHSPEC  (1 rows)
+   Repairs the row, opens a hole: everything else under the excluded path is unscanned.
+------------------------------------------------------------------------------------------------
+  .softhouse/reviews/t446-review-t445/instruments/conf-citations.sh:8  [pathspec [':!.softhouse/capture', ':!.softhouse/reviews']]
+      git grep -n -o -E 'conformance\.sh:[0-9]+(-[0-9]+)?' -- . ':!.softhouse/capture' ':!.softhouse/reviews' \
+
+------------------------------------------------------------------------------------------------
+C2. IMMUNISED BY POST-PIPE `grep -v` -- INVISIBLE TO T442 BY CONSTRUCTION [F-T447-4]  (3 rows)
+   cut_at_pipe() truncates before this is ever looked at. Same dodge, same hole.
+------------------------------------------------------------------------------------------------
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:51  [post-pipe grep -v 't244-dec2-rev6']
+      git grep -n -P "$p" -- . 2>/dev/null | /usr/bin/grep -v 't244-dec2-rev6' | cut -c1-150 | sed 's/^/    /'
+  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:58  [post-pipe grep -v 't244-dec2-rev6']
+      A=$(git grep -n -P 'contains no revers|no reversal appears' -- . 2>/dev/null | /usr/bin/grep -v 't244-dec2-rev6' | wc -l | tr -d ' ')
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:27  [post-pipe grep -v 'a2-31-dec2-rev4/probe-sweep.sh']
+      git grep -n -i -E "$pat" -- . 2>/dev/null | grep -v 'a2-31-dec2-rev4/probe-sweep.sh' | cut -c1-260
+
+D. searching a corpus that does not contain the searcher : 263 rows (not in the class)
+
+================================================================================================
+MEMBER SET -- the drift-stable figure. Paths and lines do not change when a transcript is
+published; bucket LABELS do. Quote this, and tree-qualify the counts.
+================================================================================================
+  MEMBER .softhouse/capture/t388-accrual-capture/30-casualty-sweep-t388.sh:83  'WHERE I LOOKED for things the T388 oracle-state movement'  direction=PRESENT enforced=YES
+  MEMBER .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94  'a2-33'  direction=UNDECIDED enforced=YES
+
+================================================================================================
+T452-CLASSIFY-V2-RESULT: tree=cbc8733c+17_dirty scripts=1791 searches=454 var_resolved=4 self_only=1 self_plus_others=35 family_only=2 fail_open=1 undecided=1 runtime_assembled=13 unresolved_var=29 nolit=127 immunised_pathspec=1 immunised_postpipe=3 elsewhere=263 unparsed=24
+================================================================================================

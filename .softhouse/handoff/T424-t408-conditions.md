@@ -230,12 +230,28 @@ written into globals**, and a subshell discards that. `K8` and the `STATE-LOSS` 
 `out/T424-CENSUS-after-with-K8.txt`]: `K1..K7` reproduce `T402`/`T408` **cell for cell**
 (before `22/31/40/0/0/3/28`, after `26/32/54/7/0/0/44`). `K8`: **17 before, 29 after**.
 
-**All 29 adjudicated, and none is a live defect.** Sixteen are the `sel` calls, in the wide list only
-because each carries a `|` **inside its own quoted ERE** — the same deliberate over-inclusion `K2`
-and `K3` have. Eight are `SWEEP_*=$((…))` counters, matched on the `$(` of an arithmetic expansion,
-which is not a subshell. Six are parent-side assignments (`SWEEP_ERRF=$(mktemp …)`,
+> **CORRECTED 2026-08-29 by T452 [`C-T440-2` / `F-T447-2`].** The paragraph below carried the
+> published K8 split, whose three cells summed to **thirty** — not to this paragraph's own total
+> of twenty-nine. `T442`'s erratum concluded that split lived in **one** site because
+> `git grep 'all sixteen'` over `.softhouse/handoff/` returned nothing; here it was spelled as
+> **words in running prose**, so that search could never have reached it. **`T440` was right:
+> two sites.** The corrected partition, re-derived by `T452` from the subject file and again,
+> independently, from the census transcript, is **`13 + 10 + 6 = 29`**.
+> The superseded sentence is preserved verbatim in `git` history and quoted in
+> `.softhouse/capture/t424/ERRATUM-K8-DECOMPOSITION.md`; it is deliberately **not** re-spelled
+> here, because re-planting the defect shape in the repaired file is how a corrected cardinal
+> comes back (`P-80`). Drive:
+> `.softhouse/capture/t452-t447-conditions/instruments/t452-k8-sites-drive.sh`.
+
+**All 29 adjudicated, and none is a live defect.** Thirteen of the sixteen `sel` calls reach the
+wide list, because each of those carries a `|` **inside its own quoted ERE** — the same deliberate
+over-inclusion `K2` and `K3` have; `S1`, `S3` and `S7` use `-F` patterns with no `|` and never
+reach it, so **16 is a count of the FILE and 13 is the count IN THE CENSUS**.
+Ten are `SWEEP_*=$((…))` counter rows over three distinct counters, matched on the `$(` of an
+arithmetic expansion, which is not a subshell. Six are parent-side assignments (`SWEEP_ERRF=$(mktemp …)`,
 `SWEEP_CORPUS_N=…`, …) whose command runs in a subshell but whose **assignment happens in the
-parent**. **Live `STATE-LOSS` sites: zero, before and after** — measured, not assumed.
+parent**. `13 + 10 + 6 = 29`, which is the census's own printed `== K8 SITES: 29`.
+**Live `STATE-LOSS` sites: zero, before and after** — measured, not assumed.
 
 **The new kind is not decorative, and that is driven** — `instruments/t424-k8-discrimination.sh`,
 transcript `out/T424-k8-discrimination.txt`, `arms_failed=0`. The specimen is built and graded in a

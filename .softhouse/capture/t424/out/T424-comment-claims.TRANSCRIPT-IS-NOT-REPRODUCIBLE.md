@@ -67,8 +67,26 @@ none of it was falsified.
 ## The class
 
 `git grep` for a literal probe over a corpus that includes the searcher was swept across all
-**1,704** tracked scripts under `.softhouse/`: **4** instruments spell a self-matching probe that
-changes what their search reports, **all 4 invert, all 4 fail-CLOSED, 0 fail-OPEN.** One is this
+**1,704** tracked scripts under `.softhouse/` **at commit `97bad8ed`** — the tree the census
+transcript was taken on, and the only tree those counts describe. **4** instruments spell a
+self-matching probe that changes what their search reports, **all 4 invert, all 4 fail-CLOSED,
+0 fail-OPEN _among rows whose pattern is a syntactic literal_.** One is this
 one (repaired); the other three are `t379-anticalibration-drive.sh`, `t367 drive-sweep-failopen.sh`
 and `t245-oracle-pin/measure.sh`, each measured, none of them this task's grant, all three filed.
 Details and the fail-open hunt's blind spots: `out/T442-CLASS-SWEEP-ADJUDICATION.md`.
+
+> **QUALIFIED AND CORRECTED BY T452, 2026-08-29** — `F-T447-1`, `F-T447-3`. Two things above were
+> quoted bare and must not be:
+>
+> * **The counts drift, because the census is a member of the class it censuses.** Re-running at
+>   `c223a16b` or later returns `self_only=0 family_only=0 scripts=1707 searches=401`, because
+>   publishing the transcript, the adjudication and the handoff made them new tracked carriers of
+>   the probes. The four members are unchanged; only their bucket LABELS moved. Quote the member
+>   set, not the counts — and if you quote a count, quote its commit with it.
+> * **"0 fail-OPEN" is true only of literal-pattern rows.** With one level of same-file dataflow
+>   resolved, in pattern position and in pathspec position, **T452 measures 2 fail-OPEN**, both
+>   enforced P-72 positive calibrations confined to the searcher's own task directory:
+>   `reviews/a2-33-dec2-rev5/sweep.sh` (family-only; **repaired by T452**) and
+>   `capture/t388-accrual-capture/30-casualty-sweep-t388.sh` (**self-only — strictly vacuous**;
+>   outside every grant so far, filed with an owner in the T452 handoff).
+>   Method, definition and transcripts: `.softhouse/capture/t452-t447-conditions/`.

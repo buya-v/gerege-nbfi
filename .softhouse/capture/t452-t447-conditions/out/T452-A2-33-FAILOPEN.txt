@@ -1,0 +1,96 @@
+==============================================================================
+T452 A2-33 CALIBRATION FAIL-OPEN DRIVE   [F-T447-1]
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7e5b6561c3ff56ca
+commit  : cbc8733c46cff515a2e48b5f3389ffbf514dc674
+dirty   : 16 path(s)
+live    : .softhouse/reviews/a2-33-dec2-rev5/sweep.sh            sha256 7b6856c6157e1d77
+shipped : .softhouse/capture/t452-t447-conditions/evidence/sweep-AS-SHIPPED-19fcde77.sh  sha256 57a611fde83188eb  (PINNED BY CONTENT)
+==============================================================================
+
+ARM A -- the row measured on the LIVE TREE, with the ROW'S OWN FLAGS (-c -I -i -E),
+         not with the census's -l -F.  [that substitution is F-T447-5]
+   calibration matches (row's own flags)       : 75 in 11 file(s)
+   of those, files OUTSIDE the task dir        : 0   <-- FAMILY-ONLY, BY CONSTRUCTION
+                                                  (the pathspec confines it; the corpus
+                                                   cannot make it otherwise)
+   files carrying the token in the SWEEP's     : 608   <-- the row never looks here
+     corpus but outside the task dir
+   matches in the SEARCHER ALONE               : 9   <-- would satisfy it by itself
+   files the CENSUS reports for this row (-l -F): 2   <-- vs the row's own 11 [F-T447-5]
+   calibration corpus / sweep corpus           : 17 / 10094 tracked files
+  the row's own result set is FAMILY-ONLY                    expected=0          actual=0          OK
+  the searcher alone would satisfy it                        expected=yes        actual=yes        OK
+  the calibration corpus is a STRICT SUBSET                  expected=yes        actual=yes        OK
+  T447 was right that it is NOT vacuous today                expected=yes        actual=yes        OK
+  the census's -l -F set differs from the row's              expected=yes        actual=yes        OK
+  the token DOES exist outside the family                    expected=yes        actual=yes        OK
+
+ARM B -- FOR the fail-open. A corpus of ONE FILE: the searcher itself. AS-SHIPPED script.
+   exit                       : 0
+   SWEEP CORPUS               : 1 tracked file(s)
+   positive calibration PASSed: 1
+   'MEASURED ZERO' lines       : 13 of 34 patterns
+   SWEEP-RESULT: commit=f328516 corpus_files=1 patterns=34 hit_lines=26 calibration=PASS
+  B: as-shipped EXITS 0 over a 1-file corpus                 expected=0          actual=0          OK
+  B: corpus really is one file                               expected=1          actual=1          OK
+  B: the calibration CERTIFIED that run                      expected=1          actual=1          OK
+   >>> THE FINDING: the P-72 calibration passes, and certifies 34 negatives, on a corpus
+       consisting of the searcher and nothing else. Same reader-facing outcome as the
+       deleted-worktree defect the T238 block was written to remove.
+
+ARM C -- AGAINST. The guard is NOT unfireable: move the task directory and it aborts 92.
+   exit 92 ; 'SWEEP ABORT (92)' lines: 1
+  C: the calibration CAN fire                                expected=92         actual=92         OK
+  C: and says so                                             expected=1          actual=1          OK
+   >>> So the row is a real guard on a real property -- the reachability of 17 files.
+       It was never a guard on the reachability of the ~9.7k the sweep reads.
+
+ARM D -- THE REPAIR, on the SAME specimen as arm B. Only the script differs.
+   exit 94 ; 'SWEEP ABORT (94)' lines: 1 ; old positive limb still passed: 1
+       SWEEP ABORT (94): CORPUS REACH FAILED. The engine matched text in 0 tracked files
+                         outside .softhouse/reviews/a2-33-dec2-rev5, yet the positive calibration passed on this
+                         task's own 1 file(s). Every 'MEASURED ZERO' below would
+                         describe the searcher's own family and NOT the repository.
+                         NO NEGATIVE FROM THIS RUN IS INTERPRETABLE (P-72).
+  D: the repaired script REFUSES the specimen                expected=94         actual=94         OK
+  D: with the reach message                                  expected=1          actual=1          OK
+  D: and the OLD limb still passed on it                     expected=1          actual=1          OK
+   >>> The old limb passing while the new one refuses is the whole finding, mechanised:
+       the two limbs measure different properties and only one of them was being checked.
+
+ARM E -- the repaired script on the REAL tree must still measure, not refuse.
+   exit 0 ; patterns run 34 ; limbs: pos=1 neg=1 reach=1
+   SWEEP-RESULT: commit=cbc8733c corpus_files=10094 patterns=34 hit_lines=31138 calibration=PASS calib_corpus=17 reach_files=9827
+  E: real tree exits 0                                       expected=0          actual=0          OK
+  E: positive limb PASS                                      expected=1          actual=1          OK
+  E: anti-calibration PASS                                   expected=1          actual=1          OK
+  E: NEW reach limb PASS                                     expected=1          actual=1          OK
+  E: all 34 patterns ran                                     expected=34         actual=34         OK
+
+ARM F -- the 34 patterns must be BYTE-IDENTICAL before and after the repair.
+   run-lines before/after: 34 / 34 ; byte comparison: same
+  F: 34 patterns before                                      expected=34         actual=34         OK
+  F: 34 patterns after                                       expected=34         actual=34         OK
+  F: patterns unchanged by the repair                        expected=same       actual=same       OK
+
+ARM G -- the specimen builder is not the cause: same builder, both scripts.
+   B (as-shipped) exit 0     D (repaired) exit 94     on identical one-file corpora
+  G: the two arms disagree, and only the script changed      expected=yes        actual=yes        OK
+
+ARM H -- ANTI-EVASION. The repair must not hide the repaired row from the instrument
+         that found it. The repair hoists the task directory into SELF_DIR=, which makes
+         the pathspec variable-indirect -- the SAME blind spot, one operand to the right.
+       FAMILY-ONLY rows (every match inside the searcher's own task directory) : 1
+         .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94  probe 'a2-33'  11 file(s)  direction=UNDECIDED enforced=YES
+         .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94  probe 'a2-33'
+   classifier exit 0
+  H: the repaired row is STILL VISIBLE to the classifier     expected=yes        actual=yes        OK
+  H: and is still flagged FAMILY-ONLY                        expected=yes        actual=yes        OK
+   T452_ONLY selecting nothing -> exit 2
+  H: an empty selection REFUSES, never reads clean           expected=2          actual=2          OK
+
+==============================================================================
+T452-A2-33-FAILOPEN-RESULT: verdict=REAL_FAIL_OPEN limb=corpus-reach family_only=1
+  as_shipped_on_1_file_corpus=exit0  repaired_on_same=exit94  repaired_on_tree=exit0
+  disagreements=0
+==============================================================================
