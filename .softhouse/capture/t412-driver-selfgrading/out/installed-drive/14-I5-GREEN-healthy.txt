@@ -1,0 +1,23 @@
+driver-push-gate: running /Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=t412scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.BIfDgCaEoc/remote.git
+driver-push-gate: pushing 6e137d7eea104f7290fdd6eaf56c568af81ee2bd -> refs/heads/main   tree=0d54d19a9dac257ef7cb551d483e280b7a070d9d
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: b102875c  tree=729cd8a07c986a0ebb3244ee2e6e3f47f8e18cb1
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree 0d54d19a9dac257ef7cb551d483e280b7a070d9d (from '6e137d7eea104f7290fdd6eaf56c568af81ee2bd')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.rRxIMRYHlg
+cheap-subset:   materialised 9730 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13111 definition=102 consistent=672 bare=12171 misdirecting=79 undefined=30 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 109 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+cheap-subset: PASS -- 0 fatal citation findings in the DIRECTIVE zone of tree 0d54d19a9dac257ef7cb551d483e280b7a070d9d.
+driver-push-gate:   C3 PASS -- cheap subset clean; CHEAP attestation recorded for 0d54d19a9dac257ef7cb551d483e280b7a070d9d.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.BIfDgCaEoc/remote.git
+   4e7d678a..6e137d7e  HEAD -> main
+
+ARM I5-healthy-allowed         EXPECT rc=0 GOT rc=0  marker [C3 PASS -- cheap subset clean]        PASS
+cheap path wall clock (GREEN): 30 s

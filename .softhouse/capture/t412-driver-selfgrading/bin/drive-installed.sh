@@ -65,6 +65,18 @@ cp "$HOOK" "$OUT/00-installed-pre-push.txt" || exit 2
 bash .softhouse/hooks/install-driver-push-gate.sh --status > "$OUT/01-status.txt" 2>&1
 LC_ALL=C sed -n '1,12p' "$OUT/01-status.txt"
 
+# ARMS I4/I5 switch branches, so a dirty tree would abort the drive HALFWAY -- with the arms
+# that already ran reported as PASS and the rest simply missing, which reads like a shorter drive
+# rather than a broken one. Refuse up front instead.  [driven: run 4 aborted at arm I4 exactly
+# this way, having printed three PASS lines.]
+DIRTY="$(git status --porcelain)"
+if [ -n "$DIRTY" ]; then
+  echo "drive: the work tree is DIRTY. Arms I4/I5 switch branches and would abort mid-drive,"
+  echo "drive: leaving a transcript that looks like a short clean run. Commit first. REFUSING."
+  printf '%s\n' "$DIRTY" | LC_ALL=C sed -n '1,10p'
+  exit 2
+fi
+
 D="$(mktemp -d "${TMPDIR:-/tmp}/t412-installed.XXXXXXXXXX")" || exit 2
 BARE="$D/remote.git"
 git init --quiet --bare "$BARE" || exit 2
@@ -94,10 +106,22 @@ echo    "                which leave the STATE set, so the cheap subset may not 
 git push t412scratch "HEAD:refs/heads/main" > "$OUT/11-I2-RED-own-branch-as-main.txt" 2>&1
 expect I2-own-branch-refused 1 $? "$OUT/11-I2-RED-own-branch-as-main.txt" "C3 REFUSED"
 
-hdr "ARM I3 (GREEN) -- push main itself. Its tree carries a REAL FULL attestation written by"
-echo    "                bar-attest.sh from a real bar run, not seeded by this drive."
-git push t412scratch "main:refs/heads/main" > "$OUT/12-I3-GREEN-attested-main.txt" 2>&1
-expect I3-attested-main 0 $? "$OUT/12-I3-GREEN-attested-main.txt" "C3 the pushed tree is ATTESTED FULL"
+hdr "ARM I3 (GREEN) -- push the exact commit whose tree carries a REAL FULL attestation,"
+echo    "                written by bar-attest.sh from a real bar run and not seeded by this drive."
+# BY SHA, NOT BY THE NAME `main`. Run 3 of this drive pushed `main` and the arm failed on its
+# marker -- because `main` HAD MOVED: at 10:29:36 the live driver committed 4e7d678a and at
+# 10:30:11 pushed it, THROUGH THIS GATE, 58 s after the hook was installed. The gate took the
+# cheap path and allowed it, correctly. That is recorded at 90-LIVE-DRIVER-PUSH-GATED.md and is
+# better evidence than the arm was designed to collect; the arm is now pinned to the attested
+# sha so it tests the FAST PATH deterministically instead of racing the driver for it.
+ATT="$(LC_ALL=C awk -F'\t' '$1=="FULL" {print $3}' "$COMMON/softhouse-driver-gate/attest.tsv" | LC_ALL=C tail -1)"
+if [ -z "$ATT" ]; then
+  echo "drive: no FULL attestation on this host. Run:  bash .softhouse/hooks/bar-attest.sh main"
+  exit 2
+fi
+echo "attested commit: $ATT"
+git push t412scratch "$ATT:refs/heads/main" > "$OUT/12-I3-GREEN-attested-main.txt" 2>&1
+expect I3-attested-fastpath 0 $? "$OUT/12-I3-GREEN-attested-main.txt" "C3 the pushed tree is ATTESTED FULL"
 
 # ---------------------------------------------------------------------------------------------
 hdr "ARM I4 (RED) -- a state-only commit off main carrying the RECORDED DEFECT: an undefined"

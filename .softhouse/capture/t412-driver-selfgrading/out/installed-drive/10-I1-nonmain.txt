@@ -1,0 +1,11 @@
+driver-push-gate: running /Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=t412scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.wsXUnIWAFJ/remote.git
+driver-push-gate: STANDS ASIDE for refs/heads/softhouse/T412-installed-probe -- this gate guards refs/heads/main only. Worker branches run the
+driver-push-gate:   full bar on their own tree before handoff; that obligation is unchanged and this gate
+driver-push-gate:   neither adds to it nor substitutes for it.
+driver-push-gate: no update to refs/heads/main in this push. Nothing for this gate to decide.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.wsXUnIWAFJ/remote.git
+ * [new branch]        HEAD -> softhouse/T412-installed-probe
+
+ARM I1-nonmain-stands-aside    EXPECT rc=0 GOT rc=0  marker [STANDS ASIDE for refs/heads/softhouse/T412-installed-probe] PASS

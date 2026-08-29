@@ -1,0 +1,53 @@
+
+===============================================================
+PRECONDITION -- the hook must be INSTALLED in the shared hooks directory of THIS repo
+===============================================================
+installed hook: /Users/buv/gerege-nbfi/.git/hooks/pre-push
+install-driver-push-gate: hooks dir     /Users/buv/gerege-nbfi/.git/hooks
+install-driver-push-gate: main checkout /Users/buv/gerege-nbfi
+install-driver-push-gate: pre-push      PRESENT
+install-driver-push-gate:               and it IS this gate's shim.
+install-driver-push-gate: --- installed shim ---
+#!/bin/sh
+# softhouse-t412-driver-push-gate -- installed by .softhouse/hooks/install-driver-push-gate.sh
+# Refuses a push to refs/heads/main that carries a gitlink, writes outside the driver allowlist,
+# or lands a tree no bar has graded.  Stands aside for every other ref.
+# Escape hatch for C2/C3 only, never C1:  SOFTHOUSE_DRIVER_GATE_BYPASS="<reason, 12+ chars>"
+GATE="/Users/buv/gerege-nbfi/.softhouse/hooks/driver-push-gate.sh"
+if [ ! -f "$GATE" ]; then
+main=4e7d678a68d4a5ac7585d65166bdfc09c970b9c1  mine=ad778020e33be6fbec91f1889c6af4d0fb3dbc8d  branch=softhouse/T412-driver-selfgrading
+
+===============================================================
+ARM I1 (CONTROL) -- push THIS branch to a NON-main ref. The installed gate stands aside.
+===============================================================
+ARM I1-nonmain-stands-aside    EXPECT rc=0 GOT rc=0  marker [STANDS ASIDE for refs/heads/softhouse/T412-installed-probe] PASS
+
+===============================================================
+ARM I2 (RED) -- push THIS BRANCH as refs/heads/main. Its delta from main is *.sh files,
+===============================================================
+                which leave the STATE set, so the cheap subset may not stand in for the bar.
+ARM I2-own-branch-refused      EXPECT rc=1 GOT rc=1  marker [C3 REFUSED]                           PASS
+
+===============================================================
+ARM I3 (GREEN) -- push main itself. Its tree carries a REAL FULL attestation written by
+===============================================================
+                bar-attest.sh from a real bar run, not seeded by this drive.
+ARM I3-attested-main           EXPECT rc=0 GOT rc=0  marker [C3 the pushed tree is ATTESTED FULL]  *** ARM FAILED (marker) ***
+
+===============================================================
+ARM I4 (RED) -- a state-only commit off main carrying the RECORDED DEFECT: an undefined
+===============================================================
+                P-number in .softhouse/RESUME.md, a DIRECTIVE file.
+ARM I4-bad-citation-refused    EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- THE CHEAP SUBSET FAILED ON THE PUSHED TREE] PASS
+cheap path wall clock (RED): 29 s
+
+===============================================================
+ARM I5 (GREEN) -- the same commit with the citation repaired. Same gate, healthy push.
+===============================================================
+ARM I5-healthy-allowed         EXPECT rc=0 GOT rc=0  marker [C3 PASS -- cheap subset clean]        PASS
+cheap path wall clock (GREEN): 30 s
+
+===============================================================
+SUMMARY
+===============================================================
+arms passed: 4   arms failed: 1

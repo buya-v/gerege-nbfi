@@ -1,0 +1,29 @@
+driver-push-gate: running /Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=t412scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.wsXUnIWAFJ/remote.git
+driver-push-gate: pushing ad778020e33be6fbec91f1889c6af4d0fb3dbc8d -> refs/heads/main   tree=2b93652a04733febb76690bb6cb3b57aaa936673
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of ad778020e33be6fbec91f1889c6af4d0fb3dbc8d.
+driver-push-gate:   C2 write-path allowlist: clean (50 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: b102875c  tree=729cd8a07c986a0ebb3244ee2e6e3f47f8e18cb1
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED, and its delta from the graded ancestor
+driver-push-gate:   b102875c leaves the STATE set, so the cheap subset is not
+driver-push-gate:   licensed to stand in for the bar. Offending entries:
+driver-push-gate:     [A] .softhouse/capture/t412-driver-selfgrading/bin/drive-gate.sh
+driver-push-gate:     [A] .softhouse/capture/t412-driver-selfgrading/bin/drive-installed.sh
+driver-push-gate:     [A] .softhouse/hooks/bar-attest.sh
+driver-push-gate:     [A] .softhouse/hooks/cheap-subset.sh
+driver-push-gate:     [A] .softhouse/hooks/driver-push-gate.sh
+driver-push-gate:     [A] .softhouse/hooks/install-driver-push-gate.sh
+driver-push-gate: 
+driver-push-gate:   Run:      bash .softhouse/hooks/bar-attest.sh ad778020e33be6fbec91f1889c6af4d0fb3dbc8d
+driver-push-gate: 
+driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
+driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, conformance.sh and any req/ directory,
+driver-push-gate:   ADDED or MODIFIED only. Everything else can move a guard whose corpus the cheap subset
+driver-push-gate:   does not read.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-installed.wsXUnIWAFJ/remote.git'
+
+ARM I2-own-branch-refused      EXPECT rc=1 GOT rc=1  marker [C3 REFUSED]                           PASS
