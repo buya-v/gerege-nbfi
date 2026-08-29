@@ -1,0 +1,48 @@
+=== R02.1 ref_num distribution -- T429 JSON claims "NULL on every row in this tenant"
+ total | non_null | null_cnt 
+-------+----------+----------
+   109 |       37 |       72
+(1 row)
+
+=== R02.2 sample of non-null ref_num
+ id | transaction_id | ref_num | entity_type_enum |    amount     
+----+----------------+---------+------------------+---------------
+ 33 | a28f54bfdaf3   |         |                  | 100000.250000
+ 34 | a28f54bfdaf3   |         |                  |  25000.300000
+ 35 | a28f54bfdaf3   |         |                  | 125000.550000
+ 36 | a28f54c099f7   |         |                  | 100000.250000
+ 37 | a28f54c099f7   |         |                  | 100000.250000
+ 38 | a28f54c1db73   |         |                  | 100000.250000
+ 39 | a28f54c1db73   |         |                  |  25000.300000
+ 40 | a28f54c1db73   |         |                  | 125000.550000
+ 41 | a28f55a1af0f   |         |                  |  33333.330000
+ 42 | a28f55a1af0f   |         |                  |  33333.330000
+ 43 | a28f55a289cf   |         |                  |  33333.330000
+ 44 | a28f55a289cf   |         |                  |  33333.330000
+(12 rows)
+
+=== R02.3 distinct ref_num values
+ ref_num | count 
+---------+-------
+         |    37
+(1 row)
+
+=== R02.4 reversed / reversal_id -- T429 handoff says "3 reversals"
+ reversed_true | reversal_id_non_null 
+---------------+----------------------
+             8 |                    8
+(1 row)
+
+=== R02.5 the reversal rows
+ id | transaction_id | reversed | reversal_id | type_enum |     amount     | account_id 
+----+----------------+----------+-------------+-----------+----------------+------------
+ 33 | a28f54bfdaf3   | t        |          38 |         2 |  100000.250000 |         16
+ 34 | a28f54bfdaf3   | t        |          39 |         2 |   25000.300000 |         17
+ 35 | a28f54bfdaf3   | t        |          40 |         1 |  125000.550000 |         21
+ 45 | a28f573f34c7   | t        |          50 |         2 |  100000.250000 |         16
+ 46 | a28f573f34c7   | t        |          51 |         2 |   25000.370000 |         17
+ 47 | a28f573f34c7   | t        |          52 |         1 |  125000.620000 |         21
+ 59 | a28f605fcdeb   | t        |          63 |         2 | 1000000.000000 |         33
+ 60 | a28f605fcdeb   | t        |          64 |         1 | 1000000.000000 |         34
+(8 rows)
+
