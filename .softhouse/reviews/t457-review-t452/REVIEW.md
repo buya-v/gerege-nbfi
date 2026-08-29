@@ -377,9 +377,12 @@ T316-DEADPATH-FRONTIER: rows=108 pinned=108
 `grep -n 'T316-DEADPATH' out/T452-BAR.txt` returns **one** line and it is
 `T316-DEADPATH-CENSUS: corpus=1618 deadFiles=75 deadOccurrences=108 …`. The guard's probe line is
 only re-echoed by `conformance.sh` on the *T323-reconciliation* branch; on the clean branch the
-bar prints `dead-path frontier: GREEN, and the T323 reconciliation list is empty.` **The frontier
-genuinely is at its pin** — `deadOccurrences=108` and `frontier == pinned (all 11 rows, by path)`
-are both in the transcript, so the claim is TRUE. What is wrong is that a summary block adopts
+bar prints `dead-path frontier: GREEN, and the T323 reconciliation list is empty.` Nor is the
+quoted string the guard's own format — run `check-dead-path-frontier.sh` directly and it prints
+`T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0`, with a verdict word and
+two cardinals the quoted line does not have. **The frontier genuinely is at its pin** —
+`deadOccurrences=108` and `frontier == pinned (all 11 rows, by path)` are both in the transcript,
+so the claim is TRUE. What is wrong is that a summary block adopts
 **probe-line syntax for a probe line the transcript does not contain**, in a chain whose founding
 finding (`C-T440-1`) is *an instrument that shipped a transcript its own code cannot produce*.
 Quote what the transcript prints. (My own §9 below is quoted line-for-line from `out/T457-BAR.txt`
@@ -454,5 +457,21 @@ this review's own instruments added no dead literal. That is not luck: every pat
 assembled from `S='.softhouse'` and both relocated destinations are built at run time, precisely
 because this guard has refused the first committed bar of five workers this fire on that reflex.
 
-The bar was **re-run on the final tree** after this file's last edit; §9's second transcript,
-`out/T457-BAR-FINAL.txt`, is committed on top and carries the same four figures.
+**Second run, on `c1d970b0`** — `out/T457-BAR-FINAL.txt`, `/tmp/t457/bar2`, 0 dirty before and
+after — reproduces all four: `grep -c 'probe = ' -> 1`, `probe = up`,
+`frontier 11, pinned at 11`, `deadOccurrences=108`, `VERDICT: PASS (exit 0) — 46 parity vectors …
+7884 cells`, `BAR EXIT=0`.
+
+**And the regress is closed rather than waved at.** Commits after a bar are the standing hole in
+this pattern — the transcript can only ever describe the tree beneath it. The two commits this
+branch adds on top of the last full bar are a prose edit to this file and an inert `.txt`, and
+neither is in the census corpus (`git ls-files '.softhouse/*.py' '.softhouse/*.sh'`). The one
+guard that could still have moved was therefore run **on the branch tip itself**, clean:
+
+```
+tip commit : 7fe72c1328a07702c300092b8d0698dacb06b6ac      dirty : 0
+T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
+T316-DEADPATH-CENSUS: corpus=1616 deadFiles=75 deadOccurrences=108 resolving=1545 indeterminate=121 prose=411
+```
+
+`out/T457-TIP-FRONTIER.txt`. Probe-line **presence** tested first (`grep -c … -> 1`), then value.
