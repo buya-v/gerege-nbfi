@@ -1,0 +1,96 @@
+T468 -- EVERY ONE OF T458's SIX CITATIONS OPENED AT THE CITED LINE
+==================================================================
+Method: `grep -n` / `sed -n` on the committed artefact on main. The figure AND the
+line number were both graded, because a citation that points at the right claim but
+the wrong line is a real finding in a program whose subject is stale citations.
+
+1  T440  cited: reviews/t440-review-t424/out/T440-BAR-own-RED.txt:191
+   MEASURED  grep -n 'T316-DEADPATH-FRONTIER' -> exactly one hit, at line 191:
+     191:T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
+   LINE EXACT. FIGURE EXACT. The '+' row at :189 names
+     reviews/t440-review-t424/instruments/f-t440-1.sh | capture/t424/instruments/t424-comment-claims-drive.sh
+
+2  T446  cited: reviews/t446-review-t445/evidence/80-my-first-bar-REFUSED-failopen.log:100,122
+   MEASURED  100:  "... frontier 15, pinned at 11"                       LINE EXACT
+             122:  "conformance: EXIT 2 - no verdict is available."      LINE EXACT
+             111-114: FOUR '+TIER2' rows, all under reviews/t446-review-t445/instruments/
+             grep -c 'probe = ' over that log = 0                        EXACT
+   This is guard_no_fail_open_instruments, NOT guard_dead_path_frontier.
+
+3  T447  cited: reviews/t447-review-t442/REVIEW.md sec.11
+   MEASURED  sec.11 heading at :444; the claim at :462-464:
+     "REFUSED rows=109 pinned=108 added=1 removed=0, BAR EXIT=2"
+   INSIDE the cited section. FIGURE EXACT.
+
+4  T448  cited: reviews/t448-review-t433/out/79-BAR-FIRST-RUN-REFUSED-...txt:193 and REVIEW.md:531
+   MEASURED  grep -n -> exactly one hit, at line 193:
+     193:T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
+     REVIEW.md:531 carries the same line; :532 carries "BAR EXIT 2   grep -c 'probe = ' -> 0"
+   BOTH LINES EXACT.
+
+5  T451  cited: handoff/T451-t449-conditions.md:374-382
+   MEASURED  375: "refused with `rows=120 pinned=108 added=12`: 12 new"
+             376: "dead repo-path references, **all 12 from `bin/10-fixture.sh`**"
+   INSIDE the cited range. FIGURES EXACT.
+
+6  T452  cited: handoff/T452-t447-conditions.md:404-410
+   MEASURED  406: "refused: `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1"
+             407: "removed=0`, **BAR EXIT=2**, on a clean tree (0 dirty)"
+   INSIDE the cited range. FIGURES EXACT, INCLUDING the `added=1 removed=0` tail the
+   dispatch brief dropped -- so T458's "lossy, not false" correction is confirmed.
+
+ALL SIX REPRODUCE. NO CITATION IS OFF BY A LINE.
+
+THE RECLASSIFICATION, RE-DERIVED INSTANCE BY INSTANCE
+=====================================================
+T447 -- instrument header, verbatim, reviews/t447-review-t442/instruments/t447-k8-handoff-site.sh:12:
+   "-- ERRATUM-K8-DECOMPOSITION.md, which exists ONLY on softhouse/T442-t440-conditions"
+   and :28 "THE ERRATUM IS NOT ON THIS BRANCH and this drive does not pretend otherwise."
+   -> CROSS-BRANCH ARTEFACT REFERENCE. Not a fixture. CONFIRMED FROM THE INSTRUMENT ITSELF.
+T448 -- its own REVIEW.md: the guard "is on softhouse/T433-t423-c1 and not on main".
+   -> CROSS-BRANCH ARTEFACT REFERENCE. CONFIRMED.
+T440 -- the '+' row names capture/t424/instruments/t424-comment-claims-drive.sh, which was
+   on the branch under review and not on T440's own tree at that commit.
+   -> CROSS-BRANCH ARTEFACT REFERENCE. CONFIRMED.
+   CORROBORATION: both of those two target files ARE tracked on main TODAY
+   (`git ls-files | grep -c` = 1 each at 3f4e236a). They were merged after the fact.
+   That is exactly what "exists only on the branch under review" predicts, and it is
+   independent of anything T458 wrote.
+T446 -- guard_no_fail_open_instruments, a DIFFERENT GUARD with a different pin
+   (FAILOPEN_PIN_FILE_LIST, 11 rows) and a different failure mode (a printing failure arm).
+   -> SIBLING GUARD. CONFIRMED.
+T451 -- pre-repair bytes at 0bf11587, capture/t451-t449-conditions/bin/10-fixture.sh:
+   commit ".softhouse/capture/t900-work/out/wip.txt" "real analysis" "RESCUED: ..."
+   -- paths INSIDE a synthetic repo the script builds after `cd "$FIX"`.
+   -> FIXTURE LITERAL PROPER. CONFIRMED.
+T452 -- capture/t452-t447-conditions/instruments/t452-a2-33-failopen-drive.sh:147:
+   C_REL="$(dirname "$SELF_DIR")/t452-relocated-$$/sweep.sh"
+   -- a run-time relocation destination, not a reference to a file expected to be there.
+   -> closest to "fixture literal proper"; strictly it is a SCRATCH DESTINATION, and
+      T458's own prose says so. The grouping is loose; the classification is right.
+
+VERDICT ON THE RECLASSIFICATION: T458 IS RIGHT AND THE DISPATCH BRIEF WAS WRONG.
+  Only 2 of 6 are fixture literals. 3 are cross-branch artefact references that were
+  GENUINELY DEAD on the author's own tree, so the census produced ZERO false positives
+  on them. 1 is a different guard entirely.
+
+"NOT ONE OF THEM GREW THE PIN" -- re-derived, not accepted
+  grep -c -E 't440-review-t424|t446-review-t445|t447-review-t442|t448-review-t433|
+             t451-t449-conditions|t452-t447-conditions' over guards/dead-path-frontier.pin
+    = 0 rows.
+  grep -c 't446-review-t445' over the same pin = 0.
+  The fail-open frontier is 11 == 11 today, having been 15 vs 11 during T446's RED.
+  TRUE.
+
+THE FIVE REPAIRS, EACH OPENED
+  T440  reviews/t440-review-t424/instruments/f-t440-1.sh:22-23
+        REPO=${1:?usage: ...}   DRIVE_REL=${2:?usage: ... -- no default; see the header}
+        and :24,:27 exit 2 on non-resolution.                        CONFIRMED
+  T447  .../t447-k8-handoff-site.sh:26 usage takes the erratum path; :50,:64,:65 exit 2.  CONFIRMED
+  T448  .../30-t448-tag-abuse.sh:46  GUARD="${T448_GUARD:?...}"; prepare() returns 1 at
+        :65-68 and every call site (:86-88, :106-108, :148-150) is `exit 3`. The file's own
+        comment at :44 says "a value that does not resolve is exit 3 in `prepare()`".  CONFIRMED
+  T451  capture/t451-t449-conditions/bin/10-fixture.sh:16  S=".softhouse"   LINE EXACT. CONFIRMED
+  T452  .../t452-a2-33-failopen-drive.sh:147 assembled at run time.          CONFIRMED
+  T446  the four drives carry exit arms; their remaining `|| echo` occurrences are in
+        COMMENTS describing the defect that was removed (drive-longs.sh:66,92).  CONFIRMED

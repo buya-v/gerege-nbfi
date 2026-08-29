@@ -1,0 +1,116 @@
+0a1,12
+> go-env.sh: the PINNED Go toolchain was NOT found on this host.
+> go-env.sh:   searched (needed <cand>/go/bin/go):
+>     /tmp/t468.pKBxwr/t458/.softhouse/toolchain
+>     /tmp/t468.pKBxwr/t458/.softhouse/bin/../../toolchain
+> go-env.sh:   anchor: /tmp/t468.pKBxwr/t458/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+> go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+> go-env.sh:   /Users/buv/.local/bin/go
+> go-env.sh:   go version go1.23.4 darwin/arm64
+> go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+> go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+> go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+> go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+9,11c21,23
+< conformance: no-float guard — inspected 73 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/.softhouse/vectors
+< conformance: no-float guard — inspected 6 Go packages / 70 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/nexus (recursive, whole module)
+< conformance: gofmt guard — inspected 70 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/nexus (recursive, whole module; contract.go exempt, gate G-3)
+---
+> conformance: no-float guard — inspected 73 .json files under /tmp/t468.pKBxwr/t458/.softhouse/vectors
+> conformance: no-float guard — inspected 6 Go packages / 70 .go files under /tmp/t468.pKBxwr/t458/nexus (recursive, whole module)
+> conformance: gofmt guard — inspected 70 .go files under /tmp/t468.pKBxwr/t458/nexus (recursive, whole module; contract.go exempt, gate G-3)
+14c26
+< conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+---
+> conformance: CENSUS wire-float round-trip — inspected 574 documents / 10951 numeric tokens: 548 request bodies (*.json under a req/ dir, plus *.req) across 14 capture rigs / 62 req directories under /tmp/t468.pKBxwr/t458/.softhouse/capture, and 26 capture records cited by the vector store (recursive, whole capture tree)
+16c28
+< conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 73 *.json in /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+---
+> conformance: CENSUS recorded-request blocks — 26 capture records DERIVED from provenance.capture_ref across 73 *.json in /tmp/t468.pKBxwr/t458/.softhouse/vectors; 8 of those records carry a recorded-request block and 18 carry none; 96 blocks (key `inputs` or `request`, any depth, located by parser walk) / 783 numeric tokens GRADED, float-shaped PRESENT 0, ALTERED 0
+39c51
+< conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+---
+> conformance: CENSUS narrow-catch — inspected 63 .java files across 24 directories under /tmp/t468.pKBxwr/t458 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+40a53,64
+> go-env.sh: the PINNED Go toolchain was NOT found on this host.
+> go-env.sh:   searched (needed <cand>/go/bin/go):
+>     /tmp/t468.pKBxwr/t458/.softhouse/toolchain
+>     /tmp/t468.pKBxwr/t458/.softhouse/bin/../../toolchain
+> go-env.sh:   anchor: /tmp/t468.pKBxwr/t458/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+> go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+> go-env.sh:   /Users/buv/.local/bin/go
+> go-env.sh:   go version go1.23.4 darwin/arm64
+> go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+> go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+> go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+> go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+42c66
+< ledger-invariants: CENSUS ledger-invariants — inspected 70 Go files / 6 packages / 760 funcs (1 hold-named) / 1286 assignment or inc-dec statements / 704 write targets / 7795 string literals in 6545 concatenation groups / 7748 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/nexus (recursive, whole Go tree)
+---
+> ledger-invariants: CENSUS ledger-invariants — inspected 70 Go files / 6 packages / 760 funcs (1 hold-named) / 1286 assignment or inc-dec statements / 704 write targets / 7795 string literals in 6545 concatenation groups / 7748 calls under /tmp/t468.pKBxwr/t458/nexus (recursive, whole Go tree)
+108c132
+< conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a (git ls-files, whole repository); frontier 11, pinned at 11
+---
+> conformance:   /tmp/t468.pKBxwr/t458 (git ls-files, whole repository); frontier 11, pinned at 11
+115c139
+< conformance:   read from git grep over tracked *.sh/*.py under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a; sites that assign a
+---
+> conformance:   read from git grep over tracked *.sh/*.py under /tmp/t468.pKBxwr/t458; sites that assign a
+177c201
+< conformance:   namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a
+---
+> conformance:   namespace:   root    /private/tmp/t468.pKBxwr/t458
+194c218
+< conformance:   GUARD-COST CENSUS: 16 guards timed, 66s total wall,
+---
+> conformance:   GUARD-COST CENSUS: 16 guards timed, 72s total wall,
+197c221
+< conformance:     COST 1s / ceiling 60s   guard_harness_text_is_committed
+---
+> conformance:     COST 0s / ceiling 60s   guard_harness_text_is_committed
+199,204c223,228
+< conformance:     COST 1s / ceiling 60s   guard_no_float_in_harness
+< conformance:     COST 1s / ceiling 60s   guard_gofmt
+< conformance:     COST 1s / ceiling 60s   guard_no_float_in_capture_requests
+< conformance:     COST 0s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+< conformance:     COST 3s / ceiling 300s   guard_ledger_invariants
+< conformance:     COST 7s / ceiling 60s   guard_no_fail_open_instruments
+---
+> conformance:     COST 2s / ceiling 60s   guard_no_float_in_harness
+> conformance:     COST 0s / ceiling 60s   guard_gofmt
+> conformance:     COST 4s / ceiling 60s   guard_no_float_in_capture_requests
+> conformance:     COST 1s / ceiling 60s   guard_no_narrow_catch_in_capture_rigs
+> conformance:     COST 8s / ceiling 300s   guard_ledger_invariants
+> conformance:     COST 9s / ceiling 60s   guard_no_fail_open_instruments
+206c230
+< conformance:     COST 20s / ceiling 300s   guard_pnumber_citations
+---
+> conformance:     COST 25s / ceiling 300s   guard_pnumber_citations
+208,211c232,235
+< conformance:     COST 2s / ceiling 60s   guard_guards_dir_registration
+< conformance:     COST 0s / ceiling 60s   guard_capture_namespace
+< conformance:     COST 2s / ceiling 60s   guard_dead_path_frontier
+< conformance:     COST 27s / ceiling 500s   guard_reconciler_ownership
+---
+> conformance:     COST 1s / ceiling 60s   guard_guards_dir_registration
+> conformance:     COST 1s / ceiling 60s   guard_capture_namespace
+> conformance:     COST 0s / ceiling 60s   guard_dead_path_frontier
+> conformance:     COST 20s / ceiling 500s   guard_reconciler_ownership
+222c246
+<     repo root       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a
+---
+>     repo root       /tmp/t468.pKBxwr/t458
+224,226c248,250
+<                     anchor: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/nexus/internal/apps/loanschedule/conformance/reporoot.go
+<                     cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a resolves to the graded root
+<     store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/.softhouse/vectors
+---
+>                     anchor: /tmp/t468.pKBxwr/t458/nexus/internal/apps/loanschedule/conformance/reporoot.go
+>                     cwd cross-check: SAME — cwd /tmp/t468.pKBxwr/t458 resolves to the graded root
+>     store           /tmp/t468.pKBxwr/t458/.softhouse/vectors
+832c856
+<                             census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad1afe83015166e5a/nexus
+---
+>                             census root walked: /tmp/t468.pKBxwr/t458/nexus
+871a896
+> BAR EXIT = 0

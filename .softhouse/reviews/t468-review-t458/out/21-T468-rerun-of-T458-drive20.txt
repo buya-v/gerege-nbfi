@@ -1,0 +1,30 @@
+== T458 WRAPPER-ARM DRIVE ==
+   git   : git version 2.50.1 (Apple Git-155)
+   SRC   : /tmp/t468.pKBxwr/t458
+   HEAD  : 0db7538b5fb693093b70d75aed423566a86937b5
+
+-- CALIBRATION: the wrapper's remedy line and its arm head must exist in the harness source
+   source hits = 1   for: THE REMEDY, in one line: build the path from a variable at run time
+   source hits = 1   for: A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
+   source hits = 1   for: THE FRONTIER MOVED IN A WAY NOBODY RECORDED
+   CALIBRATED.
+
+== RED ARM: full bar in a scratch clone with ONE planted dead literal ==
+   planted file tracked in clone = 1   (must be 1, or the arm measures nothing)
+   bar exit          = 2     (2 expected: a failed HARD guard, NOT an oracle outage)
+   'probe = ' lines  = 0     (0 expected -- read the ABSENCE, not a value)
+   wrapper arm head  = 1     (expected >= 1)
+   wrapper remedy    = 1     (expected >= 1)
+   pattern anchor    = 2     (expected >= 2: guard message AND wrapper arm)
+   [/tmp/t468.pKBxwr/myout/40-RED-wrapper-arm-full-bar.txt]
+
+== GREEN ARM: the same harness, frontier == pin ==
+   'probe = ' lines  = 1     (PRESENCE read before VALUE)
+   frontier GREEN    = 1     (expected >= 1 -- proves the arm HAD the chance to fire)
+   wrapper arm head  = 0     (expected 0)
+   wrapper remedy    = 0     (expected 0)
+   pattern anchor    = 0     (expected 0)
+   [/tmp/t468.pKBxwr/BAR-T458-TIP-0db7538b.txt]
+
+T458-WRAPPER-DRIVE: PASS red=exit2/arm1/remedy1/anchor2 green=arm0/remedy0/anchor0
+DRIVE20 EXIT = 0
