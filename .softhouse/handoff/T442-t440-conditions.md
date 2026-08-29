@@ -244,20 +244,28 @@ returns only **prose** references — `AUDIT-CLASS.md`, `T402`/`T424` handoffs, 
 comments, and `tasks.json`. **`conformance.sh` invokes none of them.** These are evidence
 instruments, not guards, and they are not claimed to be guards. What *does* reach them
 automatically is the bar's own censuses, which walk tracked `.sh`/`.py` under `.softhouse/` and
-carry pinned frontier counts — so the four files added here are inside a corpus the bar measures,
-and the bar was run to confirm they move nothing (below). **Wiring any of these into
+carry pinned frontier counts — so the five new scripts added here (`t442-c1-reproduction-drive.sh`,
+`t442-selfmatching-probe-census.py`, `t442-k8-decomposition.sh`, `t442-t440-lows-drive.sh`,
+`t442-unrepair-guard.py`) are inside a corpus the bar measures, and the bar was run to confirm
+they move nothing (below). **Wiring any of these into
 `conformance.sh` is not possible this wave: `T445` holds that file.**
 
 ## The bar
 
-Run with `bash`, scratch in `/tmp` outside the repository, on the committed tree at `65f384a0`:
+Run with `bash`, never `sh`/`zsh`; scratch in `/tmp`, outside the repository. Twice on committed
+trees — `65f384a0` and the finished tree `34e1382e` — with identical results:
 
 ```
-grep -c 'probe = ' → 1          (presence tested BEFORE the value was read)
+grep -c 'probe = ' → 1          (PRESENCE tested before the value was read: four exit-2 paths
+                                 run before the probe prints, so absence would not have been 'down')
 conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
-BAR EXIT=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
 all 16 wrong ledger implementations DIED through this harness, not by hand.
+BAR EXIT=0
 ```
+
+No money path, no vector, no schedule figure is touched by this branch; the diff is instruments,
+transcripts and prose under `capture/t424/`, plus one patch artefact and this handoff.
 
 ## What I could not close
 
