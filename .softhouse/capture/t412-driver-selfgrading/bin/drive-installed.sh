@@ -18,10 +18,17 @@
 # =============================================================================================
 set -u
 
-OUT="${1:-}"
-[ -n "$OUT" ] || { echo "usage: drive-installed.sh <outdir>"; exit 2; }
-mkdir -p "$OUT" || { echo "drive: could not create $OUT"; exit 2; }
-OUT="$(cd "$OUT" && pwd)" || { echo "drive: could not resolve $OUT"; exit 2; }
+DEST="${1:-}"
+[ -n "$DEST" ] || { echo "usage: drive-installed.sh <outdir>"; exit 2; }
+mkdir -p "$DEST" || { echo "drive: could not create $DEST"; exit 2; }
+DEST="$(cd "$DEST" && pwd)" || { echo "drive: could not resolve $DEST"; exit 2; }
+
+# TRANSCRIPTS ARE WRITTEN TO SCRATCH AND COPIED IN AT THE END, never straight into the tracked
+# capture directory. Arms I4/I5 switch branches, and a drive that dirties the tree it is about to
+# switch inside ABORTS ITSELF -- runs 4 and 5 did exactly that, each after printing three PASS
+# lines and no failures, which reads like a short clean drive rather than a broken one.
+SCRATCH_OUT="$(mktemp -d "${TMPDIR:-/tmp}/t412-installed-out.XXXXXXXXXX")" || { echo "drive: no scratch"; exit 2; }
+OUT="$SCRATCH_OUT"
 
 TOP="$(git rev-parse --show-toplevel)" || { echo "drive: not in a work tree"; exit 2; }
 COMMON="$(git rev-parse --git-common-dir)" || { echo "drive: no common dir"; exit 2; }
@@ -92,6 +99,11 @@ finish() {
   git checkout --quiet "$BR" >/dev/null 2>&1
   git branch -D t412-installed-probe >/dev/null 2>&1
   git remote remove t412scratch >/dev/null 2>&1
+  if [ -n "${SCRATCH_OUT:-}" ] && [ -d "$SCRATCH_OUT" ] && [ -n "${DEST:-}" ]; then
+    cp -R "$SCRATCH_OUT/." "$DEST/" 2>/dev/null
+    echo "drive: transcripts copied to $DEST"
+    rm -rf "$SCRATCH_OUT"
+  fi
   [ -n "${D:-}" ] && [ -d "$D" ] && rm -rf "$D"
 }
 trap finish EXIT
