@@ -630,6 +630,47 @@ Transcripts: `out/BAR-A-t417-tree-131218cf.txt`, `out/BAR-B-merge-result-0c35140
 
 ---
 
+## 9b. A third bar — on MY OWN branch — and a red I caused and fixed
+
+A review that reddens the bar it is grading against is worthless, so I ran the bar a **third**
+time, on `main + softhouse/T438-review-t417`. **The first attempt went EXIT 2, and my own
+evidence file was the cause.**
+
+```
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 19, pinned at 18
+conformance: THE HOST-STATE CENSUS IS NOT THE PINNED CENSUS (- pinned, + measured):
++.softhouse/reviews/t438-review-t417/out/r11-t417-diff-scan.driver.sh | T=/tmp/t438/t417tree/…
+conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+```
+`[out/BAR-C2-my-branch-EXIT2-before-fix.txt]`
+
+My scan driver performs a repo-wide `grep -r`, which puts it in `guard_no_host_state_in_lint_corpus`'s
+corpus, and it bound a literal `/tmp` path to a name — a **new** row on a census pinned at 18.
+The guard named the adoptable repair itself. I took the argument form instead: the driver now
+takes the tree to scan as `$1` and binds no host path at all.
+
+**Re-run after the fix `[out/BAR-C3-my-branch-EXIT0-after-fix.txt]`:**
+
+| | **C — my branch, merged with `main`** |
+|---|---|
+| HEAD | `main e4bde474` + `T438 52825722` |
+| **EXIT CODE** | **0** |
+| `probe = ` PRINTED AT ALL | **YES — count 1**, value `… probe = up` |
+| `VERDICT:` | `VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.` |
+| **wrong ledger implementations** | **discovered 16, pinned 16, all 16 KILLED** |
+| host-state temp-path census | **18, pinned at 18** (back to the pin) |
+| dead-path census | `corpus=1499 deadFiles=75 deadOccurrences=108 …` — **frontier moved by ZERO** |
+| repo-state attest frontier | 11, pinned at 11 |
+| guard cost | PASS — none breached |
+
+Recorded rather than tidied away, for the same reason T417 kept its own two failures: **a
+reviewer whose evidence turns the bar red and who quietly deletes the evidence has learned
+nothing and told nobody.** The finding it produces is that `.softhouse/reviews/**` `.sh`
+files enter the same censuses program instruments do — which is worth knowing before the next
+reviewer commits a driver script.
+
+---
+
 # 10. Conditions, consolidated
 
 | id | sev | condition | drive |
