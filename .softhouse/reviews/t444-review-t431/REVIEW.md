@@ -287,8 +287,14 @@ CENSUS host state … 192 repo-wide search instrument(s) … 18, pinned at 18
 Corpus `1524 → 1528` is my four tracked `.sh` instruments; `deadOccurrences` is **unmoved at
 108** because every planted repo-rooted path in them is assembled at run time from a directory
 variable plus a leaf, and **the host-state census is unmoved at `18 == 18`** because every
-instrument takes its work root as an argument. Only `REVIEW.md` prose changed after that
-commit.
+instrument takes its work root as an argument.
+
+**Re-run on the FINAL tip `b4ea4438`, `git status --porcelain` EMPTY before AND after**
+[VERIFIED: `evidence/22-FINAL-BAR-figures.txt`; full transcript, 840 lines,
+`evidence/21-FINAL-BAR-this-review-branch-clean-tree.txt`]: **EXIT 0**, `grep -c 'probe = ' = 1`
+then `probe = up`, `VERDICT: PASS 46 / 7884`, **16** wrong ledger implementations all dead,
+`population=6 … reached-by=1 … symlink-members=0`, `deadOccurrences=108`, host state
+`18, pinned at 18`. Corpus `1529` (+1, `own-bar-t444.sh`).
 
 ---
 
@@ -547,6 +553,10 @@ graded. One line either way.
 
 So that silence is distinguishable from not looking.
 
+0. **T431 stayed inside its grant.** The whole branch touches three places and nothing else:
+   `.softhouse/conformance.sh`, `.softhouse/capture/t431-t407-conditions/**` and
+   `.softhouse/handoff/T431-t407-conditions.md` — 22 files, `+6824 / −29`, of which
+   `conformance.sh` is `+201 / −29` [VERIFIED: `git diff --name-only main...`].
 1. **No non-negotiable is touched.** The `conformance.sh` diff contains no arithmetic, no
    floating point, no money, no ledger, no vector, no DEC-n, no contract change, no database
    driver, no pin change [VERIFIED: read the whole diff].
