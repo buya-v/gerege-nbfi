@@ -1,3 +1,4 @@
+=== scanning: /tmp/t438/t417tree/.softhouse/capture/t417-scheduler-attribution
 === float/double/decimal literals in T417 shell+sql:
   none
 === write verbs against the oracle in T417 shell+sql:
@@ -8,7 +9,7 @@
   none
 === hard-coded tz offsets:
   none
-=== capsql.sh write refusal:
+=== capsql.sh header + write-verb refusal (lines 1-36):
 #!/usr/bin/env bash
 # capsql.sh -- run one committed .sql file against the reference oracle's PostgreSQL and
 # keep the transcript + the statement's sha256 beside it. READ-ONLY by construction:
