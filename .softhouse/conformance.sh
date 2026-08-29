@@ -2895,6 +2895,19 @@ guard_dead_path_frontier() {
     warn "conformance: rather than pinning it; '<' is a recorded row that is no longer added and"
     warn "conformance: must be dropped from the list in the same commit."
     LC_ALL=C sed -n '1,40p' "$d/diff" >&2
+    # [T458] THE REFUSAL MUST TEACH THE FIX. Six workers in fire 20260829-080002 -- T440, T446,
+    # T447, T448, T451, T452 -- were each refused by this reflex on their first committed bar,
+    # and each rediscovered the same remedy from scratch. The guard's own message (printed in
+    # the transcript above) now carries the full three-step remedy; this arm names it too,
+    # because this arm can fire on a row the guard already listed and a reader who stops here
+    # would otherwise get the WHAT without the WHAT-TO-DO.
+    warn "conformance: THE REMEDY, in one line: build the path from a variable at run time, or"
+    warn "conformance: make the location a REQUIRED PARAMETER whose non-resolution is a HARD"
+    warn "conformance: EXIT. Repair the instrument; do not grow the pin, and do not split the"
+    warn "conformance: literal to hide it. The guard's own transcript above states all three"
+    warn "conformance: steps and the forbidden fourth. Full rule and the six measured row"
+    warn "conformance: counts: grep patterns.md for the SENTENCE (the line number moves) --"
+    warn "conformance:   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE"
     bad=1
   fi
 
