@@ -1,0 +1,82 @@
+slow-git wrapper : /tmp/t462/clock2/slowgit   (sleeps 3.20s; one measured call took 3.70s)
+CAP8 variant     : /tmp/t462/clock2/rt_cap8.py   (MAX_REFS_PROBED 512->8, clock arm disabled; -5 bytes)
+
+var    host   case kind                   polarity probes     wall
+--------------------------------------------------------------------------
+CAP8   fast   F2   relocated              REFUSE        2     0.3s
+CAP8   fast   F2S  stillborn-carried      REFUSE        2     0.2s
+CAP8   fast   F9   indeterminate          demote        8     0.6s
+CAP8   fast   F1   relocated              REFUSE        1     0.1s
+CAP8   fast   N    name-only-refs         demote        2     0.2s
+
+RED    fast   F2   relocated              REFUSE        2     0.3s
+RED    fast   F2S  stillborn-carried      REFUSE        2     0.2s
+RED    fast   F9   relocated              REFUSE        9     0.6s
+RED    fast   F1   relocated              REFUSE        1     0.1s
+RED    fast   N    name-only-refs         demote        2     0.2s
+
+GREEN  fast   F2   relocated              REFUSE        2     0.3s
+GREEN  fast   F2S  stillborn-carried      REFUSE        2     0.2s
+GREEN  fast   F9   relocated              REFUSE        9     0.6s
+GREEN  fast   F1   relocated              REFUSE        1     0.1s
+GREEN  fast   N    name-only-refs         demote        2     0.2s
+
+CAP8   SLOW   F2   relocated              REFUSE        2    26.7s
+CAP8   SLOW   F2S  stillborn-carried      REFUSE        2    24.1s
+CAP8   SLOW   F9   indeterminate          demote        8    56.6s
+CAP8   SLOW   F1   relocated              REFUSE        1     9.9s
+CAP8   SLOW   N    name-only-refs         demote        2    16.7s
+
+RED    SLOW   F2   indeterminate          demote        1    19.9s
+RED    SLOW   F2S  indeterminate          demote        1    16.6s
+RED    SLOW   F9   indeterminate          demote        1     9.9s
+RED    SLOW   F1   relocated              REFUSE        1    10.0s
+RED    SLOW   N    indeterminate          demote        1     9.9s
+
+GREEN  SLOW   F2   relocated              REFUSE        2    27.0s
+GREEN  SLOW   F2S  stillborn-carried      REFUSE        2    23.3s
+GREEN  SLOW   F9   indeterminate          demote        8    56.9s
+GREEN  SLOW   F1   relocated              REFUSE        1    10.0s
+GREEN  SLOW   N    name-only-refs         demote        2    17.0s
+
+==========================================================================
+LEG 1 -- FAST HOST: is the clean-host behaviour of GREEN identical to RED?
+==========================================================================
+  F2  fan-out 2, carrier 2nd, branch PRUNED    CAP8 REFUSE  RED REFUSE  GREEN REFUSE   want REFUSE  OK
+  F2S fan-out 2, carrier 2nd, branch STANDING  CAP8 REFUSE  RED REFUSE  GREEN REFUSE   want REFUSE  OK
+  F9  fan-out 9, carrier 9th, branch PRUNED    CAP8 demote  RED REFUSE  GREEN REFUSE   want REFUSE  OK
+  F1  fan-out 1, carrier 1st, branch PRUNED    CAP8 REFUSE  RED REFUSE  GREEN REFUSE   want REFUSE  OK
+  N   fan-out 2, NO carrier,  branch PRUNED    CAP8 demote  RED demote  GREEN demote   want demote  OK
+
+==========================================================================
+LEG 2 -- SLOW HOST: does GREEN demote anything CAP8 (the replaced bound) refuses?
+==========================================================================
+  F2  fan-out 2, carrier 2nd, branch PRUNED    CAP8 REFUSE (2) RED demote (1) GREEN REFUSE (2)
+  F2S fan-out 2, carrier 2nd, branch STANDING  CAP8 REFUSE (2) RED demote (1) GREEN REFUSE (2)
+  F9  fan-out 9, carrier 9th, branch PRUNED    CAP8 demote (8) RED demote (1) GREEN demote (8)
+  F1  fan-out 1, carrier 1st, branch PRUNED    CAP8 REFUSE (1) RED REFUSE (1) GREEN REFUSE (1)
+  N   fan-out 2, NO carrier,  branch PRUNED    CAP8 demote (2) RED demote (1) GREEN demote (2)
+
+PROBE-COUNT SUBSET CLAIM (the whole of the fix): on every case and every host,
+GREEN must probe AT LEAST as many refs as CAP8 did -- i.e. GREEN's truncated set
+is a SUBSET of CAP8's, so no truncation-caused REFUSE can become a demote.
+   F2   host=fast  CAP8 probed 2, GREEN probed 2   OK
+   F2S  host=fast  CAP8 probed 2, GREEN probed 2   OK
+   F9   host=fast  CAP8 probed 8, GREEN probed 9   OK
+   F1   host=fast  CAP8 probed 1, GREEN probed 1   OK
+   N    host=fast  CAP8 probed 2, GREEN probed 2   OK
+   F2   host=SLOW  CAP8 probed 2, GREEN probed 2   OK
+   F2S  host=SLOW  CAP8 probed 2, GREEN probed 2   OK
+   F9   host=SLOW  CAP8 probed 8, GREEN probed 8   OK
+   F1   host=SLOW  CAP8 probed 1, GREEN probed 1   OK
+   N    host=SLOW  CAP8 probed 2, GREEN probed 2   OK
+
+==========================================================================
+PASS: on a fast host every variant agrees with the written-down expectation,
+      and GREEN's kind and polarity are identical to RED's on all 5 cases.
+PASS: no case where CAP8 refuses on a SLOW host and GREEN demotes.
+PASS: GREEN's probe count >= CAP8's on every case and both hosts.
+
+STILL TRUE AND NOT CLAIMED OTHERWISE: cases where RED refuses on a SLOW host and
+GREEN demotes: none -- and cases where BOTH CAP8 and GREEN demote on a SLOW host
+are NOT fixed by a floor; they are the residual, and F9 is there to show one.

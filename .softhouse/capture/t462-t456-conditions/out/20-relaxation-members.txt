@@ -1,0 +1,53 @@
+MEASURED-AT
+  repo        : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a98c6ea6586876437
+  HEAD        : 3f4e236ad458  2026-08-29 16:50:55 +0800
+  HEAD subject: softhouse iter6: DISPATCH RECORD for wave 1 (T465 T466 T462 T458 T467) -- pushed BEFORE the first wo
+  resolver sha: 6f20b4573207
+
+population : 707 live refs, 210 ids nameable from a head, 77 (id, other-ref) pairs
+
+SET B -- pairs that CARRY ONLY UNDER THE PROPOSED `anywhere` RELAXATION.
+         This is the set the shipped docstring reported as the cardinal 0.
+         MEMBERS (id, ref, the ref's OWN leading id, whose work it is):
+   { }   -- empty ON THIS TREE. Not a property of the predicate.
+
+   |B| = 0, of which FOREIGN-owned = 0
+   THE ADJUDICATION DOES NOT TURN ON |B|. It turns on whether B's members are
+   foreign work. Every member above that reads FOREIGN is a task that would
+   REFUSE TO DEMOTE FOREVER on the strength of somebody else's branch.
+
+SET A -- pairs that CARRY under the SHIPPED code (today's refusals): 15
+   T100   ref=softhouse/T101-review-t100                     ref-owner=T101   FOREIGN
+   T108   ref=softhouse/T131-review-t108                     ref-owner=T131   FOREIGN
+   T109   ref=softhouse/T127-review-t109                     ref-owner=T127   FOREIGN
+   T21    ref=softhouse/T21-pass3-audit-rescued              ref-owner=T21    own
+   T22    ref=softhouse/T22-pathb-audit-rescued              ref-owner=T22    own
+   T268   ref=softhouse/t281-review-t268                     ref-owner=T281   FOREIGN
+   T268   ref=softhouse/t286-t268-retry                      ref-owner=T286   FOREIGN
+   T351   ref=softhouse/T369-review-t351                     ref-owner=T369   FOREIGN
+   T351   ref=softhouse/T370-t351-retry                      ref-owner=T370   FOREIGN
+   T370   ref=softhouse/T376-review-t370                     ref-owner=T376   FOREIGN
+   T38    ref=softhouse/T38-dec1-v7                          ref-owner=T38    own
+   T38    ref=softhouse/T38-dec1-v7-pass2                    ref-owner=T38    own
+   T428   ref=softhouse/rescued-t428-t421tree-20260828-140005 ref-owner=T428   own
+   T65    ref=softhouse/T67-review-t65                       ref-owner=T67    FOREIGN
+   T78    ref=softhouse/T79-review-t78                       ref-owner=T79    FOREIGN
+
+SET C -- name-only under BOTH anchors: 62 pairs
+
+FOREIGN-owned refs blocking a demotion: shipped 10 of 15 ; the relaxation would ADD 0 of 0
+
+VERDICT-SHAPE (what a later reader should re-check, rather than the numbers):
+  * is every member of B foreign-owned?  B is empty on this tree
+  * that is the whole argument against `anywhere`, and it is INDEPENDENT of |B|.
+
+NAMED-PAIR AUDIT -- pairs earlier measurements placed in B, re-asked on THIS tree
+   T448 / softhouse/T455-t448-conditions
+      cited by: T456, 2026-08-29: T455's work ABOUT T448's conditions -- foreign, so under `anywhere` T448 would refuse forever on it
+      TODAY  : THE REF NO LONGER EXISTS. Not 'the pair became name-only'
+               -- the ref was PRUNED. Its work is on main (10 tracked path(s) under its own directory).
+               merge commit: 7f064835 Merge branch 'softhouse/T455-t448-conditions'
+               So |B| moved 0 -> 1 -> 0 in under 24 hours WITHOUT the
+               predicate changing at all: create, merge, prune. A
+               cardinal over a ref store is a measurement of the ref
+               store's WEATHER, and the docstring published it as a fact.

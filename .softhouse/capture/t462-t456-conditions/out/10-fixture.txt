@@ -1,0 +1,26 @@
+fixture at /tmp/t462/fix  (dispatch fe4adae5fb61216f5e3244f6be3ae5bfd9c94d7c)
+cases:
+  F2  T801  fan-out 2, carrier 2nd, branch PRUNED    -> _absent_verdict leg
+  F2S T802  fan-out 2, carrier 2nd, branch STANDING  -> stillborn-carried leg
+  F9  T803  fan-out 9, carrier 9th, branch PRUNED    -> straddles the floor of 8
+  F1  T804  fan-out 1, carrier 1st, branch PRUNED    -> MUST-REFUSE control
+  N   T805  fan-out 2, NO carrier,  branch PRUNED    -> MUST-DEMOTE control
+refs:
+  ref main
+  ref softhouse/T802-work
+  ref softhouse/aaa-t801-decoy
+  ref softhouse/aaa-t802-decoy
+  ref softhouse/aaa-t805-decoy
+  ref softhouse/d1-t803-decoy
+  ref softhouse/d2-t803-decoy
+  ref softhouse/d3-t803-decoy
+  ref softhouse/d4-t803-decoy
+  ref softhouse/d5-t803-decoy
+  ref softhouse/d6-t803-decoy
+  ref softhouse/d7-t803-decoy
+  ref softhouse/d8-t803-decoy
+  ref softhouse/zzz-t801-carrier
+  ref softhouse/zzz-t802-carrier
+  ref softhouse/zzz-t803-carrier
+  ref softhouse/zzz-t804-carrier
+  ref softhouse/zzz-t805-decoy

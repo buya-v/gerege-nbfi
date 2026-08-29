@@ -1,0 +1,48 @@
+==============================================================================
+RED   (main's bytes)   /tmp/t462/red/rt_red.py   (refs_carrying_content arity 5)
+==============================================================================
+states enumerated             : 288   (8 branch x 4 landed x 9 ref)
+states with NO usable verdict : 0
+states with TWO verdicts      : 0   <- arms match AND DISAGREE (the defect)
+states w/ redundant agreeing arms: 9   (pre-existing; both return REFUSE)
+      merged-unverified    merged-unverified (==) + merged* (startswith)
+arm-transcription MISMATCHES  : 0   <- this file disagrees with the code
+exceptions raised             : 0
+kind -> polarity (a kind with two polarities is the defect):
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           11 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
+==============================================================================
+GREEN (this tree)   /tmp/t462/green/rt_green.py   (refs_carrying_content arity 5)
+==============================================================================
+states enumerated             : 288   (8 branch x 4 landed x 9 ref)
+states with NO usable verdict : 0
+states with TWO verdicts      : 0   <- arms match AND DISAGREE (the defect)
+states w/ redundant agreeing arms: 9   (pre-existing; both return REFUSE)
+      merged-unverified    merged-unverified (==) + merged* (startswith)
+arm-transcription MISMATCHES  : 0   <- this file disagrees with the code
+exceptions raised             : 0
+kind -> polarity (a kind with two polarities is the defect):
+      absent               demote           36 states
+      commits              demote           36 states
+      indeterminate        demote           11 states
+      merged               REFUSE           36 states
+      merged-unverified    REFUSE            9 states
+      name-only-refs       demote            1 states
+      relocated            REFUSE            8 states
+      stillborn            demote            2 states
+      stillborn-carried    REFUSE            4 states
+      unstarted            demote            1 states
+      unverified           demote          144 states
+      TOTAL                                288 states
+
