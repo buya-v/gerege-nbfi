@@ -1,0 +1,8 @@
+T423 ARM-F red drive; residual target = out/A2-200-glaccounts-live-precheck.http
+  laundered commit d59b7fe0; working tree clean: [0 path(s) dirty]
+
+  section 10 on the laundered repo : exit 1  VERDICT FAIL   (expected 0 / PASS)
+  ARM F      on the laundered repo : exit 1   VERDICT FAIL    (expected 1 / FAIL)
+  ARM F named the laundered file   : 1                    (expected 1)
+  *** section 10 did not behave as T393 disclosed
+T423 ARM-F DRIVE VERDICT: FAIL

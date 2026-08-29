@@ -65,16 +65,46 @@ one bulk newest-first walk — which the sweep REFUSES on if they disagree. They
 - `.softhouse/reviews/A2-11/run-all.sh` — the section-10 banner quotes the false sentence,
   says it was false, and states the baseline and the measurement.
 
-**Transcripts that echo the claim.** These are records of what the tooling *printed*, and a
-record of a false statement is still evidence. They are handled two ways:
+Each corrected source file **QUOTES the false text verbatim** rather than deleting it, so the
+next reader is not left with a bare negation removed. Every quoted line carries the literal tag
+`[QUOTED-FALSE-CLAIM]`, which is what lets a guard tell a quotation from an assertion by grep
+alone — `30-t433-armf-wiring-guard.sh` asserts **both** that no *untagged* line asserts the
+impossibility **and** that the tagged quote is still there, so silencing the guard by dropping
+the quote fails the other half.
 
-| transcript | line | handling |
+**Transcripts that echo the claim.** These are records of what the tooling *printed*, and a
+record of a false statement is still evidence — deleting the line would destroy the proof that
+this program shipped a false claim in tracked executables, which is what C-T423-1 exists to
+record. So the bytes are **preserved** and an attributed correction footer is **appended in
+band**, by `.softhouse/capture/t433-t423-c1/instruments/40-t433-annotate-echoing-transcripts.sh`
+(idempotent, calibrated on a known positive per P-72, and it REFUSES if its sweep matches
+nothing rather than reporting a clean repository).
+
+**14 transcripts in scope were annotated** — transcript is
+`.softhouse/capture/t433-t423-c1/out/40-transcript-annotation.txt`:
+
+| transcript | line of the echo | handling |
 |---|---|---|
-| `out/03-runall-after-fix.txt` | 706 | **REGENERATED** by re-running against the corrected code (T433). |
-| `out/drive/case-*-AFTER.txt` (10 files) | 706/709/713 | **REGENERATED** by re-running `10-drive-conditions.sh` (T433). |
-| `out/02-section10-green.txt` | — | **REGENERATED** — it is section 10's own output and now shows ARM F. |
-| `out/05-executable-diff.txt` | 489, 607, 757, 862 | **NOT regenerated** — it is a `git diff` of T393's own commit, a historical object that cannot honestly be re-derived. A `T433 CORRECTION` block is appended to it in band. |
-| `.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` | 706 | **REGENERATED** by `bash run-all.sh` (which overwrites it by design). |
+| `out/03-runall-after-fix.txt` | 706 | footer appended |
+| `out/drive/case-*-AFTER.txt` (11 files) | 706 / 709 / 713 | footer appended |
+| `out/05-executable-diff.txt` | 489, 607, 757, 862 | footer appended — it is a `git diff` of T393's own commit, a historical object that cannot honestly be re-derived |
+| `.softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt` | 706 | footer appended. **NOT regenerated, and here is why:** `bash run-all.sh` on this tree records `RUN-ALL VERDICT: FAIL`, because **section 9 (`adjudicate-section1.py`) is adjudicated 0 and exits 1 on unmodified `main`** — measured at `b102875c` with no ARM F anywhere in the tree (`.softhouse/capture/t433-t423-c1/out/runall-row/runall-control-BEFORE.txt`). Regenerating would commit that failing transcript over a review record on a defect T433 did not cause and does not own. Filed as T433 follow-up **F-6**. |
+
+**And the drives were re-run at the corrected bytes, into NEW directories** — T393's own
+transcripts are left where they are, because overwriting them would erase the record of the
+transition rather than document it:
+
+| new artefact | what it is |
+|---|---|
+| `.softhouse/capture/t433-t423-c1/out/20-ARMF-IN-SITU-DRIVE.txt`, `…/out/armf-drive/` | ARM F's own RED→GREEN drive **in situ inside the shipped grader**, plus every miss-by-one T433 could construct |
+| `.softhouse/capture/t433-t423-c1/out/50-RUNALL-f1-13b-ROW.txt`, `…/out/runall-row/` | the `f1-13b` row and the control, driven through the **whole `run-all.sh`** at both refs — the direct evidence for the ONE expectation T433 changed in `10-drive-conditions.sh` |
+
+**T393's own `out/DRIVE.txt` and `out/drive/` are left exactly as T393 produced them.** T433
+started a full 13-case re-drive of the matrix and **abandoned it**: 26 whole `run-all.sh` runs
+was hours of wall clock. Only two rows can change colour when ARM F is added — `f1-13b`, which
+ARM F is built to catch, and `control`, which must stay green — and **both were driven**. The
+other eleven are argued, not measured, in `50-t433-runall-f1-13b-row.sh`'s header, and the full
+re-run is filed as T433 follow-up **F-5**.
 
 **Echoes OUTSIDE T433's scope, disclosed and NOT edited** — searched for with
 `grep -rn "older than HEAD\|no committed baseline\|does not exist and cannot be manufactured"`

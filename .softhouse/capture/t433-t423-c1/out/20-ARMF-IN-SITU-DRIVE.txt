@@ -1,0 +1,67 @@
+T433 ARM-F IN-SITU DRIVE
+  BEFORE = b102875c7e0d1b7f1ba4339180cedc5e207dfb11   (section 10 WITHOUT ARM F)
+  AFTER  = 7df613d1   (section 10 WITH ARM F)
+  post-fork mutation target = out/A2-200-glaccounts-live-precheck.http   (MEASURED by 11-pick-targets.py, never typed)
+  adjudicated target        = out/A2-370-db-ledger-state.txt
+
+  control                  BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  control                  AFTER  rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  residual-laundered       BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  residual-laundered       AFTER  rc=1 FAIL     named=1 born-at-tip=0 adj-moved=0  expected 1  as expected
+  adjudicated-further      BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  adjudicated-further      AFTER  rc=1 FAIL     named=0 born-at-tip=0 adj-moved=1  expected 1  as expected
+  adjudicated-revert       BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  adjudicated-revert       AFTER  rc=1 FAIL     named=0 born-at-tip=0 adj-moved=1  expected 1  as expected
+  born-at-tip-iv-a         BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  born-at-tip-iv-a         AFTER  rc=0 PASS     named=0 born-at-tip=1 adj-moved=0  expected 0  as expected
+  rename-mutate-iv-b       BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  rename-mutate-iv-b       AFTER  rc=2 REFUSED  named=0 born-at-tip=0 adj-moved=0  expected 2  as expected
+  rename-rewrite-iv-b2     BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  rename-rewrite-iv-b2     AFTER  rc=0 PASS     named=0 born-at-tip=1 adj-moved=0  expected 0  as expected
+  vacuity-armf-grades-0    BEFORE rc=0 PASS     named=0 born-at-tip=0 adj-moved=0  expected 0  as expected
+  vacuity-armf-grades-0    AFTER  rc=1 FAIL     named=0 born-at-tip=10 adj-moved=0  expected 1  as expected
+
+############ MATRIX
+case                   ref     sec10_rc  verdict  armf_named  armf_at_tip  armf_moved  expected_rc  result
+control                BEFORE  0         PASS     0           0            0           0            as expected
+control                AFTER   0         PASS     0           0            0           0            as expected
+residual-laundered     BEFORE  0         PASS     0           0            0           0            as expected
+residual-laundered     AFTER   1         FAIL     1           0            0           1            as expected
+adjudicated-further    BEFORE  0         PASS     0           0            0           0            as expected
+adjudicated-further    AFTER   1         FAIL     0           0            1           1            as expected
+adjudicated-revert     BEFORE  0         PASS     0           0            0           0            as expected
+adjudicated-revert     AFTER   1         FAIL     0           0            1           1            as expected
+born-at-tip-iv-a       BEFORE  0         PASS     0           0            0           0            as expected
+born-at-tip-iv-a       AFTER   0         PASS     0           1            0           0            as expected
+rename-mutate-iv-b     BEFORE  0         PASS     0           0            0           0            as expected
+rename-mutate-iv-b     AFTER   2         REFUSED  0           0            0           2            as expected
+rename-rewrite-iv-b2   BEFORE  0         PASS     0           0            0           0            as expected
+rename-rewrite-iv-b2   AFTER   0         PASS     0           1            0           0            as expected
+vacuity-armf-grades-0  BEFORE  0         PASS     0           0            0           0            as expected
+vacuity-armf-grades-0  AFTER   1         FAIL     0           10           0           1            as expected
+
+unexpected results: 0
+############ REASONS, not just colours
+  OK   residual: ARM F NAMES the laundered file at AFTER  (LAUNDERED-OR-MUTATED out/A2-200-glaccounts-live-precheck.http x1)
+  OK   residual: nothing named it at BEFORE (there was no ARM F)  (LAUNDERED-OR-MUTATED x0)
+  OK   adjudicated-further: ARM F reports the adjudication MOVED  (ADJUDICATION MOVED out/A2-370-db-ledger-state.txt x1)
+  OK   adjudicated-revert: a VANISHED difference moves it too  (ADJUDICATION MOVED out/A2-370-db-ledger-state.txt x1)
+  OK   iv-a: the fabricated tip-born observation is PRINTED as ungraded, not silently equal  (UNGRADED-BORN-AT-TIP out/T433-FABRICATED-OBSERVATION.http x1)
+  OK   iv-b: the renamed+mutated observation has NO ADD record and is REFUSED, not passed  (have NO recorded ADD commit x2)
+  OK   iv-b2: with the similarity removed it IS a real ADD at the tip, and is PRINTED ungraded  (UNGRADED-BORN-AT-TIP out/REWRITTEN- x1)
+  OK   vacuity: the control FAILS when ARM F graded nothing  (FAIL  ARM F actually GRADED x1)
+  OK   vacuity: ARM F did in fact grade zero there  (GRADED against a birth blob older than HEAD     : 0 x1)
+  OK   control: a clean tree at AFTER names nothing and grades everything  (DIFFER and are NOT adjudicated               : 0 x1)
+
+T433 ARM-F IN-SITU DRIVE VERDICT: PASS.
+  RED  : at b102875c7e0d1b7f1ba4339180cedc5e207dfb11 the laundered post-fork mutation exits 0 / PASS — T393's residual, real.
+  GREEN: at 7df613d1 ARM F exits 1 and NAMES it. The 'impossible' baseline was the birth blob.
+  ARM F's own boundary is DRIVEN, not asserted:
+    (iv-a)  an observation born AT THE TIP is reported UNGRADED and remains UNCLOSED —
+            a fabricated observation added at the tip WITH a matching manifest row is
+            reached by no arm in the file, and only the oracle could distinguish it;
+    (iv-b)  a HIGH-SIMILARITY rename+mutate is REFUSED (exit 2), not silently passed —
+            the prediction was wrong and the measurement corrected it;
+    (iv-b2) the SAME attack with the similarity removed lands in (iv-a), exit 0;
+    the vacuity control is shown to FAIL when ARM F grades nothing, so 'no differences'
+    can never be printed by an arm that read nothing.

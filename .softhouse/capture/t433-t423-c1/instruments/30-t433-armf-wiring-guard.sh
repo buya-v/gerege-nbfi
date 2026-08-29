@@ -40,20 +40,28 @@ done
 BAD=0
 ok()  { echo "  OK   $1"; }
 bad() { echo "  BAD  $1"; BAD=$((BAD + 1)); }
-# want <label> <file> <pattern> <expected count>
+# want <label> <file> <fixed-string> <expected count> — EXACT, for claims whose count matters.
 want() {
-  local got; got="$(grep -c -- "$3" "$2")"
+  local got; got="$(grep -c -F -- "$3" "$2")"
   if [ "$got" = "$4" ]; then ok "$1  (x$got)"; else bad "$1 — expected x$4, got x$got: $3"; fi
+}
+# want_min <label> <file> <fixed-string> <minimum> — for identifiers that legitimately recur.
+# A minimum, never an exact count: P-29, a count is a weak tripwire and pinning one here would
+# go red on a comment being reworded, which is how a guard gets deleted rather than fixed.
+want_min() {
+  local got; got="$(grep -c -F -- "$3" "$2")"
+  if [ "$got" -ge "$4" ] 2>/dev/null; then ok "$1  (x$got, at least $4)"
+  else bad "$1 — expected at least x$4, got x$got: $3"; fi
 }
 
 echo "############ T433 ARM-F WIRING GUARD"
 echo "root: $ROOT"
 echo
 echo "--- 1. THE ARM EXISTS, INSIDE THE SHIPPED GRADER (not beside it) -------------------"
-want "verify-capture-integrity.py carries ARM F as section 8" "$INT" "=== 8. ARM F" 1
-want "ARM F names its baseline: the commit that FIRST ADDED each observation" "$INT" "diff-filter=A" 1
-want "ARM F has an adjudication table it can find MOVED" "$INT" "ARM_F_ADJUDICATED" 4
-want "ARM F reports born-at-tip as UNGRADED, never as equal" "$INT" "UNGRADED-BORN-AT-TIP" 1
+want     "verify-capture-integrity.py carries ARM F as section 8" "$INT" "=== 8. ARM F" 1
+want_min "ARM F names its baseline: the commit that FIRST ADDED each observation" "$INT" "diff-filter=A" 1
+want_min "ARM F has an adjudication table it can find MOVED" "$INT" "ARM_F_ADJUDICATED" 4
+want     "ARM F reports born-at-tip as UNGRADED, never as equal" "$INT" "UNGRADED-BORN-AT-TIP" 1
 want "section 9 asserts ARM F actually GRADED something (the vacuity control)" \
      "$INT" "ARM F actually GRADED a non-empty population" 1
 

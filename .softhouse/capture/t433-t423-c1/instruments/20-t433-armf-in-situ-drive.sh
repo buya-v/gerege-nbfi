@@ -242,8 +242,11 @@ chk "adjudicated-revert: a VANISHED difference moves it too" \
     "armf-case-adjudicated-revert-AFTER.txt" "ADJUDICATION MOVED $ADJ" 1
 chk "iv-a: the fabricated tip-born observation is PRINTED as ungraded, not silently equal" \
     "armf-case-born-at-tip-iv-a-AFTER.txt" "UNGRADED-BORN-AT-TIP out/$FAB" 1
+# x2, not x1: verify-capture-integrity.py prints a refusal where it happens AND re-prints its
+# first line in the REFUSALS summary block at the end. Measured, not guessed — the first run of
+# this drive expected x1 and was told x2, and that is the only reason this comment exists.
 chk "iv-b: the renamed+mutated observation has NO ADD record and is REFUSED, not passed" \
-    "armf-case-rename-mutate-iv-b-AFTER.txt" "have NO recorded ADD commit" 1
+    "armf-case-rename-mutate-iv-b-AFTER.txt" "have NO recorded ADD commit" 2
 chk "iv-b2: with the similarity removed it IS a real ADD at the tip, and is PRINTED ungraded" \
     "armf-case-rename-rewrite-iv-b2-AFTER.txt" "UNGRADED-BORN-AT-TIP out/REWRITTEN-" 1
 chk "vacuity: the control FAILS when ARM F graded nothing" \
