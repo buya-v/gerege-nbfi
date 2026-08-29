@@ -1,0 +1,38 @@
+T454 FOLD CENSUS
+host            : Darwin Buyanmunkhs-Mac-mini.local 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:41:26 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T8132 arm64
+target paths    : .softhouse/conformance.sh, .softhouse/guards
+target chars    : .acdefghmnorstu  (15)
+calibrate+      : PASS -- generator produced U+017F for 's'
+calibrate-      : PASS -- U+00E9 absent from the candidate set
+fs calibrate    : PASS -- U+017F collides, 'z' does not
+cross-check     : U+212A vs 'k' collides=YES  (T446 measured: does not)
+
+ascii  cands    collides  after    usable    example
+.      3        0         0        0         -
+a      35       0         0        0         -
+c      35       0         0        0         -
+d      37       0         0        0         -
+e      35       0         0        0         -
+f      32       0         0        0         -
+g      33       0         0        0         -
+h      34       0         0        0         -
+m      36       0         0        0         -
+n      34       0         0        0         -
+o      35       0         0        0         -
+r      35       0         0        0         -
+s      34       1         1        1         U+017F
+t      34       0         0        0         -
+u      34       0         0        0         -
+
+TOTAL candidates generated      : 486
+TOTAL that COLLIDE on this fs   : 1
+TOTAL that also SORT AFTER      : 1
+TOTAL usable as a checkout win  : 1
+
+READING: a candidate is usable when it (a) folds onto an ASCII character of
+the target path on THIS filesystem and (b) its UTF-8 bytes sort after that
+character, so its index entry is written LAST and wins the collision.
+EVERY non-ASCII collider satisfies (b) unconditionally: UTF-8 encodes every
+codepoint >= U+0080 with a leading byte >= 0xC2 > 0x7A.  So 'all-lowercase
+ASCII is unbeatable' is not merely false for U+017F; it is false for the
+whole non-ASCII collider set, and the count below is that set's size.

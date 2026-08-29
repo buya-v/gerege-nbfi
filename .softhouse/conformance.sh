@@ -3216,6 +3216,34 @@ guard_reconciler_ownership() {
 # haystack, one marker grep per member, one witness grep and one `git ls-files --error-unmatch`
 # per DECLARED or REACHED-BY row. No temporary file, no pipeline, no second process in the
 # invocation test.
+# ─── WHAT THIS FUNCTION STILL READS FROM THIS HOST'S FILESYSTEM ────────────────────────────
+# T445 removed every working-tree read from the MEMBER, WITNESS and DECLARED-WITNESS verdicts
+# and stated the remainder as "the only file it still reads from this host is
+# .softhouse/conformance.sh". THE HEADLINE IS RIGHT AND THE REMAINDER WAS UNDERCOUNTED: T446
+# enumerated FOUR, not one, and T454 re-derived the enumeration and removed one of them. As
+# deployed, this function reads this host's filesystem in exactly THREE places, and each is
+# judged here rather than left to the next reader to find:
+#
+#   [ ! -d "$gd" ]      does the canonical guards directory exist on this host. A question
+#                       ABOUT THIS RUN, not about a commit, and it can only fail CLOSED: a
+#                       missing directory is a refusal. KEPT.
+#   [ ! -f "$conf" ]    can this harness open itself. Same shape, same direction. KEPT.
+#   grep -v '#' "$conf" THE DEPLOYED TEXT, which is the thing the invocation test must grade —
+#                       a checker "invoked" only by a line that is not in the file that runs is
+#                       not invoked. This read is LOAD-BEARING and stays, and it is the read
+#                       T446 attacked: see guard_harness_text_is_committed, which refuses when
+#                       the bytes at a tracked path are another index entry's committed blob.
+#
+#   REMOVED BY T454: a SECOND `grep -v '#' "$conf"` inside guard_registration_decisive_lines,
+#                    added by the same commit that wrote "two reads of one quantity are two
+#                    chances to disagree" four hundred lines above. The stripped text is now
+#                    PASSED IN.
+#
+# THE DISCRIMINATOR, which is what generalises past this function: A TEST MAY READ THE WORKING
+# TREE ONLY FOR QUESTIONS ABOUT THIS RUN. For any question about what is COMMITTED — is it
+# registered, does it name me, is it tracked — the working tree is not evidence, and on a case-
+# or fold-insensitive filesystem it is not even a function of the commit. Seven fail-opens in
+# this one function have had that shape.
 guard_guards_dir_registration() {
   local gdrel=".softhouse/guards"
   local gd="$REPO_ROOT/$gdrel"
@@ -3300,7 +3328,7 @@ guard_guards_dir_registration() {
   #
   # This call is that watch, and it is reached on EVERY graded run because run_guards calls
   # this function unconditionally through timed_guard.
-  guard_registration_decisive_lines "$conf" || return 1
+  guard_registration_decisive_lines "$conf" "$code" || return 1
 
   # DECLARATION TABLE. One row per member this file does NOT invoke, in the form
   #   <basename>|<direction>|<witness path, repo-relative>|<token that must be present>
@@ -3723,13 +3751,33 @@ INNER
         # normalise to the identical `.softhouse/guards/ledgerguard/main.go`. The absolute
         # spelling is one T364 did not test and this compare closes it too.
         #
-        # WHAT DELIBERATELY DID NOT MOVE. The `-f` existence test still runs on the TYPED
-        # spelling, so the two refusals T364 verified fail-closed by inspection — a witness
-        # that is a DIRECTORY, and a witness carrying PATHSPEC MAGIC such as ":(glob)*" —
-        # still refuse there and refuse first. Normalising before `-f` without that would
-        # have let `:(glob)…` through git and then past `-f` on the resolved path, i.e. this
-        # repair could have opened a hole while closing one. It does not; the magic spelling
-        # is driven red as its own arm.
+        # WHAT DELIBERATELY DID NOT MOVE **AT THE TIME T375 WROTE THIS**. The `-f` existence
+        # test still ran on the TYPED spelling, so the two refusals T364 verified fail-closed
+        # by inspection — a witness that is a DIRECTORY, and a witness carrying PATHSPEC MAGIC
+        # such as ":(glob)*" — refused there and refused first. Normalising before `-f`
+        # without that would have let `:(glob)…` through git and then past `-f` on the
+        # resolved path, i.e. that repair could have opened a hole while closing one.
+        #
+        # ── AND THE `-f` TEST IS GONE. THE DELETION IS CORRECT; THE BOUNDARY IT MOVED WAS NOT
+        #    STATED, AND IS STATED HERE. [T454, from T446's LOW-1.]
+        #
+        # T445 deleted `-f` when it closed T444's LOW-4: a witness that is COMMITTED but not
+        # MATERIALISED on this host — a sparse checkout, a partial checkout, or the loser of
+        # any collision — has a perfectly readable blob and no file, and `-f` refused it. `-f`
+        # could only ever refuse, so nothing that mattered in the FAIL-OPEN direction went with
+        # it. But two refusals DID go with it, and both were T364's:
+        #
+        #   * a DIRECTORY witness that contains EXACTLY ONE tracked file now resolves to that
+        #     file, round-trips, and is graded;
+        #   * a PATHSPEC-MAGIC witness that matches EXACTLY ONE tracked file does the same.
+        #
+        # Neither is a fail-open: whatever is finally graded is still an independent committed
+        # file whose BLOB must name the member, and the self-reference, symlink, same-blob and
+        # round-trip refusals are all unmoved. What was lost is REVIEWABILITY — the row's text
+        # stops being the path that gets graded, so a reader of the DECLARATION cannot see the
+        # file that was tested. `self_multi` still refuses anything matching more than one
+        # entry, which is why "exactly one" is the whole of the residue. Recorded, not driven:
+        # that is a statement about T454's search, not about the world.
         #
         # A WITNESS THAT RESOLVES TO MORE THAN ONE PATH IS NOW A REFUSAL. `git ls-files` over
         # a pathspec can print many lines; "the witness" would then be whichever line came
@@ -3890,9 +3938,23 @@ INNER
         # THE DEFECT. On a case-INSENSITIVE host the INDEX can hold two entries differing only
         # in case while the FILESYSTEM holds one file. The attacker declares the entry that
         # sorts FIRST and plants the one that sorts LAST, because the entry written LAST wins
-        # the checkout collision (MEASURED: T445's collision-order probe; a target spelled in
-        # ALL LOWER CASE therefore cannot be beaten this way, and one carrying any upper-case
-        # letter can):
+        # the checkout collision (MEASURED: T445's collision-order probe).
+        #
+        # THE PARENTHESIS THAT USED TO FOLLOW THAT SENTENCE SAID "a target spelled in ALL LOWER
+        # CASE therefore cannot be beaten this way". IT IS FALSE AND IT IS DELETED. [T454, from
+        # T446's MAJOR-1.] Case is not the only fold this filesystem applies. T454 enumerated
+        # every printable-ASCII fold on this volume by writing two distinguishable contents at
+        # two spellings and reading back which survived, and found FOUR non-ASCII characters
+        # that collide with an ASCII character: U+017F LATIN SMALL LETTER LONG S -> `s`,
+        # U+212A KELVIN SIGN -> `k`, U+037E GREEK QUESTION MARK -> `;`, U+1FEF GREEK VARIA ->
+        # `` ` ``. EVERY ONE OF THEM SORTS AFTER ITS ASCII PARTNER, unconditionally: UTF-8
+        # encodes every codepoint >= U+0080 with a leading byte >= 0xC2, which is greater than
+        # every ASCII byte. So an all-lowercase ASCII path is beatable whenever it contains an
+        # `s`, a `k`, a `;` or a backtick — and every path under `.softhouse/` contains the `s`
+        # of "softhouse". [Census: .softhouse/capture/t454-t446-conditions/evidence/. T446
+        # reported U+212A as NOT folding; T454 re-measured and it DOES — that probe substituted
+        # the Kelvin sign into a path with no `k` in it, so it compared two genuinely different
+        # names and read "distinct" as "does not fold".]
         #
         #   index:  <dir>/W.txt  100644   a DECOY blob that names nothing   <- DECLARED
         #           <dir>/w.txt  120000   a SYMLINK to the member itself    <- WINS the
@@ -4197,13 +4259,16 @@ INNER
     # commit it, and a declaration whose committed witness no longer runs the member reads as
     # verified. DRIVEN as arm CDIRTY; the SUBJECT direction below is arm SDIRTY.
     #
-    # THE CASE ROUTE IS BOUNDED HERE AND THE BOUND IS MEASURED, NOT ASSUMED. The entry that
-    # sorts LAST wins a checkout collision, and every case variant of an ALL-LOWER-CASE path
-    # sorts BEFORE it, so neither of today's two declared witnesses can be beaten that way
-    # [T445 collision-order probe: a lower-case target keeps its own content against both an
-    # upper-cased and an all-caps decoy; an upper-case target loses to its lower-case decoy].
-    # A FUTURE row naming a path with any upper-case letter would be beatable, and reading the
-    # index removes the question rather than leaving it to the next person to spell luckily.
+    # THE COLLISION ROUTE IS CLOSED HERE BY READING THE INDEX, AND THAT IS THE WHOLE OF THE
+    # ARGUMENT. The entry that sorts LAST wins a checkout collision [T445 collision-order
+    # probe, re-driven by T446 and again by T454]. THIS FUNCTION USED TO ADD A SECOND CLAIM —
+    # that an ALL-LOWER-CASE path cannot be beaten, so today's two declared witnesses were safe
+    # even without the index read. THAT CLAIM IS FALSE ON THIS HOST AND IS DELETED [T454, from
+    # T446's MAJOR-1]: `.softhouse/guards/ledgerguard/main.go` and `.softhouse/bin/`… are beaten
+    # by U+017F, U+212A, U+037E and U+1FEF, four characters this volume folds onto `s`, `k`,
+    # `;` and backtick, each of which sorts AFTER its ASCII partner because UTF-8 gives every
+    # codepoint >= U+0080 a leading byte >= 0xC2. The index read is not belt-and-braces over a
+    # spelling argument; it is the only thing here that works.
     #
     # WHAT REPLACES `-f`: the witness must be ONE tracked index entry that is a REGULAR FILE.
     # That is strictly stronger — an untracked witness, a symlink witness, a gitlink witness
@@ -4393,28 +4458,104 @@ STALE
 # DRIVEN, IN BOTH DIRECTIONS, THROUGH THE WHOLE BAR [T445]: arm RVQ deletes the round-trip
 # line and this refuses at exit 2 with the probe ABSENT; arm RWB deletes the witness
 # tracked-blob read and this refuses; the clean-tree control stays green.
+#
+# AND DRIVEN AGAINST ITS OWN EVASION [T454, from T446's MAJOR-2]: arm RWB3 leaves every
+# needle above intact and changes ONE haystack, `<<<"$self_text"` to `"$REPO_ROOT/$self_norm"`.
+# On the T445 tip that reached EXIT 0 / probe present / `up` / `VERDICT: PASS` with T444's M-1
+# restored and this watch reporting seven of seven present. With the three USE needles below
+# it refuses. Both directions are in .softhouse/capture/t454-t446-conditions/evidence.
 # ===========================================================================================
 guard_registration_decisive_lines() {
-  local conf="$1"
-  local code n expr bad=0 missing=0 checked=0
+  # $2 IS THE ALREADY-STRIPPED TEXT, PASSED IN. It is NOT re-read from $conf here.
+  #   [T454, closing T446's MINOR-2.] The caller has it in hand; this function used to run a
+  #   SECOND `grep -v` over the SAME file, which is the exact discipline `member_blob`'s own
+  #   comment states four hundred lines above — "It is not re-read here: two reads of one
+  #   quantity are two chances to disagree" — broken in the same commit that invoked it. It
+  #   also made this the FOURTH working-tree read in a function whose author's audit table
+  #   listed one. $conf survives as a NAME, for the refusal messages, and is never opened.
+  local conf="$1" code="$2"
+  local n bad=0 missing=0 checked=0 ambiguous=0
   local self_path self_norm self_stat
-  code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")" || code=""
+  local body="" inbody=0 line lf
+  local decisive_line="" decisive_hits=0
+  lf="$(printf '\nx')"; lf="${lf%x}"
   if [ -z "$code" ]; then
-    warn "conformance: guard_registration_decisive_lines: stripping comments from $conf left"
-    warn "conformance: NOTHING. An empty haystack finds every decisive line missing AND every"
-    warn "conformance: decisive line present, depending on which way you read it. That is an"
-    warn "conformance: INSTRUMENT failure, never a clean tree. REFUSED."
+    warn "conformance: guard_registration_decisive_lines: the comment-stripped text handed to"
+    warn "conformance: this function (from $conf) is EMPTY. An empty haystack finds every"
+    warn "conformance: decisive line missing AND every decisive line present, depending on which"
+    warn "conformance: way you read it. That is an INSTRUMENT failure, never a clean tree."
+    warn "conformance: REFUSED."
     return 1
   fi
+
+  # ---- THE HAYSTACK IS THE DECIDING FUNCTION'S OWN BODY -----------------------------------
+  # [T454, closing T446's MINOR-1.] It used to be the WHOLE comment-stripped file, and a
+  # substring search over a 6000-line file is satisfied by an occurrence anywhere: in a
+  # different function, in a `say` string, in a trailing comment (`grep -v '^[[:space:]]*#'`
+  # strips FULL-LINE comments only), or on a `:` no-op that executes nothing. None of those is
+  # the step that decides. The body is cut between `guard_guards_dir_registration() {` and the
+  # next `}` in column zero; a body this function cannot cut is an INSTRUMENT failure and
+  # refuses, because "no occurrences" and "no haystack" must not be the same verdict.
+  while IFS= read -r line; do
+    case "$inbody" in
+      0) case "$line" in 'guard_guards_dir_registration() {') inbody=1 ;; esac
+         continue ;;
+      2) continue ;;
+    esac
+    if [ "$line" = '}' ]; then inbody=2; continue; fi
+    body="$body$line$lf"
+  done <<DECISIVEBODY
+$code
+DECISIVEBODY
+  if [ "$inbody" -ne 2 ] || [ -z "$body" ]; then
+    warn "conformance: guard_registration_decisive_lines: could not cut the body of"
+    warn "conformance: guard_guards_dir_registration out of $conf — its opening line, its"
+    warn "conformance: closing brace, or both are not where this function looks for them. Every"
+    warn "conformance: needle below would then be reported ABSENT for a reason that has nothing"
+    warn "conformance: to do with the needles. That is an INSTRUMENT failure. REFUSED."
+    return 1
+  fi
+
+  # ---- ONE QUALIFYING LINE PER NEEDLE, AND THE QUALIFICATION IS EXPLICIT -------------------
+  # A line qualifies when the needle occurs in it BEFORE any trailing ` #` comment, and the
+  # line is not a `:` no-op. `decisive_hits` is a MEASURED count, so "absent" (0) and
+  # "ambiguous" (>1) are two different findings with two different refusals — an earlier decoy
+  # carrying the same needle used to satisfy `discriminates`, which grades the FIRST match,
+  # while the real line sat neutered behind it.
+  decisive_scan() {
+    local needle="$1" sline pre trimmed
+    decisive_hits=0; decisive_line=""
+    while IFS= read -r sline; do
+      case "$sline" in *"$needle"*) ;; *) continue ;; esac
+      pre="${sline%% #*}"
+      case "$pre" in *"$needle"*) ;; *) continue ;; esac
+      trimmed="${sline#"${sline%%[![:space:]]*}"}"
+      case "$trimmed" in ':'*) continue ;; esac
+      decisive_hits=$((decisive_hits + 1))
+      if [ -z "$decisive_line" ]; then decisive_line="$sline"; fi
+    done <<DECISIVESCAN
+$body
+DECISIVESCAN
+  }
 
   # ---- PRESENCE -------------------------------------------------------------------------
   # Each row: <fragment A><fragment B> is the needle; the label is what a reader needs.
   present() {
     local needle="$1" label="$2"
     checked=$((checked + 1))
-    case "$code" in
-      *"$needle"*) return 0 ;;
-    esac
+    decisive_scan "$needle"
+    if [ "$decisive_hits" -eq 1 ]; then return 0; fi
+    if [ "$decisive_hits" -gt 1 ]; then
+      ambiguous=$((ambiguous + 1)); bad=1
+      warn "conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS NOT UNIQUE —"
+      warn "conformance:   $label"
+      warn "conformance: it occurs $decisive_hits times in the body of"
+      warn "conformance: guard_guards_dir_registration. The behaviour test below grades the"
+      warn "conformance: FIRST match, so a decoy carrying this text ahead of the real line makes"
+      warn "conformance: a neutered predicate report green. Two occurrences is not twice the"
+      warn "conformance: assurance; it is none. REFUSED."
+      return 1
+    fi
     missing=$((missing + 1)); bad=1
     warn "conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS GONE —"
     warn "conformance:   $label"
@@ -4444,14 +4585,34 @@ guard_registration_decisive_lines() {
   n="$(printf '%s' 'git cat-file blob '; printf '%s' '"$wit_blob"')"
   present "$n" "the DECLARED witness token test reads the TRACKED BLOB [T445]"
 
+  # ---- AND THE THREE THAT PIN THE **USE**, NOT THE READ ----------------------------------
+  # [T454, closing T446's MAJOR-2, which DROVE this as arm RWB3.] The seven needles above
+  # pin ASSIGNMENTS. T446 changed ONE line — the haystack of the witness naming test, from
+  # `<<<"$self_text"` to `"$REPO_ROOT/$self_norm"` — and T444's M-1 came back at exit 0, with
+  # the probe present and reading `up`, with `VERDICT: PASS`, and with this watch printing
+  # every needle present: `self_text` was still ASSIGNED from the tracked blob, it had simply
+  # stopped being CONSULTED. A PIN THAT WATCHES WHERE A VALUE IS READ CANNOT SEE IT BEING USED
+  # SOMEWHERE ELSE. So each of the three blob reads above is now matched by a needle on the
+  # step that consumes it, and the haystack of each grep is part of the pinned text.
+  n="$(printf '%s' 'grep -qF -- "$base" '; printf '%s' '<<<"$self_text"')"
+  present "$n" "the WITNESS naming test USES the tracked blob as its HAYSTACK [T454, arm RWB3]"
+  n="$(printf '%s' 'grep -qF -- "$token" '; printf '%s' '<<<"$wit_text"')"
+  present "$n" "the CALLER token test USES the tracked blob as its HAYSTACK [T454]"
+  n="$(printf '%s' 'grep -qF -- "$token" '; printf '%s' '<<<"$member_text"')"
+  present "$n" "the SUBJECT token test USES the tracked blob as its HAYSTACK [T454]"
+
   # ---- BEHAVIOUR ------------------------------------------------------------------------
   # The expression is cut out of the DEPLOYED line and evaluated. `${x#*elif }` and
   # `${x%%; then*}` are parameter expansion, so nothing is spawned to read the file twice.
   discriminates() {
     local needle="$1" label="$2" refusing="$3" accepting="$4"
     local line e
-    line="$(LC_ALL=C grep -m1 -F -- "$needle" <<<"$code")" || line=""
-    if [ -z "$line" ]; then return 0 ; fi   # PRESENCE already reported it; do not double-count
+    # THE SAME QUALIFYING SCAN THE PRESENCE TEST USED, over the same function-scoped body —
+    # never a fresh `grep -m1` over the whole file, which is what let an earlier decoy be
+    # graded in place of the deciding line [T454, T446 MINOR-1].
+    decisive_scan "$needle"
+    line="$decisive_line"
+    if [ -z "$line" ] || [ "$decisive_hits" -ne 1 ]; then return 0 ; fi   # PRESENCE reported it
     e="${line#*elif }"; e="${e%%; then*}"
     if [ -z "$e" ] || [ "$e" = "$line" ]; then
       bad=1
@@ -4496,16 +4657,20 @@ guard_registration_decisive_lines() {
     'self_stat=' \
     'self_stat="100644 0000000000000000000000000000000000000000 0	p"'
 
-  unset -f present discriminates 2>/dev/null || true
+  unset -f present discriminates decisive_scan 2>/dev/null || true
   if [ "$bad" -ne 0 ]; then
     warn "conformance: guard_registration_decisive_lines FAILED: $missing of $checked decisive"
-    warn "conformance: line(s) absent from $conf. The guards-dir registration verdict below is"
-    warn "conformance: WORTHLESS until that is repaired, so it is not printed."
+    warn "conformance: line(s) ABSENT and $ambiguous NOT UNIQUE, in the body of"
+    warn "conformance: guard_guards_dir_registration as deployed in $conf. The guards-dir"
+    warn "conformance: registration verdict below is WORTHLESS until that is repaired, so it is"
+    warn "conformance: not printed."
     return 1
   fi
-  say "conformance:   registration decisive lines: $checked present, 2 evaluated on an input"
-  say "conformance:   they must refuse AND an input they must accept, read out of the deployed"
-  say "conformance:   text of this file [T445, closing T444 C-2 — P-45]."
+  say "conformance:   registration decisive lines: $checked present EXACTLY ONCE in the body of"
+  say "conformance:   guard_guards_dir_registration (not merely somewhere in this file, not in a"
+  say "conformance:   trailing comment, not on a ':' no-op), 2 evaluated on an input they must"
+  say "conformance:   refuse AND an input they must accept [T445 closing T444 C-2 — P-45; T454"
+  say "conformance:   closing T446 MAJOR-2/MINOR-1: three of them pin the USE, not the read]."
   return 0
 }
 
@@ -4587,6 +4752,7 @@ guard_registration_decisive_lines() {
 # THE ABSENCE, NOT THE VALUE." [VERIFIED: .softhouse/patterns.md, P-84]. The two call sites are
 # re-cited by line at the foot of guard_cost_census, AFTER these lines shifted them.
 GUARD_COST_BUDGETS="guard_graded_root_is_this_tree|60
+guard_harness_text_is_committed|60
 guard_no_float_in_vectors|60
 guard_no_float_in_harness|60
 guard_gofmt|60
@@ -4656,8 +4822,12 @@ guard_cost_census() {
   local row name elapsed budget bad=0 stale=0 rows=0 seen
   if [ "$GUARD_COST_TIMED" -eq 0 ]; then
     warn "conformance: guard-cost: NOT ONE guard was timed. That is a SELECTOR failure, not a"
-    warn "conformance: cheap run — this function calls fifteen guards. An empty census passes"
-    warn "conformance: everything. REFUSED."
+    warn "conformance: cheap run — run_guards calls every guard in this file through"
+    warn "conformance: timed_guard. An empty census passes everything. REFUSED."
+    # THE CARDINAL THAT USED TO SIT IN THAT SENTENCE ("fifteen guards") IS GONE, AND ITS
+    # REMOVAL IS THE REPAIR. It was typed by hand beside a number this function DERIVES, and
+    # T454 moved it to sixteen by adding one guard — P-80, "A CORRECTED CARDINAL ROTS IN EVERY
+    # PLACE IT WAS RESTATED", in the same file that cites P-80.
     return 1
   fi
   say "conformance:   GUARD-COST CENSUS: $GUARD_COST_TIMED guards timed, ${GUARD_COST_TOTAL}s total wall,"
@@ -4711,6 +4881,211 @@ COSTSTALE
   return 0
 }
 
+# ===========================================================================================
+# guard_harness_text_is_committed: THE TEXT THAT EXECUTES IS NOT NECESSARILY THE TEXT THAT IS
+# COMMITTED.                                     [T454, closing T446's MAJOR-1 / its FU-T446-1.]
+# ===========================================================================================
+# WHY THIS EXISTS, and it is the sixth link in a chain that has been wrong six times.
+#
+# T445 removed every working-tree read from the guards-dir registration verdict but ONE, on
+# purpose: this harness must grade THE TEXT THAT RUNS, so it reads `.softhouse/conformance.sh`
+# off this host's filesystem. It defended that read with an argument — the index entry that
+# sorts LAST wins a checkout collision, so an ALL-LOWERCASE ASCII path is unbeatable and the
+# case attack "provably cannot win".
+#
+# THE MECHANISM IS RIGHT AND THE COROLLARY IS FALSE, because case is not the only fold this
+# filesystem applies. `U+017F LATIN SMALL LETTER LONG S` folds onto ASCII `s`, and its UTF-8
+# bytes `c5 bf` are GREATER than `s` = `73`. So `.softhouse/conformance.<U+017F>h` sorts AFTER
+# `.softhouse/conformance.sh` in the index and WINS the checkout. T446 drove it; T454 re-drove
+# it on its own instrument as arms LONGSCTL/LONGS, from a fresh clone, on unmutated `main`:
+#
+#   LONGSCTL  an unregistered checker, nothing absolving it   -> EXIT 2, probe line count 0,
+#             `invoked-by-nothing=1`, the guard REFUSES
+#   LONGS     the SAME commit plus ONE extra index entry      -> EXIT 0, probe present x1 `up`,
+#             `VERDICT: PASS … 46 parity vectors … 7884 cells`, `declared=3`, the same checker
+#             ABSOLVED — with the committed blob of `.softhouse/conformance.sh` UNCHANGED at
+#             `62cda497…` and the blob that actually ran `8bfafdda…`.
+#
+# `git show HEAD:.softhouse/conformance.sh` prints the honest harness. The harness that RUNS is
+# a different object. THE GENERAL FORM IS BIGGER THAN THIS ONE READ: T454's census counted 27
+# executable sites in this file that touch this host's filesystem at a `$REPO_ROOT` path, and
+# 26 of them name a path containing a character this volume folds — every path under
+# `.softhouse/` contains the `s` of "softhouse". Every argument in this repository that rests
+# on "the harness grades itself", or on "the guard runs the checker", inherits it.
+#
+# WHAT THIS GUARD REFUSES, AND WHY IT IS NOT "REFUSE A DIRTY TREE".
+#
+# The forgery's signature is not dirtiness. It is that the bytes materialised at a tracked path
+# ARE THE COMMITTED BLOB OF A DIFFERENT INDEX ENTRY. That is inherent to the route: the winner
+# of a checkout collision is always some index entry's blob, so the substituted content is
+# always findable in the index under another name. So:
+#
+#   SUBSTITUTED  the disk bytes at tracked path P hash to the blob of a tracked path Q != P.
+#                REFUSED, both paths and both object ids named.
+#   EDITED       the disk bytes at P differ from HEAD and match no other index entry.
+#                ACCEPTED, and PRINTED. This is an ordinary uncommitted edit.
+#
+# THE SECOND ROW IS A DECISION AND IT IS ARGUED, NOT ASSUMED. Refusing every dirty tree would
+# be simpler and it is wrong: every task in this program edits this file and runs this bar
+# before committing, so a bar that refuses a dirty tree is a bar that gets run with a flag to
+# switch this off, which is the same outcome as not having it (P-22's own reasoning, applied to
+# the guard rather than to the predicate). The cost is real and is paid daily. What is NOT
+# given up is visibility: an uncommitted edit is named, counted and printed on every run.
+#
+# THE HARNESS'S OWN TWO OBJECT IDS ARE PRINTED ON EVERY RUN, PASS OR FAIL. That converts
+# T446's out-of-band human protocol step into one command a reader can recompute from the
+# commit alone: `git rev-parse HEAD:.softhouse/conformance.sh`. A transcript whose printed
+# committed id does not match the reader's own is evidence on its face.
+#
+# THE RESIDUAL, NAMED BY ITS SPELLING BECAUSE SIX AUTHORS HAVE NOW WRITTEN "CANNOT" AND BEEN
+# REACHED: **arm LONGSTRIP**. A forger who is willing to make the forged blob larger can delete
+# THIS GUARD from it as well as adding the row they wanted. A self-check that lives inside the
+# text under attack cannot survive an attacker who edits that text. T454 DROVE IT rather than
+# arguing it, and the result is in
+# `.softhouse/capture/t454-t446-conditions/evidence/`. This guard therefore CLOSES the forgery
+# that does not also strip it, and RAISES THE COST of the one that does — the forged blob must
+# now differ from the honest blob by a whole deleted guard rather than by one table row, which
+# is loud in `git diff` of the two objects. IT DOES NOT CLOSE THE CLASS, and the only thing
+# that can is a verifier OUTSIDE this file: the fire driver, or CI, comparing
+# `git rev-parse HEAD:<path>` with `git hash-object <path>` BEFORE it trusts a transcript.
+# That is out of this file's scope and is filed as FU-T454-1.
+#
+# NOT PINNED, MEASURED (P-72 / T238's sweeplib invariant, adopted in shape): before this guard
+# is allowed to report ZERO substitutions it proves it can find a KNOWN POSITIVE — this file's
+# own object id, in the index it is about to search. A search that cannot find the file it is
+# running from cannot be believed when it says it found nothing.
+guard_harness_text_is_committed() {
+  local selfrel=".softhouse/conformance.sh"
+  local head index mods rc=0 grc=0
+  local p h q hit owner line calib
+  local modified=0 substituted=0 edited=0 gone=0 bad=0
+  local confblob="" confdisk=""
+
+  head="$( cd "$REPO_ROOT" 2>/dev/null && git rev-parse --verify HEAD 2>/dev/null )" || head=""
+  if [ -z "$head" ]; then
+    warn "conformance: guard_harness_text_is_committed: this tree has no resolvable HEAD, so"
+    warn "conformance: there is nothing to compare the files on disk AGAINST. 'I could not"
+    warn "conformance: check' and 'I checked and it was fine' are different facts and must not"
+    warn "conformance: share an exit code. REFUSED."
+    return 1
+  fi
+
+  # The whole index, ONE read. `core.quotepath=false` so a non-ASCII path — which is exactly
+  # what this guard exists to catch — arrives as its own bytes rather than as C-quoted octal.
+  index="$( cd "$REPO_ROOT" 2>/dev/null && \
+            git -c core.quotepath=false ls-files -s 2>/dev/null )" || index=""
+  if [ -z "$index" ]; then
+    warn "conformance: guard_harness_text_is_committed: the index is EMPTY. That is a SELECTOR"
+    warn "conformance: failure, not a clean tree — this repository tracks thousands of files."
+    warn "conformance: An empty index makes every substitution invisible. REFUSED."
+    return 1
+  fi
+
+  # CALIBRATION. This file's own blob id must be findable in the index this guard searches.
+  confblob="$( cd "$REPO_ROOT" 2>/dev/null && \
+               git rev-parse --verify "HEAD:$selfrel" 2>/dev/null )" || confblob=""
+  confdisk="$( cd "$REPO_ROOT" 2>/dev/null && \
+               git hash-object -- "$selfrel" 2>/dev/null )" || confdisk=""
+  if [ -z "$confblob" ] || [ -z "$confdisk" ]; then
+    warn "conformance: guard_harness_text_is_committed: could not read BOTH object ids for"
+    warn "conformance: $selfrel — committed '$confblob', on disk '$confdisk'. An EMPTY hash is"
+    warn "conformance: not a mismatch and must never be reported as one. INSTRUMENT failure."
+    warn "conformance: REFUSED."
+    return 1
+  fi
+  calib=""
+  case "$index" in
+    *" $confblob "*) calib=1 ;;
+  esac
+  if [ -z "$calib" ]; then
+    warn "conformance: guard_harness_text_is_committed: the COMMITTED object id of $selfrel"
+    warn "conformance: ($confblob) is not in the index this guard is about to search. The"
+    warn "conformance: search cannot find the file it is running from, so it cannot be believed"
+    warn "conformance: when it reports finding nothing (P-72). INSTRUMENT failure. REFUSED."
+    return 1
+  fi
+
+  # The paths whose MATERIALISED bytes differ from HEAD. git does the comparison; this guard
+  # only adjudicates it. A non-zero exit here is an ERROR and never an empty answer — "no
+  # differences" and "could not look" are two facts and get two outcomes.
+  mods="$( cd "$REPO_ROOT" 2>/dev/null && \
+           git -c core.quotepath=false diff-index --name-only HEAD -- 2>/dev/null )" || rc=$?
+  if [ "$rc" -ne 0 ]; then
+    warn "conformance: guard_harness_text_is_committed: git could not compare this working tree"
+    warn "conformance: with HEAD (exit $rc). That is an INSTRUMENT failure, not a clean tree."
+    warn "conformance: REFUSED."
+    return 1
+  fi
+
+  while IFS= read -r p; do
+    [ -n "$p" ] || continue
+    modified=$((modified + 1))
+    if [ ! -e "$REPO_ROOT/$p" ]; then
+      gone=$((gone + 1))
+      say "conformance:     HARNESS-TEXT: DELETED in the working tree — $p"
+      continue
+    fi
+    h="$( cd "$REPO_ROOT" 2>/dev/null && git hash-object -- "$p" 2>/dev/null )" || h=""
+    if [ -z "$h" ]; then
+      bad=1
+      warn "conformance: guard_harness_text_is_committed: could not hash the working-tree bytes"
+      warn "conformance: of $p. An unreadable file is an ERROR, never a match. REFUSED."
+      continue
+    fi
+    grc=0
+    hit="$( LC_ALL=C grep -F -- " $h " <<<"$index" )" || grc=$?
+    if [ "$grc" -gt 1 ]; then
+      bad=1
+      warn "conformance: guard_harness_text_is_committed: the index search for $h failed (grep"
+      warn "conformance: exit $grc). A search that errored has not reported zero. REFUSED."
+      continue
+    fi
+    owner=""
+    while IFS= read -r line; do
+      [ -n "$line" ] || continue
+      case "$line" in *"	"*) ;; *) continue ;; esac
+      q="${line#*	}"
+      if [ "$q" != "$p" ]; then owner="$q"; fi
+    done <<HARNESSOWNERS
+$hit
+HARNESSOWNERS
+    if [ -n "$owner" ]; then
+      substituted=$((substituted + 1)); bad=1
+      warn "conformance: guard_harness_text_is_committed: THE FILE ON DISK AT $p IS NOT THE FILE"
+      warn "conformance: COMMITTED THERE — IT IS THE COMMITTED BLOB OF ANOTHER INDEX ENTRY."
+      warn "conformance:   path graded by everything downstream : $p"
+      warn "conformance:   object id materialised at that path  : $h"
+      warn "conformance:   the index entry that blob belongs to : $owner"
+      warn "conformance: This is a checkout collision, not an edit. On a case- or"
+      warn "conformance: fold-insensitive filesystem two index entries can name ONE file and the"
+      warn "conformance: entry that sorts LAST wins; U+017F folds onto ASCII 's' and sorts after"
+      warn "conformance: it, so an all-lowercase ASCII path is NOT unbeatable [T446 MAJOR-1,"
+      warn "conformance: T454 arm LONGS]. A reviewer running 'git show HEAD:$p' would see"
+      warn "conformance: text that is not what ran. No verdict from this run is about the commit"
+      warn "conformance: it claims to be about. REFUSED."
+    else
+      edited=$((edited + 1))
+      say "conformance:     HARNESS-TEXT: uncommitted edit — $p (on disk $h)"
+    fi
+  done <<HARNESSMODS
+$mods
+HARNESSMODS
+
+  say "conformance:   HARNESS-TEXT CENSUS: HEAD $head; tracked paths whose materialised bytes"
+  say "conformance:   differ from HEAD: $modified — SUBSTITUTED by another index entry's blob"
+  say "conformance:   $substituted, uncommitted edits $edited, deleted $gone."
+  say "conformance:   this harness $selfrel: committed $confblob / on disk $confdisk"
+  say "conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:"
+  say "conformance:    git rev-parse HEAD:$selfrel — a transcript that disagrees with your own"
+  say "conformance:    copy of that number is evidence on its face. An uncommitted edit is"
+  say "conformance:    ACCEPTED and printed; a SUBSTITUTION is refused. [T454, T446 MAJOR-1.])"
+  if [ "$bad" -ne 0 ]; then
+    warn "conformance: guard_harness_text_is_committed FAILED: $substituted substituted path(s)."
+    return 1
+  fi
+  return 0
+}
+
 run_guards() {
   local failed=0
   # EVERY GUARD BELOW IS CALLED THROUGH `timed_guard`, which wraps it WITHOUT a subshell so the
@@ -4732,6 +5107,13 @@ run_guards() {
     warn "conformance: results would describe a tree this run was not going to grade."
     exit "$EXIT_UNUSABLE"
   }
+  # SECOND, and for the same reason as the first: every guard below reads text off this
+  # host's filesystem, and until it is settled that the text on disk IS the text in the commit,
+  # none of their answers is about the commit this run claims to grade. It joins the `failed=1`
+  # tally rather than short-circuiting, because unlike a diverged $REPO_ROOT a substitution
+  # does not make the OTHER guards' output unreadable — it makes it untrustworthy, and the
+  # reader needs to see both findings. [T454, closing T446's MAJOR-1.]
+  timed_guard guard_harness_text_is_committed     || failed=1
   timed_guard guard_no_float_in_vectors           || failed=1
   timed_guard guard_no_float_in_harness           || failed=1
   timed_guard guard_gofmt                         || failed=1

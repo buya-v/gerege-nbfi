@@ -1,0 +1,45 @@
+T454 WORKING-TREE READ CENSUS
+file            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a1561c38cd338b7c7/.softhouse/conformance.sh
+lines           : 5907
+calibrate+      : PASS -- the known check-ledger-invariants.sh site was found
+total $REPO_ROOT/ occurrences (comments included): 32
+of which EXECUTABLE text                         : 18
+variables bound to a $REPO_ROOT path             : 15 (CONFORMANCE_REPO_ROOT NEXUS_DIR STORE_ROOT capfile ccsrc chk conf env_script g gd lint rig script tool vecdir)
+
+line    kind      folds        text
+732     USE       s            if [ -f "$env_script" ]; then
+734     USE       s            . "$env_script"
+1081    USE       s            if [ ! -f "$script" ]; then
+1087    USE       s            out="$(python3 "$script" --selftest 2>&1)"; rc=$?
+1120    USE       s            out="$(python3 "$script" "$REPO_ROOT" 2>&1)"; rc=$?
+1432    DIRECT    k,s          bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+1485    USE       s            cc="$(LC_ALL=C sed -n '/^const cannotCatch = `/,/`$/p' "$ccsrc" | LC_ALL=C grep -ac '')"
+1641    USE       s            if [ ! -f "$lint" ]; then
+1655    USE       s            ( cd "$REPO_ROOT" && FAILOPEN_LINT_JSON="$json" python3 "$lint" ) >"$out" 2>&1
+1835    USE       k,s          if [ ! -f "$chk" ]; then
+1856    USE       k,s          if ! ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" --selftest ) >"$out" 2>&1; then
+1863    USE       k,s          ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" ) >"$out" 2>&1
+2316    USE       s            if [ ! -d "$vecdir" ] || [ ! -f "$capfile" ]; then
+2331    USE       s            LC_ALL=C grep -q 'T305-ACCEPTING-SIDE-GAP' "$capfile" && marker=1
+2581    USE       k,s          if [ ! -f "$g" ]; then
+2604    USE       k,s          ( cd "$REPO_ROOT" && bash "$g" ) >"$tf" 2>&1
+2796    USE       k,s          if [ ! -f "$g" ]; then
+2806    USE       k,s          bash "$g" >"$d/out" 2>&1
+2970    USE       s            if [ ! -f "$rig" ]; then
+2977    USE       k,s          if [ ! -f "$tool" ]; then
+2992    USE       k,s          /usr/bin/python3 "$rig" --repo "$REPO_ROOT" --tool "$tool" --selftest >"$tf" 2>&1
+3223    USE       -            if [ ! -d "$gd" ]; then
+3229    USE       s            if [ ! -f "$conf" ]; then
+3280    USE       s            code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")"
+4401    USE       s            code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")" || code=""
+5790    USE       s            out="$(CONFORMANCE_REPO_ROOT="$other" bash "$script" --self-test 2>&1)"; rc=$?
+5799    USE       s            out="$(CONFORMANCE_REPO_ROOT="$REPO_ROOT" bash "$script" --self-test 2>&1)"; rc=$?
+
+EXECUTABLE sites that TOUCH the filesystem at a $REPO_ROOT path : 27
+of those, whose path contains a character this host FOLDS       : 26
+
+FOLD TABLE USED (measured, evidence/02-fold-census-all-ascii.txt):
+  ';'  <-  U+037E GREEK QUESTION MARK
+  '`'  <-  U+1FEF GREEK VARIA
+  'k'  <-  U+212A KELVIN SIGN
+  's'  <-  U+017F LATIN SMALL LETTER LONG S
