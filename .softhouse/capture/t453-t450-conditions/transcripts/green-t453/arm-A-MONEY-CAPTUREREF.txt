@@ -1,0 +1,31 @@
+### T453 ARM A-MONEY-CAPTUREREF -- M a capture record a parity vector cites in provenance.capture_ref
+### mode gate   label GREEN-T453-GATE   source 7bb43b5dc9efaad9008037d32027338105c6eca9
+### attested base 7bb43b5dc9efaad9008037d32027338105c6eca9  tree de8541a0605568c34db1b0c866a70cad44c6c661
+### delta from the attested base:
+###   M	.softhouse/capture/out/capture-prod3b-raw.json
+### graded commit eba6b7fef89a3d343985e10770ebfb0a6ff55ebf  tree 1dc31172d25fa174671befd64b2c65a8f5e0159f
+### ---- git push output ----
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh (sha256 9360bd74a771c455)
+driver-push-gate: T412 driver push gate engaged. remote=origin url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git
+driver-push-gate:   gate bytes: running=9360bd74a771c455  HEAD blob=9360bd74a771c455  (/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh)
+driver-push-gate: pushing eba6b7fef89a3d343985e10770ebfb0a6ff55ebf -> refs/heads/main   tree=1dc31172d25fa174671befd64b2c65a8f5e0159f
+driver-push-gate:   C1 gitlinks: none in the pushed tree, and none in any of the 1 commit(s) of 7bb43b5dc9efaad9008037d32027338105c6eca9..eba6b7fef89a3d343985e10770ebfb0a6ff55ebf.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 7bb43b5d  tree=de8541a0605568c34db1b0c866a70cad44c6c661
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED, and its delta from the graded ancestor
+driver-push-gate:   7bb43b5d leaves the STATE set, so the cheap subset is not
+driver-push-gate:   licensed to stand in for the bar. Offending entries:
+driver-push-gate:     [M] .softhouse/capture/out/capture-prod3b-raw.json
+driver-push-gate: 
+driver-push-gate:   Run:
+driver-push-gate:       bash /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/bar-attest.sh eba6b7fef89a3d343985e10770ebfb0a6ff55ebf
+driver-push-gate: 
+driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
+driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, capture/, reviews/, conformance.sh and
+driver-push-gate:   any req/ directory; ADDED or MODIFIED only. Everything else can move a guard whose
+driver-push-gate:   corpus the cheap subset does not read -- including guards that never READ the file at
+driver-push-gate:   all and resolve against the tree's INVENTORY.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git'

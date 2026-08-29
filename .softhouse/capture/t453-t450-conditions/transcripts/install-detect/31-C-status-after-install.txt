@@ -1,0 +1,10 @@
+install-driver-push-gate: hooks dir     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt/.git/hooks
+install-driver-push-gate: main checkout /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt
+install-driver-push-gate: pre-push      PRESENT
+install-driver-push-gate:               and it IS this gate's shim.
+install-driver-push-gate: snapshot      PRESENT  9360bd74a771c455  driver-push-gate.sh
+install-driver-push-gate: snapshot      PRESENT  34954ee09f523260  cheap-subset.sh
+install-driver-push-gate: snapshot      PRESENT  3f227bec4ef370c1  bar-attest.sh
+install-driver-push-gate: snapshot      PRESENT  ad94e7e871ba26be  added-path-hazard.py
+install-driver-push-gate: ledger        /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt/.git/softhouse-driver-gate/attest.tsv
+install-driver-push-gate: STATUS: INSTALLED. EXIT 0.

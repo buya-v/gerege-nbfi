@@ -1,0 +1,11 @@
+install-driver-push-gate: hooks dir     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt/.git/hooks
+install-driver-push-gate: main checkout /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt
+install-driver-push-gate: pre-push      ABSENT -- THE GATE IS NOT INSTALLED AND ENFORCES NOTHING.
+install-driver-push-gate:               Install it:  bash .softhouse/hooks/install-driver-push-gate.sh
+install-driver-push-gate: snapshot      MISSING  driver-push-gate.sh  -- a fallback that cannot run is not a fallback.
+install-driver-push-gate: snapshot      MISSING  cheap-subset.sh  -- a fallback that cannot run is not a fallback.
+install-driver-push-gate: snapshot      MISSING  bar-attest.sh  -- a fallback that cannot run is not a fallback.
+install-driver-push-gate: snapshot      MISSING  added-path-hazard.py  -- a fallback that cannot run is not a fallback.
+install-driver-push-gate: ledger        /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.rDTSh8OOuH/wt/.git/softhouse-driver-gate/attest.tsv
+install-driver-push-gate: 
+install-driver-push-gate: STATUS: NOT INSTALLED (or incompletely installed). EXIT 1.

@@ -123,8 +123,20 @@ say "LEG 3  the bypassed tip $($GIT rev-parse --short "$NVTIP") is NAMED, post h
 
 # --------------------------------------------------------- LEG 4: the bypass ledger gets a row
 $GIT reset -q --hard "$BASE" || die 93 "leg 4: could not reset"
-printf "\n<!-- T453 reconciler drive: a state edit pushed under a recorded bypass. -->\n" >>".softhouse/gates.md" \
-  || die 93 "leg 4: could not edit the state file"
+# `git reset --hard` does not remove an untracked directory, and the leg-2 probe submodule is
+# one. Left in place, the next `git add -A` re-adds it as an EMBEDDED GIT REPOSITORY and this leg
+# commits a gitlink -- which C1 refuses with NO BYPASS, so the leg would measure C1 instead of the
+# bypass ledger. Driven: leg 4 failed exactly this way on its first run. This is instance 3's own
+# mechanism turning up inside the instrument written to detect instance 3.
+rm -rf "$SUBM" || die 93 "leg 4: could not remove the leg-2 probe submodule"
+$GIT clean -qfd || die 93 "leg 4: could not clean the work tree"
+# THE DELTA MUST BE ONE THE GATE REFUSES, or no bypass is ever recorded and this leg measures
+# nothing. Driven: the first version edited a STATE file, the gate lawfully ALLOWED it on the
+# cheap path, `record_bypass` was never reached, and the leg reported zero rows -- a green-looking
+# failure. A write OUTSIDE the driver allowlist (.softhouse/, docs/, .claude/) is what C2 exists
+# to refuse, so it is what exercises the bypass.
+printf "T453 reconciler drive leg 4: a write outside the driver allowlist.\n" >"t453-bypass-probe.txt" \
+  || die 93 "leg 4: could not write the out-of-allowlist probe"
 $GIT add -A && $GIT commit -q -m "T453 reconciler drive leg 4" || die 93 "leg 4: could not commit"
 # Force, because leg 2 moved the remote onto a history this commit does not descend from. The
 # BYPASS is what is under test here, not the fast-forward.

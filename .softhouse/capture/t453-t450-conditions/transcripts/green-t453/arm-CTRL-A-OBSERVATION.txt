@@ -1,0 +1,29 @@
+### T453 ARM CTRL-A-OBSERVATION -- A an observation note -- an addition with no inventory hazard
+### mode gate   label GREEN-T453-GATE   source 7bb43b5dc9efaad9008037d32027338105c6eca9
+### attested base 7bb43b5dc9efaad9008037d32027338105c6eca9  tree de8541a0605568c34db1b0c866a70cad44c6c661
+### delta from the attested base:
+###   A	.softhouse/observations/t453-control-note.md
+### graded commit b55f4c845bcfeba42d7f735ae27b00087e510411  tree 86529d5e6adf81b20d667a0e0bc921f89f0f8e40
+### ---- git push output ----
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh (sha256 9360bd74a771c455)
+driver-push-gate: T412 driver push gate engaged. remote=origin url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git
+driver-push-gate:   gate bytes: running=9360bd74a771c455  HEAD blob=9360bd74a771c455  (/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh)
+driver-push-gate: pushing b55f4c845bcfeba42d7f735ae27b00087e510411 -> refs/heads/main   tree=86529d5e6adf81b20d667a0e0bc921f89f0f8e40
+driver-push-gate:   C1 gitlinks: none in the pushed tree, and none in any of the 1 commit(s) of 7bb43b5dc9efaad9008037d32027338105c6eca9..b55f4c845bcfeba42d7f735ae27b00087e510411.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 7bb43b5d  tree=de8541a0605568c34db1b0c866a70cad44c6c661
+driver-push-gate:   ADDED-PATH-HAZARD: pin=.softhouse/guards/dead-path-frontier.pin rows=108 literals=68 added=1 hazards=0
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree 86529d5e6adf81b20d667a0e0bc921f89f0f8e40 (from 'b55f4c845bcfeba42d7f735ae27b00087e510411')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.EB8R50marO
+cheap-subset:   materialised 10111 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13766 definition=102 consistent=711 bare=12770 misdirecting=79 undefined=47 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 126 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+cheap-subset: PASS -- 0 fatal citation findings in the DIRECTIVE zone of tree 86529d5e6adf81b20d667a0e0bc921f89f0f8e40.
+driver-push-gate:   C3 PASS -- cheap subset clean; CHEAP attestation recorded for 86529d5e6adf81b20d667a0e0bc921f89f0f8e40.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git
+   7bb43b5d..b55f4c84  main -> main
