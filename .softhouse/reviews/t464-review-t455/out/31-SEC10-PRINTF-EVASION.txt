@@ -1,0 +1,9 @@
+smuggled line, as written into run-all.sh:
+    214:  echo "  [QUOTED-FALSE-CLAIM]  commit. There is no committed baseline older than HEAD for those 632.\""
+    251:  printf "There is no committed baseline older than HEAD for those 632.\n"  # QUOTED-FALSE-CLAIM
+
+  section-10 grader exit = 0   (0 means the smuggle EVADES both predicates)
+  FAIL lines in the grader: 0
+  run-all.sh exit = 0
+  the REGENERATED transcript carries the sentence x2, of which x1 carry NO tag.
+      UNTAGGED IN TRANSCRIPT: There is no committed baseline older than HEAD for those 632.

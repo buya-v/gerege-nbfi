@@ -1,0 +1,15 @@
+############ T464 — ADJUDICATION TABLE, DRIVEN BOTH WAYS
+  OK   7a adjudicated by name+digest: exit 0
+       FAIL lines: 0
+         PASS  the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
+               of those, ADJUDICATED born-at-tip, UNMOVED   : 1
+  OK   7b adjudicated BYTES changed: exit 1
+             adjudicated-different, UNMOVED       : 2
+             adjudicated but MOVED                : 0
+               adjudicated-different, UNMOVED               : 1
+               adjudicated but MOVED                        : 0
+  OK   7c DEAD entry, nothing born at tip: exit 1
+         FAIL  ARM F's born-at-tip adjudications are EXACTLY the ones adjudicated — a further mutation of an adjudicated capture moves it, and so does an entry that no longer names anything born at the tip (a dead entry is a silent widening of the exception)
+       VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST,
+
+T464 ADJUDICATION DRIVE: 3/3. EXIT 0

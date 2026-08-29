@@ -1,0 +1,15 @@
+############ T464 — INDEPENDENT (iv-a) DRIVE
+  OK   case 1 BEFORE clean (calibration): grader exit 0 (expected 0)
+                 graded=632 of 632 post-fork; ungraded because born at the tip=0
+  OK   case 2 BEFORE fabricated+laundered (FAIL-OPEN): grader exit 0 (expected 0)
+               UNGRADED-BORN-AT-TIP out/A2-999-T464-FABRICATED.json
+                 graded=632 of 633 post-fork; ungraded because born at the tip=1
+  OK   case 3 AFTER  fabricated+laundered (REFUSED): grader exit 1 (expected 1)
+       140:                             this file FAILS: ARM F did not measure it.
+       166:  FAIL  ARM F GRADED ITS WHOLE POPULATION — every post-fork observation was measured against a baseline older than HEAD, or is adjudicated by name AND digest as born at the tip. AN ARM THAT COULD NOT MEASURE PART OF ITS OWN POPULATION HAS NOT PASSED ON IT — the sentence section 8 already applies to a path with no recorded ADD commit
+       212:FAILURES: 1
+       215:VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST,
+  OK   case 4 AFTER  clean tree (P-98 CONTROL): grader exit 0 (expected 0)
+                 graded=632 of 632 post-fork; ungraded because born at the tip=0
+
+T464 (iv-a) DRIVE: 4/4 as T455 recorded. EXIT 0

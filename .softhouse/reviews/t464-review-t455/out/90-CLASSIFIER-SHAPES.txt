@@ -1,0 +1,18 @@
+############ T464 — THE F-6 STRUCTURAL CLASSIFIER, NINE SHAPES
+  OK   (h) token as an object KEY                   -> MATERIAL  material=[('KEY', '$.expected.paymentChannelToFundSourceMappings')] prose=[]
+  OK   (i) identifier-shaped VALUE                  -> MATERIAL  material=[('VALUE-ID', '$.provenance.capture_ref')] prose=[]
+  OK   (j) inside a PROSE sentence                  -> PROSE     material=[] prose=[('PROSE', '$.evidence')]
+  OK   (k) file that will not parse as JSON         -> MATERIAL  material=[('UNPARSEABLE', 1)] prose=[]
+  OK       top-level bare string identifier         -> MATERIAL  material=[('VALUE-ID', '$')] prose=[]
+  OK       JSON list of identifiers                 -> MATERIAL  material=[('VALUE-ID', '$[0]')] prose=[]
+  OK       empty file                               -> NEITHER   material=[] prose=[]
+  OK       identifier value + ONE TRAILING SPACE    -> PROSE     material=[] prose=[('PROSE', '$.provenance.capture_ref')]
+  OK       identifier value + an escaped newline    -> PROSE     material=[] prose=[('PROSE', '$.provenance.capture_ref')]
+
+  READ THE LAST TWO ROWS. Materiality turns on `any(ch.isspace() for ch in node)`, so an
+  identifier-shaped value with ONE trailing space is demoted to PROSE, i.e. IMMATERIAL.
+  It is a weak attack — a ref with a space in it is not a ref the harness compares — but
+  P-29 asks for the edit that should trip it and won't to be PUBLISHED beside the
+  classifier, and it is not. State the limit; it costs one comment.
+
+T464 CLASSIFIER SHAPES: all nine as recorded. EXIT 0

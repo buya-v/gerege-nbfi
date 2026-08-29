@@ -1,0 +1,40 @@
+############ T464 — CASE B, RE-DERIVED BY A THIRD PARTY
+  T448 asserts: case B gives all=2 both=1, so the one-predicate repair CLOSES B.
+  T455 asserts: case B gives all=both=2, so the one-predicate repair does NOT close B.
+
+  run-all.sh UNMUTATED                           all=1   both=1    -> PASSES  (T448's predicate does NOT catch it)
+      python-re: all=1 both=1   grep: all=1 both=1   engines AGREE
+  run-all.sh CASE B (echo, tag in comment)       all=2   both=2    -> PASSES  (T448's predicate does NOT catch it)
+      python-re: all=2 both=2   grep: all=2 both=2   engines AGREE
+      the two lines that match, and whether each carries the tag:
+        TAGGED | echo "  [QUOTED-FALSE-CLAIM]  commit. There is no committed baseline older than HEAD for those 632.\""
+        TAGGED | echo "There is no committed baseline older than HEAD for those 632."  # QUOTED-FALSE-CLAIM
+  ==> T455 IS RIGHT AND T448 IS WRONG. all = both = 2, so `both >= 1 && both == all`
+      HOLDS and the one-predicate repair PASSES case B. The tag is in the trailing
+      shell comment, on the SAME SOURCE LINE, so both greps count it.
+
+  run-all.sh CASE C (quotation deleted)          all=0   both=0    -> FAILS   (T448's predicate catches it)
+      python-re: all=0 both=0   grep: all=0 both=0   engines AGREE
+  ==> T448 IS RIGHT ABOUT C: both=0, so the predicate catches it.
+
+--- AND THE SECOND THING T455 FOUND: THE QUOTATIONS ARE LINE-WRAPPED ---------------
+    T448's predicate is LINE-WISE. Run it over the four in-scope files on an
+    UNMUTATED tree and see what it says about each:
+  run-all.sh (UNMUTATED)                         all=1   both=1    -> PASSES  (T448's predicate does NOT catch it)
+      python-re: all=1 both=1   grep: all=1 both=1   engines AGREE
+  10-drive-conditions.sh (UNMUTATED)             all=0   both=0    -> FAILS   (T448's predicate catches it)
+      python-re: all=0 both=0   grep: all=0 both=0   engines AGREE
+  verify-capture-integrity.py (UNMUTATED)        all=0   both=0    -> FAILS   (T448's predicate catches it)
+      python-re: all=0 both=0   grep: all=0 both=0   engines AGREE
+  12-relaunder-manifest.py (UNMUTATED)           all=1   both=1    -> PASSES  (T448's predicate does NOT catch it)
+      python-re: all=1 both=1   grep: all=1 both=1   engines AGREE
+
+  ==> T448's ONE-PREDICATE REPAIR IS RED ON A CLEAN TREE for 2 of the 4 in-scope
+      files: ['10-drive-conditions.sh', 'verify-capture-integrity.py']
+      Their tagged quotations are WRAPPED across source lines, so no single line
+      carries the claim: a line-wise matcher scores them 0 stated / 0 tagged —
+      INDISTINGUISHABLE FROM ABUSE C, where the quotation is gone entirely. That
+      is T455's finding, and it is stronger than T455 stated it: the supplied
+      predicate would not merely miss B, it would REFUSE HONEST FILES (P-98).
+
+T464 CASE-B ADJUDICATION: both engines agree on every figure. EXIT 0

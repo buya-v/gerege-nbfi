@@ -1,0 +1,22 @@
+############ T464 — THE want -> want_min EDIT, JUDGED BY MEASUREMENT
+
+--- A. AS SHIPPED, ON A CLEAN TREE ------------------------------------------------
+  OK   A guard as shipped (want_min), clean tree: exit 0
+       BAD assertions: 0
+
+--- B. THE TWO PINS REVERTED TO EXACT want (exact count), SAME CLEAN TREE ------
+  OK   B the same tree with EXACT-count pins: exit 1
+         BAD  ARM F reports born-at-tip as UNGRADED, never as equal — expected x1, got x2: UNGRADED-BORN-AT-TIP
+         BAD  verify-capture-integrity.py says what the baseline IS — expected x1, got x3: THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION
+       ==> the edit was NECESSARY, not convenient: with the exact pins the guard is RED
+           on a CLEAN tree, which is the defect T455 was sent to fix in F-6.
+
+--- C. AS SHIPPED, BUT THE PINNED TOKENS REMOVED FROM THE GRADER ------------------
+  OK   C want_min still fires when the token is GONE: exit 1
+         BAD  ARM F reports born-at-tip as UNGRADED, never as equal — expected at least x1, got x0: UNGRADED-BORN-AT-TIP
+         BAD  verify-capture-integrity.py says what the baseline IS — expected at least x1, got x0: THE BLOB AT THE COMMIT THAT FIRST ADDED EACH OBSERVATION
+       ==> want_min <token> 1 is still a guard: the claim these two pins make is
+           PRESENCE, and PRESENCE is exactly what survives the loosening (P-22).
+
+T464 want_min DRIVE: 3/3. The edit was necessary, minimal, and not a weakening of any
+claim the pins actually made. EXIT 0
