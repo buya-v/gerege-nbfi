@@ -1,0 +1,43 @@
+T479 / 21 — THE INTERPRETER FLAG MATRIX, RE-MEASURED, AND FOUR VECTORS T477 DID NOT NAME
+=======================================================================================
+
+host: /usr/bin/python3 -> Python 3.9.6 (Xcode Command Line Tools stub)
+
+flags=[     ] -> HIJACKED-BY-SITECUSTOMIZE|program ran|
+flags=[-E   ] -> program ran|
+flags=[-S   ] -> program ran|
+flags=[-I   ] -> program ran|
+flags=[-I -S] -> program ran|
+flags=[-s   ] -> HIJACKED-BY-SITECUSTOMIZE|program ran|
+flags=[-P   ] -> Unknown option: -P
+usage: /Applications/Xcode.app/Contents/Developer/usr/bin/python3 [option] ... [-c cmd | -m mod | file | -] [arg] ...
+Try `python -h' for more information.
+
+--- PYTHONHOME under -I -S ---
+program ran|--- PYTHONSTARTUP (non-interactive: never read) ---
+program ran|
+--- PYTHONWARNINGS under -I -S ---
+program ran|
+--- cwd on sys.path with -c ? ---
+CWD-HASHLIB-SHADOW|program ran|  <- no flags
+program ran|  <- -I -S
+--- DYLD_INSERT_LIBRARIES stripped? ---
+DYLD seen by child: None|
+--- PYTHONEXECUTABLE ---
+exe=/Applications/Xcode.app/Contents/Developer/usr/bin/python3|ran|
+
+READING:
+  * T477's five-row matrix REPRODUCES EXACTLY: no flags -> HIJACKED; -E, -S, -I, -I -S -> not.
+  * -s ALONE IS NOT ENOUGH (a row T477 did not take): the user-site flag leaves PYTHONPATH
+    on sys.path, so the hijack still fires. It is -E (implied by -I) that closes it.
+  * PYTHONHOME, PYTHONWARNINGS: ignored under -I -S. PYTHONSTARTUP is never read
+    non-interactively. PYTHONEXECUTABLE moves sys.executable only; the program still runs
+    in the real interpreter, and this hasher never re-execs.
+  * DYLD_INSERT_LIBRARIES is STRIPPED by SIP before the interpreter sees it.
+  * THE ONE THAT MATTERS MOST, AND T477 DOES NOT CLAIM IT: without flags, sys.path[0] is
+    the CURRENT DIRECTORY, and this guard cd's into REPO_ROOT before invoking. A file named
+    hashlib.py at the repository root therefore SHADOWS the stdlib inside T466's recompute —
+    driven above, 'CWD-HASHLIB-SHADOW|'. That route is COMMITTABLE and survives a clone,
+    unlike PATH and PYTHONPATH, which are local. '-I' removes it. So layer 2 closes a route
+    strictly stronger than the local-and-uncommitted class T477 declares for it.
+    Latent today: 829 tracked .py files, ZERO whose basename collides with a stdlib module.

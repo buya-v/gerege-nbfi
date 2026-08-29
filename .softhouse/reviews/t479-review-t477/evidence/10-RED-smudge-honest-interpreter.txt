@@ -1,0 +1,31 @@
+T479 / 10 — RED CONTROL: the SMUDGE forgery, honest interpreter, T477's shipped tip
+===================================================================================
+
+The fixture is my own bytes, T477's shape: an inverting clean half attached in the
+clone's PRIVATE .git/info/attributes, applied to ONE tracked file, materialised with
+'git checkout --' so git's stat cache agrees. Its ONLY detector in the shipped harness
+is the whole-tree recompute: there is no index bit, and the forged file is not the harness.
+
+victim                     : .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt
+committed blob             : 7ecb3e05261f765dcda4a4485aea59377612acd4
+hash-object --no-filters   : 80fb668b4a466e134de015915b0a15a8aa6e6db9      <- the forged bytes
+hash-object (no flag)      : 7ecb3e05261f765dcda4a4485aea59377612acd4      <- the honest id, over forged bytes
+git status --porcelain     : 0 lines
+git diff-index --name-only : 0 lines
+ls-files -v not H          : 0
+forged marker on disk      : 1 line(s)
+
+PROBE PRESENCE READ FIRST: grep -c 'probe = ' -> 0
+EXIT = 2
+VERDICT lines: 0
+guard_harness_text_is_committed refusal lines: 1
+
+conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt ARE NOT THE
+conformance: COMMITTED BYTES, AND GIT DID NOT REPORT IT.
+conformance:   path graded by everything downstream : .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt
+conformance:   committed object id (HEAD tree)      : 7ecb3e05261f765dcda4a4485aea59377612acd4
+conformance:   object id of the bytes on disk       : 80fb668b4a466e134de015915b0a15a8aa6e6db9
+conformance:   git diff-index --name-only HEAD      : did NOT list this path
+conformance: This is not an edit and it is not a checkout collision. It is a
+conformance: SUPPRESSION: an index bit, a content filter or an attributes file
+conformance: made git answer a question about something other than the bytes

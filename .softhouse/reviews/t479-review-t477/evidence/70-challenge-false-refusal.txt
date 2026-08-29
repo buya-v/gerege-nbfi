@@ -1,0 +1,22 @@
+T479 / 70 — THE CHALLENGE: FALSE-REFUSAL RATE AND RESIDUAL VALUE
+===============================================================
+
+index rows                          = 10400
+HEAD entries                        = 10400
+trials                              = 400
+selection loop exhausted (REFUSAL)  = 0
+hash-object vs raw sha1 DISAGREE    = 0
+chosen path NOT in the HEAD listing = %d   <- the only case where the honest answer
+                                          is genuinely absent from the input
+index rows the selector would reject = 1 of 10400
+
+READING:
+  * 400 trials of the guard's own selection predicate: 0 exhaustions, 0 disagreements
+    between 'git hash-object --no-filters' and a raw-bytes sha1. Of 10400 index rows the
+    selector rejects exactly ONE — the harness itself, which it excludes by name.
+  * NINE full bar runs were taken in this review. CHALLENGE refusals across all nine: 0.
+    The mechanism is not flaky on a quiescent tree.
+  * AND THE SAME MEASUREMENT IS THE FINDING: index rows 10400 == HEAD entries 10400, so
+    EVERY selectable challenge path is also in the HEAD listing, so the honest answer is
+    ALWAYS present in the challenge's own input on a clean tree. The residual value of the
+    challenge against a lookup shim is zero, not small.

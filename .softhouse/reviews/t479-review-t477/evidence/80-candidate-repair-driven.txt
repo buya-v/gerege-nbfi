@@ -1,0 +1,91 @@
+T479 / 80 — THE CANDIDATE REPAIR, DRIVEN, NOT PROPOSED
+======================================================
+
+THE DEFECT, restated in one sentence: the challenge plants a DUPLICATE record for a
+TRACKED path, so the genuine record for that path is still in the listing, and for any
+unmodified file the honest answer IS that record's HEAD id.
+
+THE REPAIR: pose the challenge over BYTES GIT HAS NEVER SEEN — a throwaway file of
+/dev/urandom under TMPDIR, planted under its ABSOLUTE path, so the answer is absent from
+the listing, absent from the object store, and unreachable by 'git ls-tree' or
+'git cat-file'. The only way to produce it is to hash it. Nine lines, one deletion.
+
+    """T479 candidate repair, applied to a scratch copy of the harness ONLY.
+    
+    THE DEFECT: the challenge plants a DUPLICATE record for a TRACKED path. The genuine record
+    for that path is still in the listing, and for any unmodified file the honest answer -- the
+    sha1 of the bytes on disk -- IS that record's HEAD id. So the correct answer IS in the input
+    and a shim that hashes nothing can look it up.
+    
+    THE REPAIR: challenge on bytes git has never seen. A throwaway file of /dev/urandom under
+    TMPDIR, named by an ABSOLUTE path so no `git ls-tree` / `cat-file` lookup can reach it either.
+    The only way to produce its object id is to hash it, which is what the challenge is for.
+    """
+    import sys
+    
+    path = sys.argv[1]
+    src = open(path, "r", encoding="utf-8").read()
+    
+    OLD_SELECT_START = '  chaltotal="$( LC_ALL=C grep -c \'\' <<<"$index" )" || chaltotal=0'
+    OLD_PLANT = """  printf '%s blob %s\\t%s' "$chalmode" "$chaldecoy" "$chalpath" >>"$headlist"
+      printf '\\000' >>"$headlist"
+    """
+    ...
+
+FOUR ARMS. R1/R2/R3 are on the SMUDGED clone with layer 1 reverted (so the shim is
+reachable and layer 3 is isolated); R4 is a clean clone with the honest interpreter.
+
+PATCHED .softhouse/conformance.sh
+repair applied; lines now: 7152
+5568:  # [T479 REPAIR] The challenge is posed over BYTES GIT HAS NEVER SEEN, so that its answer
+recompute invocation: 5657:  ( cd "$REPO_ROOT" && python3 -c "$recpy" "$selfrel" <"$headlist" ) \
+victim --no-filters : 80fb668b4a466e134de015915b0a15a8aa6e6db9
+victim committed    : 7ecb3e05261f765dcda4a4485aea59377612acd4
+===== R1: repaired + LOOKUP shim A (the shim that beat the shipped challenge) =====
+EXIT=2
+  shim fired            : 1
+  probe presence        : 0
+  VERDICT lines         : 0
+  guard refusal lines   : 1
+    conformance: guard_harness_text_is_committed: THE RECOMPUTE FAILED ITS CHALLENGE.
+===== R2: repaired + LOOKUP shim B (position-independent) =====
+EXIT=2
+  shim fired            : 1
+  probe presence        : 0
+  VERDICT lines         : 0
+    conformance: guard_harness_text_is_committed: THE RECOMPUTE FAILED ITS CHALLENGE.
+===== R3: repaired + HONEST interpreter, smudged tree: must still refuse the SMUDGE =====
+EXIT=2
+  probe presence        : 0
+  guard refusal lines   : 1
+    conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt ARE NOT THE
+    conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+    conformance:   CHALLENGE: the recompute was handed a planted record for /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//conformance-challenge.kPUVKe4R74
+===== R4: repaired + CLEAN tree + honest interpreter: must still PASS =====
+PATCHED .softhouse/conformance.sh
+EXIT=2
+  probe presence        : 1
+  probe value           : down
+    VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+  guard refusal lines   : 0
+    conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+    conformance:   CHALLENGE: the recompute was handed a planted record for /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//conformance-challenge.EYGwIo4sML
+    conformance:     COST 13s / ceiling 300s   guard_harness_text_is_committed
+  leftover challenge files in TMPDIR: 0
+
+READING:
+  * R1 and R2: the two shims that BEAT the shipped challenge now FAIL it. EXIT 2, probe
+    presence 0, no verdict.
+  * R3: the honest interpreter on the same smudged tree still refuses the SMUDGE, so the
+    repair removes no coverage of the tracked tree.
+  * R4: on a clean tree the guard itself is silent (0 refusals) and its recompute and
+    challenge both print clean, at COST 4s / ceiling 300s — unchanged. THE VERDICT LINE
+    OF R4 IS NOT A PASS AND IS NOT REPORTED AS ONE: the reference oracle went DOWN
+    during that run (probe line PRESENT, value 'down'), and the bar correctly printed
+    'VERDICT: UNUSABLE (exit 2) — THIS IS NOT A PASS.' That is an outage, not a refusal;
+    see section 9 of the review.
+  * WHAT THE REPAIR DOES NOT BUY, stated so it is not oversold: it forces a substituted
+    interpreter to hash 4 KiB CORRECTLY. It does not force it to hash the tree, and a
+    shim that reimplements the hasher still wins. That is T477's LONGNOP class and it is
+    genuinely irreducible from inside this file. The repair's whole content is that the
+    ZERO-WORK evasion stops working and the sentence in the transcript becomes true.

@@ -1,0 +1,82 @@
+T479 / 50 — REGRESSION: T473's CONFIRMED LIST, RE-DRIVEN AT T477'S TIP
+======================================================================
+
+Each arm is a fresh throwaway clone of a6bf50a3 outside the repository. Every probe line's
+PRESENCE is counted before its value is read.
+
+EXIT CODES, read from the arm driver: CTL 0, SMUDGE 2, SKIPWT 2, ASSUME 2, WDIRTY 0, NOPY 2.
+
+--- ARM CTL      (clean clone, T477 tip) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 1
+  probe value                               = up
+  VERDICT lines                             = 1
+      VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  guard_harness_text_is_committed refusals  = 0
+      conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+      conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/capture/tierA-a2/RED-GREEN-T163-census-sabotage.txt
+      conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
+
+--- ARM SMUDGE   (filter forgery, no index bit) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 0
+  probe value                               = 
+  VERDICT lines                             = 0
+  guard_harness_text_is_committed refusals  = 1
+      conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt ARE NOT THE
+      conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+      conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/capture/pathb/t36/out/mutation/B-01-mutated.json
+      conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
+
+--- ARM SKIPWT   (--skip-worktree + forged text) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 0
+  probe value                               = 
+  VERDICT lines                             = 0
+  guard_harness_text_is_committed refusals  = 3
+      conformance: guard_harness_text_is_committed: 1 TRACKED PATH(S) CARRY AN INDEX
+      conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/conformance.sh ARE NOT THE
+      conformance: guard_harness_text_is_committed: THE HARNESS THAT IS RUNNING IS NOT THE
+      conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+      conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/reviews/t261-tenant-attestation/evidence/redC/L1/L1.status
+      conformance:     COST 6s / ceiling 300s   guard_harness_text_is_committed
+
+--- ARM ASSUME   (--assume-unchanged + forged) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 0
+  probe value                               = 
+  VERDICT lines                             = 0
+  guard_harness_text_is_committed refusals  = 3
+      conformance: guard_harness_text_is_committed: 1 TRACKED PATH(S) CARRY AN INDEX
+      conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/conformance.sh ARE NOT THE
+      conformance: guard_harness_text_is_committed: THE HARNESS THAT IS RUNNING IS NOT THE
+      conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+      conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/capture/t390-baseline-attribution/out/COST-instrument.txt
+      conformance:     COST 5s / ceiling 300s   guard_harness_text_is_committed
+
+--- ARM WDIRTY   (honest uncommitted edit) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 1
+  probe value                               = up
+  VERDICT lines                             = 1
+      VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  guard_harness_text_is_committed refusals  = 0
+      conformance:     HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk 3f7d228d2c9d02b0ad23f076f623115c6ac356eb)
+      conformance:     HARNESS-TEXT: this harness is edited but not committed — git agrees,
+      conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+      conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/reviews/t285-review-t273/evidence/51-bracket-root-location-probe-REPAIRED.txt
+      conformance:     COST 5s / ceiling 300s   guard_harness_text_is_committed
+
+--- ARM NOPY     (recpython points at nothing) ---------------------------------------------------------
+  probe line PRESENCE (grep -c 'probe = ')  = 0
+  probe value                               = 
+  VERDICT lines                             = 0
+  guard_harness_text_is_committed refusals  = 1
+      conformance: guard_harness_text_is_committed: /usr/bin/python3 is absent. The
+      conformance:     COST 1s / ceiling 300s   guard_harness_text_is_committed
+
+READING:
+  * SKIPWT and ASSUME each fire THREE independent refusals — the index bit, the
+    SUPPRESSION at the harness path, and the two ids compared by name.
+  * SMUDGE fires ONE, and one is correct: there is no index bit to find and the forged
+    file is not the harness, so only the recompute can see it. T473's L-5 correction
+    ('two, not three') is about the harness-as-victim shape; with an unrelated victim it
+    is one, and it is enough.
+  * WDIRTY IS INTACT — EXIT 0, probe presence 1 then 'up', PASS 46 / 7884, ZERO refusals,
+    and the edit NAMED with its on-disk id. The honest-dirty boundary survives the rewrite.
+  * NOPY refuses by name at the [ ! -x ] pre-check, COST 1s, before any recompute.

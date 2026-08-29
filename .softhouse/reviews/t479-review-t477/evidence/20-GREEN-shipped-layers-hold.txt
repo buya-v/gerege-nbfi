@@ -1,0 +1,16 @@
+T479 / 20 — GREEN: layers 1 and 2 hold, on the SHIPPED bytes
+============================================================
+
+T477's tip UNMUTATED, the SMUDGE forgery present, and BOTH interposition routes armed
+at once: the lookup shim first on PATH, and PYTHONPATH pointing at a sitecustomize.py
+that hijacks stdout for exactly the recompute invocation.
+
+  EXIT                                          -> 2
+  PROBE PRESENCE READ FIRST                     -> 0
+  VERDICT lines                                 -> 0
+  PATH shim fired                               -> 0   (NEVER REACHED: /usr/bin/python3 is absolute)
+  sitecustomize fired inside the recompute      -> 0   (NEVER IMPORTED: -I -S)
+  sitecustomize fired in OTHER python3 calls    -> 62   <- see the finding on the
+                                                       three PATH-resolved call sites that remain
+  and the guard still caught the forgery:
+    conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/reviews/t459-review-t454/evidence/00-fold-probes.txt ARE NOT THE

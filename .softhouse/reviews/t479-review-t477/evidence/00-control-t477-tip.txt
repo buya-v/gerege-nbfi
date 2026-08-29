@@ -1,0 +1,42 @@
+T479 / 00 — CONTROL: the bar on T477's tip a6bf50a3, clean throwaway clone
+==========================================================================
+
+clone            : a throwaway clone outside the repository
+HEAD             : a6bf50a36296c097d96a805b63032d94801b0b9e
+harness blob     : rev-parse HEAD: = hash-object --no-filters = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+command          : bash <harness>   (bash, not sh, not zsh)
+wall             : real 74.73s  user 44.24s  sys 15.74s
+
+PROBE PRESENCE READ FIRST:
+  grep -c 'probe = '  -> 1
+  probe value         -> up
+EXIT = 0
+
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+GUARD OUTPUT:
+conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+conformance:   filters 0, ATTRIBUTE SOURCES 0 — of which lines in this
+conformance:   HARNESS-TEXT CENSUS: HEAD a6bf50a36296c097d96a805b63032d94801b0b9e; tracked paths whose materialised bytes
+conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+conformance:   differing 0 — of which git also reported 0 and git did NOT
+conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/capture/tierA-a2/RED-GREEN-T163-census-sabotage.txt
+conformance:   READ CENSUS (S1), DERIVED THIS RUN, NEVER TRANSCRIBED: 81
+conformance:   this harness .softhouse/conformance.sh: committed 1ced9310c33d561b776e73aafa90e2fbe920f5b7 / on disk 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+conformance:   /tmp/t479-work/c1 (git ls-files, whole repository); frontier 11, pinned at 11
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+conformance:     INVOKED    .softhouse/guards/check-dead-path-frontier.sh
+conformance:   namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   GUARD-COST CENSUS: 16 guards timed, 65s total wall,
+conformance:     COST 4s / ceiling 300s   guard_harness_text_is_committed
+conformance:     COST 2s / ceiling 60s   guard_dead_path_frontier
+conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+    Gradeability is NOT "two captures differing only in a setting differ in some cell". That test is
+    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and
+        EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+    this harness. The citation is MINTED by the harness, not read from the vector, and it is
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+
+guard_harness_text_is_committed refusal lines: 0

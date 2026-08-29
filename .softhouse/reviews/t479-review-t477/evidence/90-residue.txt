@@ -1,0 +1,57 @@
+=== T479 RESIDUE CHECK, TAKEN IN THE REVIEWER'S OWN WORKTREE ===
+worktree            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0b63faccbca5aadd
+HEAD                : 09209899a6a4e6102d1ecb20b2535dbd577013c7
+
+--- 1. INDEX BITS ---
+  entries NOT in state H : 0
+
+--- 2. ATTRIBUTE SOURCES, ALL FOUR ---
+    ABSENT : /Users/buv/gerege-nbfi/.git/worktrees/agent-a0b63faccbca5aadd/info/attributes
+    ABSENT : /Users/buv/gerege-nbfi/.git/info/attributes
+    ABSENT : /Users/buv/.config/git/attributes
+    core.attributesFile   : []  (empty = unset)
+    TRACKED .gitattributes files: 0
+
+--- 3. CONTENT FILTERS, EVERY CONFIG LEVEL ---
+    level [--local] : 0
+    level [--global] : 0
+    level [--system] : 0
+    level [ALL] : 0
+    core.autocrlf : []
+    core.eol      : []
+
+--- 4. WORKING TREE ---
+    git status --porcelain lines : 1
+     M .softhouse/reviews/t479-review-t477/evidence/90-residue.txt
+
+--- 5. FORGERY MARKERS AND SCRATCH NAMES IN TRACKED FILES ---
+    tracked paths carrying the forged-marker token : 0
+    tracked paths naming the scratch root          : 4
+    tracked .sh/.py added by this review            : 0
+
+--- 6. PINS AND THE FIRE LOCK ---
+    LOCK in HEAD : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    LOCK on disk : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    changed vs main: .softhouse/tasks.json -> 0
+    changed vs main: .softhouse/RESUME.md -> 0
+    changed vs main: .softhouse/program.json -> 0
+    changed vs main: .softhouse/patterns.md -> 0
+    changed vs main: .softhouse/conformance.sh -> 0
+    changed vs main: .softhouse/bin/fire-program.sh -> 0
+
+--- 7. SCRATCH LIVES OUTSIDE THE REPOSITORY ---
+    scratch root : /tmp/t479-work
+    is it inside the repo? : no
+    clones under it        : 9
+
+--- NOTE, TAKEN AFTER THE REVIEW WAS COMMITTED, AND RECORDED RATHER THAN TIDIED ---
+Row 5 reads 5, not 0. The five are THIS REVIEW'S OWN prose and transcripts naming the
+scratch root: REVIEW.md and four evidence .txt files. None is a .sh or a .py, so none
+enters the corpus of guard_no_host_state_in_lint_corpus (which selects *.sh and *.py
+carrying a repo-wide search instrument) or of the T238 fail-open linter. Measured:
+  tracked .sh / .py naming the scratch root : 0
+  tracked .sh / .py added by this review    : 0
+and the bar at the review tip printed, live:
+  literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+  frontier 11, pinned at 11 ; frontier == pinned (all 11 rows, by path)
+NO PIN MOVED. The count that must be zero -- forgery markers in tracked files -- is zero.

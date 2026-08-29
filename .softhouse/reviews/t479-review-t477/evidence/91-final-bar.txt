@@ -1,0 +1,52 @@
+T479 / 91 — THE FINAL BAR ON THE REVIEWER'S OWN COMMITTED TREE
+==============================================================
+
+=== 0. THE TREE BEING GRADED ===============================================
+branch                                 = softhouse/T479-review-t477
+HEAD                                   = fb7e65e2337b8c01d01a5b63877a039bdb02303b
+git status --porcelain lines           = 1
+git rev-parse HEAD:<harness>           = db313f98153126d7024401542a3ba5bc14407828
+git hash-object --no-filters <harness> = db313f98153126d7024401542a3ba5bc14407828
+git hash-object (no flag)   <harness>  = db313f98153126d7024401542a3ba5bc14407828
+ls-files -v, entries NOT in state H    = 0
+
+NOTE ON WHICH HARNESS GRADED THIS RUN. This branch is cut from main and T477 is NOT
+merged into it, so the harness that graded this review is main's db313f98…, not the
+one under review. main does not carry T466's whole-tree recompute, which is why no
+RECOMPUTE / CHALLENGE / READ CENSUS lines appear below. That is deliberate: a reviewer
+graded by the artefact under review is not an independent measurement.
+
+=== 1. THE RUN =============================================================
+command: bash .softhouse/conformance.sh   (bash, not sh, not zsh)
+EXIT = 2
+
+=== 2. PROBE PRESENCE BEFORE PROBE VALUE ===================================
+grep -c 'probe = '  -> 1      <-- PRESENCE, read first
+probe value         -> down
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = down
+
+=== 3. VERDICT =============================================================
+VERDICT lines: 1
+    VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+  THE EXIT 2 IS AN ORACLE OUTAGE, NOT A GUARD REFUSAL, AND THE TWO ARE NOT REPORTED
+  THE SAME WAY. The probe line is PRESENT (1) and its value is 'down'; the Docker
+  daemon socket /Users/buv/.docker/run/docker.sock is absent on this host, so the
+  reference oracle cannot be reached at all. NO PASS IS CLAIMED FOR THIS RUN.
+
+=== 4. EVERY GUARD REFUSAL, COUNT FIRST ====================================
+refusal lines matched ('guard_<name>:' on stderr): 0
+
+=== 5. THIS TREE'S OWN CENSUSES ============================================
+    conformance:   HARNESS-TEXT CENSUS: HEAD fb7e65e2337b8c01d01a5b63877a039bdb02303b; tracked paths whose materialised bytes
+    conformance:   this harness .softhouse/conformance.sh: committed db313f98153126d7024401542a3ba5bc14407828 / on disk db313f98153126d7024401542a3ba5bc14407828
+    conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0b63faccbca5aadd (git ls-files, whole repository); frontier 11, pinned at 11
+    conformance:   frontier == pinned (all 11 rows, by path).
+    conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+    conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+    conformance:   GUARD-COST CENSUS: 16 guards timed, 66s total wall,
+    conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+
+=== 6. THE PINS ============================================================
+    FAILOPEN and HOSTSTATE pins: byte-identical to main (see 60-citations-and-pins.txt)
+    LOCK in HEAD = LOCK on disk = bc5f4a33bb9c3ac1504ae344cbf2466c739d9985

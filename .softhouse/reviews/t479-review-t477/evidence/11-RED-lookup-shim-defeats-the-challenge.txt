@@ -1,0 +1,79 @@
+T479 / 11 — THE FIFTH ROUTE: a shim that HASHES NOTHING answers T477's CHALLENGE
+================================================================================
+
+ISOLATION: exactly T477's own CHALLENGE-ONLY arm — layer 1 (the absolute path) and
+layer 2 (-I -S) reverted to a bare PATH-resolved 'python3', and NOTHING else changed.
+The mutation was COMMITTED in the throwaway clone, so the harness's own two ids agree
+and the arm isolates layer 3, the challenge, alone.
+
+  mutated line : ( cd "$REPO_ROOT" && python3 -c "$recpy" "$selfrel" <"$headlist" )
+  HEAD         : b80518a97e0358e0e3c3e67814153c49deafe324
+  harness      : committed ccc27166… / on disk ccc27166…
+  victim       : committed 7ecb3e05… / --no-filters 80fb668b…  (forged, git silent)
+
+THE SHIM. It imports no hashlib and opens no tracked file. It answers the challenge by
+LOOKING THE ANSWER UP IN THE CHALLENGE'S OWN INPUT: the planted record is a DUPLICATE of
+a tracked path, so the GENUINE record for that path — carrying the true HEAD id, which
+for an unmodified file IS the id of the bytes on disk — is still in the listing.
+
+    #!/bin/sh
+    # T479 LOOKUP SHIM. Targeted: answers only `-c` invocations (which is how, and only how,
+    # the whole-tree recompute is called) and execs the real interpreter for everything else,
+    # so no other guard is disturbed and the arm measures one thing.
+    if [ "$1" != "-c" ]; then
+      exec /usr/bin/python3 "$@"
+    fi
+    echo "T479-LOOKUP-SHIM-FIRED" >> /tmp/t479-work/shim-fired.txt
+    # It hashes NOTHING. It answers the CHALLENGE by looking the honest id up in the
+    # CHALLENGE'S OWN INPUT: the planted record is a DUPLICATE, so the genuine record for the
+    # same path -- carrying the true HEAD id, which for an unmodified file IS the id of the
+    # bytes on disk -- is still in the listing.
+    exec /usr/bin/python3 -I -S -c '
+    import sys
+    data = sys.stdin.buffer.read()
+    recs = [r for r in data.split(b"\x00") if r]
+    selfrel = sys.argv[1].encode()
+    out = sys.stdout.buffer
+    def parse(r):
+        meta, sep, path = r.partition(b"\t")
+        f = meta.split(b" ")
+        return (f[0], f[2], path) if (len(f) >= 3 and sep and path) else None
+    P = [p for p in map(parse, recs) if p]
+    # 1. the CHALLENGE is the LAST record -- it is appended, so it is always last.
+    cmode, cdecoy, cpath = P[-1]
+    # 2. the honest answer is the OTHER record with the same path.
+    honest = None
+    for mode, sha, path in P[:-1]:
+        if path == cpath and sha != cdecoy:
+            honest = sha
+    # 3. CALIB is echoed straight out of the listing: committed == on disk on this tree.
+    for mode, sha, path in P:
+        if path == selfrel:
+            out.write(b"CALIB " + sha + b" " + sha + b"\x00")
+            break
+    if honest is not None:
+        out.write(b"DIFFERS " + honest + b" " + cdecoy + b" " + cpath + b"\x00")
+    sys.stderr.write("")
+    out.write(b"SCANNED " + str(len(P)).encode() + b"\x00")
+    out.flush()
+    ' "$3"
+
+RESULT:
+  PROBE PRESENCE READ FIRST: grep -c 'probe = ' -> 1
+  probe value                                   -> up
+  EXIT                                          -> 0
+  shim fired                                    -> 1
+  guard_harness_text_is_committed refusal lines -> 0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+AND THE TRANSCRIPT THE FORGERY EARNED, VERBATIM — every line of it false:
+conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+conformance:   differing 0 — of which git also reported 0 and git did NOT
+conformance:   report 0 (SUPPRESSED); reported by git but byte-identical
+conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/reviews/t382-review-t374/out/census-mine.txt
+conformance:   carrying the decoy id c470650bcb5e04efc1bb9a20a2ed9dc4d473cbfc, and answered 144f593a018571d613877164896e442bc016caa8, which is the id
+conformance:   this guard took with git hash-object --no-filters BEFORE handing it over.
+conformance:   The correct answer was NOT in the recompute's input, so an interpreter that
+conformance:   echoes the ids it was given cannot produce it [T473 M-2].
+    Gradeability is NOT "two captures differing only in a setting differ in some cell". That test is
+    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and
