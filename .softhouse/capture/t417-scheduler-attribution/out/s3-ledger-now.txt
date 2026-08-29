@@ -1,0 +1,51 @@
+-- s3-ledger-now  captured 2026-08-29T00:27:22Z  container=fineract-db-1 db=fineract_gerege
+-- statement sha256 a08a4b0572cb66b442dd7cd4746af4c4cc2e5c2cb55ae75bb757a3412390652b
+-- oracle pinned 426a23544 ; PostgreSQL only (CLAUDE.md)
+
+== s3a: ledger counters NOW -- compare against T409 out/r18 (109/113, 38, 379/379, m_loan 8) ==
+                   k                   |               v               
+---------------------------------------+-------------------------------
+ acc_gl_journal_entry rows/maxid       | 109/113
+ distinct transaction_id               | 38
+ acc_gl_closure rows/maxid             | 0/null
+ m_portfolio_command_source rows/maxid | 379/379
+ m_loan rows                           | 8
+ m_office rows                         | 1
+ max created_on_utc                    | 2026-08-28 16:01:00.117772+00
+ max last_modified_on_utc              | 2026-08-28 16:01:00.117772+00
+(8 rows)
+
+== s3b: T409 mutation proof, re-derived ==
+ created_before_modified_after | modified_after_create |    oldest_mutated_created     |        mutation_first         |         mutation_last         | modifier_ids | creator_ids 
+-------------------------------+-----------------------+-------------------------------+-------------------------------+-------------------------------+--------------+-------------
+                            91 |                    91 | 2026-08-21 06:03:41.494198+00 | 2026-08-28 16:01:00.033938+00 | 2026-08-28 16:01:00.039824+00 | 2            | 1,2
+(1 row)
+
+== s3c: T409 prediction state -- next job-9 sweep size ==
+ min_uncalculated_entry_date | uncalculated_rows 
+-----------------------------+-------------------
+ 2026-01-15                  |                18
+(1 row)
+
+ rows_at_or_after_min_uncalculated 
+-----------------------------------
+                                55
+(1 row)
+
+== s3d: distinct users on the ledger table -- the trap, measured ==
+             k             |  v  
+---------------------------+-----
+ distinct created_by       | 1,2
+ distinct last_modified_by | 2
+(2 rows)
+
+== s3e: m_appuser ==
+ id |  username   | firstname |   lastname    | is_deleted 
+----+-------------+-----------+---------------+------------
+  1 | mifos       | App       | Administrator | f
+  2 | system      | system    | system        | f
+  3 | interopUser | Interop   | User          | f
+(3 rows)
+
+
+-- psql rc=0

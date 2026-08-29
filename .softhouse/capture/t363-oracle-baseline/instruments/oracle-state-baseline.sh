@@ -57,25 +57,51 @@
 #       load -- satisfies none of the argument above.
 #   (c) an UPDATE BELOW THE FLOOR. The floor detects appends, not mutations. 8 rows already
 #       carry reversed = t, all at or below id 64, and this script never reads that column.
-#   (d) THE SCHEDULER — added by T390, and OBSERVED, not theorised. Fineract's in-process
-#       Spring Batch scheduler writes journal entries WITHOUT a command-source row, so the
-#       coverage argument above ("every API-driven write lands a command-source row") is true
-#       and does not reach it. Measured 2026-08-28: job 11 "Add Accrual Transactions"
-#       (job_run_history 12721, 16:01:00 UTC = 00:01 Asia/Ulaanbaatar, cron 0 1 0 1/1 * ? *)
-#       wrote journal transactions L32/L33/L34, eighteen legs, je ids 96-113, as app user 2
-#       `system`, while m_portfolio_command_source stayed at 379. The command floor moved by
-#       ZERO and the ledger moved by eighteen rows.
-#       WHY THIS ONE WAS CAUGHT ANYWAY: job 11 happens to write to acc_gl_journal_entry, which
-#       IS one of the two watched tables, so it starred as UNATTRIBUTED and the operator had to
-#       go and find out who did it. A scheduled job touching any of the other 279 tables would
-#       be invisible on both floors. Nineteen jobs read is_active = t in this tenant.
-#       WHAT NOT TO DO ABOUT IT: do not teach this script to wave through writes by user 2.
-#       That converts every future scheduler write into a silent green and is strictly worse
-#       than a red somebody has to read. Register the transactions in PROBES.tsv naming the job
-#       and its job_run_history id, as T390's block there does.
+#   (d) THE SCHEDULER — added by T390, WIDENED by T417 after T409's condition C3. OBSERVED,
+#       not theorised, and it does not only INSERT: IT ALSO REWRITES POSTED ROWS.
+#       Fineract's in-process Spring Batch scheduler writes and rewrites journal entries with
+#       NO command-source row, so the coverage argument above ("every API-driven write lands a
+#       command-source row") is true and does not reach it.
+#         INSERTS  — job 11 "Add Accrual Transactions" (job_run_history 12721, 16:01:00 UTC =
+#           00:01 Asia/Ulaanbaatar) wrote journal transactions L32/L33/L34, eighteen legs,
+#           je ids 96-113, while m_portfolio_command_source stayed at 379. The command floor
+#           moved by ZERO and the ledger moved by eighteen rows.
+#         MUTATIONS — in the SAME minute, job 9 "Update Accounting Running Balances"
+#           UPDATEd 91 PRE-EXISTING rows — every ledger row that then existed, the oldest
+#           created 2026-08-21 — through a raw
+#           `UPDATE acc_gl_journal_entry SET is_running_balance_calculated=?,
+#            organization_running_balance=?, office_running_balance=?, last_modified_by=?,
+#            last_modified_on_utc=? WHERE id=?` issued on jdbcTemplate, no JPA, no command bus
+#           [VERIFIED by T417 from the pinned source:
+#            JournalEntryRunningBalanceUpdateServiceImpl.java:163-164 @ 426a23544; a SECOND raw
+#            UPDATE on the same table, office_running_balance only, is at :211]. THIS SCRIPT
+#           CANNOT RISE ON THAT AXIS AT ALL: a max(id) floor detects appends, not rewrites.
+#           Class (d) and class (c) INTERSECT, and (c) is live, not theoretical.
+#       WHY THE INSERTS WERE CAUGHT ANYWAY: job 11 happens to write to acc_gl_journal_entry,
+#       which IS one of the two watched tables, so it starred as UNATTRIBUTED. A scheduled job
+#       touching any of the other 279 tables would be invisible on both floors.
+#       HOW MANY JOBS: this script TYPES NO COUNT, and T390's header typed one here — it said
+#       "nineteen jobs read is_active = t". THAT WAS WRONG. Derived live by T417 on
+#       2026-08-29T00:09:30Z: 41 job rows, 31 is_active = t, 10 inactive; 31 distinct jobs ran
+#       in the preceding 24h; job 36 "Send Asynchronous Events" runs EVERY MINUTE (1440 runs in
+#       24h). Re-derive it, never transcribe it:
+#         SELECT count(*), count(*) FILTER (WHERE is_active) FROM job;
+#       WHAT NOT TO DO ABOUT IT — SHARPER THAN T390 COULD STATE IT: do not teach this script to
+#       wave through writes by user 2. `last_modified_by` is now 2 on EVERY row of
+#       acc_gl_journal_entry [T409; re-derived by T417], so a user-2 exemption would not merely
+#       excuse future scheduler writes — it would retroactively excuse THE ENTIRE LEDGER,
+#       including every probe T352, T359 and T388 ever fired. Register the transactions in
+#       PROBES.tsv naming the job and its job_run_history id, as T390's block there does.
+#       THE INSTRUMENT THAT DOES REACH THIS: T417 built
+#       .softhouse/capture/t417-scheduler-attribution/instruments/oracle-window-witness.sh,
+#       which digests EVERY base table and sequence except eight named scheduler-bookkeeping
+#       tables, so it sees mutations and it sees the other 279 tables. It complements this
+#       script; it does not replace it, because it grades a WINDOW and this grades ATTRIBUTION.
 #       [VERIFIED: T390, live. Evidence under .softhouse/capture/t390-baseline-attribution/out/:
 #        q1-je-above-95.txt, q2-command-source-tail.txt, q3-jobs.txt, q4-job-run-history.txt,
-#        q5-loan-transactions-8.txt, q7-who-is-user-2.txt.]
+#        q5-loan-transactions-8.txt, q7-who-is-user-2.txt.
+#        T417 re-derivation: .softhouse/capture/t417-scheduler-attribution/out/
+#        s1-jobs.txt, s2-job-run-history.txt, s3-ledger-now.txt.]
 #
 # The float check is the one place DDL is covered, and it is narrower than it could be: it
 # looks at the two ledger tables, while live there are 0 float columns across ALL 281

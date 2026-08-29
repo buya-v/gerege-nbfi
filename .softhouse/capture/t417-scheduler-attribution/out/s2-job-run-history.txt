@@ -1,0 +1,134 @@
+-- s2-job-run-history  captured 2026-08-29T00:09:30Z  container=fineract-db-1 db=fineract_gerege
+-- statement sha256 c39a6da0e9a033adac116ac2eac2a92d6fd39607ed694455b6604bea28df002a
+-- oracle pinned 426a23544 ; PostgreSQL only (CLAUDE.md)
+
+== s2a: job_run_history columns ==
+  column_name  |          data_type          
+---------------+-----------------------------
+ id            | bigint
+ job_id        | bigint
+ version       | bigint
+ start_time    | timestamp without time zone
+ end_time      | timestamp without time zone
+ status        | character varying
+ error_message | text
+ trigger_type  | character varying
+ error_log     | text
+(9 rows)
+
+== s2b: high-water mark and span ==
+ rows  | min_id | max_id |       min_start        |      max_start      |         max_end         
+-------+--------+--------+------------------------+---------------------+-------------------------
+ 13327 |      1 |  13327 | 2026-08-18 09:54:00.01 | 2026-08-29 00:09:00 | 2026-08-29 00:09:00.027
+(1 row)
+
+== s2c: which jobs ran in the last 24h (job-table time is naive UTC) ==
+ job_id |                                 name                                  | is_active | runs_24h |        first_24h        |        last_24h         | non_success 
+--------+-----------------------------------------------------------------------+-----------+----------+-------------------------+-------------------------+-------------
+      2 | Update Loan Arrears Ageing                                            | t         |        1 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.003 |           0
+      4 | Apply Annual Fee For Savings                                          | t         |        1 | 2026-08-28 14:20:00.005 | 2026-08-28 14:20:00.005 |           0
+      5 | Apply Holidays To Loans                                               | t         |        1 | 2026-08-28 04:00:00.01  | 2026-08-28 04:00:00.01  |           0
+      6 | Post Interest For Savings                                             | t         |        1 | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.007 |           0
+      7 | Transfer Fee For Loans From Savings                                   | t         |        1 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.003 |           0
+      8 | Pay Due Savings Charges                                               | t         |        1 | 2026-08-28 04:00:00.011 | 2026-08-28 04:00:00.011 |           0
+      9 | Update Accounting Running Balances                                    | t         |        1 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.003 |           0
+     10 | Execute Standing Instruction                                          | t         |        1 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.006 |           0
+     11 | Add Accrual Transactions                                              | t         |        1 | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.049 |           0
+     12 | Apply penalty to overdue loans                                        | t         |        1 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.006 |           0
+     13 | Update Non Performing Assets                                          | t         |        1 | 2026-08-28 16:00:00.005 | 2026-08-28 16:00:00.005 |           0
+     14 | Transfer Interest To Savings                                          | t         |        1 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.002 |           0
+     15 | Update Deposit Accounts Maturity details                              | t         |        1 | 2026-08-28 16:00:00.062 | 2026-08-28 16:00:00.062 |           0
+     16 | Add Periodic Accrual Transactions                                     | t         |        1 | 2026-08-28 16:02:00.002 | 2026-08-28 16:02:00.002 |           0
+     17 | Recalculate Interest For Loans                                        | t         |        1 | 2026-08-28 16:01:00.032 | 2026-08-28 16:01:00.032 |           0
+     18 | Generate Mandatory Savings Schedule                                   | t         |        1 | 2026-08-28 16:05:00.011 | 2026-08-28 16:05:00.011 |           0
+     19 | Generate Loan Loss Provisioning                                       | t         |        1 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.006 |           0
+     20 | Post Dividends For Shares                                             | t         |        1 | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.006 |           0
+     21 | Update Savings Dormant Accounts                                       | t         |        1 | 2026-08-28 16:00:00.069 | 2026-08-28 16:00:00.069 |           0
+     22 | Add Accrual Transactions For Loans With Income Posted As Transactions | t         |        1 | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.002 |           0
+     23 | Execute Report Mailing Jobs                                           | t         |       96 | 2026-08-28 00:15:00.001 | 2026-08-29 00:00:00.002 |           0
+     24 | Update SMS Outbound with Campaign Message                             | t         |        1 | 2026-08-28 21:00:00.001 | 2026-08-28 21:00:00.001 |           0
+     25 | Send Messages to SMS Gateway                                          | t         |        1 | 2026-08-28 21:00:00.043 | 2026-08-28 21:00:00.043 |           0
+     26 | Get Delivery Reports from SMS Gateway                                 | t         |        1 | 2026-08-28 21:00:00.053 | 2026-08-28 21:00:00.053 |           0
+     27 | Execute Email                                                         | t         |      144 | 2026-08-28 00:10:00.009 | 2026-08-29 00:00:00.002 |           0
+     28 | Update Email Outbound with campaign message                           | t         |       96 | 2026-08-28 00:15:00.001 | 2026-08-29 00:00:00.002 |           0
+     29 | Generate AdhocClient Schedule                                         | t         |        1 | 2026-08-28 04:00:00.011 | 2026-08-28 04:00:00.011 |           0
+     30 | Update Trial Balance Details                                          | t         |        1 | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.003 |           1
+     31 | Execute All Dirty Jobs                                                | t         |        1 | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.002 |           0
+     35 | Loan Delinquency Classification                                       | t         |        1 | 2026-08-28 14:00:00.005 | 2026-08-28 14:00:00.005 |           0
+     36 | Send Asynchronous Events                                              | t         |     1440 | 2026-08-28 00:10:00.009 | 2026-08-29 00:09:00     |           0
+(31 rows)
+
+== s2d: jobs that are ACTIVE but have NEVER appeared in job_run_history ==
+ id | name | cron_expression | previous_run_start_time 
+----+------+-----------------+-------------------------
+(0 rows)
+
+== s2e: the 2026-08-28 16:01 sweep, every run overlapping that minute ==
+  id   | job_id |                                 name                                  |       start_time        |        end_time         | status  |                             err                              
+-------+--------+-----------------------------------------------------------------------+-------------------------+-------------------------+---------+--------------------------------------------------------------
+ 12704 |     13 | Update Non Performing Assets                                          | 2026-08-28 16:00:00.005 | 2026-08-28 16:00:00.062 | success | 
+ 12703 |     23 | Execute Report Mailing Jobs                                           | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.061 | success | 
+ 12701 |     12 | Apply penalty to overdue loans                                        | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.059 | success | 
+ 12706 |     20 | Post Dividends For Shares                                             | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | 
+ 12707 |     19 | Generate Loan Loss Provisioning                                       | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.063 | success | 
+ 12708 |     27 | Execute Email                                                         | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.065 | success | 
+ 12705 |     10 | Execute Standing Instruction                                          | 2026-08-28 16:00:00.006 | 2026-08-28 16:00:00.062 | success | 
+ 12702 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.059 | success | 
+ 12709 |      6 | Post Interest For Savings                                             | 2026-08-28 16:00:00.007 | 2026-08-28 16:00:00.068 | success | 
+ 12710 |     15 | Update Deposit Accounts Maturity details                              | 2026-08-28 16:00:00.062 | 2026-08-28 16:00:00.074 | success | 
+ 12711 |     28 | Update Email Outbound with campaign message                           | 2026-08-28 16:00:00.063 | 2026-08-28 16:00:00.075 | success | 
+ 12712 |     21 | Update Savings Dormant Accounts                                       | 2026-08-28 16:00:00.069 | 2026-08-28 16:00:00.079 | success | 
+ 12713 |     22 | Add Accrual Transactions For Loans With Income Posted As Transactions | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.03  | success | 
+ 12716 |     31 | Execute All Dirty Jobs                                                | 2026-08-28 16:01:00.002 | 2026-08-28 16:01:00.033 | success | 
+ 12720 |      9 | Update Accounting Running Balances                                    | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.048 | success | 
+ 12714 |     36 | Send Asynchronous Events                                              | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.031 | success | 
+ 12715 |      7 | Transfer Fee For Loans From Savings                                   | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.032 | success | 
+ 12717 |      2 | Update Loan Arrears Ageing                                            | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.033 | success | 
+ 12718 |     30 | Update Trial Balance Details                                          | 2026-08-28 16:01:00.003 | 2026-08-28 16:01:00.034 | failed  | exitCode=FAILED;exitDescription=java.lang.ClassCastException
+ 12719 |     17 | Recalculate Interest For Loans                                        | 2026-08-28 16:01:00.032 | 2026-08-28 16:01:00.048 | success | 
+ 12721 |     11 | Add Accrual Transactions                                              | 2026-08-28 16:01:00.049 | 2026-08-28 16:01:00.12  | success | 
+(21 rows)
+
+== s2f: every DISTINCT job that has EVER run, with its total run count ==
+ job_id |                                 name                                  | is_active | runs_all_time 
+--------+-----------------------------------------------------------------------+-----------+---------------
+      2 | Update Loan Arrears Ageing                                            | t         |             8
+      4 | Apply Annual Fee For Savings                                          | t         |             7
+      5 | Apply Holidays To Loans                                               | t         |             8
+      6 | Post Interest For Savings                                             | t         |             8
+      7 | Transfer Fee For Loans From Savings                                   | t         |             8
+      8 | Pay Due Savings Charges                                               | t         |             8
+      9 | Update Accounting Running Balances                                    | t         |             8
+     10 | Execute Standing Instruction                                          | t         |             8
+     11 | Add Accrual Transactions                                              | t         |             9
+     12 | Apply penalty to overdue loans                                        | t         |             8
+     13 | Update Non Performing Assets                                          | t         |             8
+     14 | Transfer Interest To Savings                                          | t         |             9
+     15 | Update Deposit Accounts Maturity details                              | t         |             8
+     16 | Add Periodic Accrual Transactions                                     | t         |             9
+     17 | Recalculate Interest For Loans                                        | t         |             9
+     18 | Generate Mandatory Savings Schedule                                   | t         |             9
+     19 | Generate Loan Loss Provisioning                                       | t         |             8
+     20 | Post Dividends For Shares                                             | t         |             8
+     21 | Update Savings Dormant Accounts                                       | t         |             8
+     22 | Add Accrual Transactions For Loans With Income Posted As Transactions | t         |             8
+     23 | Execute Report Mailing Jobs                                           | t         |           708
+     24 | Update SMS Outbound with Campaign Message                             | t         |             9
+     25 | Send Messages to SMS Gateway                                          | t         |             9
+     26 | Get Delivery Reports from SMS Gateway                                 | t         |             9
+     27 | Execute Email                                                         | t         |          1061
+     28 | Update Email Outbound with campaign message                           | t         |           708
+     29 | Generate AdhocClient Schedule                                         | t         |             8
+     30 | Update Trial Balance Details                                          | t         |             8
+     31 | Execute All Dirty Jobs                                                | t         |             8
+     35 | Loan Delinquency Classification                                       | t         |             7
+     36 | Send Asynchronous Events                                              | t         |         10623
+     37 | Purge External Events                                                 | f         |             1
+     38 | Purge Processed Commands                                              | f         |             1
+     39 | Accrual Activity Posting                                              | f         |             1
+     40 | Journal Entry Aggregation                                             | f         |             1
+     42 | Add Accrual Transactions For Savings                                  | f         |             1
+(36 rows)
+
+
+-- psql rc=0

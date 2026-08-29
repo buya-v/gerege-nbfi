@@ -1,0 +1,28 @@
+LIVE ARM -- capture window deliberately spanning a scheduler minute boundary
+host UTC at open : 2026-08-29T00:15:32Z
+WITNESS OPEN  label=LIVE-MINUTE-BOUNDARY
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+  graded rollup = 4c0adcae1804d88464265fc0f7661891
+  db now (UTC)  = 2026-08-29 00:15:32.838096
+  jrh max id    = 13336
+  witness       -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a609da9cdb9ba5dbc/.softhouse/capture/t417-scheduler-attribution/witness/LIVE-MINUTE-BOUNDARY.open.tsv
+open rc=0
+-- waiting 80s, across the next minute boundary --
+host UTC at close: 2026-08-29T00:16:53Z
+WITNESS CLOSE label=LIVE-MINUTE-BOUNDARY
+  window (UTC, database clock): 2026-08-29 00:15:32.838096  ->  2026-08-29 00:16:53.566795
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  jrh     job    kind      start (UTC)                end (UTC)                  name
+  13337   36     overlaps  2026-08-29 00:16:00.002000 2026-08-29 00:16:00.028000 Send Asynchronous Events [success]
+  RUNS OVERLAPPING WINDOW = 1
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ok   nothing moved. rollup open == close == 4c0adcae1804d88464265fc0f7661891
+-----------------------------------------------------------------------------
+VERDICT: QUIESCENT-WITH-RUNS (exit 0). 1 job run(s) overlapped the window and
+  NOTHING ON THE GRADED SURFACE MOVED. They are proven harmless FOR THIS WINDOW by
+  measurement -- not waved through by a classification, and not by who they ran as.
+  A capture taken inside this window is reproducible against this oracle state.
+close rc=0

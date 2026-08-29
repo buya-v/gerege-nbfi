@@ -1,0 +1,580 @@
+# oracle-window-witness v1
+meta	label	PROBE-A
+meta	phase	close
+meta	host_utc	2026-08-29T00:14:41Z
+meta	fineract_commit	426a23544e8426a38ae43ae404670a0a7e85b9eb
+meta	database	fineract_gerege
+meta	container	fineract-db-1
+meta	db_now_utc	2026-08-29 00:14:41.941207
+meta	session_timezone	Etc/UTC
+meta	engine	PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1)
+jrh	max_id	13333
+jrh	rows	13333
+jrh	max_start_time	2026-08-29 00:14:00.001000
+jrh	max_end_time	2026-08-29 00:14:00.028000
+jobs	total	41
+jobs	active	31
+jobs	currently_running	0
+job	10	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.006000	2026-08-29 16:00:00.000000	Execute Standing Instruction
+job	11	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.049000	2026-08-29 16:01:00.000000	Add Accrual Transactions
+job	12	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.006000	2026-08-29 16:00:00.000000	Apply penalty to overdue loans
+job	13	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.005000	2026-08-29 16:00:00.000000	Update Non Performing Assets
+job	14	true	0 2 0 1/1 * ? *	2026-08-28 16:02:00.002000	2026-08-29 16:02:00.000000	Transfer Interest To Savings
+job	15	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.062000	2026-08-29 16:00:00.000000	Update Deposit Accounts Maturity details
+job	16	true	0 2 0 1/1 * ? *	2026-08-28 16:02:00.002000	2026-08-29 16:02:00.000000	Add Periodic Accrual Transactions
+job	17	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.032000	2026-08-29 16:01:00.000000	Recalculate Interest For Loans
+job	18	true	0 5 0 1/1 * ? *	2026-08-28 16:05:00.011000	2026-08-29 16:05:00.000000	Generate Mandatory Savings Schedule
+job	19	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.006000	2026-08-29 16:00:00.000000	Generate Loan Loss Provisioning
+job	2	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.003000	2026-08-29 16:01:00.000000	Update Loan Arrears Ageing
+job	20	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.006000	2026-08-29 16:00:00.000000	Post Dividends For Shares
+job	21	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.069000	2026-08-29 16:00:00.000000	Update Savings Dormant Accounts
+job	22	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.002000	2026-08-29 16:01:00.000000	Add Accrual Transactions For Loans With Income Posted As Transactions
+job	23	true	0 0/15 * * * ?	2026-08-29 00:00:00.002000	2026-08-29 00:15:00.000000	Execute Report Mailing Jobs
+job	24	true	0 0 5 1/1 * ? *	2026-08-28 21:00:00.001000	2026-08-29 21:00:00.000000	Update SMS Outbound with Campaign Message
+job	25	true	0 0 5 1/1 * ? *	2026-08-28 21:00:00.043000	2026-08-29 21:00:00.000000	Send Messages to SMS Gateway
+job	26	true	0 0 5 1/1 * ? *	2026-08-28 21:00:00.053000	2026-08-29 21:00:00.000000	Get Delivery Reports from SMS Gateway
+job	27	true	0 0/10 * * * ?	2026-08-29 00:10:00.004000	2026-08-29 00:20:00.000000	Execute Email
+job	28	true	0 0/15 * * * ?	2026-08-29 00:00:00.002000	2026-08-29 00:15:00.000000	Update Email Outbound with campaign message
+job	29	true	0 0 12 1/1 * ? *	2026-08-28 04:00:00.011000	2026-08-29 04:00:00.000000	Generate AdhocClient Schedule
+job	30	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.003000	2026-08-29 16:01:00.000000	Update Trial Balance Details
+job	31	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.002000	2026-08-29 16:01:00.000000	Execute All Dirty Jobs
+job	32	false	0 0 0 1/1 * ? *	never	none	Increase Business Date by 1 day
+job	33	false	0 0 0 1/1 * ? *	never	none	Increase COB Date by 1 day
+job	34	false	0 0 0 * * ?	never	none	Loan COB
+job	35	true	0 0 22 1/1 * ? *	2026-08-28 14:00:00.005000	2026-08-29 14:00:00.000000	Loan Delinquency Classification
+job	36	true	0 0/1 * * *  ?	2026-08-29 00:14:00.001000	2026-08-29 00:15:00.000000	Send Asynchronous Events
+job	37	false	0 1 0 1/1 * ? *	2026-08-18 16:01:00.052000	none	Purge External Events
+job	38	false	0 0 1 * * ?	2026-08-18 16:01:00.055000	none	Purge Processed Commands
+job	39	false	0 0 1 * * ?	2026-08-18 16:01:00.050000	none	Accrual Activity Posting
+job	4	true	0 20 22 1/1 * ? *	2026-08-28 14:20:00.005000	2026-08-29 14:20:00.000000	Apply Annual Fee For Savings
+job	40	false	0 0 6 * * ?	2026-08-18 16:01:00.053000	none	Journal Entry Aggregation
+job	41	false	0 0 6 * * ?	never	none	Retained Earning Job
+job	42	false	0 1 0 1/1 * ? *	2026-08-18 16:01:00.055000	none	Add Accrual Transactions For Savings
+job	43	false	0 0 0 * * ?	never	none	Working Capital Loan COB
+job	5	true	0 0 12 * * ?	2026-08-28 04:00:00.010000	2026-08-29 04:00:00.000000	Apply Holidays To Loans
+job	6	true	0 0 0 1/1 * ? *	2026-08-28 16:00:00.007000	2026-08-29 16:00:00.000000	Post Interest For Savings
+job	7	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.003000	2026-08-29 16:01:00.000000	Transfer Fee For Loans From Savings
+job	8	true	0 0 12 * * ?	2026-08-28 04:00:00.011000	2026-08-29 04:00:00.000000	Pay Due Savings Charges
+job	9	true	0 1 0 1/1 * ? *	2026-08-28 16:01:00.003000	2026-08-29 16:01:00.000000	Update Accounting Running Balances
+seq	acc_accounting_rule_id_seq	unset
+seq	acc_gl_account_id_seq	47
+seq	acc_gl_closure_id_seq	1
+seq	acc_gl_financial_activity_account_id_seq	7
+seq	acc_gl_journal_entry_annual_summary_id_seq	unset
+seq	acc_gl_journal_entry_id_seq	113
+seq	acc_product_mapping_id_seq	189
+seq	acc_rule_tags_id_seq	unset
+seq	batch_custom_job_parameters_id_seq	unset
+seq	c_account_number_format_id_seq	unset
+seq	c_cache_id_seq	unset
+seq	c_configuration_id_seq	79
+seq	c_external_service_id_seq	unset
+seq	glim_accounts_id_seq	unset
+seq	gsim_accounts_id_seq	unset
+seq	interop_identifier_id_seq	unset
+seq	job_parameters_id_seq	unset
+seq	m_account_transfer_details_id_seq	unset
+seq	m_account_transfer_standing_instructions_history_id_seq	unset
+seq	m_account_transfer_standing_instructions_id_seq	unset
+seq	m_account_transfer_transaction_id_seq	unset
+seq	m_address_id_seq	unset
+seq	m_adhoc_id_seq	unset
+seq	m_appuser_id_seq	unset
+seq	m_appuser_previous_password_id_seq	unset
+seq	m_batch_business_steps_id_seq	13
+seq	m_business_date_id_seq	unset
+seq	m_calendar_history_id_seq	unset
+seq	m_calendar_id_seq	unset
+seq	m_calendar_instance_id_seq	unset
+seq	m_cashier_transactions_id_seq	unset
+seq	m_cashiers_id_seq	unset
+seq	m_charge_id_seq	18
+seq	m_client_address_id_seq	unset
+seq	m_client_attendance_id_seq	unset
+seq	m_client_charge_id_seq	unset
+seq	m_client_charge_paid_by_id_seq	unset
+seq	m_client_collateral_management_id_seq	unset
+seq	m_client_id_seq	3
+seq	m_client_identifier_id_seq	unset
+seq	m_client_non_person_id_seq	unset
+seq	m_client_transaction_id_seq	unset
+seq	m_client_transfer_details_id_seq	unset
+seq	m_code_id_seq	49
+seq	m_code_value_id_seq	22
+seq	m_collateral_management_id_seq	unset
+seq	m_command_id_seq	1
+seq	m_creditbureau_configuration_id_seq	unset
+seq	m_creditbureau_id_seq	unset
+seq	m_creditbureau_loanproduct_mapping_id_seq	unset
+seq	m_creditbureau_token_id_seq	unset
+seq	m_creditreport_id_seq	unset
+seq	m_currency_id_seq	unset
+seq	m_delinquency_bucket_id_seq	unset
+seq	m_delinquency_bucket_mappings_id_seq	unset
+seq	m_delinquency_range_id_seq	unset
+seq	m_deposit_account_on_hold_transaction_id_seq	unset
+seq	m_deposit_account_recurring_detail_id_seq	unset
+seq	m_deposit_account_term_and_preclosure_id_seq	unset
+seq	m_deposit_product_recurring_detail_id_seq	unset
+seq	m_deposit_product_term_and_preclosure_id_seq	unset
+seq	m_document_id_seq	unset
+seq	m_entity_datatable_check_id_seq	unset
+seq	m_entity_relation_id_seq	unset
+seq	m_entity_to_entity_access_id_seq	unset
+seq	m_entity_to_entity_mapping_id_seq	unset
+seq	m_external_asset_owner_id_seq	unset
+seq	m_external_asset_owner_journal_entry_mapping_id_seq	unset
+seq	m_external_asset_owner_loan_product_configurable_attribu_id_seq	unset
+seq	m_external_asset_owner_transfer_details_id_seq	unset
+seq	m_external_asset_owner_transfer_id_seq	unset
+seq	m_external_asset_owner_transfer_journal_entry_mapping_id_seq	unset
+seq	m_external_asset_owner_transfer_loan_mapping_id_seq	unset
+seq	m_external_event_id_seq	unset
+seq	m_family_members_id_seq	unset
+seq	m_field_configuration_id_seq	unset
+seq	m_floating_rates_id_seq	unset
+seq	m_floating_rates_periods_id_seq	unset
+seq	m_fund_id_seq	unset
+seq	m_group_id_seq	unset
+seq	m_group_level_id_seq	unset
+seq	m_group_roles_id_seq	unset
+seq	m_guarantor_funding_details_id_seq	unset
+seq	m_guarantor_id_seq	unset
+seq	m_guarantor_transaction_id_seq	unset
+seq	m_holiday_id_seq	unset
+seq	m_hook_configuration_id_seq	unset
+seq	m_hook_id_seq	unset
+seq	m_hook_registered_events_id_seq	unset
+seq	m_hook_schema_id_seq	unset
+seq	m_hook_templates_id_seq	unset
+seq	m_image_id_seq	unset
+seq	m_import_document_id_seq	unset
+seq	m_interest_incentives_id_seq	unset
+seq	m_interest_rate_chart_id_seq	unset
+seq	m_interest_rate_slab_id_seq	unset
+seq	m_journal_entry_aggregation_summary_id_seq	unset
+seq	m_journal_entry_aggregation_tracking_id_seq	unset
+seq	m_loan_amortization_allocation_mapping_id_seq	unset
+seq	m_loan_approved_amount_history_id_seq	unset
+seq	m_loan_arrears_aging_loan_id_seq	unset
+seq	m_loan_buy_down_fee_balance_id_seq	unset
+seq	m_loan_capitalized_income_balance_id_seq	unset
+seq	m_loan_charge_id_seq	4
+seq	m_loan_charge_paid_by_id_seq	15
+seq	m_loan_charge_tax_details_id_seq	unset
+seq	m_loan_collateral_id_seq	unset
+seq	m_loan_collateral_management_id_seq	unset
+seq	m_loan_credit_allocation_rule_id_seq	unset
+seq	m_loan_delinquency_action_id_seq	unset
+seq	m_loan_delinquency_tag_history_id_seq	unset
+seq	m_loan_disbursement_detail_id_seq	unset
+seq	m_loan_id_seq	8
+seq	m_loan_installment_charge_id_seq	60
+seq	m_loan_installment_delinquency_tag_history_id_seq	unset
+seq	m_loan_interest_recalculation_additional_details_id_seq	unset
+seq	m_loan_officer_assignment_history_id_seq	unset
+seq	m_loan_originator_id_seq	unset
+seq	m_loan_originator_mapping_id_seq	unset
+seq	m_loan_overdue_installment_charge_id_seq	unset
+seq	m_loan_payment_allocation_rule_id_seq	unset
+seq	m_loan_product_credit_allocation_rule_id_seq	unset
+seq	m_loan_product_payment_allocation_rule_id_seq	21
+seq	m_loan_progressive_model_id_seq	unset
+seq	m_loan_reage_parameter_id_seq	unset
+seq	m_loan_reamortization_parameter_id_seq	unset
+seq	m_loan_recalculation_details_id_seq	unset
+seq	m_loan_repayment_schedule_history_id_seq	unset
+seq	m_loan_repayment_schedule_id_seq	48
+seq	m_loan_reschedule_request_id_seq	unset
+seq	m_loan_reschedule_request_term_variations_mapping_id_seq	unset
+seq	m_loan_status_change_history_id_seq	unset
+seq	m_loan_term_variations_id_seq	unset
+seq	m_loan_topup_id_seq	unset
+seq	m_loan_tranche_charges_id_seq	unset
+seq	m_loan_tranche_disbursement_charge_id_seq	unset
+seq	m_loan_transaction_id_seq	34
+seq	m_loan_transaction_relation_id_seq	unset
+seq	m_loan_transaction_repayment_schedule_mapping_id_seq	12
+seq	m_loanproduct_provisioning_entry_id_seq	unset
+seq	m_loanproduct_provisioning_mapping_id_seq	unset
+seq	m_mandatory_savings_schedule_id_seq	unset
+seq	m_meeting_id_seq	unset
+seq	m_note_id_seq	unset
+seq	m_office_id_seq	unset
+seq	m_office_transaction_id_seq	unset
+seq	m_organisation_creditbureau_id_seq	unset
+seq	m_organisation_currency_id_seq	23
+seq	m_password_validation_policy_id_seq	3
+seq	m_payment_detail_id_seq	5
+seq	m_payment_type_id_seq	3
+seq	m_permission_id_seq	1015
+seq	m_portfolio_account_associations_id_seq	unset
+seq	m_portfolio_command_source_id_seq	379
+seq	m_product_loan_configurable_attributes_id_seq	58
+seq	m_product_loan_floating_rates_id_seq	unset
+seq	m_product_loan_guarantee_details_id_seq	unset
+seq	m_product_loan_id_seq	63
+seq	m_product_loan_recalculation_details_id_seq	unset
+seq	m_product_loan_variable_installment_config_id_seq	unset
+seq	m_product_loan_variations_borrower_cycle_id_seq	unset
+seq	m_product_mix_id_seq	unset
+seq	m_provision_category_id_seq	unset
+seq	m_provisioning_criteria_definition_id_seq	unset
+seq	m_provisioning_criteria_id_seq	unset
+seq	m_provisioning_history_id_seq	unset
+seq	m_rate_id_seq	unset
+seq	m_repayment_with_post_dated_checks_id_seq	unset
+seq	m_report_mailing_job_configuration_id_seq	unset
+seq	m_report_mailing_job_id_seq	unset
+seq	m_report_mailing_job_run_history_id_seq	unset
+seq	m_role_id_seq	unset
+seq	m_savings_account_charge_id_seq	unset
+seq	m_savings_account_charge_paid_by_id_seq	unset
+seq	m_savings_account_id_seq	unset
+seq	m_savings_account_interest_rate_chart_id_seq	unset
+seq	m_savings_account_interest_rate_slab_id_seq	unset
+seq	m_savings_account_transaction_id_seq	unset
+seq	m_savings_account_transaction_tax_details_id_seq	unset
+seq	m_savings_interest_incentives_id_seq	unset
+seq	m_savings_officer_assignment_history_id_seq	unset
+seq	m_savings_product_id_seq	unset
+seq	m_share_account_charge_id_seq	unset
+seq	m_share_account_charge_paid_by_id_seq	unset
+seq	m_share_account_dividend_details_id_seq	unset
+seq	m_share_account_id_seq	unset
+seq	m_share_account_transactions_id_seq	unset
+seq	m_share_product_dividend_pay_out_id_seq	unset
+seq	m_share_product_id_seq	unset
+seq	m_share_product_market_price_id_seq	unset
+seq	m_staff_assignment_history_id_seq	unset
+seq	m_staff_id_seq	unset
+seq	m_survey_components_id_seq	unset
+seq	m_survey_lookup_tables_id_seq	unset
+seq	m_survey_questions_id_seq	unset
+seq	m_survey_responses_id_seq	unset
+seq	m_survey_scorecards_id_seq	unset
+seq	m_surveys_id_seq	unset
+seq	m_tax_component_history_id_seq	unset
+seq	m_tax_component_id_seq	unset
+seq	m_tax_group_id_seq	unset
+seq	m_tax_group_mappings_id_seq	unset
+seq	m_tellers_id_seq	unset
+seq	m_template_id_seq	unset
+seq	m_templatemappers_id_seq	unset
+seq	m_wc_breach_configuration_id_seq	unset
+seq	m_wc_delinquency_configuration_id_seq	unset
+seq	m_wc_loan_amortization_model_id_seq	unset
+seq	m_wc_loan_balance_id_seq	unset
+seq	m_wc_loan_breach_action_id_seq	unset
+seq	m_wc_loan_breach_schedule_id_seq	unset
+seq	m_wc_loan_charge_id_seq	unset
+seq	m_wc_loan_charge_paid_by_id_seq	unset
+seq	m_wc_loan_delinquency_action_id_seq	unset
+seq	m_wc_loan_delinquency_range_schedule_id_seq	unset
+seq	m_wc_loan_disbursement_detail_id_seq	unset
+seq	m_wc_loan_id_seq	unset
+seq	m_wc_loan_near_breach_action_id_seq	unset
+seq	m_wc_loan_note_id_seq	unset
+seq	m_wc_loan_originator_mapping_id_seq	unset
+seq	m_wc_loan_payment_allocation_rule_id_seq	unset
+seq	m_wc_loan_period_payment_rate_change_id_seq	unset
+seq	m_wc_loan_product_configurable_attributes_id_seq	unset
+seq	m_wc_loan_product_id_seq	unset
+seq	m_wc_loan_product_payment_allocation_rule_id_seq	unset
+seq	m_wc_loan_range_delinquency_tag_id_seq	unset
+seq	m_wc_loan_transaction_allocation_id_seq	unset
+seq	m_wc_loan_transaction_id_seq	unset
+seq	m_wc_loan_transaction_relation_id_seq	unset
+seq	m_wc_near_breach_id_seq	unset
+seq	m_working_days_id_seq	unset
+seq	notification_generator_id_seq	58
+seq	notification_mapper_id_seq	58
+seq	ppi_likelihoods_id_seq	unset
+seq	ppi_likelihoods_ppi_id_seq	unset
+seq	ppi_scores_id_seq	unset
+seq	ref_loan_transaction_processing_strategy_id_seq	unset
+seq	rpt_sequence_id_seq	unset
+seq	scheduled_email_campaign_id_seq	unset
+seq	scheduled_email_configuration_id_seq	unset
+seq	scheduled_email_messages_outbound_id_seq	unset
+seq	scheduler_detail_id_seq	unset
+seq	sms_campaign_id_seq	unset
+seq	sms_messages_outbound_id_seq	unset
+seq	stretchy_parameter_id_seq	unset
+seq	stretchy_report_id_seq	200
+seq	stretchy_report_parameter_id_seq	544
+seq	twofactor_access_token_id_seq	unset
+seq	twofactor_configuration_id_seq	unset
+tbl	acc_accounting_rule	0	EMPTY
+tbl	acc_gl_account	36	dc0f5f7196959b68867b17abdc40a4dc
+tbl	acc_gl_closure	0	EMPTY
+tbl	acc_gl_financial_activity_account	3	ec55445328691a7ca57f9deecdcd8745
+tbl	acc_gl_journal_entry	109	77a7b645ba0f491fd1c58531899c5164
+tbl	acc_gl_journal_entry_annual_summary	0	EMPTY
+tbl	acc_product_mapping	145	7b9cac4606021d4b032be3aba591a215
+tbl	acc_rule_tags	0	EMPTY
+tbl	batch_custom_job_parameters	0	EMPTY
+tbl	c_account_number_format	0	EMPTY
+tbl	c_cache	1	2dbd7c8cb06ab58b6b4f190d67152377
+tbl	c_configuration	74	2351a2be0735deb7dbcbebe603419932
+tbl	c_external_service	4	c9b8f7d961fdb1a718895f3177775771
+tbl	c_external_service_properties	17	beb3f3cdc9671906bc0afcc3f67159a0
+tbl	databasechangelog	1922	138de783313cfa52d3969939f82b4909
+tbl	databasechangeloglock	1	2128eaa433de42ee106eb0c9fc7c0a79
+tbl	glim_accounts	0	EMPTY
+tbl	gsim_accounts	0	EMPTY
+tbl	interop_identifier	0	EMPTY
+tbl	job_parameters	5	cf14f4833cc8177d6230a1b220d2af95
+tbl	m_account_transfer_details	0	EMPTY
+tbl	m_account_transfer_standing_instructions	0	EMPTY
+tbl	m_account_transfer_standing_instructions_history	0	EMPTY
+tbl	m_account_transfer_transaction	0	EMPTY
+tbl	m_address	0	EMPTY
+tbl	m_adhoc	0	EMPTY
+tbl	m_appuser	3	af3f442c0ae26c4fb0292650a5b9e879
+tbl	m_appuser_previous_password	0	EMPTY
+tbl	m_appuser_role	2	31ca31afabf4d8a2b0ba14232e44f29a
+tbl	m_batch_business_steps	13	eddce2e69fc3d8737bd0a322490c981e
+tbl	m_business_date	0	EMPTY
+tbl	m_calendar	0	EMPTY
+tbl	m_calendar_history	0	EMPTY
+tbl	m_calendar_instance	0	EMPTY
+tbl	m_cashier_transactions	0	EMPTY
+tbl	m_cashiers	0	EMPTY
+tbl	m_charge	18	2a6fa9dbbcc7ae20ca9c49790ecf464e
+tbl	m_client	3	50bd9690b036fa00f1d70d6d01b366b5
+tbl	m_client_address	0	EMPTY
+tbl	m_client_attendance	0	EMPTY
+tbl	m_client_charge	0	EMPTY
+tbl	m_client_charge_paid_by	0	EMPTY
+tbl	m_client_collateral_management	0	EMPTY
+tbl	m_client_identifier	0	EMPTY
+tbl	m_client_non_person	0	EMPTY
+tbl	m_client_transaction	0	EMPTY
+tbl	m_client_transfer_details	0	EMPTY
+tbl	m_code	48	e23c6d5e16b8612350edf166bfd2aaad
+tbl	m_code_value	22	3da346ca34deb20fc548e76d16c2cec5
+tbl	m_collateral_management	0	EMPTY
+tbl	m_command	1	0bc4e24fa27b6bbeacab6e8e4f755c16
+tbl	m_creditbureau	1	6c689534dc14e702444e459d61f8868b
+tbl	m_creditbureau_configuration	8	6e4d46717a6339342d4ba991e2a3fc6d
+tbl	m_creditbureau_loanproduct_mapping	0	EMPTY
+tbl	m_creditbureau_token	0	EMPTY
+tbl	m_creditreport	0	EMPTY
+tbl	m_currency	164	d30d32c509060af751128f1b63182eee
+tbl	m_delinquency_bucket	0	EMPTY
+tbl	m_delinquency_bucket_mappings	0	EMPTY
+tbl	m_delinquency_range	0	EMPTY
+tbl	m_deposit_account_on_hold_transaction	0	EMPTY
+tbl	m_deposit_account_recurring_detail	0	EMPTY
+tbl	m_deposit_account_term_and_preclosure	0	EMPTY
+tbl	m_deposit_product_interest_rate_chart	0	EMPTY
+tbl	m_deposit_product_recurring_detail	0	EMPTY
+tbl	m_deposit_product_term_and_preclosure	0	EMPTY
+tbl	m_document	0	EMPTY
+tbl	m_entity_datatable_check	0	EMPTY
+tbl	m_entity_relation	5	1d0287b3f3c8039c903c41d5d58a1782
+tbl	m_entity_to_entity_access	0	EMPTY
+tbl	m_entity_to_entity_mapping	0	EMPTY
+tbl	m_external_asset_owner	0	EMPTY
+tbl	m_external_asset_owner_journal_entry_mapping	0	EMPTY
+tbl	m_external_asset_owner_loan_product_configurable_attributes	0	EMPTY
+tbl	m_external_asset_owner_transfer	0	EMPTY
+tbl	m_external_asset_owner_transfer_details	0	EMPTY
+tbl	m_external_asset_owner_transfer_journal_entry_mapping	0	EMPTY
+tbl	m_external_asset_owner_transfer_loan_mapping	0	EMPTY
+tbl	m_external_event	0	EMPTY
+tbl	m_external_event_configuration	146	e5e67919e3f9f3ffc04cdf8281214f7d
+tbl	m_family_members	0	EMPTY
+tbl	m_field_configuration	17	925162fabca226aa71a75f9e67292256
+tbl	m_floating_rates	0	EMPTY
+tbl	m_floating_rates_periods	0	EMPTY
+tbl	m_fund	0	EMPTY
+tbl	m_group	0	EMPTY
+tbl	m_group_client	0	EMPTY
+tbl	m_group_level	2	eddda3003d2d7579314414663cee3a45
+tbl	m_group_roles	0	EMPTY
+tbl	m_guarantor	0	EMPTY
+tbl	m_guarantor_funding_details	0	EMPTY
+tbl	m_guarantor_transaction	0	EMPTY
+tbl	m_holiday	0	EMPTY
+tbl	m_holiday_office	0	EMPTY
+tbl	m_hook	0	EMPTY
+tbl	m_hook_configuration	0	EMPTY
+tbl	m_hook_registered_events	0	EMPTY
+tbl	m_hook_schema	11	7cfb4877aaf79c20682b69403ddd5086
+tbl	m_hook_templates	4	35a3da2c7d7ddd0cc07af1ca825b4326
+tbl	m_image	0	EMPTY
+tbl	m_import_document	0	EMPTY
+tbl	m_interest_incentives	0	EMPTY
+tbl	m_interest_rate_chart	0	EMPTY
+tbl	m_interest_rate_slab	0	EMPTY
+tbl	m_journal_entry_aggregation_summary	0	EMPTY
+tbl	m_journal_entry_aggregation_tracking	0	EMPTY
+tbl	m_loan	8	f042ed2befd572374747f649f8691534
+tbl	m_loan_account_locks	0	EMPTY
+tbl	m_loan_amortization_allocation_mapping	0	EMPTY
+tbl	m_loan_approved_amount_history	0	EMPTY
+tbl	m_loan_arrears_aging	6	95a3945cfdb88a0d2ddc36043e8e2340
+tbl	m_loan_buy_down_fee_balance	0	EMPTY
+tbl	m_loan_capitalized_income_balance	0	EMPTY
+tbl	m_loan_charge	4	91f7dc1448c968afa513105a7cea7634
+tbl	m_loan_charge_paid_by	15	7b697a1543b37d1c382ee5d2367dafdb
+tbl	m_loan_charge_tax_details	0	EMPTY
+tbl	m_loan_collateral	0	EMPTY
+tbl	m_loan_collateral_management	0	EMPTY
+tbl	m_loan_credit_allocation_rule	0	EMPTY
+tbl	m_loan_delinquency_action	0	EMPTY
+tbl	m_loan_delinquency_tag_history	0	EMPTY
+tbl	m_loan_disbursement_detail	0	EMPTY
+tbl	m_loan_installment_charge	24	d7fcb77a195302b27f2c4c5a438aa16e
+tbl	m_loan_installment_delinquency_tag	0	EMPTY
+tbl	m_loan_interest_recalculation_additional_details	0	EMPTY
+tbl	m_loan_officer_assignment_history	0	EMPTY
+tbl	m_loan_originator	0	EMPTY
+tbl	m_loan_originator_mapping	0	EMPTY
+tbl	m_loan_overdue_installment_charge	0	EMPTY
+tbl	m_loan_payment_allocation_rule	0	EMPTY
+tbl	m_loan_product_credit_allocation_rule	0	EMPTY
+tbl	m_loan_product_payment_allocation_rule	21	e73e2530ee4877fa4332066e6fa3171f
+tbl	m_loan_progressive_model	0	EMPTY
+tbl	m_loan_rate	0	EMPTY
+tbl	m_loan_reage_parameter	0	EMPTY
+tbl	m_loan_reamortization_parameter	0	EMPTY
+tbl	m_loan_recalculation_details	0	EMPTY
+tbl	m_loan_repayment_schedule	48	98b68cb536c4c0c61ccf56af89b7c6e9
+tbl	m_loan_repayment_schedule_history	0	EMPTY
+tbl	m_loan_reschedule_request	0	EMPTY
+tbl	m_loan_reschedule_request_term_variations_mapping	0	EMPTY
+tbl	m_loan_status_change_history	0	EMPTY
+tbl	m_loan_term_variations	0	EMPTY
+tbl	m_loan_topup	0	EMPTY
+tbl	m_loan_tranche_charges	0	EMPTY
+tbl	m_loan_tranche_disbursement_charge	0	EMPTY
+tbl	m_loan_transaction	24	6d47d543933bdcb11324cd643cb8ad58
+tbl	m_loan_transaction_relation	0	EMPTY
+tbl	m_loan_transaction_repayment_schedule_mapping	10	54e34c879690cc6d92779a4806c63806
+tbl	m_loanproduct_provisioning_entry	0	EMPTY
+tbl	m_loanproduct_provisioning_mapping	0	EMPTY
+tbl	m_mandatory_savings_schedule	0	EMPTY
+tbl	m_meeting	0	EMPTY
+tbl	m_note	0	EMPTY
+tbl	m_office	1	4d323c221dbba5101564284df4bdb738
+tbl	m_office_transaction	0	EMPTY
+tbl	m_organisation_creditbureau	0	EMPTY
+tbl	m_organisation_currency	2	d74ca5e9565acf9cbe61f674e8946e84
+tbl	m_password_validation_policy	3	0b0fada5e1aa16d08369837e055eb7a4
+tbl	m_payment_detail	3	34aef17c5917a36f39e5926781dc21c6
+tbl	m_payment_type	3	36f46dcee469170173313bf88b4e5652
+tbl	m_permission	964	bbfc15e971441c78700015eab9f95c0d
+tbl	m_portfolio_account_associations	0	EMPTY
+tbl	m_portfolio_command_source	379	3e05e3ced75c2dc6688606462de25356
+tbl	m_product_loan	34	45e23ed5c758556b3438f0d2b90a7d9f
+tbl	m_product_loan_charge	8	871032998ad2ebed26658b841fef2546
+tbl	m_product_loan_configurable_attributes	34	c99d050190134d1b757de20425f02be0
+tbl	m_product_loan_floating_rates	0	EMPTY
+tbl	m_product_loan_guarantee_details	0	EMPTY
+tbl	m_product_loan_rate	0	EMPTY
+tbl	m_product_loan_recalculation_details	0	EMPTY
+tbl	m_product_loan_variable_installment_config	0	EMPTY
+tbl	m_product_loan_variations_borrower_cycle	0	EMPTY
+tbl	m_product_mix	0	EMPTY
+tbl	m_provision_category	4	304723e7eb81cace0b3062d318688c4e
+tbl	m_provisioning_criteria	0	EMPTY
+tbl	m_provisioning_criteria_definition	0	EMPTY
+tbl	m_provisioning_history	0	EMPTY
+tbl	m_rate	0	EMPTY
+tbl	m_repayment_with_post_dated_checks	0	EMPTY
+tbl	m_report_mailing_job	0	EMPTY
+tbl	m_report_mailing_job_configuration	4	a0bbd0af054cd36a1cf6e475a579d6d1
+tbl	m_report_mailing_job_run_history	0	EMPTY
+tbl	m_role	2	6d8121ba8baa7c161bede2f48bb32dce
+tbl	m_role_permission	3	a2397afa5601dc28e88f8d3572775686
+tbl	m_savings_account	0	EMPTY
+tbl	m_savings_account_charge	0	EMPTY
+tbl	m_savings_account_charge_paid_by	0	EMPTY
+tbl	m_savings_account_interest_rate_chart	0	EMPTY
+tbl	m_savings_account_interest_rate_slab	0	EMPTY
+tbl	m_savings_account_transaction	0	EMPTY
+tbl	m_savings_account_transaction_tax_details	0	EMPTY
+tbl	m_savings_interest_incentives	0	EMPTY
+tbl	m_savings_officer_assignment_history	0	EMPTY
+tbl	m_savings_product	0	EMPTY
+tbl	m_savings_product_charge	0	EMPTY
+tbl	m_share_account	0	EMPTY
+tbl	m_share_account_charge	0	EMPTY
+tbl	m_share_account_charge_paid_by	0	EMPTY
+tbl	m_share_account_dividend_details	0	EMPTY
+tbl	m_share_account_transactions	0	EMPTY
+tbl	m_share_product	0	EMPTY
+tbl	m_share_product_charge	0	EMPTY
+tbl	m_share_product_dividend_pay_out	0	EMPTY
+tbl	m_share_product_market_price	0	EMPTY
+tbl	m_staff	0	EMPTY
+tbl	m_staff_assignment_history	0	EMPTY
+tbl	m_survey_components	0	EMPTY
+tbl	m_survey_lookup_tables	0	EMPTY
+tbl	m_survey_questions	0	EMPTY
+tbl	m_survey_responses	0	EMPTY
+tbl	m_survey_scorecards	0	EMPTY
+tbl	m_surveys	0	EMPTY
+tbl	m_tax_component	0	EMPTY
+tbl	m_tax_component_history	0	EMPTY
+tbl	m_tax_group	0	EMPTY
+tbl	m_tax_group_mappings	0	EMPTY
+tbl	m_tellers	0	EMPTY
+tbl	m_template	0	EMPTY
+tbl	m_template_m_templatemappers	0	EMPTY
+tbl	m_templatemappers	0	EMPTY
+tbl	m_trial_balance	0	EMPTY
+tbl	m_wc_breach_configuration	0	EMPTY
+tbl	m_wc_delinquency_configuration	0	EMPTY
+tbl	m_wc_loan	0	EMPTY
+tbl	m_wc_loan_account_locks	0	EMPTY
+tbl	m_wc_loan_amortization_model	0	EMPTY
+tbl	m_wc_loan_balance	0	EMPTY
+tbl	m_wc_loan_breach_action	0	EMPTY
+tbl	m_wc_loan_breach_schedule	0	EMPTY
+tbl	m_wc_loan_charge	0	EMPTY
+tbl	m_wc_loan_charge_paid_by	0	EMPTY
+tbl	m_wc_loan_delinquency_action	0	EMPTY
+tbl	m_wc_loan_delinquency_range_schedule	0	EMPTY
+tbl	m_wc_loan_disbursement_detail	0	EMPTY
+tbl	m_wc_loan_near_breach_action	0	EMPTY
+tbl	m_wc_loan_note	0	EMPTY
+tbl	m_wc_loan_originator_mapping	0	EMPTY
+tbl	m_wc_loan_payment_allocation_rule	0	EMPTY
+tbl	m_wc_loan_period_payment_rate_change	0	EMPTY
+tbl	m_wc_loan_product	0	EMPTY
+tbl	m_wc_loan_product_configurable_attributes	0	EMPTY
+tbl	m_wc_loan_product_payment_allocation_rule	0	EMPTY
+tbl	m_wc_loan_range_delinquency_tag	0	EMPTY
+tbl	m_wc_loan_transaction	0	EMPTY
+tbl	m_wc_loan_transaction_allocation	0	EMPTY
+tbl	m_wc_loan_transaction_relation	0	EMPTY
+tbl	m_wc_near_breach	0	EMPTY
+tbl	m_working_days	1	7b8b377c8acf7bce78669e7246352aff
+tbl	notification_generator	58	4407946fb63ff65613e8a957c94e51d1
+tbl	notification_mapper	58	a4ef9e2466d22bfcadcbd1a336af2ef7
+tbl	oauth_access_token	0	EMPTY
+tbl	oauth_client_details	1	1848bf7e24cfb9a6a79b7440d6b121ac
+tbl	oauth_refresh_token	0	EMPTY
+tbl	ppi_likelihoods	0	EMPTY
+tbl	ppi_likelihoods_ppi	0	EMPTY
+tbl	ppi_scores	20	588850b6c4cee25a08d18028d49b4acd
+tbl	r_enum_value	193	236d6afbfa02e9cae8559edf0ee671d6
+tbl	ref_loan_transaction_processing_strategy	9	9ea7634fe3c3d60832e68d4ea645a793
+tbl	rpt_sequence	0	EMPTY
+tbl	scheduled_email_campaign	0	EMPTY
+tbl	scheduled_email_configuration	4	45fdd3b9798f1f3cca809e17f1cf62a0
+tbl	scheduled_email_messages_outbound	0	EMPTY
+tbl	scheduler_detail	1	e59d0264332710f6f8277b5d9964fc86
+tbl	sms_campaign	0	EMPTY
+tbl	sms_messages_outbound	0	EMPTY
+tbl	stretchy_parameter	32	50bc7dc200442411fe57656f5c27a6a0
+tbl	stretchy_report	84	7f688714be0d4072cccc03af0a06e299
+tbl	stretchy_report_parameter	253	f05a5ec0021a02421ff36583ff393e70
+tbl	twofactor_access_token	0	EMPTY
+tbl	twofactor_configuration	10	1b0cde994725a865f5f43ec9aae274f7
+tbl	x_registered_table	0	EMPTY
+tbl	x_table_column_code_mappings	0	EMPTY

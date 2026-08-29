@@ -1,0 +1,45 @@
+COVERAGE OF THIS INSTRUMENT -- every figure derived now, none typed
+-----------------------------------------------------------------------------
+TABLES      base tables in the tenant schema : 281
+            GRADED by the content digest     : 273
+            EXCLUDED, each named below       : 8
+              - batch_job_execution  (13350 rows)
+              - batch_job_execution_context  (13350 rows)
+              - batch_job_execution_params  (13393 rows)
+              - batch_job_instance  (13350 rows)
+              - batch_step_execution  (13351 rows)
+              - batch_step_execution_context  (13351 rows)
+              - job_run_history  (13350 rows)
+              - job  (41 rows)
+-----------------------------------------------------------------------------
+SEQUENCES   sequences in the tenant schema   : 254
+            GRADED by last_value             : 249
+            EXCLUDED (prefix match on the excluded tables' own sequences):
+              - batch_job_execution_seq
+              - batch_job_seq
+              - batch_step_execution_seq
+              - job_id_seq
+              - job_run_history_id_seq
+-----------------------------------------------------------------------------
+SCHEDULER   job rows / active / inactive     : 41 / 31 / 10
+            distinct jobs that ran in 24h    : 31
+            ACTIVE jobs with NO run history  :
+            (an empty list above means every active job has been seen to run)
+-----------------------------------------------------------------------------
+WHAT REMAINS UNWATCHED BY THIS INSTRUMENT, STATED PLAINLY:
+  1. The 8 excluded tables above. They are the scheduler's OWN bookkeeping.
+     A write to them by anything other than the batch runner would not be reported.
+  2. A job that is IN FLIGHT across a window boundary. job_run_history is written only
+     when a job FINISHES, so its run is not in the list. This is REFUSED, not missed:
+     job.currently_running is read at both ends and a non-zero reading refuses the window.
+  3. Movement BETWEEN two windows. The digest compares open to close. Continuity across
+     captures is the job of 'verify', which compares a stored witness to the oracle now.
+  4. Anything below the granularity of a table's rendered row text -- there is nothing
+     known to be in this class, and it is listed so the claim is falsifiable rather than
+     absolute.
+  5. State that is not in this database at all: files on the app container, in-memory
+     caches, and the OTHER tenant databases (fineract_default, fineract_tenants). This
+     instrument reads exactly one database, named in its output on every run.
+-----------------------------------------------------------------------------
+NOT UNWATCHED, though a reader might assume so: the other 271 tables beyond the two
+  that oracle-state-baseline.sh reads. They ARE in the digest. That is the point of it.
