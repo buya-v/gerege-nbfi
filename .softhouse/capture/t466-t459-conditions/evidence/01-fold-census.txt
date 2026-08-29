@@ -1,0 +1,24 @@
+CALIBRATION: U+017F collides = yes; unrelated-name control collides = no.
+FOLD+ORDER CANDIDATES over printable ASCII: 1401 total (single-character image 1091, MULTI-character image 310)
+  INSTRUMENT: U+2100 -> 'a/c' : probe could not write 't466probea/c.txt' / 't466probe℀.txt': [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t466-fold-qe8282cw/tmpdvwkrbh5/t466probea/c.txt'
+  INSTRUMENT: U+2101 -> 'a/s' : probe could not write 't466probea/s.txt' / 't466probe℁.txt': [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t466-fold-qe8282cw/tmpzxp_5zdk/t466probea/s.txt'
+  INSTRUMENT: U+2105 -> 'c/o' : probe could not write 't466probec/o.txt' / 't466probe℅.txt': [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t466-fold-qe8282cw/tmpl1s5735g/t466probec/o.txt'
+  INSTRUMENT: U+2106 -> 'c/u' : probe could not write 't466probec/u.txt' / 't466probe℆.txt': [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t466-fold-qe8282cw/tmpjlfg868e/t466probec/u.txt'
+  INSTRUMENT: U+FF0F -> '/' : probe could not write 't466probe/.txt' / 't466probe／.txt': [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t466-fold-qe8282cw/tmpoghy2te3/t466probe/.txt'
+CONFIRMED COLLIDING ON THIS FILESYSTEM (fold + sorts-after + one file): 13
+  U+00DF LATIN SMALL LETTER SHARP S                     -> 'ss'  live tracked targets   837  e.g. .softhouse/capture/README-pass2.md
+  U+017F LATIN SMALL LETTER LONG S                      -> 's'   live tracked targets 10345  e.g. .claude/skills/softhouse-plan/SKILL.md
+  U+037E GREEK QUESTION MARK                            -> ';'   live tracked targets     0  e.g. <NONE TRACKED>
+  U+1E9E LATIN CAPITAL LETTER SHARP S                   -> 'ss'  live tracked targets   837  e.g. .softhouse/capture/README-pass2.md
+  U+1FEF GREEK VARIA                                    -> '`'   live tracked targets     0  e.g. <NONE TRACKED>
+  U+212A KELVIN SIGN                                    -> 'k'   live tracked targets   812  e.g. .claude/skills/softhouse-plan/SKILL.md
+  U+FB00 LATIN SMALL LIGATURE FF                        -> 'ff'  live tracked targets   720  e.g. .softhouse/capture/pathb/t125/red-post-fix-default/scratch.diff
+  U+FB01 LATIN SMALL LIGATURE FI                        -> 'fi'  live tracked targets   666  e.g. .softhouse/bin/fire-program.sh
+  U+FB02 LATIN SMALL LIGATURE FL                        -> 'fl'  live tracked targets   174  e.g. .softhouse/capture/audit-t44/analysis/T207/RULING-float-derived-predicate.md
+  U+FB03 LATIN SMALL LIGATURE FFI                       -> 'ffi' live tracked targets    23  e.g. .softhouse/capture/t250-tenant-attestation/evidence/redB/req/bad-office.json
+  U+FB04 LATIN SMALL LIGATURE FFL                       -> 'ffl' live tracked targets     4  e.g. .softhouse/capture/t349-pretooluse-eval/out/P3-offline-FAILOPEN.hook.jsonl
+  U+FB05 LATIN SMALL LIGATURE LONG S T                  -> 'st'  live tracked targets  2889  e.g. .softhouse/capture/actualactual/out/t48-calc-stderr.txt
+  U+FB06 LATIN SMALL LIGATURE ST                        -> 'st'  live tracked targets  2889  e.g. .softhouse/capture/actualactual/out/t48-calc-stderr.txt
+MULTI-CHARACTER-IMAGE MEMBERS OF THAT SET: 9
+MEMBERS WITH AT LEAST ONE LIVE TRACKED TARGET: 11
+MEMBERS WITH NO TRACKED TARGET IN THIS REPOSITORY (a route with nothing to aim at TODAY, not a closed one): U+037E->';', U+1FEF->'`'
