@@ -4746,12 +4746,18 @@ DECISIVESCAN
 # `guard_harness_text_is_committed` MOVED FROM 60 TO 300 IN T466, BY THAT SAME ARITHMETIC AND
 # NOT TO MAKE A BREACH GO AWAY — it had never breached. T466 gave it a whole-tree recompute
 # that reads every tracked byte, because the only comparison an uncommitted index bit or
-# content filter cannot reach is one the guard performs itself. MEASURED on the tree of the day
-# — 10,347 HEAD entries, about 252 MB — 4 s with the page cache warm and 21 s cold, the cold
-# figure being the one the rule takes: max(60, 10 x 21) = 210, rounded up to 300. That is the
-# same order as guard_ledger_invariants and well under guard_reconciler_ownership. THE WORK
-# GREW, so the ceiling grew; if a later author shrinks the work, shrink the row in the same
-# commit rather than leaving slack that will excuse the next spin.
+# content filter cannot reach is one the guard performs itself. It reads about a quarter of a
+# gigabyte over ten thousand entries, and BOTH FIGURES ARE PRINTED BY THE GUARD ITSELF ON EVERY
+# RUN (`RECOMPUTE: N HEAD entries`, `COST Ns / ceiling 300s`) rather than retyped here — T466
+# typed 10,347 into this paragraph and its own final bar printed 10,368 on the same branch
+# [T473 L-1]. THE COLD MEASUREMENT IS THE INPUT THE RULE TAKES AND IT DID NOT REPRODUCE:
+# T466 measured 21 s and T473 measured 51.3 s on a fresh clone under load, neither being
+# controllable on a host whose page cache cannot be purged. max(60, 10 x 21) = 210, rounded up
+# to 300; on T473's figure the rule would have demanded 510. So 300 stands and NEITHER COLD
+# NUMBER IS A PINNED FACT [T473 L-2]. That is the same order as guard_ledger_invariants and well
+# under guard_reconciler_ownership. THE WORK GREW, so the ceiling grew; if a later author
+# shrinks the work, shrink the row in the same commit rather than leaving slack that will excuse
+# the next spin.
 #
 # THE FIRST RUN OF THIS INSTRUMENT ALREADY FOUND TWO WRONG COST CLAIMS, which is the whole
 # argument for it and is recorded rather than tidied away. (1) `guard_reconciler_ownership`
@@ -4962,18 +4968,56 @@ COSTSTALE
 # ONCE SAID. T454 wrote "27 executable sites in this file … at a `$REPO_ROOT` path, 26 of them
 # foldable". T459 measured 67 and called the direction confirmed and understated; T466 re-derived
 # it a third time and REPORTS ITS SELECTOR WITH ITS NUMBER, because that is the only reason three
-# authors got three answers. On the tree of the day, over non-comment lines of this file:
+# authors got three answers.
 #
-#   the root variable is an operand of something that OPENS/ENTERS/SEARCHES a path   35 (28 foldable)
-#   the root variable appears at all                                                 69 (59 foldable)
-#   … plus any line spelling a path anchored at the program directory               114 (104 foldable)
-#   … plus any line using a local that was assigned from the root variable          309 (277 foldable)
+# AND THEN T466 SHIPPED THE TABLE ABOUT THE WRONG OBJECT, WHICH IS RECORDED HERE RATHER THAN
+# QUIETLY CORRECTED. [T473 M-1; re-measured and repaired by T477.] It measured the four selectors
+# on the PRE-FIX harness and printed them under the words "over non-comment lines of THIS FILE",
+# in the same commit that made this file 457 lines longer. All four rows, both foldable columns
+# and the locals count were wrong about the file they sat in — the exact P-80 defect this
+# function exists to prosecute, committed inside the correction, in a paragraph whose own
+# argument is that "`git show HEAD:<harness>` prints the honest harness; the harness that RUNS is
+# a different object". The census measured a THIRD object and did not print its id.
 #
-# 27 is not reproducible under any of the four. The narrowest honest reading is already larger
-# than the shipped figure, and the widest is an order of magnitude larger. Every path under
-# `.softhouse/` contains the `s` of "softhouse", which is why "foldable" is nearly all of each
-# column. Every argument in this repository that rests on "the harness grades itself", or on
-# "the guard runs the checker", inherits this.
+# THE STRUCTURAL CAUSE WAS NAMING THE CORPUS BY PATH. A path names whatever is there today; a
+# BLOB ID names an immutable object, and a statement about an immutable object cannot rot. So the
+# table below is anchored to blob ids, and it is TRUE FOREVER of those two blobs and claims
+# nothing about the bytes you are reading:
+#
+#   selector                                                      7c543532…   d1c45afc…
+#                                                                 (T454 tip)  (T466 tip)
+#   non-comment, non-blank lines in the corpus                       2310        2555
+#   locals assigned from the root variable                             36          40
+#   S0  the root variable is an operand of something that
+#       OPENS / ENTERS / SEARCHES a path                            35 (28)     40 (33)
+#   S1  the root variable appears at all                            69 (59)     74 (64)
+#   S2  … plus any line spelling a path anchored at the
+#       program directory                                         114 (104)   119 (109)
+#   S3  … plus any line using a local assigned from the root       309 (277)   331 (298)
+#
+# AND THE NUMBER ABOUT *THIS* FILE IS NO LONGER TYPED AT ALL. `guard_harness_text_is_committed`
+# DERIVES S1 EVERY RUN, from the bytes actually executing, and prints it beside the object id of
+# those bytes — the same remedy T466 applied to the last hand-typed cardinal it removed (`yet
+# three of them are invoked verbatim` became the derived `invoked=`). A reader who wants "how
+# many sites are there in the file in front of me" reads the transcript, not this comment; a
+# reader who wants "what did T454 and T466 measure" reads the table, which names its corpora. The
+# table is a sensitivity band and S1 is nominated as the answer, because S1 is the one the
+# run-time census can re-derive cheaply and identically (verified: the shell derivation and
+# T466's `read-census.py` both return 74 on `d1c45afc…`).
+#
+# 27 is not reproducible under any of the four, on either corpus. The narrowest honest reading is
+# already larger than the shipped figure — MORE so on the shipped file, 40 > 35 > 27 — and the
+# widest is an order of magnitude larger, so the load-bearing conclusion survived the correction
+# intact and is monotone in the selector. Every argument in this repository that rests on "the
+# harness grades itself", or on "the guard runs the checker", inherits this.
+#
+# THE PARENTHESISED COLUMN IS NOT WHAT ITS OLD LABEL SAID, AND THE LABEL IS CORRECTED RATHER THAN
+# THE COLUMN DROPPED. [T473 L-6.] It was printed as "path text carries a confirmed fold image"
+# and it is measured over the WHOLE LINE, with `s` among the images — so it is approximately "the
+# line contains the letter s", and a degenerate control scores 58 against S1's 59. It is
+# therefore quoted here as "LINE contains a fold image", which is what it measures, and it
+# supports only the weak claim it was offered for: every path under this program's own directory
+# contains the `s` of its name, so foldability is nearly universal in every column.
 #
 # WHAT THIS GUARD REFUSES, AND WHY IT IS NOT "REFUSE A DIRTY TREE".
 #
@@ -5015,21 +5059,30 @@ COSTSTALE
 #                    fix: EXIT 0, probe x1 `up`, `VERDICT: PASS … 46 … 7884`, `declared=3`,
 #                    `git status --porcelain` EMPTY — and this guard PRINTING
 #                    `committed 7c543532… / on disk e9f134f0…`, two visibly different numbers,
-#                    one line above `uncommitted edits 0`. The ids were in hand and were never
-#                    compared. CLOSED THREE WAYS, each of which refuses on its own: the two ids
-#                    are compared; the whole-tree recompute finds the difference git suppressed;
-#                    and any index entry not in state `H` is itself a refusal.
+#                    on the line BELOW `uncommitted edits 0` (T466's handoff said "one line
+#                    above"; it is inverted, and three transcripts show the order — T473 L-3).
+#                    The ids were in hand and were never compared. CLOSED THREE WAYS FOR THESE
+#                    TWO ARMS, each of which refuses on its own: the two ids are compared; the
+#                    whole-tree recompute finds the difference git suppressed; and any index
+#                    entry not in state `H` is itself a refusal. **SMUDGE FIRES TWO OF THE
+#                    THREE, NOT THREE** — it sets no index bit, so there is none to find, and
+#                    saying "three findings each" was the dispatch's framing, never a
+#                    measurement [T473 L-5]. Two is enough; each refuses alone.
 #
-#   SMUDGE           a `filter=` attribute in `.git/info/attributes` — per-clone, never
-#                    committed — with an inverting `clean` half. `git hash-object` APPLIES THE
+#   SMUDGE           a `filter=` attribute in ANY OF FOUR PLACES — `.git/info/attributes`, the
+#                    common git-dir's copy, `core.attributesFile`, the XDG file; three of the
+#                    four are per-clone and committed nowhere [T473 m-1] — with an inverting
+#                    `clean` half. `git hash-object` APPLIES THE
 #                    CLEAN FILTER, so the forged bytes hash to the honest id; `git diff-index`
 #                    reports nothing; and the "recompute this yourself" affordance this guard
 #                    advertises CORROBORATED the forgery. MEASURED before the fix: EXIT 0, probe
 #                    x1 `up`, PASS, `declared=3`, porcelain EMPTY, `git hash-object` = the
 #                    committed id and `git hash-object --no-filters` = the forged one. CLOSED by
 #                    reading raw bytes everywhere in this function and by a recompute that never
-#                    asks git what differs. The filter and the private attributes file are also
-#                    PRINTED, every run, in the LOCAL-STATE CENSUS.
+#                    asks git what differs. The filter and every attribute source are also
+#                    PRINTED, every run, in the LOCAL-STATE CENSUS — and note what that census
+#                    now says in terms: **A NON-IDENTITY FILTER IS REFUSED WHETHER IT IS HONEST
+#                    OR NOT**, so git-lfs and `text=auto` are refused too [T473 M-3].
 #
 # THE BOUND, PRESERVED VERBATIM FROM T459 BECAUSE IT IS THE HONEST SHAPE OF THE FINDING: both
 # routes are LOCAL STATE, so what they forge is A TRANSCRIPT, NOT THE COMMIT. A reader who
@@ -5101,7 +5154,39 @@ COSTSTALE
 # CARRIES ITS OWN COPY OF THAT RULE and it does more work than it looks like: the independent
 # hasher must reproduce BOTH of this file's ids — committed and on disk — before any zero it
 # prints is read, which also refuses a repository whose object format it does not implement
-# rather than reporting every one of ten thousand paths as DIFFERS.
+# rather than reporting every one of ten thousand paths as DIFFERS. **AND THAT CALIBRATION IS
+# PASSED BY AN ECHO**, because both ids are derivable by the interpreter being calibrated —
+# T473 drove it, T477 re-drove it targeted — so T477 added a CHALLENGE beside it whose answer is
+# NOT in the recompute's input. See THE CHALLENGE in the body.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# WHAT THIS GUARD DOES NOT CLOSE — DECLARED, NOT ARGUED SHUT. Kept here, in the file, so that
+# the list a reader needs is not in a handoff they will never open.
+#
+#   1. **LONGNOP / LONGSTRIP.** A guard inside the text under attack cannot survive an attacker
+#      who edits that text. One inserted `return 0` reaches EXIT 0 and PASS. Only a verifier
+#      OUTSIDE this file closes it, and it must use `--no-filters`. [FU-T454-1 / T460.]
+#   2. **THE INTERPRETER IS IN THE TRUST BASE.** T477 closed the PATH route (absolute path) and
+#      the environment route (`-I -S`, driven against a `PYTHONPATH` `sitecustomize` hijack of
+#      the absolute interpreter) and made an ECHO shim fail the challenge. A substituted
+#      interpreter that REIMPLEMENTS the hasher — `git hash-object --no-filters --stdin-paths`
+#      does the whole job in one process — still answers the challenge and can omit one row.
+#      T477 drove that too, and it reaches EXIT 0. This is class (1), not a separate hole.
+#   3. **EVERY NON-IDENTITY CONTENT FILTER AND EOL CONVERSION IS REFUSED, HONEST OR NOT.**
+#      git-lfs and `* text=auto` are refused as SUPPRESSIONS. Latent on this tree, fail-closed,
+#      deliberate; see the LOCAL-STATE CENSUS. [T473 M-3.]
+#   4. **A GITLINK REFUSES THE WHOLE BAR.** Agrees with push-gate condition C1; if this program
+#      ever vendors a submodule, both have to be taught. [T473 m-3.]
+#   5. **THE INDEX-BIT REFUSAL IS ABSOLUTE**, so a sparse checkout and a conflicted merge cannot
+#      run the bar. Judged the right trade by T466, T473 and T477; the refusal now says so.
+#   6. **PHANTOM is printed, not refused** — a mode-only divergence is not a text substitution.
+#   7. **THE WHOLE CLASS: WHAT IS FORGED IS A TRANSCRIPT, NEVER THE COMMIT.** Index bits, filter
+#      drivers, attributes files and interpreter substitutions are all LOCAL and UNCOMMITTED. A
+#      reader who fetches the commit and hashes it themselves was never fooled by any of them,
+#      and is still the only reader who cannot be.
+#   8. **U+037E → `;` and U+1FEF → `` ` `` have no tracked target today.** Not closed; the first
+#      path that spells either character opens them.
+# ─────────────────────────────────────────────────────────────────────────────────────────────
 guard_harness_text_is_committed() {
   local selfrel=".softhouse/conformance.sh"
   local head index mods rc=0 grc=0
@@ -5112,11 +5197,18 @@ guard_harness_text_is_committed() {
   # one of the two, and both exist because the answers git gives about a working tree are a
   # function of LOCAL, UNCOMMITTED STATE — index bits, attributes and filter config — none of
   # which appears in any diff. See the SKIPWT / SMUDGE block above this function.
-  local headlist recomp recpy recrc=0 hrc=0
+  local headlist recompf recerrf recpy recrc=0 hrc=0
   local recscanned="" reccalib_head="" reccalib_disk="" recrow rest recpaths=""
   local recdiffers=0 suppressed=0 agreed=0 phantom=0 recbad=0
   local bits bitrow bitcount=0 filters filtercount=0 attrfile attrlines=0
+  local attrcfg attrcfglines=0 attrcommon attrcommonlines=0 attrxdg attrxdglines=0
+  local attrtracked=0 attrsrc=0
   local dsha hsha inmods
+  # [T477] THE CHALLENGE. See "CALIBRATING ON A VALUE THE CALLER DOES NOT HAND IT" below.
+  local chalpath="" chaldisk="" chaldecoy="" chalmode="" chalrow="" chalseen="" chalgot=""
+  local chaltotal=0 chalpick=0 chaltry=0
+  # [T477] THE RUN-TIME READ CENSUS — derived from the bytes that are running, never typed.
+  local s1now=""
   # ONE LITERAL NEWLINE, so every membership test below is a `case` pattern and starts no
   # second process. Spelled once, here, for the same reason as CONF_LF three thousand lines up.
   local HTC_LF
@@ -5201,24 +5293,81 @@ guard_harness_text_is_committed() {
   # They are PRINTED on every run, pass or fail, because a transcript that does not disclose
   # them is a transcript whose reader cannot tell which question git was answering.
   #
-  # THE INDEX BITS ARE A REFUSAL AND THE OTHER TWO ARE NOT, and that asymmetry is argued.
-  # A bit says "do not compare this path" — it has no legitimate use in a run whose entire
-  # job is to compare paths, and T466 drove it both ways (arms SKIPWT and ASSUME): the forged
-  # harness reached EXIT 0, probe up, `VERDICT: PASS … 46 … 7884`, the planted checker
-  # absolved, with `git status --porcelain` EMPTY. A filter, by contrast, has legitimate uses
-  # and is already defeated at the point that matters (`--no-filters` above, and THE RECOMPUTE
-  # below, which never asks git what differs). So the filter census is EVIDENCE, and the
-  # refusal for a filter comes from the recompute disagreeing with git — from the EFFECT,
-  # named at the path where it lands, rather than from the mechanism being present.
+  # THE INDEX BITS ARE A REFUSAL AND THE OTHER TWO ARE NOT **AS MECHANISMS**, and that
+  # asymmetry is argued. A bit says "do not compare this path" — it has no legitimate use in a
+  # run whose entire job is to compare paths, and T466 drove it both ways (arms SKIPWT and
+  # ASSUME): the forged harness reached EXIT 0, probe up, `VERDICT: PASS … 46 … 7884`, the
+  # planted checker absolved, with `git status --porcelain` EMPTY. A filter, by contrast, is a
+  # mechanism with legitimate uses, so its PRESENCE is not a refusal; the refusal comes from
+  # the EFFECT, named at the path where it lands.
+  #
+  # AND THE SENTENCE THAT USED TO END THAT PARAGRAPH WAS MISLEADING, WHICH IS CORRECTED HERE
+  # RATHER THAN QUIETLY DELETED. [T477, closing T473 M-3.] It said filters "are PRINTED, not
+  # refused" and left a reader with the impression that an honest filter passes. IT DOES NOT.
+  # T473 drove an entirely honest, COMMITTED, git-lfs-shaped setup — `big.dat filter=fakelfs`
+  # in a committed `.gitattributes`, the driver in local config, a pointer in the object store
+  # and the payload on disk, which is what LFS is FOR — and the recompute reports `DIFFERS`,
+  # `git diff-index` is empty, and that combination IS the SUPPRESSED branch. An honest
+  # engineer running git-lfs is called a forger. The same lands on eol normalisation:
+  # `* text=auto` committed with `core.autocrlf=true` set locally produces the same refusal.
+  #
+  # SO THE TRUE STATEMENT IS: **THIS GUARD REFUSES EVERY CONTENT FILTER AND EVERY EOL
+  # CONVERSION WHOSE EFFECT IS NON-IDENTITY, HONEST OR NOT, AND THERE IS NO WAY TO DECLARE A
+  # LEGITIMATE ONE.** It is LATENT on this tree — zero tracked `.gitattributes`, no
+  # `core.attributesFile`, no `core.autocrlf`, no filter driver — and it FAILS CLOSED.
+  #
+  # T477 CHOSE TO KEEP THE REFUSAL AND CORRECT THE TEXT, over narrowing it to admit a
+  # "committed, honest" filter, and the reason is that the narrowing is FORGEABLE BY COMMITTING
+  # A FILE. A carve-out keyed on "the attribute is declared in a committed `.gitattributes`"
+  # hands the attacker a route strictly cheaper than the three T466 just closed: commit a
+  # `.gitattributes` and a `filter.*.clean` half, and every SUPPRESSED refusal in this tree is
+  # disarmed by a two-line diff nobody reads. The premise the recompute rests on — RAW BYTES
+  # ARE THE TRUTH — is not generally true of git, whose blob is DEFINED as the post-clean
+  # bytes; it is the right premise against an adversary precisely because it disagrees with
+  # that definition. The cost is a legitimate LFS or `text=auto` adoption, which this program
+  # has not made and which would be a task, not a surprise: the refusal below names the filter
+  # and says so in terms. **A future worker who adopts LFS or `text=auto` MUST TEACH THIS GUARD
+  # FIRST — it will refuse, by design, and the refusal is the notification.**
   bits="$( cd "$REPO_ROOT" 2>/dev/null && \
            git ls-files -v 2>/dev/null | LC_ALL=C grep -v '^H ' )" || bits=""
   filters="$( cd "$REPO_ROOT" 2>/dev/null && \
               git config --get-regexp '^filter\.' 2>/dev/null )" || filters=""
+  # `.git/info/attributes` IS ONE OF FOUR PLACES, NOT THE PLACE. [T477, closing T473 m-1.]
+  # T473 drove the hole: with that file ABSENT, `core.attributesFile` pointing anywhere at all
+  # attaches a clean filter to a path — per-clone, uncommitted, in NO diff, i.e. exactly the
+  # class this census exists to disclose. The other two sources are a committed `.gitattributes`
+  # at ANY directory level (at least that one is in a diff) and the XDG file
+  # `${XDG_CONFIG_HOME:-~/.config}/git/attributes`. All four are counted below. The count is
+  # DISCLOSURE, not a verdict: the verdict still comes from the effect, and `--no-filters` plus
+  # a recompute that never asks git reach the effect wherever the attribute was declared.
   attrfile="$( cd "$REPO_ROOT" 2>/dev/null && git rev-parse --git-dir 2>/dev/null )" || attrfile=""
   if [ -n "$attrfile" ] && [ -f "$attrfile/info/attributes" ]; then
     attrlines="$( LC_ALL=C grep -c '' "$attrfile/info/attributes" )"
     case "$attrlines" in ''|*[!0-9]*) attrlines=0 ;; esac
   fi
+  attrcommon="$( cd "$REPO_ROOT" 2>/dev/null && git rev-parse --git-common-dir 2>/dev/null )" \
+    || attrcommon=""
+  if [ -n "$attrcommon" ] && [ "$attrcommon" != "$attrfile" ] \
+     && [ -f "$attrcommon/info/attributes" ]; then
+    attrcommonlines="$( LC_ALL=C grep -c '' "$attrcommon/info/attributes" )"
+    case "$attrcommonlines" in ''|*[!0-9]*) attrcommonlines=0 ;; esac
+  fi
+  attrcfg="$( cd "$REPO_ROOT" 2>/dev/null && git config --get core.attributesFile 2>/dev/null )" \
+    || attrcfg=""
+  if [ -n "$attrcfg" ] && [ -f "$attrcfg" ]; then
+    attrcfglines="$( LC_ALL=C grep -c '' "$attrcfg" )"
+    case "$attrcfglines" in ''|*[!0-9]*) attrcfglines=0 ;; esac
+  fi
+  attrxdg="${XDG_CONFIG_HOME:-$HOME/.config}/git/attributes"
+  if [ -f "$attrxdg" ]; then
+    attrxdglines="$( LC_ALL=C grep -c '' "$attrxdg" )"
+    case "$attrxdglines" in ''|*[!0-9]*) attrxdglines=0 ;; esac
+  fi
+  attrtracked="$( cd "$REPO_ROOT" 2>/dev/null && \
+                  git ls-files -- '.gitattributes' '*/.gitattributes' 2>/dev/null \
+                  | LC_ALL=C grep -c '' )" || attrtracked=0
+  case "$attrtracked" in ''|*[!0-9]*) attrtracked=0 ;; esac
+  attrsrc=$((attrlines + attrcommonlines + attrcfglines + attrxdglines + attrtracked))
   while IFS= read -r bitrow; do
     [ -n "$bitrow" ] || continue
     bitcount=$((bitcount + 1))
@@ -5233,19 +5382,29 @@ $filters
 HTCFILTERS
   say "conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git"
   say "conformance:   answers): index entries NOT in state H $bitcount, configured content"
-  say "conformance:   filters $filtercount, lines in this clone's private attributes file"
-  say "conformance:   $attrlines."
-  if [ "$filtercount" -ne 0 ] || [ "$attrlines" -ne 0 ]; then
+  say "conformance:   filters $filtercount, ATTRIBUTE SOURCES $attrsrc — of which lines in this"
+  say "conformance:   clone's private attributes file $attrlines, lines in the common git-dir's"
+  say "conformance:   $attrcommonlines, lines in core.attributesFile $attrcfglines"
+  say "conformance:   (${attrcfg:-<unset>}), lines in the XDG attributes file $attrxdglines,"
+  say "conformance:   TRACKED .gitattributes files $attrtracked. [Four sources, not one: T473"
+  say "conformance:   m-1 drove core.attributesFile attaching a clean filter with"
+  say "conformance:   .git/info/attributes absent.]"
+  if [ "$filtercount" -ne 0 ] || [ "$attrsrc" -ne 0 ]; then
     while IFS= read -r bitrow; do
       [ -n "$bitrow" ] || continue
       say "conformance:     LOCAL-STATE: content filter configured — $bitrow"
     done <<HTCFILTERSHOW
 $filters
 HTCFILTERSHOW
-    say "conformance:     LOCAL-STATE: a filter or a private attributes file is present. Every"
-    say "conformance:     hash below is taken with --no-filters and the whole-tree recompute"
-    say "conformance:     never asks git what differs, so neither can move a verdict; they are"
-    say "conformance:     disclosed because a reader must be able to see that they were here."
+    say "conformance:     LOCAL-STATE: a filter or an attributes source is present. Every hash"
+    say "conformance:     below is taken with --no-filters and the whole-tree recompute never"
+    say "conformance:     asks git what differs, so neither can move a verdict by CHANGING WHAT"
+    say "conformance:     GIT ANSWERS. THEY CAN STILL MOVE IT BY THEIR EFFECT, AND THAT IS NOT"
+    say "conformance:     A CARVE-OUT: a filter whose clean half is not the identity makes the"
+    say "conformance:     bytes on disk differ from the committed blob, which is refused below"
+    say "conformance:     as a SUPPRESSION whether the filter is honest or not. git-lfs and"
+    say "conformance:     'text=auto' both land there [T473 M-3, driven]. This tree uses"
+    say "conformance:     neither; adopting one is a task, and this refusal is its notice."
   fi
   if [ "$bitcount" -ne 0 ]; then
     bad=1
@@ -5263,7 +5422,15 @@ HTCBITSHOW
     warn "conformance: C-T459-1, re-driven by T466 as arms SKIPWT and ASSUME]. The bit is local"
     warn "conformance: and uncommitted, so this is a refusal about THIS TRANSCRIPT, not about"
     warn "conformance: the commit. Clear it with 'git update-index --no-skip-worktree' /"
-    warn "conformance: '--no-assume-unchanged' and run the bar again. REFUSED."
+    warn "conformance: '--no-assume-unchanged' and run the bar again."
+    warn "conformance: TWO HONEST STATES ALSO LAND HERE, AND THAT COMMAND WILL NOT HELP EITHER"
+    warn "conformance: OF THEM [T473 m-4]. 'S' is ALSO what a SPARSE CHECKOUT sets on every path"
+    warn "conformance: outside the cone, so this bar cannot be run from a sparse checkout at"
+    warn "conformance: all; and 'M' is an UNMERGED entry, so it cannot be run in the middle of a"
+    warn "conformance: conflicted merge. Both are refusals by choice, not by accident: no"
+    warn "conformance: workflow in this program uses either, and allowing a non-H state is what"
+    warn "conformance: arms SKIPWT and ASSUME bought an attacker. Finish the merge, or clone"
+    warn "conformance: without --sparse, and run the bar again. REFUSED."
   fi
 
   # ═══════════════════════════════════════════════════════════════════════════════════════
@@ -5287,12 +5454,18 @@ HTCBITSHOW
   # HEAD listing on stdin, so the recompute does not re-enter the machinery whose answers it
   # exists to check. It is CALIBRATED (P-72) against this file's own committed id before any
   # zero it prints is believed — which also refuses a repository whose object format this
-  # hasher does not implement, rather than reporting every path as DIFFERS.
+  # hasher does not implement, rather than reporting every path as DIFFERS. THAT CALIBRATION IS
+  # NOT ENOUGH ON ITS OWN, because both of its ids are derivable by the interpreter itself; see
+  # THE CHALLENGE below, which is the half of it whose answer the caller does not hand over.
   #
-  # WHAT IT COSTS, MEASURED AND NOT ASSERTED: it reads every tracked byte. On the tree T466
-  # measured — 10,347 entries, about 252 MB — it took 4s warm and 21s cold, so its budget row
-  # in GUARD_COST_BUDGETS was raised to 300, in family with guard_ledger_invariants. The
-  # ceiling exists to turn a runaway into a named refusal, not to police honest I/O.
+  # WHAT IT COSTS, MEASURED AND NOT ASSERTED: it reads every tracked byte. Every run prints its
+  # OWN population (`RECOMPUTE: N HEAD entries`) and its OWN wall time (`COST Ns / ceiling`), so
+  # neither is restated here — the figures T466 typed into this paragraph (10,347 entries, 4s
+  # warm, 21s cold) were already stale in T466's own final bar, which printed 10,368, and T473
+  # measured 51.3 s cold on a fresh clone under load. NONE OF THOSE IS A PINNED FACT. The budget
+  # row was raised to 300 by the block's own `max(60, 10 × cold)` rule, rounded up, and both
+  # authors' cold measurements bracket it (T466's rule gives 210, T473's gives 510). The ceiling
+  # exists to turn a runaway into a named refusal, not to police honest I/O.
   #
   # THE BOUND, AND IT IS NOT NARROWED BY ANY OF THIS: an index bit, a filter and a private
   # attributes file are all LOCAL AND UNCOMMITTED. What they forge is A TRANSCRIPT, never the
@@ -5308,6 +5481,45 @@ HTCBITSHOW
   # UNREADABLE line, which is recorded here because it failed LOUDLY and a quieter version of
   # the same mistake — `-z` dropped for `\n`, say — would have failed silently on the first
   # path containing a newline.
+  # ─────────────────────────────────────────────────────────────────────────────────────
+  # THE INTERPRETER IS RESOLVED ABSOLUTELY, AND IT IS NOT SUFFICIENT ON ITS OWN. [T477, M-2.]
+  # ─────────────────────────────────────────────────────────────────────────────────────
+  # T466 shipped this as a bare `python3`, i.e. PATH-resolved, which put whatever this host's
+  # PATH happened to name into the trust base of the harness's own integrity check. T473 drove
+  # it: a shim printing nothing but `CALIB <committed> <ondisk>` and `SCANNED <n>` PASSES the
+  # P-72 calibration and the guard then prints a wholly fabricated clean census and does NOT
+  # refuse. Both calibration ids are cheaply derivable by the substituted interpreter from the
+  # repository it is standing in, so the calibration refuses a WRONG hasher and cannot refuse a
+  # LYING one. T477 re-drove it in the sharper form T473 could not: a TARGETED shim that
+  # delegates every other invocation to the real interpreter, so no other guard is disturbed.
+  #
+  # `/usr/bin/python3` with the `[ ! -x ]` pre-check is this file's existing convention —
+  # guard_pnumber_citations and guard_reconciler_ownership both do exactly this — and it closes
+  # the PATH route. IT IS NOT SUFFICIENT, AND THAT WAS DRIVEN RATHER THAN ASSUMED:
+  #
+  #   PYTHONPATH=<dir with a sitecustomize.py> /usr/bin/python3 -c '...'
+  #
+  # runs the attacker's module BEFORE the program text, on the absolute interpreter, because
+  # `site` imports `sitecustomize` from `sys.path` and `PYTHONPATH` is on `sys.path`. Measured
+  # on this host: flags `<none>` -> HIJACKED; `-E`, `-S`, `-I`, `-I -S` -> not hijacked.
+  # So the interpreter is invoked `-I -S`: `-I` is isolated mode (which implies `-E`, so
+  # PYTHONPATH / PYTHONHOME are ignored, and `-s`, so the user site directory is ignored) and
+  # `-S` suppresses `site` altogether, which is the only thing that also closes a
+  # `sitecustomize` reachable from an installed site-packages directory.
+  #
+  # WHAT REMAINS, AND IT IS DECLARED RATHER THAN ARGUED SHUT: an interpreter REPLACED AT
+  # `/usr/bin/python3` itself is not refused by anything in this file — but an attacker who can
+  # write there can also write this file, which is LONGNOP's class, and the answer to that class
+  # is a verifier outside this file [FU-T454-1 / T460]. See the CHALLENGE below for what is
+  # closed against an interpreter that is merely INTERPOSED.
+  if [ ! -x /usr/bin/python3 ]; then
+    warn "conformance: guard_harness_text_is_committed: /usr/bin/python3 is absent. The"
+    warn "conformance: whole-tree recompute cannot run, and this guard REFUSES rather than"
+    warn "conformance: degrading to the smaller green it had before T466. [Same shape and same"
+    warn "conformance: refusal as guard_pnumber_citations and guard_reconciler_ownership.]"
+    return 1
+  fi
+
   headlist="$(mktemp "${TMPDIR:-/tmp}/conformance-headtree.XXXXXXXXXX")" || return 1
   ( cd "$REPO_ROOT" && git -c core.quotepath=false ls-tree -r -z HEAD ) >"$headlist" 2>/dev/null \
     || hrc=$?
@@ -5319,63 +5531,156 @@ HTCBITSHOW
     warn "conformance: nothing and would report every suppression as absent. REFUSED."
     return 1
   fi
+
+  # ═══════════════════════════════════════════════════════════════════════════════════════
+  # THE CHALLENGE — CALIBRATING ON A VALUE THE CALLER DOES NOT HAND IT. [T477, M-2.]
+  # ═══════════════════════════════════════════════════════════════════════════════════════
+  # P-72 says: prove the instrument can find a KNOWN POSITIVE before believing its zero. T466
+  # applied it with a known positive the instrument is HANDED — this file's two object ids,
+  # both of which the interpreter can look up itself. That calibration is passed by an echo.
+  #
+  # SO THE CALIBRATION IS MADE INTO A CHALLENGE WHOSE ANSWER IS NOT IN ITS INPUT. One tracked
+  # path is chosen PER RUN, pseudorandomly, and a DUPLICATE record for it is appended to the
+  # listing carrying a DECOY object id drawn fresh from /dev/urandom. An honest hasher must
+  # therefore report `DIFFERS <the real id of the bytes on disk> <decoy> <path>` — and the real
+  # id is nowhere in the listing. This guard knows what that answer must be because it computed
+  # it with `git hash-object --no-filters`, A DIFFERENT PROGRAM, before handing the challenge
+  # over. A hasher that echoes what it was told cannot produce it; a hasher that prints a
+  # fabricated clean census cannot produce it either, because the challenge record is
+  # indistinguishable from the ten thousand real ones and it must be ANSWERED, not skipped.
+  #
+  # THE BOUND, STATED HONESTLY: this refuses a CHEAP shim — the O(1) echo T473 drove. It does
+  # not refuse a shim that actually implements the hasher (or shells out to `git hash-object`)
+  # and lies about exactly one path; nothing computable from this repository can, because the
+  # challenge lives in the same repository. What it buys is that a substituted interpreter must
+  # now REIMPLEMENT the recompute correctly in order to lie about one line of it.
+  #
+  # THE CHALLENGE PATH IS STILL ADJUDICATED NORMALLY. Only the row whose HEAD-side id is the
+  # decoy is consumed by the challenge; a genuine difference at the same path arrives as its own
+  # row, carrying the genuine HEAD id, and is refused or printed exactly as any other. The
+  # challenge adds coverage and removes none.
+  chaltotal="$( LC_ALL=C grep -c '' <<<"$index" )" || chaltotal=0
+  case "$chaltotal" in ''|*[!0-9]*) chaltotal=0 ;; esac
+  chalpick="$( LC_ALL=C od -An -N4 -tu4 < /dev/urandom 2>/dev/null | LC_ALL=C tr -dc '0-9' )"
+  case "$chalpick" in ''|*[!0-9]*) chalpick="$$" ;; esac
+  chaltry=0
+  while [ "$chaltry" -lt 12 ] && [ "$chaltotal" -gt 0 ]; do
+    chaltry=$((chaltry + 1))
+    chalrow="$( LC_ALL=C sed -n "$(( chalpick % chaltotal + 1 ))p" <<<"$index" )"
+    chalpick=$((chalpick + 7919))
+    case "$chalrow" in *"	"*) ;; *) continue ;; esac
+    chalmode="${chalrow%% *}"
+    chalpath="${chalrow#*	}"
+    case "$chalmode" in 100644|100755) ;; *) chalpath=""; continue ;; esac
+    [ -n "$chalpath" ] || continue
+    [ "$chalpath" != "$selfrel" ] || { chalpath=""; continue; }
+    [ -f "$REPO_ROOT/$chalpath" ] || { chalpath=""; continue; }
+    break
+  done
+  chaldisk=""
+  if [ -n "$chalpath" ]; then
+    chaldisk="$( cd "$REPO_ROOT" 2>/dev/null && \
+                 git hash-object --no-filters -- "$chalpath" 2>/dev/null )" || chaldisk=""
+  fi
+  chaldecoy="$( LC_ALL=C od -An -N20 -tx1 < /dev/urandom 2>/dev/null | LC_ALL=C tr -dc '0-9a-f' )"
+  if [ -z "$chalpath" ] || [ -z "$chaldisk" ] || [ "${#chaldecoy}" -ne 40 ] \
+     || [ "$chaldecoy" = "$chaldisk" ]; then
+    rm -f "$headlist"
+    warn "conformance: guard_harness_text_is_committed: THE CHALLENGE COULD NOT BE BUILT"
+    warn "conformance: (path '$chalpath', its id on disk '$chaldisk', decoy length"
+    warn "conformance: ${#chaldecoy}). Without it the recompute's zero rests on a calibration"
+    warn "conformance: whose answer the interpreter is handed, which a substituted interpreter"
+    warn "conformance: passes by echoing [T473 M-2]. A calibration that could not be posed has"
+    warn "conformance: not been passed. INSTRUMENT failure. REFUSED."
+    return 1
+  fi
+  printf '%s blob %s\t%s' "$chalmode" "$chaldecoy" "$chalpath" >>"$headlist"
+  printf '\000' >>"$headlist"
   # The hasher. Single-quoted, so the shell expands nothing inside it; it therefore contains
   # no apostrophe anywhere, which is why its prose reads the way it does.
+  # ITS OUTPUT IS NUL-DELIMITED TOO, AND THAT IS THE SAME ARGUMENT AS THE PARAGRAPH ABOVE.
+  # [T477, closing T473 m-2.] T466 NUL-delimited the INPUT for the reason just given and then
+  # newline-delimited the OUTPUT, with the path last — inside a function whose own comment says
+  # a newline is the wrong delimiter because a path can contain one. T473 drove it: a tracked
+  # `news<newline>line.txt` splits one DIFFERS row into two, the first parsing as a DIFFERS with
+  # a TRUNCATED path and the second hitting the catch-all. It failed closed and it refused with
+  # the wrong name — and, sharper, a COMMITTED PATH NAME is attacker-influenced text arriving on
+  # the control channel this guard adjudicates, so a path spelled `…<newline>SCANNED 1` could
+  # inject a row. Both halves are now NUL-delimited, the rows are written as RAW BYTES (no
+  # decode, so a path that is not valid UTF-8 cannot raise inside the hasher either), and the
+  # stream is read with `read -r -d ""` FROM A FILE, because bash cannot hold a NUL in a
+  # variable and a command substitution would silently splice the whole stream into one row.
   recpy='
 import hashlib, os, sys
-selfrel = sys.argv[1]
-recs = [r for r in sys.stdin.buffer.read().split(b"\x00") if r]
+selfrel = sys.argv[1].encode("utf-8", "surrogateescape")
+out = sys.stdout.buffer
+def emit(b):
+    out.write(b + b"\x00")
 def blobsha(b):
     h = hashlib.sha1()
     h.update(b"blob " + str(len(b)).encode() + b"\x00")
     h.update(b)
-    return h.hexdigest()
+    return h.hexdigest().encode()
+recs = [r for r in sys.stdin.buffer.read().split(b"\x00") if r]
 n = 0
 for r in recs:
-    meta, _, path = r.partition(b"\t")
+    meta, sep, path = r.partition(b"\t")
     f = meta.split(b" ")
-    if len(f) < 3:
-        print("MALFORMED")
+    if len(f) < 3 or not sep or not path:
+        emit(b"MALFORMED")
         continue
-    mode = f[0].decode()
-    sha = f[2].decode()
-    p = path.decode("utf-8", "surrogateescape")
+    mode = f[0]
+    sha = f[2]
     n += 1
     try:
-        if mode == "120000":
-            b = os.readlink(p).encode("utf-8", "surrogateescape")
-        elif mode == "100644" or mode == "100755":
-            fh = open(p, "rb")
+        if mode == b"120000":
+            b = os.readlink(path)
+        elif mode == b"100644" or mode == b"100755":
+            fh = open(path, "rb")
             try:
                 b = fh.read()
             finally:
                 fh.close()
         else:
-            print("MODE %s %s" % (mode, p))
+            emit(b"MODE " + mode + b" " + path)
             continue
     except FileNotFoundError:
-        print("MISSING %s %s" % (sha, p))
+        emit(b"MISSING " + sha + b" " + path)
         continue
     except OSError as exc:
-        print("UNREADABLE %s %s" % (p, exc))
+        emit(b"UNREADABLE " + path + b" " + str(exc).encode("utf-8", "backslashreplace"))
         continue
     d = blobsha(b)
-    if p == selfrel:
-        print("CALIB %s %s" % (sha, d))
+    if path == selfrel:
+        emit(b"CALIB " + sha + b" " + d)
     if d != sha:
-        print("DIFFERS %s %s %s" % (d, sha, p))
-print("SCANNED %d" % n)
+        emit(b"DIFFERS " + d + b" " + sha + b" " + path)
+emit(b"SCANNED " + str(n).encode())
+out.flush()
 '
-  recomp="$( cd "$REPO_ROOT" && python3 -c "$recpy" "$selfrel" <"$headlist" 2>&1 )" || recrc=$?
+  recompf="$(mktemp "${TMPDIR:-/tmp}/conformance-recompute.XXXXXXXXXX")" || { rm -f "$headlist"; return 1; }
+  recerrf="$(mktemp "${TMPDIR:-/tmp}/conformance-recompute-err.XXXXXXXXXX")" \
+    || { rm -f "$headlist" "$recompf"; return 1; }
+  # STDERR IS KEPT SEPARATE rather than merged with `2>&1`. Merged, an unframed diagnostic
+  # appended after the last NUL is DROPPED by `read -d ""` — a fail-open shape — and a
+  # diagnostic arriving BEFORE it would be spliced onto a real row. Kept separate, ANY byte on
+  # stderr is itself a refusal below.
+  ( cd "$REPO_ROOT" && /usr/bin/python3 -I -S -c "$recpy" "$selfrel" <"$headlist" ) \
+    >"$recompf" 2>"$recerrf" || recrc=$?
   rm -f "$headlist"
-  if [ "$recrc" -ne 0 ] || [ -z "$recomp" ]; then
-    warn "conformance: guard_harness_text_is_committed: THE RECOMPUTE DID NOT RUN (exit $recrc)."
-    warn "conformance: A whole-tree byte comparison that did not happen is not a clean tree, and"
-    warn "conformance: its silence must never be read as one. First lines of its output:"
-    LC_ALL=C printf '%s\n' "$recomp" | LC_ALL=C sed -n '1,8p' >&2
+  if [ "$recrc" -ne 0 ] || [ ! -s "$recompf" ] || [ -s "$recerrf" ]; then
+    warn "conformance: guard_harness_text_is_committed: THE RECOMPUTE DID NOT RUN CLEANLY (exit"
+    warn "conformance: $recrc, $(LC_ALL=C wc -c <"$recompf" | tr -d ' ') byte(s) of output,"
+    warn "conformance: $(LC_ALL=C wc -c <"$recerrf" | tr -d ' ') byte(s) on stderr). A whole-tree"
+    warn "conformance: byte comparison that did not happen is not a clean tree, and its silence"
+    warn "conformance: must never be read as one. First lines of stdout, then of stderr:"
+    LC_ALL=C tr '\000' '\n' <"$recompf" | LC_ALL=C sed -n '1,8p' >&2
+    LC_ALL=C sed -n '1,8p' "$recerrf" >&2
+    rm -f "$recompf" "$recerrf"
     return 1
   fi
-  while IFS= read -r recrow; do
+  rm -f "$recerrf"
+  while IFS= read -r -d '' recrow; do
     [ -n "$recrow" ] || continue
     case "$recrow" in
       "SCANNED "*)
@@ -5385,7 +5690,6 @@ print("SCANNED %d" % n)
         reccalib_head="${rest%% *}"
         reccalib_disk="${rest#* }" ;;
       "DIFFERS "*|"MISSING "*)
-        recdiffers=$((recdiffers + 1))
         case "$recrow" in
           "MISSING "*)
             rest="${recrow#MISSING }"
@@ -5399,6 +5703,15 @@ print("SCANNED %d" % n)
             hsha="${rest%% *}"
             p="${rest#* }" ;;
         esac
+        # THE CHALLENGE ROW. [T477.] It is identified by its HEAD-side id being the decoy this
+        # guard generated, never by its path — so a genuine difference at the same path arrives
+        # as its own row, carrying the genuine HEAD id, and is adjudicated below like any other.
+        if [ "$p" = "$chalpath" ] && [ "$hsha" = "$chaldecoy" ]; then
+          chalseen=1
+          chalgot="${dsha:-<ABSENT FROM DISK>}"
+          continue
+        fi
+        recdiffers=$((recdiffers + 1))
         recpaths="$recpaths$p$HTC_LF"
         inmods=""
         case "$HTC_LF$mods$HTC_LF" in
@@ -5415,26 +5728,49 @@ print("SCANNED %d" % n)
           warn "conformance:   object id of the bytes on disk       : ${dsha:-<ABSENT FROM DISK>}"
           warn "conformance:   git diff-index --name-only HEAD      : did NOT list this path"
           warn "conformance: This is not an edit and it is not a checkout collision. It is a"
-          warn "conformance: SUPPRESSION: an index bit, a content filter or a private attributes"
-          warn "conformance: file made git answer a question about something other than the bytes"
+          warn "conformance: SUPPRESSION: an index bit, a content filter or an attributes file"
+          warn "conformance: made git answer a question about something other than the bytes"
           warn "conformance: that are there. The LOCAL-STATE CENSUS above names which levers are"
-          warn "conformance: present. Nothing downstream in this run is about the commit it"
+          warn "conformance: present, across all four attribute sources."
+          warn "conformance: IF YOU JUST ADOPTED git-lfs OR 'text=auto', THIS IS YOU, AND IT IS"
+          warn "conformance: NOT A FALSE POSITIVE [T473 M-3, driven]. This guard hashes the RAW"
+          warn "conformance: BYTES ON DISK, on purpose, because that premise is what defeats an"
+          warn "conformance: inverting clean filter — and it therefore also disagrees with an"
+          warn "conformance: HONEST one, whose whole job is to make the blob differ from the"
+          warn "conformance: file. There is no way to declare a legitimate filter here and the"
+          warn "conformance: carve-out was refused deliberately: it would be forgeable by"
+          warn "conformance: committing a .gitattributes. Teach this guard first; do not"
+          warn "conformance: disable it. Nothing downstream in this run is about the commit it"
           warn "conformance: claims to be about. REFUSED."
         fi ;;
       "MODE "*|"UNREADABLE "*|"MALFORMED"*)
         recbad=$((recbad + 1)); bad=1
         warn "conformance: guard_harness_text_is_committed: the recompute could not grade an"
         warn "conformance: entry — $recrow. An entry it cannot hash is an ERROR, never a match,"
-        warn "conformance: and never a silent skip. REFUSED." ;;
+        warn "conformance: and never a silent skip."
+        case "$recrow" in
+          "MODE 160000 "*)
+            warn "conformance: THAT MODE IS A GITLINK — A SUBMODULE — AND IT REFUSES THE WHOLE"
+            warn "conformance: BAR. That is a CHOICE and it agrees with the rest of this program"
+            warn "conformance: rather than being an oversight [T473 m-3, driven]: condition C1 of"
+            warn "conformance: the driver push gate already forbids a gitlink on refs/heads/main,"
+            warn "conformance: and T450 drove one onto main with --no-verify, which is why the"
+            warn "conformance: post-hoc reconciliation exists. A submodule's working tree is not"
+            warn "conformance: covered by this commit, so 'the bytes on disk are the committed"
+            warn "conformance: bytes' has no meaning at that path, and reporting it as a MATCH"
+            warn "conformance: would be the fail-open answer. If this program ever vendors the"
+            warn "conformance: pinned Fineract checkout as a submodule, THIS GUARD AND THE PUSH"
+            warn "conformance: GATE BOTH HAVE TO BE TAUGHT, and that is a task." ;;
+        esac
+        warn "conformance: REFUSED." ;;
       *)
         recbad=$((recbad + 1)); bad=1
         warn "conformance: guard_harness_text_is_committed: the recompute emitted a line this"
         warn "conformance: guard does not understand — $recrow. An unparsed line is an"
         warn "conformance: INSTRUMENT failure. REFUSED." ;;
     esac
-  done <<HTCRECOMP
-$recomp
-HTCRECOMP
+  done <"$recompf"
+  rm -f "$recompf"
   case "$recscanned" in
     ''|*[!0-9]*)
       warn "conformance: guard_harness_text_is_committed: the recompute printed no usable"
@@ -5442,12 +5778,33 @@ HTCRECOMP
       warn "conformance: has not reported zero. INSTRUMENT failure. REFUSED."
       return 1 ;;
   esac
-  if [ "$recscanned" -lt 1 ]; then
+  if [ "$recscanned" -lt 2 ]; then
     warn "conformance: guard_harness_text_is_committed: the recompute scanned $recscanned"
-    warn "conformance: entries. A walk that inspects nothing finds no suppression and would"
-    warn "conformance: report the class shut. INSTRUMENT failure. REFUSED."
+    warn "conformance: entries, and the challenge record alone makes the floor 2. A walk that"
+    warn "conformance: inspects nothing finds no suppression and would report the class shut."
+    warn "conformance: INSTRUMENT failure. REFUSED."
     return 1
   fi
+  # THE CHALLENGE IS ADJUDICATED BEFORE ANY ZERO ABOVE IT IS BELIEVED. [T477, T473 M-2.]
+  if [ -z "$chalseen" ] || [ "$chalgot" != "$chaldisk" ]; then
+    warn "conformance: guard_harness_text_is_committed: THE RECOMPUTE FAILED ITS CHALLENGE."
+    warn "conformance:   challenge path                       : $chalpath"
+    warn "conformance:   decoy id planted in the listing      : $chaldecoy"
+    warn "conformance:   this guard hashed the bytes on disk  : $chaldisk"
+    warn "conformance:     (git hash-object --no-filters, A DIFFERENT PROGRAM, taken BEFORE the"
+    warn "conformance:      challenge was handed over)"
+    warn "conformance:   the recompute answered               : ${chalgot:-<NO ROW FOR THAT PATH AT ALL>}"
+    warn "conformance: The challenge is a record this guard planted, carrying an object id drawn"
+    warn "conformance: fresh from /dev/urandom, so THE CORRECT ANSWER IS NOT IN THE INPUT. An"
+    warn "conformance: interpreter that echoes the two ids it was handed passes P-72 and fails"
+    warn "conformance: here [T473 M-2, re-driven by T477]. A recompute that did not answer it"
+    warn "conformance: did not hash this tree, and its census of zero suppressions is not a"
+    warn "conformance: measurement. INSTRUMENT failure — and never a clean tree. REFUSED."
+    return 1
+  fi
+  # The challenge record is this guard's own, so it is removed from the population before the
+  # population is reported: the census must count the COMMIT, not this guard's instrument.
+  recscanned=$((recscanned - 1))
   if [ "$reccalib_head" != "$confblob" ] || [ "$reccalib_disk" != "$confdisk" ]; then
     warn "conformance: guard_harness_text_is_committed: THE RECOMPUTE FAILED ITS CALIBRATION."
     warn "conformance:   this file, committed: git says $confblob, the recompute says"
@@ -5563,6 +5920,23 @@ HARNESSMODS
   say "conformance:   report $suppressed (SUPPRESSED); reported by git but byte-identical"
   say "conformance:   $phantom (PHANTOM: a mode change or unrefreshed stat data, not a text"
   say "conformance:   substitution); ungradeable entries $recbad."
+  say "conformance:   CHALLENGE: the recompute was handed a planted record for $chalpath"
+  say "conformance:   carrying the decoy id $chaldecoy, and answered $chalgot, which is the id"
+  say "conformance:   this guard took with git hash-object --no-filters BEFORE handing it over."
+  say "conformance:   The correct answer was NOT in the recompute's input, so an interpreter that"
+  say "conformance:   echoes the ids it was given cannot produce it [T473 M-2]."
+  # THE READ CENSUS, DERIVED FROM THE BYTES THAT ARE RUNNING. [T477, closing T473 M-1.]
+  # The four-selector table in this guard's comment is anchored to two BLOB IDS and says nothing
+  # about the file in front of you; this line is the number about the file in front of you, and
+  # it is measured, not transcribed, so it cannot rot the way T466's table did. S1 is the
+  # nominated selector: a non-comment, non-blank line that spells the root variable at all.
+  s1now="$( LC_ALL=C grep -v -E '^[[:space:]]*#' "$REPO_ROOT/$selfrel" 2>/dev/null \
+            | LC_ALL=C grep -c 'REPO_ROOT' )" || s1now=""
+  case "$s1now" in ''|*[!0-9]*) s1now="" ;; esac
+  say "conformance:   READ CENSUS (S1), DERIVED THIS RUN, NEVER TRANSCRIBED: ${s1now:-<UNMEASURED>}"
+  say "conformance:   non-comment line(s) of the bytes now on disk at $selfrel spell the root"
+  say "conformance:   variable. That object is $confdisk. The four-selector table in this"
+  say "conformance:   guard's comment is anchored to two OTHER blob ids and is not about it."
   say "conformance:   this harness $selfrel: committed $confblob / on disk $confdisk"
   say "conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:"
   say "conformance:    git rev-parse HEAD:$selfrel — a transcript that disagrees with your own"
