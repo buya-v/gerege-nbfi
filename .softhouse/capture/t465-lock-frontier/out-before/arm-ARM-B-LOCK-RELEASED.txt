@@ -1,0 +1,29 @@
+conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+conformance:   selector and per-bucket counts are printed by the census itself:
+T316-DEADPATH-CENSUS: corpus=1684 deadFiles=91 deadOccurrences=125 resolving=1577 indeterminate=126 prose=428
+conformance:   frontier 125 row(s), pinned at 108
+conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+conformance: !! THE DEAD-PATH FRONTIER MOVED.
+conformance: !! 17 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
+conformance: !! rather than pinning it. Either make the path resolve, or -- if the
+conformance: !! reference is a deliberate fallback candidate -- make the instrument
+conformance: !! REFUSE when no candidate resolves, and record why in the pin.
+> .softhouse/bin/fire-program.sh | .softhouse/LOCK
+> .softhouse/bin/ready-tasks.py | .softhouse/LOCK
+> .softhouse/capture/t279-lock-partition/audit-this-fire.py | .softhouse/LOCK
+> .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py | .softhouse/LOCK.
+> .softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh | .softhouse/LOCK
+> .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py | .softhouse/LOCK
+> .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py | .softhouse/LOCK
+> .softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh | .softhouse/LOCK
+> .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh | .softhouse/LOCK
+> .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh | .softhouse/LOCK
+> .softhouse/hooks/push-before-spawn-audit.py | .softhouse/LOCK
+> .softhouse/reviews/T189-probe/hardening.sh | .softhouse/LOCK
+> .softhouse/reviews/T189-probe/reachability.sh | .softhouse/LOCK
+> .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh | .softhouse/LOCK
+> .softhouse/reviews/t172-probe/run-move-demo.sh | .softhouse/LOCK
+> .softhouse/reviews/t202-probe/make-mutants-b.py | .softhouse/LOCK
+> .softhouse/reviews/t202-probe/patch.py | .softhouse/LOCK
+conformance:   The pin is /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-arms.pl2fAmuN4t/wt/.softhouse/guards/dead-path-frontier.pin
+T316-DEADPATH-FRONTIER: REFUSED rows=125 pinned=108 added=17 removed=0

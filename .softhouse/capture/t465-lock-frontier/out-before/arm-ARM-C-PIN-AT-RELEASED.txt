@@ -1,0 +1,7 @@
+conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+conformance:   selector and per-bucket counts are printed by the census itself:
+T316-DEADPATH-CENSUS: corpus=1684 deadFiles=91 deadOccurrences=125 resolving=1577 indeterminate=126 prose=428
+conformance:   frontier 125 row(s), pinned at 125
+conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+conformance:   frontier == pinned (all 125 row(s), by path AND by literal)
+T316-DEADPATH-FRONTIER: GREEN rows=125 pinned=125 added=0 removed=0
