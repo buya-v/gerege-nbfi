@@ -1,0 +1,15 @@
+=== CONTROL: the guard on the untouched tree (lock held)
+   exit=0
+   T316-DEADPATH-FRONTIER: GREEN rows=108 pinned=108 added=0 removed=0
+=== ARM: the same guard after the end-of-fire lock release ([D] of the lock)
+   exit=1
+   T316-DEADPATH-FRONTIER: REFUSED rows=125 pinned=108 added=17 removed=0
+scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-lg.HdodOQY0
+universe /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-lock.y1SdB6c3
+--- A: baseline (LOCK tracked? YES)
+T316-DEADPATH-CENSUS: corpus=1641 deadFiles=75 deadOccurrences=108 resolving=1561 indeterminate=122 prose=418
+--- B: remove the fire lock from the index, exactly as a fire-end push does
+    LOCK tracked now? NO
+T316-DEADPATH-CENSUS: corpus=1641 deadFiles=90 deadOccurrences=124 resolving=1545 indeterminate=122 prose=418
+--- C: which instruments name it
+done. universe /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-lock.y1SdB6c3

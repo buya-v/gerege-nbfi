@@ -1,0 +1,11 @@
+=== A: the rig on the untouched tree (the control -- without it every RED below is unearned)
+   exit=0  1 SELFTEST-OK line(s)
+   GREEN LEG (shipped tool): 13/13 cells correct
+   RED LEG (planted T309 defect): 8/13 cells correct
+   SELFTEST OK: the planted T309 defect drives cell B' RED, and the shipped tool keeps it GREEN.
+=== B: the SAME rig after a STATE-set-confined [M] of the task graph -- total garbage
+   exit=0  1 SELFTEST-OK line(s)
+   GREEN LEG (shipped tool): 13/13 cells correct
+   RED LEG (planted T309 defect): 8/13 cells correct
+   SELFTEST OK: the planted T309 defect drives cell B' RED, and the shipped tool keeps it GREEN.
+universe /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-tasks.FhyHACWV

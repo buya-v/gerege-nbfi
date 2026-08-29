@@ -1,0 +1,17 @@
+caller's toplevel     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3b86bca1b8a554a5
+materialised tree at  : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-cheapenv.Nwk87fk8/tree
+git rev-parse --show-toplevel under the cheap-subset environment:
+   -> /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t461-cheapenv.Nwk87fk8/tree
+cd into the materialised tree first, then ask again:
+   -> /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t461-cheapenv.Nwk87fk8/tree
+
+and now the guard itself, exactly as a future cheap tier would call it:
+   namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t461-cheapenv.Nwk87fk8/tree
+   NAMESPACE-CENSUS: dirs=228 prefixed=205 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+   namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
+
+scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t461-cheapenv.Nwk87fk8
+
+=== the SAME guard run plainly in the caller worktree, for comparison ===
+namespace:   root    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3b86bca1b8a554a5
+NAMESPACE-CENSUS: dirs=227 prefixed=204 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0

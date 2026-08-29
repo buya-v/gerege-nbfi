@@ -1,0 +1,14 @@
+commits examined: 400
+t412      covered 353/400 = 88.2%
+t453      covered 335/400 = 83.8%
+caponly   covered 336/400 = 84.0%
+modonly   covered 284/400 = 71.0%
+total ADDITION entries across the 400 commits: 78
+A <LOCK> entries: 34
+additions inside t453-covered commits: 53
+top additions that modonly would newly block: [('.softhouse/LOCK', 34), ('.softhouse/observations/20260828-140005-iter2-a-reviewer-was-retracting-its-approval.md', 1), ('.softhouse/observations/20260828-140005-iter2-verify-after-git-add.md', 1), ('.softhouse/observations/20260828-140005-iter2-driver-misrouted-a-worker-message.md', 1), ('.softhouse/state/T357.STATE.json', 1), ('.softhouse/state/T358.STATE.json', 1), ('.softhouse/state/T361.STATE.json', 1), ('.softhouse/observations/20260828-140005-program-progress-accounting.md', 1)]
+total name-status entries: 629
+entries under capture/: 27  under reviews/: 43  sum: 70
+status histogram: {'M': 473, 'A': 78, 'D': 78}
+top prefixes: [('.softhouse/tasks.json', 235), ('.softhouse/LOCK', 122), ('.softhouse/RESUME.md', 90), ('.softhouse/reviews', 43), ('.softhouse/program.json', 30), ('.softhouse/capture', 27), ('.softhouse/patterns.md', 19), ('.softhouse/observations', 19), ('.softhouse/state', 17), ('.softhouse/gates.md', 12), ('.softhouse/bin', 4), ('.softhouse/conformance.sh', 3), ('.softhouse/handoff', 2), ('main', 2), ('.softhouse/reference-oracle.md', 2)]
+LOCK status histogram over 400 non-merge first-parent commits: {'A': 34, 'D': 34, 'M': 54}
