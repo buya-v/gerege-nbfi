@@ -806,9 +806,9 @@ func (s *Summary) OracleDerivedLines() []string {
 		fmt.Sprintf(
 			"      cited artefacts scanned  CLEAN %-4d FORBIDDEN %-4d UNREADABLE %d",
 			clean, forbidden, unreadable),
-		"      A ledger vector may not be captured with " +
-			strings.Join(r.CaptureRule.ForbiddenParameters, " or ") + ". The scanner looks for",
-		"      " + strings.Join(r.CaptureRule.ForbiddenFieldNames, ", ") + " in the cited bytes:",
+		"      A ledger vector may not be captured with "+
+			strings.Join(r.CaptureRule.ForbiddenParameters, " or ")+". The scanner looks for",
+		"      "+strings.Join(r.CaptureRule.ForbiddenFieldNames, ", ")+" in the cited bytes:",
 		"      those fields appear in an oracle response IF AND ONLY IF the parameter was set",
 		"      [MEASURED T429: GET /journalentries/78 carries none of them; the same GET with",
 		"      ?runningBalance=true carries all three]. A vector citing such a body is INADMISSIBLE.",
@@ -826,8 +826,8 @@ func (s *Summary) OracleDerivedLines() []string {
 		fmt.Sprintf(
 			"      OBSERVED FROM THE LIVE ORACLE %s, fineract %s, tenant %s, database %s.",
 			r.Oracle.ObservedAtUTC, r.Oracle.FineractCommit[:9], r.Oracle.Tenant, r.Oracle.Database),
-		"      Evidence: " + r.Oracle.EvidenceDir,
-		"      THE DECLARATION IS NOT A RATIFIED DEC. It is raised under " + r.Gate + "; DEC-2 is ratified and",
+		"      Evidence: "+r.Oracle.EvidenceDir,
+		"      THE DECLARATION IS NOT A RATIFIED DEC. It is raised under "+r.Gate+"; DEC-2 is ratified and",
 		"      an agent may not amend it. See docs/adr/DEC-2-PROPOSED-REVISION-T429-oracle-derived-columns.md.",
 		"",
 	)
