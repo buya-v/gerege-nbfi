@@ -1,0 +1,24 @@
+install-driver-push-gate: hooks dir     /Users/buv/gerege-nbfi/.git/hooks
+install-driver-push-gate: main checkout /Users/buv/gerege-nbfi
+install-driver-push-gate: pre-push      PRESENT
+install-driver-push-gate:               and it IS this gate's shim.
+install-driver-push-gate: --- installed shim ---
+#!/bin/sh
+# softhouse-t412-driver-push-gate -- installed by .softhouse/hooks/install-driver-push-gate.sh
+# Refuses a push to refs/heads/main that carries a gitlink, writes outside the driver allowlist,
+# or lands a tree no bar has graded.  Stands aside for every other ref.
+# Escape hatch for C2/C3 only, never C1:  SOFTHOUSE_DRIVER_GATE_BYPASS="<reason, 12+ chars>"
+GATE="/Users/buv/gerege-nbfi/.softhouse/hooks/driver-push-gate.sh"
+if [ ! -f "$GATE" ]; then
+  GATE="/Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate/driver-push-gate.sh"
+fi
+if [ ! -f "$GATE" ]; then
+  echo "driver-push-gate: ABORT -- the gate script is absent from BOTH the main checkout and the" >&2
+  echo "driver-push-gate: install-time snapshot. A pre-push hook that cannot find its gate REFUSES;" >&2
+  echo "driver-push-gate: an absent guard that passes is the defect this whole gate exists for." >&2
+  exit 1
+fi
+echo "driver-push-gate: running $GATE (sha256 $(shasum -a 256 "$GATE" | cut -c1-16))" >&2
+exec bash "$GATE" "$@"
+install-driver-push-gate: snapshot      8fc9d676e850e45c  /Users/buv/gerege-nbfi/.git/hooks/softhouse-t412-gate
+install-driver-push-gate: ledger        /Users/buv/gerege-nbfi/.git/softhouse-driver-gate/attest.tsv

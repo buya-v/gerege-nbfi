@@ -1,0 +1,11 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: STANDS ASIDE for refs/heads/softhouse/T412-probe -- this gate guards refs/heads/main only. Worker branches run the
+driver-push-gate:   full bar on their own tree before handoff; that obligation is unchanged and this gate
+driver-push-gate:   neither adds to it nor substitutes for it.
+driver-push-gate: no update to refs/heads/main in this push. Nothing for this gate to decide.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+ * [new branch]        softhouse/T412-probe -> softhouse/T412-probe
+
+ARM nonmain-stands-aside         EXPECT rc=0 GOT rc=0  marker [STANDS ASIDE for refs/heads/softhouse/T412-probe] PASS

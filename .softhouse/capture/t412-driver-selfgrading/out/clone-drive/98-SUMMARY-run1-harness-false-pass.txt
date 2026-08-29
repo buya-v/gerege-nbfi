@@ -1,0 +1,76 @@
+
+===============================================================
+SETUP -- throwaway clone and bare remote under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.bNPMmSAyh1
+===============================================================
+installed in the clone (rc=127)
+base commit b102875c7e0d1b7f1ba4339180cedc5e207dfb11  tree 729cd8a07c986a0ebb3244ee2e6e3f47f8e18cb1
+
+===============================================================
+ARM 1 (CONTROL) -- a NON-MAIN ref. The gate must STAND ASIDE.
+===============================================================
+ARM nonmain-stands-aside         EXPECT rc=0  GOT rc=0   PASS
+
+===============================================================
+ARM 2 (RED) -- state-only commit, EMPTY LEDGER. No graded ancestor => REFUSE.
+===============================================================
+ARM no-graded-ancestor           EXPECT rc=1  GOT rc=0   *** ARM FAILED ***
+
+===============================================================
+ARM 3 (GREEN) -- same commit, with the BASE tree attested FULL. Cheap subset must PASS.
+===============================================================
+ARM state-only-cheap-pass        EXPECT rc=0  GOT rc=0   PASS
+
+===============================================================
+ARM 4 (RED) -- the RECORDED DEFECT: an UNDEFINED P-number in RESUME.md, a DIRECTIVE file.
+===============================================================
+ARM bad-citation-refused         EXPECT rc=1  GOT rc=0   *** ARM FAILED ***
+
+===============================================================
+ARM 5 (GREEN) -- repair the citation in place. The SAME gate must now allow the push.
+===============================================================
+ARM citation-repaired            EXPECT rc=0  GOT rc=1   *** ARM FAILED ***
+
+===============================================================
+ARM 6 (RED) -- a GITLINK in the pushed tree. Instance 3. Must refuse.
+===============================================================
+ARM gitlink-refused              EXPECT rc=1  GOT rc=1   PASS
+
+===============================================================
+ARM 7 (RED) -- the SAME gitlink push WITH a bypass reason set. C1 has NO bypass.
+===============================================================
+ARM gitlink-bypass-refused       EXPECT rc=1  GOT rc=1   PASS
+
+===============================================================
+ARM 8 (RED) -- a NON-MERGE commit writing OUTSIDE the driver allowlist.
+===============================================================
+ARM outside-allowlist            EXPECT rc=1  GOT rc=1   PASS
+
+===============================================================
+ARM 9 (GREEN-BY-BYPASS) -- the same push WITH a reason. C2 is bypassable, and LOGGED.
+===============================================================
+ARM outside-allowlist-bypass     EXPECT rc=0  GOT rc=1   *** ARM FAILED ***
+
+===============================================================
+ARM 10 (RED) -- a bypass reason that is TOO SHORT is not a bypass.
+===============================================================
+ARM short-bypass-refused         EXPECT rc=1  GOT rc=0   *** ARM FAILED ***
+
+===============================================================
+ARM 11 (RED) -- an UNGRADED delta that LEAVES the STATE set (a *.sh under guards/).
+===============================================================
+ARM delta-leaves-state           EXPECT rc=1  GOT rc=1   PASS
+
+===============================================================
+ARM 12 (RED) -- a DELETION of a state file. Deletions take the full bar.
+===============================================================
+ARM deletion-refused             EXPECT rc=1  GOT rc=1   PASS
+
+===============================================================
+ARM 13 (GREEN) -- the pushed tree is ITSELF attested FULL. Fast path, no subset run.
+===============================================================
+ARM tree-itself-attested         EXPECT rc=0  GOT rc=1   *** ARM FAILED ***
+
+===============================================================
+SUMMARY
+===============================================================
+arms passed: 7   arms failed: 6

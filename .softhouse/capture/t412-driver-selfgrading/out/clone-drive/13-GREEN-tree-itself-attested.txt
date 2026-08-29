@@ -1,0 +1,11 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: pushing fd629954d42d2ea5787b4cac3bffff7a5e98be6f -> refs/heads/main   tree=086d5aa1698209e7661c769f46fcfe3a020da433
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 the pushed tree is ATTESTED FULL. /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.git/softhouse-driver-gate/attest.tsv says the bar was run on THIS tree.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+   0808be33..fd629954  main -> main
+
+ARM tree-itself-attested         EXPECT rc=0 GOT rc=0  marker [C3 the pushed tree is ATTESTED FULL] PASS

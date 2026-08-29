@@ -1,0 +1,76 @@
+
+===============================================================
+SETUP -- throwaway clone and bare remote under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8
+===============================================================
+installed in the clone (rc=0)
+base commit 0968bd044c235e836a29d1fa4c140e786bf5cfec  tree cfe4d04556a0fbc22f7e857a3523c7d8c1ae285b
+
+===============================================================
+ARM 1 (CONTROL) -- a NON-MAIN ref. The gate must STAND ASIDE.
+===============================================================
+ARM nonmain-stands-aside         EXPECT rc=0 GOT rc=0  marker [STANDS ASIDE for refs/heads/softhouse/T412-probe] PASS
+
+===============================================================
+ARM 2 (RED) -- state-only commit, EMPTY LEDGER. No graded ancestor => REFUSE.
+===============================================================
+ARM no-graded-ancestor           EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- NO GRADED ANCESTOR] PASS
+
+===============================================================
+ARM 3 (GREEN) -- same commit, with the BASE tree attested FULL. Cheap subset must PASS.
+===============================================================
+ARM state-only-cheap-pass        EXPECT rc=0 GOT rc=0  marker [C3 PASS -- cheap subset clean]    PASS
+
+===============================================================
+ARM 4 (RED) -- the RECORDED DEFECT: an UNDEFINED P-number in RESUME.md, a DIRECTIVE file.
+===============================================================
+ARM bad-citation-refused         EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- THE CHEAP SUBSET FAILED ON THE PUSHED TREE] PASS
+
+===============================================================
+ARM 5 (GREEN) -- repair the citation in place. The SAME gate must now allow the push.
+===============================================================
+ARM citation-repaired            EXPECT rc=0 GOT rc=0  marker [C3 PASS -- cheap subset clean]    PASS
+
+===============================================================
+ARM 6 (RED) -- a GITLINK in the pushed tree. Instance 3. Must refuse.
+===============================================================
+ARM gitlink-refused              EXPECT rc=1 GOT rc=1  marker [C1 REFUSED -- THE PUSHED TREE CONTAINS A GITLINK] PASS
+
+===============================================================
+ARM 7 (RED) -- the SAME gitlink push WITH a bypass reason set. C1 has NO bypass.
+===============================================================
+ARM gitlink-bypass-refused       EXPECT rc=1 GOT rc=1  marker [THERE IS NO BYPASS FOR C1]        PASS
+
+===============================================================
+ARM 8 (RED) -- a NON-MERGE commit writing OUTSIDE the driver allowlist.
+===============================================================
+ARM outside-allowlist            EXPECT rc=1 GOT rc=1  marker [C2 REFUSED -- a NON-MERGE commit] PASS
+
+===============================================================
+ARM 9 (GREEN-BY-BYPASS) -- the same push WITH a reason. C2 is bypassable, and LOGGED.
+===============================================================
+ARM outside-allowlist-bypass     EXPECT rc=0 GOT rc=0  marker [BYPASSED: C2 allowlist]           PASS
+
+===============================================================
+ARM 10 (RED) -- a bypass reason that is TOO SHORT is not a bypass.
+===============================================================
+ARM short-bypass-refused         EXPECT rc=1 GOT rc=1  marker [C2 REFUSED -- a NON-MERGE commit] PASS
+
+===============================================================
+ARM 11 (RED) -- an UNGRADED delta that LEAVES the STATE set (a *.sh under guards/).
+===============================================================
+ARM delta-leaves-state           EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED] PASS
+
+===============================================================
+ARM 12 (RED) -- a DELETION of a state file. Deletions take the full bar.
+===============================================================
+ARM deletion-refused             EXPECT rc=1 GOT rc=1  marker [C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED] PASS
+
+===============================================================
+ARM 13 (GREEN) -- the pushed tree is ITSELF attested FULL. Fast path, no subset run.
+===============================================================
+ARM tree-itself-attested         EXPECT rc=0 GOT rc=0  marker [C3 the pushed tree is ATTESTED FULL] PASS
+
+===============================================================
+SUMMARY
+===============================================================
+arms passed: 13   arms failed: 0

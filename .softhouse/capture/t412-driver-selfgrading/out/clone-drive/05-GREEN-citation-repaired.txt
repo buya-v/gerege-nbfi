@@ -1,0 +1,22 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t412-drive.Y870457cu8/repo/.softhouse/hooks/driver-push-gate.sh (sha256 9901ab5d02f9b42c)
+driver-push-gate: T412 driver push gate engaged. remote=scratch url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+driver-push-gate: pushing 0808be33f6cde21e69633511b01915ec75ace87d -> refs/heads/main   tree=b1abb7b46826aeace8965f82fb21808a361258b6
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 0968bd04  tree=cfe4d04556a0fbc22f7e857a3523c7d8c1ae285b
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree b1abb7b46826aeace8965f82fb21808a361258b6 (from '0808be33f6cde21e69633511b01915ec75ace87d')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.55RZtzwOtP
+cheap-subset:   materialised 9735 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13139 definition=102 consistent=675 bare=12195 misdirecting=79 undefined=31 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 110 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+cheap-subset: PASS -- 0 fatal citation findings in the DIRECTIVE zone of tree b1abb7b46826aeace8965f82fb21808a361258b6.
+driver-push-gate:   C3 PASS -- cheap subset clean; CHEAP attestation recorded for b1abb7b46826aeace8965f82fb21808a361258b6.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-drive.Y870457cu8/remote.git
+   f6a34793..0808be33  main -> main
+
+ARM citation-repaired            EXPECT rc=0 GOT rc=0  marker [C3 PASS -- cheap subset clean]    PASS
