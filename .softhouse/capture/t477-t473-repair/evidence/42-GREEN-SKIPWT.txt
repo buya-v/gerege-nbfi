@@ -1,0 +1,29 @@
+=== ARM SKIPWT  (run tag FSKIPWT) ================================================================
+source repository : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+clone             : /tmp/t477-work.zAhOxLeGA9/clone-FSKIPWT
+checked out       : abfe785c = abfe785cf1daf56358d76d92091590410d3fb963
+harness blob      : eeae56b76f0697a046c8fb16d6da22035ae977d0
+recompute framing : nul
+git status --porcelain lines      : 0
+git diff-index --name-only lines  : 0
+ls-files -v entries NOT in state H: 1
+PATH shim         : 0 file(s) in /tmp/t477-work.zAhOxLeGA9/bin-FSKIPWT
+PYTHONPATH        : []
+
+EXIT = 2
+probe line PRESENCE (grep -c 'probe = ') = 0     <-- PRESENCE, read FIRST
+VERDICT lines: 0
+shim fired    : 0 time(s)
+guard_harness_text_is_committed REFUSAL lines: 3
+    conformance: guard_harness_text_is_committed: 1 TRACKED PATH(S) CARRY AN INDEX
+    conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/conformance.sh ARE NOT THE
+    conformance: guard_harness_text_is_committed: THE HARNESS THAT IS RUNNING IS NOT THE
+the guard's own census lines: 7
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    conformance: that are there. The LOCAL-STATE CENSUS above names which levers are
+    conformance:   HARNESS-TEXT CENSUS: HEAD abfe785cf1daf56358d76d92091590410d3fb963; tracked paths whose materialised bytes
+    conformance:   RECOMPUTE: 10377 HEAD entries re-hashed from their bytes on disk;
+    conformance:   this harness .softhouse/conformance.sh: committed eeae56b76f0697a046c8fb16d6da22035ae977d0 / on disk 1ad7d323893e7fa3d90153b2306a6561dc93118a
+    conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:
+    conformance:    copy of that number is evidence on its face. RECOMPUTE THE RIGHT-HAND ONE
+full log kept at: /tmp/t477-work.zAhOxLeGA9/log-FSKIPWT.txt

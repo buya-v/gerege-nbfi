@@ -1,0 +1,38 @@
+repository under test : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+HEAD                  : f48af591eb145a2ef75655cd6006930fddd991fc
+
+--- 1. INDEX BITS: every tracked entry whose ls-files -v state is not H
+    entries not in state H: 0
+
+--- 2. ATTRIBUTE SOURCES, ALL FOUR
+    git-dir        : /Users/buv/gerege-nbfi/.git/worktrees/agent-a07469ad5da6af2c3
+    git-common-dir : /Users/buv/gerege-nbfi/.git
+    ABSENT : /Users/buv/gerege-nbfi/.git/worktrees/agent-a07469ad5da6af2c3/info/attributes
+    ABSENT : /Users/buv/gerege-nbfi/.git/info/attributes
+    core.attributesFile   : []  (empty = unset)
+    ABSENT : /Users/buv/.config/git/attributes
+    TRACKED .gitattributes files: 0
+
+--- 3. CONTENT FILTERS, AT EVERY CONFIG LEVEL
+    local  filter.* entries: 0
+    global filter.* entries: 0
+    system filter.* entries: 0
+    ALL levels             : 0
+    core.autocrlf          : []  (empty = unset)
+
+--- 4. WORKING TREE
+    porcelain lines: 2
+    ?? .softhouse/capture/t477-t473-repair/evidence/
+    ?? .softhouse/handoff/T477-handoff.md
+
+--- 5. THE FIXTURE TOKEN NEVER TOUCHED THIS REPOSITORY
+    tracked paths carrying the forged-marker token: 0
+    tracked paths named for the scratch root      : 0
+
+--- 6. THE LOCK AND THE PINS ARE UNTOUCHED
+    LOCK in HEAD : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    LOCK on disk : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    tasks.json changed vs merge-base with main: 0
+    RESUME.md changed vs merge-base with main: 0
+    program.json changed vs merge-base with main: 0
+    patterns.md changed vs merge-base with main: 0

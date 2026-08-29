@@ -1,0 +1,45 @@
+MEMBERS IN = 13 ; DISTINCT IMAGES OUT = 11
+FOLD IMAGES DERIVED: 11  [; ` ff ffi ffl fi fl k s ss st ]
+
+==============================================================================
+CORPUS BLOB = 7c54353236aa1b40161173d75eb4d7905f08a306
+  bytes     = 423556
+  newlines  = 6326
+  role      = an object that is NEITHER the committed harness NOR the harness on disk
+------------------------------------------------------------------------------
+SELECTOR CORPUS: 6327 lines in the file, 2310 of them NON-COMMENT and non-blank.
+LOCALS ASSIGNED FROM THE ROOT VARIABLE: 36 -- CONFORMANCE_REPO_ROOT, NEXUS_DIR, STORE_ROOT, attest, bodies, capfile, ccsrc, chk, conf, confblob, confdisk, env_script, floor, g, gd, h, head, here, index, lint, member_stat, member_text, mods, other, out, pop, records, rig, script, self_norm, self_stat, self_text, tool, vecdir, wit_stat, wit_text
+S0 TOUCH   :  35 sites,  28 of them FOLDABLE (path text carries a confirmed fold image),   7 not.
+S1 DIRECT  :  69 sites,  59 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S2 +ANCHOR : 114 sites, 104 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S3 +VARS   : 309 sites, 277 of them FOLDABLE (path text carries a confirmed fold image),  32 not.
+
+
+==============================================================================
+CORPUS BLOB = d1c45afc1c037135896bd52b4ee90c47c6843f8b
+  bytes     = 453957
+  newlines  = 6783
+  role      = an object that is NEITHER the committed harness NOR the harness on disk
+------------------------------------------------------------------------------
+SELECTOR CORPUS: 6784 lines in the file, 2555 of them NON-COMMENT and non-blank.
+LOCALS ASSIGNED FROM THE ROOT VARIABLE: 40 -- CONFORMANCE_REPO_ROOT, NEXUS_DIR, STORE_ROOT, attest, attrfile, bits, bodies, capfile, ccsrc, chk, conf, confblob, confdisk, env_script, filters, floor, g, gd, h, head, here, index, lint, member_stat, member_text, mods, other, out, pop, recomp, records, rig, script, self_norm, self_stat, self_text, tool, vecdir, wit_stat, wit_text
+S0 TOUCH   :  40 sites,  33 of them FOLDABLE (path text carries a confirmed fold image),   7 not.
+S1 DIRECT  :  74 sites,  64 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S2 +ANCHOR : 119 sites, 109 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S3 +VARS   : 331 sites, 298 of them FOLDABLE (path text carries a confirmed fold image),  33 not.
+
+
+==============================================================================
+CORPUS BLOB = eeae56b76f0697a046c8fb16d6da22035ae977d0
+  bytes     = 483751
+  newlines  = 7161
+  role      = an object that is NEITHER the committed harness NOR the harness on disk
+------------------------------------------------------------------------------
+SELECTOR CORPUS: 7162 lines in the file, 2717 of them NON-COMMENT and non-blank.
+LOCALS ASSIGNED FROM THE ROOT VARIABLE: 44 -- CONFORMANCE_REPO_ROOT, NEXUS_DIR, STORE_ROOT, attest, attrcfg, attrcommon, attrfile, attrtracked, bits, bodies, capfile, ccsrc, chaldisk, chk, conf, confblob, confdisk, env_script, filters, floor, g, gd, h, head, here, index, lint, member_stat, member_text, mods, other, out, pop, records, rig, s1now, script, self_norm, self_stat, self_text, tool, vecdir, wit_stat, wit_text
+S0 TOUCH   :  47 sites,  40 of them FOLDABLE (path text carries a confirmed fold image),   7 not.
+S1 DIRECT  :  81 sites,  71 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S2 +ANCHOR : 126 sites, 116 of them FOLDABLE (path text carries a confirmed fold image),  10 not.
+S3 +VARS   : 353 sites, 320 of them FOLDABLE (path text carries a confirmed fold image),  33 not.
+
+

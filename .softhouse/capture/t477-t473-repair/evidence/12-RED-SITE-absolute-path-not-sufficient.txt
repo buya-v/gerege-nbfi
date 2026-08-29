@@ -1,0 +1,44 @@
+=== ARM SITE ================================================================
+source repository : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+clone             : /tmp/t477-work.zAhOxLeGA9/clone-SITE
+checked out       : 11afb281 = 11afb28168c24366e1c308814616ced29c9a404f
+harness blob      : d1c45afc1c037135896bd52b4ee90c47c6843f8b
+mutation          : abs
+  invocation lines matching the recompute pattern, before=1 after=1
+  the line now reads:
+    5369:  recomp="$( cd "$REPO_ROOT" && /usr/bin/python3 -c "$recpy" "$selfrel" <"$headlist" 2>&1 )" || recrc=$?
+recompute framing : nl
+victim            : .softhouse/capture/t238-failopen/evidence/class-runs/a2-11-enumerate.txt
+  committed blob                 : c900ce84a3d8cf91dd56ce5f5960d43fcbf1823c
+  hash-object --no-filters       : 09fc75e9b7f5a40a2a0aec5e3b865ed042e29b75
+  hash-object (no flag)          : c900ce84a3d8cf91dd56ce5f5960d43fcbf1823c
+  forged marker present on disk  : 1
+git status --porcelain lines      : 1
+     M .softhouse/conformance.sh
+git diff-index --name-only lines  : 1
+ls-files -v entries NOT in state H: 0
+PATH shim         : 0 file(s) in /tmp/t477-work.zAhOxLeGA9/bin-SITE
+PYTHONPATH        : [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3/.softhouse/capture/t477-t473-repair/instruments/hijack]
+
+EXIT = 0
+probe line PRESENCE (grep -c 'probe = ') = 1     <-- PRESENCE, read FIRST
+probe value = up 
+VERDICT lines: 1
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+shim fired    : 1 time(s)
+    sitecustomize fired inside /usr/bin/python3: d1c45afc1c037135896bd52b4ee90c47c6843f8b d37cca569d787bc1dc3d68249f27e5c996cd402d
+guard_harness_text_is_committed REFUSAL lines: 0
+the guard's own census lines: 12
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    conformance:     LOCAL-STATE: content filter configured — filter.t477.clean /tmp/t477-work.zAhOxLeGA9/clean.sh
+    conformance:     LOCAL-STATE: content filter configured — filter.t477.smudge /tmp/t477-work.zAhOxLeGA9/smudge.sh
+    conformance:     LOCAL-STATE: a filter or a private attributes file is present. Every
+    conformance:     HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk d37cca569d787bc1dc3d68249f27e5c996cd402d)
+    conformance:     HARNESS-TEXT: this harness is edited but not committed — git agrees,
+    conformance:   HARNESS-TEXT CENSUS: HEAD 11afb28168c24366e1c308814616ced29c9a404f; tracked paths whose materialised bytes
+    conformance:   RECOMPUTE: 10368 HEAD entries re-hashed from their bytes on disk;
+    conformance:   this harness .softhouse/conformance.sh: committed d1c45afc1c037135896bd52b4ee90c47c6843f8b / on disk d37cca569d787bc1dc3d68249f27e5c996cd402d
+    conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:
+    conformance:    copy of that number is evidence on its face. RECOMPUTE THE RIGHT-HAND ONE
+            EVERY rate-variation expectation in the corpus is reached by calling changeInterestRate on an ALREADY-BUILT model — that is, mid-term rescheduling. NO vector exists for a product configured with a rate schedule FROM ORIGINATION, and the Path A seam cannot express one. A port that computes origination-time rate variation wrongly would pass this entire corpus. Whether the two paths must agree is a Tier-A design question; it is not closable from source and this harness does not try.
+full log kept at: /tmp/t477-work.zAhOxLeGA9/log-SITE.txt

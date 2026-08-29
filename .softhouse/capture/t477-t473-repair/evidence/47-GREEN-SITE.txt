@@ -1,0 +1,35 @@
+=== ARM SITE  (run tag FSITE) ================================================================
+source repository : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3
+clone             : /tmp/t477-work.zAhOxLeGA9/clone-FSITE
+checked out       : abfe785c = abfe785cf1daf56358d76d92091590410d3fb963
+harness blob      : eeae56b76f0697a046c8fb16d6da22035ae977d0
+recompute framing : nul
+victim            : .softhouse/capture/t238-failopen/evidence/class-runs/a2-11-enumerate.txt
+  committed blob                 : c900ce84a3d8cf91dd56ce5f5960d43fcbf1823c
+  hash-object --no-filters       : 09fc75e9b7f5a40a2a0aec5e3b865ed042e29b75
+  hash-object (no flag)          : c900ce84a3d8cf91dd56ce5f5960d43fcbf1823c
+  forged marker present on disk  : 1
+git status --porcelain lines      : 0
+git diff-index --name-only lines  : 0
+ls-files -v entries NOT in state H: 0
+PATH shim         : 0 file(s) in /tmp/t477-work.zAhOxLeGA9/bin-FSITE
+PYTHONPATH        : [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a07469ad5da6af2c3/.softhouse/capture/t477-t473-repair/instruments/hijack]
+
+EXIT = 2
+probe line PRESENCE (grep -c 'probe = ') = 0     <-- PRESENCE, read FIRST
+VERDICT lines: 0
+shim fired    : 0 time(s)
+guard_harness_text_is_committed REFUSAL lines: 1
+    conformance: guard_harness_text_is_committed: THE BYTES ON DISK AT .softhouse/capture/t238-failopen/evidence/class-runs/a2-11-enumerate.txt ARE NOT THE
+the guard's own census lines: 10
+    conformance:   LOCAL-STATE CENSUS (uncommitted, in no diff, and it decides what git
+    conformance:     LOCAL-STATE: content filter configured — filter.t477.clean /tmp/t477-work.zAhOxLeGA9/clean.sh
+    conformance:     LOCAL-STATE: content filter configured — filter.t477.smudge /tmp/t477-work.zAhOxLeGA9/smudge.sh
+    conformance:     LOCAL-STATE: a filter or an attributes source is present. Every hash
+    conformance: that are there. The LOCAL-STATE CENSUS above names which levers are
+    conformance:   HARNESS-TEXT CENSUS: HEAD abfe785cf1daf56358d76d92091590410d3fb963; tracked paths whose materialised bytes
+    conformance:   RECOMPUTE: 10377 HEAD entries re-hashed from their bytes on disk;
+    conformance:   this harness .softhouse/conformance.sh: committed eeae56b76f0697a046c8fb16d6da22035ae977d0 / on disk eeae56b76f0697a046c8fb16d6da22035ae977d0
+    conformance:   (RECOMPUTE THE LEFT-HAND ID FROM THE COMMIT ALONE:
+    conformance:    copy of that number is evidence on its face. RECOMPUTE THE RIGHT-HAND ONE
+full log kept at: /tmp/t477-work.zAhOxLeGA9/log-FSITE.txt

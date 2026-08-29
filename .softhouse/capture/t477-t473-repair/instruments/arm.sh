@@ -73,7 +73,12 @@ echo "harness blob      : $(git -C "$C" rev-parse "HEAD:$CONF")"
 # ---- the optional mutation of the recompute`s invocation line ---------------------------
 MUT="${T477_MUT:-}"
 if [ -n "$MUT" ]; then
-  before=$(LC_ALL=C grep -c 'python3.*-c "\$recpy"' "$C/$CONF" || true)
+  # The pattern must match the invocation in EVERY form it can take -- bare `python3 -c`,
+  # `/usr/bin/python3 -c`, and `"$recpython" -c` -- or a mutation that did nothing would be
+  # reported with the same `before=1 after=1` as one that worked.
+  RECPAT='-c "\$recpy"'
+  before=$(LC_ALL=C grep -c -e "$RECPAT" "$C/$CONF" || true)
+  beforepy=$(LC_ALL=C grep -c "^  recpython=" "$C/$CONF" || true)
   case "$MUT" in
     abs)
       LC_ALL=C sed -i.bak 's|&& python3 -c "\$recpy"|\&\& /usr/bin/python3 -c "$recpy"|' \
@@ -91,9 +96,11 @@ if [ -n "$MUT" ]; then
   esac
   rm -f "$C/$CONF.bak"
   echo "mutation          : $MUT"
-  echo "  invocation lines matching the recompute pattern, before=$before after=$(LC_ALL=C grep -c 'python3.*-c "\$recpy"' "$C/$CONF" || true)"
-  echo "  the line now reads:"
-  LC_ALL=C grep -n 'c "\$recpy"' "$C/$CONF" | LC_ALL=C sed 's/^/    /'
+  echo "  invocation lines matching the recompute pattern, before=$before after=$(LC_ALL=C grep -c -e "$RECPAT" "$C/$CONF" || true)"
+  echo "  recpython assignment lines,                     before=$beforepy after=$(LC_ALL=C grep -c '^  recpython=' "$C/$CONF" || true)"
+  echo "  the lines now read:"
+  LC_ALL=C grep -n -e "$RECPAT" "$C/$CONF" | LC_ALL=C sed 's/^/    /'
+  LC_ALL=C grep -n '^  recpython=' "$C/$CONF" | LC_ALL=C sed 's/^/    /' || true
 fi
 
 # ---- the delimiter the harness under test expects ---------------------------------------
