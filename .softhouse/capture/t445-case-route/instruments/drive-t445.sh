@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+# T445 drive — index-versus-filesystem divergence in guard_guards_dir_registration.
+#
+# USAGE:  bash drive-t445.sh <workroot> <source-repo> <arm> [<arm> ...]
+#
+# EVERY path this instrument writes is derived from <workroot>, which is an ARGUMENT.
+# No name in this file is bound to a literal /tmp path, so it adds no row to
+# HOSTSTATE_PIN_TEMP_ASSIGN_LIST.
+#
+# Each arm: clone <source-repo> -> mutate + commit -> RE-CLONE (so a case collision
+# materialises exactly as a fresh checkout would) -> run the WHOLE BAR from a cwd outside
+# the repo -> record exit code, then probe PRESENCE, then probe value (P-84: "'exit 2 with
+# no probe line' is the guard working — read the ABSENCE, not the value"), then the census
+# line and the decisive refusal sentences.
+#
+# The MODE of the tree under test is DETECTED from the tree itself and is not passable in.
+set -u -o pipefail
+
+W="${1:?workroot}"; SRC="${2:?source repo}"; shift 2
+mkdir -p "$W"
+
+MARK='GUARDS-DIR-REGISTRATION: REACHED-BY'
+# The guards directory is spelled ONCE and every planted leaf is assembled from it at run
+# time, so no repo-rooted path that does not resolve is ever spelled whole in this file
+# (T316's dead-path frontier reads literals, not variables).
+GDR='.softhouse/guards'
+
+detect_mode() {
+  # Which of the decisive lines does the tree under test carry? Needles are ASSEMBLED here
+  # so that this file cannot satisfy a grep it is also the subject of.
+  local f="$1" n
+  n="$(printf '%s' '[ "$self_path" '; printf '%s' '!= "$self_norm" ]')"
+  if LC_ALL=C grep -qF -- "$n" "$f"; then printf 'roundtrip=yes '; else printf 'roundtrip=NO '; fi
+  n="$(printf '%s' 'git cat-file blob "$self_blob"')"
+  if LC_ALL=C grep -qF -- "$n" "$f"; then printf 'witness-blob=yes '; else printf 'witness-blob=NO '; fi
+  n="$(printf '%s' 'git cat-file blob "$member_blob"')"
+  if LC_ALL=C grep -qF -- "$n" "$f"; then printf 'member-blob=yes '; else printf 'member-blob=NO '; fi
+  n="$(printf '%s' 'guard_registration_decisive_lines')"
+  if LC_ALL=C grep -qF -- "$n" "$f"; then printf 'decisive-arm=yes\n'; else printf 'decisive-arm=NO\n'; fi
+}
+
+plant_Z() { :; }
+
+# ---- CASE: the WITNESS-side index/filesystem case divergence (T444 M-1). -------------
+# index holds W.txt (100644, a decoy that does NOT name the member) and w.txt (120000, a
+# symlink to the member). 'W' sorts before 'w', so the SYMLINK is written last and wins the
+# checkout collision. Every index-reading test grades W.txt; the closing grep opens the
+# filesystem and dereferences w.txt to the member itself.
+plant_CASE() {
+  local R="$1" D="$GDR/zz-t445k" B blob
+  mkdir -p "$R/$D"
+  B="zz-t445k-member.sh"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# planted by T445: %s\n' "$B"
+    printf '# %s %s/W.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/$B"
+  printf 'a decoy that names nothing\n' > "$R/$D/W.txt"
+  git -C "$R" add "$D/$B" "$D/W.txt" >/dev/null
+  blob="$(printf '%s' "$B" | git -C "$R" hash-object -w --stdin)"
+  git -C "$R" update-index --add --cacheinfo "120000,$blob,$D/w.txt"
+  git -C "$R" commit -q -m 'T445 arm CASE' >/dev/null
+}
+
+# ---- MCASE: the MEMBER-side index/filesystem case divergence (T445's own finding). ----
+# Two index entries whose DIRECTORIES differ only in case, same basename. The lowercase
+# directory sorts last and wins the checkout, so the honest member's text is what the
+# filesystem returns for BOTH paths — and the smuggled member's REACHED-BY row is read out
+# of a file that is not it.
+plant_MCASE() {
+  local R="$1" D1="$GDR/zz-t445m" D2="$GDR/ZZ-T445M" blob
+  mkdir -p "$R/$D1"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# honest planted checker x.sh, registered against its witness\n'
+    printf '# %s %s/wit.txt\n' "$MARK" "$D1"
+    printf '%s\n' 'exit 0'; } > "$R/$D1/x.sh"
+  printf 'this witness runs x.sh nightly\n' > "$R/$D1/wit.txt"
+  git -C "$R" add "$D1/x.sh" "$D1/wit.txt" >/dev/null
+  blob="$( { printf '%s\n' '#!/usr/bin/env bash'
+             printf '%s\n' '# SMUGGLED: an unwired checker with NO registration row of its own.'
+             printf '%s\n' 'exit 0'; } | git -C "$R" hash-object -w --stdin )"
+  git -C "$R" update-index --add --cacheinfo "100644,$blob,$D2/x.sh"
+  git -C "$R" commit -q -m 'T445 arm MCASE' >/dev/null
+}
+
+# ---- LEGA: an entirely honest, plain-ASCII registration. Must stay ACCEPTED. ----------
+plant_LEGA() {
+  local R="$1" D="$GDR/zz-t445a"
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# honest planted checker\n'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445a-member.sh"
+  printf 'the fire driver runs zz-t445a-member.sh\n' > "$R/$D/witness.txt"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm LEGA' >/dev/null
+}
+
+# ---- LEGC: honest witness whose CONTENT is not touched, but whose member is committed
+# with an UNCOMMITTED extra registration row on disk. Reads the member-blob change.
+plant_LEGDIRTY() {
+  local R="$1" D="$GDR/zz-t445d"
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# honest planted checker, row added but NOT COMMITTED\n'
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445d-member.sh"
+  printf 'the fire driver runs zz-t445d-member.sh\n' > "$R/$D/witness.txt"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm LEGDIRTY base' >/dev/null
+  # now add the row WITHOUT committing it
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# honest planted checker, row added but NOT COMMITTED\n'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445d-member.sh"
+}
+
+# ---- 2ROW: a member carrying TWO registration rows (T444 LOW-5). ---------------------
+plant_2ROW() {
+  local R="$1" D="$GDR/zz-t445r"
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '# %s %s/second.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445r-member.sh"
+  printf 'the fire driver runs zz-t445r-member.sh\n' > "$R/$D/witness.txt"
+  printf 'this second row is never graded\n' > "$R/$D/second.txt"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm 2ROW' >/dev/null
+}
+
+# ---- RVQ: delete the round-trip line. C-2's subject. ---------------------------------
+plant_RVQ() {
+  local R="$1" f="$R/.softhouse/conformance.sh" n
+  n="$(printf '%s' '[ "$self_path" '; printf '%s' '!= "$self_norm" ]')"
+  LC_ALL=C grep -vF -- "$n" "$f" > "$f.new" && mv "$f.new" "$f"
+  git -C "$R" commit -q -am 'T445 arm RVQ: delete the round-trip line' >/dev/null
+}
+
+# ---- RWB: revert the M-1 remedy (witness grep back to the filesystem). ----------------
+plant_RWB() {
+  local R="$1" f="$R/.softhouse/conformance.sh" n
+  n="$(printf '%s' 'git cat-file blob "$self_blob"')"
+  LC_ALL=C grep -vF -- "$n" "$f" > "$f.new" && mv "$f.new" "$f"
+  git -C "$R" commit -q -am 'T445 arm RWB: delete the witness tracked-blob read' >/dev/null
+}
+
+run_arm() {
+  local arm="$1" base="$W/$arm" seed="$base/seed" run="$base/run" log="$base/bar.log"
+  rm -rf "$base"; mkdir -p "$base"
+  git clone -q "$SRC" "$seed" 2>/dev/null || { echo "$arm: CLONE FAILED"; return 9; }
+  git -C "$seed" config user.email t445@example.invalid
+  git -C "$seed" config user.name  T445
+  "plant_$arm" "$seed" > "$base/plant.log" 2>&1
+  git clone -q "$seed" "$run" 2>"$base/clone2.log"
+  ( cd "$W" && bash "$run/.softhouse/conformance.sh" ) > "$log" 2>&1
+  local rc=$?
+  local present value census
+  present="$(LC_ALL=C grep -c 'probe = ' "$log" || true)"
+  if [ "$present" -ge 1 ]; then
+    value="$(LC_ALL=C sed -n 's/.*probe = //p' "$log" | LC_ALL=C sed -n 1p)"
+  else
+    value='(ABSENT — not "down")'
+  fi
+  census="$(LC_ALL=C sed -n 's/.*GUARDS-DIR-REGISTRATION: population/population/p' "$log" | LC_ALL=C sed -n 1p)"
+  {
+    printf '=== ARM %s ===\n' "$arm"
+    printf 'tree mode under test: '; detect_mode "$run/.softhouse/conformance.sh"
+    printf 'EXIT=%s\n' "$rc"
+    printf "grep -c 'probe = ' = %s\n" "$present"
+    printf 'probe = %s\n' "$value"
+    printf 'census: %s\n' "${census:-<no census line printed>}"
+    printf 'VERDICT: %s\n' "$(LC_ALL=C grep -m1 '^VERDICT' "$log" || echo '<none>')"
+    printf -- '--- decisive registration sentences ---\n'
+    LC_ALL=C grep -n 'REACHED-BY\|IS INVOKED BY NOTHING\|DID NOT ROUND-TRIP\|IS A SYMLINK\|NO INDEX ENTRY\|BYTE-IDENTICAL\|DOES NOT NAME\|MORE THAN ONE\|DECISIVE\|is DECLARED' "$log" \
+      | LC_ALL=C grep -v '^ *[0-9]*:conformance: THE FIX YOU CAN' | LC_ALL=C sed -n '1,40p' || true
+    printf -- '--- checkout collision warnings ---\n'
+    LC_ALL=C sed -n '1,20p' "$base/clone2.log" || true
+    printf -- '--- git status of the fresh clone ---\n'
+    ( cd "$run" && git status --porcelain ) | LC_ALL=C sed -n '1,20p'
+    printf '\n'
+  } > "$base/figures.txt" 2>&1
+  cat "$base/figures.txt"
+  return 0
+}
+
+for a in "$@"; do run_arm "$a"; done
