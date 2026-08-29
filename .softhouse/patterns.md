@@ -3983,18 +3983,20 @@ for the reason `P-96` gives. **Read the entry above together with this erratum.*
 *"THE REMEDY, and it is always small. One of these three, never a fourth"* (`:3895`), and so is
 `:3903`'s gloss that remedy 2 is *"what the frontier guard asks for in exchange for the row."*
 
-**WHY IT IS WRONG — four sanctioning sites in this tree, each opened rather than cited.**
+**WHY IT IS WRONG — five sanctioning sites in this tree, each opened rather than cited.**
 
 | # | Site | The bytes |
 |---|------|-----------|
 | 1 | `.softhouse/guards/check-dead-path-frontier.sh:59-61`, the block headed `WHAT A ROW DOES **NOT** MEAN` | *"A dead literal is a SMELL that must be inspected once, by a human, and then **either repaired or pinned with its reason**. This guard counts; it does not judge."* |
 | 2 | The **same refusal message**, in the very `added_n > 0` branch the remedy block lives in, unchanged since `T316` — before `T458`'s block, not after it | *"Either make the path resolve, or — if the reference is a deliberate fallback candidate — make the instrument REFUSE when no candidate resolves, **and record why in the pin**."* |
 | 3 | `.softhouse/guards/dead-path-frontier.pin:170-171` (the reason) and `:215-216` (the rows) | The two `FU-T299-2` ordered-fallback instruments — `guard_rvpa_floor_t290.py`, `red/drive-red-t290.py` — are **on the pin, with the reason written above them**, and were never repaired. |
-| 4 | `.softhouse/conformance.sh:2694-2698` | Four dead-by-design red-drive literals: *"the class T316's own header says must be 'inspected once, by a human, and then either repaired or pinned with its reason'. **They are pinned here, with the reason**, and the inspection above is the human one."* |
+| 4 | `.softhouse/guards/dead-path-frontier.pin:81-87` (the reason) and `:222-225` (the rows) | `T305`'s four red-drive literals — an `attest` dir under the deliberately fictional task id `t999-rig`, and two ledger vectors the drive writes — are **dead BY DESIGN**: *"A red drive plants files that MUST NOT exist in a clean tree; that is what makes it a red drive."* Pinned, with the reason. (`.softhouse/conformance.sh:2694-2698` carried these four for `T323` and says *"They are pinned here, with the reason"*; `T326` folded them into the pin and emptied that list, so the pin is now the live site.) |
+| 5 | `.softhouse/guards/dead-path-frontier.pin:121-125` — **the decisive one** | `T326` took a **NEW** row (`T306`'s injected acceptance vector), inspected it, and **pinned it**: *"SAME CLASS, byte for byte, as the four `T305` rows above. **Pinning it is the disposition `T316`'s own header prescribes**: 'a SMELL that must be inspected once, by a human, and then either repaired or pinned WITH ITS REASON.'"* — immediately followed by *"**REPAIR WAS CONSIDERED AND IS NOT AVAILABLE.**"* A NEW row, pinned with its reason, by a later worker, in the very file this guard grades against. That is exactly the case the entry above declared forbidden. |
 
 So the register was telling every future worker not to do a thing that the guard's header sanctions in
-terms, that the same refusal message offers on the same screen, and that **this tree has already done
-twice**. That is the species of defect already recorded inside the `removed_n` arm of
+terms, that the same refusal message offers on the same screen, and that **the pin this guard grades
+against has already done at least three times — once on a NEW row, after explicitly considering repair
+and rejecting it**. That is the species of defect already recorded inside the `removed_n` arm of
 `.softhouse/conformance.sh` — *"[T358: this line used to say 'the pin is outside T323's edit grant',
 which stopped being true when T326 regenerated the pin — a false statement inside a refusal
 message.]"* — and it is worse in one respect, because it also reached the register.
@@ -4028,7 +4030,8 @@ as required on *either* route — because site 2 above requires it for the pin r
   `THE ROUTE THAT IS NOT A REPAIR, AND IS STILL SANCTIONED` prints between the three remedies and
   `THE FORBIDDEN FOURTH`.
 * `.softhouse/conformance.sh` — one contiguous hunk of four `warn` lines replacing three, in
-  `guard_dead_path_frontier`'s `elif ! LC_ALL=C diff` arm.
+  `guard_dead_path_frontier`'s `elif ! LC_ALL=C diff` arm, whose `T458` line likewise read *"do not
+  grow the pin"*.
 * Driven RED (planted dead literal in a throwaway clone: the refusal prints the pin route **and** the
   pre-existing `record why in the pin` offer **and** `THE FORBIDDEN FOURTH`, and the foreclosing
   strings are gone) and GREEN (clean tree: frontier == pin, none of it prints), with the *absence*

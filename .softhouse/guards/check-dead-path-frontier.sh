@@ -235,11 +235,13 @@ if [ "$added_n" -gt 0 ]; then
   # guard asks. Immediately above the row listing, unchanged since T316, this same message
   # OFFERS the pin route ("record why in the pin"); the header block WHAT A ROW DOES **NOT**
   # MEAN sanctions it in terms ("either repaired or pinned with its reason");
-  # `dead-path-frontier.pin` EXERCISES it
-  # for the two FU-T299-2 ordered-fallback rows, with the reason recorded above them; and
-  # `conformance.sh` exercises it again for T305's four red-drive rows ("They are pinned here,
-  # with the reason"). So the shipped text forbade, inside one screen, a disposition the same
-  # screen offers and the tree takes twice. That is the species of defect this file already
+  # `dead-path-frontier.pin` EXERCISES it -- for the two FU-T299-2 ordered-fallback rows, for
+  # T305's four red-drive rows, and, decisively, for T306's injected-vector row, which T326
+  # added as a NEW row and pinned after recording "REPAIR WAS CONSIDERED AND IS NOT AVAILABLE"
+  # and "Pinning it is the disposition T316's own header prescribes". A NEW row, pinned with
+  # its reason, by a later worker, in this pin, today -- which is exactly the case the shipped
+  # text declared forbidden. So it forbade, inside one screen, a disposition the same screen
+  # offers and the pin it grades against has taken at least three times. That is the species of defect this file already
   # records at the `removed_n` arm in `conformance.sh` -- "[T358: ... a false statement inside
   # a refusal message.]" -- and T458 also carried the narrower half into the permanent register
   # as P-103's "forbidden fourth". Both sites are corrected; the register FORWARD, never in
@@ -280,10 +282,12 @@ if [ "$added_n" -gt 0 ]; then
   echo "conformance: !!   this file for WHAT A ROW DOES **NOT** MEAN -- 'a dead literal is a"
   echo "conformance: !!   SMELL that must be inspected once, by a human, and then either"
   echo "conformance: !!   repaired or pinned with its reason. This guard counts; it does not"
-  echo "conformance: !!   judge.' And this tree TAKES that route twice already: the pin holds"
-  echo "conformance: !!   the two FU-T299-2 ordered-fallback rows with the reason written"
-  echo "conformance: !!   above them, and conformance.sh holds T305's four red-drive rows on"
-  echo "conformance: !!   the same terms -- 'They are pinned here, with the reason.'"
+  echo "conformance: !!   judge.' And THE PIN ITSELF TAKES THAT ROUTE, repeatedly -- open it"
+  echo "conformance: !!   and read the reasons: the two FU-T299-2 ordered-fallback rows; the"
+  echo "conformance: !!   four T305 red-drive rows that MUST NOT exist in a clean tree; and"
+  echo "conformance: !!   T306's injected-vector row, which T326 ADDED AS A NEW ROW and pinned"
+  echo "conformance: !!   with 'REPAIR WAS CONSIDERED AND IS NOT AVAILABLE ... Pinning it is"
+  echo "conformance: !!   the disposition T316's own header prescribes.'"
   echo "conformance: !!   It is the EXCEPTION, not the default -- six of six workers in fire"
   echo "conformance: !!   20260829-080002 repaired, and not one of them needed it."
   echo "conformance: !! ----------------------------------------------------------------"
