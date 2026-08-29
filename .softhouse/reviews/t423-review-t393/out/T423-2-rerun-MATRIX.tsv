@@ -1,0 +1,7 @@
+case	ref	sec10	runall_rc	verdict	sec4_named	armA_pop	expected	result
+t423-f4a-control-mutate-forkobs	BEFORE	1	1	FAIL	1	403	1	as expected
+t423-f4a-control-mutate-forkobs	AFTER	1	1	FAIL	1	403	1	as expected
+t423-f4b-move-fork-constant	BEFORE	0	0	PASS	1	1035	0	as expected
+t423-f4b-move-fork-constant	AFTER	2	1	FAIL	1	1035	2	as expected
+t423-residual-postfork-laundered	BEFORE	0	0	PASS	0	403	0	as expected
+t423-residual-postfork-laundered	AFTER	0	0	PASS	0	403	0	as expected
