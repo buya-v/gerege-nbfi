@@ -1,0 +1,21 @@
+
+=== ARM SYMFORGE  (base 02fb1af4)
+    colliding entry is 120000, target-string blob 16bc259fef1b48eeb05cf1d9400a6f665c6e9316
+    committed HEAD:harness   = 7c54353236aa1b40161173d75eb4d7905f08a306
+    what the path IS on disk : conformance-payload.sh
+    is it a symlink?         : YES
+    git hash-object -- path  = ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    absolving row reachable through the link: 1
+    git status --porcelain:
+       T .softhouse/conformance.sh
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance: it claims to be about. REFUSED.
+    ! conformance: guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    conformance:   HARNESS-TEXT CENSUS: HEAD 1604eea2bb5ab97343d2da2ffeca205607fad11d; tracked paths whose materialised bytes
+    conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c

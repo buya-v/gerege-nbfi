@@ -1,0 +1,26 @@
+
+=== ARM RWB3-MUT-02fb1af4  (base 02fb1af4)
+1
+    committed blob of .softhouse/guards/W.txt = 1d644900597d3a6ccaf938e8822889229d04d25e
+    materialised at that path = 8e6ad58f11e2b1d498359447dbad9d44ed846422
+    what is on disk there: #!/usr/bin/env bash # T459 fixture member. # self-naming hea
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = <none>
+    harness   = guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance: it claims to be about. REFUSED.
+    ! conformance: guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance: the same commit. REFUSED.
+    --- decisive-lines watch:
+    conformance:   no tracked disposability attestation — nothing authorises an irreversible
+    conformance:   accepting capture in this tree.
+    conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS GONE —
+    conformance:   the WITNESS naming test USES the tracked blob as its HAYSTACK [T454, arm RWB3]
+    conformance: It is absent from the executable text of /tmp/t459/arms/RWB3-MUT-02fb1af4-02fb1af4/graded/.softhouse/conformance.sh. Every refusal in the
+    conformance: guards-dir registration direction was driven RED before it was written,
+    conformance: and at least one of them — the witness round-trip equality — was proved
+    conformance: by an 8-way matrix to be the ONLY line that closes the C-quoted witness
+    conformance: forgery [T444]. Removing one of these lines reopens a hole that this
+    --- reached-by verdict lines:

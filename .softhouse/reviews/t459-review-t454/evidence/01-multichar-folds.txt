@@ -1,0 +1,10 @@
+U+00DF SHARP S            -> ss                      files=1 zss.txt reads=BBB -> COLLIDES
+U+FB00 LIGATURE FF        -> ff                      files=1 zff.txt reads=BBB -> COLLIDES
+U+FB01 LIGATURE FI        -> fi                      files=1 zfi.txt reads=BBB -> COLLIDES
+U+FB02 LIGATURE FL        -> fl                      files=1 zfl.txt reads=BBB -> COLLIDES
+U+FB03 LIGATURE FFI       -> ffi                     files=1 zffi.txt reads=BBB -> COLLIDES
+U+FB05 LIGATURE LONG S T  -> st                      files=1 zst.txt reads=BBB -> COLLIDES
+U+FB06 LIGATURE ST        -> st                      files=1 zst.txt reads=BBB -> COLLIDES
+U+0149 N PRECEDED BY APOS -> 'n                      files=2 z'n.txt reads=AAA -> distinct
+U+01F0 j-caron            -> j+comb                  files=2 zj.txt reads=AAA -> distinct
+U+FDFA ARABIC SALLALLAHOU -> long                    files=2 zsallallahou.txt reads=AAA -> distinct

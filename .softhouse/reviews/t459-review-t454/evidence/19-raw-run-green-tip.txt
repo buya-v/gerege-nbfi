@@ -1,0 +1,215 @@
+
+=== ARM Z  (base 02fb1af4)
+    clone-stderr: Note: switching to 'b80442628b17f3a7e649537c2b6e064d131abda0'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = 7c54353236aa1b40161173d75eb4d7905f08a306
+    git status --porcelain of the graded clone:
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+
+=== ARM CTL  (base 02fb1af4)
+    clone-stderr: Note: switching to 'c04770f04fbec425f632d945f9031623475bd40e'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = 7c54353236aa1b40161173d75eb4d7905f08a306
+    git status --porcelain of the graded clone:
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+
+=== ARM LONGS  (base 02fb1af4)
+    planted colliding entry, forged blob ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    clone-stderr: Note: switching to '6511649b3021d41fbafc8612e13daf62c6c860ab'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    clone-stderr: warning: the following paths have collided (e.g. case-sensitive paths
+    clone-stderr: on a case-insensitive filesystem) and only one from the same
+    clone-stderr: colliding group is in the working tree:
+    clone-stderr: 
+    clone-stderr:   '.softhouse/conformance.sh'
+    clone-stderr:   '.softhouse/conformance.ſh'
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    git status --porcelain of the graded clone:
+       M .softhouse/conformance.sh
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance: it claims to be about. REFUSED.
+    ! conformance: guard_harness_text_is_committed FAILED: 1 substituted path(s).
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+
+=== ARM LONGSTRIP1  (base 02fb1af4)
+    planted colliding entry, forged blob fd933dd9f5e3ca85f7a6ab5d5f3db350d5a7dc0d
+    clone-stderr: Note: switching to 'de480cdc16f2705b8ea954215ad62b74837270ca'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    clone-stderr: warning: the following paths have collided (e.g. case-sensitive paths
+    clone-stderr: on a case-insensitive filesystem) and only one from the same
+    clone-stderr: colliding group is in the working tree:
+    clone-stderr: 
+    clone-stderr:   '.softhouse/conformance.sh'
+    clone-stderr:   '.softhouse/conformance.ſh'
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = fd933dd9f5e3ca85f7a6ab5d5f3db350d5a7dc0d
+    git status --porcelain of the graded clone:
+       M .softhouse/conformance.sh
+    EXIT      = 2
+    probe cnt = 0   (PRESENCE read before value)
+    probe val = -
+    VERDICT   = <none>
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    ! conformance: guard_cost_census FAILED: 0 ceiling breach(es),
+
+=== ARM LONGSTRIP  (base 02fb1af4)
+    planted colliding entry, forged blob c5c4372f324fb0413850835c1a73b5cf0fecabb4
+    clone-stderr: Note: switching to 'cf09298a5eadfb23fd0d9b6a31e576d325c0164c'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    clone-stderr: warning: the following paths have collided (e.g. case-sensitive paths
+    clone-stderr: on a case-insensitive filesystem) and only one from the same
+    clone-stderr: colliding group is in the working tree:
+    clone-stderr: 
+    clone-stderr:   '.softhouse/conformance.sh'
+    clone-stderr:   '.softhouse/conformance.ſh'
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = c5c4372f324fb0413850835c1a73b5cf0fecabb4
+    git status --porcelain of the graded clone:
+       M .softhouse/conformance.sh
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+
+=== ARM LONGNOP  (base 02fb1af4)
+    planted colliding entry, forged blob 8086f21e54502955dc83707c4feed41382233474
+    clone-stderr: Note: switching to 'f4cbf7be7f772f3bccb4a625cf115f48dfac5718'.
+    clone-stderr: 
+    clone-stderr: You are in 'detached HEAD' state. You can look around, make experimental
+    clone-stderr: changes and commit them, and you can discard any commits you make in this
+    clone-stderr: state without impacting any branches by switching back to a branch.
+    clone-stderr: 
+    clone-stderr: If you want to create a new branch to retain commits you create, you may
+    clone-stderr: do so (now or later) by using -c with the switch command. Example:
+    clone-stderr: 
+    clone-stderr:   git switch -c <new-branch-name>
+    clone-stderr: 
+    clone-stderr: Or undo this operation with:
+    clone-stderr: 
+    clone-stderr:   git switch -
+    clone-stderr: 
+    clone-stderr: Turn off this advice by setting config variable advice.detachedHead to false
+    clone-stderr: 
+    clone-stderr: warning: the following paths have collided (e.g. case-sensitive paths
+    clone-stderr: on a case-insensitive filesystem) and only one from the same
+    clone-stderr: colliding group is in the working tree:
+    clone-stderr: 
+    clone-stderr:   '.softhouse/conformance.sh'
+    clone-stderr:   '.softhouse/conformance.ſh'
+    committed HEAD:.softhouse/conformance.sh = 7c54353236aa1b40161173d75eb4d7905f08a306
+    materialised at path = 8086f21e54502955dc83707c4feed41382233474
+    git status --porcelain of the graded clone:
+       M .softhouse/conformance.sh
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)

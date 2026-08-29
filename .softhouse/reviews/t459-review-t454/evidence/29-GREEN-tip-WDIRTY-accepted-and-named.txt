@@ -1,0 +1,18 @@
+
+=== ARM WDIRTY  (base 02fb1af4)
+    git status --porcelain:
+       M .softhouse/conformance.sh
+    committed HEAD:harness = 7c54353236aa1b40161173d75eb4d7905f08a306
+    on disk                = 0edbbf6afe55ac60ea2f61b1466637e950608709
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk 0edbbf6afe55ac60ea2f61b1466637e950608709)
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+    --- what the guard printed about the edit:
+    conformance:     HARNESS-TEXT: uncommitted edit — .softhouse/conformance.sh (on disk 0edbbf6afe55ac60ea2f61b1466637e950608709)
+    conformance:   HARNESS-TEXT CENSUS: HEAD 02fb1af48db50bf3adb1d10d3b14a967dec33a52; tracked paths whose materialised bytes

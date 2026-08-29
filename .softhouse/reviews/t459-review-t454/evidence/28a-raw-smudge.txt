@@ -1,0 +1,26 @@
+
+=== ARM SMUDGE  (base 02fb1af4)
+    committed HEAD:harness       = 7c54353236aa1b40161173d75eb4d7905f08a306
+    on disk, RAW (--no-filters)  = ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    on disk, as git sees it      = 7c54353236aa1b40161173d75eb4d7905f08a306
+    absolving row present on disk: 1
+    git status --porcelain:
+    git diff-index --name-only HEAD:
+    committed footprint of the attack (git show HEAD --stat, filtered):
+      6d729cc5 T459 SMUDGE fixture: an unregistered checker
+       .softhouse/guards/zz-t459-unreg.sh | 3 +++
+       .softhouse/guards/zz-t459-wit.txt  | 1 +
+       2 files changed, 4 insertions(+)
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+    conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk 7c54353236aa1b40161173d75eb4d7905f08a306
+    conformance:   HARNESS-TEXT CENSUS: HEAD 6d729cc50fedf1b07932923f97e971f329fdc3ad; tracked paths whose materialised bytes
+    conformance:   differ from HEAD: 0 — SUBSTITUTED by another index entry's blob
+    conformance:   0, uncommitted edits 0, deleted 0.

@@ -1,0 +1,10 @@
+CALIB-POS  U+017F LONG S vs ascii s            files=1  zs.txt reads=BBB  -> COLLIDES
+CALIB-NEG  ascii z vs ascii y                  files=2  zz.txt reads=AAA  -> distinct
+U+212A KELVIN vs ascii k                       files=1  zk.txt reads=BBB  -> COLLIDES
+U+212A appended where there is no k            files=2  zs.txt reads=AAA  -> distinct
+ASCII uppercase S vs s                         files=1  zs.txt reads=BBB  -> COLLIDES
+U+037E GREEK QUESTION MARK vs ascii ;          files=1  z;.txt reads=BBB  -> COLLIDES
+U+1FEF GREEK VARIA vs ascii backtick           files=1  z`.txt reads=BBB  -> COLLIDES
+U+0131 DOTLESS I vs ascii i                    files=2  zi.txt reads=AAA  -> distinct
+U+00DF SHARP S vs ss                           files=1  zss.txt reads=BBB  -> COLLIDES
+NFD e-acute vs NFC e-acute                     files=1  zé.txt reads=BBB  -> COLLIDES

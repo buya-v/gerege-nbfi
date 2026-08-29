@@ -1,0 +1,14 @@
+T459 arm LONGNOP, base 02fb1af4
+host: macOS 26.5.1 (25F80), APFS case- and fold-INSENSITIVE, git 2.50.1 (Apple Git-155),
+      GNU bash 3.2.57(1); core.ignorecase=true core.precomposeunicode=true
+cwd for the run: a scratch directory OUTSIDE every repository involved
+---------------------------------------------------------------------------
+probe line COUNT (read BEFORE its value, P-84) : 1
+probe value                                    : up
+VERDICT line                                   : VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+guards-dir census                              : population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+--- every REFUSED / FAILED line in the log --------------------------------
+--- the HARNESS-TEXT census, verbatim -------------------------------------
+--- guard-cost census ------------------------------------------------------
+213:conformance:   GUARD-COST CENSUS: 16 guards timed, 73s total wall,
+237:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.

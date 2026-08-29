@@ -1,0 +1,21 @@
+
+=== ARM RWB3-MUT-cbc8733c  (base cbc8733c)
+1
+    committed blob of .softhouse/guards/W.txt = 1d644900597d3a6ccaf938e8822889229d04d25e
+    materialised at that path = 8e6ad58f11e2b1d498359447dbad9d44ed846422
+    what is on disk there: #!/usr/bin/env bash # T459 fixture member. # self-naming hea
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+    --- decisive-lines watch:
+    conformance:   registration decisive lines: 7 present, 2 evaluated on an input
+    --- reached-by verdict lines:
+    conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+    conformance:     REACHED-BY .softhouse/guards/zz-t459-member.sh — declared in its own header, reached by
+    conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0

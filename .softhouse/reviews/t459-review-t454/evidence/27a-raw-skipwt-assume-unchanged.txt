@@ -1,0 +1,21 @@
+
+=== ARM SKIPWT-assume-unchanged  (base 02fb1af4)
+    BEFORE: git status --porcelain:
+    committed HEAD:harness = 7c54353236aa1b40161173d75eb4d7905f08a306
+    on disk (--no-filters)  = ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    AFTER : git status --porcelain:
+    AFTER : git diff-index --name-only HEAD:
+    EXIT      = 0
+    probe cnt = 1   (PRESENCE read before value)
+    probe val = up
+    VERDICT   = VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compare
+    census    = population=7 invoked=3 declared=3 reached-by=1 invoked-by-nothing=0 symlink-members=0
+    harness   = <none>
+    ! conformance:   than one, or to no, index entry is REFUSED rather than silently skipped.)
+    !                                      — pre-T165 this run would have REFUSED here instead of grading
+    !     kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+    --- the guard's own two object ids, as printed:
+    conformance:   this harness .softhouse/conformance.sh: committed 7c54353236aa1b40161173d75eb4d7905f08a306 / on disk ddb88d5a16e0d4f4fbd7cb773bfbf1098c44a39c
+    conformance:   HARNESS-TEXT CENSUS: HEAD 47c4d71f4c68d4da4c05da002e8494301e122d92; tracked paths whose materialised bytes
+    conformance:   differ from HEAD: 0 — SUBSTITUTED by another index entry's blob
+    conformance:   0, uncommitted edits 0, deleted 0.

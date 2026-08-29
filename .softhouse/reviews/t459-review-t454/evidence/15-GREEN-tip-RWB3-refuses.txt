@@ -1,0 +1,19 @@
+T459 arm RWB3-tip, base 02fb1af4
+host: macOS 26.5.1 (25F80), APFS case- and fold-INSENSITIVE, git 2.50.1 (Apple Git-155),
+      GNU bash 3.2.57(1); core.ignorecase=true core.precomposeunicode=true
+cwd for the run: a scratch directory OUTSIDE every repository involved
+---------------------------------------------------------------------------
+probe line COUNT (read BEFORE its value, P-84) : 0
+probe value                                    : -
+VERDICT line                                   : <absent>
+guards-dir census                              : 
+--- every REFUSED / FAILED line in the log --------------------------------
+33:conformance: guard_harness_text_is_committed FAILED: 1 substituted path(s).
+176:conformance: guard_registration_decisive_lines: THE DECISIVE LINE IS GONE —
+186:conformance: guard_registration_decisive_lines FAILED: 1 of 10 decisive
+--- the HARNESS-TEXT census, verbatim -------------------------------------
+25:conformance:   HARNESS-TEXT CENSUS: HEAD 60969322cb465dad7c7cec7ec0480b2193b42f53; tracked paths whose materialised bytes
+28:conformance:   this harness .softhouse/conformance.sh: committed 756126b20b523341c1c4181e7b4413d1d7f251f8 / on disk 756126b20b523341c1c4181e7b4413d1d7f251f8
+--- guard-cost census ------------------------------------------------------
+210:conformance:   GUARD-COST CENSUS: 16 guards timed, 73s total wall,
+234:conformance:   guard-cost: PASS — every guard timed, every ceiling row used, none breached.

@@ -1,0 +1,74 @@
+T459 WORKTREE-READ CENSUS over /tmp/t459-tip-conf.sh
+variables bound to a $REPO_ROOT path: 15  (CONFORMANCE_REPO_ROOT, NEXUS_DIR, STORE_ROOT, capfile, ccsrc, chk, conf, env_script, g, gd, lint, rig, script, tool, vecdir)
+executable sites naming $REPO_ROOT directly and touching the filesystem : 39
+executable sites reaching it through one of those variables             : 28
+TOTAL executable filesystem-touching sites at a $REPO_ROOT path         : 67
+of those, on a path containing a character THIS HOST folds              : 61
+
+    731  FOLDABLE  local env_script="$REPO_ROOT/.softhouse/bin/go-env.sh"
+    732  FOLDABLE  if [ -f "$env_script" ]; then
+    838  FOLDABLE  done < <(find "$STORE_ROOT" -name '*.json' -type f | sort)
+    915  FOLDABLE  done < <(find "$NEXUS_DIR" -name '*.go' -type f | sort)
+    918  FOLDABLE  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+    925  FOLDABLE  say "conformance: no-float guard — inspected $pkgs Go packages / $seen .go files under $NEXUS_DIR (recursive, whole module)"
+    959  FOLDABLE  seen="$(find "$NEXUS_DIR" -name '*.go' -type f | LC_ALL=C grep -ac '' || true)"
+    973  FOLDABLE  say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole module; contract.go exempt, gate G-3)"
+   1087  FOLDABLE  out="$(python3 "$script" --selftest 2>&1)"; rc=$?
+   1120  FOLDABLE  out="$(python3 "$script" "$REPO_ROOT" 2>&1)"; rc=$?
+   1251  FOLDABLE  bodies="$(git -C "$REPO_ROOT" ls-files -z -- .softhouse/capture 2>/dev/null \
+   1254  FOLDABLE  records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/dev/null \
+   1284  FOLDABLE  floor="$(git -C "$REPO_ROOT" ls-files -z -- '*.java' 2>/dev/null \
+   1357  plain     here="$(cd "$REPO_ROOT" 2>/dev/null && pwd -P)" || here=""
+   1432  FOLDABLE  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+   1484  FOLDABLE  local ccsrc="$REPO_ROOT/.softhouse/guards/ledgerguard/main.go" cc ccsize
+   1485  FOLDABLE  cc="$(LC_ALL=C sed -n '/^const cannotCatch = `/,/`$/p' "$ccsrc" | LC_ALL=C grep -ac '')"
+   1655  FOLDABLE  ( cd "$REPO_ROOT" && FAILOPEN_LINT_JSON="$json" python3 "$lint" ) >"$out" 2>&1
+   1708  FOLDABLE  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at $p"
+   1856  FOLDABLE  if ! ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" --selftest ) >"$out" 2>&1; then
+   1863  FOLDABLE  ( cd "$REPO_ROOT" && /usr/bin/python3 "$chk" ) >"$out" 2>&1
+   2131  FOLDABLE  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/null
+   2158  FOLDABLE  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -n -E "$as" -- "${corpus[@]}" ) >"$raw" 2>/dev/null
+   2225  FOLDABLE  say "conformance:   read from git grep over tracked *.sh/*.py under $REPO_ROOT; sites that assign a"
+   2331  FOLDABLE  LC_ALL=C grep -q 'T305-ACCEPTING-SIDE-GAP' "$capfile" && marker=1
+   2361  FOLDABLE  attest="$(cd "$REPO_ROOT" && git ls-files -- '.softhouse/capture/*/attest/*.disposable' 2>/dev/null || true)"
+   2580  FOLDABLE  local g="$REPO_ROOT/.softhouse/guards/check-capture-namespace.sh"
+   2589  plain     here="$(cd "$REPO_ROOT" 2>/dev/null && pwd -P)" || here=""
+   2604  FOLDABLE  ( cd "$REPO_ROOT" && bash "$g" ) >"$tf" 2>&1
+   2795  FOLDABLE  local g="$REPO_ROOT/.softhouse/guards/check-dead-path-frontier.sh"
+   2806  FOLDABLE  bash "$g" >"$d/out" 2>&1
+   2992  FOLDABLE  /usr/bin/python3 "$rig" --repo "$REPO_ROOT" --tool "$tool" --selftest >"$tf" 2>&1
+   3222  FOLDABLE  local conf="$REPO_ROOT/.softhouse/conformance.sh"
+   3266  FOLDABLE  pop="$( cd "$REPO_ROOT" 2>/dev/null && git ls-files -- \
+   3318  FOLDABLE  code="$(LC_ALL=C grep -v '^[[:space:]]*#' "$conf")"
+   3587  FOLDABLE  member_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+   3689  plain     member_text="$( cd "$REPO_ROOT" 2>/dev/null && \
+   3801  FOLDABLE  self_norm="$( cd "$REPO_ROOT" 2>/dev/null && \
+   4000  FOLDABLE  self_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+   4006  FOLDABLE  self_text="$( cd "$REPO_ROOT" 2>/dev/null && \
+   4296  FOLDABLE  wit_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
+   4314  plain     wit_text="$( cd "$REPO_ROOT" 2>/dev/null && \
+   4393  FOLDABLE  say "conformance:   and '*.go' files at ANY DEPTH under $gdrel, from \$REPO_ROOT. NOT closed over"
+   5002  FOLDABLE  head="$( cd "$REPO_ROOT" 2>/dev/null && git rev-parse --verify HEAD 2>/dev/null )" || head=""
+   5013  plain     index="$( cd "$REPO_ROOT" 2>/dev/null && \
+   5023  plain     confblob="$( cd "$REPO_ROOT" 2>/dev/null && \
+   5025  FOLDABLE  confdisk="$( cd "$REPO_ROOT" 2>/dev/null && \
+   5049  FOLDABLE  mods="$( cd "$REPO_ROOT" 2>/dev/null && \
+   5066  FOLDABLE  h="$( cd "$REPO_ROOT" 2>/dev/null && git hash-object -- "$p" 2>/dev/null )" || h=""
+   5620  FOLDABLE  if ! ( cd "$NEXUS_DIR" && go build -o "$out" "$CMD_PKG" ) >&2; then
+   5794  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/perturbed/"
+   5809  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/transcription/"
+   5817  FOLDABLE  cp "$STORE_ROOT/PIN.json" "$STORE_ROOT/capabilities.json" "$tmp/empty/"
+   5854  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/floaty/"
+   5870  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/overscale/"
+   5884  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/ratefactor/"
+   5897  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/corroboration/"
+   5910  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/structural/"
+   5926  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/unrecorded/"
+   5952  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/parity-money/"
+   5969  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/parity-date/"
+   5985  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/populated-unrecorded/"
+   6002  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/withdrawn-kill/"
+   6105  FOLDABLE  cp -R "$STORE_ROOT/." "$tmp/unrecorded-invariant/"
+   6185  FOLDABLE  local other="$tmp/other-checkout" script="$REPO_ROOT/.softhouse/conformance.sh"
+   6210  FOLDABLE  out="$(CONFORMANCE_REPO_ROOT="$other" bash "$script" --self-test 2>&1)"; rc=$?
+   6219  FOLDABLE  out="$(CONFORMANCE_REPO_ROOT="$REPO_ROOT" bash "$script" --self-test 2>&1)"; rc=$?

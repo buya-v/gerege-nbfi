@@ -1,0 +1,9 @@
+files in the directory      : 1
+what "fire-program.sh" reads back : THE FORGED FIRE DRIVER
+RESULT: COLLIDES. U+FB01 folds onto "fi" on this volume and its UTF-8 leading byte 0xEF
+        sorts after ASCII "f" = 0x66, so the forged entry WINS a checkout.
+
+WHY IT MATTERS: .softhouse/bin/fire-program.sh is (a) a DECLARED WITNESS in the
+DECLARATION TABLE and (b) the file FU-T454-1 proposes to host the external
+committed-vs-materialised verifier. T454 counted 4 colliders over all printable ASCII and
+this character is not among them, because its ASCII image is TWO characters.

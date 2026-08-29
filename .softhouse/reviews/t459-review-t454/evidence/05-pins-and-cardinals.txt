@@ -1,0 +1,35 @@
+==============================================================================
+A. THE LIVE PIN patterns.md:3426 -> conformance.sh:3271
+==============================================================================
+patterns.md:3426 (main) :    clean tree (`.softhouse/conformance.sh:3271`). This is the founding instance of the *vacuous-pass*
+patterns.md:3426 (tip)  :    clean tree (`.softhouse/conformance.sh:3271`). This is the founding instance of the *vacuous-pass*
+conformance.sh:3271 main:     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+conformance.sh:3271 tip :     warn "conformance: guard_guards_dir_registration: the population is EMPTY. That is a SELECTOR"
+RESULT: 3271 BYTE-IDENTICAL on both trees
+RESULT: patterns.md UNTOUCHED by T454 (it is outside T454's grant)
+
+==============================================================================
+B. THE DERIVED GUARD COUNT -- 16 is a COUNT, not a typed number
+==============================================================================
+timed_guard call sites on main : 15
+timed_guard call sites on tip  : 16
+the say line that prints it    :   say "conformance:   GUARD-COST CENSUS: $GUARD_COST_TIMED guards timed, ${GUARD_COST_TOTAL}s total wall,"
+
+the hand-typed cardinal T454 says it DELETED, on main:
+4659:    warn "conformance: cheap run — this function calls fifteen guards. An empty census passes"
+the same search on the tip (expect: absent from warn text, present only as a comment):
+4837:    # THE CARDINAL THAT USED TO SIT IN THAT SENTENCE ("fifteen guards") IS GONE, AND ITS
+5941:  # --- The T56 additions. Finding T9-F5: before these, ALL FIFTEEN proofs above
+
+==============================================================================
+C. C-T459-4 -- a hand-typed cardinal that SURVIVED, in refusal text
+==============================================================================
+4384:    warn "conformance: population was found on a non-comment line of this file, yet three of them"
+4309:    warn "conformance: population was found on a non-comment line of this file, yet three of them"
+(the quantity it narrates is derived and printed on every run as invoked=N)
+
+==============================================================================
+D. is guard_harness_text_is_committed pinned by anything?
+==============================================================================
+occurrences of 'harness_text' inside guard_registration_decisive_lines: 0
+(0 == the guard that closes MAJOR-1 is watched by nothing; this is why LONGNOP is one line)
