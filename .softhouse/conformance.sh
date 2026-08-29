@@ -3378,11 +3378,15 @@ drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|led
   local symlinked=0
   local rel base row rowbase dir witness token found
   local self_row self_wit self_norm self_multi
-  local self_stat self_mode self_blob member_stat member_mode member_blob member_multi
+  local self_stat self_mode self_blob self_path member_stat member_mode member_blob member_multi
   # One literal newline, so the multi-line test below is a `case` pattern and starts no second
   # process. Spelled once, here, rather than inside the pattern where it reads as a typo.
-  local CONF_LF
+  local CONF_LF CONF_TAB
   CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+  # One literal TAB, for the same reason and spelled the same way. `git ls-files -s`
+  # separates `<mode> <objectid> <stage>` from `<path>` with a TAB and nothing else, so
+  # the round-trip test below can take the path field with parameter expansion alone.
+  CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
 
   # THE DECLARATION TABLE'S OWN TEXT IS CUT OUT OF THE HAYSTACK BEFORE THE INVOCATION TEST.
   # [T358.] T323 already matched DECLARED rows first "so that the table's own text cannot
@@ -3719,35 +3723,51 @@ INNER
         # to print, defeated by one prefix.
         #
         # IT IS A CLASS, NOT A SPELLING, AND THE PIN CLOSES THE CLASS. Measured on git 2.50.1
-        # [T431, evidence 20-probe-magic-neighbourhood]: FOUR typed spellings reach this call
-        # with `self_multi` unset and a two-line plain re-lookup — `:(literal)P`,
-        # `:(top,literal)P`, `:(literal,icase)P` and the BACKSLASH-ESCAPED `<dir>/w\?.txt`,
-        # which needs no magic at all, only a real file of that literal name so `-f` passes.
-        # The property they share is that git resolves ONE index entry while the DE-MAGICKED
-        # output still globs. Pinning HERE fixes it for all of them at once, because the pin is
-        # applied to the OUTPUT — every route has already collapsed to the same bare path by
-        # the time this line runs. The neighbours that do NOT reach it are refused for their
-        # own reasons and were measured, not assumed: `:(glob)`, `:(icase)`, `:(top)`, `:/` and
-        # the bare `:` short form all keep globbing, so they return two lines and `self_multi`
-        # fires; `:!`, `:^` and `:(exclude)` are exclusion-only and match every OTHER tracked
-        # path, so they return many and `self_multi` fires; `:(attr:x)` matches nothing, so
-        # `--error-unmatch` exits non-zero, `self_norm` is empty and the untracked refusal
-        # fires.
+        # (Apple Git-155) [T431, evidence 20-probe-magic-neighbourhood]: THREE typed spellings
+        # reach this call with `self_multi` unset and a two-line plain re-lookup —
+        # `:(literal)P`, `:(top,literal)P` and `:(literal,icase)P`. What they share is that git
+        # resolves ONE index entry while the DE-MAGICKED output still globs; the pin fixes all
+        # three at once, because it is applied to the OUTPUT and every route has already
+        # collapsed to the same bare path by the time this line runs. THE NEIGHBOURS THAT DO
+        # NOT REACH IT WERE MEASURED, NOT ASSUMED, AND THEY ARE REFUSED FOR THEIR OWN REASONS:
+        # `:(glob)`, `:(icase)`, `:(top)`, `:/` and the bare `:` short form all keep globbing,
+        # return two lines and trip `self_multi`; `:!`, `:^` and `:(exclude)` are
+        # exclusion-only, match every OTHER tracked path, and trip `self_multi` with many;
+        # `:(attr:x)` matches nothing, so `--error-unmatch` exits non-zero, `self_norm` is
+        # empty and the untracked refusal fires.
         #
-        # AN EMPTY `self_stat` IS NOW A REFUSAL, and it is the exact sibling of the
-        # `member_none` branch T404 added above — written for the same reason, because an empty
-        # result skips the mode test AND the blob test AT ONCE, which is the whole mechanism of
-        # this family. It closes `FU-T407-1`, which T407 recorded as reasoned-not-driven and is
-        # DRIVEN HERE [T431 arm XQ]: `git ls-files` C-QUOTES any path carrying a non-ASCII
-        # byte, a backslash, a double quote, a control character or a newline, and prints it
-        # WRAPPED IN LITERAL DOUBLE QUOTES — MEASURED: `"q/w\303\251.txt"`, and
-        # `core.quotePath=false` still quotes the backslash and dquote cases. `self_norm` is
-        # the OUTPUT of a pathspec lookup, so it arrives quoted, matches no index entry under
-        # the pin, and left `self_mode` and `self_blob` empty. The final `grep` then reads
-        # `"$REPO_ROOT/$self_norm"` — a path that still contains those literal quotes — so a
-        # witness that is a tracked SYMLINK TO THE MEMBER could be vouched for by a DIFFERENT
-        # file, planted at the C-quoted literal path and not necessarily tracked at all. The
-        # pin alone does NOT close that; this refusal does.
+        # ONE CORRECTION TO T404's OWN REASONING, WHICH REACHES THE SAME CONCLUSION BY A
+        # DIFFERENT ROUTE. T404 said a BACKSLASH-ESCAPED spelling `<dir>/w\?.txt` is stopped by
+        # the `-f` test. That is only true while the attacker does not plant a real file of
+        # that literal name — and planting one is the same move that defeats `-f` for the magic
+        # spelling. MEASURED with the pacifier file tracked: `--error-unmatch` then returns
+        # TWO lines, because git tries EXACT LITERAL EQUALITY (the pacifier) as well as
+        # wildmatch (the globbed sibling), so `self_multi` fires and the route is closed —
+        # by the multi refusal, NOT by `-f`. The conclusion stands; the stated reason did not.
+        #
+        # TWO MORE REFUSALS BELOW, AND THE PIN ALONE IS NOT ENOUGH WITHOUT THEM. `self_norm` is
+        # the OUTPUT of a pathspec lookup, and `git ls-files` C-QUOTES any path carrying a
+        # non-ASCII byte, a backslash, a double quote, a control character or a newline,
+        # printing it WRAPPED IN LITERAL DOUBLE QUOTES — MEASURED: `"d/w\303\251.txt"`, and
+        # `core.quotePath=false` still quotes the backslash and dquote cases. This is T407's
+        # `FU-T407-1`, which T407 recorded as reasoned-not-driven; T431 drove it, and it is
+        # WORSE than the reasoning predicted.
+        #
+        #   (a) EMPTY RESULT. If nothing is tracked at the C-quoted literal text, the pinned
+        #       lookup returns nothing, `self_mode` and `self_blob` are EMPTY, and the mode
+        #       test and the blob test are BOTH skipped at once — the whole mechanism of this
+        #       family. `[ -z "$self_stat" ]` refuses it. This is the exact sibling of the
+        #       `member_none` branch T404 added above, written for the same reason.
+        #   (b) NON-EMPTY BUT THE WRONG FILE — AND NEITHER THE PIN NOR (a) CATCHES IT.
+        #       MEASURED [T431 arm XQ]: an attacker who CREATES a tracked file whose literal
+        #       name IS the C-quoted rendering makes the pinned lookup succeed on that DECOY,
+        #       mode `100644`, decoy blob, while the real witness stays a symlink to the
+        #       member; the closing `grep` then reads the decoy too, and the member is
+        #       ACCEPTED vouching for itself. `[ "$self_path" != "$self_norm" ]` refuses it —
+        #       the lookup must round-trip, i.e. the path git hands back must be the path
+        #       that was asked for. Its only fixed point is the true witness: a plain tracked
+        #       path is its own `ls-files` rendering, so it refuses nothing legitimate, and
+        #       the healthy control `Y` is ACCEPTED under it [T431 arm Y].
         #
         # NO PIPELINE, for the reason P-57 gives and this function keeps everywhere else
         # [VERIFIED: .softhouse/patterns.md:1654]. `git ls-files -s` prints
@@ -3756,12 +3776,13 @@ INNER
         # `member_blob` is ALREADY IN HAND — it was read at the top of this loop iteration, by
         # the symlink refusal above, from the same `git ls-files -s` call. It is not re-read
         # here: two reads of one quantity are two chances to disagree.
-        self_stat=""; self_mode=""; self_blob=""
+        self_stat=""; self_mode=""; self_blob=""; self_path=""
         if [ -n "$self_norm" ] && [ "$self_multi" -eq 0 ]; then
           self_stat="$( cd "$REPO_ROOT" 2>/dev/null && \
             git ls-files -s -- ":(literal)$self_norm" 2>/dev/null )" || self_stat=""
           self_mode="${self_stat%% *}"
           self_blob="${self_stat#* }"; self_blob="${self_blob%% *}"
+          self_path="${self_stat#*"$CONF_TAB"}"
         fi
         if [ -z "$self_wit" ]; then
           bad=1
@@ -3821,6 +3842,26 @@ INNER
           warn "conformance: index entry, while the grep below would still read a filesystem"
           warn "conformance: path containing those quotes. Name a witness with a plain ASCII"
           warn "conformance: path. REFUSED."
+        elif [ "$self_path" != "$self_norm" ]; then
+          bad=1
+          warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
+          warn "conformance: and THE WITNESS LOOKUP DID NOT ROUND-TRIP. git resolved that"
+          warn "conformance: witness to '$self_norm', and asking git for THAT path as a literal"
+          warn "conformance: pathspec returned a DIFFERENT tracked path, '$self_path'. Every"
+          warn "conformance: test in this direction — the mode, the blob, and the grep that"
+          warn "conformance: reads the file — would then grade a file the declaration never"
+          warn "conformance: named. THIS IS NOT HYPOTHETICAL AND IT DEFEATS THE ':(literal)'"
+          warn "conformance: PIN ON ITS OWN [T431, driven as arm XQ]: git C-QUOTES a path"
+          warn "conformance: carrying a non-ASCII byte, a backslash, a quote, a control"
+          warn "conformance: character or a newline, so the resolved witness comes back as the"
+          warn "conformance: literal text '\"d/w\\303\\251.txt\"' — and an attacker who CREATES a"
+          warn "conformance: tracked file of exactly that literal name makes the pinned lookup"
+          warn "conformance: match the DECOY, with a 100644 mode and the decoy's blob, while"
+          warn "conformance: the real witness stays a symlink to the member. The mode refusal"
+          warn "conformance: and the blob refusal are both disabled and the grep reads the"
+          warn "conformance: decoy. Only this equality catches it. The healthy case is exact:"
+          warn "conformance: a plain tracked path is its own ls-files rendering, so this test"
+          warn "conformance: refuses nothing legitimate. Name a plain ASCII witness. REFUSED."
         elif [ "$self_mode" = "120000" ]; then
           bad=1
           warn "conformance: guard_guards_dir_registration: $rel declares REACHED-BY $self_wit,"
