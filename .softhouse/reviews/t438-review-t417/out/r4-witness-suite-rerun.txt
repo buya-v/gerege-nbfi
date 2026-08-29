@@ -1,0 +1,98 @@
+############ CLOSE T438A
+WITNESS CLOSE label=T438A
+  window (UTC, database clock): 2026-08-29 00:43:00.157944  ->  2026-08-29 00:43:15.106163
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ok   nothing moved. rollup open == close == 4c0adcae1804d88464265fc0f7661891
+-----------------------------------------------------------------------------
+VERDICT: QUIESCENT (exit 0). No job ran inside the window and no graded content moved.
+  A capture taken inside this window is reproducible against this oracle state.
+rc=0
+
+############ SELF-TEST
+SELF-TEST  base_tables=281  graded=273  excluded_named=8
+SELF-TEST OK: every excluded table is named, and the graded surface is everything else.
+rc=0
+
+############ COVERAGE
+COVERAGE OF THIS INSTRUMENT -- every figure derived now, none typed
+-----------------------------------------------------------------------------
+TABLES      base tables in the tenant schema : 281
+            GRADED by the content digest     : 273
+            EXCLUDED, each named below       : 8
+              - batch_job_execution  (13369 rows)
+              - batch_job_execution_context  (13369 rows)
+              - batch_job_execution_params  (13412 rows)
+              - batch_job_instance  (13369 rows)
+              - batch_step_execution  (13370 rows)
+              - batch_step_execution_context  (13370 rows)
+              - job_run_history  (13369 rows)
+              - job  (41 rows)
+-----------------------------------------------------------------------------
+SEQUENCES   sequences in the tenant schema   : 254
+            GRADED by last_value             : 249
+            EXCLUDED (prefix match on the excluded tables' own sequences):
+              - batch_job_execution_seq
+              - batch_job_seq
+              - batch_step_execution_seq
+              - job_id_seq
+              - job_run_history_id_seq
+-----------------------------------------------------------------------------
+SCHEDULER   job rows / active / inactive     : 41 / 31 / 10
+            distinct jobs that ran in 24h    : 31
+            ACTIVE jobs with NO run history  :
+            (an empty list above means every active job has been seen to run)
+-----------------------------------------------------------------------------
+WHAT REMAINS UNWATCHED BY THIS INSTRUMENT, STATED PLAINLY:
+  1. The 8 excluded tables above. They are the scheduler's OWN bookkeeping.
+     A write to them by anything other than the batch runner would not be reported.
+  2. A job that is IN FLIGHT across a window boundary. job_run_history is written only
+     when a job FINISHES, so its run is not in the list. This is REFUSED, not missed:
+     job.currently_running is read at both ends and a non-zero reading refuses the window.
+  3. Movement BETWEEN two windows. The digest compares open to close. Continuity across
+     captures is the job of 'verify', which compares a stored witness to the oracle now.
+  4. Anything below the granularity of a table's rendered row text -- there is nothing
+     known to be in this class, and it is listed so the claim is falsifiable rather than
+     absolute.
+  5. State that is not in this database at all: files on the app container, in-memory
+     caches, and the OTHER tenant databases (fineract_default, fineract_tenants). This
+     instrument reads exactly one database, named in its output on every run.
+-----------------------------------------------------------------------------
+NOT UNWATCHED, though a reader might assume so: the other 271 tables beyond the two
+  that oracle-state-baseline.sh reads. They ARE in the digest. That is the point of it.
+rc=0
+
+############ ATTRIBUTE job-11 insert window
+JOB RUNS OVERLAPPING [2026-08-28 16:01:00.100207 .. 2026-08-28 16:01:00.117772]  (UTC, job_run_history is naive UTC)
+  jrh     job    kind      start (UTC)                end (UTC)                  name
+  12721   11     CONTAINS  2026-08-28 16:01:00.049000 2026-08-28 16:01:00.120000 Add Accrual Transactions [success]
+  RUNS OVERLAPPING WINDOW = 1
+SOLE CANDIDATE. Named above. Confirm from Fineract source @ 426a23544e8426a38ae43ae404670a0a7e85b9eb before recording.
+rc=0
+
+############ ATTRIBUTE job-9 mutation window
+JOB RUNS OVERLAPPING [2026-08-28 16:01:00.033938 .. 2026-08-28 16:01:00.039824]  (UTC, job_run_history is naive UTC)
+  jrh     job    kind      start (UTC)                end (UTC)                  name
+  12718   30     overlaps  2026-08-28 16:01:00.003000 2026-08-28 16:01:00.034000 Update Trial Balance Details [failed]
+  12720   9      CONTAINS  2026-08-28 16:01:00.003000 2026-08-28 16:01:00.048000 Update Accounting Running Balances [success]
+  12719   17     CONTAINS  2026-08-28 16:01:00.032000 2026-08-28 16:01:00.048000 Recalculate Interest For Loans [success]
+  RUNS OVERLAPPING WINDOW = 3
+REFUSING TO NAME ONE AUTHOR: 3 runs overlap. The clock cannot resolve this.
+rc=1
+
+############ INTERPRETER GUARD (sh)
+REFUSING: bash is in POSIX mode -- you invoked this as 'sh'. Run it with 'bash'.
+  No observation was made. This is exit 3, NOT an oracle outage (exit 2).
+rc=3
+
+############ VERIFY against T417's OWN COMMITTED witness (shelf life)
+SHELF-LIFE CHECK  label=LIVE-MINUTE-BOUNDARY
+  witness taken   : 2026-08-29T00:16:53Z  rollup 4c0adcae1804d88464265fc0f7661891
+  oracle right now: 2026-08-29T00:43:18Z  rollup 4c0adcae1804d88464265fc0f7661891
+VERDICT: UNMOVED (exit 0). Every graded table and sequence is byte-identical to the
+  witness. A vector captured against this witness is still graded against this oracle.
+rc=0

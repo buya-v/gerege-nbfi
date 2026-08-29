@@ -1,0 +1,79 @@
+############ RED-A: doctored LEDGER digest in the open witness -> must report MOVED, exit 1
+1
+WITNESS CLOSE label=REDA
+  window (UTC, database clock): 2026-08-29 00:43:00.157944  ->  2026-08-29 00:43:46.686497
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ***  acc_gl_journal_entry  rows 109 -> 109   digest 000000000000 -> 77a7b645ba0f   MOVED
+-----------------------------------------------------------------------------
+VERDICT: CAPTURE CONTAMINATED (exit 1). The oracle MOVED while the capture was open.
+  Anything captured inside this window may be a photograph of a moving target. Do not
+  promote it to a vector: re-capture inside a window this instrument calls QUIESCENT.
+  ATTRIBUTION: NO job run overlaps this window. The scheduler did not do this. Something
+  else wrote to the SHARED reference oracle -- find it, and register it.
+rc=1
+
+############ RED-B: doctored in-flight (jobs currently_running=1) -> must REFUSE, exit 1
+1
+WITNESS CLOSE label=REDB
+  window (UTC, database clock): 2026-08-29 00:43:00.157944  ->  2026-08-29 00:43:47.517108
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ok   nothing moved. rollup open == close == 4c0adcae1804d88464265fc0f7661891
+-----------------------------------------------------------------------------
+IN FLIGHT: job.currently_running = 1 at open, 0 at close.
+VERDICT: REFUSED (exit 1). A job was RUNNING across a boundary of this window. Its
+  job_run_history row is not written until it finishes, so the run list above is
+  INCOMPLETE by construction and this window cannot be certified quiescent.
+  Re-take the witness when no job is in flight.
+rc=1
+
+############ RED-C: doctored SEQUENCE last_value -> must report MOVED, exit 1
+1
+WITNESS CLOSE label=REDC
+  window (UTC, database clock): 2026-08-29 00:43:00.157944  ->  2026-08-29 00:43:48.313449
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ***  acc_gl_journal_entry_id_seq  rows 999999 ->    digest 113 ->    MOVED
+-----------------------------------------------------------------------------
+VERDICT: CAPTURE CONTAMINATED (exit 1). The oracle MOVED while the capture was open.
+  Anything captured inside this window may be a photograph of a moving target. Do not
+  promote it to a vector: re-capture inside a window this instrument calls QUIESCENT.
+  ATTRIBUTION: NO job run overlaps this window. The scheduler did not do this. Something
+  else wrote to the SHARED reference oracle -- find it, and register it.
+rc=1
+
+############ RED-D: a table REMOVED from the open witness (appearance detection)
+WITNESS CLOSE label=REDD
+  window (UTC, database clock): 2026-08-29 00:43:00.157944  ->  2026-08-29 00:43:49.086380
+  graded_tables=273 graded_sequences=249  excluded_tables=8
+-----------------------------------------------------------------------------
+SCHEDULER RUNS INSIDE THE WINDOW (the witness -- says a job RAN, not what it WROTE)
+  RUNS OVERLAPPING WINDOW = 0
+-----------------------------------------------------------------------------
+GRADED SURFACE -- content digest over EVERY base table and sequence except the 8 named
+  ***  m_loan  APPEARED between open and close
+-----------------------------------------------------------------------------
+VERDICT: CAPTURE CONTAMINATED (exit 1). The oracle MOVED while the capture was open.
+  Anything captured inside this window may be a photograph of a moving target. Do not
+  promote it to a vector: re-capture inside a window this instrument calls QUIESCENT.
+  ATTRIBUTION: NO job run overlaps this window. The scheduler did not do this. Something
+  else wrote to the SHARED reference oracle -- find it, and register it.
+rc=1
+
+############ RED-E: close with NO open witness
+REFUSING: no open witness at /tmp/t438/redwit/NEVEROPENED.open.tsv. A capture with no opening witness cannot be
+  shown to have been taken against a still oracle. Absence is not quiescence.
+rc=1

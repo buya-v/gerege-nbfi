@@ -1,0 +1,142 @@
+== c1: base table count ==
+ base_tables 
+-------------
+         281
+
+== c2: the 8 names T417 excludes -- do they all EXIST as base tables? ==
+              n               | exists_as_base_table 
+------------------------------+----------------------
+ batch_job_execution          | t
+ batch_job_execution_context  | t
+ batch_job_execution_params   | t
+ batch_job_instance           | t
+ batch_step_execution         | t
+ batch_step_execution_context | t
+ job                          | t
+ job_run_history              | t
+
+== c3: graded count = base tables MINUS the 8 ==
+ graded 
+--------
+    273
+
+== c4: sequences total ==
+ sequences 
+-----------
+       254
+
+== c5: sequences EXCLUDED by the prefix predicate, by name ==
+       sequencename       
+--------------------------
+ batch_job_execution_seq
+ batch_job_seq
+ batch_step_execution_seq
+ job_id_seq
+ job_run_history_id_seq
+
+== c6: sequences graded ==
+ graded_sequences 
+------------------
+              249
+
+== c7: ANY OTHER base table whose name starts with batch_ or job (over/under-exclusion check) ==
+          table_name          
+------------------------------
+ batch_custom_job_parameters
+ batch_job_execution
+ batch_job_execution_context
+ batch_job_execution_params
+ batch_job_instance
+ batch_step_execution
+ batch_step_execution_context
+ job
+ job_parameters
+ job_run_history
+
+== c8: ALL sequences starting with job or batch (does the prefix over-reach?) ==
+            sequencename            
+------------------------------------
+ batch_custom_job_parameters_id_seq
+ batch_job_execution_seq
+ batch_job_seq
+ batch_step_execution_seq
+ job_id_seq
+ job_parameters_id_seq
+ job_run_history_id_seq
+
+== c9: columns of the 8 excluded tables that look monetary ==
+          table_name          |       column_name       |          data_type          
+------------------------------+-------------------------+-----------------------------
+ batch_job_execution          | job_execution_id        | bigint
+ batch_job_execution          | version                 | bigint
+ batch_job_execution          | job_instance_id         | bigint
+ batch_job_execution          | create_time             | timestamp without time zone
+ batch_job_execution          | start_time              | timestamp without time zone
+ batch_job_execution          | end_time                | timestamp without time zone
+ batch_job_execution          | status                  | character varying
+ batch_job_execution          | exit_code               | character varying
+ batch_job_execution          | exit_message            | character varying
+ batch_job_execution          | last_updated            | timestamp without time zone
+ batch_job_execution_context  | job_execution_id        | bigint
+ batch_job_execution_context  | short_context           | character varying
+ batch_job_execution_context  | serialized_context      | text
+ batch_job_execution_params   | job_execution_id        | bigint
+ batch_job_execution_params   | parameter_type          | character varying
+ batch_job_execution_params   | parameter_name          | character varying
+ batch_job_execution_params   | parameter_value         | character varying
+ batch_job_execution_params   | identifying             | character
+ batch_job_instance           | job_instance_id         | bigint
+ batch_job_instance           | version                 | bigint
+ batch_job_instance           | job_name                | character varying
+ batch_job_instance           | job_key                 | character varying
+ batch_step_execution         | step_execution_id       | bigint
+ batch_step_execution         | version                 | bigint
+ batch_step_execution         | step_name               | character varying
+ batch_step_execution         | job_execution_id        | bigint
+ batch_step_execution         | start_time              | timestamp without time zone
+ batch_step_execution         | end_time                | timestamp without time zone
+ batch_step_execution         | status                  | character varying
+ batch_step_execution         | commit_count            | bigint
+ batch_step_execution         | read_count              | bigint
+ batch_step_execution         | filter_count            | bigint
+ batch_step_execution         | write_count             | bigint
+ batch_step_execution         | read_skip_count         | bigint
+ batch_step_execution         | write_skip_count        | bigint
+ batch_step_execution         | process_skip_count      | bigint
+ batch_step_execution         | rollback_count          | bigint
+ batch_step_execution         | exit_code               | character varying
+ batch_step_execution         | exit_message            | character varying
+ batch_step_execution         | last_updated            | timestamp without time zone
+ batch_step_execution         | create_time             | timestamp without time zone
+ batch_step_execution_context | step_execution_id       | bigint
+ batch_step_execution_context | short_context           | character varying
+ batch_step_execution_context | serialized_context      | text
+ job                          | id                      | bigint
+ job                          | name                    | character varying
+ job                          | display_name            | character varying
+ job                          | cron_expression         | character varying
+ job                          | create_time             | timestamp without time zone
+ job                          | task_priority           | smallint
+ job                          | group_name              | character varying
+ job                          | previous_run_start_time | timestamp without time zone
+ job                          | next_run_time           | timestamp without time zone
+ job                          | job_key                 | character varying
+ job                          | initializing_errorlog   | text
+ job                          | is_active               | boolean
+ job                          | currently_running       | boolean
+ job                          | updates_allowed         | boolean
+ job                          | scheduler_group         | smallint
+ job                          | is_misfired             | boolean
+ job                          | node_id                 | integer
+ job                          | is_mismatched_job       | boolean
+ job                          | short_name              | character varying
+ job_run_history              | id                      | bigint
+ job_run_history              | job_id                  | bigint
+ job_run_history              | version                 | bigint
+ job_run_history              | start_time              | timestamp without time zone
+ job_run_history              | end_time                | timestamp without time zone
+ job_run_history              | status                  | character varying
+ job_run_history              | error_message           | text
+ job_run_history              | trigger_type            | character varying
+ job_run_history              | error_log               | text
+
