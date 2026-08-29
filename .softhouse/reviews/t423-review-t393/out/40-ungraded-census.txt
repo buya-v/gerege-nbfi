@@ -1,0 +1,92 @@
+=== T423 — the set section 10 does NOT grade ===
+REF  softhouse/T393-t382-conditions -> 66ab2af9e48da32ec76a0e372a1f97ba5b8bbc49
+
+tracked files under .softhouse/capture/tierA-a2                 : 1140
+  of those under out/ or req/ (ARMs A-D)                     : 1035
+  of those NOT under out/ or req/                            : 105
+ARM E's population (fork-sha manifest rows outside out/req)   : 27
+current MANIFEST rows outside out/ or req/                    : 104
+
+*** TRACKED UNDER THE CAPTURE DIR AND GRADED BY NO ARM OF SECTION 10 : 78 ***
+    CENSUS-A2-26.txt                                     row     post-fork
+    MANIFEST.sha256                                      NO-ROW  in-fork-tree
+    ORACLE-STATE-MOVED-BY-T276.md                        row     post-fork
+    PARSE-FLOAT-EXEMPT.txt                               row     post-fork
+    PROVENANCE-A2-15.txt                                 row     post-fork
+    RED-GREEN-A2-15.txt                                  row     post-fork
+    RED-GREEN-A2-26-guards.txt                           row     post-fork
+    RED-GREEN-A2-7-guards.txt                            row     post-fork
+    RED-GREEN-T163-cap8-wire-bytes.txt                   row     post-fork
+    RED-GREEN-T163-census-sabotage.txt                   row     post-fork
+    RED-GREEN-T163-resolve7-float.txt                    row     post-fork
+    RED-GREEN-T164-parse-float-ast.txt                   row     post-fork
+    RED-GREEN-T173-wired-guards.txt                      row     post-fork
+    RED-GREEN-T275-reissue.txt                           row     post-fork
+    SUPERSEDED.txt                                       row     post-fork
+    SWEEP-T164-SELFMATCH-GUARDS.txt                      row     post-fork
+    T163-AUDIT-no-capture-affected.txt                   row     post-fork
+    a2-29-retype-path.py                                 row     post-fork
+    analyze7.py                                          row     post-fork
+    audit-req-float-roundtrip.py                         row     post-fork
+    cap10.sh                                             row     post-fork
+    cap8.sh                                              row     post-fork
+    cap9.sh                                              row     post-fork
+    capsql.sh                                            row     post-fork
+    census-a2-26.py                                      row     post-fork
+    census-json-float-siblings.py                        row     post-fork
+    guard-parse-float-ast.py                             row     post-fork
+    mkje-a2-29.py                                        row     post-fork
+    mkreq-a2-26.sh                                       row     post-fork
+    mkreq-t275.py                                        row     post-fork
+    mkreq7.py                                            row     post-fork
+    prove-a2-26-guards-red.sh                            row     post-fork
+    prove-a2-7-additive.py                               row     post-fork
+    prove-cap8-wire-bytes.py                             row     post-fork
+    prove-census-red.sh                                  row     post-fork
+    prove-mkreq7-guard-red.py                            row     post-fork
+    prove-parse-float-guard-red.py                       row     post-fork
+    prove-quit-trap-a226.py                              row     post-fork
+    prove-quit-trap-cap.py                               row     post-fork
+    prove-quit-trap-cap9.py                              row     post-fork
+    prove-resolve8-float-red.py                          row     post-fork
+    prove-t275-reissue.py                                row     post-fork
+    red-green-a2-15.sh                                   row     post-fork
+    resolve7.py                                          row     post-fork
+    resolve8.py                                          row     post-fork
+    run-200-a2-7-readbacks.sh                            row     post-fork
+    run-210-a2-7-mapping.sh                              row     post-fork
+    run-220-a2-7-runtime-v8.sh                           row     post-fork
+    run-220-a2-7-runtime.sh                              row     post-fork
+    run-232-a2-7-writeoff-recovery.sh                    row     post-fork
+    run-240-a2-7-update-path.sh                          row     post-fork
+    run-300-a2-26-g10c-admissibility.sh                  row     post-fork
+    run-310-a2-26-retype-visibility.sh                   row     post-fork
+    run-320-a2-26-ledger-coverage.sh                     row     post-fork
+    run-330-a2-26-manual-and-reversal.sh                 row     post-fork
+    run-340-a2-26-idempotency.sh                         row     post-fork
+    run-350-a2-26-remaining-slots.sh                     row     post-fork
+    run-400-a2-29-boundary.sh                            row     post-fork
+    run-420-a2-29-recompute-heal.sh                      row     post-fork
+    run-430-a2-29-drift-probe.sh                         row     post-fork
+    run-437-a2-29-drift-probe-leg2.sh                    row     post-fork
+    run-450-a2-29-drift-at-boundary.sh                   row     post-fork
+    run-460-a2-29-reversal-and-office-scope.sh           row     post-fork
+    run-463-a2-29-recompute-org-after-reversal.sh        row     post-fork
+    run-470-a2-29-report-reader.sh                       row     post-fork
+    run-500-t275-mapping-update.sh                       row     post-fork
+    run-514-t275-channel-row-identity.sh                 row     post-fork
+    run-520-t275-charge-dimension.sh                     row     post-fork
+    run-540-t275-reason-mappings.sh                      row     post-fork
+    sql/q4-a2-26-ledger-state.sql                        row     post-fork
+    sql/q5-a2-29-running-balance-drift.sql               row     post-fork
+    sql/q6-a2-29-report-predicate.sql                    row     post-fork
+    sql/q7-a2-15-ledger-state-json.sql                   row     post-fork
+    sql/q8-t275-mapping-ids.sql                          row     post-fork
+    sql/q9-t275-fixture-state.sql                        row     post-fork
+    sweep-t164-selfmatch-guards.py                       row     post-fork
+    t275-mapping-diff.py                                 row     post-fork
+    verify-provenance-a2-15.py                           row     post-fork
+
+NOTE ON SECTION 4: it compares the FORK-SHA manifest's entries. A file that is not in
+that manifest is outside section 4's third arm too, so for the post-fork members of
+the set above NOTHING in run-all.sh compares them against anything.

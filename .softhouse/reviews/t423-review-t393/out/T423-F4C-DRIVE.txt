@@ -1,0 +1,12 @@
+T423 f4c target: out/A2-000-glaccounts-preexisting.http
+--- f4c @ BEFORE (4eeed2b3)
+      assignments found: section10=1 prove-a2-7-additive=1 verify-manifest-independently=1
+      constant moved to 8d34a25dba2ff66bf7b603cb80cf614adc4bae42 in: section10=1 tie1=1 tie2=1
+      section10=0 rc=0 verdict=PASS sec4-named=0 armA-pop=1035 tie-refusals=0 pin-refusals=0 expected=0
+--- f4c @ AFTER (fc51790d)
+      assignments found: section10=1 prove-a2-7-additive=1 verify-manifest-independently=1
+      constant moved to 9744e0c6f5c75fb1ca68d7ef50fc87f95769a7d4 in: section10=1 tie1=1 tie2=1
+      section10=2 rc=1 verdict=FAIL sec4-named=0 armA-pop=1035 tie-refusals=0 pin-refusals=2 expected=2
+
+unexpected results: 0
+T423 f4c VERDICT: PASS

@@ -1,0 +1,54 @@
+=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===
+  PASS  the comparator reports IDENTICAL on identical bytes
+          7d432cd60871d25c
+  PASS  the comparator reports DIFFERENT on bytes with ONE line appended — the exact mutation shape T362 used to prove F-1
+          7d432cd60871d25c vs 451c230f34f023fe
+  PASS  the manifest parser reads a two-column list, strips the binary-mode star, and skips comments and blank lines
+          {'out/x.http': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'req/y.json': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+
+=== 1. THE BASELINE EXISTS, AND ITS CALIBRATION IS CROSS-CHECKED (T382 FINDING 4) ===
+    T382: 'a tripwire whose calibration is a bare unchecked constant is a tripwire
+    with a switch on it.' Moving FORK forward to a commit that CONTAINS a mutation
+    collapsed ARM A onto ARM B (403 -> 1035) and the mutation went invisible while
+    section 4 printed it BY NAME and run-all.sh printed PASS. So the constant is now
+    tied to tracked files, in the same spelling section 4 already uses for its copy.
+  PASS  literal baseline sha 12a7f8d9a3af is present
+  PASS  prove-a2-7-additive.py carries `BASELINE = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+  PASS  verify-manifest-independently.py carries `FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+
+=== 2. POPULATION — enumerated from the fork tree AND from HEAD, and PINNED ===
+    An EMPTY population is a SELECTOR failure, not a clean tree: this repository
+    tracks captured oracle observations under .softhouse/capture/tierA-a2/{out,req}/ and always
+    has. An empty census passes everything. REFUSED. (Same spelling as
+    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)
+    T382 FINDING 1: applying that rule AT ZERO and stopping is not enough. A
+    population that silently shrank by up to 632, or grew by any number of
+    fabricated files, is the same class of selector failure one step short of empty.
+    ARM A's size is pinned below; ARM B's is pinned by the manifest in ARM C.
+      at the fork sha : 403 observations  {'out': 327, 'req': 76}
+      at HEAD         : 1035 observations  {'out': 906, 'req': 129}
+  PASS  ARM A's population is the pinned 403 (a property of an immutable commit)
+
+=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
+    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
+      enumerated                : 403
+      byte-identical            : 403
+      DIFFER                    : 0
+      MISSING on disk           : 0
+      unreadable at the fork sha: 0
+  PASS  NO captured oracle observation that existed at the fork sha has been MUTATED
+          differ=0
+  PASS  NO captured oracle observation that existed at the fork sha has been DELETED
+          missing=0 unreadable=0
+
+=== 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
+    git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
+    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
+Traceback (most recent call last):
+  File "/private/tmp/t423-work-a75c/scratch/extra/.softhouse/reviews/A2-11/verify-capture-integrity.py", line 399, in <module>
+    at_head = git("show", "HEAD:" + rel)
+  File "/private/tmp/t423-work-a75c/scratch/extra/.softhouse/reviews/A2-11/verify-capture-integrity.py", line 221, in git
+    return subprocess.run(["git", "-C", ROOT, *args], capture_output=True,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/private/tmp/t423-work-a75c/scratch/extra', 'show', 'HEAD:.softhouse/capture/tierA-a2/out/A2-000-glaccounts-preexisting.http']' returned non-zero exit status 128.

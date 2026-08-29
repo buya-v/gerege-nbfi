@@ -1,0 +1,31 @@
+T423 targets (my own selector): FORKOBS=out/A2-000-glaccounts-preexisting.http  POSTFORK=out/A2-200-glaccounts-live-precheck.http
+############ T423 INDEPENDENT RE-RUN
+BEFORE = 4eeed2b3
+AFTER  = fc51790d
+
+--- t423-f4a-control-mutate-forkobs @ BEFORE (4eeed2b3)
+      section10=1 rc=1 verdict=FAIL sec4-named=1 armA-pop=403 expected=1 as expected
+--- t423-f4a-control-mutate-forkobs @ AFTER (fc51790d)
+      section10=1 rc=1 verdict=FAIL sec4-named=1 armA-pop=403 expected=1 as expected
+--- t423-f4b-move-fork-constant @ BEFORE (4eeed2b3)
+      FORK moved to the probe commit 42189d42f1b126dc9620d01108af28595e857fdc (one line)
+      section10=0 rc=0 verdict=PASS sec4-named=1 armA-pop=1035 expected=0 as expected
+--- t423-f4b-move-fork-constant @ AFTER (fc51790d)
+      FORK moved to the probe commit 1bead4341f60ff89c910bd1b1b0ad01954393cb9 (one line)
+      section10=2 rc=1 verdict=FAIL sec4-named=1 armA-pop=1035 expected=2 as expected
+--- t423-residual-postfork-laundered @ BEFORE (4eeed2b3)
+      section10=0 rc=0 verdict=PASS sec4-named=0 armA-pop=403 expected=0 as expected
+--- t423-residual-postfork-laundered @ AFTER (fc51790d)
+      section10=0 rc=0 verdict=PASS sec4-named=0 armA-pop=403 expected=0 as expected
+
+############ T423 MATRIX
+case	ref	sec10	runall_rc	verdict	sec4_named	armA_pop	expected	result
+t423-f4a-control-mutate-forkobs	BEFORE	1	1	FAIL	1	403	1	as expected
+t423-f4a-control-mutate-forkobs	AFTER	1	1	FAIL	1	403	1	as expected
+t423-f4b-move-fork-constant	BEFORE	0	0	PASS	1	1035	0	as expected
+t423-f4b-move-fork-constant	AFTER	2	1	FAIL	1	1035	2	as expected
+t423-residual-postfork-laundered	BEFORE	0	0	PASS	0	403	0	as expected
+t423-residual-postfork-laundered	AFTER	0	0	PASS	0	403	0	as expected
+
+unexpected results: 0
+T423 DRIVE VERDICT: PASS

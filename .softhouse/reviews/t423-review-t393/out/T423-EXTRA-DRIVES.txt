@@ -1,0 +1,15 @@
+############ DRIVE 1 — a committed mutation of a POST-FORK NON-OBSERVATION entry
+target: .softhouse/capture/tierA-a2/cap8.sh  (tracked, has a MANIFEST row, NOT in ARM E's fork-sha population)
+  section10=0   run-all rc=0   verdict=PASS   section4-named-it=0
+  (section 4 naming it while the aggregate says PASS is T362's F-1 shape: a saturated
+   section is the ONLY thing that saw it.)
+
+############ DRIVE 2 — ARM B raises: how many arms never run, and what does the operator see?
+  verify-capture-integrity.py exit = 1
+  Traceback printed        : 1
+  ARM C header reached     : 0
+  ARM D header reached     : 0
+  ARM E header reached     : 0
+  FAILURES: line printed   : 0
+  VERDICT: line printed    : 0
+  Is exit 1 distinguishable from a genuine mutation? exit 1 is ALSO the mutation code.
