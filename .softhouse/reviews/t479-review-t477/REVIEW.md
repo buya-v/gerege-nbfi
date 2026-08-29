@@ -596,12 +596,31 @@ can be moved by it. Full transcript in `evidence/90-residue.txt`:
 instruments did not catch mine, because I committed no instrument: the shims, the hijack module
 and the repair patch are quoted in `evidence/` as text and live nowhere in the tree.
 
-**FINAL BAR ON MY OWN COMMITTED TREE:** see `evidence/91-final-bar.txt`, taken at my tip with
-`bash` (never `sh`/`zsh`), probe **presence** counted before its value. The reference oracle was
-**down** by then (§9), so that run reports `probe presence 1, probe = down`, `VERDICT: UNUSABLE`
-and **exit 2 — an outage, and I do not report it as a PASS**. What it does establish, and what
-matters for this review, is that **`guard_harness_text_is_committed` and every other guard
-refused nothing on my tree**: the refusal-line count is 0 and the harness-text census is clean.
+**FINAL BAR ON MY OWN COMMITTED TREE:** `evidence/91-final-bar.txt`, taken at my tip
+`fb7e65e2337b8c01d01a5b63877a039bdb02303b` with `bash` (never `sh`/`zsh`), working tree clean,
+0 index bits, probe **presence** counted before its value.
+
+```
+grep -c 'probe = '  -> 1        <-- PRESENCE, read first
+probe value         -> down
+EXIT = 2
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+refusal lines matched ('guard_<name>:' on stderr) : 0
+this harness: committed db313f98… / on disk db313f98…
+frontier 11, pinned at 11   ·   frontier == pinned (all 11 rows, by path)
+literal /tmp, /private/tmp or /var/tmp path to a name: 18, pinned at 18
+dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+guard-cost: PASS — every guard timed, every ceiling row used, none breached.
+```
+
+The exit 2 is the **outage of §9, not a guard refusal** — the probe line is present and reads
+`down`, and **no guard refused anything: the refusal-line count is 0.** I do not report it as a
+PASS. **Which harness graded it:** this branch is cut from `main` and T477 is *not* merged into
+it, so the grader is `main`'s `db313f98…`, which does not carry T466's whole-tree recompute —
+hence no `RECOMPUTE` / `CHALLENGE` / `READ CENSUS` lines in that transcript. That is deliberate,
+and it is T473's method: a reviewer graded by the artefact under review is not an independent
+measurement. The graded runs of the *artefact* are the nine arms in `evidence/00`–`evidence/50`,
+all taken in throwaway clones at `a6bf50a3`, and the oracle was **up** for every one of them.
 
 ---
 
