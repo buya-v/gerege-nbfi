@@ -562,5 +562,66 @@ at `:1686` and is greppable, stable and self-verifying in a way a line number is
 
 # 10. THE BAR
 
-See §11 (appended after the review was committed, run from a clean tree on this branch's own
-committed bytes, scratch in `/tmp` outside the repo).
+`bash .softhouse/conformance.sh` on the **clean committed tree `5bddc3fb`** of
+`softhouse/T456-review-t451` — this review's own bytes, not T451's. Scratch in
+`/tmp/t456/bar`, **outside the repo** (`TMPDIR=/tmp/t456/bar`). `git status --porcelain`
+was **empty before** the run and **empty after** it.
+
+## EXIT 0
+
+The probe was tested for **PRESENCE BEFORE ITS VALUE** — P-84, "absence is not `down`", and
+"EXIT 2 WITH NO PROBE LINE" is the guard working:
+
+```
+$ grep -c 'probe = ' /tmp/t456/bar/bar-1.txt
+1
+```
+
+**and only then read. Probe line, verbatim:**
+
+```
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+```
+
+## The cardinals this review was required to confirm
+
+```
+conformance:   T316-DEADPATH-CENSUS: corpus=1623 deadFiles=75 deadOccurrences=108 resolving=1547 indeterminate=122 prose=411
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   ... frontier 11, pinned at 11
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance:   reconciler ownership: GREEN 13/13 cells correct / RED 8/13 cells correct
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
+```
+
+`deadOccurrences 108` ✓ · frontier `11 == 11` ✓ · reconciler ownership `GREEN 13/13 / RED 8/13`
+✓ — the one guard standing between this predicate and destroyed work is unweakened, on a tree
+carrying 10 new instruments. Host-state pin also unchanged at `18, pinned at 18`.
+
+**The bar did not go red on my instruments.** Four workers this fire reddened
+`guard_dead_path_frontier` with fixture literals spelling real `.softhouse/…` paths;
+`bin/10-fixture.sh` builds every synthetic path from `S=".softhouse"` / `$C` / `$R` / `$B` and
+adopts T238's `sweeplib.sh` shape — `set -euo pipefail`, and a **self-check that every branch
+the fixture promises actually exists**, exiting 91 otherwise, so no driver can report over a
+tree that was never built. The frontier pin was not touched, and the calibration in
+`out/70-deadpath-calibration.txt` proves the census read my files rather than skipping them.
+
+Full transcript: `out/90-bar-committed-tree-5bddc3fb.txt`, 860 lines.
+
+---
+
+# 11. INSTRUMENTS
+
+| file | what it establishes |
+|---|---|
+| `bin/01-cardinals.py` | C-T449-3 and C-T449-4 re-derived at `b102875c` **and** at today's `main` |
+| `bin/10-fixture.sh` | the reviewer's own synthetic repo: G, G2, R2, K, **KOWN**, S, **HLOAD**, E — paths through `$S`, self-checking |
+| `bin/11-drive.py` | RED / GREEN / **T449-RELAXED** over all eight cases; plants the patch itself, one site, verified unique |
+| `bin/12-clock.py` | **C-T456-1** — makes the HOST slow, not the code, and drives REFUSE→demote |
+| `bin/13-note-truth.py` | every assertion in the G/G2 notes checked against git; calibrated by a RED leg it catches |
+| `bin/20-census.py` | 708 refs / 143 pairs / 25 carriers / **1** relaxation-only, via `git for-each-ref` (a different primitive from T451's) |
+| `bin/21-t428-anchor.py` | the decisive T428 ref, per path component, plus the filename counterfactual |
+| `bin/22-liveness.py` | **C-T456-3** — reachability by calling `branch_wip`, which is the half T451's `out/22` did not measure |
+| `bin/50-direction.py` | per-state polarity transitions RED↔GREEN; exits non-zero on any REFUSE→demote |
+| `bin/51-plant-d4.py` | **C-T456-2** — the fourth planted defect, and the two legs that disagree about it |
