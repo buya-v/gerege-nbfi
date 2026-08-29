@@ -1,0 +1,13 @@
+conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
+conformance:   selector and per-bucket counts are printed by the census itself:
+T316-DEADPATH-CENSUS: corpus=1691 deadFiles=76 deadOccurrences=109 resolving=1577 indeterminate=126 prose=427
+conformance:   frontier 109 row(s), pinned at 108
+conformance:   (both cardinals DERIVED by counting the files compared, never typed)
+conformance: !! THE DEAD-PATH FRONTIER MOVED.
+conformance: !! 1 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
+conformance: !! rather than pinning it. Either make the path resolve, or -- if the
+conformance: !! reference is a deliberate fallback candidate -- make the instrument
+conformance: !! REFUSE when no candidate resolves, and record why in the pin.
+> .softhouse/reviews/t471-review-t465/zz-calibration-plant.sh | .softhouse/this-path-does-not-exist-t471/absent.txt
+conformance:   The pin is /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t471-armc.wUnsce/.softhouse/guards/dead-path-frontier.pin
+T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0

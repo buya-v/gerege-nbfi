@@ -1,0 +1,69 @@
+NO PROBE LINE IS PRINTED (P-84).
+T465 -- ASSEMBLY PARITY
+============================================================================================
+  repo   : /private/tmp/t471-scratch/tip2
+  base   : b9b37f9c57f0e2016d4c25aae0a9157decbb72cb   (the commit BEFORE the repair)
+  head   : b9b37f9c57f0e2016d4c25aae0a9157decbb72cb   (this working tree's HEAD)
+  method : each file's OWN declaration lines, evaluated in that file's OWN
+           interpreter. Expected values are BUILT from a variable, never spelt.
+
+  OK       .softhouse/bin/fire-program.sh
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/bin/fire-program.sh
+           SH_DIR,LOCK_REL,LOCK_EXCLUDE_PATHSPEC base literal(s) removed: 0
+           value now = ':(top,exclude).softhouse/LOCK'
+  OK       .softhouse/bin/fire-program.sh
+           SH_DIR,LOCK_REL,LOCK     base literal(s) removed: 0
+           value now = '/REPO/.softhouse/LOCK'
+  OK       .softhouse/bin/ready-tasks.py
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/hooks/push-before-spawn-audit.py
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t279-lock-partition/audit-this-fire.py
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh
+           SH_DIR,LOCK_REL          base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh
+           LOCKLEAF,LOCK_REL        base literal(s) removed: 0
+           value now = '.softhouse/LOCK'
+  OK       .softhouse/reviews/T189-probe/hardening.sh
+           SH_DIR,LOCK_EXCLUDE      base literal(s) removed: 0
+           value now = ':(exclude).softhouse/LOCK'
+  OK       .softhouse/reviews/T189-probe/reachability.sh
+           SH_DIR,LOCK_EXCLUDE      base literal(s) removed: 0
+           value now = ':(exclude).softhouse/LOCK'
+  OK       .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh
+           SH_DIR,EXPECT_PATHSPEC   base literal(s) removed: 0
+           value now = ':(top,exclude).softhouse/LOCK'
+  OK       .softhouse/reviews/t172-probe/run-move-demo.sh
+           USE_FRAGMENT             base literal(s) removed: 0
+           value now = '"$LOCK_EXCLUDE_PATHSPEC"'
+  OK       .softhouse/reviews/t202-probe/make-mutants-b.py
+           muts                     base literal(s) removed: 0
+           1 assignment(s) compared
+  OK       .softhouse/reviews/t202-probe/patch.py
+           old,new                  base literal(s) removed: 0
+           10 assignment(s) compared
+  OK       .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py
+           -                        base literal(s) removed: 0
+
+ABORT(92): the BASE commit b9b37f9c57f0e2016d4c25aae0a9157decbb72cb spells ZERO lock literals across the 17 file(s) in
+the site table. There was nothing to repair, so `HEAD is clean` is not a finding
+about this repair -- it is a statement about the wrong base. REFUSING.

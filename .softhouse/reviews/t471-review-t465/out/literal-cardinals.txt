@@ -1,0 +1,100 @@
+selector corpus  : git ls-files '.softhouse/*.py' '.softhouse/*.sh'
+selector literals: r"""(['"])((?:[^'"\\\n]|\\.)*?\.softhouse/(?:[^'"\\\n]|\\.)*?)\1"""
+subject          : literal interior contains the assembled lock path
+
+BASE 3f4e236a  corpusFiles=1684  filesWithLockLiteral=21  occurrences=69  distinctRows=56
+    .softhouse/bin/fire-program.sh                                           occ=4 distinct=3
+        literal: '$REPO/.softhouse/LOCK'
+        literal: ':!.softhouse/LOCK'
+        literal: ':(top,exclude).softhouse/LOCK'
+    .softhouse/bin/ready-tasks.py                                            occ=8 distinct=7
+        literal: '.softhouse/LOCK'
+        literal: '.softhouse/LOCK (%s) -- REFUSING'
+        literal: '.softhouse/LOCK, and its SUBJECT is the lock-take form for '
+        literal: '.softhouse/LOCK, so the instant this fire took the lock is '
+        literal: 'no .softhouse/LOCK on disk, AND the caller passed %s, '
+        literal: 'no .softhouse/LOCK on disk. Absence of the lock FILE is not '
+        literal: 'the newest commit touching .softhouse/LOCK is %s %r, which '
+    .softhouse/capture/t279-lock-partition/audit-this-fire.py                occ=1 distinct=1
+        literal: '.softhouse/LOCK'
+    .softhouse/capture/t319-reconciler-f5/probe-anchor.sh                    occ=2 distinct=2
+        literal: ' --diff-filter=A -- .softhouse/LOCK | head -3 | sed '
+        literal: '--- C: corroboration  (commit that ADDED .softhouse/LOCK, newest first, 3) ---'
+    .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py            occ=5 distinct=5
+        literal: ' writes .softhouse/LOCK, '
+        literal: 'F   F7: NO .softhouse/LOCK on disk, 8 live workers in tasks.json'
+        literal: 'K   the newest commit touching .softhouse/LOCK is a RELEASE'
+        literal: 'Subject equality alone is forgeable; touching .softhouse/LOCK is not.'
+        literal: 'TOUCH .softhouse/LOCK.'
+    .softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh occ=1 distinct=1
+        literal: '$d/.softhouse/LOCK'
+    .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py  occ=2 distinct=2
+        literal: '.softhouse/LOCK'
+        literal: 'no .softhouse/LOCK on origin/main -> origin says NO FIRE IS RUNNING'
+    .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py    occ=2 distinct=2
+        literal: '.softhouse/LOCK'
+        literal: 'origin/main carries NO .softhouse/LOCK -- it says no fire is running'
+    .softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh      occ=1 distinct=1
+        literal: '$FIX/.softhouse/LOCK'
+    .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh          occ=4 distinct=2
+        literal: '$c:.softhouse/LOCK'
+        literal: '=== commits touching .softhouse/LOCK ==='
+    .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh        occ=3 distinct=2
+        literal: '.softhouse/LOCK'
+        literal: 'A .softhouse/LOCK from an attested base without it -- the fire-lock cycle'
+    .softhouse/hooks/driver-push-gate.sh                                     occ=1 distinct=1
+        literal: '  The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),'
+    .softhouse/hooks/push-before-spawn-audit.py                              occ=2 distinct=2
+        literal: '.softhouse/LOCK'
+        literal: 'no .softhouse/LOCK on origin -- origin said NO FIRE WAS RUNNING'
+    .softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh          occ=1 distinct=1
+        literal: ' M nexus/x.go\\n?? \\xe2.softhouse/LOCK\\n?? .softhouse/LOCK\\n'
+    .softhouse/reviews/T189-probe/hardening.sh                               occ=3 distinct=2
+        literal: ':(exclude).softhouse/LOCK'
+        literal: '=== S1  ONLY .softhouse/LOCK untracked  (all three MUST be empty) ==='
+    .softhouse/reviews/T189-probe/mkfixtures.sh                              occ=2 distinct=2
+        literal: '?? .softhouse/LOCK\\n M real_change.go\\n?? new_deliverable.go\\n'
+        literal: '?? .softhouse/LOCK\\xe2\\n M real_change.go\\n'
+    .softhouse/reviews/T189-probe/reachability.sh                            occ=2 distinct=2
+        literal: '--- C4 same three, with ONLY .softhouse/LOCK dirty (must all be EMPTY) ---'
+        literal: ':(exclude).softhouse/LOCK'
+    .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh             occ=16 distinct=13
+        literal: '  CHECK 1 FAIL: sibling .softhouse/LOCKED_STATE.md was DROPPED from \\$DIRTY -- DETECT site is broken'
+        literal: '  CHECK 1 PASS: sibling .softhouse/LOCKED_STATE.md survived in \\$DIRTY'
+        literal: '  CHECK 1S FAIL: sibling .softhouse/LOCKED_STATE.md was NOT staged -- STAGE site is broken; \\`git add -A\\` skipped a genuine deliverable and a checkpoint would report success while losing it (the 2026-08-18 17:22 hazard)'
+        literal: '  CHECK 1S PASS: sibling .softhouse/LOCKED_STATE.md was STAGED (not silently skipped)'
+        literal: '  CHECK 2 FAIL: .softhouse/LOCK itself is present in \\$DIRTY -- DETECT site is not excluding the real lock file'
+        literal: '  CHECK 2 PASS: .softhouse/LOCK is correctly excluded from \\$DIRTY'
+        literal: '  CHECK 2S FAIL: .softhouse/LOCK itself was staged -- STAGE site is not excluding the real lock file'
+        literal: '  CHECK 2S PASS: .softhouse/LOCK is correctly excluded from staging'
+        literal: '  STOP: site $SITE_INDEX (line $SITE_LINENO) matched the population fragment but does not reference .softhouse/LOCK at all -- something is inconsistent, refusing to evaluate.'
+        literal: '.softhouse/LOCK'
+        literal: ':(top,exclude).softhouse/LOCK'
+        literal: ':(top,exclude).softhouse/LOCK*'
+        literal: '?? .softhouse/LOCK'
+    .softhouse/reviews/t172-probe/run-move-demo.sh                           occ=4 distinct=1
+        literal: ':(top,exclude).softhouse/LOCK'
+    .softhouse/reviews/t202-probe/make-mutants-b.py                          occ=2 distinct=2
+        literal: ':!.softhouse/LOCK'
+        literal: ':(top,exclude).softhouse/LOCK'
+    .softhouse/reviews/t202-probe/patch.py                                   occ=3 distinct=2
+        literal: ':!.softhouse/LOCK'
+        literal: ':(top,exclude).softhouse/LOCK'
+
+HEAD b9b37f9c  corpusFiles=1690  filesWithLockLiteral=14  occurrences=32  distinctRows=31
+    .softhouse/bin/ready-tasks.py                                            occ=7
+    .softhouse/capture/t319-reconciler-f5/probe-anchor.sh                    occ=2
+    .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py            occ=4
+    .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py  occ=1
+    .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py    occ=1
+    .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh          occ=1
+    .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh        occ=1
+    .softhouse/hooks/driver-push-gate.sh                                     occ=1
+    .softhouse/hooks/push-before-spawn-audit.py                              occ=1
+    .softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh          occ=1
+    .softhouse/reviews/T189-probe/hardening.sh                               occ=1
+    .softhouse/reviews/T189-probe/mkfixtures.sh                              occ=2
+    .softhouse/reviews/T189-probe/reachability.sh                            occ=1
+    .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh             occ=8
+
+T471-LITERALS: baseFiles=21 baseOccurrences=69 baseDistinctRows=56 headFiles=14 headOccurrences=32 removed=37 remain=32

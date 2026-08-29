@@ -1,0 +1,2 @@
+ERROR: expected EXACTLY ONE column-0 declaration of LOCK_EXCLUDE_PATHSPEC in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t471-anchor.05uolV/target.sh, found 2.
+The LOCK-exclusion pathspec cannot be reconstructed, so nothing below would be measuring the live guard. REFUSING (P-35); this is not a pass.

@@ -1,0 +1,3 @@
+declaration (reconstructed from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t471-anchor.05uolV/target.sh, never transcribed):
+  LOCK_EXCLUDE_PATHSPEC = [:(top,exclude).softhouse/LOCK*]
+  FAIL: the DECLARED pathspec is [:(top,exclude).softhouse/LOCK*], not the expected [:(top,exclude).softhouse/LOCK] -- it appears WIDENED, narrowed or otherwise corrupted at the declaration, where neither use site would show it.

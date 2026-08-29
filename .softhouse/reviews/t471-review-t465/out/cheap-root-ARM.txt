@@ -1,0 +1,15 @@
+toplevel under the cheap-subset environment: /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-cheaproot.sNxFQsCDU4/tree
+namespace: THE CAPTURE/REVIEW NAMESPACE GUARD [T299]
+namespace:   engine  git version 2.50.1 (Apple Git-155), POSIX awk/sed/sort/comm
+namespace:   root    /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-cheaproot.sNxFQsCDU4/tree
+namespace:   corpus  9796 tracked paths -> 220 evidence directories
+namespace:           197 carry a t<n> id prefix; 23 do not and CANNOT collide this way
+namespace:   CALIBRATION (P-72): the known T256/T259 collision is seen 2/2 times
+namespace:   T255 -> 2 directories; ownership records required 1, present 1
+namespace:       DECLARED   capture/t255-frontier-rot                    by .softhouse/capture/t255-frontier-rot/OWNER-IS-T258-NOT-T255.md
+namespace:       UNCLAIMED  capture/t255-dec2-rev8                       (record: <absent>)
+namespace:   T256 -> 2 directories; ownership records required 1, present 1
+namespace:       DECLARED   capture/t256-verdict-predicate               by .softhouse/capture/t256-verdict-predicate/OWNER-IS-T259-NOT-T256.md
+namespace:       UNCLAIMED  capture/t256-toolchain-population            (record: <absent>)
+NAMESPACE-CENSUS: dirs=220 prefixed=197 unprefixed=23 collidingIds=2 declared=2 unclaimed=2 shortfallIds=0
+namespace: PASS -- every task-id prefix shared by two directories carries its OWNER record.
