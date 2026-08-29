@@ -1,0 +1,10 @@
+pushgate| bash: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-wiring.FwIlN0BZjE/wt/.softhouse/hooks/install-driver-push-gate.sh: No such file or directory
+pushgate| ############################################################
+pushgate| # THE DRIVER PUSH GATE IS NOT INSTALLED (or is incomplete).
+pushgate| # Every push this fire makes to refs/heads/main is UNGATED.
+pushgate| # --status output follows.
+pushgate| ############################################################
+pushgate| bash: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-wiring.FwIlN0BZjE/wt/.softhouse/hooks/install-driver-push-gate.sh: No such file or directory
+reconcile| reconcile-pushed-trees: ref     refs/remotes/origin/main
+reconcile| reconcile-pushed-trees: ledger  /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-wiring.FwIlN0BZjE/wt/.git/softhouse-driver-gate/attest.tsv
+reconcile| reconcile-pushed-trees: ABORT(2) -- the attestation ledger does not exist. There is nothing to reconcile against, and an absent ledger must never read as 'every push was graded'.
