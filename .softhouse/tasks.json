@@ -6079,11 +6079,11 @@
       "model": "opus",
       "target": "code",
       "dependencies": [],
-      "status": "in_progress",
+      "status": "needs_review",
       "files_hint": [
         ".softhouse/capture/t412-driver-selfgrading/"
       ],
-      "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T412-driver-selfgrading. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884.",
+      "note": "FILED BY THE DRIVER against itself, iter4, from a red main it caused and pushed. || DISPATCHED 2026-08-29 by fire 20260829-080002 iter5 on softhouse/T412-driver-selfgrading. Bar on main at dispatch: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46/7884. || COMPLETE 2026-08-29 iter5, bar EXIT 0 probe PRESENT x1 up VERDICT PASS 46/7884, wall 71s. Scope clean vs merge-base. pre-push gate on refs/heads/main INSTALLED at .git/hooks/pre-push; C1 gitlink refusal (no bypass), C2 write-path allowlist over non-merge commits, C3 grade identity on the PUSHED tree. Corrected the driver: full bar is 76-80s here, NOT ~4min; option A rejected on ORACLE DEPENDENCY (it would freeze main during an outage the program says must not stop work), not on cost. Gate has graded two real driver pushes in the wild (4e7d678a, 4e48b7e8), zero bypasses. Three defects found by its own drives, all fixed. HELD for T450.",
       "branch": "softhouse/T412-driver-selfgrading"
     },
     {
@@ -6677,6 +6677,23 @@
         ".softhouse/reviews/t447-review-t442/"
       ],
       "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5, immediately on T442 going terminal."
+    },
+    {
+      "id": "T450",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "role": "reviewer",
+      "target": "docs",
+      "title": "INDEPENDENT review of T412 -- a pre-push gate that is ALREADY INSTALLED AND ENFORCING on the live repo, and whether its cheap tier grades anything worth grading",
+      "branch": "softhouse/T450-review-t412",
+      "dependencies": [
+        "T412"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/t450-review-t412/"
+      ],
+      "note": "DISPATCHED 2026-08-29 by fire 20260829-080002 iter5. NOTE FOR THE REVIEWER: this gate is LIVE on the driver's own repo right now, running from an install-time SNAPSHOT because the tracked gate is not yet on main. It is the only worker output this fire that is already enforcing before merge."
     }
   ],
   "cross_corroboration": {
