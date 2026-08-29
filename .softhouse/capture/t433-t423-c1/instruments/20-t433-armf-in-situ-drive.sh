@@ -120,11 +120,33 @@ mut_adjudicated_reverted() {   # the adjudicated entry REVERTED to its birth byt
   git -C "$D" commit -q -m "T433: ARM F's adjudicated entry REVERTED to its birth bytes, manifest laundered" || return 1
 }
 
+mut_rename_and_rewrite() {  # boundary (iv-b2): rename + REPLACE the bytes, so git sees D+A
+  # (iv-b) turned out to REFUSE, because git reports a high-similarity rename as R and ARM F
+  # then has no ADD record at all. That answer depends on SIMILARITY. This case removes the
+  # similarity: the file is renamed and its content wholly replaced, so git records a genuine
+  # ADD at the new path, dated at the tip — which lands in (iv-a) and is UNGRADED, not
+  # refused. Driving both is the only way to know which of the two answers is the real one.
+  local new="REWRITTEN-$(basename "$POSTFORK")"
+  git -C "$D" mv "$CAP/$POSTFORK" "$CAP/out/$new" || return 1
+  printf 'T433 (iv-b2): every byte of this observation replaced, so no rename similarity remains.\n' \
+    > "$D/$CAP/out/$new" || return 1
+  local d; d="$(shasum -a 256 "$D/$CAP/out/$new" | awk '{print $1}')" || return 1
+  perl -pi -e "s|^[0-9a-f]{64}(\s+\*?)\Q$POSTFORK\E\$|$d\$1out/$new|" "$D/$MAN" || return 1
+  grep -q -E "^$d  out/$new\$" "$D/$MAN" || { echo "    (manifest row not relabelled)"; return 1; }
+  git -C "$D" add -A -- "$CAP" || return 1
+  git -C "$D" commit -q -m "T433 (iv-b2): a post-fork observation renamed AND wholly rewritten, manifest row relabelled, ONE commit" || return 1
+}
+
 mut_vacuity() {   # every post-fork observation born AT THE TIP: ARM F grades NOTHING
   # An orphan commit re-adds every tracked path in ONE commit, so every birth commit IS the
   # tip. Nothing on disk changes, so ARMs A-E are untouched: the ONLY thing that can move is
   # ARM F's own vacuity control. This is the RED half of "an arm that graded nothing reads
   # exactly like an arm that found no differences".
+  # `--orphan` refuses over an existing branch name, and this function runs twice (BEFORE and
+  # AFTER) in the SAME clone. Delete first, or the second call is a HARNESS FAILURE that looks
+  # like a finding. Detach before deleting so the branch is never the checked-out one.
+  git -C "$D" checkout -q --detach 2>/dev/null
+  git -C "$D" branch -q -D t433-vacuity 2>/dev/null
   git -C "$D" checkout -q --orphan t433-vacuity || return 1
   git -C "$D" add -A || return 1
   git -C "$D" commit -q -m "T433 vacuity: every tracked path re-added in ONE commit, so every birth commit IS the tip" || return 1
@@ -132,6 +154,13 @@ mut_vacuity() {   # every post-fork observation born AT THE TIP: ARM F grades NO
 
 run_case() {   # run_case <name> <mutfn> <expect_before> <expect_after>
   local name="$1" mutfn="$2" eb="$3" ea="$4" ref rc want tag
+  # T433_CASES, when set, is a space-separated allowlist. It exists so a single case can be
+  # re-driven after a harness fix without re-running the whole matrix; a run that used it says
+  # so in the transcript, and the RECORDED matrix in out/ is always from an unfiltered run.
+  if [ -n "${T433_CASES:-}" ] && ! printf ' %s ' "${T433_CASES}" | grep -q " $name "; then
+    echo "  $name  SKIPPED (T433_CASES filter)"
+    return 0
+  fi
   for tag in BEFORE AFTER; do
     if [ "$tag" = BEFORE ]; then ref="$BEFORE"; want="$eb"; else ref="$AFTER"; want="$ea"; fi
     if ! prepare "$ref"; then
@@ -172,9 +201,16 @@ run_case adjudicated-revert   mut_adjudicated_reverted   0 1
 # matching manifest row is reached by NO arm in the file. Expected 0 at BOTH refs; what
 # changes at AFTER is that ARM F PRINTS it as UNGRADED-BORN-AT-TIP instead of being silent.
 run_case born-at-tip-iv-a     mut_born_at_tip            0 0
-# BOUNDARY (iv-b) — DISCLOSED, NOT CLOSED. A rename resets the birth commit to the renaming
-# commit, so rename+mutate+relabel in ONE commit lands in (iv-a). Expected 0 at BOTH refs.
-run_case rename-mutate-iv-b   mut_rename_and_mutate      0 0
+# BOUNDARY (iv-b) — MEASURED, AND THE ANSWER WAS NOT THE ONE PREDICTED. T433 expected a
+# rename+mutate to reset ARM F's baseline silently (0 at both refs). It does not: git reports
+# a HIGH-SIMILARITY rename as R, not A, so ARM F has NO ADD record for the new path and
+# REFUSES with exit 2. A refusal moves adjudicated section 10 and fails run-all.sh's verdict,
+# so this case is CAUGHT — as a refusal, which this file's own rules say is never a pass.
+run_case rename-mutate-iv-b   mut_rename_and_mutate      0 2
+# BOUNDARY (iv-b2) — THE SAME ATTACK WITH THE SIMILARITY REMOVED, which is the version that
+# actually lands in (iv-a). Renamed AND wholly rewritten, git records a real ADD at the tip,
+# ARM F reports it UNGRADED-BORN-AT-TIP and the file exits 0. DISCLOSED, NOT CLOSED.
+run_case rename-rewrite-iv-b2 mut_rename_and_rewrite     0 0
 # THE VACUITY CONTROL, DRIVEN. If every post-fork observation were born at the tip, ARM F
 # would grade nothing and report zero differences — which reads exactly like a pass. Section 9
 # asserts f_graded > 0, and this case is the proof that assertion can FAIL.
@@ -206,8 +242,10 @@ chk "adjudicated-revert: a VANISHED difference moves it too" \
     "armf-case-adjudicated-revert-AFTER.txt" "ADJUDICATION MOVED $ADJ" 1
 chk "iv-a: the fabricated tip-born observation is PRINTED as ungraded, not silently equal" \
     "armf-case-born-at-tip-iv-a-AFTER.txt" "UNGRADED-BORN-AT-TIP out/$FAB" 1
-chk "iv-b: the renamed+mutated observation lands in (iv-a) and is PRINTED" \
-    "armf-case-rename-mutate-iv-b-AFTER.txt" "UNGRADED-BORN-AT-TIP out/RENAMED-" 1
+chk "iv-b: the renamed+mutated observation has NO ADD record and is REFUSED, not passed" \
+    "armf-case-rename-mutate-iv-b-AFTER.txt" "have NO recorded ADD commit" 1
+chk "iv-b2: with the similarity removed it IS a real ADD at the tip, and is PRINTED ungraded" \
+    "armf-case-rename-rewrite-iv-b2-AFTER.txt" "UNGRADED-BORN-AT-TIP out/REWRITTEN-" 1
 chk "vacuity: the control FAILS when ARM F graded nothing" \
     "armf-case-vacuity-armf-grades-0-AFTER.txt" "FAIL  ARM F actually GRADED" 1
 chk "vacuity: ARM F did in fact grade zero there" \
@@ -223,7 +261,13 @@ fi
 echo "T433 ARM-F IN-SITU DRIVE VERDICT: PASS."
 echo "  RED  : at $BEFORE the laundered post-fork mutation exits 0 / PASS — T393's residual, real."
 echo "  GREEN: at $AFTER ARM F exits 1 and NAMES it. The 'impossible' baseline was the birth blob."
-echo "  ARM F's own boundary is DRIVEN, not asserted: (iv-a) born-at-tip and (iv-b) rename are"
-echo "  reported UNGRADED and remain UNCLOSED; the vacuity control is shown to FAIL when ARM F"
-echo "  grades nothing, so 'no differences' can never be printed by an arm that read nothing."
+echo "  ARM F's own boundary is DRIVEN, not asserted:"
+echo "    (iv-a)  an observation born AT THE TIP is reported UNGRADED and remains UNCLOSED —"
+echo "            a fabricated observation added at the tip WITH a matching manifest row is"
+echo "            reached by no arm in the file, and only the oracle could distinguish it;"
+echo "    (iv-b)  a HIGH-SIMILARITY rename+mutate is REFUSED (exit 2), not silently passed —"
+echo "            the prediction was wrong and the measurement corrected it;"
+echo "    (iv-b2) the SAME attack with the similarity removed lands in (iv-a), exit 0;"
+echo "    the vacuity control is shown to FAIL when ARM F grades nothing, so 'no differences'"
+echo "    can never be printed by an arm that read nothing."
 exit 0

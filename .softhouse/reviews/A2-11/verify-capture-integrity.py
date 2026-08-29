@@ -155,11 +155,16 @@ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not imp
                     observation added at the tip WITH a matching manifest row is therefore
                     reached by no arm in this file — internal consistency cannot distinguish
                     it from a real capture; only the oracle can. DRIVEN by T433.
-                    (iv-b) MOVED/RENAMED. `--diff-filter=A` without `--follow` records a
-                    rename as an ADD at the new path, so a rename-and-mutate in ONE commit
-                    resets the baseline to the mutated bytes and ARM F is silent. DRIVEN by
-                    T433. ARM C's path-set catches the rename itself unless the manifest is
-                    laundered too; laundered, the pair is uncaught.
+                    (iv-b) MOVED/RENAMED — AND THE PREDICTION WAS WRONG, WHICH IS WHY IT WAS
+                    DRIVEN. T433 expected `--diff-filter=A` to record a rename as an ADD at
+                    the new path, resetting the baseline silently. It does not: git reports a
+                    HIGH-SIMILARITY rename as R, so ARM F finds NO ADD record for the new path
+                    and REFUSES with exit 2 — which run-all.sh adjudicates as a MOVE of section
+                    10, never a pass. So rename+mutate+relabel in one commit is CAUGHT.
+                    (iv-b2) …BUT ONLY WHILE THE SIMILARITY HOLDS. Rename the file AND replace
+                    its bytes wholly and git records a genuine ADD at the tip, which lands in
+                    (iv-a): reported UNGRADED, exit 0. This is the real edge, and it is the
+                    same hole as (iv-a) rather than a second one. Both DRIVEN by T433.
                     (iv-c) DELETED AND RE-ADDED. The earliest ADD still wins, so a re-add
                     with different bytes IS caught; a re-add with IDENTICAL bytes is caught
                     by nothing here, because no arm keeps history of the gap. NOT DRIVEN.
