@@ -1,0 +1,7 @@
+  BASE  emitter_payloads sees 3 payload(s): [1, 2, 3]
+  M1    union payloads on a .py  2 -> 1   CHANGED: True
+        union payloads on a .sh  7 -> 7   CHANGED: False <- the shell arm already reproduces ARM 1 exactly
+  M2    arm sees 0 payload(s): []   CHANGED: True
+  M3    arm sees 1 payload(s): [1]   CHANGED: True
+
+RESULT: all three mutations demonstrably change the arm or the union. EXIT 0

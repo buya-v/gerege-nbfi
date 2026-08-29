@@ -1,0 +1,23 @@
+=== 7.1  THE F-STRING DISAGREEMENT ===
+  cells report WHICH predicate fires: P1 = binding (an untagged line states the
+  claim), P2 = printed (a payload states it untagged), clear = neither.
+
+  case                                                       T455    T467    T476   
+  F1  f-string, claim CONTIGUOUS, tag in trailing comment    P2      P2      P2      <- T476 says T467 already caught this
+  F2  f-string split by a COMPUTED value {chr(72)}           clear   clear   clear   <- T472's A4
+  F3  f-string split by a STATIC interpolation {'H'}         clear   clear   P2      <- nothing computed; bytes all in source
+  F4  the same claim in a plain str (calibration)            P2      P2      P2      <- known POSITIVE
+
+=== 7.2  T467's WRAPPED-PAYLOAD MITIGATION ===
+  T467 §9: 'a claim WRAPPED across two payloads -- predicate 1 de-wraps contiguous
+  tagged blocks and does see it.' Driven, with the tag in each place that matters.
+
+  case                                                       T455    T467    T476   
+  W1  wrapped over a continuation, tag on BOTH lines         clear   clear   P2      
+  W2  wrapped over a continuation, tag on the SECOND line on clear   clear   P2      
+  W3  wrapped over a continuation, NO tag anywhere           clear   clear   P2      
+  W4  wrapped over two SEPARATE commands, no tag (declared o clear   clear   clear   
+
+  READ W3: if T467 is 'clear' there, its declared mitigation is FALSE and not
+  merely untested, because the sentence reaches the reader with no tag anywhere
+  in the file and neither predicate says so.

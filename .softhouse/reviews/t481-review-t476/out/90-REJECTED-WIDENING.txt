@@ -1,0 +1,15 @@
+  code from 36e01f25   population from 6a345e4a: 1687 tracked .py/.sh
+  shipped  flags 6 file(s)
+  widened  flags 9 file(s)
+  files the WIDENING adds:
+      .softhouse/reviews/A2-11/verify-capture-integrity.py
+      .softhouse/reviews/t423-review-t393/instruments/20-t423-birth-blob-probe.py
+      .softhouse/reviews/t423-review-t393/instruments/60-t423-birth-arm-reaches-residual.py
+  does the widening flag the grader itself (a GUARDED file)? True
+
+  === THE INERT-DOCSTRING SENTENCE, HELD TO ITS OWN STANDARD ===
+  shipped rule on the SHIPPED inert-docstring fixture:            clear
+  WIDENED rule on the same fixture:                              FLAGS
+  shipped rule on a docstring whose LINE STARTS WITH `print(`:   FLAGS
+      ^ that last line is ARM 1 -- a LEXICAL arm running over a .py that PARSES,
+        which is the thing the rejected widening was rejected for being.

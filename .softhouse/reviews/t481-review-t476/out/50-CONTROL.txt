@@ -1,0 +1,63 @@
+===========================================================================
+T481 -- THE SUPERSET CONTROL, DRIVEN RED THREE WAYS
+===========================================================================
+
+--- THE CHECK COUNT AT EACH REF (T476 publishes 43 / 48 / 53) ---
+Note: switching to '36e01f25fa908951d82c17ed2ad8748fe8324f43'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+  ref 3f4e236a: section 10 exit 0, checks 43
+  ref 6a345e4a: section 10 exit 0, checks 48
+  ref 36e01f25: section 10 exit 0, checks 53
+
+--- THE UNMUTATED TIP ---
+  OK   clean tip: section 10 exit = 0 (expected 0)
+  OK   clean tip: SUPERSET CONTROL failures = 0 (expected 0)
+  OK   clean tip: REGRESSION SUITE failures = 0 (expected 0)
+  clean tip: checks run = 53
+
+--- M1 ---
+  section 10 exit=1  checks=53  traceback=0  FAILURES-line=1
+  SUPERSET CONTROL failed: 1    REGRESSION SUITE failed: 0
+  OK   M1: exit is 1, BY A VALUE not a traceback = 1 (expected 1)
+  OK   M1: traceback count = 0 (expected 0)
+  OK   M1: checks run (nothing skipped) = 53 (expected 53)
+  OK   M1: the SUPERSET CONTROL goes RED = 1 (expected 1)
+  (the REGRESSION SUITE's own verdict under M1 is reported above, NOT asserted:
+   whether it moves is the finding, not the expectation.)
+
+--- M2 ---
+  section 10 exit=0  checks=53  traceback=0  FAILURES-line=1
+  SUPERSET CONTROL failed: 0    REGRESSION SUITE failed: 0
+  BAD  M2: exit is 1, BY A VALUE not a traceback = 0, EXPECTED 1
+  OK   M2: traceback count = 0 (expected 0)
+  OK   M2: checks run (nothing skipped) = 53 (expected 53)
+  BAD  M2: the SUPERSET CONTROL goes RED = 0, EXPECTED 1
+  (the REGRESSION SUITE's own verdict under M2 is reported above, NOT asserted:
+   whether it moves is the finding, not the expectation.)
+
+--- M3 ---
+  section 10 exit=0  checks=53  traceback=0  FAILURES-line=1
+  SUPERSET CONTROL failed: 0    REGRESSION SUITE failed: 0
+  BAD  M3: exit is 1, BY A VALUE not a traceback = 0, EXPECTED 1
+  OK   M3: traceback count = 0 (expected 0)
+  OK   M3: checks run (nothing skipped) = 53 (expected 53)
+  BAD  M3: the SUPERSET CONTROL goes RED = 0, EXPECTED 1
+  (the REGRESSION SUITE's own verdict under M3 is reported above, NOT asserted:
+   whether it moves is the finding, not the expectation.)
+
+RESULT: 4 assertion(s) did not hold. EXIT 1

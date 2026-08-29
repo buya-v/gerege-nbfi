@@ -1,0 +1,4 @@
+  T467   as the file counts it (per PAYLOAD): 2      distinct SOURCE LINES: 2
+  T476   as the file counts it (per PAYLOAD): 8      distinct SOURCE LINES: 2
+
+  The transcript prints the first number under the words "quotation LINES".

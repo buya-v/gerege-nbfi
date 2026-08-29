@@ -1,0 +1,60 @@
+===========================================================================
+T481 -- THE REGRESSION SUITE, RE-DRIVEN
+  emitter rule ref : 3f4e236a
+  payload rule ref : 6a345e4a
+  union ref        : 36e01f25
+===========================================================================
+
+--- SECTION 10's OWN EXIT, THREE CASES x THREE REFS ---
+Note: switching to '36e01f25fa908951d82c17ed2ad8748fe8324f43'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+  case U    section 10 exit:  T455=1  T467=0  T476=1
+  case Q    section 10 exit:  T455=1  T467=1  T476=1
+  case A2   section 10 exit:  T455=1  T467=0  T476=1
+
+  OK   U   caught at the emitter ref = 1 (expected 1)
+  OK   U   MISSED at the payload ref = 0 (expected 0)
+  OK   U   caught at the union ref = 1 (expected 1)
+  OK   A2  caught at the emitter ref = 1 (expected 1)
+  OK   A2  MISSED at the payload ref = 0 (expected 0)
+  OK   A2  caught at the union ref = 1 (expected 1)
+  OK   Q   the CONTROL: caught at the payload ref = 1 (expected 1)
+  OK   Q   the CONTROL: caught at the union ref = 1 (expected 1)
+
+--- THE WHOLE RUNNER, AND THE TRANSCRIPT A READER OPENS ---
+  ref 6a345e4a: runner exit=0  untagged sentences in the transcript=1  verdict PASS=1 FAIL=0
+  ref 36e01f25: runner exit=1  untagged sentences in the transcript=1  verdict PASS=0 FAIL=1
+  OK   runner at the payload ref exits 0 with the smuggled line live = 0 (expected 0)
+  OK   its transcript carries the sentence UNTAGGED = 1 (expected 1)
+  OK   and that transcript calls the run a PASS = 1 (expected 1)
+  OK   runner at the union ref FAILS on the same tree = 1 (expected 1)
+  OK   its transcript carries the same bytes = 1 (expected 1)
+  OK   but calls the run a FAIL = 1 (expected 1)
+  OK   and does NOT call it a PASS = 0 (expected 0)
+
+  The echo is live at both refs -- section 10 grades SOURCE and cannot unprint an
+  emitter. What moves is the RECORD: a transcript that carries a false sentence
+  untagged and calls itself a PASS is citable; the same bytes under a FAIL are not.
+
+--- CASE G: THE CLEAN TREE AT THE UNION REF, WHOLE RUNNER ---
+  OK   clean tree: runner exit = 0 (expected 0)
+  OK   clean tree: sections run = 10 (expected 10)
+  OK   clean tree: deviations = 0 (expected 0)
+  OK   clean tree: untagged sentences in transcript = 0 (expected 0)
+
+RESULT: every case behaved as recorded. EXIT 0

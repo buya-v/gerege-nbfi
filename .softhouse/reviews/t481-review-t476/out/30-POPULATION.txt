@@ -1,0 +1,38 @@
+
+=== POPULATION AT 6a345e4a-equivalent (T467 tip): 1687 tracked .py/.sh ===
+  T455  flags 0 file(s); grading RAISED on 0
+  T467  flags 6 file(s); grading RAISED on 0
+  T476  flags 6 file(s); grading RAISED on 0
+
+=== POPULATION AT T476 tip: 1691 tracked .py/.sh ===
+  T455  flags 0 file(s); grading RAISED on 0
+  T467  flags 6 file(s); grading RAISED on 0
+  T476  flags 6 file(s); grading RAISED on 0
+
+  (i)  T455's rule flags 0 of 1691 -- the number the union's cost rests on
+  (ii) the T476 member SET, at this tree:
+       .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh
+           30-t433-armf-wiring-guard.sh:89 IMPOSS="there is no committed baseline older than HEAD|no baseline older than HEAD anywher
+       .softhouse/capture/t433-t423-c1/instruments/31-t433-wiring-guard-red-drive.sh
+           31-t433-wiring-guard-red-drive.sh:55 printf '\n# There is no committed baseline older than HEAD for those 632.\n' >> "$D/$DRIVE
+       .softhouse/capture/t433-t423-c1/instruments/40-t433-annotate-echoing-transcripts.sh
+           40-t433-annotate-echoing-transcripts.sh:31 PAT="There is no committed baseline older than HEAD for those 632\.|no baseline older than
+       .softhouse/capture/t455-t448-conditions/instruments/30-t455-tag-binding-drive.sh
+           30-t455-tag-binding-drive.sh:133 local imposs="there is no committed baseline older than HEAD|no baseline older than HEAD a
+       .softhouse/reviews/t448-review-t433/instruments/30-t448-tag-abuse.sh
+           30-t448-tag-abuse.sh:48 FALSE_SENTENCE="There is no committed baseline older than HEAD for those 632."
+       .softhouse/reviews/t464-review-t455/instruments/40-t464-caseB-adjudication.py
+           40-t464-caseB-adjudication.py:26 SENT = "There is no committed baseline older than HEAD for those 632."
+           40-t464-caseB-adjudication.py:30 IMPOSS = ("there is no committed baseline older than HEAD"
+  T476 vs T467:  +0  -0
+  the 7 guarded files, flagged by T476 on a clean tree: 0 []
+
+=== REACH CARDINALS, re-counted at 6a345e4a (T472 published 7152/571, 2491/170, 192/60)
+  "<literal>" % ...      sites=7152  files=571
+  f-strings              sites=2491  files=170
+  bytes literals         sites=192  files=60
+  f-strings with an interpolation BETWEEN two constants: 1031 in 158 files
+  (that last row is T476's narrower count -- the shape where a claim COULD be
+   split by an interpolation. T476 publishes 1,033 in 158 files.)
+
+RESULT: every recorded relation held. EXIT 0

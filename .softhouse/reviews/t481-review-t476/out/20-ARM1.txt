@@ -1,0 +1,46 @@
+=== ARM 1 UNWIRED vs WIRED, on CONSTRUCTED cases ===
+  ref under test: 36e01f25
+
+  case                                                                   WITH     WITHOUT  ARM 1 DECIDES IT
+  C1  continuation: CLAIM on line 1, TAG printed on line 2               FLAG     clear    YES
+  C2  continuation: CLAIM on line 1, TAG on line 2, tag ALSO in a traili FLAG     clear    YES
+  C3  continuation: CLAIM on line 1, NOTHING but text on line 2 (a real  FLAG     FLAG     -
+  D1  a `print(`-prefixed line INSIDE A FUNCTION DOCSTRING               FLAG     clear    YES
+  D2  a `print(`-prefixed line inside a MODULE docstring                 FLAG     clear    YES
+  D3  a `print(`-prefixed line inside a docstring, TAGGED in that docstr FLAG     clear    YES
+  E1  a real live print of the claim, untagged (the calibration: a KNOWN FLAG     FLAG     -
+  E2  a correctly tagged live print (the calibration: a KNOWN negative)  clear    clear    -
+
+=== WHAT ARM 1 DECIDES, AND IN WHICH DIRECTION ===
+  C1  continuation: CLAIM on line 1, TAG printed on line 2
+      the reader of the output sees: the claim AND the tag, on one printed line
+      flagging it is WRONG  ->  A FALSE POSITIVE ARM 1 CAUSES
+  C2  continuation: CLAIM on line 1, TAG on line 2, tag ALSO in a trailing comment
+      the reader of the output sees: the claim AND the tag
+      flagging it is WRONG  ->  A FALSE POSITIVE ARM 1 CAUSES
+  D1  a `print(`-prefixed line INSIDE A FUNCTION DOCSTRING
+      the reader of the output sees: nothing: a docstring is not executed
+      flagging it is WRONG  ->  A FALSE POSITIVE ARM 1 CAUSES
+  D2  a `print(`-prefixed line inside a MODULE docstring
+      the reader of the output sees: nothing: a docstring is not executed
+      flagging it is WRONG  ->  A FALSE POSITIVE ARM 1 CAUSES
+  D3  a `print(`-prefixed line inside a docstring, TAGGED in that docstring
+      the reader of the output sees: nothing
+      flagging it is WRONG  ->  A FALSE POSITIVE ARM 1 CAUSES
+
+  ARM 1 earns 0 catch(es) here and causes 5 false positive(s).
+
+=== THE CALIBRATION (P-72): this instrument must be able to say both words ===
+  E1, a known POSITIVE, is flagged by the shipped rule: True
+  E2, a known NEGATIVE, is clear under the shipped rule:  True
+
+=== THE SAME CASES AT ALL THREE REFS -- is any of it NEW? ===
+  case                                                       T455    T467    T476
+  C1  continuation: CLAIM on line 1, TAG printed on line 2   FLAG    FLAG    FLAG
+  C2  continuation: CLAIM on line 1, TAG on line 2, tag ALSO FLAG    FLAG    FLAG
+  C3  continuation: CLAIM on line 1, NOTHING but text on lin FLAG    FLAG    FLAG
+  D1  a `print(`-prefixed line INSIDE A FUNCTION DOCSTRING   FLAG    clear   FLAG
+  D2  a `print(`-prefixed line inside a MODULE docstring     FLAG    clear   FLAG
+  D3  a `print(`-prefixed line inside a docstring, TAGGED in FLAG    clear   FLAG
+  E1  a real live print of the claim, untagged (the calibrat FLAG    FLAG    FLAG
+  E2  a correctly tagged live print (the calibration: a KNOW clear   clear   clear

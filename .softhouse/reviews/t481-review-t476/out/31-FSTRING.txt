@@ -1,0 +1,7 @@
+  ref: 6a345e4a   total JoinedStr nodes: 2491
+  A  FormattedValue with a Constant on BOTH sides                   1031 f-strings in 158 files
+  B  any FormattedValue that is neither first nor last element      1045 f-strings in 158 files
+  C  >=1 FormattedValue and >=2 Constants anywhere in the JoinedStr  1033 f-strings in 158 files
+  D  >=1 FormattedValue and >=1 Constant before it and >=1 after    1033 f-strings in 158 files
+
+  T476 publishes 1,033 in 158 files.
