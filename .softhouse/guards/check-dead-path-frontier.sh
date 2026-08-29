@@ -228,12 +228,36 @@ if [ "$added_n" -gt 0 ]; then
   # that names WHAT is wrong but not WHAT TO DO buys one lesson per worker and buys it
   # again every time. So the message names the remedy, and anchors to a SENTENCE rather
   # than a line number or a pattern id, because both of those move and the sentence does not.
+  #
+  # T470 -- THE REFUSAL MUST NOT ARGUE WITH ITSELF.
+  # As T458 shipped it, this block read "Do ONE of these three, and never a fourth" and called
+  # remedy 2 the arm asked for "in exchange for NOT PINNING the row". Neither is what this
+  # guard asks. Immediately above the row listing, unchanged since T316, this same message
+  # OFFERS the pin route ("record why in the pin"); the header block WHAT A ROW DOES **NOT**
+  # MEAN sanctions it in terms ("either repaired or pinned with its reason");
+  # `dead-path-frontier.pin` EXERCISES it -- for the two FU-T299-2 ordered-fallback rows, for
+  # T305's four red-drive rows, and, decisively, for T306's injected-vector row, which T326
+  # added as a NEW row and pinned after recording "REPAIR WAS CONSIDERED AND IS NOT AVAILABLE"
+  # and "Pinning it is the disposition T316's own header prescribes". A NEW row, pinned with
+  # its reason, by a later worker, in this pin, today -- which is exactly the case the shipped
+  # text declared forbidden. So it forbade, inside one screen, a disposition the same screen
+  # offers and the pin it grades against has taken at least three times. That is the species of defect this file already
+  # records at the `removed_n` arm in `conformance.sh` -- "[T358: ... a false statement inside
+  # a refusal message.]" -- and T458 also carried the narrower half into the permanent register
+  # as P-103's "forbidden fourth". Both sites are corrected; the register FORWARD, never in
+  # place (see the T470 erratum at the foot of patterns.md).
+  # THE PRESUMPTION IS UNCHANGED AND DELIBERATELY SO: a '+' row is a NEW site, REPAIR IT. The
+  # pin is the documented exception, gated on ordered-fallback-or-dead-by-design PLUS the
+  # refuse-when-nothing-resolves arm. Widening it to "pin anything awkward" is the amnesty this
+  # frontier exists to prevent.
   # ---------------------------------------------------------------------------------------
   echo "conformance: !! ----------------------------------------------------------------"
   echo "conformance: !! THE REMEDY, because SIX workers in one fire each rediscovered it:"
   echo "conformance: !!   T440, T446, T447, T448, T451, T452 -- every one of them repaired"
-  echo "conformance: !!   the INSTRUMENT, and not one of them grew the pin. Do ONE of these"
-  echo "conformance: !!   three, and never a fourth:"
+  echo "conformance: !!   the INSTRUMENT, and not one of them grew the pin. THAT IS WHAT SIX"
+  echo "conformance: !!   WORKERS DID; it is not the only disposition this guard sanctions."
+  echo "conformance: !!   To REPAIR, do ONE of these three. If you are NOT repairing, there"
+  echo "conformance: !!   is exactly ONE other sanctioned route, and it is named after them:"
   echo "conformance: !!   1. ASSEMBLE the path at run time from a variable -- S='.softhouse'"
   echo "conformance: !!      and build downward. This census reads QUOTED LITERALS ONLY, so"
   echo "conformance: !!      an assembled path is not a row. That is not evasion: it STATES"
@@ -242,14 +266,37 @@ if [ "$added_n" -gt 0 ]; then
   echo "conformance: !!   2. MAKE THE LOCATION A REQUIRED PARAMETER -- no default, and a"
   echo "conformance: !!      HARD EXIT when it does not resolve. Never a skipped case,"
   echo "conformance: !!      never a warning, never a pass. This is the arm this guard asks"
-  echo "conformance: !!      for in exchange for not pinning the row."
+  echo "conformance: !!      for on EITHER route -- whether you repair the row away or pin"
+  echo "conformance: !!      it. The sentence above requires it for the PIN route too."
   echo "conformance: !!   3. If the failure arm PRINTS instead of exiting, adopt T238's"
   echo "conformance: !!      sweeplib shape too, so the instrument cannot print a negative"
   echo "conformance: !!      it never measured. That is the sibling defect T446 was caught"
   echo "conformance: !!      by, in the same fire, for the same underlying reason."
+  echo "conformance: !! ----------------------------------------------------------------"
+  echo "conformance: !! THE ROUTE THAT IS NOT A REPAIR, AND IS STILL SANCTIONED:"
+  echo "conformance: !!   PIN THE ROW WITH ITS REASON. Permitted ONLY where the reference is"
+  echo "conformance: !!   a deliberate ORDERED-FALLBACK candidate, or is dead BY DESIGN, and"
+  echo "conformance: !!   ONLY together with remedy 2's arm: the instrument must REFUSE when"
+  echo "conformance: !!   NO candidate resolves. THIS REFUSAL ALREADY OFFERED IT ABOVE --"
+  echo "conformance: !!   'record why in the pin'. This guard's own header SANCTIONS it: grep"
+  echo "conformance: !!   this file for WHAT A ROW DOES **NOT** MEAN -- 'a dead literal is a"
+  echo "conformance: !!   SMELL that must be inspected once, by a human, and then either"
+  echo "conformance: !!   repaired or pinned with its reason. This guard counts; it does not"
+  echo "conformance: !!   judge.' And THE PIN ITSELF TAKES THAT ROUTE, repeatedly -- open it"
+  echo "conformance: !!   and read the reasons: the two FU-T299-2 ordered-fallback rows; the"
+  echo "conformance: !!   four T305 red-drive rows that MUST NOT exist in a clean tree; and"
+  echo "conformance: !!   T306's injected-vector row, which T326 ADDED AS A NEW ROW and pinned"
+  echo "conformance: !!   with 'REPAIR WAS CONSIDERED AND IS NOT AVAILABLE ... Pinning it is"
+  echo "conformance: !!   the disposition T316's own header prescribes.'"
+  echo "conformance: !!   It is the EXCEPTION, not the default -- six of six workers in fire"
+  echo "conformance: !!   20260829-080002 repaired, and not one of them needed it."
+  echo "conformance: !! ----------------------------------------------------------------"
   echo "conformance: !! THE FORBIDDEN FOURTH: do NOT split or concatenate the literal to"
   echo "conformance: !! slip past the selector. That leaves the false claim standing and"
   echo "conformance: !! removes the only instrument that would ever have found it."
+  echo "conformance: !! (It is 'the FOURTH' because it is the fourth idea that occurs to a"
+  echo "conformance: !! refused worker, not a fourth entry in a list. PINNING WITH A REASON"
+  echo "conformance: !! IS NOT IT.)"
   echo "conformance: !! FULL RULE, the six measured row counts, and the three sub-classes:"
   echo "conformance: !! grep patterns.md for this SENTENCE -- the line number moves, and an"
   echo "conformance: !! id is a cardinal that rots, but the sentence relocates with its text:"
