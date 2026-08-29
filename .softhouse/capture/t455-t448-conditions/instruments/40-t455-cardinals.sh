@@ -27,7 +27,13 @@ DRIVE=".softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.s
 MATRIX=".softhouse/capture/t393-t382-conditions/out/drive/MATRIX.tsv"
 GRADER="verify-capture-integrity.py"
 
-[ -d "$ROOT/.git" ] || { echo "REFUSED: $ROOT is not a git checkout." >&2; exit 3; }
+# `[ -d "$ROOT/.git" ]` IS WRONG HERE and this file used it first: in a LINKED WORKTREE — which
+# is how every softhouse worker runs — `.git` is a FILE holding a gitdir pointer, not a
+# directory, so the test refused a perfectly good checkout. Ask git instead of guessing at its
+# layout. (Fail-closed in the wrong place is still a broken instrument: it refuses to measure
+# exactly the trees this program actually works in.)
+git -C "$ROOT" rev-parse --show-toplevel >/dev/null 2>&1 \
+  || { echo "REFUSED: $ROOT is not inside a git work tree." >&2; exit 3; }
 for f in "$DRIVE" "$MATRIX"; do
   [ -f "$ROOT/$f" ] || { echo "REFUSED: $f absent under $ROOT; nothing to measure." >&2; exit 3; }
 done
@@ -45,7 +51,7 @@ echo "  commit = $(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo UNK
 echo
 
 echo "--- 1. C-T448-4: HOW MANY CASES IS T393's MATRIX? ---------------------------------"
-echo "    LEG 1 — the SOURCE: `run_case` invocations in the drive script."
+echo "    LEG 1 - the SOURCE: run_case invocations in the drive script."
 CASES_SRC="$(grep -c '^run_case ' "$ROOT/$DRIVE")"
 echo "    LEG 2 — the OUTPUT: distinct case names in the committed MATRIX.tsv, and its row"
 echo "            count, which must be cases x 2 refs."
@@ -79,10 +85,10 @@ echo
 echo "--- 2. C-T448-5: WHAT INVOKES THE GRADER? -----------------------------------------"
 echo "    THE DEFINITION, STATED BEFORE THE COUNT, because the '17' was a count with no"
 echo "    definition attached. An INVOCATION LINE is a tracked, non-out/ line in a .sh or .py"
-echo "    that either RUNS the grader (\`python3 ... $GRADER\`) or BINDS its path to a shell"
-echo "    variable for later execution (\`VAR=...$GRADER\`). A line that merely NAMES the"
+echo "    that either RUNS the grader (python3 ... $GRADER) or BINDS its path to a shell"
+echo "    variable for later execution (VAR=...$GRADER). A line that merely NAMES the"
 echo "    grader inside a quoted assertion string is a MENTION, not an invocation, and is"
-echo "    counted separately — three of the seventeen were exactly that."
+echo "    counted separately, and the gap between the two columns is measured, not asserted."
 echo
 echo "    LEG 1 — git's engine."
 L1_LINES="$(git -C "$ROOT" grep -n -E "(python3[^|;]*$GRADER|^[[:space:]]*[A-Za-z_]+=[^=]*$GRADER)" -- '*.sh' '*.py' 2>/dev/null | grep -v '/out/' | grep -c . )"
@@ -131,6 +137,24 @@ echo
 agree "invocation LINES"   "$L1_LINES"   "$L2_LINES"
 agree "invoking FILES"     "$L1_FILES"   "$L2_FILES"
 agree "total MENTIONS"     "$L1_MENTION" "$L2_MENTION"
+echo
+echo "    THE LIST, so the count stands beside the thing it counts and a later reader can"
+echo "    decompose it instead of restating it (P-80 is a count that outlives its list):"
+git -C "$ROOT" grep -c -E "(python3[^|;]*$GRADER|^[[:space:]]*[A-Za-z_]+=[^=]*$GRADER)" \
+  -- '*.sh' '*.py' 2>/dev/null | grep -v '/out/' | sed 's/^/      /' || true
+echo
+echo "    T455_EXCLUDE, if given, is a path prefix whose files are subtracted, so a figure for"
+echo "    PRE-EXISTING invokers can be produced without hand-editing a total."
+EXCL="${T455_EXCLUDE:-}"
+if [ -n "$EXCL" ]; then
+  X_LINES="$(git -C "$ROOT" grep -n -E "(python3[^|;]*$GRADER|^[[:space:]]*[A-Za-z_]+=[^=]*$GRADER)" -- '*.sh' '*.py' 2>/dev/null | grep -v '/out/' | grep -c "^$EXCL" )"
+  X_FILES="$(git -C "$ROOT" grep -l -E "(python3[^|;]*$GRADER|^[[:space:]]*[A-Za-z_]+=[^=]*$GRADER)" -- '*.sh' '*.py' 2>/dev/null | grep -v '/out/' | grep -c "^$EXCL" )"
+  echo "      excluding $EXCL : $X_FILES file(s), $X_LINES line(s)"
+  echo "      PRE-EXISTING     : $((L2_FILES - X_FILES)) file(s), $((L2_LINES - X_LINES)) line(s)"
+else
+  echo "      T455_EXCLUDE not set, so no pre-existing figure is produced. THAT IS A STATEMENT"
+  echo "      ABOUT THIS RUN, not a claim that the two figures coincide."
+fi
 echo
 echo "    THE ONE THAT IS ADJUDICATED, NOT MERELY PRESENT: run-all.sh runs the grader as"
 echo "    \`sec 10 0\`, so its exit code is graded against 0 and any move fails RUN-ALL VERDICT."

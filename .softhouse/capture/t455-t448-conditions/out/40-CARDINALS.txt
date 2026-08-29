@@ -1,0 +1,92 @@
+############ T455 — THE CARDINALS, MEASURED HERE
+  root   = /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0f9e6e17cedc71ae
+  commit = d41a018e
+
+--- 1. C-T448-4: HOW MANY CASES IS T393's MATRIX? ---------------------------------
+    LEG 1 - the SOURCE: run_case invocations in the drive script.
+    LEG 2 — the OUTPUT: distinct case names in the committed MATRIX.tsv, and its row
+            count, which must be cases x 2 refs.
+      run_case invocations in the script : 11
+      distinct cases in MATRIX.tsv       : 11
+      data rows in MATRIX.tsv            : 22   (= cases x 2 refs)
+  OK   matrix cardinality: both legs say 11
+  OK   the row count is exactly cases x 2 refs (22)
+      T433 restated this as a 13-case matrix. It is 11.
+
+    HOW MANY ROWS WERE ARGUED RATHER THAN MEASURED. T433 drove exactly two cases through
+    the whole runner — the CONTROL (calibration) and f1-13b (the row it changed) — and
+    argued the rest. Measured from the case list, not from the sentence:
+      cases: 11   driven through run-all.sh by T433: 2   argued: 9
+      T433 restated this as eleven argued. It is 9.
+    T448 MEASURED ALL 9 — including the control row — and every one
+    matched T393's committed value (its out/50-F5-ARGUED-ROWS.txt). So T433's ARGUMENT
+    holds; it now holds ON MEASUREMENT rather than on reasoning, and F-5 closes as
+    MEASURED. T455 does not re-drive them: they are settled, and re-running a settled
+    measurement is not a second derivation, it is the same one twice.
+
+--- 2. C-T448-5: WHAT INVOKES THE GRADER? -----------------------------------------
+    THE DEFINITION, STATED BEFORE THE COUNT, because the '17' was a count with no
+    definition attached. An INVOCATION LINE is a tracked, non-out/ line in a .sh or .py
+    that either RUNS the grader (python3 ... verify-capture-integrity.py) or BINDS its path to a shell
+    variable for later execution (VAR=...verify-capture-integrity.py). A line that merely NAMES the
+    grader inside a quoted assertion string is a MENTION, not an invocation, and is
+    counted separately, and the gap between the two columns is measured, not asserted.
+
+    LEG 1 — git's engine.
+      invocation lines : 33
+      invoking files   : 22
+      total mentions   : 69   (the figure a bare grep produces)
+
+    LEG 2 — python reads the bytes of every tracked file. No git grep anywhere in it.
+      invocation lines : 33
+      invoking files   : 22
+      total mentions   : 69
+
+  OK   invocation LINES: both legs say 33
+  OK   invoking FILES: both legs say 22
+  OK   total MENTIONS: both legs say 69
+
+    THE LIST, so the count stands beside the thing it counts and a later reader can
+    decompose it instead of restating it (P-80 is a count that outlives its list):
+      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh:4
+      .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh:1
+      .softhouse/capture/t433-t423-c1/instruments/20-t433-armf-in-situ-drive.sh:1
+      .softhouse/capture/t433-t423-c1/instruments/30-t433-armf-wiring-guard.sh:2
+      .softhouse/capture/t433-t423-c1/instruments/31-t433-wiring-guard-red-drive.sh:1
+      .softhouse/capture/t455-t448-conditions/instruments/20-t455-iva-close-drive.sh:1
+      .softhouse/capture/t455-t448-conditions/instruments/30-t455-tag-binding-drive.sh:5
+      .softhouse/capture/t455-t448-conditions/instruments/40-t455-cardinals.sh:2
+      .softhouse/reviews/A2-11/run-all.sh:1
+      .softhouse/reviews/t382-review-t374/instruments/10-attack-section10.sh:1
+      .softhouse/reviews/t382-review-t374/instruments/30-saturation-audit.sh:1
+      .softhouse/reviews/t382-review-t374/instruments/31-saturation-clean-target.sh:1
+      .softhouse/reviews/t382-review-t374/instruments/60-defeat-arm-a-baseline.sh:1
+      .softhouse/reviews/t423-review-t393/instruments/10-t423-f4-rerun.sh:1
+      .softhouse/reviews/t423-review-t393/instruments/30-t423-extra-drives.sh:1
+      .softhouse/reviews/t423-review-t393/instruments/50-t423-fork-tie-defeat.sh:1
+      .softhouse/reviews/t423-review-t393/instruments/61-t423-armf-red-drive.sh:1
+      .softhouse/reviews/t448-review-t433/instruments/20-t448-armf-drives.sh:1
+      .softhouse/reviews/t448-review-t433/instruments/30-t448-tag-abuse.sh:2
+      .softhouse/reviews/t448-review-t433/instruments/40-t448-iva-closable.sh:1
+      .softhouse/reviews/t448-review-t433/instruments/50-t448-f5-argued-rows.sh:2
+      .softhouse/reviews/t448-review-t433/instruments/60-t448-f113b-attribution.sh:1
+
+    T455_EXCLUDE, if given, is a path prefix whose files are subtracted, so a figure for
+    PRE-EXISTING invokers can be produced without hand-editing a total.
+      excluding .softhouse/capture/t455-t448-conditions/ : 3 file(s), 8 line(s)
+      PRE-EXISTING     : 19 file(s), 25 line(s)
+
+    THE ONE THAT IS ADJUDICATED, NOT MERELY PRESENT: run-all.sh runs the grader as
+    `sec 10 0`, so its exit code is graded against 0 and any move fails RUN-ALL VERDICT.
+      adjudicated invocation sites: 1
+  OK   exactly one, and it is the one P-45 is satisfied by
+
+    THE LIMIT OF THIS COUNT, STATED. Both legs search .sh and .py only. A future invoker
+    written in any other language would be invisible to both, and 'not found' would be a
+    statement about this search. T448 checked '*.py' as well as '*.sh' and found no .py
+    invoker; that is still true above, and it is a MEASUREMENT that goes stale.
+
+T455 CARDINALS: PASS. The matrix is 11 cases and 22 rows, 9
+of them argued by T433 and measured by T448. The grader is invoked from 22 files
+across 33 lines, of which exactly 1 is ADJUDICATED; a bare grep for the name
+returns 69, which is the kind of number the '17' was.
