@@ -1,0 +1,51 @@
+#!/bin/bash
+# T444 probe 4 — HEALTHY WITNESS SPELLINGS under the fixed configuration (pin+empty+round-trip).
+# The round-trip requirement is exactly the shape that over-refuses, so every legitimate
+# spelling this program has ever accepted is re-checked against it.
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe4.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q .; git config user.email r@x; git config user.name r
+mkdir -p g/zz g/zz/sub
+printf 'member\n'  > g/zz/m.sh
+printf 'names m.sh\n' > g/zz/w.txt
+printf 'names m.sh\n' > 'g/zz/w space.txt'
+printf 'names m.sh\n' > 'g/zz/w-dash_under.9.txt'
+printf 'names m.sh\n' > 'g/zz/w[1].txt'
+printf 'names m.sh\n' > 'g/zz/w+plus.txt'
+printf 'names m.sh\n' > 'g/zz/sub/w.txt'
+git add -A >/dev/null 2>&1
+
+CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+
+check() {  # check <typed spelling>
+  local wit="$1" norm multi stat mode path out
+  norm="$(git ls-files --error-unmatch -- "$wit" 2>/dev/null)" || norm=""
+  multi=0; case "$norm" in *"$CONF_LF"*) multi=1 ;; esac
+  stat=""
+  if [ -n "$norm" ] && [ "$multi" -eq 0 ]; then
+    stat="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)" || stat=""
+  fi
+  mode="${stat%% *}"; path="${stat#*"$CONF_TAB"}"
+  if   [ "$multi" -ne 0 ];            then out="REFUSE:self_multi"
+  elif [ ! -f "$wit" ];               then out="REFUSE:not-a-file"
+  elif [ -z "$norm" ];                then out="REFUSE:untracked"
+  elif [ -z "$stat" ];                then out="REFUSE:empty-result"
+  elif [ "$path" != "$norm" ];        then out="REFUSE:round-trip"
+  elif [ "$mode" = "120000" ];        then out="REFUSE:symlink-witness"
+  elif ! LC_ALL=C grep -qF -- "m.sh" "$norm" 2>/dev/null; then out="REFUSE:does-not-name"
+  else out="ACCEPT"; fi
+  printf '  %-34s norm=%-28s -> %s\n' "$wit" "[$norm]" "$out"
+}
+
+echo "HEALTHY WITNESS SPELLINGS, fixed configuration (pin + empty-result + round-trip):"
+check 'g/zz/w.txt'
+check './g/zz/w.txt'
+check 'g/zz/sub/../w.txt'
+check 'g/zz/sub/w.txt'
+check 'g/zz/w space.txt'
+check 'g/zz/w-dash_under.9.txt'
+check 'g/zz/w[1].txt'
+check 'g/zz/w+plus.txt'

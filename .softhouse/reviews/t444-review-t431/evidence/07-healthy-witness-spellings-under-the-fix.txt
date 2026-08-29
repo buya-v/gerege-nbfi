@@ -1,0 +1,9 @@
+HEALTHY WITNESS SPELLINGS, fixed configuration (pin + empty-result + round-trip):
+  g/zz/w.txt                         norm=[g/zz/w.txt]                 -> ACCEPT
+  ./g/zz/w.txt                       norm=[g/zz/w.txt]                 -> ACCEPT
+  g/zz/sub/../w.txt                  norm=[g/zz/w.txt]                 -> ACCEPT
+  g/zz/sub/w.txt                     norm=[g/zz/sub/w.txt]             -> ACCEPT
+  g/zz/w space.txt                   norm=[g/zz/w space.txt]           -> ACCEPT
+  g/zz/w-dash_under.9.txt            norm=[g/zz/w-dash_under.9.txt]    -> ACCEPT
+  g/zz/w[1].txt                      norm=[g/zz/w[1].txt]              -> ACCEPT
+  g/zz/w+plus.txt                    norm=[g/zz/w+plus.txt]            -> ACCEPT
