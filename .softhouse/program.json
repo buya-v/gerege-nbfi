@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260829-080002 (local, Buyan's Mac, oracle REACHABLE throughout). TEN BRANCHES MERGED IN FIVE REVIEWED PAIRS -- T421+T428, T393+T423, T416+T422, T429+T439, T424+T440, T417+T438 -- every pair graded on the MERGE RESULT and then again on main itself. Bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, deadOccurrences 108, frontier 11==11, all 16 wrong ledger implementations dead. THE FIRE'S RESULTS: (1) THE INHERITED RECORD WAS WRONG ABOUT T431 IN THE DANGEROUS DIRECTION -- ready-tasks.py reported 'WIP: MERGED, the work LANDED' for a branch with ZERO commits pointing at the driver's own dispatch commit; C-T407-1 (MAJOR) was UNSTARTED. First live instance of the T350/T403 class. Six more tasks carried a branch field with no branch behind it. (2) T412's complaint proved itself: the tree graded in a scratch worktree was NOT the tree that landed on main (16300b66 vs fd4051a6), differing by RESUME.md -- a DIRECTIVE file to a HARD guard. (3) A MONEY-REPORTING defect closed and its fix made RIGHT rather than merely non-zero: T422 mutated 1, 2 and 3 ledger money cells and got 1, 2, 3, plus a mixed loanschedule+ledger case nobody had driven. (4) The ORACLE-DERIVED COLUMN CARVE-OUT now prints in the bar every run -- the port is declared RIGHT not to match the oracle's denormalised running balances, and T439 twice failed to exempt a money column through it. (5) T417's min_entry_date corrected from the database: T409 was right, and T417's own '55' could only have come from the value its prose told readers to distrust -- written up as P-102. (6) T431 found the RATIFIED one-token pin INSUFFICIENT: git ls-files C-quotes paths, so four fail-opens where T407 found one. HELD for T444. ZERO LIVE WORKERS AT EXIT except T444, which is awaited. G-22 raised by T429 with a DEC-2 proposed revision; the ratified DEC-2 is byte-unchanged, verified.",
+  "cursor": "Fire 20260829-080002 (local, Buyan's Mac, oracle REACHABLE throughout with one transient container restart observed by T446 and recovered). ITERATION 5, TWO WAVES, TWENTY BRANCHES MERGED IN TEN REVIEWED PAIRS -- wave 1: T350+T449, T442+T447, T412+T450, T445+T446, T433+T448; wave 2: T451+T456, T452+T457, T453+T461, T454+T459, T455+T464. EVERY merge was graded ON THE MERGE RESULT in a scratch worktree outside the repo, its tree identity verified against the graded tree, and ATTESTED BY TREE SHA before main was touched. Bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, frontier 11==11, deadOccurrences 108, 16 guards timed, all 16 wrong ledger implementations dead. THE FIRE'S RESULTS: (1) THE DRIVER PUSH GATE WAS BUILT, INSTALLED AND ENFORCED, AND IT REFUSED THE DRIVER -- at the T350+T449 merge the driver had graded the merge result AND verified tree identity by hand and was STILL refused, because a transcript is bytes and nothing binds it to the tree it claims to have graded; the remedy was to attest properly, never to bypass, and bypass.log still does not exist. (2) TWO REVIEWER-PROPOSED PATCHES WERE REFUTED BY THE WORKERS ASKED TO APPLY THEM, and an independent third confirmed both refutations -- T451 vs T449 (the anywhere relaxation adds exactly 0 carriers and breaks R2) and T455 vs T448 (the one-predicate repair PASSES case B, and shipped as written would have been RED ON A CLEAN TREE for two of the four files it guards). The rule that the driver does not hand-apply a reviewer's patch paid twice in one day. (3) THE WITNESS-FORGERY CHAIN REACHED LINKS SEVEN AND EIGHT -- U+017F folds onto ASCII s on APFS and sorts after it, so conformance.<U+017F>h wins the checkout and the harness that RUNS is forged while the committed blob stays honest; then LONGSTRIP and LONGNOP. T454 BROKE THE SIX-LINK STREAK by DECLARING its open route instead of arguing it shut. (4) A HEADLINE COUNT OF 0 FAIL-OPENS BECAME 2, with a strictly-vacuous member two purpose-built censuses had missed. (5) T448 SHOWED THAT T433's TWO INDEPENDENT DERIVATIONS WERE ONE PRIMITIVE READ TWICE, and T456 showed that a 288-state enumeration catching 3 planted defects missed a fourth of a kind its author had not thought to plant -- it checks WELL-FORMEDNESS, not CORRECTNESS. (6) A SAFETY REFUSAL BOUNDED BY WALL CLOCK was driven to demote on a slow host what it refuses on a fast one. (7) The driver caught its OWN filed task specifying a remedy T459 had already defeated, and amended T460 before any worker started it. ZERO LIVE WORKERS AT EXIT. No user gate crossed; no CONTRACT gate open.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -2394,6 +2394,72 @@
       ],
       "verifier": "bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 vectors / 7884 cells, deadOccurrences 108, frontier 11==11, 16/16 wrong ledger implementations dead, P-number citations VERDICT PASS",
       "gates": "G-22 raised by T429 (oracle rewrites posted journal entries; DEC-2 proposed revision written, ratified DEC-2 byte-unchanged and verified). No CONTRACT gate open. No user gate crossed."
+    },
+    {
+      "fire": "20260829-080002 (iteration 5, waves 1-2)",
+      "host": "local (Buyan's Mac)",
+      "date": "2026-08-29",
+      "oracle": "REACHABLE throughout; one transient container restart observed by T446 mid-run and recovered",
+      "merges": [
+        "T350+T449",
+        "T442+T447",
+        "T412+T450",
+        "T445+T446",
+        "T433+T448",
+        "T451+T456",
+        "T452+T457",
+        "T453+T461",
+        "T454+T459",
+        "T455+T464"
+      ],
+      "held_for_review": [],
+      "tasks_filed": [
+        "T446",
+        "T447",
+        "T448",
+        "T449",
+        "T450",
+        "T451",
+        "T452",
+        "T453",
+        "T454",
+        "T455",
+        "T456",
+        "T457",
+        "T458",
+        "T459",
+        "T460",
+        "T461",
+        "T462",
+        "T463",
+        "T464",
+        "T465",
+        "T466",
+        "T467"
+      ],
+      "reviewer_catches_that_changed_the_outcome": [
+        "T446: T445 argued its one remaining working-tree read 'provably cannot win' because an all-lowercase ASCII path sorts last. FALSE -- U+017F folds onto ASCII s on APFS and its bytes c5 bf sort AFTER 73, so conformance.<U+017F>h wins the checkout collision. The committed blob stays honest and the harness that RUNS is forged. It also REFUTED T445's own prime suspect (NFD/NFC) by measurement rather than assuming.",
+        "T448: T433's METHOD A and METHOD B are THE SAME rename-aware primitive read two ways, so their 632/632 agreement was weaker evidence than it looked. Re-derived under a genuinely independent primitive. Also overturned T433's own 'not closable by internal consistency' disclosure -- the grader ALREADY STATES the rule nine lines above, one check closes it, and the clean tree still exits 0.",
+        "T450: found what it was sent to hunt -- three STATE-set-confined deltas that pass the cheap subset, get a CHEAP attestation WRITTEN, and are ALLOWED, while the full bar on that exact tree goes EXIT 2 with no probe line. One is guard_no_float_in_capture_requests, a MONEY non-negotiable.",
+        "T456: adjudicated T451-vs-T449 with a DIFFERENT primitive, then found a MAJOR on an axis nobody was watching -- a safety refusal bounded by WALL CLOCK demotes on a slow host what it refuses on a fast one. And planted a FOURTH defect T451's enumeration could not catch, proving the enumeration checks well-formedness rather than correctness.",
+        "T459: drove SKIPWT and SMUDGE, both reaching PASS with the guard FULLY INTACT and -- unlike every earlier route -- with `git status --porcelain` EMPTY, so the one out-of-band protocol step is blind to them. Corrected the fold census from 4 to 13 (fold_candidates kept only len(f)==1, excluding every multi-character fold) and found a LIVE target in fire-program.sh, a DECLARED WITNESS. Also REFUTED its own SYMFORGE arm.",
+        "T461: adjudicated the money arm FROM SOURCE -- T453 right, T450 wrong; arm A is a READ hazard. Then found that the dead-path frontier is a function of whether the fire LOCK is TRACKED: lock held GREEN rows=108, lock released REFUSED rows=125. The driver releases the lock at EVERY fire exit.",
+        "T464: confirmed T455 over T448 under two engines sharing no primitive, and made the case STRONGER than T455 had -- T448's patch shipped as written would have been RED ON A CLEAN TREE for two of the four files it guards."
+      ],
+      "driver_own_catches": [
+        "Before dispatching anything, audited every non-terminal task against main and found TWO false records: T428 carried as needs_retry 'worker killed mid-flight' while its branch was an ANCESTOR OF MAIN with 35 tracked files, and T421 carried as needs_review with 33 files on main. T428 is T403 in the mirror -- the reconciler wrote the KILLED story for a worker that FINISHED.",
+        "CORRECTED ITS OWN MEASUREMENT ERROR IN PLACE: the scope check must run against the MERGE-BASE, not `git diff main..branch`. Once main advances under live workers the two-dot diff attributes the DRIVER'S OWN later commits to the branch as deletions -- it made all five wave-1 branches look like they had clobbered tasks.json and deleted a live task. None had.",
+        "Wrote a VACUOUS WATCHER: an until-loop testing for REVIEW.md anywhere under .softhouse/reviews/ on a branch at zero commits ahead matched main's hundred existing reviews and reported success for work that had not started. Caught because the branch state was verified before acting on it.",
+        "AMENDED ITS OWN FILED TASK BEFORE A WORKER STARTED IT: T460 specified comparing git rev-parse HEAD:<path> to git hash-object, which T459 had already DEFEATED via SMUDGE -- a filter= attribute in .git/info/attributes makes git hash-object APPLY THE FILTER, so the ids print EQUAL over forged bytes.",
+        "REPRODUCED C-T461-1 FIRST-HAND at its own exit: deleting .softhouse/LOCK adds 17 dead-path rows and the frontier REFUSES. Confirmed the wrapper writes no released_at key, so its exit release is a genuine deletion -- the shape that reddens the tree. Filed as T465 with the measurement attached.",
+        "FILED T458 FROM SIX FIRST-HAND INSTANCES IN ONE FIRE: T440, T446, T447, T448, T451 and T452 each had a first committed bar REFUSED for the same reflex -- spelling a real .softhouse/ path as a literal in a fixture. All six repaired at the instrument rather than growing the pin. The remedy is small, identical every time, and none of them knew it in advance."
+      ],
+      "patterns_added": [
+        "T458 filed to write the fixture-literal reflex into patterns.md (six instances in one fire)",
+        "T454 proposed FU-T445-8: a test that reads the WORKING TREE cannot decide a question about what is COMMITTED -- and T459 extended it: the text that EXECUTES is not necessarily the text that is COMMITTED"
+      ],
+      "verifier": "bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, frontier 11==11, deadOccurrences 108, 16 guards timed, 0 ceiling breaches, all 16 wrong ledger implementations dead. Every one of the ten merges additionally graded on its MERGE RESULT and ATTESTED BY TREE SHA before main was touched.",
+      "gates": "No user gate crossed. No CONTRACT gate open. G-4, G-5, G-8, G-10, G-12, G-19, G-20, G-21, G-22 remain pending and none blocks work. NEW for Buyan's attention: server-side prevention of --no-verify is PARTLY a user item (repo-admin rights; pre-receive is Enterprise-only on github.com, so the realistic instrument is a branch ruleset) -- raised by T461 C-T461-4 and carried into T465."
     }
   ],
   "database": {
