@@ -378,7 +378,18 @@ EOF
   say "  C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset"
   say "  on the PUSHED TREE (not the working tree -- that substitution is instance 2)."
 
-  SUB="$TOPLEVEL/.softhouse/hooks/cheap-subset.sh"
+  # THE SUBSET IS RESOLVED BESIDE THIS FILE, NOT FROM THE PUSHING WORKTREE. Driven live at
+  # .softhouse/capture/t412-driver-selfgrading/out/installed-drive/13-I4-RED-bad-citation.txt
+  # (first run): the gate ran from the install-time snapshot in the shared hooks directory, the
+  # pushing worktree was checked out at a commit that does not carry these files yet, and the
+  # gate refused with "the cheap subset is ABSENT" -- fail-CLOSED, but for the wrong reason, and
+  # it would have refused every driver push until this branch merged. The clone drive could not
+  # see this: there the repo copy is always present. A gate and its subset are ONE UNIT and must
+  # travel together; $TOPLEVEL is kept only as a secondary so a merged tree's newer subset wins.
+  SUB="$(cd "$(dirname "$0")" 2>/dev/null && pwd)/cheap-subset.sh"
+  if [ ! -f "$SUB" ]; then
+    SUB="$TOPLEVEL/.softhouse/hooks/cheap-subset.sh"
+  fi
   if [ ! -f "$SUB" ]; then
     say "C3 REFUSED -- the cheap subset is ABSENT: ${SUB#"$TOPLEVEL"/}"
     say "  It is wired into this gate, so its absence is a refusal and never a pass."
