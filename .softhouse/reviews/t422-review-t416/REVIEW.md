@@ -369,3 +369,173 @@ first. Two places in it still describe the **superseded blacklist**
 **This is the same class of defect as F-T405-5 itself, one file over**: the machine decision is right
 and the sentence the human reads is wrong about why. T416 rewrote three hundred lines of comment on
 the functions below and left the caller's account of them stale.
+
+---
+
+## 5. F-T405-4 — THE DIVERGENCE-CLASS PIN REQUEST. RE-DRIVEN. SAFE TO APPLY.
+
+`.softhouse/conformance.sh` is **0 lines changed by T416** — confirmed: it does not appear in
+`git diff --name-only <merge-base>..t416` `[VERIFIED: /tmp/t422/mergecheck.sh output]`. The request
+ships as `.softhouse/capture/t416-t405-conditions/REQUEST-conformance-sh-divergence-pin.md`.
+
+### 5.1 The bar reads neither figure — confirmed
+
+`[VERIFIED: grep over /tmp/t422/t416/.softhouse/conformance.sh]`
+`grep -c 'ledger inadmissible'` = **0**; `grep -c 'INADMISSIBLE'` = **0**;
+`grep -c 'divergence vectors'` = **0**. Four `EXEMPTION_PIN_LEDGER_*` figures are compared
+(`_DECLARED`, `_PARITY`, `_REFUSAL`, `_MONEYCELLS`, at `conformance.sh:4309-4312`) plus
+`_WRONGIMPLS` at `:4499`. Neither proposed figure is among them.
+
+### 5.2 T405's narrowing — CONFIRMED by my own drive, not inherited
+
+`/tmp/t422/pinreq.sh`. I mutated the divergence vector's `observed_amount_texts`
+(`100.125000` → `100.12500`) and, separately, broke a PARITY vector's `provenance.capture_ref` to a
+non-existent artefact. Both proposed `sed` extractions were run **exactly as the REQUEST writes
+them** against all three transcripts `[VERIFIED: /tmp/t422/out/pin-*.log]`:
+
+| store state | exit | declared | parity | refusal | money cells | **inadm** | **divPASS** | the four existing pins |
+|---|---|---|---|---|---|---|---|---|
+| baseline | 0 | 0 | 10 | 6 | 63 | `0` | `1` | **GREEN, correctly** |
+| **DIVERGENCE vector inadmissible** | 2 | 0 | 10 | 6 | 63 | `1` | `0` | **GREEN — every one of the four is byte-identical to baseline. This is the hole.** |
+| PARITY vector inadmissible | 2 | 0 | **9** | 6 | **58** | `1` | `1` | **RED — two pins move; already caught** |
+
+**T405's narrowing holds exactly and T416 reproduced it correctly.** Both proposed extractions
+returned a non-empty value on all three rows, so neither would be a `_census_one` refusal.
+
+### 5.3 IS THE REQUEST SAFE TO APPLY? YES — with one correction to how it is described.
+
+**Safe.** The two pins are `0` and `1` at the current store, measured by running, and both hold on my
+own bar runs (`ledger inadmissible 0`, `divergence vectors PASS 1 FAIL 0 (pinned 1)`)
+`[VERIFIED: /tmp/t422/BAR-t416.log and /tmp/t422/BAR-merge.log]`. The patch adds two constants, two
+`_census_one` extractions inside the existing `ledger_cmp` block and two `_cmp` lines; it touches
+neither helper. `conformance.sh` is free — T404 released it — and current `main` has since edited it,
+so the applier must re-anchor the three hunks by context rather than by the line numbers in the
+request (`524`, and the `ledger_cmp` / `_cmp` blocks; on today's `main` the `_cmp` lines are at
+`:4309-4312`).
+
+**The correction: this pin is defence in depth, not the closure of a fail-open.** The REQUEST's
+headline row says the four pins stay GREEN "and it should not be", which is true — but I measured
+the run's **exit code in that state and it is 2, not 0**
+`[VERIFIED: /tmp/t422/out/pin-divergence-inadmissible.log, exit=2]`. `Summary.ExitCode()` returns 2
+on `s.Ledger.Inadmissible > 0`, so **nothing green is called green today**. The REQUEST does state
+this counter-argument in its own words and answers it (one boolean, one Go function, no second
+layer — the shape this program keeps paying for), and I agree with that answer. But the driver
+should apply it knowing it is a **second layer under a working first layer**, not a hole through
+which a vanished divergence record currently escapes. Applying it is cheap and correct; **not**
+applying it does not leave a live fail-open.
+
+**One operational note for whoever applies it:** `EXEMPTION_PIN_LEDGER_DIVERGENCE_PASS=1` pins a
+GRADED figure, so it must be moved in the same commit as any added or removed divergence vector,
+alongside `divergencePinCount` in `ledger/conformance/grade.go:750`. That is two pins on adjacent
+facts and the request says so.
+
+---
+
+## 6. F-T405-6 — CORRECTING RATHER THAN DELETING. RIGHT CALL. ONE HONEST LIMIT.
+
+**The comment T397 left was false and T405 is right about it, and I re-derived why**
+`[VERIFIED: report.go on main vs T416; ledger/conformance/grade.go:748-750]`. `recordedDivergences()`
+returns `s.Ledger.DivergencePass + s.Ledger.DivergenceFail` — GRADED counters. The census prints
+`(pinned n)` from `DivergencePinCount()`, a `const divergencePinCount = 1` describing the population
+the store is pinned to HOLD. Two different populations; they can disagree. The corrected comment now
+claims only the narrower thing (this figure and the census's own PASS/FAIL pair read the same two
+fields) and that narrower claim is true.
+
+**Correcting rather than deleting was right, and the correction is stronger than what it replaced,
+not weaker.** The old arm asserted two things. The new arm asserts three, and branches on
+`DivergencePinCount()` instead of hard-coding today's value, so at a zero pin the original sentence
+is asserted again `[VERIFIED: the diff of verdict_divergence_test.go]`. Deleting it would have
+removed the only guard on the "there are none" / "nobody looked" distinction the arm existed for. A
+test whose expectation is wrong is evidence about the expectation, not a reason to stop asserting.
+
+**RED/GREEN driven by me**: the arm
+`TestTheExitZeroVerdictNamesTheRecordedDivergences/a_zero_graded_divergence_run_does_not_claim_the_store_has_none`
+is **FAIL against `main`'s `report.go` and PASS against T416's**
+`[VERIFIED: /tmp/t422/out/units-{RED,GREEN}-report.log]`. The real store is unaffected: the exit-0
+arm still prints `IT EXCLUDES 1 RECORDED DIVERGENCE(S)` and the bar is exit 0
+`[VERIFIED: /tmp/t422/out/pin-baseline.log, /tmp/t422/BAR-t416.log]`.
+
+**The honest limit, which the handoff does not state.** I tried to reach the new third branch on the
+real corpus and **could not**. It requires exit 0 **and** `s.Ledger != nil` **and** pin > 0 **and**
+zero graded divergences. Two other guards forbid every route I found:
+
+- make the divergence vector inadmissible → `ExitCode()` returns **2** (`Ledger.Inadmissible > 0`)
+  `[VERIFIED: /tmp/t422/out/pin-divergence-inadmissible.log]`;
+- remove the divergence vector from the store → `LEDGER FATAL: DIVERGENCE POPULATION 0, PINNED 1`,
+  exit **2** `[VERIFIED: /tmp/t422/out/f6-removed-AFTER.log:287]`;
+- and the ledger `Summary` has no non-fatal "refused/skipped" outcome — the four outcomes are
+  PASS / FAIL / INADMISSIBLE / ERROR (`grade.go:628-647`), so a loaded divergence vector always
+  grades `[VERIFIED: grade.go]`.
+
+So the new branch is **currently unreachable at exit 0**, and so was the false sentence it replaces.
+T416's handoff writes "driven above: `divergence vectors PASS 0 FAIL 0 (pinned 1)`", and that state
+WAS driven — but at exit 2, where neither sentence prints. The unit test constructs the state
+directly and does prove the wording. **This is belt-and-braces and I judge it correct to have added
+it** (P-45: a state protected only by two other guards is one refactor from being protected by
+none), but the record should not imply the corpus exercised it. **F-T422-4, LOW.**
+
+---
+
+## 7. MERGE SAFETY — CLEAN, AND VERIFIED AGAINST **TODAY'S** `main`, NOT T416's.
+
+`main` moved again while I worked: T416 merged `e0eb4fe2` (T391 + T411); `main` is now **`e864dd3d`**
+(T421 + T428 merged on top). I checked the merge that matters — **current `main` + T416** — in
+`/tmp/t422/merge`, a clone OUTSIDE the repository `[VERIFIED: /tmp/t422/mergecheck.sh]`.
+
+| | files changed since merge-base `e0eb4fe2` |
+|---|---|
+| **`main`** | `.softhouse/conformance.sh`, `ledger/conformance/impl.go`, `ledger/conformance/slotadmission_test.go`, `ledger/conformance/vector.go` |
+| **T416** | `ledger/conformance/admit.go`, `ledger/conformance/verbatimallowlist_test.go`, `loanschedule/conformance/report.go`, `loanschedule/conformance/verdict_divergence_test.go`, `loanschedule/conformance/verdict_fail_ledger_test.go` |
+
+**The two sets are disjoint at FILE level, so the T391 line-range argument is now moot** — I did not
+need to check 1332-1334 / 1342-1352 / 1354-1364 against 182-243 / 243-300 / 981, because T391 is
+already in the merge base and no remaining `main` change touches `admit.go` at all.
+
+- `git merge-tree --write-tree main t416` → **exit 0, tree `f990da2a`, zero conflict markers**.
+- the merge itself → **exit 0, zero conflicted paths, clean working tree**.
+- **T421 collision, checked as the brief asks:** T421/T428 land `impl.go`, `vector.go` and a new
+  `slotadmission_test.go` in the **same Go package** as T416's `verbatimallowlist_test.go`. Git cannot
+  see a duplicate-symbol collision, so I compiled it: `go build ./...` **exit 0**,
+  `go vet ./...` **exit 0**, `go test -count=1 ./...` **exit 0, all four packages ok**
+  `[VERIFIED: /tmp/t422/mergebuild.sh]`. **No collision.**
+- T416 changes 0 lines of `.softhouse/conformance.sh`, which `main` has since edited — no conflict,
+  and the F-T405-4 REQUEST is still unapplied.
+
+---
+
+## 8. THE BAR — RUN TWICE, FROM CLEAN TREES, BOTH OUTSIDE THE REPOSITORY.
+
+`bash .softhouse/conformance.sh` (never `sh`), from `/tmp`, so
+`guard_no_narrow_catch_in_capture_rigs`'s recursive walk cannot see a nested checkout.
+**Probe-line PRESENCE tested before its value, as the brief requires.**
+
+| | **T416's own tree** `/tmp/t422/t416` | **`main` + T416 merged** `/tmp/t422/merge` |
+|---|---|---|
+| **exit code** | **0** | **0** |
+| **`grep -c 'probe = '`** | **1 — the line WAS printed** | **1 — the line WAS printed** |
+| probe value | `probe = up` | `probe = up` |
+| **VERDICT** | `PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.` | identical |
+| loanschedule parity | `PASS 46 FAIL 0`, `refused 0`, `inadmissible 0` | identical |
+| ledger parity | `PASS 10 FAIL 0` == pinned 10 | `PASS 10 FAIL 0` == pinned 10 |
+| ledger oracle-refusal | `PASS 6 FAIL 0` == pinned 6 | == pinned 6 |
+| ledger money cells | `63` == pinned 63 | `63` == pinned 63 |
+| ledger declared exemptions | `0` == pinned 0 | `0` == pinned 0 |
+| ledger inadmissible / harness errors | `0` / `0` | `0` / `0` |
+| divergence vectors | `PASS 1 FAIL 0 (pinned 1)` | identical |
+| wrong ledger impls | 15 == pinned 15, **all died through the harness** | **16 == pinned 16**, all died through the harness |
+| dead-path frontier | GREEN, 11 == pinned 11 | GREEN, 11 == pinned 11 |
+| DEADPATH-CENSUS | `corpus=1428 deadFiles=75 deadOccurrences=108` | `corpus=1480 deadFiles=75 deadOccurrences=108` |
+| exemption census (loanschedule) | graded 4 / loaded 4 / GROUNDED 4 / UNDETERMINED 0 / UNGROUNDED 0, all == pinned | identical |
+| P-number citations | **VERDICT PASS** | **VERDICT PASS** |
+| FAIL / HARD-guard lines | none | none |
+
+**Exit 2 with no probe line — the HARD-guard failure mode the brief warns about — did not occur on
+either run: the probe line was printed exactly once on each, before I looked at its value.**
+`deadOccurrences` holds at **108** on both, and every count T416's handoff reports for its own tree
+reproduces exactly. The two differences on the merged tree (`wrong impls` 15→16, `corpus` 1428→1480)
+are `main`'s, from T421/T428, and both are `== pinned` there.
+
+`go build ./...` exit 0 and `go test -count=1 ./...` exit 0 on **both** trees
+`[VERIFIED: /tmp/t422/mergebuild.sh and the T416-tree run]`.
+
+**MERGING IS SAFE.**
