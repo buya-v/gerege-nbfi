@@ -495,7 +495,11 @@ What is lost is the attributed pointer to the sweep, the arm and the correction 
 ## 4. THE BAR, ON MY OWN COMMITTED WORK
 
 Run from `/tmp` (scratch outside the repository), `bash`, never `sh`/`zsh`, on a committed
-clean tree. Full transcript: `out/80-CONFORMANCE-BAR.txt`.
+clean tree — **twice**, at `19a60cb4` (`out/80-CONFORMANCE-BAR.txt`) and again at `a1301345`
+(`out/80b-CONFORMANCE-BAR-at-a1301345.txt`). Identical result both times. `git status --porcelain`
+was 0 lines before and after each run. The only paths committed after the second graded run
+are this file and that transcript — both `.md`/`.txt` under `reviews/`, and the census that
+could move (`T316-DEADPATH-CENSUS`) scans tracked `.sh`/`.py`, so neither is in its corpus.
 
 ```
 BAR EXIT 0
