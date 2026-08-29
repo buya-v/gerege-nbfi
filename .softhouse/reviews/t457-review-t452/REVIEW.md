@@ -2,7 +2,7 @@
 
 **VERDICT: APPROVED WITH CONDITIONS.**
 
-Six conditions, all MINOR or LOW. **No MAJOR.** Nothing in this review overturns a T452 finding;
+Eight conditions, all MINOR or LOW. **No MAJOR.** Nothing in this review overturns a T452 finding;
 every substantive claim in the handoff reproduced, several of them by a route T452 did not use.
 The conditions are about how three of the numbers are *worded* and *owned*, not about whether
 they are right.
@@ -364,6 +364,33 @@ time"*, which is adjacent but is not the claim — "built at run time" is the *c
 "holds a same-file literal" is the blind spot. A reader who runs the census gets three bullets and
 not the fourth. One `print()` line closes it.
 
+### `C-T457-8` (LOW) — the handoff's bar block contains a line the bar transcript does not
+
+Handoff §9 presents a five-line fenced block under *"BAR TRANSCRIPT:
+`capture/t452-t447-conditions/out/T452-BAR.txt`"*. Four of the five check out verbatim or as
+plain summary. The third does not:
+
+```
+T316-DEADPATH-FRONTIER: rows=108 pinned=108
+```
+
+`grep -n 'T316-DEADPATH' out/T452-BAR.txt` returns **one** line and it is
+`T316-DEADPATH-CENSUS: corpus=1618 deadFiles=75 deadOccurrences=108 …`. The guard's probe line is
+only re-echoed by `conformance.sh` on the *T323-reconciliation* branch; on the clean branch the
+bar prints `dead-path frontier: GREEN, and the T323 reconciliation list is empty.` **The frontier
+genuinely is at its pin** — `deadOccurrences=108` and `frontier == pinned (all 11 rows, by path)`
+are both in the transcript, so the claim is TRUE. What is wrong is that a summary block adopts
+**probe-line syntax for a probe line the transcript does not contain**, in a chain whose founding
+finding (`C-T440-1`) is *an instrument that shipped a transcript its own code cannot produce*.
+Quote what the transcript prints. (My own §9 below is quoted line-for-line from `out/T457-BAR.txt`
+for the same reason.)
+
+### Not a condition, recorded
+
+The handoff says *"**34** `A2` rows are exposed"*; the transcript's own header says
+`A2. SELF + OTHERS … (35 rows, 21 files)` and my parser reads 35. I read all 35, so the
+difference changes nothing, but the two figures should agree.
+
 ---
 
 ## 7 · Settled, and not reopened
@@ -404,6 +431,27 @@ Run with `bash`, never `sh`/`zsh`; on the finished **committed** tree; scratch i
 **outside the repository**. **Presence of the probe line was tested before its value was read** —
 `grep -c 'probe = '` first, because absence is a harness failure and is not `down` (P-84).
 
-<!-- T457-BAR-BEGIN -->
-_(filled in below from `out/T457-BAR.txt`)_
-<!-- T457-BAR-END -->
+**First run, on the substantive commit `673bc5cf`**, in a throwaway worktree at `/tmp/t457/bar`,
+`TMPDIR=/tmp`, `git status --porcelain` = **0 paths before and 0 after**. Every line below is
+quoted from `out/T457-BAR.txt`, not paraphrased (`C-T457-8` is why):
+
+```
+grep -c 'probe = ' -> 1     (PRESENCE tested FIRST; absence would be a harness failure, not `down`)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+conformance:   /tmp/t457/bar (git ls-files, whole repository); frontier 11, pinned at 11
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1616 deadFiles=75 deadOccurrences=108 resolving=1545 indeterminate=121 prose=411
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+BAR EXIT=0
+```
+
+**`deadOccurrences` = 108** and **frontier `11 == 11`** — both at their pins, unmoved. The corpus
+grew from 1,614 to **1,616** tracked `.sh`/`.py` under the instrument root (my two committed
+scripts) and `deadFiles` / `deadOccurrences` did **not** move, which is the measurement that says
+this review's own instruments added no dead literal. That is not luck: every path they name is
+assembled from `S='.softhouse'` and both relocated destinations are built at run time, precisely
+because this guard has refused the first committed bar of five workers this fire on that reflex.
+
+The bar was **re-run on the final tree** after this file's last edit; §9's second transcript,
+`out/T457-BAR-FINAL.txt`, is committed on top and carries the same four figures.
