@@ -1,0 +1,10 @@
+# T453 ARM DRIVE -- mode=gate label=RED-T412-GATE-AT-MAIN source=main (cbc8733c46cff515a2e48b5f3389ffbf514dc674)
+# base commit 69d7004b3fe78e66b89f927c84bf0862b123219e  tree d711b20affe57963e61ed11d9eb54ed1b22a055e  (10088 tracked paths)
+# columns: arm | delta | push-exit | verdict | gate-output-lines
+CTRL-M-RESUME          | M .softhouse/RESUME.md -- an honest driver state edit    | 0 | ALLOWED                      | 10
+A-MONEY-CAPTUREREF     | M a capture record a parity vector cites in provenance.capture_ref | 0 | ALLOWED                      | 10
+B-FRONTIER-CAPTURE     | A a note under an existing capture directory             | 0 | ALLOWED                      | 10
+C2-NAMESPACE-CAPTURE   | A a NEW capture directory colliding on an existing id    | 0 | ALLOWED                      | 10
+D-FRONTIER-UATMD       | A .softhouse/uat.md -- a pinned dead literal, ordinary driver work | 0 | ALLOWED                      | 10
+CTRL-A-OBSERVATION     | A an observation note -- an addition with no inventory hazard | 0 | ALLOWED                      | 10
+CTRL-A-LOCK            | A .softhouse/LOCK from an attested base without it -- the fire-lock cycle | 0 | ALLOWED                      | 10

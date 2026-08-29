@@ -63,8 +63,34 @@ if [ -n "$HOOKSPATH" ]; then
   die "ABORT(2) -- core.hooksPath is set to '$HOOKSPATH'. This installer writes to \$(git rev-parse --git-common-dir)/hooks and would install a hook git will not run. REFUSING rather than installing something inert."
 fi
 
+# THE PARTS OF THE GATE, NAMED ONCE.  [T453, m-4]
+#
+# T412 wrote this list TWICE -- three names in the presence check, two in the copy loop -- and the
+# one that fell out of the second list was `bar-attest.sh`, which is the file the gate's own C3
+# refusal tells the driver to run. The driver of fire 20260829-080002 followed that message at the
+# T350+T449 merge, found no such file in the main checkout, and had to extract it from an unmerged
+# branch to proceed. A refusal naming a nonexistent remedy is a fail-CLOSED that costs a fire.
+#
+# P-80's prescription is not "fix the second list", it is "make the second site READ the first".
+# So there is ONE list, it is checked and copied by the same loop, and adding a part to the gate
+# cannot silently fail to install it.
+GATE_PARTS='driver-push-gate.sh cheap-subset.sh bar-attest.sh added-path-hazard.py'
+
 case "$MODE" in
   --status)
+    # --status EXITS NON-ZERO WHEN THE GATE IS NOT INSTALLED.  [T453, M-2]
+    #
+    # It used to exit 0 unconditionally, printing "ABSENT -- the gate is NOT installed and
+    # enforces nothing" and then telling its caller everything was fine. That is the difference
+    # between a report and a check: NOTHING COULD TEST FOR THE GATE'S ABSENCE. `.git/hooks` is
+    # untracked, so a fresh clone -- which is exactly what a CI runner and the cloud fire are --
+    # is silently ungated, and P-45 has now been recorded EIGHT times in this program on that
+    # shape. An exit code is what makes absence detectable by something other than a reader.
+    #
+    #   0  the shim is installed, it is OURS, and every part is present
+    #   1  the shim is ABSENT, or is not ours, or a part of the gate is missing
+    #   2  the environment cannot be inspected at all (handled above by die)
+    rc=0
     say "hooks dir     $HOOKS"
     say "main checkout $MAINWT"
     if [ -f "$HOOK" ]; then
@@ -73,19 +99,29 @@ case "$MODE" in
         say "              and it IS this gate's shim."
       else
         say "              but it is NOT this gate's shim. Inspect it before overwriting."
+        rc=1
       fi
-      say "--- installed shim ---"
-      cat "$HOOK"
     else
-      say "pre-push      ABSENT -- the gate is NOT installed and enforces nothing."
+      say "pre-push      ABSENT -- THE GATE IS NOT INSTALLED AND ENFORCES NOTHING."
+      say "              Install it:  bash .softhouse/hooks/install-driver-push-gate.sh"
+      rc=1
     fi
-    if [ -f "$SNAPDIR/driver-push-gate.sh" ]; then
-      say "snapshot      $(shasum -a 256 "$SNAPDIR/driver-push-gate.sh" | cut -c1-16)  $SNAPDIR"
-    else
-      say "snapshot      ABSENT"
-    fi
+    for f in $GATE_PARTS; do
+      if [ -f "$SNAPDIR/$f" ]; then
+        say "snapshot      PRESENT  $(shasum -a 256 "$SNAPDIR/$f" | cut -c1-16)  $f"
+      else
+        say "snapshot      MISSING  $f  -- a fallback that cannot run is not a fallback."
+        rc=1
+      fi
+    done
     say "ledger        $COMMON/softhouse-driver-gate/attest.tsv"
-    exit 0 ;;
+    if [ "$rc" -ne 0 ]; then
+      say ""
+      say "STATUS: NOT INSTALLED (or incompletely installed). EXIT 1."
+    else
+      say "STATUS: INSTALLED. EXIT 0."
+    fi
+    exit "$rc" ;;
   --uninstall)
     if [ -f "$HOOK" ] && grep -q 'softhouse-t412-driver-push-gate' "$HOOK"; then
       rm -f "$HOOK" || die "ABORT(2) -- could not remove $HOOK"
@@ -99,7 +135,7 @@ case "$MODE" in
 esac
 
 SRC="$TOPLEVEL/.softhouse/hooks"
-for f in driver-push-gate.sh cheap-subset.sh bar-attest.sh; do
+for f in $GATE_PARTS; do
   [ -f "$SRC/$f" ] || die "ABORT(2) -- $f is missing from $SRC. Refusing to install a partial gate."
 done
 
@@ -107,9 +143,24 @@ if [ -f "$HOOK" ] && ! grep -q 'softhouse-t412-driver-push-gate' "$HOOK"; then
   die "ABORT(2) -- $HOOK exists and is NOT this gate's shim. REFUSING to overwrite another hook silently. Inspect it, then move it aside deliberately."
 fi
 
+# THE SELFTESTS OF THE PARTS THAT HAVE ONE RUN BEFORE ANYTHING IS INSTALLED (P-22). Installing a
+# gate whose addition-hazard predicate has stopped discriminating would be installing a control
+# that cannot fail, which is worse than none because it is believed.
+if [ -f "$SRC/added-path-hazard.py" ]; then
+  /usr/bin/python3 "$SRC/added-path-hazard.py" --selftest >/dev/null 2>&1 \
+    || die "ABORT(2) -- added-path-hazard.py FAILED ITS OWN SELFTEST. REFUSING to install a gate whose addition test cannot be shown to discriminate. Run it by hand to see which case broke."
+  say "selftest      added-path-hazard.py: PASS (both polarities driven)"
+fi
+
+# ONE LOOP, ONE LIST -- checked above and copied here from the SAME variable, so the two can
+# never disagree again. [T453, m-4]
 mkdir -p "$SNAPDIR" || die "ABORT(2) -- could not create $SNAPDIR"
-for f in driver-push-gate.sh cheap-subset.sh; do
+for f in $GATE_PARTS; do
   cp "$SRC/$f" "$SNAPDIR/$f" || die "ABORT(2) -- could not snapshot $f"
+done
+for f in $GATE_PARTS; do
+  [ -f "$SNAPDIR/$f" ] \
+    || die "ABORT(2) -- $f is not in the snapshot after copying it. Refusing to report an install that did not happen."
 done
 
 cat >"$HOOK" <<SHIM
