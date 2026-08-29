@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260828-140005 chain iteration 3 CLOSED CLEAN at 2026-08-29T~00:0xZ, ~8.9h. TWELVE branches merged in six merges, EVERY ONE verified by running the bar on the MERGE RESULT in a scratch worktree before touching main, then again on main after. Exit attestation: NO DAMAGE, both advisories attributed. Bar on main: exit 0, probe PRESENT reading up, VERDICT PASS 46/7884, ledger 7/6/0/144/39, LDG-DIV-01 divergence PASS 2 cells / 0 money, all 14 wrong implementations dead, frontier GREEN at 108. THE FIRE'S RESULTS: (1) THE FIRST ACCRUAL OBSERVATIONS IN THIS PROGRAM -- 9 entries through INTEREST/FEES/PENALTIES_RECEIVABLE on a NEW ACCRUAL_PERIODIC product on CLEAN GL accounts, no promoted account moved, re-derived by T389 on four independent axes. (2) T387 established that T359's MEASURED remedy would have made the bar GRADE BACKWARDS -- the deliberately wrong port passes at exit 0 while the correct port reds -- recorded DO-NOT-APPLY. (3) The store can now record an oracle-ACCEPTS/port-REFUSES divergence with money ABSENT rather than empty, and the harness prints that a divergence is NOT a parity pass. (4) A P-45 CENSUS: seven guards built and wired to nothing, surfaced by four workers independently. NEXT FIRE, IN ORDER: T404 (the fifth registration fail-open, arm already written), T402 (blocks T399), T399, T393 (NEVER DISPATCHED -- driver error, reset to pending), T394, T390, T391, T395, T396, T397, T400, T401, T403, then T392+T398 which MUST agree their P-numbers or land in one commit. Zero live workers at exit. G-19, G-20, G-21 open; none blocks anything.",
+  "cursor": "Fire 20260829-080002 (local, Buyan's Mac, oracle REACHABLE throughout). TEN BRANCHES MERGED IN FIVE REVIEWED PAIRS -- T421+T428, T393+T423, T416+T422, T429+T439, T424+T440, T417+T438 -- every pair graded on the MERGE RESULT and then again on main itself. Bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, deadOccurrences 108, frontier 11==11, all 16 wrong ledger implementations dead. THE FIRE'S RESULTS: (1) THE INHERITED RECORD WAS WRONG ABOUT T431 IN THE DANGEROUS DIRECTION -- ready-tasks.py reported 'WIP: MERGED, the work LANDED' for a branch with ZERO commits pointing at the driver's own dispatch commit; C-T407-1 (MAJOR) was UNSTARTED. First live instance of the T350/T403 class. Six more tasks carried a branch field with no branch behind it. (2) T412's complaint proved itself: the tree graded in a scratch worktree was NOT the tree that landed on main (16300b66 vs fd4051a6), differing by RESUME.md -- a DIRECTIVE file to a HARD guard. (3) A MONEY-REPORTING defect closed and its fix made RIGHT rather than merely non-zero: T422 mutated 1, 2 and 3 ledger money cells and got 1, 2, 3, plus a mixed loanschedule+ledger case nobody had driven. (4) The ORACLE-DERIVED COLUMN CARVE-OUT now prints in the bar every run -- the port is declared RIGHT not to match the oracle's denormalised running balances, and T439 twice failed to exempt a money column through it. (5) T417's min_entry_date corrected from the database: T409 was right, and T417's own '55' could only have come from the value its prose told readers to distrust -- written up as P-102. (6) T431 found the RATIFIED one-token pin INSUFFICIENT: git ls-files C-quotes paths, so four fail-opens where T407 found one. HELD for T444. ZERO LIVE WORKERS AT EXIT except T444, which is awaited. G-22 raised by T429 with a DEC-2 proposed revision; the ratified DEC-2 is byte-unchanged, verified.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -2339,6 +2339,61 @@
         "T360+T387 @ cc45c5af (+ pin bump d8ea93b8)"
       ],
       "every_merge_verified_on_the_merge_result": true
+    },
+    {
+      "fire": "20260829-080002",
+      "host": "local (Buyan's Mac)",
+      "date": "2026-08-29",
+      "oracle": "REACHABLE throughout",
+      "merges": [
+        "T421+T428",
+        "T393+T423",
+        "T416+T422",
+        "T429+T439",
+        "T424+T440",
+        "T417+T438"
+      ],
+      "held_for_review": [
+        "T431 (+T444 dispatched)"
+      ],
+      "tasks_filed": [
+        "T432",
+        "T433",
+        "T434",
+        "T435",
+        "T436",
+        "T437",
+        "T438",
+        "T439",
+        "T440",
+        "T441",
+        "T442",
+        "T443",
+        "T444"
+      ],
+      "reviewer_catches_that_changed_the_outcome": [
+        "T422: T416 had only ever mutated ONE vector, so its '1 mismatched vector(s)' proved non-zero and nothing more. T422 drove 1/2/3 money cells and a mixed case -- the count is RIGHT, not merely non-zero.",
+        "T423: T393's f4 drive moved the constant in ONE of three tied files, so both halves of its repair fired together and proved neither alone. T423's f4c moves all three: with the cross-check FULLY SATISFIED, section 10 still refuses on the population pins alone.",
+        "T423 C-1 (MAJOR): T393 shipped a FALSE impossibility claim in two tracked EXECUTABLE files and reasoned from it to direct the next task to build an artefact it does not need.",
+        "T439: attacked the money boundary twice -- naively (four arms trip) and sophisticatedly (reclassify to PROVENANCE so forbidden_cells stays silent AND move the Go pins so both counting arms stay silent) -- and it STILL exits 2 with the money-column guard firing alone.",
+        "T439: caught T429 proposing a follow-up that ratified gate G-3 forbids (gofmt -w a frozen DEC-1 artefact). Retracted at merge.",
+        "T440 C-T440-1 (MAJOR): T424's comment-claims drive FAILS on the tree it ships in -- its no-match probe token is spelled in its own tracked source, so git grep finds it. The shipped transcript could only have been taken while the instrument was untracked.",
+        "T438 F-T438-1 (MAJOR): T417's min_entry_date wrong AND it told readers to distrust T409's correct value. Root cause: FILTER on the count(*), not on the min().",
+        "T438 F-T438-2 (MAJOR): T417's 'cannot wire it without nightly red' is correct and answers the wrong question -- a static repo-content-only wiring is already templated in the same bar.",
+        "T431: the RATIFIED one-token pin from T407 does NOT close the hole. git ls-files C-quotes paths, so self_norm is not a path. Four driven fail-opens where T407 found one."
+      ],
+      "driver_own_catches": [
+        "T431's branch had ZERO commits while the record said MERGED/LANDED -- caught by git rev-list, not by reading.",
+        "The graded tree != the landed tree (T412), caught by comparing tree hashes before pushing.",
+        "T432 filed: five vectors carry captured_at \"\" with nothing declaring what the empty string means.",
+        "Settled T417-vs-T409 from the database with its own SELECTs rather than weighing two accounts.",
+        "Caught its OWN patterns.md draft reddening the bar with a FATAL undefined citation -- before pushing, so main never went red."
+      ],
+      "patterns_added": [
+        "P-102"
+      ],
+      "verifier": "bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 vectors / 7884 cells, deadOccurrences 108, frontier 11==11, 16/16 wrong ledger implementations dead, P-number citations VERDICT PASS",
+      "gates": "G-22 raised by T429 (oracle rewrites posted journal entries; DEC-2 proposed revision written, ratified DEC-2 byte-unchanged and verified). No CONTRACT gate open. No user gate crossed."
     }
   ],
   "database": {
