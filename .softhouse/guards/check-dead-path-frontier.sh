@@ -220,6 +220,41 @@ if [ "$added_n" -gt 0 ]; then
   echo "conformance: !! reference is a deliberate fallback candidate -- make the instrument"
   echo "conformance: !! REFUSE when no candidate resolves, and record why in the pin."
   sed -n '1,40p' "$ADDED"
+  # ---------------------------------------------------------------------------------------
+  # T458 -- THE REFUSAL MUST TEACH THE FIX.
+  # Six workers in local fire 20260829-080002 (T440, T446, T447, T448, T451, T452) each had
+  # their FIRST committed bar refused by this reflex, and each rediscovered the same small
+  # remedy from scratch -- four of them AFTER it had already been written down. A refusal
+  # that names WHAT is wrong but not WHAT TO DO buys one lesson per worker and buys it
+  # again every time. So the message names the remedy, and anchors to a SENTENCE rather
+  # than a line number or a pattern id, because both of those move and the sentence does not.
+  # ---------------------------------------------------------------------------------------
+  echo "conformance: !! ----------------------------------------------------------------"
+  echo "conformance: !! THE REMEDY, because SIX workers in one fire each rediscovered it:"
+  echo "conformance: !!   T440, T446, T447, T448, T451, T452 -- every one of them repaired"
+  echo "conformance: !!   the INSTRUMENT, and not one of them grew the pin. Do ONE of these"
+  echo "conformance: !!   three, and never a fourth:"
+  echo "conformance: !!   1. ASSEMBLE the path at run time from a variable -- S='.softhouse'"
+  echo "conformance: !!      and build downward. This census reads QUOTED LITERALS ONLY, so"
+  echo "conformance: !!      an assembled path is not a row. That is not evasion: it STATES"
+  echo "conformance: !!      that the path is COMPUTED rather than REFERENCED, which is"
+  echo "conformance: !!      exactly what a fixture or a scratch destination means."
+  echo "conformance: !!   2. MAKE THE LOCATION A REQUIRED PARAMETER -- no default, and a"
+  echo "conformance: !!      HARD EXIT when it does not resolve. Never a skipped case,"
+  echo "conformance: !!      never a warning, never a pass. This is the arm this guard asks"
+  echo "conformance: !!      for in exchange for not pinning the row."
+  echo "conformance: !!   3. If the failure arm PRINTS instead of exiting, adopt T238's"
+  echo "conformance: !!      sweeplib shape too, so the instrument cannot print a negative"
+  echo "conformance: !!      it never measured. That is the sibling defect T446 was caught"
+  echo "conformance: !!      by, in the same fire, for the same underlying reason."
+  echo "conformance: !! THE FORBIDDEN FOURTH: do NOT split or concatenate the literal to"
+  echo "conformance: !! slip past the selector. That leaves the false claim standing and"
+  echo "conformance: !! removes the only instrument that would ever have found it."
+  echo "conformance: !! FULL RULE, the six measured row counts, and the three sub-classes:"
+  echo "conformance: !! grep patterns.md for this SENTENCE -- the line number moves, and an"
+  echo "conformance: !! id is a cardinal that rots, but the sentence relocates with its text:"
+  echo "conformance: !!   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE"
+  echo "conformance: !! ----------------------------------------------------------------"
 fi
 if [ "$removed_n" -gt 0 ]; then
   echo "conformance: !! $removed_n row(s) GONE from the frontier. That is GOOD NEWS, and the pin"

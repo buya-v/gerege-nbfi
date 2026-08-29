@@ -3827,3 +3827,136 @@ running, never by arithmetic — this is not its converse. `P-83` governs a **pi
 moved twice**, where only a run can order the movements. `P-102` governs a **single unmoved value two
 tasks read differently**, where a run is the *expensive* step and the record decides it for free. The
 two are compatible: check the record first, and when the record cannot decide, run.
+
+---
+
+<!-- T458-FIXTURE-LITERAL-REFLEX -->
+
+**P-103 — A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE, NOT A STRING. SIX WORKERS
+IN ONE FIRE SPELLED ONE AS A LITERAL, THE BAR REFUSED ALL SIX ON THEIR FIRST COMMITTED RUN, AND ALL
+SIX REPAIRED THE INSTRUMENT RATHER THAN GROWING THE PIN — WHICH IS WORTH RECORDING AS MUCH AS THE
+DEFECT IS.**
+
+*Local fire `20260829-080002`, iterations 3–5. Filed by `T458`, which re-derived every row below from
+the branches and transcripts on `main` rather than inheriting them from its own dispatch brief.*
+
+**THE MEASUREMENT.** Six workers, one fire, one reflex. Every row was read from the cited committed
+artefact, not from the task description that dispatched this entry:
+
+| # | Task | Guard that refused | Measured probe line / figures | Verified in |
+|---|------|--------------------|-------------------------------|-------------|
+| 1 | `T440` | `guard_dead_path_frontier` | `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0`, bar `EXIT 2` | `.softhouse/reviews/t440-review-t424/out/T440-BAR-own-RED.txt:191`; narrated in that review's §10a |
+| 2 | `T446` | `guard_no_fail_open_instruments` (the **sibling** guard) | fail-open frontier `15`, `pinned at 11`, **4** new `TIER2` rows, bar `EXIT 2`, `grep -c 'probe = ' = 0` | `.softhouse/reviews/t446-review-t445/REVIEW.md` §11.1; `.softhouse/reviews/t446-review-t445/evidence/80-my-first-bar-REFUSED-failopen.log:100,122` |
+| 3 | `T447` | `guard_dead_path_frontier` | `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0`, bar `EXIT 2` | `.softhouse/reviews/t447-review-t442/REVIEW.md` §11 |
+| 4 | `T448` | `guard_dead_path_frontier` | `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0`, bar `EXIT 2`, `grep -c 'probe = ' -> 0` | `.softhouse/reviews/t448-review-t433/out/79-BAR-FIRST-RUN-REFUSED-BY-MY-OWN-INSTRUMENT.txt:193`; `.softhouse/reviews/t448-review-t433/REVIEW.md:531` |
+| 5 | `T451` | `guard_dead_path_frontier` | `rows=120 pinned=108 added=12` — **all twelve from one file** | `.softhouse/handoff/T451-t449-conditions.md:374-382` |
+| 6 | `T452` | `guard_dead_path_frontier` | `T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0`, bar `EXIT 2`, on a clean tree (0 dirty) | `.softhouse/handoff/T452-t447-conditions.md:404-410` |
+
+**ALL SIX ROW COUNTS REPRODUCE.** `T458` re-read each artefact; nothing in the table was inherited.
+Two refinements the dispatch brief did not carry, recorded because they change what a reader should
+generalise:
+
+* The brief gives `T452` as `rows=109 pinned=108`. The committed line also carries `added=1
+  removed=0`; the abbreviation was lossy, not wrong.
+* The brief calls all six *fixture* literals. **Measured, they are three sub-classes, and only two
+  are fixtures.** See below. The *reflex* is one; the *object* is not.
+
+**THE THREE SUB-CLASSES, because the remedy differs slightly and the misdiagnosis is expensive.**
+
+1. **CROSS-BRANCH ARTEFACT REFERENCE (`T440`, `T447`, `T448` — three of six).** The instrument names
+   a real file that exists **only on the branch under review**. On the author's own tree the path is
+   *genuinely* dead, so the census is not merely defensible here — it is **right**, and it caught a
+   claim that stops reproducing the moment the instrument leaves that one branch. `T448`'s own words:
+   its instrument "spelled the path of the guard it tests as a literal. That guard is on
+   `softhouse/T433-t423-c1` and **not on `main`**."
+2. **FIXTURE LITERAL PROPER (`T451`, `T452` — two of six).** The string is not a reference to this
+   tree at all. `T451`'s `bin/10-fixture.sh` built a *synthetic* repository whose paths had to
+   **mimic** this program's conventions (that mimicry is the point of its cases K and R2), and twelve
+   of them were spelled out. `T452`'s arm C named a relocation destination it *creates at run time*.
+3. **THE SIBLING REFLEX (`T446` — one of six).** Not a dead path: four drives whose failure arms
+   *printed* instead of exiting, so each could print a negative it had not measured. Different guard,
+   same generative cause — **an instrument that states something about the world it never established.**
+
+**EVERY ONE OF THE SIX REPAIRED AT THE INSTRUMENT AND NONE GREW THE PIN.** That is the finding, and
+it is a *good* one:
+
+* `T440` — the graded path became **a required argument with no default**, and the script refuses when
+  it does not resolve. It explicitly refused the tempting alternative: *"spell the literal in pieces
+  so the census would not see it. That is gaming a guard this program has paid for twice."*
+* `T447` — same repair, on the erratum it grades: required argument, `NO-ARG EXIT=2` verified.
+* `T448` — location became the required caller parameter `T448_GUARD`, and a value that does not
+  resolve is **`exit 3` in `prepare()` — never a skipped case and never a pass**.
+* `T451` — the fixture's paths are now assembled from `S=".softhouse"` [`10-fixture.sh:16`], with the
+  reason written in the file. The pin was not touched.
+* `T452` — the destination is assembled at run time from the real directory and sanity-checked before
+  use. The pin was not touched; the frontier went back to 108.
+* `T446` — the four drives were rewritten so a failure arm exits instead of printing.
+
+**THE REMEDY, and it is always small. One of these three, never a fourth:**
+
+1. **ASSEMBLE the path at run time from a variable** — `S=".softhouse"` and build downward. The census
+   reads **quoted literals only**, and a path that is not spelled in one is not a row. This is not
+   evasion: an assembled path is a *different claim*, one about a directory the script computes, and
+   that is exactly what a fixture means.
+2. **MAKE THE LOCATION A REQUIRED PARAMETER** — `${VAR:?…}` with no default, and a **hard exit** (not
+   a skip, not a warning, not a default) when it does not resolve. This is what the frontier guard
+   asks for in exchange for the row, in the refusal text itself.
+3. **ADOPT `T238`'s `sweeplib.sh` SHAPE** so an instrument cannot print a negative it did not measure
+   — the `T446` half of the class. A `|| echo "(none)"` arm cannot tell *"the line is absent"* from
+   *"the log is absent"*, and it reports the second as the first.
+
+**AND THE FORBIDDEN FOURTH, stated because it is the one that will occur to the next worker:** do
+**not** split, concatenate or otherwise disguise the literal to slip past the selector, and do **not**
+add the row to the pin. The pin is a frontier, not an amnesty. Splitting the string leaves the false
+claim in place and removes the only instrument that would have found it.
+
+**CAN THE GUARD TELL A FIXTURE LITERAL FROM A GENUINE DEAD PATH? NO — AND IT SHOULD NOT TRY.** This
+was asked directly and the honest answer is the useful one. The two are **textually identical**: the
+same quoted string inside a fixture builder and inside a real reference is the same bytes, in the same
+position, in the same kind of file. The difference lives entirely in **what the surrounding program
+does with the value at run time**, which a string-literal census by construction cannot see, and which
+no heuristic over the text can recover without guessing. A detector that guessed would be strictly
+worse than none: its false negatives would be silent, and *silently excusing a real dead reference* is
+the failure this guard exists to prevent — a guard that cannot fail is worse than none, because it is
+believed.
+
+So the census's inability is **not a defect to be closed; it is the guard's fail-closed direction
+working.** The remedy is to make the distinction visible in the text — which is precisely what all
+three repairs above do. Assembling from a variable, or taking a required parameter, does not *hide*
+the fixture from the census; it *states* that the path is computed rather than referenced. **The
+author encodes the intent because only the author has it.**
+
+**Corollary, and it is the reason this entry exists at all.** The knowledge was in the tree the whole
+time — `T440` wrote the remedy down, then `T447`, `T448`, `T451` and `T452` each rediscovered it from
+scratch. Four rediscoveries at reviewer cost. A refusal that names **what is wrong** but not **what to
+do** buys exactly one of these lessons per worker, and buys it again every time.
+
+**WHAT `T458` CHANGED IN CONSEQUENCE.** The refusal now names the remedy. Both sites that print the
+"a `+` row is a NEW site" verdict — the guard's own message in
+`.softhouse/guards/check-dead-path-frontier.sh`, which is where the six workers actually read it, and
+the wrapper arm in `.softhouse/conformance.sh` — now print the three repairs, the forbidden fourth,
+and a **grep anchor into this entry** rather than a line number. Driven RED (a planted dead literal in
+a scratch clone: the remedy block prints) and GREEN (clean tree: frontier == pin, the block does not
+print); transcripts in `.softhouse/capture/t458-fixture-literal-reflex/`.
+
+**WHY THE ANCHOR IS A SENTENCE AND NOT AN ID.** The refusal message quotes this entry's opening
+sentence — `A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE` — and tells the reader to
+grep for it. `P-86`: *"an ID IS A CARDINAL. Never restate a pattern id in a second document — make the
+second site NAME THE RULE, or cite the id AND its sentence together so a shifted number is
+self-correcting."* A number in a shell string is a citation nobody re-checks; a sentence relocates
+with its text.
+
+**READ THE REFUSAL'S SHAPE BEFORE ITS CONTENT.** Five of these six bars were `EXIT 2` with the oracle
+probe line printed **zero** times. `P-84`: *"'EXIT 2 WITH NO PROBE LINE' IS THE GUARD WORKING. READ
+THE ABSENCE, NOT THE VALUE."* Every one of the six tested the probe line's PRESENCE before its value,
+and so none of them misread a failed HARD guard as an oracle outage. That habit held under six
+independent hits in one fire, which is the strongest evidence this program has that it has taken.
+
+**COLLISION HAZARD, declared rather than discovered:** this entry claims **`P-103`**, verified free
+the way `P-100`, `P-101` and `P-102` were — a whole-repository search for the token returned exactly
+**one** hit before this commit, and it is not a definition: it is the recorded *transcript of a
+refusal*,
+`.softhouse/capture/fire-20260829-080002/60-BAR-RED-p102-first-draft-FATAL-undefined-citation.txt:125`,
+in which `guard_pnumber_citations` went fatal on a draft that spelled the then-unclaimed cardinal.
+Defining `P-103` here retires that dangling citation rather than creating one. Four workers were live
+in the same wave; **if a rival `P-103` lands, renumber this one.**
