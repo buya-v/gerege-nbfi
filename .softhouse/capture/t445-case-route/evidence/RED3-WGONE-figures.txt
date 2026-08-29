@@ -1,0 +1,32 @@
+=== ARM WGONE ===
+tree mode under test: roundtrip=yes witness-blob=NO member-blob=NO decisive-arm=NO
+EXIT=2
+grep -c 'probe = ' = 0
+probe = (ABSENT — not "down")
+census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+VERDICT: <none>
+--- decisive registration sentences ---
+159:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+162:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t445g/zz-t445g-member.sh declares REACHED-BY .softhouse/guards/zz-t445g/witness.txt,
+163:conformance: and THAT REACHED-BY WITNESS DOES NOT EXIST. A declaration whose
+--- checkout collision warnings ---
+Note: switching to '4e519c82a53287cc20b21384ef9bf1d9e77303b4'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+--- git status of the fresh clone ---
+ D .softhouse/guards/zz-t445g/witness.txt
+

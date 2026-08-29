@@ -1,0 +1,21 @@
+=== ARM CASE ===
+tree mode under test: roundtrip=yes witness-blob=yes member-blob=yes decisive-arm=yes
+EXIT=2
+grep -c 'probe = ' = 0
+probe = (ABSENT — not "down")
+census: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+VERDICT: <none>
+--- decisive registration sentences ---
+163:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+167:conformance: guard_guards_dir_registration: .softhouse/guards/zz-t445k/zz-t445k-member.sh declares REACHED-BY .softhouse/guards/zz-t445k/W.txt,
+168:conformance: and THAT REACHED-BY WITNESS DOES NOT NAME zz-t445k-member.sh IN ITS COMMITTED
+--- checkout collision warnings ---
+warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  '.softhouse/guards/zz-t445k/W.txt'
+  '.softhouse/guards/zz-t445k/w.txt'
+--- git status of the fresh clone ---
+ T .softhouse/guards/zz-t445k/W.txt
+

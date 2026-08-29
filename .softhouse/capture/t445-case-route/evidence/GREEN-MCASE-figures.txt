@@ -1,0 +1,23 @@
+=== ARM MCASE ===
+tree mode under test: roundtrip=yes witness-blob=yes member-blob=yes decisive-arm=yes
+EXIT=2
+grep -c 'probe = ' = 0
+probe = (ABSENT — not "down")
+census: population=8 invoked=3 declared=2 reached-by=2 invoked-by-nothing=1 symlink-members=0
+VERDICT: <none>
+--- decisive registration sentences ---
+158:conformance: guard_guards_dir_registration: .softhouse/guards/ZZ-T445M/x.sh IS INVOKED BY NOTHING.
+170:conformance: REACHED-BY row below to record what actually reaches this file.
+177:conformance:     GUARDS-DIR-REGISTRATION: REACHED-BY <witness path, repo-relative>
+201:conformance:     REACHED-BY .softhouse/guards/ledgerguard/main.go — declared in its own header, reached by
+205:conformance:     REACHED-BY .softhouse/guards/zz-t445m/x.sh — declared in its own header, reached by
+--- checkout collision warnings ---
+warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  '.softhouse/guards/ZZ-T445M/x.sh'
+  '.softhouse/guards/zz-t445m/x.sh'
+--- git status of the fresh clone ---
+ M .softhouse/guards/ZZ-T445M/x.sh
+

@@ -213,6 +213,23 @@ plant_RWB() {
   git -C "$R" commit -q -am 'T445 arm RWB: delete the witness tracked-blob read' >/dev/null
 }
 
+# ---- RWB2: REVERT the M-1 remedy properly. --------------------------------------------
+# RWB (above) deleted every line carrying the tracked-blob read. That line is the SECOND
+# line of a two-line command substitution, so deleting it left an unterminated `$(` and the
+# harness died of a SYNTAX ERROR at exit 2 with the probe absent — a refusal, but not the
+# refusal the arm was asking about. RECORDED RATHER THAN QUIETLY REPLACED: an arm that
+# refuses for the wrong reason looks exactly like an arm that worked.
+# RWB2 SUBSTITUTES instead of deleting, so the mutant is a real semantic revert of T445's
+# witness-side remedy — the naming test goes back to reading this host — and stays valid
+# shell.
+plant_RWB2() {
+  local R f
+  R="$1"; f="$R/.softhouse/conformance.sh"
+  LC_ALL=C sed 's|git cat-file blob "$self_blob"|cat "$REPO_ROOT/$self_norm"|' "$f" > "$f.new" \
+    && mv "$f.new" "$f"
+  git -C "$R" commit -q -am 'T445 arm RWB2: revert the witness tracked-blob read to a host read' >/dev/null
+}
+
 run_arm() {
   # bash EXPANDS EVERY WORD of a `local` before assigning any of them, so a later name
   # cannot reference an earlier one on the same line under `set -u`. Declared, then assigned.

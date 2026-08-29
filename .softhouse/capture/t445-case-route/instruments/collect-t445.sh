@@ -7,7 +7,7 @@ W="${1:?workroot}"; E="${2:?evidence dir}"; TAG="${3:?tag}"
 mkdir -p "$E"
 GDR='.softhouse/guards'
 
-for a in Z CASE MCASE LEGA LEGDIRTY 2ROW RVQ RWB; do
+for a in Z CASE MCASE LEGA LEGDIRTY WDIRTY CDIRTY WGONE GITLW 2ROW RVQ RWB RWB2; do
   [ -f "$W/$a/figures.txt" ] || continue
   cp "$W/$a/figures.txt" "$E/$TAG-$a-figures.txt"
   cp "$W/$a/bar.log"     "$E/$TAG-$a-bar.log" 2>/dev/null || true
