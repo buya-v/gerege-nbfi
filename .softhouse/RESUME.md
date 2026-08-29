@@ -1,88 +1,69 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260828-140005`, chain iteration 4 — **NINE WORKERS IN FLIGHT.** Updated live, not at exit.
+## FIRE `20260829-080002` (local, Buyan's Mac) — **SIX WORKERS DISPATCHED.** Written BEFORE the first `git worktree add`.
 
-If you are reading this after a kill, the table below is what was running. Each worker was told to commit
-incrementally. Verify every row with `git log --oneline main..<branch>`; **a branch with no commit means that
-worker died before its first checkpoint and the task is `needs_retry`, not `in_progress`.** `in_progress`
-never means "work is happening"; it means "a driver said so, once".
+Oracle **REACHABLE** for this whole fire: `https://localhost:8443/fineract-provider/actuator/health`,
+PostgreSQL at `localhost:5432`, pinned Fineract `/Users/buv/fineract @ 426a23544`.
 
-## BAR ON `main` — GREEN, but it was RED for three commits this iteration and the driver caused it
+## BAR ON `main` AT FIRE START — GREEN, measured, not assumed
 
 ```
-bash .softhouse/conformance.sh   →  VERDICT: PASS (exit 0)
+bash .softhouse/conformance.sh   →  EXIT 0
 probe line PRESENT (grep -c 'probe = ' == 1), reads `up`     ← presence tested BEFORE value
-46 parity vectors / 7884 cells · all 14 wrong ledger implementations KILLED · pin 14 == population 14
-dead-path frontier GREEN, deadOccurrences 108 · P-number citations VERDICT PASS, 0 fatal
+VERDICT: PASS — 46 parity vectors match the pinned reference oracle, 7884 cells compared
+dead-path frontier GREEN, deadOccurrences 108 · frontier 11 == pinned 11
 ```
 
-### ⚠ THE DRIVER REDDENED `main` AND PUSHED IT — READ THIS BEFORE YOU WRITE ANY DIRECTIVE FILE
-Dispatching T398, the driver wrote a bare `P-<n>` token into **this file** naming a pattern that did not
-exist yet. `.softhouse/RESUME.md` is a **DIRECTIVE file** to `check-pnumber-citations.py`, so that is a
-**FATAL UNDEFINED citation**, and `guard_pnumber_citations` is a **HARD guard**:
+## ⚠ WHAT THIS FIRE FOUND IN THE INHERITED RECORD, BEFORE IT DISPATCHED ANYTHING
 
-```
-PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:42 <the token>
-conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
-```
+The previous fire (`20260828-140005`, iteration 4) ended with **nine workers in flight**. All nine died
+with the session. The wrapper's reconciler ran, and **it got one of them exactly backwards**:
 
-`main` was red from `4cf77a42` to `c0b15151` — **three pushed commits** — and nothing detected it. It surfaced
-only because an unrelated merge result was being graded. Two lessons, neither of which is "the guard worked":
-- **T392 had reported this exact near-miss in its own handoff** and the driver reproduced it within minutes.
-- **The driver never runs the bar on its own commits**, and it is the only identity that pushes to `main`.
-  Filed as **`T413`**'s sibling **`T412`**.
-- **Exit 2 with NO probe line printed is a HARD-guard failure, never an oracle outage.** The oracle has been
-  reachable for this entire fire.
+**`ready-tasks.py` reported `T431` as `WIP: MERGED … The work LANDED. Do NOT read this as an unstarted
+task.` `git rev-list --count main..softhouse/T431-t407-conditions` is `0`.** The branch points **at** the
+driver's own dispatch commit `280817a1` — which is on `main`, because that is the commit `git worktree add`
+branched from. The worker never committed a line. `C-T407-1` (**MAJOR**, the pathspec-magic witness
+forgery) is **UNSTARTED**, and the record was telling the next driver the opposite.
 
-## MERGED THIS ITERATION — each verified on the MERGE RESULT before `main` was touched
+This is the first **live** instance of the class `T350` and `T403` are already filed for — the reconciler
+keys its refusal-to-demote on a branch **name**, not on whether that branch carries a commit. It is the
+**P-45** shape once more: a control that runs and reports, and reports the reverse of the truth. `T350`
+and `T403` are both READY and neither is dispatched yet; this fire's evidence raises both.
+
+Six other tasks the record carried as `needs_retry` with a `branch` field (`T417 T419 T422 T424 T429
+T266`) have **no branch at all** — `git rev-parse` fails on every one. They were never dispatched. Their
+records now say so.
+
+`T423` is the third shape: its branch carries **1 real commit** of instruments and drive output, and
+**no `REVIEW.md`** — verified with `git ls-tree -r --name-only`. Evidence real, verdict never written.
+
+## MERGED THIS FIRE
 
 | Merge | What it was |
 |---|---|
-| `T392` | **`P-98`** — a control that cannot fail and a control that refuses everything are the same defect wearing opposite signs. Driver verified the P-number free independently before merge. |
-| `T396` | T389's three citation defects — and **three REAL port traps**, all re-verified by the driver against `/Users/buv/fineract @ 426a23544`, not accepted on the worker's word. |
+| `T421` + `T428` | T406's six conditions on the accrual vectors, **and its independent review**. `T428` verdict: `APPROVED WITH CONDITIONS`, four findings, **all LOW, none blocking**. Bar run on the **MERGE RESULT** in a scratch worktree at `/tmp/t429-merge` before `main` was touched. |
 
-**The three port traps are the most portable thing this iteration produced**, and they are what `G-20` asked
-for — actual porting knowledge rather than more instrument:
-- **A** — `isBeforePeriod` switches on `isFirstPeriod`: strict `isBefore` for the first period, `!isAfter`
-  for every other. At `tillDate == fromDate` the first installment is kept and all others dropped. A
-  single-comparison Go port diverges **silently** — the loan is still selected, so it is a no-op, not an error.
-- **B** — the `!chargeOnDueDate ||` short-circuit removes both date cutoffs from one config row.
-- **C** — the progressive `plusDays(1)` shift reaches installment selection and interest but **not**
-  `addChargeAccrual`, which still gets raw `tillDate`. Two distinct Go failures.
-
-## IN FLIGHT
+## IN FLIGHT — SIX WORKERS
 
 | Task | Branch | What it is |
 |---|---|---|
-| `T391` | `softhouse/T391-accrual-promotion` | **Promote T388's accrual observations into vectors.** Oracle-only work. The pin it may need moved to `conformance.sh:4551` (+75) under T404 — **match it BY NAME.** |
-| `T390` | `softhouse/T390-baseline-attribution` | Oracle-state baseline attribution; ships a wiring patch as a request. |
-| `T402` | `softhouse/T402-t386-conditions` | **Blocks `T399`.** A `2>` redirect that returns 1 without running the command. |
-| `T404` | `softhouse/T404-t384-conditions` | The fifth registration fail-open. **Has ended two turns mid-drive**; fix is committed, GREEN-AFTER and R1/R2/R3 are not. |
-| `T400` | `softhouse/T400-t385-conditions` | `fire-program.sh` offsets that "cannot drift apart" and do. |
-| `T393` | `softhouse/T393-t382-conditions` | T382's four conditions on T374. |
-| `T398` | `softhouse/T398-measured-but-backwards` | A measured remedy that is measured and still backwards. Must take the next free cardinal above `P-98`. |
-| `T405` | `softhouse/T405-review-t397` | INDEPENDENT review of T397 — a change to the **admission comparator**, which is grading. |
-| `T411` | `softhouse/T411-review-t401` | INDEPENDENT review of T401. |
+| `T422` | `softhouse/T422-review-t416` | **INDEPENDENT review of T416 — a MONEY-REPORTING fix.** A one-minor-unit ledger mismatch announced to a human as `0 mismatched vector(s)`. Verify the count is now RIGHT, not merely non-zero. |
+| `T423` | `softhouse/T423-review-t393` | **RESUME, do not restart.** Its 1 commit of evidence is real; the verdict is what is missing. |
+| `T431` | `softhouse/T431-t407-conditions` | **UNSTARTED, MAJOR.** `C-T407-1` — the witness-side lookup at `conformance.sh:3677` is still a pathspec, so `:(literal)` magic spelled as a real tracked directory disables two refusals at once. |
+| `T417` | `softhouse/T417-scheduler-attribution` | **G-22, oracle-only work.** The reference oracle edits itself overnight — nineteen active jobs, one caught by luck. Pin the scheduler WITHOUT trusting app user 2. |
+| `T429` | `softhouse/T429-oracle-derived-columns` | **G-22(c), a divergence of principle.** The oracle writes running balances onto posted rows; `CLAUDE.md` says balances are DERIVED, NEVER WRITTEN. Declare the oracle-derived columns so the port is not "fixed" into violating the non-negotiable. |
+| `T424` | `softhouse/T424-t408-conditions` | T408's conditions on T402 — an attribution wrong in the **shipped source comment**, and a guard correct only by accident of this host's `tee` buffering. |
 
 ## COMPLETE, HELD UNMERGED PENDING REVIEW
-`T397` (`softhouse/T397-t387-conditions`) — token-bounded `verbatimInCapture`, qualified verdict. Driver
-re-ran its float sweep independently: 4 hits, **all inside comments stating the prohibition**.
-`T401` (`softhouse/T401-zsh-census-gap`) — purely additive; applied nothing, by design.
-
-## ⚠ A SYSTEMIC PLAN-GATE MISS, FOUND AND CLOSED THIS ITERATION
-Plan gate 1 requires every coder task to carry a paired INDEPENDENT reviewer. **Seven of ten in this wave had
-none** (`T390 T391 T397 T400 T401 T402 T404`); only `T393` was paired. Cause: all were planned as
-review-CONDITION follow-ups, and the pairing was applied to the original task but **never re-applied to the
-follow-up** — so a chain that began with a review was drifting back into unreviewed money-path changes.
-Filed `T405`–`T411`, one per code task.
+`T393` (`softhouse/T393-t382-conditions`, 11 commits, its own final bar EXIT 0) — **blocked on `T423`.**
+`T416` (`softhouse/T416-t405-conditions`, 10 commits) — **blocked on `T422`.** Money-path; will not merge unreviewed.
 
 ## QUEUE FOR THE NEXT FIRE
-`T406`–`T410` (reviewers, as their subjects land) → `T399` (needs `T402`) → `T413` (apply T401's four census
-extensions; needs `T404`) → `T412` (the driver never grades its own commits) → `T394` (reviews `T393`) →
-`T395` (G-21, DEC-2 **evidential correction only**).
+`T419` (the grep BRE defect, held out of this wave only because three writers to `conformance.sh` is
+already two more than merges cleanly) → `T350` + `T403` (both raised by this fire's own T431 finding) →
+`T412` (the driver never grades its own commits) → `T399` (needs `T424`) → `T425` (needs `T393`+`T423`) →
+`T413`, `T394`, `T395`.
 
 ## OPEN GATES — none blocks anything, and no CONTRACT gate is open
-`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`. `G-20` and `G-21` were stored as **bare strings**
-in `program.json`, which **crashed `ready-tasks.py`** after it had printed READY and BLOCKED — so every driver
-running it got a full, plausible task list and **no gate section at all**. Normalised into gate objects; the
-resolver now surfaces non-dict entries as `MALFORMED` and reads them as **OPEN**, never closed.
+`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`, `G-22`. `ready-tasks.py` reports
+`OPEN CONTRACT GATES … NONE open. Every gate id in program.json.gates_pending was inspected.`
