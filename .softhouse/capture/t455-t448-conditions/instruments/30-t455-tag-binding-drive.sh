@@ -84,7 +84,10 @@ prepare() {   # prepare [ref] — defaults to REF
     rm -rf "$D" || return 1
     git clone --quiet --shared "$SRC" "$D" || return 1
   fi
-  git -C "$D" checkout --quiet --detach "$ref" || return 1
+  # --force, because these cases mutate the working tree WITHOUT committing: a plain checkout
+  # refuses to move across refs over local changes, and that refusal arrives as "could not
+  # prepare" halfway through a run rather than as a case that did not fire.
+  git -C "$D" checkout --quiet --force --detach "$ref" || return 1
   git -C "$D" reset --quiet --hard "$ref" || return 1
   git -C "$D" clean -qfdx || return 1
   [ -f "$D/$INT" ]    || { echo "REFUSED: $INT absent at $ref" >&2; return 1; }
