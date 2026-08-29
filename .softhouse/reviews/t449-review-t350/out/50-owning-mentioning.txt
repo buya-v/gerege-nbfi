@@ -1,0 +1,25 @@
+=== Q1: the T268 measurement the author says forced the leading anchor ===
+
+  T268  OWNING=0  MENTIONING=24
+      mention dir .softhouse/capture/t286-t268-retry             23
+      mention dir .softhouse/reviews/t291-review-t286            1
+      landed_evidence -> flagged=False complete=True
+
+  T286  OWNING=27  MENTIONING=27
+      mention dir .softhouse/reviews/t291-review-t286            26
+      mention dir .softhouse/capture/t290-review-t271            1
+      landed_evidence -> flagged=True complete=True
+
+  T291  OWNING=30  MENTIONING=0
+      landed_evidence -> flagged=True complete=True
+
+=== Q2: which tasks OWN nothing but are MENTIONED a lot? ===
+For each id nameable from a tracked path component, count OWNING and MENTIONING.
+distinct T<n> ids nameable from a tracked path component on main: 354
+
+ids with ZERO owning paths on main (the population the anchor could drop): 5
+  T405   owning=0 mentioning=27  landed_index_hits=0  -> NOT FLAGGED
+  T268   owning=0 mentioning=24  landed_index_hits=0  -> NOT FLAGGED
+  T269   owning=0 mentioning=1   landed_index_hits=0  -> NOT FLAGGED
+  T408   owning=0 mentioning=1   landed_index_hits=0  -> NOT FLAGGED
+  T900   owning=0 mentioning=1   landed_index_hits=0  -> NOT FLAGGED

@@ -1,0 +1,10 @@
+case                                                           SHIPPED (leading)      RELAXED (anywhere)
+--------------------------------------------------------------------------------------------------------------
+T339  the incident ref -- MUST STAY name-only                  name-only              name-only
+T945  case K -- genuine work under T944's dir; SHOULD block    name-only              CARRIES
+      relaxed hit: path .softhouse/capture/t944-t945-conditions/out/work.txt
+T900  case G's rescue ref -- owning path; already blocks on th CARRIES                CARRIES
+      relaxed hit: path .softhouse/capture/t900-work/out/wip.txt
+T351  control -- real content, owning path                     CARRIES                CARRIES
+      relaxed hit: commit 0b19949c9 subject 'T351: progress accounting'
+      relaxed hit: path .softhouse/capture/t351-progress-accounting/out/x.txt

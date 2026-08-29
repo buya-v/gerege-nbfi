@@ -1,0 +1,45 @@
+local heads: 689
+heads with NO T<n> id in the name (not exercised): 488
+    main
+    softhouse/A2-10-review-a2-5
+    softhouse/A2-11-review-a2-7
+    softhouse/A2-12-a2-8-microfix
+    softhouse/A2-13-dec2-gl-contract
+    softhouse/A2-14-review-dec2
+    softhouse/A2-16-dec2-rev2
+    softhouse/A2-17-review-dec2-rev2
+    softhouse/A2-18-ledger-invariant-guard
+    softhouse/A2-19-review-dec2-rev2-second
+    softhouse/A2-20-context-allowlist
+    softhouse/A2-21-dec2-rev3
+    softhouse/A2-22-refused-vector-coverage
+    softhouse/A2-5-capture-rig-fixes
+    softhouse/A2-6-behaviour-doc-microfix
+    softhouse/A2-7-capture-mandatory-accounts
+    softhouse/A2-8-ledger-port
+    softhouse/A2-9-review-a2-8
+    softhouse/T16b-capture-plan-corrections
+    softhouse/T304b-evidence-destruction
+    softhouse/rescued-agent-a00dbfd6196b49bc0-20260828-140005
+    softhouse/rescued-agent-a0a52fc48d1087796-20260820-230001
+    softhouse/rescued-agent-a157842e280d9a835-20260822-140002
+    softhouse/rescued-agent-a1be0f4db12e4b8b8-20260821-080001
+    softhouse/rescued-agent-a2027f85cea4effc9-20260818-200001
+
+RED(main kind) -> GREEN(T350 kind)   count   RED action / GREEN action
+  commits            -> commits              44   demote   / demote  
+  merged             -> merged              156   REFUSE   / REFUSE  
+  merged             -> stillborn             1   REFUSE   / demote  
+
+--- the pre-T350 `merged` population (0 ahead AND ancestor of main) ---
+heads main calls `merged`: 157
+  keep `merged`: 156
+  FLIP        : 1
+    softhouse/T449-review-t350                       id=T449   merged -> stillborn   head 4e7d678a6  'softhouse iter5: T350 complete (bar EXIT 0, scope clean); dispatch T44'
+
+--- every REFUSE->demote transition, LISTED (P-80: list, do not count) ---
+  REFUSE->demote  softhouse/T449-review-t350                       id=T449   merged -> stillborn
+  total REFUSE->demote: 1
+
+--- every demote->REFUSE transition (the other direction) ---
+  total demote->REFUSE: 0

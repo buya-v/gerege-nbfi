@@ -1,0 +1,10 @@
+branch_sweep imported (with it beside the module): True
+ref_index()            -> None
+  note: branch_sweep.py could not be imported (simulated ImportError), so NO case-variant check ran -- absence of a warning belo
+refs_naming('T339')    -> None
+refs_carrying_content  -> carriers=None name_only=None unprobed=None
+
+_absent_verdict with branch_sweep=None -> kind='indeterminate'
+action: demote to needs_retry
+
+NO AttributeError: the real code returns before branch_sweep.short() is reached.

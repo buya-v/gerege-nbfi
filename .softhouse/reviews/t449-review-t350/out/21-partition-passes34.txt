@@ -1,0 +1,80 @@
+module: /tmp/t449/mods/rt_t350.py   branch_sweep imported: True
+states enumerated: 256 ; states with NO usable verdict: 0
+
+--- kind x polarity ---
+  absent               demote    32
+  commits              demote    32
+  indeterminate        demote     8
+  merged               REFUSE    32
+  merged-unverified    REFUSE     8
+  name-only-refs       demote     1
+  relocated            REFUSE     6
+  stillborn            demote     8
+  unstarted            demote     1
+  unverified           demote   128
+
+============================================================================================
+PASS 3 -- ONLY STATES WHERE GIT ANSWERED CLEANLY
+============================================================================================
+
+  !! SPLIT: content-on-main=False ref-carries-content=False -> ['REFUSE', 'demote']
+       absent                       none        refindex-failed     -> indeterminate      demote
+       absent                       unrun       refindex-failed     -> indeterminate      demote
+       exists-ahead                 none        refindex-failed     -> commits            demote
+       exists-ahead                 unrun       refindex-failed     -> commits            demote
+       exists-0ahead-ancestor       none        refindex-failed     -> stillborn          demote
+       exists-0ahead-ancestor       unrun       refindex-failed     -> merged-unverified  REFUSE
+       exists-0ahead-not-ancestor   none        refindex-failed     -> absent             demote
+       exists-0ahead-not-ancestor   unrun       refindex-failed     -> absent             demote
+
+  !! SPLIT: content-on-main=False ref-carries-content=True -> ['REFUSE', 'demote']
+       absent                       none        carrier             -> relocated          REFUSE
+       absent                       unrun       carrier             -> relocated          REFUSE
+       exists-ahead                 none        carrier             -> commits            demote
+       exists-ahead                 unrun       carrier             -> commits            demote
+       exists-0ahead-ancestor       none        carrier             -> stillborn          demote
+       exists-0ahead-ancestor       unrun       carrier             -> merged-unverified  REFUSE
+       exists-0ahead-not-ancestor   none        carrier             -> absent             demote
+       exists-0ahead-not-ancestor   unrun       carrier             -> absent             demote
+
+  !! SPLIT: content-on-main=True  ref-carries-content=False -> ['REFUSE', 'demote']
+       absent                       found       refindex-failed     -> merged             REFUSE
+       absent                       found_part  refindex-failed     -> merged             REFUSE
+       exists-ahead                 found       refindex-failed     -> commits            demote
+       exists-ahead                 found_part  refindex-failed     -> commits            demote
+       exists-0ahead-ancestor       found       refindex-failed     -> merged             REFUSE
+       exists-0ahead-ancestor       found_part  refindex-failed     -> merged             REFUSE
+       exists-0ahead-not-ancestor   found       refindex-failed     -> absent             demote
+       exists-0ahead-not-ancestor   found_part  refindex-failed     -> absent             demote
+
+  !! SPLIT: content-on-main=True  ref-carries-content=True -> ['REFUSE', 'demote']
+       absent                       found       carrier             -> merged             REFUSE
+       absent                       found_part  carrier             -> merged             REFUSE
+       exists-ahead                 found       carrier             -> commits            demote
+       exists-ahead                 found_part  carrier             -> commits            demote
+       exists-0ahead-ancestor       found       carrier             -> merged             REFUSE
+       exists-0ahead-ancestor       found_part  carrier             -> merged             REFUSE
+       exists-0ahead-not-ancestor   found       carrier             -> absent             demote
+       exists-0ahead-not-ancestor   found_part  carrier             -> absent             demote
+
+RULE-LEVEL splits: 4
+
+============================================================================================
+PASS 4 -- IS THE REF EVIDENCE CONSULTED AT ALL WHEN THE BRANCH EXISTS?
+============================================================================================
+  absent                       main=found       verdicts over ALL 8 ref states: [('merged', 'REFUSE')]
+  absent                       main=found_part  verdicts over ALL 8 ref states: [('merged', 'REFUSE')]
+  absent                       main=none        verdicts over ALL 8 ref states: [('indeterminate', 'demote'), ('name-only-refs', 'demote'), ('relocated', 'REFUSE'), ('unstarted', 'demote')]
+  absent                       main=unrun       verdicts over ALL 8 ref states: [('indeterminate', 'demote'), ('relocated', 'REFUSE')]
+  exists-ahead                 main=found       verdicts over ALL 8 ref states: [('commits', 'demote')]
+  exists-ahead                 main=found_part  verdicts over ALL 8 ref states: [('commits', 'demote')]
+  exists-ahead                 main=none        verdicts over ALL 8 ref states: [('commits', 'demote')]
+  exists-ahead                 main=unrun       verdicts over ALL 8 ref states: [('commits', 'demote')]
+  exists-0ahead-ancestor       main=found       verdicts over ALL 8 ref states: [('merged', 'REFUSE')]
+  exists-0ahead-ancestor       main=found_part  verdicts over ALL 8 ref states: [('merged', 'REFUSE')]
+  exists-0ahead-ancestor       main=none        verdicts over ALL 8 ref states: [('stillborn', 'demote')]
+  exists-0ahead-ancestor       main=unrun       verdicts over ALL 8 ref states: [('merged-unverified', 'REFUSE')]
+  exists-0ahead-not-ancestor   main=found       verdicts over ALL 8 ref states: [('absent', 'demote')]
+  exists-0ahead-not-ancestor   main=found_part  verdicts over ALL 8 ref states: [('absent', 'demote')]
+  exists-0ahead-not-ancestor   main=none        verdicts over ALL 8 ref states: [('absent', 'demote')]
+  exists-0ahead-not-ancestor   main=unrun       verdicts over ALL 8 ref states: [('absent', 'demote')]

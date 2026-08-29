@@ -1,0 +1,13 @@
+landed_index()  (commit subjects + handoff listing) : 0.2377 s
+main_tree()     NEW, one `git ls-tree -r main`      : 0.0967 s
+main_tree note: 9730 path(s) tracked on main were scanned for a path component naming the id
+paths listed: 9730
+
+raw `git ls-tree -r main -- .softhouse/handoff` : 0.0446 s
+raw `git ls-tree -r main`                      : 0.0856 s
+net additional cost, once per process          : 0.0410 s
+
+landed_evidence() over 360 ids: 1.3757 s total, 0.00382 s/task
+ref_content_evidence() for ONE ref (2 git calls): 0.0920 s
+MAX_REFS_PROBED = 8
+54 non-terminal tasks through the READY flag    : 0.1299 s
