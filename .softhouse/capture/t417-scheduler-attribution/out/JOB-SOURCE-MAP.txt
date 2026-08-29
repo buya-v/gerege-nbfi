@@ -1,0 +1,48 @@
+# job->source map   pinned fineract 426a23544e8426a38ae43ae404670a0a7e85b9eb   generated 2026-08-29T00:24:04Z
+# job rows from the LIVE job table; enum constants from JobName.java; classes from grep
+
+job  active  last_run_utc         display_name                                                           ENUM                                                           main-source classes
+2    t       2026-08-28 16:01:00  Update Loan Arrears Ageing                                             UPDATE_LOAN_ARREARS_AGEING                                     UpdateLoanArrearsAgeingConfig.java 
+4    t       2026-08-28 14:20:00  Apply Annual Fee For Savings                                           APPLY_ANNUAL_FEE_FOR_SAVINGS                                   ApplyAnnualFeeForSavingsConfig.java 
+5    t       2026-08-28 04:00:00  Apply Holidays To Loans                                                APPLY_HOLIDAYS_TO_LOANS                                        ApplyHolidaysToLoansConfig.java 
+6    t       2026-08-28 16:00:00  Post Interest For Savings                                              POST_INTEREST_FOR_SAVINGS                                      PostInterestForSavingConfig.java 
+7    t       2026-08-28 16:01:00  Transfer Fee For Loans From Savings                                    TRANSFER_FEE_CHARGE_FOR_LOANS                                  TransferFeeChargeForLoansConfig.java 
+8    t       2026-08-28 04:00:00  Pay Due Savings Charges                                                PAY_DUE_SAVINGS_CHARGES                                        PayDueSavingsChargesConfig.java 
+9    t       2026-08-28 16:01:00  Update Accounting Running Balances                                     ACCOUNTING_RUNNING_BALANCE_UPDATE                              AccountRunningBalanceUpdateConfig.java 
+10   t       2026-08-28 16:00:00  Execute Standing Instruction                                           EXECUTE_STANDING_INSTRUCTIONS                                  ExecuteStandingInstructionsConfig.java 
+11   t       2026-08-28 16:01:00  Add Accrual Transactions                                               ADD_ACCRUAL_ENTRIES                                            AddAccrualEntriesConfig.java 
+12   t       2026-08-28 16:00:00  Apply penalty to overdue loans                                         APPLY_CHARGE_TO_OVERDUE_LOAN_INSTALLMENT                       ApplyChargeToOverdueLoanInstallmentConfig.java 
+13   t       2026-08-28 16:00:00  Update Non Performing Assets                                           UPDATE_NPA                                                     UpdateNpaConfig.java 
+14   t       2026-08-28 16:02:00  Transfer Interest To Savings                                           TRANSFER_INTEREST_TO_SAVINGS                                   TransferInterestToSavingsConfig.java 
+15   t       2026-08-28 16:00:00  Update Deposit Accounts Maturity details                               UPDATE_DEPOSITS_ACCOUNT_MATURITY_DETAILS                       UpdateDepositsAccountMaturityDetailsConfig.java 
+16   t       2026-08-28 16:02:00  Add Periodic Accrual Transactions                                      ADD_PERIODIC_ACCRUAL_ENTRIES                                   AddPeriodicAccrualEntriesConfig.java 
+17   t       2026-08-28 16:01:00  Recalculate Interest For Loans                                         RECALCULATE_INTEREST_FOR_LOAN                                  RecalculateInterestForLoanConfig.java 
+18   t       2026-08-28 16:05:00  Generate Mandatory Savings Schedule                                    GENERATE_RD_SCEHDULE                                           GenerateRdScheduleConfig.java 
+19   t       2026-08-28 16:00:00  Generate Loan Loss Provisioning                                        GENERATE_LOANLOSS_PROVISIONING                                 GenerateLoanlossProvisioningConfig.java 
+20   t       2026-08-28 16:00:00  Post Dividends For Shares                                              POST_DIVIDENTS_FOR_SHARES                                      PostDividentsForSharesConfig.java 
+21   t       2026-08-28 16:00:00  Update Savings Dormant Accounts                                        UPDATE_SAVINGS_DORMANT_ACCOUNTS                                UpdateSavingsDormantAccountsConfig.java 
+22   t       2026-08-28 16:01:00  Add Accrual Transactions For Loans With Income Posted As Transactions  ADD_PERIODIC_ACCRUAL_ENTRIES_FOR_LOANS_WITH_INCOME_POSTED_AS_TRANSACTIONS AddPeriodicAccrualEntriesForLoansConfig.java 
+23   t       2026-08-29 00:15:00  Execute Report Mailing Jobs                                            EXECUTE_REPORT_MAILING_JOBS                                    ExecuteReportMailingJobsConfig.java 
+24   t       2026-08-28 21:00:00  Update SMS Outbound with Campaign Message                              UPDATE_SMS_OUTBOUND_WITH_CAMPAIGN_MESSAGE                      UpdateSmsOutboundWithCampaignMessageConfig.java UpdateSmsOutboundWithCampaignMessageTasklet.java 
+25   t       2026-08-28 21:00:00  Send Messages to SMS Gateway                                           SEND_MESSAGES_TO_SMS_GATEWAY                                   SendMessageToSmsGatewayConfig.java 
+26   t       2026-08-28 21:00:00  Get Delivery Reports from SMS Gateway                                  GET_DELIVERY_REPORTS_FROM_SMS_GATEWAY                          GetDeliveryReportsFromSmsGatewayConfig.java 
+27   t       2026-08-29 00:20:00  Execute Email                                                          EXECUTE_EMAIL                                                  ExecuteEmailConfig.java 
+28   t       2026-08-29 00:15:00  Update Email Outbound with campaign message                            UPDATE_EMAIL_OUTBOUND_WITH_CAMPAIGN_MESSAGE                    UpdateEmailOutboundWithCampaignMessageConfig.java 
+29   t       2026-08-28 04:00:00  Generate AdhocClient Schedule                                          GENERATE_ADHOC_CLIENT_SCHEDULE                                 GenerateAdhocClientScheduleConfig.java 
+30   t       2026-08-28 16:01:00  Update Trial Balance Details                                           UPDATE_TRIAL_BALANCE_DETAILS                                   UpdateTrialBalanceDetailsConfig.java 
+31   t       2026-08-28 16:01:00  Execute All Dirty Jobs                                                 EXECUTE_DIRTY_JOBS                                             ExecuteAllDirtyJobsConfig.java 
+32   f       never                Increase Business Date by 1 day                                        INCREASE_BUSINESS_DATE_BY_1_DAY                                IncreaseBusinessDateBy1DayConfig.java 
+33   f       never                Increase COB Date by 1 day                                             INCREASE_COB_DATE_BY_1_DAY                                     IncreaseCobDateBy1DayConfig.java 
+34   f       never                Loan COB                                                               LOAN_COB                                                       LoanCOBCatchUpApiResource.java LoanCOBJobParameterProvider.java LoanCOBManagerConfiguration.java LoanCOBWorkerConfiguration.java LoanInlineCOBConfig.java WorkingCapitalLoanCOBCatchUpApiResource.java WorkingCapitalLoanCOBWorkerConfiguration.java 
+35   t       2026-08-28 14:00:00  Loan Delinquency Classification                                        LOAN_DELINQUENCY_CLASSIFICATION                                SetLoanDelinquencyTagsConfig.java 
+36   t       2026-08-29 00:24:00  Send Asynchronous Events                                               SEND_ASYNCHRONOUS_EVENTS                                       SendAsynchronousEventsConfig.java 
+37   f       2026-08-18 16:01:00  Purge External Events                                                  PURGE_EXTERNAL_EVENTS                                          PurgeExternalEventsConfig.java 
+38   f       2026-08-18 16:01:00  Purge Processed Commands                                               PURGE_PROCESSED_COMMANDS                                       PurgeProcessedCommandsConfig.java 
+39   f       2026-08-18 16:01:00  Accrual Activity Posting                                               ACCRUAL_ACTIVITY_POSTING                                       AccrualActivityPostingConfig.java 
+40   f       2026-08-18 16:01:00  Journal Entry Aggregation                                              JOURNAL_ENTRY_AGGREGATION                                      JournalEntryAggregationJobConfiguration.java 
+41   f       never                Retained Earning Job                                                   RETAINED_EARNING                                               RetainedEarningJobConfiguration.java 
+42   f       2026-08-18 16:01:00  Add Accrual Transactions For Savings                                   ADD_PERIODIC_ACCRUAL_ENTRIES_FOR_SAVINGS_WITH_INCOME_POSTED_AS_TRANSACTIONS AddAccrualTransactionForSavingsConfig.java 
+43   f       never                Working Capital Loan COB                                               WORKING_CAPITAL_LOAN_COB_JOB                                   AsyncWorkingCapitalLoanCOBExecutorServiceImpl.java InternalTestCobJobAfterListener.java InternalTestCobJobBeforeListener.java LoanCOBJobParameterProvider.java WorkingCapitalLoanCOBCatchUpServiceImpl.java WorkingCapitalLoanCOBManagerConfiguration.java WorkingCapitalLoanInlineCOBConfig.java 
+
+# DERIVED: job rows mapped to an enum constant = 41 ; unmapped = 0
+# DERIVED: enum constants in JobName.java = 41
