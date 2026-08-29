@@ -1,0 +1,5 @@
+install-driver-push-gate: hooks dir     /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.bMeJOqQWrX/wt/.git/hooks
+install-driver-push-gate: main checkout /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.bMeJOqQWrX/wt
+install-driver-push-gate: pre-push      ABSENT -- the gate is NOT installed and enforces nothing.
+install-driver-push-gate: snapshot      ABSENT
+install-driver-push-gate: ledger        /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-install.bMeJOqQWrX/wt/.git/softhouse-driver-gate/attest.tsv

@@ -1,0 +1,18 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh (sha256 9360bd74a771c455)
+driver-push-gate: T412 driver push gate engaged. remote=origin url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git
+driver-push-gate:   gate bytes: running=9360bd74a771c455  HEAD blob=9360bd74a771c455  (/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.XLkxj7Y7gY/wt/.softhouse/hooks/driver-push-gate.sh)
+driver-push-gate: pushing fdb793d38c3bcf3de82189781bf51e19724d7459 -> refs/heads/main   tree=52691ca0635e5daf53b1cbd0db46c3d927b1a417
+driver-push-gate: 
+driver-push-gate: C1 REFUSED -- THE PUSHED TREE CONTAINS A GITLINK (mode 160000):
+driver-push-gate:     t453-calibration-submodule
+driver-push-gate: 
+driver-push-gate:   This is instance 3 exactly: a worker left a git worktree inside the repo, the driver's
+driver-push-gate:   `git add -A` staged it as a submodule reference, git printed a warning nobody read,
+driver-push-gate:   and the push succeeded because a gitlink is a legal tree entry (8c08f7d8, reverted at
+driver-push-gate:   c31b0842). Remove the entry -- `git rm --cached <path>` -- and stage explicitly.
+driver-push-gate: 
+driver-push-gate:   THERE IS NO BYPASS FOR C1. No commit in this repository's history has ever legitimately
+driver-push-gate:   carried a gitlink; the only occurrence is the defect.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.XLkxj7Y7gY/origin.git'

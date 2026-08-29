@@ -1,0 +1,10 @@
+# T453 ARM DRIVE -- mode=gate label=GREEN-T453-GATE source=HEAD (7bb43b5dc9efaad9008037d32027338105c6eca9)
+# base commit 7bb43b5dc9efaad9008037d32027338105c6eca9  tree de8541a0605568c34db1b0c866a70cad44c6c661  (10110 tracked paths)
+# columns: arm | delta | push-exit | verdict | gate-output-lines
+CTRL-M-RESUME          | M .softhouse/RESUME.md -- an honest driver state edit    | 0 | ALLOWED                      | 13
+A-MONEY-CAPTUREREF     | M a capture record a parity vector cites in provenance.capture_ref | 1 | REFUSED                      | 23
+B-FRONTIER-CAPTURE     | A a note under an existing capture directory             | 1 | REFUSED                      | 23
+C2-NAMESPACE-CAPTURE   | A a NEW capture directory colliding on an existing id    | 1 | REFUSED                      | 23
+D-FRONTIER-UATMD       | A .softhouse/uat.md -- a pinned dead literal, ordinary driver work | 1 | REFUSED                      | 23
+CTRL-A-OBSERVATION     | A an observation note -- an addition with no inventory hazard | 0 | ALLOWED                      | 12
+CTRL-A-LOCK            | A .softhouse/LOCK from an attested base without it -- the fire-lock cycle | 0 | ALLOWED                      | 12

@@ -1,0 +1,10 @@
+pushgate| install-driver-push-gate: selftest      added-path-hazard.py: PASS (both polarities driven)
+pushgate| install-driver-push-gate: INSTALLED /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-wiring.FwIlN0BZjE/wt/.git/hooks/pre-push
+pushgate| install-driver-push-gate:   primary  /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-wiring.FwIlN0BZjE/wt/.softhouse/hooks/driver-push-gate.sh  PRESENT
+pushgate| install-driver-push-gate:   snapshot /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-wiring.FwIlN0BZjE/wt/.git/hooks/softhouse-t412-gate/driver-push-gate.sh  sha256 9360bd74a771c455
+pushgate| install-driver-push-gate: 
+pushgate| install-driver-push-gate:   It is INSTALLED, not merely written. Verify with:  bash .softhouse/hooks/install-driver-push-gate.sh --status
+pushgate| STATUS OK — the driver push gate is installed on this host.
+reconcile| reconcile-pushed-trees: ref     refs/remotes/origin/main
+reconcile| reconcile-pushed-trees: ledger  /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-wiring.FwIlN0BZjE/wt/.git/softhouse-driver-gate/attest.tsv
+reconcile| reconcile-pushed-trees: ABORT(2) -- the attestation ledger does not exist. There is nothing to reconcile against, and an absent ledger must never read as 'every push was graded'.

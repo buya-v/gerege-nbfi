@@ -1,0 +1,45 @@
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-recon.kTZP0K2Hve/wt/.softhouse/hooks/driver-push-gate.sh (sha256 9360bd74a771c455)
+driver-push-gate: T412 driver push gate engaged. remote=origin url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-recon.kTZP0K2Hve/origin.git
+driver-push-gate:   gate bytes: running=9360bd74a771c455  HEAD blob=9360bd74a771c455  (/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-recon.kTZP0K2Hve/wt/.softhouse/hooks/driver-push-gate.sh)
+driver-push-gate: pushing bdba35ff3837367dd8c7f4bc51eb845081b10c08 -> refs/heads/main   tree=b1b6dd788910d580c5324791971cbaa7f7049532
+driver-push-gate:   C1 gitlinks: none in the pushed tree, and none in any of the 1 commit(s) of 0b141357ba21e17d37774a616ce2e860fae58680..bdba35ff3837367dd8c7f4bc51eb845081b10c08.
+driver-push-gate: 
+driver-push-gate: C2 REFUSED -- a NON-MERGE commit in 0b141357ba21e17d37774a616ce2e860fae58680..bdba35ff3837367dd8c7f4bc51eb845081b10c08 writes outside the driver allowlist
+driver-push-gate:   (.softhouse/, docs/, .claude/):
+driver-push-gate:     bdba35ff t453-bypass-probe.txt
+driver-push-gate: 
+driver-push-gate:   Merge commits are exempt -- they lawfully carry a worker's whole branch, and that
+driver-push-gate:   branch ran the bar. A non-merge commit on main is the driver's own writing, and over
+driver-push-gate:   the last 400 such commits it has never lawfully left those three prefixes.
+driver-push-gate: 
+driver-push-gate:   ############################################################################
+driver-push-gate:   # BYPASSED: C2 allowlist
+driver-push-gate:   # reason  : T453 drive: proving the bypass ledger gains a readable row
+driver-push-gate:   # recorded: .git/softhouse-driver-gate/bypass.log
+driver-push-gate:   ############################################################################
+driver-push-gate: 
+driver-push-gate:   C3 graded ancestor: 7bb43b5d  tree=de8541a0605568c34db1b0c866a70cad44c6c661
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED, and its delta from the graded ancestor
+driver-push-gate:   7bb43b5d leaves the STATE set, so the cheap subset is not
+driver-push-gate:   licensed to stand in for the bar. Offending entries:
+driver-push-gate:     [A] t453-bypass-probe.txt
+driver-push-gate: 
+driver-push-gate:   Run:
+driver-push-gate:       bash /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-recon.kTZP0K2Hve/wt/.softhouse/hooks/bar-attest.sh bdba35ff3837367dd8c7f4bc51eb845081b10c08
+driver-push-gate: 
+driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
+driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, capture/, reviews/, conformance.sh and
+driver-push-gate:   any req/ directory; ADDED or MODIFIED only. Everything else can move a guard whose
+driver-push-gate:   corpus the cheap subset does not read -- including guards that never READ the file at
+driver-push-gate:   all and resolve against the tree's INVENTORY.
+driver-push-gate: 
+driver-push-gate:   ############################################################################
+driver-push-gate:   # BYPASSED: C3 delta leaves the STATE set
+driver-push-gate:   # reason  : T453 drive: proving the bypass ledger gains a readable row
+driver-push-gate:   # recorded: .git/softhouse-driver-gate/bypass.log
+driver-push-gate:   ############################################################################
+driver-push-gate: 
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-recon.kTZP0K2Hve/origin.git
+ + 0b141357...bdba35ff main -> main (forced update)

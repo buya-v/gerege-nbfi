@@ -1287,6 +1287,69 @@ log "reference oracle (Fineract): $ORACLE_STATUS"
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" install-hook --repo "$REPO" 2>&1 | while IFS= read -r l; do log "refguard| $l"; done || true
 /usr/bin/python3 "$SCRIPT_DIR/branch_sweep.py" sweep --repo "$REPO" --pattern 'softhouse/*' --quiet 2>&1 | while IFS= read -r l; do log "sweep| $l"; done || true
 
+# T453 — M-2. THE DRIVER PUSH GATE IS INSTALLED HERE, BY SOMETHING, EVERY FIRE.
+#
+# T412 built the gate and an installer for it. NOTHING CALLED THE INSTALLER. Measured by T450 and
+# re-measured by T453: `grep -rn 'install-driver-push-gate|driver-push-gate|softhouse-t412-gate'`
+# over every tracked *.sh / *.py / *.md / *.json, excluding T412's and T450's own files, found
+# the token only in PROSE — a handoff, a review, and the task description. Not here, not in the
+# `softhouse-program` skill. `.git/hooks` is UNTRACKED, so the gate protected exactly one machine
+# because one worker ran the installer by hand once, and a fresh clone — which is what the CLOUD
+# FIRE and any CI runner is — was SILENTLY UNGATED. That is P-45, for the EIGHTH recorded time in
+# this program: a control whose only enforcement is somebody remembering it enforces nothing.
+#
+# THE PLACEMENT IS THE T312 PRECEDENT TWO LINES ABOVE, DELIBERATELY AND FOR THE SAME REASON: the
+# installer is IDEMPOTENT, so running it every fire is free; and it belongs here rather than in
+# the skill because the skill's steps are prose a driver retypes, and a step that runs only when
+# somebody remembers to type it is exactly the defect being closed.
+#
+# NEVER FATAL — both are `|| true`, exactly as the refguard above is. A broken guard must not stop
+# a fire. But ABSENCE IS NOW DETECTABLE, which is the half that was missing: `--status` EXITS
+# NON-ZERO when the hook is absent, is not ours, or a part of the gate is missing from the
+# install-time snapshot, and this block LOGS THAT LOUDLY. Before T453 `--status` exited 0 while
+# printing "the gate is NOT installed and enforces nothing", so nothing could test for it.
+#
+# THE SENTINELS BELOW ARE LOAD-BEARING. This wrapper is the RUNNING fire and cannot be verified
+# by running it -- T301 already recorded the wrapper editing itself mid-run as a defect, and a
+# change landed here does not take effect until the NEXT fire. So the block is delimited, and
+# `.softhouse/capture/t453-t450-conditions/instruments/drive-fire-wiring.sh` EXTRACTS IT BY THESE
+# SENTINELS and executes it against a throwaway clone with a stub `log`. That is not the same as
+# a live fire and the handoff says so; it is the difference between "the lines are in the file"
+# and "the lines do what they say". The drive REFUSES if the sentinels are missing, so deleting
+# one is a red drive rather than a silently skipped test.
+# >>> T453-PUSHGATE-BLOCK-BEGIN
+bash "$REPO/.softhouse/hooks/install-driver-push-gate.sh" 2>&1 | while IFS= read -r l; do log "pushgate| $l"; done || true
+if bash "$REPO/.softhouse/hooks/install-driver-push-gate.sh" --status >/dev/null 2>&1; then
+  log "pushgate| STATUS OK — the driver push gate is installed on this host."
+else
+  log "pushgate| ############################################################"
+  log "pushgate| # THE DRIVER PUSH GATE IS NOT INSTALLED (or is incomplete)."
+  log "pushgate| # Every push this fire makes to refs/heads/main is UNGATED."
+  log "pushgate| # --status output follows."
+  log "pushgate| ############################################################"
+  bash "$REPO/.softhouse/hooks/install-driver-push-gate.sh" --status 2>&1 | while IFS= read -r l; do log "pushgate| $l"; done || true
+fi
+
+# T453 — m-3 / FU-T412-4. THE POST-HOC RECONCILIATION.
+#
+# `pre-push` is CLIENT-SIDE and `--no-verify` turns it off; T450 drove a GITLINK onto main that
+# way with zero gate output. The answer to a bypassable pre-push check is a SECOND READING taken
+# afterwards from evidence the bypasser did not choose — what actually landed on the ref — so
+# this reconciles every tip in `origin/main`'s reflog against the attestation ledger, scans each
+# for gitlinks, and READS `bypass.log`, which until now had no reader at all.
+#
+# It runs at fire START, so what it reports is the PREVIOUS fire's pushes: a bypass is caught one
+# fire late rather than never. Non-fatal, same reason as everything else in this block.
+RECON_TMP="$(mktemp "${TMPDIR:-/tmp}/fire-reconcile.XXXXXXXXXX")" || RECON_TMP=''
+if [[ -n "$RECON_TMP" ]]; then
+  bash "$REPO/.softhouse/hooks/reconcile-pushed-trees.sh" >"$RECON_TMP" 2>&1 || true
+  while IFS= read -r l; do log "reconcile| $l"; done <"$RECON_TMP"
+  rm -f "$RECON_TMP"
+else
+  log "reconcile| could not create a scratch file; the post-hoc reconciliation did not run this fire."
+fi
+# <<< T453-PUSHGATE-BLOCK-END
+
 # T325 — THE PRE-FLIGHT BASELINE READING (FU-T318-5).
 #
 # `/softhouse` STEP 0.1 and `/softhouse-plan` STEP 0.1 both say "`git status` —

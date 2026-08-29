@@ -1,0 +1,27 @@
+### T453 ARM CTRL-A-LOCK -- A .softhouse/LOCK from an attested base without it -- the fire-lock cycle
+### mode gate   label RED-T412-GATE-AT-MAIN   source cbc8733c46cff515a2e48b5f3389ffbf514dc674
+### attested base 5b8635fd4c783cb909ad65b2652499bf1aeeae40  tree 3b16a9afa04408e09e705e8f1856c3d1d90fe12c
+### delta from the attested base:
+###   A	.softhouse/LOCK
+### graded commit f7a839affdad5a975726aa06f7791e92c0a6b1a8  tree 2d1a00cc5d6191b7a673173969d7b2e6e364e4a2
+### ---- git push output ----
+driver-push-gate: running /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-arms.eYEbYlDOOd/wt/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=origin url=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.eYEbYlDOOd/origin.git
+driver-push-gate: pushing f7a839affdad5a975726aa06f7791e92c0a6b1a8 -> refs/heads/main   tree=2d1a00cc5d6191b7a673173969d7b2e6e364e4a2
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 write-path allowlist: clean (1 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 5b8635f  tree=3b16a9afa04408e09e705e8f1856c3d1d90fe12c
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree 2d1a00cc5d6191b7a673173969d7b2e6e364e4a2 (from 'f7a839affdad5a975726aa06f7791e92c0a6b1a8')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.8oFXUyNLpR
+cheap-subset:   materialised 10088 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13699 definition=102 consistent=709 bare=12705 misdirecting=79 undefined=47 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 126 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+cheap-subset: PASS -- 0 fatal citation findings in the DIRECTIVE zone of tree 2d1a00cc5d6191b7a673173969d7b2e6e364e4a2.
+driver-push-gate:   C3 PASS -- cheap subset clean; CHEAP attestation recorded for 2d1a00cc5d6191b7a673173969d7b2e6e364e4a2.
+driver-push-gate: PUSH ALLOWED.
+To /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t453-arms.eYEbYlDOOd/origin.git
+   5b8635f..f7a839a  main -> main

@@ -1,0 +1,17 @@
+reconcile-pushed-trees: ref     refs/remotes/origin/main
+reconcile-pushed-trees: ledger  /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-recon.kTZP0K2Hve/wt/.git/softhouse-driver-gate/attest.tsv
+reconcile-pushed-trees: ledger rows: 2
+reconcile-pushed-trees: window  tips that DESCEND FROM 7bb43b5d (the oldest commit the ledger names)
+reconcile-pushed-trees: reflog  4 distinct tip(s) in the last 80 entries of refs/remotes/origin/main
+reconcile-pushed-trees: bypass  2 recorded bypass(es) at /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t453-recon.kTZP0K2Hve/wt/.git/softhouse-driver-gate/bypass.log:
+reconcile-pushed-trees:           2026-08-29T06:36:45Z	C2 allowlist	bdba35ff3837367dd8c7f4bc51eb845081b10c08	T453 drive: proving the bypass ledger gains a readable row
+reconcile-pushed-trees:           2026-08-29T06:36:45Z	C3 delta leaves the STATE set	bdba35ff3837367dd8c7f4bc51eb845081b10c08	T453 drive: proving the bypass ledger gains a readable row
+reconcile-pushed-trees: 
+reconcile-pushed-trees: T453-RECONCILE: ref=refs/remotes/origin/main window=4 pre-gate=0 unattested=2 gitlinks=1 bypasses=2
+reconcile-pushed-trees: 
+reconcile-pushed-trees: FINDINGS -- a tip landed on refs/remotes/origin/main that this host's gate never graded, or that carries a
+reconcile-pushed-trees:   gitlink. A --no-verify push, a push from an ungated machine, and a hook that was never
+reconcile-pushed-trees:   installed all present here identically, and all three are the same problem.
+reconcile-pushed-trees:   UNATTESTED  0b141357  tree 62355f11a53752138c5b004f7ed05289fb9b6557  T453 reconciler drive leg 2: a gitlink, pushed with --no-ver
+reconcile-pushed-trees:   GITLINK     0b141357  t453-nv-submodule
+reconcile-pushed-trees:   UNATTESTED  bdba35ff  tree b1b6dd788910d580c5324791971cbaa7f7049532  T453 reconciler drive leg 4

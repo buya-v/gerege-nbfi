@@ -54,6 +54,41 @@ first if you believe the harness changed; the probes are checked in.
   the driver's exit path does, the obligation is a **convention**. Driven red and green:
   `…/out/audit-red-green.txt`.
 
+### The driver push gate — T412, repaired by T453
+
+`pre-push`, engaging only for `refs/heads/main`. **Every file below is part of one unit and
+the installer copies all of them into the install-time snapshot** — the list lives once, in
+`install-driver-push-gate.sh`'s `GATE_PARTS`, because T412 wrote it twice (checked three,
+copied two), the omitted file was `bar-attest.sh`, and the gate's own refusal message names
+it. The driver of fire 20260829-080002 followed that message, found nothing, and lost a
+merge to it.
+
+| file | what it is |
+|---|---|
+| `driver-push-gate.sh` | the gate: C1 gitlinks (tip **and every commit in the pushed range**), C2 driver write-path allowlist, C3 grade identity + the STATE set |
+| `cheap-subset.sh` | the P-number citation checker, run against a **named tree**, not the working tree |
+| `bar-attest.sh` | materialises a commit's tree in scratch, runs the full bar there, writes the ledger row. The **only** way to satisfy C3 |
+| `added-path-hazard.py` | **[T453]** does ADDING these paths make a **pinned dead literal resolve**? Read out of the *pushed tree's own pin*. `--selftest` drives both polarities |
+| `install-driver-push-gate.sh` | installs / `--status` / `--uninstall`. **`--status` exits 1 when the gate is absent or incomplete** |
+| `reconcile-pushed-trees.sh` | **[T453, FU-T412-4]** post-hoc: every tip in `origin/main`'s reflog reconciled against the ledger, scanned for gitlinks, and `bypass.log` finally read |
+
+**Two things about this gate that must not be forgotten.**
+
+1. **`pre-push` is client-side. `--no-verify` turns it off.** C1 says "THERE IS NO BYPASS";
+   that is true about the gate and false about git — T450 drove a gitlink onto `main` with
+   zero gate output. `reconcile-pushed-trees.sh` is the answer: it cannot *prevent* the
+   bypass, it makes it **countable**, one fire later. Do not read C1's sentence as a
+   guarantee about the ref.
+2. **The STATE set is not a list of files the guards read.** Three of the fifteen guards
+   resolve against the tree's **inventory** and never open the file you touched, which is
+   why T412's read-oriented table let four bar-red trees through. Anything that widens the
+   STATE set must answer the inventory question too, and clause (k) answers it by
+   *measurement against the pin*, deliberately, because the table is what rotted.
+
+Installed by `.softhouse/bin/fire-program.sh` at every fire, beside T312's `refguard` lines
+— **not** by a human remembering. If you move that call, `--status`'s exit code is what any
+replacement must keep testing.
+
 ## The candidate nobody has tested yet
 
 A Claude Code **`PreToolUse` hook on the `Agent`/`Task` tool** is the only remaining place
