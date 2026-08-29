@@ -1,0 +1,16 @@
+
+K/  T945's genuine work is under T944's condition dir; sweep-rescued; recorded branch DELETED
+  RED  relocated        REFUSE
+  GREEN name-only-refs  DEMOTE   <== CHANGED
+  GREEN text: Its recorded branch softhouse/T945-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, AND THIS IS THE T350 CASE: 1 live ref(s) carry id T945 IN THEIR NAME -- softhouse/rescued-t945-base-20260829 -- and NOT ONE of them carries any content belonging to it. No commit only that ref has names T945 in its subject, and no path in its diff vs main has a component naming T945. A branch NAME is an assertion by whoever created the branch, and in the recorded incident the creator was THIS PROGRAM'S OWN WORKTREE SWEEP, which names rescue branches after the worktree directory -- 
+
+K2/ the SAME ref, but the commit subject names the id
+  RED  unstarted        DEMOTE
+  GREEN unstarted       DEMOTE
+  GREEN text: Its recorded branch softhouse/T946-t944-conditions does not exist in this repo. THIS IS NOT EVIDENCE THAT NOTHING WAS DONE: a branch MERGED INTO main AND THEN PRUNED -- this repo's stated habit -- a branch RENAMED (T302 measured one on T299) and a branch that never existed are BYTE-IDENTICAL to `git rev-parse`. T330 therefore does not stop at that observation, and T350 does not stop at a NAME either. MEASURED, and every signal came back EMPTY: no commit subject on main begins `T946:` or `Merge T946:`, no tracked path on main has a component naming T946, and no live ref carries the id in its name or its content. This is the unstarted world, and saying so is now a measurement rather than the default reading of an absence. (Landed index: commit subjects + exact handoff names: 5 of 6 commit subjects on main carry a `<id>:` or `Merge <id>:` prefix; 0 handoff .md path(s) tracked on main (EXACT
+
+refs_carrying_content('T945'):
+  carriers = []
+  name_only= ['refs/heads/softhouse/rescued-t945-base-20260829']
+  unprobed = []
+  note     = loose refs walked from /tmp/t449/fixture/.git/refs/heads and packed entries parsed from /tmp/t449/fixture/.git/packed-refs. refs/heads/softhouse/rescued-t945-base-20260829 is NAME-ONLY -- refs/heads/softhouse/rescued-t945-base-20260829 carries 1 commit(s) main does not and touches 1 path(s) vs its merge-base with main, and nothing in either names T945

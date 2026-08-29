@@ -1,0 +1,25 @@
+distinct T<n> ids nameable from local head names: 194
+
+H/CAP -- ids by number of NAME-MATCHING live refs (cap = 8):
+  T96     3
+  T91     3
+  T351    3
+  T268    3
+  T178    3
+  T125    3
+  T113    3
+  T110    3
+  T108    3
+  T97     2
+  T90     2
+  T88     2
+  ids ABOVE the cap today: 0 []
+  max fan-out observed: 3
+
+G/ATTACK -- live instances of 'ref carries content, nothing on main, recorded
+branch still parked at the dispatch commit' (the state where the ref is NEVER
+consulted).  Every id with a live head naming it is tested.
+  ok T447   stillborn on ['softhouse/T447-review-t442'], and no ref carries content either
+  ok T449   stillborn on ['softhouse/T449-review-t350'], and no ref carries content either
+
+live G-shape instances on the real repo right now: 0

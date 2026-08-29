@@ -1,0 +1,329 @@
+==============================================================================
+OWNERSHIP MATRIX -- GREEN LEG (shipped tool)
+  tool under test : /tmp/t449/tool/ready-tasks.py
+  sha256          : e80196813ea210a0
+  source repo     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4ef19486db80d95 (READ ONLY)
+  real ids in_progress at BOTH 5428c0a4 and 5964ab54: T297 T298 T302 T304 T305 T306 T308
+==============================================================================
+
+CELL B   T309's cell: clock FROZEN at the lock instant, 8 inherited corpses
+    why          : Every in_progress task is inherited and untouched; naming all 8 must demote all 8.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL B'  SAME FIRE, clock ADVANCED across its own RE-DISPATCH  <<< F5
+    why          : Seven of the ids in_progress at the lock commit were RE-DISPATCHED by this same fire five minutes later and are LIVE WORKERS. T309's single term reports 7 demotable here. Correct answer: 0.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL A   clock advanced, but the dispatch is all FRESH ids (T309's cell A shape)
+    why          : The 8 inherited records are untouched, so they demote; the freshly dispatched A2-1 must be WITHHELD by term 1 even though it was named.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL C   term 3: NO --corpse passed, on the same 8 real corpses
+    why          : An in-session caller that enumerates nothing may touch nothing.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL C2  term 3: only 3 of the 8 named
+    why          : Exactly the named subset, never the swept set.
+    expected     : mode=in_session demotions=3
+    observed     : mode=in_session demotions=3
+    >>> OK
+
+CELL D   F6: a later REVIEW commit whose BODY quotes the lock subject
+    why          : T309's `--grep -1` moved its anchor to this review commit and the count went 7 -> 8 [T302 F6]. The anchor must not move: a review commit does not TOUCH .softhouse/LOCK.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL E   F6: a later commit with the IDENTICAL lock subject, LOCK untouched
+    why          : Subject equality alone is forgeable; touching .softhouse/LOCK is not.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL K   the newest commit touching .softhouse/LOCK is a RELEASE
+    why          : A LOCK is on disk but the committed history says it was released: the two disagree and this must REFUSE rather than pick one.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL F   F7: NO .softhouse/LOCK on disk, 8 live workers in tasks.json
+    why          : Before T319 this returned `wrapper` -- the demote-everything authority -- to any caller at all, and T302 drove it to '8 task(s) WOULD be demoted'.
+    expected     : mode=refused    demotions=0
+    observed     : mode=refused    demotions=0
+    >>> OK
+
+CELL G   F7: no LOCK, caller passes the out-of-band liveness assertion
+    why          : The capability is preserved for the one caller that has actually run a probe.
+    expected     : mode=wrapper    demotions=8
+    observed     : mode=wrapper    demotions=8
+    >>> OK
+
+CELL H   a LOCK naming pid 1 (an ancestor of EVERY process on the host)
+    why          : T302's minor F7 finding: pid 1 passed ancestry for everybody.
+    expected     : mode=refused    demotions=0
+    observed     : mode=refused    demotions=0
+    >>> OK
+
+CELL I   F10: LOCK carries NO `fire` field (the live 20260827 lock's shape)
+    why          : T309 REFUSED outright here, so in_session mode was 100% inert on the machine it shipped to. The fire id is now read off the anchor commit's SUBJECT, so the missing field costs nothing.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL J   wrapper mode with a LOCK present: demote everything (unchanged)
+    why          : The wrapper's authority is established out of band and is deliberately broad.
+    expected     : mode=wrapper    demotions=8
+    observed     : mode=wrapper    demotions=8
+    >>> OK
+
+==============================================================================
+GREEN LEG (shipped tool): 13/13 cells correct
+==============================================================================
+
+### RED LEG -- T309's single-term predicate planted into a COPY.
+### The matrix MUST go red, and cell B' MUST be one of the failures.
+==============================================================================
+OWNERSHIP MATRIX -- RED LEG (planted T309 defect)
+  tool under test : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319plant.d50aopy3/ready-tasks.py
+  sha256          : b5ad22bb6e97ab40
+  source repo     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4ef19486db80d95 (READ ONLY)
+  real ids in_progress at BOTH 5428c0a4 and 5964ab54: T297 T298 T302 T304 T305 T306 T308
+==============================================================================
+
+CELL B   T309's cell: clock FROZEN at the lock instant, 8 inherited corpses
+    why          : Every in_progress task is inherited and untouched; naming all 8 must demote all 8.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL B'  SAME FIRE, clock ADVANCED across its own RE-DISPATCH  <<< F5
+    why          : Seven of the ids in_progress at the lock commit were RE-DISPATCHED by this same fire five minutes later and are LIVE WORKERS. T309's single term reports 7 demotable here. Correct answer: 0.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=7
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.xygaecq3/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.xygaecq3/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | RECONCILE -- fire 20260823-140001
+        |   git:  /usr/bin/git
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.xygaecq3/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 66476 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   mode: in_session   (lock fire id: 20260823-140001)
+        |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+        |   in-session anchor: this fire's lock commit is 64d9acbcd, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
+        |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
+        |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+        |   T309     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260823-140001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+        |   T297     softhouse/T297-review-t295                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T298     softhouse/T298-review-t256                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T302     softhouse/T302-review-t288                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T304     softhouse/T304-evidence-destruction        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T305     softhouse/T305-openingbalance-accepting-side WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T306     softhouse/T306-adjudicate-admit-widening   WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T308     softhouse/T308-review-t292                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   RESULT: DRY RUN -- 7 task(s) WOULD be demoted, 0 WOULD be REFUSED (T330); tasks.json untouched.
+        | 
+        | [exit 0]
+    >>> **WRONG**
+
+CELL A   clock advanced, but the dispatch is all FRESH ids (T309's cell A shape)
+    why          : The 8 inherited records are untouched, so they demote; the freshly dispatched A2-1 must be WITHHELD by term 1 even though it was named.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL C   term 3: NO --corpse passed, on the same 8 real corpses
+    why          : An in-session caller that enumerates nothing may touch nothing.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=8
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.lnbxcfgs/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.lnbxcfgs/repo --dry-run
+        | RECONCILE -- fire 20260823-140001
+        |   git:  /usr/bin/git
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.lnbxcfgs/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 66696 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   mode: in_session   (lock fire id: 20260823-140001)
+        |   in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+        |   in-session anchor: this fire's lock commit is 574d70413, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
+        |   in-session `--corpse`: NONE PASSED. Term 3 will fail for every task; an in-session caller must NAME each dispatch it claims is dead.
+        |   IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+        |   T297     softhouse/T297-review-t295                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T298     softhouse/T298-review-t256                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T299     softhouse/T299-t256-flagged-defects        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T302     softhouse/T302-review-t288                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T304     softhouse/T304-evidence-destruction        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T305     softhouse/T305-openingbalance-accepting-side WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T306     softhouse/T306-adjudicate-admit-widening   WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T308     softhouse/T308-review-t292                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   RESULT: DRY RUN -- 8 task(s) WOULD be demoted, 0 WOULD be REFUSED (T330); tasks.json untouched.
+        | 
+        | [exit 0]
+    >>> **WRONG**
+
+CELL C2  term 3: only 3 of the 8 named
+    why          : Exactly the named subset, never the swept set.
+    expected     : mode=in_session demotions=3
+    observed     : mode=in_session demotions=8
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.batni71c/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.batni71c/repo --dry-run --corpse T297 --corpse T298 --corpse T299
+        | RECONCILE -- fire 20260823-140001
+        |   git:  /usr/bin/git
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.batni71c/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 66796 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   mode: in_session   (lock fire id: 20260823-140001)
+        |   in_progress tasks found: 8  (out of 197 in tasks.json -- every task was read to get this count, it is not a default)
+        |   in-session anchor: this fire's lock commit is 2e034d4ea, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
+        |   in-session `--corpse`: T297, T298, T299
+        |   IN-SESSION authority: 8 demotable, 0 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+        |   T297     softhouse/T297-review-t295                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T298     softhouse/T298-review-t256                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T299     softhouse/T299-t256-flagged-defects        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T302     softhouse/T302-review-t288                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T304     softhouse/T304-evidence-destruction        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T305     softhouse/T305-openingbalance-accepting-side WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T306     softhouse/T306-adjudicate-admit-widening   WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T308     softhouse/T308-review-t292                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   RESULT: DRY RUN -- 8 task(s) WOULD be demoted, 0 WOULD be REFUSED (T330); tasks.json untouched.
+        | 
+        | [exit 0]
+    >>> **WRONG**
+
+CELL D   F6: a later REVIEW commit whose BODY quotes the lock subject
+    why          : T309's `--grep -1` moved its anchor to this review commit and the count went 7 -> 8 [T302 F6]. The anchor must not move: a review commit does not TOUCH .softhouse/LOCK.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=7
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.hatlonk3/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.hatlonk3/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | RECONCILE -- fire 20260823-140001
+        |   git:  /usr/bin/git
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.hatlonk3/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 66910 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   mode: in_session   (lock fire id: 20260823-140001)
+        |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+        |   in-session anchor: this fire's lock commit is db4b1d2b5, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
+        |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
+        |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+        |   T309     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260823-140001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+        |   T297     softhouse/T297-review-t295                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T298     softhouse/T298-review-t256                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T302     softhouse/T302-review-t288                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T304     softhouse/T304-evidence-destruction        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T305     softhouse/T305-openingbalance-accepting-side WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T306     softhouse/T306-adjudicate-admit-widening   WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T308     softhouse/T308-review-t292                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   RESULT: DRY RUN -- 7 task(s) WOULD be demoted, 0 WOULD be REFUSED (T330); tasks.json untouched.
+        | 
+        | [exit 0]
+    >>> **WRONG**
+
+CELL E   F6: a later commit with the IDENTICAL lock subject, LOCK untouched
+    why          : Subject equality alone is forgeable; touching .softhouse/LOCK is not.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=7
+        | $ /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.iv85g236/repo/.softhouse/bin/ready-tasks.py --reconcile --fire 20260823-140001 --repo /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.iv85g236/repo --dry-run --corpse T297 --corpse T298 --corpse T299 --corpse T302 --corpse T304 --corpse T305 --corpse T306 --corpse T308
+        | RECONCILE -- fire 20260823-140001
+        |   git:  /usr/bin/git
+        |   repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t319cell.iv85g236/repo
+        |   lock: invoked from INSIDE a live session -- ancestor pid 67026 is `claude`. NARROW authority: this caller may demote only dispatches positively attributed to a fire other than the lock holder's (20260823-140001).
+        |   mode: in_session   (lock fire id: 20260823-140001)
+        |   in_progress tasks found: 8  (out of 198 in tasks.json -- every task was read to get this count, it is not a default)
+        |   in-session anchor: this fire's lock commit is 517156d33, the newest commit that TOUCHED .softhouse/LOCK, and its SUBJECT is the lock-take form for fire 20260823-140001; the LOCK's own `fire` field agrees
+        |   in-session evidence: at that commit 8 task(s) already claimed in_progress: T297, T298, T299, T302, T304, T305, T306, T308
+        |   in-session `--corpse`: T297, T298, T299, T302, T304, T305, T306, T308
+        |   IN-SESSION authority: 7 demotable, 1 WITHHELD (a live fire is running; a task may be touched only if it was inherited at the lock commit, has NOT been rewritten by this fire since, AND was named with `--corpse`)
+        |   T309     WITHHELD  TERM 1 FAILS: it was NOT claiming in_progress when fire 20260823-140001 took the lock, so THIS fire dispatched it: it is a LIVE sibling. REFUSING.
+        |   T297     softhouse/T297-review-t295                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T298     softhouse/T298-review-t256                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T302     softhouse/T302-review-t288                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T304     softhouse/T304-evidence-destruction        WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T305     softhouse/T305-openingbalance-accepting-side WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T306     softhouse/T306-adjudicate-admit-widening   WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   T308     softhouse/T308-review-t292                 WIP=indeterminate/CASE-UNCHECKED
+        |            in_progress -> needs_retry
+        |   RESULT: DRY RUN -- 7 task(s) WOULD be demoted, 0 WOULD be REFUSED (T330); tasks.json untouched.
+        | 
+        | [exit 0]
+    >>> **WRONG**
+
+CELL K   the newest commit touching .softhouse/LOCK is a RELEASE
+    why          : A LOCK is on disk but the committed history says it was released: the two disagree and this must REFUSE rather than pick one.
+    expected     : mode=in_session demotions=0
+    observed     : mode=in_session demotions=0
+    >>> OK
+
+CELL F   F7: NO .softhouse/LOCK on disk, 8 live workers in tasks.json
+    why          : Before T319 this returned `wrapper` -- the demote-everything authority -- to any caller at all, and T302 drove it to '8 task(s) WOULD be demoted'.
+    expected     : mode=refused    demotions=0
+    observed     : mode=refused    demotions=0
+    >>> OK
+
+CELL G   F7: no LOCK, caller passes the out-of-band liveness assertion
+    why          : The capability is preserved for the one caller that has actually run a probe.
+    expected     : mode=wrapper    demotions=8
+    observed     : mode=wrapper    demotions=8
+    >>> OK
+
+CELL H   a LOCK naming pid 1 (an ancestor of EVERY process on the host)
+    why          : T302's minor F7 finding: pid 1 passed ancestry for everybody.
+    expected     : mode=refused    demotions=0
+    observed     : mode=refused    demotions=0
+    >>> OK
+
+CELL I   F10: LOCK carries NO `fire` field (the live 20260827 lock's shape)
+    why          : T309 REFUSED outright here, so in_session mode was 100% inert on the machine it shipped to. The fire id is now read off the anchor commit's SUBJECT, so the missing field costs nothing.
+    expected     : mode=in_session demotions=8
+    observed     : mode=in_session demotions=8
+    >>> OK
+
+CELL J   wrapper mode with a LOCK present: demote everything (unchanged)
+    why          : The wrapper's authority is established out of band and is deliberately broad.
+    expected     : mode=wrapper    demotions=8
+    observed     : mode=wrapper    demotions=8
+    >>> OK
+
+==============================================================================
+RED LEG (planted T309 defect): 8/13 cells correct
+==============================================================================
+SELFTEST OK: the planted T309 defect drives cell B' RED, and the shipped tool keeps it GREEN.

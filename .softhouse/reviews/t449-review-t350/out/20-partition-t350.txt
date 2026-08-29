@@ -1,0 +1,323 @@
+================================================================================================
+PASS 1 -- FULL CROSS PRODUCT  branch_state x main_content x ref_state
+================================================================================================
+states enumerated: 256
+states with NO verdict / an un-actionable verdict: 7
+   !! ('absent', 'none', 'name-only', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'none', 'carrier', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'none', 'carrier+nameonly', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'none', 'carrier+unprobed', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'unrun', 'carrier', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'unrun', 'carrier+nameonly', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+   !! ('absent', 'unrun', 'carrier+unprobed', 'EXCEPTION AttributeError("\'NoneType\' object has no attribute \'short\'")')
+
+--- kind x polarity table ---
+  absent               demote    32
+  commits              demote    32
+  indeterminate        demote     8
+  merged               REFUSE    32
+  merged-unverified    REFUSE     8
+  stillborn            demote     8
+  unstarted            demote     1
+  unverified           demote   128
+
+--- FULL TABLE (branch_state, main_content, ref_state) -> kind / action ---
+  absent                       found       refindex-failed     -> merged             REFUSE
+  absent                       found       no-ref-names-id     -> merged             REFUSE
+  absent                       found       name-only           -> merged             REFUSE
+  absent                       found       carrier             -> merged             REFUSE
+  absent                       found       carrier+nameonly    -> merged             REFUSE
+  absent                       found       carrier+unprobed    -> merged             REFUSE
+  absent                       found       unprobed-only       -> merged             REFUSE
+  absent                       found       nameonly+unprobed   -> merged             REFUSE
+  absent                       found_part  refindex-failed     -> merged             REFUSE
+  absent                       found_part  no-ref-names-id     -> merged             REFUSE
+  absent                       found_part  name-only           -> merged             REFUSE
+  absent                       found_part  carrier             -> merged             REFUSE
+  absent                       found_part  carrier+nameonly    -> merged             REFUSE
+  absent                       found_part  carrier+unprobed    -> merged             REFUSE
+  absent                       found_part  unprobed-only       -> merged             REFUSE
+  absent                       found_part  nameonly+unprobed   -> merged             REFUSE
+  absent                       none        refindex-failed     -> indeterminate      demote
+  absent                       none        no-ref-names-id     -> unstarted          demote
+  absent                       none        unprobed-only       -> indeterminate      demote
+  absent                       none        nameonly+unprobed   -> indeterminate      demote
+  absent                       unrun       refindex-failed     -> indeterminate      demote
+  absent                       unrun       no-ref-names-id     -> indeterminate      demote
+  absent                       unrun       name-only           -> indeterminate      demote
+  absent                       unrun       unprobed-only       -> indeterminate      demote
+  absent                       unrun       nameonly+unprobed   -> indeterminate      demote
+  rev-parse-failed             found       refindex-failed     -> unverified         demote
+  rev-parse-failed             found       no-ref-names-id     -> unverified         demote
+  rev-parse-failed             found       name-only           -> unverified         demote
+  rev-parse-failed             found       carrier             -> unverified         demote
+  rev-parse-failed             found       carrier+nameonly    -> unverified         demote
+  rev-parse-failed             found       carrier+unprobed    -> unverified         demote
+  rev-parse-failed             found       unprobed-only       -> unverified         demote
+  rev-parse-failed             found       nameonly+unprobed   -> unverified         demote
+  rev-parse-failed             found_part  refindex-failed     -> unverified         demote
+  rev-parse-failed             found_part  no-ref-names-id     -> unverified         demote
+  rev-parse-failed             found_part  name-only           -> unverified         demote
+  rev-parse-failed             found_part  carrier             -> unverified         demote
+  rev-parse-failed             found_part  carrier+nameonly    -> unverified         demote
+  rev-parse-failed             found_part  carrier+unprobed    -> unverified         demote
+  rev-parse-failed             found_part  unprobed-only       -> unverified         demote
+  rev-parse-failed             found_part  nameonly+unprobed   -> unverified         demote
+  rev-parse-failed             none        refindex-failed     -> unverified         demote
+  rev-parse-failed             none        no-ref-names-id     -> unverified         demote
+  rev-parse-failed             none        name-only           -> unverified         demote
+  rev-parse-failed             none        carrier             -> unverified         demote
+  rev-parse-failed             none        carrier+nameonly    -> unverified         demote
+  rev-parse-failed             none        carrier+unprobed    -> unverified         demote
+  rev-parse-failed             none        unprobed-only       -> unverified         demote
+  rev-parse-failed             none        nameonly+unprobed   -> unverified         demote
+  rev-parse-failed             unrun       refindex-failed     -> unverified         demote
+  rev-parse-failed             unrun       no-ref-names-id     -> unverified         demote
+  rev-parse-failed             unrun       name-only           -> unverified         demote
+  rev-parse-failed             unrun       carrier             -> unverified         demote
+  rev-parse-failed             unrun       carrier+nameonly    -> unverified         demote
+  rev-parse-failed             unrun       carrier+unprobed    -> unverified         demote
+  rev-parse-failed             unrun       unprobed-only       -> unverified         demote
+  rev-parse-failed             unrun       nameonly+unprobed   -> unverified         demote
+  rev-parse-rc2                found       refindex-failed     -> unverified         demote
+  rev-parse-rc2                found       no-ref-names-id     -> unverified         demote
+  rev-parse-rc2                found       name-only           -> unverified         demote
+  rev-parse-rc2                found       carrier             -> unverified         demote
+  rev-parse-rc2                found       carrier+nameonly    -> unverified         demote
+  rev-parse-rc2                found       carrier+unprobed    -> unverified         demote
+  rev-parse-rc2                found       unprobed-only       -> unverified         demote
+  rev-parse-rc2                found       nameonly+unprobed   -> unverified         demote
+  rev-parse-rc2                found_part  refindex-failed     -> unverified         demote
+  rev-parse-rc2                found_part  no-ref-names-id     -> unverified         demote
+  rev-parse-rc2                found_part  name-only           -> unverified         demote
+  rev-parse-rc2                found_part  carrier             -> unverified         demote
+  rev-parse-rc2                found_part  carrier+nameonly    -> unverified         demote
+  rev-parse-rc2                found_part  carrier+unprobed    -> unverified         demote
+  rev-parse-rc2                found_part  unprobed-only       -> unverified         demote
+  rev-parse-rc2                found_part  nameonly+unprobed   -> unverified         demote
+  rev-parse-rc2                none        refindex-failed     -> unverified         demote
+  rev-parse-rc2                none        no-ref-names-id     -> unverified         demote
+  rev-parse-rc2                none        name-only           -> unverified         demote
+  rev-parse-rc2                none        carrier             -> unverified         demote
+  rev-parse-rc2                none        carrier+nameonly    -> unverified         demote
+  rev-parse-rc2                none        carrier+unprobed    -> unverified         demote
+  rev-parse-rc2                none        unprobed-only       -> unverified         demote
+  rev-parse-rc2                none        nameonly+unprobed   -> unverified         demote
+  rev-parse-rc2                unrun       refindex-failed     -> unverified         demote
+  rev-parse-rc2                unrun       no-ref-names-id     -> unverified         demote
+  rev-parse-rc2                unrun       name-only           -> unverified         demote
+  rev-parse-rc2                unrun       carrier             -> unverified         demote
+  rev-parse-rc2                unrun       carrier+nameonly    -> unverified         demote
+  rev-parse-rc2                unrun       carrier+unprobed    -> unverified         demote
+  rev-parse-rc2                unrun       unprobed-only       -> unverified         demote
+  rev-parse-rc2                unrun       nameonly+unprobed   -> unverified         demote
+  exists-ahead                 found       refindex-failed     -> commits            demote
+  exists-ahead                 found       no-ref-names-id     -> commits            demote
+  exists-ahead                 found       name-only           -> commits            demote
+  exists-ahead                 found       carrier             -> commits            demote
+  exists-ahead                 found       carrier+nameonly    -> commits            demote
+  exists-ahead                 found       carrier+unprobed    -> commits            demote
+  exists-ahead                 found       unprobed-only       -> commits            demote
+  exists-ahead                 found       nameonly+unprobed   -> commits            demote
+  exists-ahead                 found_part  refindex-failed     -> commits            demote
+  exists-ahead                 found_part  no-ref-names-id     -> commits            demote
+  exists-ahead                 found_part  name-only           -> commits            demote
+  exists-ahead                 found_part  carrier             -> commits            demote
+  exists-ahead                 found_part  carrier+nameonly    -> commits            demote
+  exists-ahead                 found_part  carrier+unprobed    -> commits            demote
+  exists-ahead                 found_part  unprobed-only       -> commits            demote
+  exists-ahead                 found_part  nameonly+unprobed   -> commits            demote
+  exists-ahead                 none        refindex-failed     -> commits            demote
+  exists-ahead                 none        no-ref-names-id     -> commits            demote
+  exists-ahead                 none        name-only           -> commits            demote
+  exists-ahead                 none        carrier             -> commits            demote
+  exists-ahead                 none        carrier+nameonly    -> commits            demote
+  exists-ahead                 none        carrier+unprobed    -> commits            demote
+  exists-ahead                 none        unprobed-only       -> commits            demote
+  exists-ahead                 none        nameonly+unprobed   -> commits            demote
+  exists-ahead                 unrun       refindex-failed     -> commits            demote
+  exists-ahead                 unrun       no-ref-names-id     -> commits            demote
+  exists-ahead                 unrun       name-only           -> commits            demote
+  exists-ahead                 unrun       carrier             -> commits            demote
+  exists-ahead                 unrun       carrier+nameonly    -> commits            demote
+  exists-ahead                 unrun       carrier+unprobed    -> commits            demote
+  exists-ahead                 unrun       unprobed-only       -> commits            demote
+  exists-ahead                 unrun       nameonly+unprobed   -> commits            demote
+  exists-0ahead-ancestor       found       refindex-failed     -> merged             REFUSE
+  exists-0ahead-ancestor       found       no-ref-names-id     -> merged             REFUSE
+  exists-0ahead-ancestor       found       name-only           -> merged             REFUSE
+  exists-0ahead-ancestor       found       carrier             -> merged             REFUSE
+  exists-0ahead-ancestor       found       carrier+nameonly    -> merged             REFUSE
+  exists-0ahead-ancestor       found       carrier+unprobed    -> merged             REFUSE
+  exists-0ahead-ancestor       found       unprobed-only       -> merged             REFUSE
+  exists-0ahead-ancestor       found       nameonly+unprobed   -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  refindex-failed     -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  no-ref-names-id     -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  name-only           -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  carrier             -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  carrier+nameonly    -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  carrier+unprobed    -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  unprobed-only       -> merged             REFUSE
+  exists-0ahead-ancestor       found_part  nameonly+unprobed   -> merged             REFUSE
+  exists-0ahead-ancestor       none        refindex-failed     -> stillborn          demote
+  exists-0ahead-ancestor       none        no-ref-names-id     -> stillborn          demote
+  exists-0ahead-ancestor       none        name-only           -> stillborn          demote
+  exists-0ahead-ancestor       none        carrier             -> stillborn          demote
+  exists-0ahead-ancestor       none        carrier+nameonly    -> stillborn          demote
+  exists-0ahead-ancestor       none        carrier+unprobed    -> stillborn          demote
+  exists-0ahead-ancestor       none        unprobed-only       -> stillborn          demote
+  exists-0ahead-ancestor       none        nameonly+unprobed   -> stillborn          demote
+  exists-0ahead-ancestor       unrun       refindex-failed     -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       no-ref-names-id     -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       name-only           -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       carrier             -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       carrier+nameonly    -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       carrier+unprobed    -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       unprobed-only       -> merged-unverified  REFUSE
+  exists-0ahead-ancestor       unrun       nameonly+unprobed   -> merged-unverified  REFUSE
+  exists-0ahead-not-ancestor   found       refindex-failed     -> absent             demote
+  exists-0ahead-not-ancestor   found       no-ref-names-id     -> absent             demote
+  exists-0ahead-not-ancestor   found       name-only           -> absent             demote
+  exists-0ahead-not-ancestor   found       carrier             -> absent             demote
+  exists-0ahead-not-ancestor   found       carrier+nameonly    -> absent             demote
+  exists-0ahead-not-ancestor   found       carrier+unprobed    -> absent             demote
+  exists-0ahead-not-ancestor   found       unprobed-only       -> absent             demote
+  exists-0ahead-not-ancestor   found       nameonly+unprobed   -> absent             demote
+  exists-0ahead-not-ancestor   found_part  refindex-failed     -> absent             demote
+  exists-0ahead-not-ancestor   found_part  no-ref-names-id     -> absent             demote
+  exists-0ahead-not-ancestor   found_part  name-only           -> absent             demote
+  exists-0ahead-not-ancestor   found_part  carrier             -> absent             demote
+  exists-0ahead-not-ancestor   found_part  carrier+nameonly    -> absent             demote
+  exists-0ahead-not-ancestor   found_part  carrier+unprobed    -> absent             demote
+  exists-0ahead-not-ancestor   found_part  unprobed-only       -> absent             demote
+  exists-0ahead-not-ancestor   found_part  nameonly+unprobed   -> absent             demote
+  exists-0ahead-not-ancestor   none        refindex-failed     -> absent             demote
+  exists-0ahead-not-ancestor   none        no-ref-names-id     -> absent             demote
+  exists-0ahead-not-ancestor   none        name-only           -> absent             demote
+  exists-0ahead-not-ancestor   none        carrier             -> absent             demote
+  exists-0ahead-not-ancestor   none        carrier+nameonly    -> absent             demote
+  exists-0ahead-not-ancestor   none        carrier+unprobed    -> absent             demote
+  exists-0ahead-not-ancestor   none        unprobed-only       -> absent             demote
+  exists-0ahead-not-ancestor   none        nameonly+unprobed   -> absent             demote
+  exists-0ahead-not-ancestor   unrun       refindex-failed     -> absent             demote
+  exists-0ahead-not-ancestor   unrun       no-ref-names-id     -> absent             demote
+  exists-0ahead-not-ancestor   unrun       name-only           -> absent             demote
+  exists-0ahead-not-ancestor   unrun       carrier             -> absent             demote
+  exists-0ahead-not-ancestor   unrun       carrier+nameonly    -> absent             demote
+  exists-0ahead-not-ancestor   unrun       carrier+unprobed    -> absent             demote
+  exists-0ahead-not-ancestor   unrun       unprobed-only       -> absent             demote
+  exists-0ahead-not-ancestor   unrun       nameonly+unprobed   -> absent             demote
+  exists-0ahead-mb-unanswer    found       refindex-failed     -> unverified         demote
+  exists-0ahead-mb-unanswer    found       no-ref-names-id     -> unverified         demote
+  exists-0ahead-mb-unanswer    found       name-only           -> unverified         demote
+  exists-0ahead-mb-unanswer    found       carrier             -> unverified         demote
+  exists-0ahead-mb-unanswer    found       carrier+nameonly    -> unverified         demote
+  exists-0ahead-mb-unanswer    found       carrier+unprobed    -> unverified         demote
+  exists-0ahead-mb-unanswer    found       unprobed-only       -> unverified         demote
+  exists-0ahead-mb-unanswer    found       nameonly+unprobed   -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  refindex-failed     -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  no-ref-names-id     -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  name-only           -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  carrier             -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  carrier+nameonly    -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  carrier+unprobed    -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  unprobed-only       -> unverified         demote
+  exists-0ahead-mb-unanswer    found_part  nameonly+unprobed   -> unverified         demote
+  exists-0ahead-mb-unanswer    none        refindex-failed     -> unverified         demote
+  exists-0ahead-mb-unanswer    none        no-ref-names-id     -> unverified         demote
+  exists-0ahead-mb-unanswer    none        name-only           -> unverified         demote
+  exists-0ahead-mb-unanswer    none        carrier             -> unverified         demote
+  exists-0ahead-mb-unanswer    none        carrier+nameonly    -> unverified         demote
+  exists-0ahead-mb-unanswer    none        carrier+unprobed    -> unverified         demote
+  exists-0ahead-mb-unanswer    none        unprobed-only       -> unverified         demote
+  exists-0ahead-mb-unanswer    none        nameonly+unprobed   -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       refindex-failed     -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       no-ref-names-id     -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       name-only           -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       carrier             -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       carrier+nameonly    -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       carrier+unprobed    -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       unprobed-only       -> unverified         demote
+  exists-0ahead-mb-unanswer    unrun       nameonly+unprobed   -> unverified         demote
+  exists-count-unreadable      found       refindex-failed     -> unverified         demote
+  exists-count-unreadable      found       no-ref-names-id     -> unverified         demote
+  exists-count-unreadable      found       name-only           -> unverified         demote
+  exists-count-unreadable      found       carrier             -> unverified         demote
+  exists-count-unreadable      found       carrier+nameonly    -> unverified         demote
+  exists-count-unreadable      found       carrier+unprobed    -> unverified         demote
+  exists-count-unreadable      found       unprobed-only       -> unverified         demote
+  exists-count-unreadable      found       nameonly+unprobed   -> unverified         demote
+  exists-count-unreadable      found_part  refindex-failed     -> unverified         demote
+  exists-count-unreadable      found_part  no-ref-names-id     -> unverified         demote
+  exists-count-unreadable      found_part  name-only           -> unverified         demote
+  exists-count-unreadable      found_part  carrier             -> unverified         demote
+  exists-count-unreadable      found_part  carrier+nameonly    -> unverified         demote
+  exists-count-unreadable      found_part  carrier+unprobed    -> unverified         demote
+  exists-count-unreadable      found_part  unprobed-only       -> unverified         demote
+  exists-count-unreadable      found_part  nameonly+unprobed   -> unverified         demote
+  exists-count-unreadable      none        refindex-failed     -> unverified         demote
+  exists-count-unreadable      none        no-ref-names-id     -> unverified         demote
+  exists-count-unreadable      none        name-only           -> unverified         demote
+  exists-count-unreadable      none        carrier             -> unverified         demote
+  exists-count-unreadable      none        carrier+nameonly    -> unverified         demote
+  exists-count-unreadable      none        carrier+unprobed    -> unverified         demote
+  exists-count-unreadable      none        unprobed-only       -> unverified         demote
+  exists-count-unreadable      none        nameonly+unprobed   -> unverified         demote
+  exists-count-unreadable      unrun       refindex-failed     -> unverified         demote
+  exists-count-unreadable      unrun       no-ref-names-id     -> unverified         demote
+  exists-count-unreadable      unrun       name-only           -> unverified         demote
+  exists-count-unreadable      unrun       carrier             -> unverified         demote
+  exists-count-unreadable      unrun       carrier+nameonly    -> unverified         demote
+  exists-count-unreadable      unrun       carrier+unprobed    -> unverified         demote
+  exists-count-unreadable      unrun       unprobed-only       -> unverified         demote
+  exists-count-unreadable      unrun       nameonly+unprobed   -> unverified         demote
+
+================================================================================================
+PASS 2 -- DOES THE SAME EVIDENCE EVER GET TWO ANSWERS?
+================================================================================================
+The evidence a reader has in hand is: is there content bearing this id ON MAIN,
+and is there a live ref CARRYING content for it.  Group the enumerated states by
+that pair alone and report every group that contains BOTH polarities.
+
+  !! SPLIT VERDICT: content-on-main=False ref-carries-content=False -> ['REFUSE', 'demote']
+       absent                       none        refindex-failed     -> indeterminate      demote
+       rev-parse-failed             none        refindex-failed     -> unverified         demote
+       rev-parse-rc2                none        refindex-failed     -> unverified         demote
+       exists-ahead                 none        refindex-failed     -> commits            demote
+       exists-0ahead-ancestor       none        refindex-failed     -> stillborn          demote
+       exists-0ahead-ancestor       unrun       refindex-failed     -> merged-unverified  REFUSE
+       exists-0ahead-not-ancestor   none        refindex-failed     -> absent             demote
+       exists-0ahead-mb-unanswer    none        refindex-failed     -> unverified         demote
+       exists-count-unreadable      none        refindex-failed     -> unverified         demote
+
+  !! SPLIT VERDICT: content-on-main=False ref-carries-content=True -> ['REFUSE', 'demote']
+       rev-parse-failed             none        carrier             -> unverified         demote
+       rev-parse-rc2                none        carrier             -> unverified         demote
+       exists-ahead                 none        carrier             -> commits            demote
+       exists-0ahead-ancestor       none        carrier             -> stillborn          demote
+       exists-0ahead-ancestor       unrun       carrier             -> merged-unverified  REFUSE
+       exists-0ahead-not-ancestor   none        carrier             -> absent             demote
+       exists-0ahead-mb-unanswer    none        carrier             -> unverified         demote
+       exists-count-unreadable      none        carrier             -> unverified         demote
+
+  !! SPLIT VERDICT: content-on-main=True ref-carries-content=False -> ['REFUSE', 'demote']
+       absent                       found       refindex-failed     -> merged             REFUSE
+       rev-parse-failed             found       refindex-failed     -> unverified         demote
+       rev-parse-rc2                found       refindex-failed     -> unverified         demote
+       exists-ahead                 found       refindex-failed     -> commits            demote
+       exists-0ahead-ancestor       found       refindex-failed     -> merged             REFUSE
+       exists-0ahead-not-ancestor   found       refindex-failed     -> absent             demote
+       exists-0ahead-mb-unanswer    found       refindex-failed     -> unverified         demote
+       exists-count-unreadable      found       refindex-failed     -> unverified         demote
+
+  !! SPLIT VERDICT: content-on-main=True ref-carries-content=True -> ['REFUSE', 'demote']
+       absent                       found       carrier             -> merged             REFUSE
+       rev-parse-failed             found       carrier             -> unverified         demote
+       rev-parse-rc2                found       carrier             -> unverified         demote
+       exists-ahead                 found       carrier             -> commits            demote
+       exists-0ahead-ancestor       found       carrier             -> merged             REFUSE
+       exists-0ahead-not-ancestor   found       carrier             -> absent             demote
+       exists-0ahead-mb-unanswer    found       carrier             -> unverified         demote
+       exists-count-unreadable      found       carrier             -> unverified         demote
+
+groups whose polarity depends on something OTHER than the evidence: 4

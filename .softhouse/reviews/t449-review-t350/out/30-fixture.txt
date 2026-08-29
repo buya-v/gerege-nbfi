@@ -1,0 +1,25 @@
+fixture built at /tmp/t449/fixture
+616f565 softhouse fire 20260829-080002 iter5: dispatch record for 5 workers
+7ba32c7 softhouse: T870+T871 merged; conditions filed as T872
+07cb581 T286: retry of T268's capture
+a309796 T428: independent review of T421 -- APPROVED WITH CONDITIONS
+5c58279 T421: stop the handoff counting its own commits
+9f65b2d softhouse: seed
+--- refs ---
+main
+softhouse/T351-progress-accounting
+softhouse/T431-t407-conditions
+softhouse/T442-nonneg-guard
+softhouse/T900-work
+softhouse/aa1-t950-decoy
+softhouse/aa2-t950-decoy
+softhouse/aa3-t950-decoy
+softhouse/aa4-t950-decoy
+softhouse/aa5-t950-decoy
+softhouse/aa6-t950-decoy
+softhouse/aa7-t950-decoy
+softhouse/aa8-t950-decoy
+softhouse/rescued-t339-base-20260828-080001
+softhouse/rescued-t900-base-20260829
+softhouse/rescued-t901-base-20260829
+softhouse/zz-t950-real

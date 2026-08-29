@@ -1,0 +1,10 @@
+T350's population definition (0 ahead AND ancestor, id parsed from last
+path component with T350's own regex): 174 heads, 427 unparseable
+  keep `merged`      : 173
+  merged-unverified  : 0
+  FLIP to stillborn  : 1
+     softhouse/T449-review-t350                           id=T449      4e7d678a softhouse iter5: T350 complete (bar EXIT 0, scope clean); dis
+
+--- the two heads T350 reported as flips, today ---
+  softhouse/T350-reconcile-content                 ahead=2   ancestor_rc=1  main:commits  T350:commits   head 08b3b3ab9
+  softhouse/T412-driver-selfgrading                ahead=7   ancestor_rc=1  main:commits  T350:commits   head 8d0d4e04b
