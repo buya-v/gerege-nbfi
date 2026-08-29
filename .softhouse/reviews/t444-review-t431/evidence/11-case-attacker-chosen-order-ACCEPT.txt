@@ -1,0 +1,32 @@
+=== committed tree ===
+100644 blob 78758e14e062e82b9fb283cadaf4cd3f366aea01	g/zz/W.txt
+100644 blob 52ba63782218244e83bda223457848889345fb56	g/zz/m.sh
+120000 blob 01956d181ae14f50c9b92182e6cc4d7cff86b8e7	g/zz/w.txt
+
+=== FRESH CLONE ===
+warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  'g/zz/W.txt'
+  'g/zz/w.txt'
+--- filesystem in the clone ---
+total 8
+-rw-r--r--  1 buv  wheel  112 Aug 29 09:42 m.sh
+lrwxr-xr-x  1 buv  wheel    4 Aug 29 09:42 w.txt -> m.sh
+--- index in the clone ---
+100644 78758e14e062e82b9fb283cadaf4cd3f366aea01 0	g/zz/W.txt
+100644 52ba63782218244e83bda223457848889345fb56 0	g/zz/m.sh
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	g/zz/w.txt
+
+member_mode=[100644] member_blob=[52ba63782218244e83bda223457848889345fb56]
+typed witness=[g/zz/W.txt]  self_norm=[g/zz/W.txt]  self_mode=[100644]  self_blob=[78758e14e062e82b9fb283cadaf4cd3f366aea01]
+self_path=[g/zz/W.txt]  ROUND-TRIP HOLDS? YES
+-f on typed: pass
+grep reads g/zz/W.txt and sees:
+    #!/usr/bin/env bash
+    # m.sh -- PLANTED, UNWIRED checker.
+    # GUARDS-DIR-REGISTRATION: REACHED-BY g/zz/W.txt
+    exit 0
+
+VERDICT-MODEL: **ACCEPT** — the member vouched for ITSELF, in a FRESH CLONE, with the T431 fix applied

@@ -1,0 +1,112 @@
+#!/bin/bash
+# T444 probe 3 — THE NECESSITY / REDUNDANCY MATRIX, evaluated with the guard's OWN expressions.
+#
+# The full bar takes minutes per arm, so the 8-way combination matrix is evaluated here at the
+# git level with the four decision expressions transcribed VERBATIM from
+# `guard_guards_dir_registration` on T431's tree. This is a model, not the guard; every result
+# it reports as interesting is then re-driven through the whole bar as a real arm.
+#
+# Scenarios (witness side only):
+#   X    typed ":(literal)<dir>/w?.txt", real dir named ":(literal)..." planted, decoy w1.txt
+#   XQ   typed "<dir>/wé.txt", real witness is a symlink, decoy tracked at the C-QUOTED literal
+#   XQ0  as XQ with no decoy
+#   LEGA honest: witness is a plain-ASCII independent regular file
+#   LEGC honest: witness is an independent regular file with a CYRILLIC name
+#   LEGG honest: witness legitimately named "w[1].txt", no colliding sibling
+#   LEGG2 honest: witness "w[1].txt" WITH a colliding sibling "w1.txt"
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe3.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W"
+
+CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+
+build() {  # build <scenario> <repodir>
+  local s="$1" R="$2" d na
+  mkdir -p "$R"; ( cd "$R" && git init -q . && git config user.email r@x && git config user.name r )
+  d="g/zz"
+  mkdir -p "$R/$d"
+  case "$s" in
+    X)
+      printf 'member\n' > "$R/$d/m.sh"
+      ( cd "$R/$d" && ln -s m.sh 'w?.txt' )
+      printf 'decoy names m.sh\n' > "$R/$d/w1.txt"
+      mkdir -p "$R/:(literal)$d"
+      printf 'pacifier\n' > "$R/:(literal)$d/w?.txt"
+      TYPED=":(literal)$d/w?.txt" ;;
+    XQ|XQ0)
+      na="$(printf 'w\303\251.txt')"
+      printf 'member\n' > "$R/$d/m.sh"
+      ( cd "$R/$d" && ln -s m.sh "$na" )
+      if [ "$s" = XQ ]; then
+        mkdir -p "$R/\"$d"
+        printf 'decoy names m.sh\n' > "$R/\"$d/w"'\303\251.txt"'
+      fi
+      TYPED="$d/$na" ;;
+    LEGA)
+      printf 'member\n' > "$R/$d/m.sh"
+      printf 'honest witness naming m.sh\n' > "$R/$d/w-a.txt"
+      TYPED="$d/w-a.txt" ;;
+    LEGC)
+      na="$(printf '\320\263\321\215\321\200\321\207.txt')"
+      printf 'member\n' > "$R/$d/m.sh"
+      printf 'honest witness naming m.sh\n' > "$R/$d/$na"
+      TYPED="$d/$na" ;;
+    LEGG)
+      printf 'member\n' > "$R/$d/m.sh"
+      printf 'honest witness naming m.sh\n' > "$R/$d/w[1].txt"
+      TYPED="$d/w[1].txt" ;;
+    LEGG2)
+      printf 'member\n' > "$R/$d/m.sh"
+      printf 'honest witness naming m.sh\n' > "$R/$d/w[1].txt"
+      printf 'honest sibling\n' > "$R/$d/w1.txt"
+      TYPED="$d/w[1].txt" ;;
+  esac
+  ( cd "$R" && git add -A >/dev/null 2>&1 )
+}
+
+# The guard's own expressions, transcribed.
+evaluate() {  # evaluate <repodir> <typed> <pin yes|no> <empty yes|no> <rt yes|no>
+  local R="$1" wit="$2" pin="$3" emp="$4" rt="$5"
+  local norm multi stat mode path
+  norm="$( cd "$R" && git ls-files --error-unmatch -- "$wit" 2>/dev/null )" || norm=""
+  multi=0; case "$norm" in *"$CONF_LF"*) multi=1 ;; esac
+  stat=""
+  if [ -n "$norm" ] && [ "$multi" -eq 0 ]; then
+    if [ "$pin" = yes ]; then
+      stat="$( cd "$R" && git ls-files -s -- ":(literal)$norm" 2>/dev/null )" || stat=""
+    else
+      stat="$( cd "$R" && git ls-files -s -- "$norm" 2>/dev/null )" || stat=""
+    fi
+  fi
+  mode="${stat%% *}"
+  path="${stat#*"$CONF_TAB"}"
+  if [ -z "$wit" ];                    then echo "REFUSE:no-directive"; return; fi
+  if [ "$multi" -ne 0 ];               then echo "REFUSE:self_multi"; return; fi
+  if [ ! -f "$R/$wit" ];               then echo "REFUSE:not-a-file"; return; fi
+  if [ -z "$norm" ];                   then echo "REFUSE:untracked"; return; fi
+  if [ "$emp" = yes ] && [ -z "$stat" ]; then echo "REFUSE:empty-result"; return; fi
+  if [ "$rt" = yes ] && [ "$path" != "$norm" ]; then echo "REFUSE:round-trip"; return; fi
+  if [ "$mode" = "120000" ];           then echo "REFUSE:symlink-witness"; return; fi
+  # the closing grep reads "$R/$norm"
+  if ! LC_ALL=C grep -qF -- "m.sh" "$R/$norm" 2>/dev/null; then echo "REFUSE:does-not-name"; return; fi
+  echo "ACCEPT"
+}
+
+printf '%-7s %-28s %s\n' SCEN 'combination (pin/empty/rt)' 'outcome'
+for s in X XQ XQ0 LEGA LEGC LEGG LEGG2; do
+  R="$W/$s"
+  TYPED=""
+  build "$s" "$R"
+  echo "--- $s   typed witness: $TYPED"
+  echo "      self_norm = [$( cd "$R" && git ls-files --error-unmatch -- "$TYPED" 2>/dev/null | tr '\n' '|' )]"
+  for pin in no yes; do
+   for emp in no yes; do
+    for rt in no yes; do
+      printf '        pin=%-3s empty=%-3s rt=%-3s -> %s\n' "$pin" "$emp" "$rt" \
+        "$(evaluate "$R" "$TYPED" "$pin" "$emp" "$rt")"
+    done
+   done
+  done
+done

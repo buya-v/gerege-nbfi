@@ -1,0 +1,71 @@
+SCEN    combination (pin/empty/rt)   outcome
+--- X   typed witness: :(literal)g/zz/w?.txt
+      self_norm = [g/zz/w?.txt|]
+        pin=no  empty=no  rt=no  -> REFUSE:does-not-name
+        pin=no  empty=no  rt=yes -> REFUSE:round-trip
+        pin=no  empty=yes rt=no  -> REFUSE:does-not-name
+        pin=no  empty=yes rt=yes -> REFUSE:round-trip
+        pin=yes empty=no  rt=no  -> REFUSE:symlink-witness
+        pin=yes empty=no  rt=yes -> REFUSE:symlink-witness
+        pin=yes empty=yes rt=no  -> REFUSE:symlink-witness
+        pin=yes empty=yes rt=yes -> REFUSE:symlink-witness
+--- XQ   typed witness: g/zz/wé.txt
+      self_norm = ["g/zz/w\303\251.txt"|]
+        pin=no  empty=no  rt=no  -> ACCEPT
+        pin=no  empty=no  rt=yes -> REFUSE:round-trip
+        pin=no  empty=yes rt=no  -> ACCEPT
+        pin=no  empty=yes rt=yes -> REFUSE:round-trip
+        pin=yes empty=no  rt=no  -> ACCEPT
+        pin=yes empty=no  rt=yes -> REFUSE:round-trip
+        pin=yes empty=yes rt=no  -> ACCEPT
+        pin=yes empty=yes rt=yes -> REFUSE:round-trip
+--- XQ0   typed witness: g/zz/wé.txt
+      self_norm = ["g/zz/w\303\251.txt"|]
+        pin=no  empty=no  rt=no  -> REFUSE:does-not-name
+        pin=no  empty=no  rt=yes -> REFUSE:round-trip
+        pin=no  empty=yes rt=no  -> REFUSE:empty-result
+        pin=no  empty=yes rt=yes -> REFUSE:empty-result
+        pin=yes empty=no  rt=no  -> REFUSE:does-not-name
+        pin=yes empty=no  rt=yes -> REFUSE:round-trip
+        pin=yes empty=yes rt=no  -> REFUSE:empty-result
+        pin=yes empty=yes rt=yes -> REFUSE:empty-result
+--- LEGA   typed witness: g/zz/w-a.txt
+      self_norm = [g/zz/w-a.txt|]
+        pin=no  empty=no  rt=no  -> ACCEPT
+        pin=no  empty=no  rt=yes -> ACCEPT
+        pin=no  empty=yes rt=no  -> ACCEPT
+        pin=no  empty=yes rt=yes -> ACCEPT
+        pin=yes empty=no  rt=no  -> ACCEPT
+        pin=yes empty=no  rt=yes -> ACCEPT
+        pin=yes empty=yes rt=no  -> ACCEPT
+        pin=yes empty=yes rt=yes -> ACCEPT
+--- LEGC   typed witness: g/zz/гэрч.txt
+      self_norm = ["g/zz/\320\263\321\215\321\200\321\207.txt"|]
+        pin=no  empty=no  rt=no  -> REFUSE:does-not-name
+        pin=no  empty=no  rt=yes -> REFUSE:round-trip
+        pin=no  empty=yes rt=no  -> REFUSE:empty-result
+        pin=no  empty=yes rt=yes -> REFUSE:empty-result
+        pin=yes empty=no  rt=no  -> REFUSE:does-not-name
+        pin=yes empty=no  rt=yes -> REFUSE:round-trip
+        pin=yes empty=yes rt=no  -> REFUSE:empty-result
+        pin=yes empty=yes rt=yes -> REFUSE:empty-result
+--- LEGG   typed witness: g/zz/w[1].txt
+      self_norm = [g/zz/w[1].txt|]
+        pin=no  empty=no  rt=no  -> ACCEPT
+        pin=no  empty=no  rt=yes -> ACCEPT
+        pin=no  empty=yes rt=no  -> ACCEPT
+        pin=no  empty=yes rt=yes -> ACCEPT
+        pin=yes empty=no  rt=no  -> ACCEPT
+        pin=yes empty=no  rt=yes -> ACCEPT
+        pin=yes empty=yes rt=no  -> ACCEPT
+        pin=yes empty=yes rt=yes -> ACCEPT
+--- LEGG2   typed witness: g/zz/w[1].txt
+      self_norm = [g/zz/w1.txt|g/zz/w[1].txt|]
+        pin=no  empty=no  rt=no  -> REFUSE:self_multi
+        pin=no  empty=no  rt=yes -> REFUSE:self_multi
+        pin=no  empty=yes rt=no  -> REFUSE:self_multi
+        pin=no  empty=yes rt=yes -> REFUSE:self_multi
+        pin=yes empty=no  rt=no  -> REFUSE:self_multi
+        pin=yes empty=no  rt=yes -> REFUSE:self_multi
+        pin=yes empty=yes rt=no  -> REFUSE:self_multi
+        pin=yes empty=yes rt=yes -> REFUSE:self_multi

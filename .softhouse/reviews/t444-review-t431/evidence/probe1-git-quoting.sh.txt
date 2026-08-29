@@ -1,0 +1,37 @@
+#!/bin/bash
+# T444 probe 1 — derive git's C-quoting behaviour from scratch.
+# Work root is an ARGUMENT. Nothing here binds a literal shared-temp path to a name.
+set -e
+W="$1"
+[ -n "$W" ] || { echo "usage: probe1.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q .
+git config user.email r@x; git config user.name r
+git config core.quotePath >/dev/null 2>&1 || true
+mkdir -p d
+printf 'hello\n' > "d/w$(printf '\303\251').txt"
+printf 'hello\n' > "d/plain.txt"
+printf 'hello\n' > 'd/w\x.txt'
+printf 'hello\n' > "d/жагсаалт.txt"
+printf 'hello\n' > 'd/q".txt'
+git add -A
+echo "=== git version ==="
+git --version
+echo "=== core.ignorecase ==="
+git config core.ignorecase || echo "(unset)"
+echo "=== ls-files (default quotePath) ==="
+git ls-files
+echo "=== ls-files with -c core.quotePath=false ==="
+git -c core.quotePath=false ls-files
+echo "=== ls-files --error-unmatch of the non-ASCII path (what self_norm gets) ==="
+git ls-files --error-unmatch -- "d/w$(printf '\303\251').txt"
+echo "=== round-trip: feed THAT text back as :(literal) ==="
+N="$(git ls-files --error-unmatch -- "d/w$(printf '\303\251').txt")"
+echo "self_norm=[$N]"
+git ls-files -s -- ":(literal)$N" || echo "(exit $?)"
+echo "--- and the raw path with -s ---"
+git ls-files -s -- ":(literal)d/w$(printf '\303\251').txt"
+echo "=== quotePath=false round-trip ==="
+N2="$(git -c core.quotePath=false ls-files --error-unmatch -- "d/w$(printf '\303\251').txt")"
+echo "self_norm(qp=false)=[$N2]"
+git -c core.quotePath=false ls-files -s -- ":(literal)$N2" || echo "(exit $?)"

@@ -1,0 +1,25 @@
+=== git version ===
+git version 2.50.1 (Apple Git-155)
+=== core.ignorecase ===
+true
+=== ls-files (default quotePath) ===
+d/plain.txt
+"d/q\".txt"
+"d/w\\x.txt"
+"d/w\303\251.txt"
+"d/\320\266\320\260\320\263\321\201\320\260\320\260\320\273\321\202.txt"
+=== ls-files with -c core.quotePath=false ===
+d/plain.txt
+"d/q\".txt"
+"d/w\\x.txt"
+d/wé.txt
+d/жагсаалт.txt
+=== ls-files --error-unmatch of the non-ASCII path (what self_norm gets) ===
+"d/w\303\251.txt"
+=== round-trip: feed THAT text back as :(literal) ===
+self_norm=["d/w\303\251.txt"]
+--- and the raw path with -s ---
+100644 ce013625030ba8dba906f756967f9e9ca394464a 0	"d/w\303\251.txt"
+=== quotePath=false round-trip ===
+self_norm(qp=false)=[d/wé.txt]
+100644 ce013625030ba8dba906f756967f9e9ca394464a 0	d/wé.txt

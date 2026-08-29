@@ -1,0 +1,106 @@
+############ T444-2ROWH-honest-first
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 1
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+conformance:     REACHED-BY .softhouse/guards/zz-t444r/zz-t444r-member.sh — declared in its own header, reached by
+
+############ T444-2ROWX-hostile-first
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444r/zz-t444r-member.sh declares REACHED-BY .softhouse/guards/zz-t444r/self.txt,
+conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+############ T444-GITL-gitlink-member
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444g/zz-t444g-sub.sh IS INVOKED BY NOTHING.
+ERROR: unreadable corpus member .softhouse/guards/zz-t444g/zz-t444g-sub.sh: [Errno 21] Is a directory: '/private/tmp/t444/green/T444-GITL-gitlink-member/.softhouse/guards/zz-t444g/zz-t444g-sub.sh'
+
+############ T444-GITL2-gitlink-known-name
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=1 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444g/check-capture-namespace.sh IS INVOKED BY NOTHING.
+ERROR: unreadable corpus member .softhouse/guards/zz-t444g/check-capture-namespace.sh: [Errno 21] Is a directory: '/private/tmp/t444/green/T444-GITL2-gitlink-known-name/.softhouse/guards/zz-t444g/check-capture-namespace.sh'
+
+############ T444-LEGA-ascii-witness
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 1
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+conformance:     REACHED-BY .softhouse/guards/zz-t444a/zz-t444a-member.sh — declared in its own header, reached by
+
+############ T444-LEGC-CYRILLIC-witness
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444c/zz-t444c-member.sh declares REACHED-BY .softhouse/guards/zz-t444c/гэрчилгээ.txt,
+conformance: matched NO INDEX ENTRY when handed straight back to git as a
+
+############ T444-LEGM-cyrillic-dir-and-wit
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+ERROR: unreadable corpus member ".softhouse/guards/\321\205\320\260\320\273\321\202/zz-t444d-member.sh": [Errno 2] No such file or directory: '/private/tmp/t444/green/T444-LEGM-cyrillic-dir-and-wit/".softhouse/guards/\\321\\205\\320\\260\\320\\273\\321\\202/zz-t444d-member.sh"'
+
+############ T444-NLMEM-newline-member
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+ERROR: unreadable corpus member ".softhouse/guards/zz-t444n/zz-t444n\nmember.sh": [Errno 2] No such file or directory: '/private/tmp/t444/green/T444-NLMEM-newline-member/".softhouse/guards/zz-t444n/zz-t444n\\nmember.sh"'
+
+############ T444-RVQ-kill-roundtrip-REOPENS
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 1
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+conformance:     REACHED-BY .softhouse/guards/zz-t444q/zz-t444q-member.sh — declared in its own header, reached by
+
+############ T444-X-literal-REFUSED
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444x/zz-t444x-member.sh declares REACHED-BY :(literal).softhouse/guards/zz-t444x/w?.txt,
+conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+############ T444-XI-literal-icase-REFUSED
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444x/zz-t444x-member.sh declares REACHED-BY :(literal,icase).softhouse/guards/zz-t444x/w?.txt,
+conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+############ T444-XQ-CQUOTED-REFUSED
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444q/zz-t444q-member.sh declares REACHED-BY .softhouse/guards/zz-t444q/vä.txt,
+conformance: and THE WITNESS LOOKUP DID NOT ROUND-TRIP. git resolved that
+
+############ T444-XQ0-cquoted-no-decoy
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444q/zz-t444q-member.sh declares REACHED-BY .softhouse/guards/zz-t444q/vä.txt,
+conformance: matched NO INDEX ENTRY when handed straight back to git as a
+
+############ T444-XT-top-literal-REFUSED
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 0
+conformance:   GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+conformance: guard_guards_dir_registration: .softhouse/guards/zz-t444x/zz-t444x-member.sh declares REACHED-BY :(top,literal).softhouse/guards/zz-t444x/w?.txt,
+conformance: and THAT WITNESS IS A SYMLINK. What git tracks at that path is the
+
+############ T444-Z-unmutated
+-- P-84: PRESENCE of the probe line first --
+   grep -c 'probe = ' = 1
+conformance:   GUARDS-DIR-REGISTRATION: population=6 invoked=3 declared=2 reached-by=1 invoked-by-nothing=0 symlink-members=0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+

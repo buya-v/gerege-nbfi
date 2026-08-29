@@ -1,0 +1,65 @@
+#!/bin/bash
+# T444 probe 6 — THE CASE ROUTE. Does an index/filesystem case divergence disable the SYMLINK
+# refusal on the witness side, on this case-INSENSITIVE host, WITH the T431 fix in place?
+#
+# Construction:
+#   index:      g/zz/W.txt  mode 120000  (a symlink to the member)   <- the real file
+#               g/zz/w.txt  mode 100644  (a DECOY blob, forced in with update-index)
+#   filesystem: only W.txt exists, and it is the symlink.
+#   the member declares REACHED-BY g/zz/w.txt  (the LOWERCASE entry)
+#
+# The mode test and the blob test read the INDEX at g/zz/w.txt -> 100644, decoy blob.
+# The closing `grep` reads the FILESYSTEM at g/zz/w.txt -> the OS opens W.txt -> the symlink ->
+# dereferenced to the member itself.
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe6.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q .; git config user.email r@x; git config user.name r
+echo "core.ignorecase = $(git config core.ignorecase)"
+mkdir -p g/zz
+{ printf '#!/usr/bin/env bash\n'
+  printf '# m.sh -- PLANTED, UNWIRED checker.\n'
+  printf 'exit 0\n'; } > g/zz/m.sh
+ln -s m.sh g/zz/W.txt
+git add -A >/dev/null 2>&1
+D="$(printf 'DECOY BLOB. It does NOT name the member.\n' | git hash-object -w --stdin)"
+git update-index --add --cacheinfo 100644,"$D",g/zz/w.txt
+echo "--- index ---"
+git ls-files -s
+echo "--- filesystem ---"
+ls -l g/zz
+
+CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+rel="g/zz/m.sh"; base="m.sh"
+member_stat="$(git ls-files -s -- ":(literal)$rel")"
+member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+
+wit='g/zz/w.txt'
+norm="$(git ls-files --error-unmatch -- "$wit" 2>/dev/null)" || norm=""
+multi=0; case "$norm" in *"$CONF_LF"*) multi=1 ;; esac
+stat=""
+if [ -n "$norm" ] && [ "$multi" -eq 0 ]; then
+  stat="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)" || stat=""
+fi
+mode="${stat%% *}"; blob="${stat#* }"; blob="${blob%% *}"; path="${stat#*"$CONF_TAB"}"
+echo
+echo "typed witness   = [$wit]"
+echo "self_norm       = [$norm]   self_multi=$multi"
+echo "pinned self_stat= [$stat]"
+echo "self_mode       = [$mode]   self_blob=[$blob]   member_blob=[$member_blob]"
+echo "self_path       = [$path]   round-trip holds? $( [ "$path" = "$norm" ] && echo YES || echo no )"
+echo "-f on typed     : $( [ -f "$wit" ] && echo pass || echo FAIL )"
+echo "grep reads      : $wit  -> bytes seen:"
+LC_ALL=C sed -n '1,3p' "$wit" | LC_ALL=C sed 's/^/                  /'
+echo
+if   [ "$multi" -ne 0 ];            then echo "VERDICT-MODEL: REFUSE:self_multi"
+elif [ ! -f "$wit" ];               then echo "VERDICT-MODEL: REFUSE:not-a-file"
+elif [ -z "$norm" ];                then echo "VERDICT-MODEL: REFUSE:untracked"
+elif [ -z "$stat" ];                then echo "VERDICT-MODEL: REFUSE:empty-result"
+elif [ "$path" != "$norm" ];        then echo "VERDICT-MODEL: REFUSE:round-trip"
+elif [ "$mode" = "120000" ];        then echo "VERDICT-MODEL: REFUSE:symlink-witness"
+elif [ -n "$member_blob" ] && [ "$blob" = "$member_blob" ]; then echo "VERDICT-MODEL: REFUSE:blob-identical"
+elif ! LC_ALL=C grep -qF -- "$base" "$norm" 2>/dev/null; then echo "VERDICT-MODEL: REFUSE:does-not-name"
+else echo "VERDICT-MODEL: **ACCEPT** — the member vouched for itself through a case-divergent path"; fi

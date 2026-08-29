@@ -1,0 +1,51 @@
+#!/bin/bash
+# T444 probe 5 — CASE. T431 records "a case-SENSITIVE host" as an unreached bound. This host is
+# case-INSENSITIVE (core.ignorecase=true), and that direction has its own question: can the
+# INDEX hold two entries differing only in case while the FILESYSTEM holds one file, so that the
+# mode/blob tests read one entry and the closing `grep` reads a different file?
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe5.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q .; git config user.email r@x; git config user.name r
+echo "core.ignorecase = $(git config core.ignorecase)"
+mkdir -p g/zz
+printf 'member\n' > g/zz/m.sh
+printf 'HONEST WITNESS: names m.sh\n' > g/zz/W.txt
+git add -A >/dev/null 2>&1
+git commit -qm one
+echo "--- index after first add ---"
+git ls-files -s
+
+# Force a SECOND index entry differing only in case, without touching the filesystem.
+printf 'DECOY CONTENT, does not name the member\n' > /tmp/t444-probe5-blob.$$
+B="$(git hash-object -w /tmp/t444-probe5-blob.$$)"
+rm -f /tmp/t444-probe5-blob.$$
+git update-index --add --cacheinfo 100644,"$B",g/zz/w.txt 2>&1 || echo "(update-index refused)"
+echo "--- index after forcing the case-variant entry ---"
+git ls-files -s
+echo "--- filesystem ---"
+ls -1 g/zz
+
+CONF_LF="$(printf '\nx')"; CONF_LF="${CONF_LF%x}"
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+for wit in 'g/zz/W.txt' 'g/zz/w.txt'; do
+  norm="$(git ls-files --error-unmatch -- "$wit" 2>/dev/null)" || norm=""
+  multi=0; case "$norm" in *"$CONF_LF"*) multi=1 ;; esac
+  stat=""
+  if [ -n "$norm" ] && [ "$multi" -eq 0 ]; then
+    stat="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)" || stat=""
+  fi
+  mode="${stat%% *}"; path="${stat#*"$CONF_TAB"}"
+  echo "typed=[$wit]"
+  echo "   self_norm=[$(printf '%s' "$norm" | tr '\n' '|')] multi=$multi"
+  echo "   pinned self_stat=[$(printf '%s' "$stat" | tr '\n' '|')]"
+  if   [ "$multi" -ne 0 ];     then echo "   -> REFUSE:self_multi"
+  elif [ ! -f "$wit" ];        then echo "   -> REFUSE:not-a-file"
+  elif [ -z "$norm" ];         then echo "   -> REFUSE:untracked"
+  elif [ -z "$stat" ];         then echo "   -> REFUSE:empty-result"
+  elif [ "$path" != "$norm" ]; then echo "   -> REFUSE:round-trip"
+  elif [ "$mode" = "120000" ]; then echo "   -> REFUSE:symlink-witness"
+  elif ! LC_ALL=C grep -qF -- "m.sh" "$norm" 2>/dev/null; then echo "   -> REFUSE:does-not-name"
+  else echo "   -> ACCEPT  (grep read the file at $norm)"; fi
+done

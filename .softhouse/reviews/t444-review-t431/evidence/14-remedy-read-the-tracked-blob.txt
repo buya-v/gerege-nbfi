@@ -1,0 +1,6 @@
+Each row: what the CURRENT closing grep decides vs what a BLOB-reading grep would decide.
+(mode 120000 is already refused earlier; shown for completeness.)
+HONEST   wit=g/zz/w.txt   mode=100644  round-trip=YES | grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=NAMES-IT
+CASE     wit=g/zz/W.txt   mode=100644  round-trip=YES | grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=does-not-name
+SYMLINK  wit=g/zz/w.txt   mode=120000  round-trip=YES | grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=NAMES-IT
+COPY     wit=g/zz/w.txt   mode=100644  round-trip=YES | grep(FILESYSTEM)=NAMES-IT       grep(TRACKED BLOB)=NAMES-IT
