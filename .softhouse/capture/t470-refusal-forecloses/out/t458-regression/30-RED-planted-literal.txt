@@ -1,6 +1,6 @@
 conformance: CENSUS dead repo-path references among tracked .softhouse/ instruments
 conformance:   selector and per-bucket counts are printed by the census itself:
-T316-DEADPATH-CENSUS: corpus=1755 deadFiles=76 deadOccurrences=109 resolving=1577 indeterminate=126 prose=427
+T316-DEADPATH-CENSUS: corpus=1756 deadFiles=76 deadOccurrences=109 resolving=1577 indeterminate=126 prose=427
 conformance:   frontier 109 row(s), pinned at 108
 conformance:   (both cardinals DERIVED by counting the files compared, never typed)
 conformance: !! THE DEAD-PATH FRONTIER MOVED.
@@ -8,12 +8,14 @@ conformance: !! 1 NEW dead path reference(s). A '+' row is a NEW site: REPAIR it
 conformance: !! rather than pinning it. Either make the path resolve, or -- if the
 conformance: !! reference is a deliberate fallback candidate -- make the instrument
 conformance: !! REFUSE when no candidate resolves, and record why in the pin.
-> .softhouse/capture/t470-red-drive-specimen/planted-dead-literal.sh | .softhouse/capture/t470-no-such-directory/no-such-file.txt
+> .softhouse/capture/t458-red-drive-specimen/planted-dead-literal.sh | .softhouse/capture/t458-no-such-directory/no-such-file.txt
 conformance: !! ----------------------------------------------------------------
 conformance: !! THE REMEDY, because SIX workers in one fire each rediscovered it:
 conformance: !!   T440, T446, T447, T448, T451, T452 -- every one of them repaired
-conformance: !!   the INSTRUMENT, and not one of them grew the pin. Do ONE of these
-conformance: !!   three, and never a fourth:
+conformance: !!   the INSTRUMENT, and not one of them grew the pin. THAT IS WHAT SIX
+conformance: !!   WORKERS DID; it is not the only disposition this guard sanctions.
+conformance: !!   To REPAIR, do ONE of these three. If you are NOT repairing, there
+conformance: !!   is exactly ONE other sanctioned route, and it is named after them:
 conformance: !!   1. ASSEMBLE the path at run time from a variable -- S='.softhouse'
 conformance: !!      and build downward. This census reads QUOTED LITERALS ONLY, so
 conformance: !!      an assembled path is not a row. That is not evasion: it STATES
@@ -22,18 +24,39 @@ conformance: !!      exactly what a fixture or a scratch destination means.
 conformance: !!   2. MAKE THE LOCATION A REQUIRED PARAMETER -- no default, and a
 conformance: !!      HARD EXIT when it does not resolve. Never a skipped case,
 conformance: !!      never a warning, never a pass. This is the arm this guard asks
-conformance: !!      for in exchange for not pinning the row.
+conformance: !!      for on EITHER route -- whether you repair the row away or pin
+conformance: !!      it. The sentence above requires it for the PIN route too.
 conformance: !!   3. If the failure arm PRINTS instead of exiting, adopt T238's
 conformance: !!      sweeplib shape too, so the instrument cannot print a negative
 conformance: !!      it never measured. That is the sibling defect T446 was caught
 conformance: !!      by, in the same fire, for the same underlying reason.
+conformance: !! ----------------------------------------------------------------
+conformance: !! THE ROUTE THAT IS NOT A REPAIR, AND IS STILL SANCTIONED:
+conformance: !!   PIN THE ROW WITH ITS REASON. Permitted ONLY where the reference is
+conformance: !!   a deliberate ORDERED-FALLBACK candidate, or is dead BY DESIGN, and
+conformance: !!   ONLY together with remedy 2's arm: the instrument must REFUSE when
+conformance: !!   NO candidate resolves. THIS REFUSAL ALREADY OFFERED IT ABOVE --
+conformance: !!   'record why in the pin'. This guard's own header SANCTIONS it: grep
+conformance: !!   this file for WHAT A ROW DOES **NOT** MEAN -- 'a dead literal is a
+conformance: !!   SMELL that must be inspected once, by a human, and then either
+conformance: !!   repaired or pinned with its reason. This guard counts; it does not
+conformance: !!   judge.' And this tree TAKES that route twice already: the pin holds
+conformance: !!   the two FU-T299-2 ordered-fallback rows with the reason written
+conformance: !!   above them, and conformance.sh holds T305's four red-drive rows on
+conformance: !!   the same terms -- 'They are pinned here, with the reason.'
+conformance: !!   It is the EXCEPTION, not the default -- six of six workers in fire
+conformance: !!   20260829-080002 repaired, and not one of them needed it.
+conformance: !! ----------------------------------------------------------------
 conformance: !! THE FORBIDDEN FOURTH: do NOT split or concatenate the literal to
 conformance: !! slip past the selector. That leaves the false claim standing and
 conformance: !! removes the only instrument that would ever have found it.
+conformance: !! (It is 'the FOURTH' because it is the fourth idea that occurs to a
+conformance: !! refused worker, not a fourth entry in a list. PINNING WITH A REASON
+conformance: !! IS NOT IT.)
 conformance: !! FULL RULE, the six measured row counts, and the three sub-classes:
 conformance: !! grep patterns.md for this SENTENCE -- the line number moves, and an
 conformance: !! id is a cardinal that rots, but the sentence relocates with its text:
 conformance: !!   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
 conformance: !! ----------------------------------------------------------------
-conformance:   The pin is /tmp/t470-scratch/work/base-clone/.softhouse/guards/dead-path-frontier.pin
+conformance:   The pin is /tmp/t470-scratch/t458work/red-clone/.softhouse/guards/dead-path-frontier.pin
 T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0

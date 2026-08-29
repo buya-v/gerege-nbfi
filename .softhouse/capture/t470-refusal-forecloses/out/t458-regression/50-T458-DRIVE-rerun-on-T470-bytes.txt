@@ -1,0 +1,33 @@
+== T458 REMEDY-TEXT DRIVE ==
+   git      : git version 2.50.1 (Apple Git-155)
+   python3  : Python 3.9.6
+   SRC      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e
+   HEAD     : 9892d9426b231a3c13e723a842e48435d0dcd53a
+   guard    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e/.softhouse/guards/check-dead-path-frontier.sh
+
+-- CALIBRATION: the three strings must be present in the guard's SOURCE
+   source hits = 1   for: A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
+   source hits = 1   for: THE REMEDY, because SIX workers in one fire each rediscovered it
+   source hits = 1   for: THE FORBIDDEN FOURTH
+   CALIBRATED: the drive can see the text it is about to report on.
+
+== GREEN ARM: the committed tree, frontier == pin ==
+   exit           = 0
+   probe lines    = 1      (PRESENCE read before VALUE)
+   probe line     = GREEN rows=108 pinned=108 added=0 removed=0
+   anchor hits    = 0      (expected 0 -- calibrated present in source above)
+   remedy hits    = 0      (expected 0)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e/.softhouse/capture/t470-refusal-forecloses/out/t458-regression/20-GREEN-clean-tree.txt]
+
+== RED ARM: a scratch clone with ONE planted dead literal ==
+   planted file tracked in clone = 1   (must be 1, or the arm measures nothing)
+   exit           = 1
+   probe lines    = 1      (PRESENCE read before VALUE)
+   probe line     = REFUSED rows=109 pinned=108 added=1 removed=0
+   anchor hits    = 1      (expected >= 1)
+   remedy hits    = 1      (expected >= 1)
+   forbidden-4th  = 1      (expected >= 1)
+   planted row named in the listing = 1   (expected >= 1)
+   [/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5521f6ca857fe29e/.softhouse/capture/t470-refusal-forecloses/out/t458-regression/30-RED-planted-literal.txt]
+
+T458-REMEDY-DRIVE: PASS green=exit0/anchor0 red=exit1/anchor1/remedy1

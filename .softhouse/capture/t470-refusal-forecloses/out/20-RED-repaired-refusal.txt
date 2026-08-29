@@ -58,5 +58,5 @@ conformance: !! grep patterns.md for this SENTENCE -- the line number moves, and
 conformance: !! id is a cardinal that rots, but the sentence relocates with its text:
 conformance: !!   A TRACKED INSTRUMENT'S QUOTED PATH IS A CLAIM ABOUT THIS TREE
 conformance: !! ----------------------------------------------------------------
-conformance:   The pin is /tmp/t470-scratch/head-clone/.softhouse/guards/dead-path-frontier.pin
+conformance:   The pin is /tmp/t470-scratch/work/head-clone/.softhouse/guards/dead-path-frontier.pin
 T316-DEADPATH-FRONTIER: REFUSED rows=109 pinned=108 added=1 removed=0
