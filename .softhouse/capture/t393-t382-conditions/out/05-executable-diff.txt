@@ -1,0 +1,1307 @@
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/00-verify-t382-counts.py b/.softhouse/capture/t393-t382-conditions/instruments/00-verify-t382-counts.py
+new file mode 100644
+index 00000000..3aaf519a
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/00-verify-t382-counts.py
+@@ -0,0 +1,157 @@
++#!/usr/bin/env python3
++"""T393 — RE-VERIFY T382's F-2 counts INDEPENDENTLY, before relying on any of them.
++
++T382's FINDING 2 asserts that `.softhouse/capture/tierA-a2/MANIFEST.sha256` already covers
++exactly the tracked observation set, so a third arm reading it closes F-1's deletion,
++addition and untracked cases without a new artefact. The coordinator's instruction is
++explicit: VERIFY THOSE COUNTS YOURSELF. This file does that from the repository, with its
++own enumeration, and REFUSES rather than printing a reassuring sentence if it cannot.
++
++P-25: no floating point. Only len() counts and sha256 hex digests.
++P-24: the historical baseline is a LITERAL immutable sha.
++
++EXIT 0 every number T382 reports reproduces.  EXIT 1 at least one does not.
++EXIT 2 REFUSED — could not measure.
++"""
++import hashlib
++import os
++import pathlib
++import subprocess
++import sys
++
++ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[4])
++CAPREL = ".softhouse/capture/tierA-a2"
++OBS_DIRS = ("out", "req")
++FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"
++MANREL = CAPREL + "/MANIFEST.sha256"
++
++fails = []
++
++
++def check(label, got, want):
++    ok = got == want
++    print(("  PASS  " if ok else "  FAIL  ") + "%-58s got=%s  T382=%s" % (label, got, want))
++    if not ok:
++        fails.append(label)
++
++
++def g(*args):
++    r = subprocess.run(["git", "-C", ROOT, *args], capture_output=True)
++    if r.returncode != 0:
++        print("  REFUSED  git %s exited %d: %s" % (" ".join(args), r.returncode,
++                                                   r.stderr.decode()[:200]))
++        sys.exit(2)
++    return r.stdout
++
++
++def tree(ref):
++    return [l.strip() for l in g("ls-tree", "-r", "--name-only", ref, "--", CAPREL)
++            .decode().split("\n") if l.strip()]
++
++
++def is_obs(p):
++    return p.startswith(CAPREL + "/") and p[len(CAPREL) + 1:].split("/")[0] in OBS_DIRS
++
++
++def parse_manifest(blob):
++    out = {}
++    for line in blob.decode("utf-8").split("\n"):
++        line = line.rstrip()
++        if not line or line.startswith("#"):
++            continue
++        parts = line.split(None, 1)
++        if len(parts) != 2:
++            continue
++        out[parts[1].lstrip("*").strip()] = parts[0]
++    return out
++
++
++fork_all = tree(FORK)
++head_all = tree("HEAD")
++fork_obs = sorted(p for p in fork_all if is_obs(p))
++head_obs = sorted(p for p in head_all if is_obs(p))
++post_fork = sorted(set(head_obs) - set(fork_obs))
++
++print("=== populations (T382 out/POPULATIONS.txt: 403 / 1035 / 632) ===")
++check("observations tracked at the fork sha (ARM A population)", len(fork_obs), 403)
++check("observations tracked at HEAD (ARM B population)", len(head_obs), 1035)
++check("post-fork observations (in ARM B, invisible to ARM A)", len(post_fork), 632)
++
++print()
++print("=== MANIFEST.sha256 coverage (T382 out/MANIFEST-COVERAGE.txt) ===")
++man = parse_manifest(open(os.path.join(ROOT, MANREL), "rb").read())
++man_obs = {k: v for k, v in man.items() if k.split("/")[0] in OBS_DIRS}
++tracked_rel = set(p[len(CAPREL) + 1:] for p in head_obs)
++check("MANIFEST.sha256 total rows", len(man), 1139)
++check("of which out/ or req/ rows", len(man_obs), 1035)
++check("tracked observations with NO manifest row", len(tracked_rel - set(man_obs)), 0)
++check("manifest rows naming NO tracked observation", len(set(man_obs) - tracked_rel), 0)
++
++agree = disagree = unreadable = 0
++for name, digest in sorted(man_obs.items()):
++    try:
++        with open(os.path.join(ROOT, CAPREL, name), "rb") as fh:
++            body = fh.read()
++    except OSError:
++        unreadable += 1
++        continue
++    if hashlib.sha256(body).hexdigest() == digest:
++        agree += 1
++    else:
++        disagree += 1
++check("manifest digest vs disk: AGREE", agree, 1035)
++check("manifest digest vs disk: DISAGREE", disagree, 0)
++check("manifest digest vs disk: unreadable", unreadable, 0)
++check("POST-FORK observations covered by a manifest row",
++      sum(1 for p in post_fork if p[len(CAPREL) + 1:] in man_obs), 632)
++
++print()
++print("=== the fork-sha manifest, section 4's population (T382 FINDING 3: 430 / 403 / 27) ===")
++old = parse_manifest(g("show", FORK + ":" + MANREL))
++old_obs = [k for k in old if k.split("/")[0] in OBS_DIRS]
++old_non = sorted(k for k in old if k.split("/")[0] not in OBS_DIRS)
++check("entries in the fork-sha manifest", len(old), 430)
++check("of those under out/ or req/ (section 10 covers these)", len(old_obs), 403)
++check("NOT under out/ or req/ (section 4 ONLY — the saturated set)", len(old_non), 27)
++print("      the 27, enumerated:")
++for name in old_non:
++    print("        " + name)
++
++print()
++print("=== which of the 27 are NOT byte-identical to the fork sha today ===")
++print("    T382 / section 4's banner name exactly two: CAPTURE-PLAN.md and cap.sh.")
++differ = []
++same = 0
++for name in old_non:
++    rel = CAPREL + "/" + name
++    at_fork = g("show", FORK + ":" + rel)
++    try:
++        with open(os.path.join(ROOT, rel), "rb") as fh:
++            today = fh.read()
++    except OSError as exc:
++        print("  REFUSED  %s is missing on disk: %r" % (name, exc))
++        sys.exit(2)
++    if hashlib.sha256(at_fork).hexdigest() == hashlib.sha256(today).hexdigest():
++        same += 1
++    else:
++        differ.append(name)
++        print("        DIFFERS  %s\n                 fork  %s\n                 today %s"
++              % (name, hashlib.sha256(at_fork).hexdigest(),
++                 hashlib.sha256(today).hexdigest()))
++check("of the 27 non-observation fork-sha entries, byte-identical", same, 25)
++check("the differing set is exactly {CAPTURE-PLAN.md, cap.sh}",
++      differ, ["CAPTURE-PLAN.md", "cap.sh"])
++
++print()
++print("FAILURES: %d" % len(fails))
++for f in fails:
++    print("  - " + f)
++if fails:
++    print()
++    print("VERDICT: FAIL (exit 1) — a number T382 reports did NOT reproduce here. Do not build")
++    print("on T382's FINDING 2 until the disagreement is explained.")
++    sys.exit(1)
++print()
++print("VERDICT: PASS (exit 0) — every count T382 reports reproduces from an independent")
++print("enumeration. MANIFEST.sha256's out/req row-set IS the tracked observation path-set.")
++sys.exit(0)
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/01-manifest-nonobs-shape.py b/.softhouse/capture/t393-t382-conditions/instruments/01-manifest-nonobs-shape.py
+new file mode 100644
+index 00000000..70215101
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/01-manifest-nonobs-shape.py
+@@ -0,0 +1,94 @@
++#!/usr/bin/env python3
++"""T393 — SHAPE MEASUREMENT, not a guard: how far can a manifest arm reach?
++
++Before widening section 10 I measure what the CURRENT MANIFEST.sha256 actually covers
++outside out/ and req/, so the arm I write is sized to the measurement and not to a hope.
++Printing only. No verdict, no exit code other than 0/2 — it decides nothing.
++"""
++import hashlib
++import os
++import pathlib
++import subprocess
++import sys
++
++ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[4])
++CAPREL = ".softhouse/capture/tierA-a2"
++OBS_DIRS = ("out", "req")
++MANREL = CAPREL + "/MANIFEST.sha256"
++
++
++def g(*args):
++    r = subprocess.run(["git", "-C", ROOT, *args], capture_output=True)
++    if r.returncode != 0:
++        print("REFUSED  git %s exited %d" % (" ".join(args), r.returncode))
++        sys.exit(2)
++    return r.stdout
++
++
++man = {}
++for line in open(os.path.join(ROOT, MANREL), "rb").read().decode().split("\n"):
++    line = line.rstrip()
++    if not line or line.startswith("#"):
++        continue
++    parts = line.split(None, 1)
++    if len(parts) == 2:
++        man[parts[1].lstrip("*").strip()] = parts[0]
++
++tracked = set()
++for line in g("ls-tree", "-r", "--name-only", "HEAD", "--", CAPREL).decode().split("\n"):
++    line = line.strip()
++    if line.startswith(CAPREL + "/"):
++        tracked.add(line[len(CAPREL) + 1:])
++
++non_obs_rows = sorted(k for k in man if k.split("/")[0] not in OBS_DIRS)
++tracked_non_obs = sorted(k for k in tracked if k.split("/")[0] not in OBS_DIRS)
++
++print("manifest rows total                    : %d" % len(man))
++print("manifest rows outside out/ req/        : %d" % len(non_obs_rows))
++print("tracked files under the capture dir    : %d" % len(tracked))
++print("tracked files outside out/ req/        : %d" % len(tracked_non_obs))
++print("manifest non-obs rows naming no tracked file: %s"
++      % sorted(set(non_obs_rows) - tracked))
++print("tracked non-obs files with NO manifest row  : %d" % len(set(tracked_non_obs) - set(man)))
++for n in sorted(set(tracked_non_obs) - set(man)):
++    print("    " + n)
++
++agree = disagree = unreadable = 0
++dis_names = []
++for name in non_obs_rows:
++    try:
++        with open(os.path.join(ROOT, CAPREL, name), "rb") as fh:
++            body = fh.read()
++    except OSError:
++        unreadable += 1
++        continue
++    if hashlib.sha256(body).hexdigest() == man[name]:
++        agree += 1
++    else:
++        disagree += 1
++        dis_names.append(name)
++print()
++print("non-obs manifest rows: digest AGREES with disk : %d" % agree)
++print("non-obs manifest rows: digest DISAGREES        : %d %s" % (disagree, dis_names))
++print("non-obs manifest rows: unreadable              : %d" % unreadable)
++
++print()
++print("--- disk walk under out/ and req/: anything not tracked, or not a regular file? ---")
++untracked = []
++nonregular = []
++disk_count = 0
++for d in OBS_DIRS:
++    base = os.path.join(ROOT, CAPREL, d)
++    for dirpath, dirnames, filenames in os.walk(base):
++        for fn in filenames:
++            full = os.path.join(dirpath, fn)
++            rel = os.path.relpath(full, os.path.join(ROOT, CAPREL))
++            disk_count += 1
++            if rel not in tracked:
++                untracked.append(rel)
++            if os.path.islink(full):
++                nonregular.append(rel)
++print("files on disk under out/ + req/        : %d" % disk_count)
++print("of those NOT tracked at HEAD           : %d %s" % (len(untracked), untracked[:10]))
++print("of those that are SYMLINKS             : %d %s" % (len(nonregular), nonregular[:10]))
++sys.exit(0)
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh b/.softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh
+new file mode 100644
+index 00000000..95429f41
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh
+@@ -0,0 +1,238 @@
++#!/bin/bash
++# T393 — RED BEFORE GREEN for every condition T382 filed, driven on real repositories.
++#
++# Each case is run TWICE: once against the bytes BEFORE T393's fix and once against the bytes
++# AFTER it, in scratch clones, with the whole run-all.sh runner. The RED half is not a claim
++# about what used to happen — it is the same mutation, on the same file, against the earlier
++# commit, producing the earlier answer. A fix whose RED half was never observed is a fix whose
++# author guessed (P-22).
++#
++# NO HOST PATH IS WRITTEN IN THIS FILE. The source repo, the scratch root, the output
++# directory and BOTH commit-ishes are required parameters; a missing one aborts the run
++# rather than defaulting to somebody's disk (T256/T298 — no graded path may depend on where
++# it runs; this is an instrument, held to the same rule).
++#
++#   T393_SRC=<repo>  T393_CLONE=<scratch>  T393_OUT=<dir> \
++#   T393_BEFORE=<sha> T393_AFTER=<sha>  bash 10-drive-conditions.sh
++#
++# EXIT 0 every case produced the expected RED and the expected GREEN.
++# EXIT 1 at least one did not — printed by name, never counted only.
++# EXIT 3 the harness could not run (bad parameter, clone failure). Never read as a result.
++set -u
++
++SRC="${T393_SRC:?T393_SRC must name the source repository}"
++SCROOT="${T393_CLONE:?T393_CLONE must name a scratch directory OUTSIDE the repository}"
++OUT="${T393_OUT:?T393_OUT must name the directory to write transcripts into}"
++BEFORE="${T393_BEFORE:?T393_BEFORE must name the commit-ish carrying the PRE-fix bytes}"
++AFTER="${T393_AFTER:?T393_AFTER must name the commit-ish carrying the POST-fix bytes}"
++
++CAP=".softhouse/capture/tierA-a2"
++A211=".softhouse/reviews/A2-11"
++INT="$A211/verify-capture-integrity.py"
++RUNALL="$A211/run-all.sh"
++MAN="$CAP/MANIFEST.sha256"
++PICK=".softhouse/capture/t393-t382-conditions/instruments/11-pick-targets.py"
++FAB="T393-FABRICATED-OBSERVATION.http"
++
++mkdir -p "$OUT" || exit 3
++mkdir -p "$SCROOT" || exit 3
++MATRIX="$OUT/MATRIX.tsv"
++: > "$MATRIX" || exit 3
++printf 'case\tref\tsec10\trunall_rc\tverdict\tsec4_named_the_mutation\texpected\tresult\n' \
++  >> "$MATRIX"
++
++# ---------------------------------------------------------------------------------------
++# The mutation targets are MEASURED, not typed. See 11-pick-targets.py; it REFUSES on an
++# empty set, so a case can never silently become a no-op.
++# ---------------------------------------------------------------------------------------
++if ! TARGETS="$(python3 "$SRC/$PICK")"; then
++  echo "REFUSED: could not pick mutation targets from $SRC. Nothing below can run." >&2
++  exit 3
++fi
++FORKOBS="$(printf '%s\n' "$TARGETS" | awk -F'\t' '$1=="FORKOBS"{print $2}')"
++POSTFORK="$(printf '%s\n' "$TARGETS" | awk -F'\t' '$1=="POSTFORK"{print $2}')"
++NONOBS="$(printf '%s\n' "$TARGETS" | awk -F'\t' '$1=="NONOBS"{print $2}')"
++if [ -z "$FORKOBS" ] || [ -z "$POSTFORK" ] || [ -z "$NONOBS" ]; then
++  echo "REFUSED: a mutation target came back empty: [$FORKOBS] [$POSTFORK] [$NONOBS]" >&2
++  exit 3
++fi
++echo "targets: FORKOBS=$FORKOBS  POSTFORK=$POSTFORK  NONOBS=$NONOBS"
++
++FAILURES=0
++
++prepare() {   # prepare <clonedir> <ref>
++  local d="$1" ref="$2"
++  if [ ! -d "$d/.git" ]; then
++    rm -rf "$d" || return 1
++    git clone --quiet --shared "$SRC" "$d" || return 1
++    git -C "$d" config user.email "t393@softhouse.local" || return 1
++    git -C "$d" config user.name "T393" || return 1
++  fi
++  # Order matters: a previous case may have left the clone dirty AND on a probe commit, and
++  # `checkout --detach` refuses over a dirty tree. Reset to whatever HEAD is, clean, THEN
++  # move. Every arm is fatal — a clone that did not reach the requested ref would grade the
++  # wrong bytes and report a colour about a commit it was never on.
++  git -C "$d" reset --quiet --hard || return 1
++  git -C "$d" clean -qfdx || return 1
++  git -C "$d" checkout --quiet --detach "$ref" || return 1
++  git -C "$d" reset --quiet --hard "$ref" || return 1
++  return 0
++}
++
++# --- the mutations. Each takes the clone directory and returns non-zero if it could not
++# --- apply, because a mutation that silently did nothing turns a RED case into a control.
++mut_control()      { return 0; }
++
++mut_commit_mutate_postfork() {
++  printf '\nT393-MUTATION-MARKER\n' >> "$1/$CAP/$POSTFORK" || return 1
++  git -C "$1" add -- "$CAP/$POSTFORK" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed mutation of a POST-FORK observation" || return 1
++}
++
++mut_commit_mutate_postfork_laundered() {
++  printf '\nT393-MUTATION-MARKER\n' >> "$1/$CAP/$POSTFORK" || return 1
++  python3 "$SRC/.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py" \
++    "$1" "$POSTFORK" || return 1
++  git -C "$1" add -- "$CAP/$POSTFORK" "$MAN" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed mutation of a POST-FORK observation, manifest row rewritten to match" || return 1
++}
++
++mut_commit_delete_postfork() {
++  git -C "$1" rm -q -- "$CAP/$POSTFORK" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed DELETION of a post-fork observation" || return 1
++}
++
++mut_commit_add_fabricated() {
++  printf 'HTTP/1.1 200 OK\r\n\r\n{"fabricated":true}\n' > "$1/$CAP/out/$FAB" || return 1
++  git -C "$1" add -- "$CAP/out/$FAB" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed ADDITION of a fabricated observation" || return 1
++}
++
++mut_untracked_fabricated() {
++  printf 'HTTP/1.1 200 OK\r\n\r\n{"fabricated":true}\n' > "$1/$CAP/out/$FAB" || return 1
++  return 0
++}
++
++mut_symlink_identical_bytes() {
++  local keep="$SCROOT/t393-symlink-target"
++  cp "$1/$CAP/$POSTFORK" "$keep" || return 1
++  rm -f "$1/$CAP/$POSTFORK" || return 1
++  ln -s "$keep" "$1/$CAP/$POSTFORK" || return 1
++  return 0
++}
++
++mut_commit_mutate_forkobs() {
++  printf '\nT393-MUTATION-MARKER\n' >> "$1/$CAP/$FORKOBS" || return 1
++  git -C "$1" add -- "$CAP/$FORKOBS" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed mutation of a FORK-SHA observation" || return 1
++}
++
++# T382 FINDING 4, verbatim: commit a mutation of a fork-sha observation ARM A catches, then
++# move section 10's OWN baseline constant forward ONE LINE to the commit that contains it.
++mut_move_fork_constant() {
++  mut_commit_mutate_forkobs "$1" || return 1
++  local probe old
++  probe="$(git -C "$1" rev-parse HEAD)" || return 1
++  old="$(python3 "$SRC/.softhouse/capture/t393-t382-conditions/instruments/13-move-fork-constant.py" \
++        "$1/$INT" "$probe")" || return 1
++  echo "      FORK moved: $old -> $probe"
++  return 0
++}
++
++mut_commit_mutate_nonobs() {
++  printf '\n# T393-MUTATION-MARKER\n' >> "$1/$CAP/$NONOBS" || return 1
++  git -C "$1" add -- "$CAP/$NONOBS" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed mutation of a fork-sha NON-observation entry" || return 1
++}
++
++mut_commit_mutate_nonobs_laundered() {
++  printf '\n# T393-MUTATION-MARKER\n' >> "$1/$CAP/$NONOBS" || return 1
++  python3 "$SRC/.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py" \
++    "$1" "$NONOBS" || return 1
++  git -C "$1" add -- "$CAP/$NONOBS" "$MAN" || return 1
++  git -C "$1" commit -q -m "T393 probe: committed mutation of a fork-sha NON-observation entry, manifest row rewritten to match" || return 1
++}
++
++# ---------------------------------------------------------------------------------------
++run_case() {   # run_case <name> <mutfn> <expect_before> <expect_after>
++  local name="$1" mutfn="$2" exp_before="$3" exp_after="$4" ref tag d rc sec10 verdict named
++  for ref in BEFORE AFTER; do
++    if [ "$ref" = "BEFORE" ]; then
++      tag="$BEFORE"; d="$SCROOT/before"
++    else
++      tag="$AFTER"; d="$SCROOT/after"
++    fi
++    if ! prepare "$d" "$tag"; then
++      echo "REFUSED: could not prepare $d at $tag" >&2
++      exit 3
++    fi
++    echo "--- $name @ $ref ($tag)"
++    if ! "$mutfn" "$d"; then
++      echo "REFUSED: mutation $mutfn failed to apply in $d. A mutation that did not apply" >&2
++      echo "         would turn this case into a control and report a false GREEN." >&2
++      exit 3
++    fi
++    ( cd "$d" && bash "$RUNALL" ) > "$OUT/case-$name-$ref.txt" 2>&1
++    rc=$?
++    sec10="$(awk '/^  10 /{print $3}' "$OUT/case-$name-$ref.txt" | tail -1)"
++    if [ -z "$sec10" ]; then sec10="none"; fi
++    verdict="$(sed -n 's/.*RUN-ALL VERDICT: \([A-Z]*\).*/\1/p' "$OUT/case-$name-$ref.txt" | tail -1)"
++    if [ -z "$verdict" ]; then verdict="none"; fi
++    # SECTION 4's OUTPUT LINE, not any sentence that quotes it. The first spelling of this
++    # column was `grep -c -- "DIFF $FORKOBS"`, and the control row at the POST-fix ref came
++    # back 1 on an UNMUTATED tree: the hit was section 10's own new BANNER, which quotes
++    # T382's finding verbatim ("...section 4 printed DIFF out/A2-000-... BY NAME"). A column
++    # that counts the harness describing the defect instead of the harness detecting it is a
++    # false positive of exactly the shape this whole review is about, so it is anchored to
++    # the printed form -- `        DIFF <name>` at line start, nothing after it. Found by
++    # reading a control row that should have been 0 and was 1; the first drive was killed and
++    # re-run from the corrected bytes rather than post-processed, so the committed matrix and
++    # the committed instrument are the same bytes (T356/P-22 spelling).
++    named="$(grep -c -E -- "^ +DIFF ${FORKOBS}\$" "$OUT/case-$name-$ref.txt")"
++    local expect result
++    if [ "$ref" = "BEFORE" ]; then expect="$exp_before"; else expect="$exp_after"; fi
++    if [ "$sec10" = "$expect" ]; then result="as expected"; else
++      result="*** UNEXPECTED ***"; FAILURES=$((FAILURES + 1)); fi
++    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
++      "$name" "$ref" "$sec10" "$rc" "$verdict" "$named" "$expect" "$result" >> "$MATRIX"
++    echo "      section10=$sec10  run-all rc=$rc  verdict=$verdict  sec4-named-mutation=$named  expected=$expect  $result"
++  done
++}
++
++echo "############ T393 RED-BEFORE-GREEN DRIVE"
++echo "BEFORE = $BEFORE   (T374's section 10, two arms, untied constant)"
++echo "AFTER  = $AFTER   (T393's section 10, five arms, cross-checked constant)"
++echo
++
++# name                                   mutation                              BEFORE AFTER
++run_case control                         mut_control                           0 0
++run_case f1-13-commit-mutate-postfork    mut_commit_mutate_postfork            0 1
++run_case f1-14-commit-delete-postfork    mut_commit_delete_postfork            0 1
++run_case f1-15-commit-add-fabricated     mut_commit_add_fabricated             0 1
++run_case f1-16-untracked-fabricated      mut_untracked_fabricated              0 1
++run_case f1-09-symlink-identical-bytes   mut_symlink_identical_bytes           0 1
++run_case f4a-control-commit-mutate-forkobs mut_commit_mutate_forkobs           1 1
++run_case f4b-move-fork-constant          mut_move_fork_constant                0 2
++run_case f3-commit-mutate-nonobs         mut_commit_mutate_nonobs              0 1
++run_case f3b-commit-mutate-nonobs-laundered mut_commit_mutate_nonobs_laundered 0 1
++# DISCLOSED RESIDUAL, driven so the boundary statement is a measurement and not a hope.
++# Expected UNDETECTED at BOTH refs: a committed mutation of a post-fork observation whose
++# manifest row is rewritten in the same commit has no baseline older than HEAD anywhere in
++# this repository. The docstring says so; this row is the evidence that it says so truly.
++run_case f1-13b-postfork-laundered-RESIDUAL mut_commit_mutate_postfork_laundered 0 0
++
++echo
++echo "############ MATRIX"
++cat "$MATRIX"
++echo
++echo "unexpected results: $FAILURES"
++if [ "$FAILURES" -ne 0 ]; then
++  echo "DRIVE VERDICT: FAIL — a case did not produce the expected exit code. Read the rows"
++  echo "marked *** UNEXPECTED *** above and the transcript named for each."
++  exit 1
++fi
++echo "DRIVE VERDICT: PASS — every case was RED at $BEFORE and GREEN at $AFTER, except the"
++echo "two rows that are deliberately expected to be unchanged: the f4a control (ARM A caught"
++echo "it at both refs) and the f1-13b disclosed residual (undetected at both, which is what"
++echo "the boundary statement in verify-capture-integrity.py says)."
++exit 0
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/11-pick-targets.py b/.softhouse/capture/t393-t382-conditions/instruments/11-pick-targets.py
+new file mode 100644
+index 00000000..47a58135
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/11-pick-targets.py
+@@ -0,0 +1,74 @@
++#!/usr/bin/env python3
++"""T393 — pick the mutation targets BY MEASUREMENT, so the drive carries no path literal.
++
++Prints exactly three lines, each `KEY<TAB>capture-relative path`:
++    FORKOBS    an observation that EXISTED at the fork sha        (ARM A can see it)
++    POSTFORK   an observation captured AFTER the fork sha         (ARM A cannot see it)
++    NONOBS     a fork-sha manifest entry outside out/ and req/    (ARM E's population)
++
++Deterministic: the sorted-first member of each set. Chosen this way rather than typed so
++that the drive script contains no repo path literal that could rot into a dead path, and so
++the choice is re-derivable from the repository instead of from a transcript.
++
++REFUSES (exit 2) if any of the three sets is empty — an empty set here would silently turn a
++mutation case into a no-op, which is the vacuous pass this whole review is about.
++"""
++import os
++import pathlib
++import subprocess
++import sys
++
++ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[4])
++CAPREL = ".softhouse/capture/tierA-a2"
++OBS_DIRS = ("out", "req")
++FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"
++MANREL = CAPREL + "/MANIFEST.sha256"
++
++
++def g(*args):
++    r = subprocess.run(["git", "-C", ROOT, *args], capture_output=True)
++    if r.returncode != 0:
++        sys.stderr.write("REFUSED: git %s exited %d\n" % (" ".join(args), r.returncode))
++        sys.exit(2)
++    return r.stdout
++
++
++def obs(ref):
++    out = []
++    for line in g("ls-tree", "-r", "--name-only", ref, "--", CAPREL).decode().split("\n"):
++        line = line.strip()
++        if line.startswith(CAPREL + "/"):
++            rel = line[len(CAPREL) + 1:]
++            if rel.split("/")[0] in OBS_DIRS:
++                out.append(rel)
++    return sorted(out)
++
++
++fork_obs = obs(FORK)
++head_obs = obs("HEAD")
++post = sorted(set(head_obs) - set(fork_obs))
++
++non_obs = []
++for line in g("show", FORK + ":" + MANREL).decode().split("\n"):
++    line = line.rstrip()
++    if not line or line.startswith("#"):
++        continue
++    parts = line.split(None, 1)
++    if len(parts) == 2:
++        name = parts[1].lstrip("*").strip()
++        if name.split("/")[0] not in OBS_DIRS:
++            non_obs.append(name)
++non_obs.sort()
++
++if not fork_obs or not post or not non_obs:
++    sys.stderr.write("REFUSED: empty target set fork=%d post=%d nonobs=%d\n"
++                     % (len(fork_obs), len(post), len(non_obs)))
++    sys.exit(2)
++
++print("FORKOBS\t" + fork_obs[0])
++print("POSTFORK\t" + post[0])
++# manifest.py is the file T382 drove FINDING 3 on: the script that WRITES the manifest.
++# Prefer it when present so this drive reproduces T382's case exactly; otherwise take the
++# sorted-first member, and say which was used.
++print("NONOBS\t" + ("manifest.py" if "manifest.py" in non_obs else non_obs[0]))
++sys.exit(0)
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py b/.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py
+new file mode 100644
+index 00000000..d384345d
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/12-relaunder-manifest.py
+@@ -0,0 +1,61 @@
++#!/usr/bin/env python3
++"""T393 — LAUNDER one MANIFEST.sha256 row to match the mutated bytes on disk.
++
++Used only by 10-drive-conditions.sh, and only inside a scratch clone. Two of T393's cases
++are about laundering, and they point in opposite directions:
++
++  f3b   mutate a fork-sha NON-observation entry AND rewrite its manifest row.
++        ARM E must STILL catch it, because ARM E compares against the IMMUTABLE fork blob
++        and never reads a recorded digest. This case is what makes ARM E worth having
++        rather than being a restatement of ARM C.
++
++  f1-13b  mutate a POST-FORK observation AND rewrite its manifest row.
++        Nothing catches it, at either ref. That is the DISCLOSED RESIDUAL: there is no
++        committed baseline older than HEAD for those 632 observations. Driving it is how
++        the boundary statement in verify-capture-integrity.py's docstring becomes a
++        measurement instead of a hope.
++
++argv: <clone root> <capture-relative name>.  REFUSES (exit 2) if the row is not there —
++a laundering step that silently did nothing would turn a residual case into a caught one
++and report the wrong colour.
++"""
++import hashlib
++import os
++import sys
++
++if len(sys.argv) != 3:
++    sys.stderr.write("usage: 12-relaunder-manifest.py <clone-root> <capture-relative-name>\n")
++    sys.exit(2)
++
++CLONE, NAME = sys.argv[1], sys.argv[2]
++CAPREL = ".softhouse/capture/tierA-a2"
++MANPATH = os.path.join(CLONE, CAPREL, "MANIFEST.sha256")
++TARGET = os.path.join(CLONE, CAPREL, NAME)
++
++with open(TARGET, "rb") as fh:
++    digest = hashlib.sha256(fh.read()).hexdigest()
++
++with open(MANPATH, "r", encoding="utf-8") as fh:
++    lines = fh.read().split("\n")
++
++hits = 0
++for i, line in enumerate(lines):
++    stripped = line.rstrip()
++    if not stripped or stripped.startswith("#"):
++        continue
++    parts = stripped.split(None, 1)
++    if len(parts) != 2:
++        continue
++    if parts[1].lstrip("*").strip() == NAME:
++        lines[i] = line.replace(parts[0], digest, 1)
++        hits += 1
++
++if hits != 1:
++    sys.stderr.write("REFUSED: %s matched %d manifest rows, expected exactly 1.\n"
++                     % (NAME, hits))
++    sys.exit(2)
++
++with open(MANPATH, "w", encoding="utf-8") as fh:
++    fh.write("\n".join(lines))
++print("laundered manifest row for %s -> %s" % (NAME, digest))
++sys.exit(0)
+diff --git a/.softhouse/capture/t393-t382-conditions/instruments/13-move-fork-constant.py b/.softhouse/capture/t393-t382-conditions/instruments/13-move-fork-constant.py
+new file mode 100644
+index 00000000..9d98966d
+--- /dev/null
++++ b/.softhouse/capture/t393-t382-conditions/instruments/13-move-fork-constant.py
+@@ -0,0 +1,39 @@
++#!/usr/bin/env python3
++"""T393 — T382 FINDING 4's ONE-LINE MOVE, applied mechanically so it is exactly one line.
++
++Rewrites `FORK = "<40 hex>"` in the named copy of verify-capture-integrity.py to the given
++commit-ish, and prints the OLD value on stdout. Nothing else in the file is touched.
++
++The whole finding is that this is a ONE-LINE change to a constant nothing checked. Doing it
++by hand in a transcript would leave "one line" as a claim; doing it with a regex that
++REFUSES (exit 2) unless it matches exactly one occurrence makes it a measurement.
++
++argv: <path to verify-capture-integrity.py in a scratch clone> <new 40-hex commit-ish>
++"""
++import re
++import sys
++
++if len(sys.argv) != 3:
++    sys.stderr.write("usage: 13-move-fork-constant.py <path> <new-sha>\n")
++    sys.exit(2)
++
++PATH, NEW = sys.argv[1], sys.argv[2]
++if not re.fullmatch(r"[0-9a-f]{40}", NEW):
++    sys.stderr.write("REFUSED: %r is not a 40-hex commit-ish.\n" % NEW)
++    sys.exit(2)
++
++with open(PATH, "r", encoding="utf-8") as fh:
++    src = fh.read()
++
++pat = re.compile(r'^FORK = "([0-9a-f]{40})"$', re.M)
++hits = pat.findall(src)
++if len(hits) != 1:
++    sys.stderr.write("REFUSED: found %d `FORK = \"<sha>\"` assignments in %s, expected "
++                     "exactly 1. The one-line move is only one line if there is one line.\n"
++                     % (len(hits), PATH))
++    sys.exit(2)
++
++with open(PATH, "w", encoding="utf-8") as fh:
++    fh.write(pat.sub('FORK = "%s"' % NEW, src, count=1))
++print(hits[0])
++sys.exit(0)
+diff --git a/.softhouse/reviews/A2-11/run-all.sh b/.softhouse/reviews/A2-11/run-all.sh
+index 6b164f1d..380fbab1 100644
+--- a/.softhouse/reviews/A2-11/run-all.sh
++++ b/.softhouse/reviews/A2-11/run-all.sh
+@@ -103,6 +103,21 @@ sec() {
+   echo "NAME and run-all.sh still exited 0 printing RUN-ALL VERDICT: PASS. T374 reproduced it"
+   echo "in a scratch clone before repairing it. THE REPAIR IS SECTION 10, which asks the"
+   echo "integrity question where GREEN is the adjudicated value. Section 4 keeps the drift arm."
++  echo
++  echo "T393 / T382 F-3 -- AND THIS SECTION STAYED SATURATED FOR 27 MORE FILES UNTIL NOW."
++  echo "T374 lifted the saturation for out/ and req/ ONLY. The fork-sha manifest holds 430"
++  echo "entries; 403 are observations under out/ or req/, and the other 27 -- cap.sh,"
++  echo "manifest.py, the mkreq*.py, the run-*.sh, the sql, and the red/green evidence that"
++  echo "grades them: the scripts that PRODUCED the observations -- were still graded ONLY by"
++  echo "this saturated arm. T382 drove it: mutate manifest.py, this section prints"
++  echo "DIFF manifest.py BY NAME, byte-identical 428 -> 427, and run-all.sh still exits 0"
++  echo "printing RUN-ALL VERDICT: PASS. T362's F-1 verbatim, one directory over."
++  echo "THE REPAIR IS SECTION 10's ARM E, which adjudicates those same 27 where GREEN is the"
++  echo "expected value, with the two known differences (CAPTURE-PLAN.md, cap.sh) adjudicated"
++  echo "BY DIGEST rather than only by name. SO: NOTHING IN THE FORK-SHA MANIFEST IS COVERED"
++  echo "BY THIS SATURATED SECTION ALONE ANY MORE. What this section still uniquely carries is"
++  echo "the DRIFT measurement (the pinned 571-vs-1139 counts) and the branch-shape arm, and"
++  echo "those are the only reasons it is adjudicated RED."
+   sec 4 1 python3 "$DIR/verify-manifest-independently.py"
+   echo
+   echo "############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0"
+@@ -169,10 +184,30 @@ sec() {
+   echo "but section 4 is adjudicated RED for manifest drift, and a status that cannot get"
+   echo "worse cannot carry new information. So the integrity question is asked HERE, in a"
+   echo "section adjudicated GREEN, where a mutated or deleted observation MOVES the section"
+-  echo "and fails the aggregate verdict. Two arms: against the literal fork sha (403"
+-  echo "observations, the historical baseline) and against HEAD (every observation tracked"
+-  echo "today, including the 632 captured since). An empty population is REFUSED with exit 2,"
+-  echo "not passed."
++  echo "and fails the aggregate verdict."
++  echo
++  echo "T393 / T382 F-1, F-3, F-4 -- FIVE ARMS, NOT TWO, AND A CALIBRATION THAT IS CHECKED."
++  echo "T374 shipped two arms: the literal fork sha (403 observations) and HEAD (all 1035,"
++  echo "including the 632 captured since). T382 measured what they could not see and drove"
++  echo "every case with a control. Both arms are handed a population by a git listing, so:"
++  echo "  a COMMITTED DELETION took HEAD's population 1035 -> 1034 and printed VERDICT: PASS;"
++  echo "  a COMMITTED ADDITION of a fabricated observation took it to 1036, PASS;"
++  echo "  an UNTRACKED fabricated observation in out/ was never handed to any arm at all;"
++  echo "  a SYMLINK with identical bytes passed, because open() follows symlinks."
++  echo "And section 10's OWN baseline constant was tied to nothing: T382 moved it ONE LINE"
++  echo "forward to a commit containing a mutation, ARM A's population collapsed 403 -> 1035"
++  echo "onto ARM B's, the mutation went invisible, and run-all.sh exited 0 printing PASS while"
++  echo "section 4 printed DIFF out/A2-000-glaccounts-preexisting.http BY NAME."
++  echo "T393 closes all of it: ARM C reads the tracked MANIFEST.sha256 as a PATH-SET and as"
++  echo "RECOMPUTED digests (deletion, addition); ARM D walks the DISK with lstat (untracked,"
++  echo "symlink); ARM E covers the 27 fork-sha manifest entries outside out/ and req/ that"
++  echo "section 4's saturated arm was the only thing looking at; the fork sha is CROSS-CHECKED"
++  echo "against the two tracked files that also carry it; and ARM A's population is PINNED at"
++  echo "403 -- a property of an immutable commit, so it cannot drift. An empty population, a"
++  echo "population off its pin, or an untied constant is REFUSED with exit 2, not passed."
++  echo "What is still NOT closed is named in the file's docstring, not left to be found: a"
++  echo "committed change to a POST-FORK observation that ALSO rewrites its manifest row in"
++  echo "the same commit. There is no committed baseline older than HEAD for those 632."
+   sec 10 0 python3 "$DIR/verify-capture-integrity.py"
+   echo
+   echo "############ VERDICT — every section against its adjudicated exit code"
+diff --git a/.softhouse/reviews/A2-11/verify-capture-integrity.py b/.softhouse/reviews/A2-11/verify-capture-integrity.py
+index 2ba79a73..955b0377 100644
+--- a/.softhouse/reviews/A2-11/verify-capture-integrity.py
++++ b/.softhouse/reviews/A2-11/verify-capture-integrity.py
+@@ -1,6 +1,9 @@
+ #!/usr/bin/env python3
+ """T374 (T362 F-1) — EVIDENCE INTEGRITY for the tierA-a2 captured oracle observations,
+ with its OWN exit code, adjudicated GREEN, so run-all.sh's aggregate verdict can see it.
++T393 (T382 F-1/F-3/F-4) — widened: the calibration is now CROSS-CHECKED, the population is
++PINNED, the manifest is a third arm, the disk is walked, and section 4's remaining 27
++saturated entries are adjudicated here.
+ 
+ WHY THIS FILE EXISTS — the measurement, not the theory.
+ 
+@@ -30,27 +33,113 @@ defect class T357 removed one level up: a status that cannot get worse carries n
+ >>> the integrity question is asked HERE, where GREEN is the adjudicated value and any
+ >>> deviation therefore moves the section and fails the aggregate.
+ 
++============================================================================================
++T393 — WHAT T382 MEASURED ABOUT THE T374 VERSION OF THIS FILE, AND WHAT EACH ARM NOW CLOSES.
++============================================================================================
++T382 reviewed T374 and returned APPROVED WITH CONDITIONS on four findings, all driven. Two of
++them are about THIS FILE and they are the reason for every arm added below.
++
++  T382 FINDING 4 — the tripwire had a switch on it. Section 4 ties its copy of the fork sha
++  to another tracked file (`prove-a2-7-additive.py hard-codes the literal sha`). The T374
++  version of this file carried the SAME literal tied to NOTHING, and asserted nothing about
++  ARM A's population size. Moving that one constant forward to a commit that already contains
++  a mutation collapsed ARM A's population 403 -> 1035, the two arms stopped being independent,
++  and the mutation ARM A had caught a moment earlier became invisible — while section 4 went
++  on printing `DIFF out/A2-000-glaccounts-preexisting.http` BY NAME and run-all.sh exited 0
++  printing `RUN-ALL VERDICT: PASS`. That is T362's F-1 verbatim, on the branch that fixes it.
++  CLOSED BY: section 1's cross-check (the literal must appear, in the same spelling section 4
++  uses, in TWO tracked files) and section 2's ARM A cardinality pin (403 — a property of an
++  IMMUTABLE commit, so it cannot drift; if it is not 403 the selector or the constant moved).
++
++  T382 FINDING 1 — the uncovered set was larger than T374 disclosed. T374 disclosed committed
++  MUTATION of a post-fork observation. T382 measured four more shapes outside both arms and
++  outside the disclosure, all reported `VERDICT: PASS`, exit 0:
++      committed DELETION of a post-fork observation  (HEAD population 1035 -> 1034, PASS)
++      committed ADDITION of a fabricated observation (HEAD population 1035 -> 1036, PASS)
++      an UNTRACKED fabricated observation left in out/
++      a regular file replaced by a SYMLINK whose target has IDENTICAL bytes
++  Root cause, stated by T382 and reproduced here: T374's own F-2 repair is the rule "an empty
++  population is a SELECTOR failure, not a clean tree". Sections 2 applies that rule AT ZERO
++  and stops. It never pins the population's CARDINALITY, so a shrink of up to 632 (every
++  post-fork observation, with both out/ and req/ still non-empty so the refusal never fires)
++  or any growth passes.
++  CLOSED BY: ARM C (the manifest) and ARM D (the disk walk), below.
++
++  T382 FINDING 2 — the artefact needed to close it ALREADY EXISTS. T374's follow-up asked for
++  a new tracked `OBSERVATIONS.sha256`. `.softhouse/capture/tierA-a2/MANIFEST.sha256` already
++  IS one. T393 re-verified T382's counts independently before relying on them
++  (.softhouse/capture/t393-t382-conditions/out/00-t382-counts.txt, exit 0): 1139 rows, of
++  which 1035 under out/ or req/ — EXACTLY the tracked observation path-set — 0 tracked
++  observations without a row, 0 rows naming no tracked observation, 1035 digests agreeing
++  with disk and 0 disagreeing, and all 632 post-fork observations covered. It also holds 104
++  rows outside out/ and req/, all 104 agreeing with disk, covering every tracked file under
++  the capture directory except MANIFEST.sha256 itself (1139 = 1140 - 1). NO NEW ARTEFACT WAS
++  BUILT. A second one would have been a second thing to keep in step.
++
++  T382 FINDING 3 — the saturation class was closed at exactly ONE site. T382 audited every
++  section's return-code arithmetic: 3/5/6/7/8/9/10 cannot saturate, 1 is adjudicated by 9, 2
++  has the shape but is inert (it reads only frozen git blobs). Section 4 is LIVE and still
++  absorbed the 27 fork-sha manifest entries OUTSIDE out/ and req/ — cap.sh, manifest.py,
++  mkreq*.py, the run-*.sh, the sql, and the red/green evidence that grades them: the scripts
++  that PRODUCED the observations. Driven by T382 on manifest.py: 428 -> 427 byte-identical,
++  `DIFF manifest.py` printed BY NAME, and run-all.sh still EXIT 0, `RUN-ALL VERDICT: PASS`.
++  CLOSED BY: ARM E, which adjudicates those 27 here, where GREEN is the expected value.
++
+ WHAT THIS FILE DOES AND DOES NOT COVER (P-40 — the boundary is stated, not implied):
+   * COVERS   every file under .softhouse/capture/tierA-a2/{out,req}/ — the captured oracle
+-             observations and the request bodies that produced them — in two independent
+-             directions: against the LITERAL fork sha (the historical baseline section 4
+-             uses) and against HEAD (which also covers observations captured since).
++             observations and the request bodies that produced them — in FOUR independent
++             directions:
++               ARM A  against the LITERAL fork sha (the historical baseline section 4 uses),
++               ARM B  against HEAD (which also covers observations captured since),
++               ARM C  against the tracked MANIFEST.sha256, BOTH as a path-set equality and as
++                      a recomputed digest, which is what makes a committed DELETION or a
++                      committed ADDITION visible at all,
++               ARM D  against the DISK, which is what makes an UNTRACKED file and a SYMLINK
++                      substitution visible at all.
++  * COVERS   ARM E: the 27 entries in the fork-sha manifest that are NOT under out/ or req/ —
++             the capture scripts and the red/green evidence — against their fork-sha blobs,
++             with the two known differences adjudicated BY NAME AND BY DIGEST. This is the
++             population section 4's saturated third arm was the only thing looking at.
+   * DOES NOT COVER  other capture directories, .softhouse/vectors/, or obs/ under this
+              review. obs/ byte-identity is graded at the git-object level by the reviewer,
+              and the graded vector store is graded by conformance.sh. Named so that silence
+              here is distinguishable from not looking.
++  * DOES NOT CLOSE — stated exactly, because T382's whole finding was that the previous
++             disclosure was smaller than the measured gap, and an understated boundary is the
++             defect this file exists to punish:
++               (i)  A committed mutation, deletion or addition of a POST-FORK observation
++                    that ALSO rewrites the matching MANIFEST.sha256 row in the same commit.
++                    ARM A cannot see it (no fork blob), ARM B cannot see it (HEAD is the
++                    mutated commit), ARM C cannot see it (the manifest was laundered to
++                    agree), ARM D cannot see it (the file is tracked and regular). Closing
++                    this needs a committed baseline OLDER than HEAD for the post-fork
++                    observations, which does not exist and cannot be manufactured here. What
++                    T393 does change is the COST: it was one file edit, it is now one file
++                    edit plus a matching manifest row, both visible in one diff.
++               (ii) A mutation committed to the fork sha itself. Not reachable without
++                    rewriting main's history; section 1 checks the constant, not the object.
++               (iii) The 403 fork-sha observations are FULLY covered against laundering, by
++                    ARM A: it recomputes from the git blob and never reads a recorded digest,
++                    so rewriting the manifest does not help (T382 matrix case 17).
+ 
+ P-25: no floating point. The only numbers are counts from len() and sha256 hex digests.
+ P-24: the historical baseline is a LITERAL immutable sha, never `git merge-base`.
+ P-22: the comparator is driven RED against mutated bytes in memory before it is trusted, and
+-      end-to-end against a mutated file in a scratch copy by
+-      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh.
++      end-to-end against real mutated repositories in scratch clones by
++      .softhouse/capture/t374-t362-conditions/prove-t374-fixes-can-fail.sh (T374's seven
++      cases) and .softhouse/capture/t393-t382-conditions/instruments/10-drive-conditions.sh
++      (T393's seven, each run at the PRE-fix bytes and at the POST-fix bytes).
+ 
+ EXIT CODES
+-  0  every captured observation is byte-identical in both directions.
+-  1  at least one captured observation DIFFERS or is MISSING. Named, never counted only.
+-  2  REFUSED — the instrument could not measure (empty population, unusable git, missing
+-     baseline). A refusal is never reported as a pass.
++  0  every captured observation is byte-identical in every direction, the manifest agrees
++     with the tracked set and with disk, the disk holds nothing else, and the 27 adjudicated
++     non-observation entries are exactly as adjudicated.
++  1  at least one captured observation DIFFERS, is MISSING, is EXTRA, or is not a regular
++     file; or an adjudicated non-observation entry moved. Named, never counted only.
++  2  REFUSED — the instrument could not measure, or its own calibration failed (empty
++     population, unusable git, missing baseline, a fork sha not carried by the two tracked
++     files that also carry it, a population whose size is not the pinned one). A refusal is
++     never reported as a pass.
+ """
+ import hashlib
+ import os
+@@ -62,10 +151,56 @@ import sys
+ # checkout root, under reviews/A2-11, so parents[3] IS that root. A2_11_ROOT overrides.
+ ROOT = os.environ.get("A2_11_ROOT") or str(pathlib.Path(__file__).resolve().parents[3])
+ CAPREL = ".softhouse/capture/tierA-a2"
++A2_11_REL = ".softhouse/reviews/A2-11"
+ OBS_DIRS = ("out", "req")
++MANIFEST_NAME = "MANIFEST.sha256"
++MANREL = CAPREL + "/" + MANIFEST_NAME
+ # LITERAL, immutable (P-24). A2-7's fork point; the same baseline section 4 uses.
+ FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"
+ 
++# T393 / T382 FINDING 4 — THE CALIBRATION IS TIED TO TRACKED FILES, NOT LEFT BARE.
++# Each entry is (repo-relative file, the EXACT assignment text that file must contain). The
++# spelling is section 4's: `check("prove-a2-7-additive.py hard-codes the literal sha", ...)`.
++# Moving FORK in this file alone now REFUSES, because neither tie is satisfied by the new
++# value. Moving it in all three is a three-file diff that says what it is doing.
++FORK_TIES = (
++    (CAPREL + "/prove-a2-7-additive.py", 'BASELINE = "%s"' % FORK),
++    (A2_11_REL + "/verify-manifest-independently.py", 'FORK = "%s"' % FORK),
++)
++
++# T393 / T382 FINDING 4 — ARM A's POPULATION SIZE, PINNED.
++# 403 is a property of the tree at an IMMUTABLE commit, so unlike section 4's manifest counts
++# it CANNOT drift with the rig: no future task can change how many observation files existed
++# at 12a7f8d9. If this number is not 403, either FORK has been moved or the selector below
++# stopped selecting, and both are instrument failures, not clean corpora.
++FORK_OBS_PIN = 403
++# Same argument for the fork-sha MANIFEST's non-observation rows — ARM E's population.
++FORK_NONOBS_PIN = 27
++
++# T393 / T382 FINDING 3 — THE TWO ADJUDICATED DIFFERENCES IN ARM E's POPULATION.
++# Section 4's banner has always NAMED these two as "rig tooling and a plan document" that have
++# changed since the fork sha. Naming is where section 4 stops, and naming alone leaves them as
++# the one place in the capture directory where a further mutation is expected. So they are
++# adjudicated here by NAME AND BY DIGEST, in both directions: the fork blob must still hash to
++# what it hashed to, and disk must still hash to what it hashes to today. A FURTHER mutation
++# of either file moves this section; so does a REVERT to the fork bytes, because a vanished
++# adjudicated difference is a move in the other direction and section 9 already sets that
++# precedent for section 1's three permanent failures.
++#
++# TO RE-ADJUDICATE after a deliberate edit: run
++#   python3 .softhouse/capture/t393-t382-conditions/instruments/00-verify-t382-counts.py
++# which prints both digests for every entry in this population that differs, and record the
++# new value HERE with the reason. Do not delete the entry — an unadjudicated difference in
++# this population is exactly what T382 measured as still-open.
++ADJUDICATED_DIFFERENT = {
++    "CAPTURE-PLAN.md": (
++        "7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd",
++        "da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd"),
++    "cap.sh": (
++        "67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a",
++        "6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62"),
++}
++
+ fails = []
+ refusals = []
+ 
+@@ -91,6 +226,20 @@ def sha(b):
+     return hashlib.sha256(b).hexdigest()
+ 
+ 
++def parse_manifest(blob):
++    """name -> hex digest. Same spelling as verify-manifest-independently.py's parser."""
++    out = {}
++    for line in blob.decode("utf-8").split("\n"):
++        line = line.rstrip()
++        if not line or line.startswith("#"):
++            continue
++        parts = line.split(None, 1)
++        if len(parts) != 2:
++            continue
++        out[parts[1].lstrip("*").strip()] = parts[0]
++    return out
++
++
+ print("=== 0. THE INSTRUMENT ITSELF — driven RED before it is trusted (P-22) ===")
+ _a = b"HTTP/1.1 200 OK\r\n\r\n{\"id\":2}\n"
+ _b = _a + b"\nT374-SELFTEST-MARKER\n"
+@@ -98,9 +247,18 @@ check("the comparator reports IDENTICAL on identical bytes", sha(_a) == sha(_a),
+ check("the comparator reports DIFFERENT on bytes with ONE line appended — the exact "
+       "mutation shape T362 used to prove F-1", sha(_a) != sha(_b),
+       "%s vs %s" % (sha(_a)[:16], sha(_b)[:16]))
++_m = parse_manifest(b"# comment\n%s  out/x.http\n\n%s *req/y.json\n" % (b"a" * 64, b"b" * 64))
++check("the manifest parser reads a two-column list, strips the binary-mode star, and skips "
++      "comments and blank lines", _m == {"out/x.http": "a" * 64, "req/y.json": "b" * 64},
++      repr(_m))
+ 
+ print()
+-print("=== 1. THE BASELINE EXISTS — a missing baseline is REFUSED, never read as clean ===")
++print("=== 1. THE BASELINE EXISTS, AND ITS CALIBRATION IS CROSS-CHECKED (T382 FINDING 4) ===")
++print("    T382: 'a tripwire whose calibration is a bare unchecked constant is a tripwire")
++print("    with a switch on it.' Moving FORK forward to a commit that CONTAINS a mutation")
++print("    collapsed ARM A onto ARM B (403 -> 1035) and the mutation went invisible while")
++print("    section 4 printed it BY NAME and run-all.sh printed PASS. So the constant is now")
++print("    tied to tracked files, in the same spelling section 4 already uses for its copy.")
+ have_fork = subprocess.run(["git", "-C", ROOT, "cat-file", "-e", FORK + "^{commit}"],
+                            capture_output=True).returncode == 0
+ if not have_fork:
+@@ -111,12 +269,35 @@ if not have_fork:
+ else:
+     print("  PASS  literal baseline sha %s is present" % FORK[:12])
+ 
++for rel, needle in FORK_TIES:
++    try:
++        with open(os.path.join(ROOT, rel), "r", encoding="utf-8") as fh:
++            src = fh.read()
++    except OSError as exc:
++        refuse("%s could not be read, so this file's fork sha is tied to nothing: %r"
++               % (rel, exc),
++               "The tie is the calibration. An untied constant is the T382 FINDING 4 defect,",
++               "and reporting PASS on an unverifiable calibration is how it stayed invisible.")
++        continue
++    if needle in src:
++        print("  PASS  %s carries `%s`" % (os.path.basename(rel), needle))
++    else:
++        refuse("%s does NOT carry `%s`." % (rel, needle),
++               "Either this file's FORK constant was moved, or that file's was. Section 10",
++               "cannot tell which, and it will not guess: a baseline that no longer agrees",
++               "with the two tracked files that also carry it is a CALIBRATION failure and",
++               "is REFUSED, never reported as a clean corpus.")
++
+ print()
+-print("=== 2. POPULATION — enumerated from the fork tree AND from HEAD ===")
++print("=== 2. POPULATION — enumerated from the fork tree AND from HEAD, and PINNED ===")
+ print("    An EMPTY population is a SELECTOR failure, not a clean tree: this repository")
+ print("    tracks captured oracle observations under %s/{out,req}/ and always" % CAPREL)
+ print("    has. An empty census passes everything. REFUSED. (Same spelling as")
+ print("    guard_guards_dir_registration in conformance.sh — one idea, one spelling.)")
++print("    T382 FINDING 1: applying that rule AT ZERO and stopping is not enough. A")
++print("    population that silently shrank by up to 632, or grew by any number of")
++print("    fabricated files, is the same class of selector failure one step short of empty.")
++print("    ARM A's size is pinned below; ARM B's is pinned by the manifest in ARM C.")
+ 
+ fork_paths = []
+ if have_fork:
+@@ -152,6 +333,17 @@ if not head_paths or any(v == 0 for v in per_dir_head.values()):
+     refuse("the HEAD observation population is EMPTY or missing a whole directory: %s"
+            % per_dir_head,
+            "SELECTOR failure. REFUSED.")
++if have_fork and len(fork_paths) != FORK_OBS_PIN:
++    refuse("ARM A's population is %d observations, and it is PINNED at %d."
++           % (len(fork_paths), FORK_OBS_PIN),
++           "This number is a property of an IMMUTABLE commit. It cannot drift with the rig,",
++           "so a disagreement means the FORK constant moved or the selector stopped",
++           "selecting. T382 drove exactly this: moving FORK forward to a later commit takes",
++           "ARM A's population to ARM B's, the two arms stop being independent, and a",
++           "mutation ARM A would have caught becomes invisible. REFUSED.")
++elif have_fork:
++    print("  PASS  ARM A's population is the pinned %d (a property of an immutable commit)"
++          % FORK_OBS_PIN)
+ 
+ print()
+ print("=== 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===")
+@@ -231,15 +423,233 @@ check("NO captured oracle observation tracked at HEAD is missing from the workin
+       not b_missing, "missing=%d" % len(b_missing))
+ 
+ print()
+-print("=== 5. POSITIVE CONTROL — the two arms actually READ bytes ===")
++print("=== 5. ARM C — the tracked MANIFEST, as a PATH-SET and as RECOMPUTED DIGESTS ===")
++print("    T382 FINDING 1/2. ARMs A and B compare files they were HANDED; neither can see a")
++print("    file that was never handed to them, which is why a committed DELETION took the")
++print("    HEAD population 1035 -> 1034 and a committed ADDITION took it to 1036, both")
++print("    reporting VERDICT: PASS. %s is a TRACKED, per-file digest list" % MANIFEST_NAME)
++print("    whose out/ + req/ row-set is EXACTLY the tracked observation path-set. Comparing")
++print("    the two SETS is what makes a deletion and an addition visible at all.")
++try:
++    with open(os.path.join(ROOT, MANREL), "rb") as fh:
++        manifest = parse_manifest(fh.read())
++except OSError as exc:
++    manifest = {}
++    refuse("%s could not be read: %r" % (MANREL, exc),
++           "It is the third arm's whole population. Without it ARM C is not a passing arm,",
++           "it is an absent one. REFUSED.")
++
++man_obs = {k: v for k, v in manifest.items() if k.split("/")[0] in OBS_DIRS}
++tracked_rel = set(p[len(CAPREL) + 1:] for p in head_paths)
++print("      manifest rows total                  : %d" % len(manifest))
++print("      manifest rows under out/ or req/     : %d" % len(man_obs))
++print("      observations tracked at HEAD         : %d" % len(tracked_rel))
++
++if manifest and not man_obs:
++    refuse("the manifest holds %d rows and NONE of them is under out/ or req/."
++           % len(manifest),
++           "SELECTOR failure — an empty ARM C population passes every observation.",
++           "REFUSED.")
++
++no_row = sorted(tracked_rel - set(man_obs))
++no_file = sorted(set(man_obs) - tracked_rel)
++for name in no_row[:20]:
++    print("        ADDED-WITHOUT-A-ROW  %s" % name)
++for name in no_file[:20]:
++    print("        ROW-WITHOUT-A-FILE   %s" % name)
++check("every observation tracked at HEAD has a MANIFEST row — a file ADDED to the corpus "
++      "without one is a fabrication, not a capture",
++      not no_row, "tracked observations with no manifest row: %d %s" % (len(no_row), no_row[:5]))
++check("every MANIFEST row under out/ or req/ names an observation tracked at HEAD — a row "
++      "whose file is gone is a DELETION, and the population moving is not a clean tree",
++      not no_file, "manifest rows naming no tracked observation: %d %s"
++      % (len(no_file), no_file[:5]))
++
++c_agree = 0
++c_disagree = []
++c_unreadable = []
++for name in sorted(man_obs):
++    try:
++        with open(os.path.join(ROOT, CAPREL, name), "rb") as fh:
++            body = fh.read()
++    except OSError as exc:
++        c_unreadable.append((name, repr(exc)))
++        continue
++    if sha(body) == man_obs[name]:
++        c_agree += 1
++    else:
++        c_disagree.append((name, man_obs[name], sha(body)))
++print("      manifest digest agrees with disk     : %d" % c_agree)
++print("      DISAGREES                            : %d" % len(c_disagree))
++print("      unreadable                           : %d" % len(c_unreadable))
++for name, want, got in c_disagree[:20]:
++    print("        MANIFEST MISMATCH %s\n             manifest %s\n             disk     %s"
++          % (name, want, got))
++for name, exc in c_unreadable[:20]:
++    print("        UNREADABLE %s  %s" % (name, exc))
++check("every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk",
++      not c_disagree and not c_unreadable,
++      "agree=%d disagree=%d unreadable=%d" % (c_agree, len(c_disagree), len(c_unreadable)))
++
++print()
++print("=== 6. ARM D — THE DISK, walked. Nothing tracked ARMs A-C were never handed. ===")
++print("    T382 FINDING 1, cases 16 and 09. ARMs A, B and C all start from a git or manifest")
++print("    listing, so an UNTRACKED fabricated observation sitting in out/ is invisible to")
++print("    all three — nobody hands it to them. And open(path,'rb') FOLLOWS SYMLINKS, so a")
++print("    regular file replaced by a symlink to identical bytes reports PASS: the bytes are")
++print("    right at that instant, but the file is no longer the tracked object and its")
++print("    content is thereafter controlled from outside the repository. This arm starts")
++print("    from the DISK instead, and uses lstat, which does not follow.")
++disk_rel = []
++disk_links = []
++disk_odd = []
++walk_missing = []
++for d in OBS_DIRS:
++    base = os.path.join(ROOT, CAPREL, d)
++    if not os.path.isdir(base):
++        walk_missing.append(d)
++        continue
++    for dirpath, _dirnames, filenames in os.walk(base):
++        for fn in filenames:
++            full = os.path.join(dirpath, fn)
++            rel = os.path.relpath(full, os.path.join(ROOT, CAPREL))
++            disk_rel.append(rel)
++            if os.path.islink(full):
++                disk_links.append(rel)
++            elif not os.path.isfile(full):
++                disk_odd.append(rel)
++print("      files on disk under out/ + req/      : %d" % len(disk_rel))
++print("      of those that are SYMLINKS           : %d" % len(disk_links))
++print("      of those that are neither file nor link: %d" % len(disk_odd))
++if walk_missing:
++    refuse("observation directories absent from disk: %s" % walk_missing,
++           "SELECTOR failure — a walk over a directory that is not there finds nothing and",
++           "reports nothing wrong. REFUSED.")
++if not walk_missing and not disk_rel:
++    refuse("the disk walk under out/ and req/ found NOTHING.",
++           "SELECTOR failure. A zero-difference table over an empty walk is a vacuous",
++           "pass. REFUSED.")
++
++extra_on_disk = sorted(set(disk_rel) - tracked_rel)
++absent_on_disk = sorted(tracked_rel - set(disk_rel))
++for name in extra_on_disk[:20]:
++    print("        UNTRACKED %s" % name)
++for name in absent_on_disk[:20]:
++    print("        ABSENT FROM DISK %s" % name)
++for name in disk_links[:20]:
++    print("        SYMLINK %s -> %s" % (name, os.readlink(os.path.join(ROOT, CAPREL, name))))
++check("the disk holds NOTHING under out/ or req/ that is not tracked at HEAD — an untracked "
++      "observation is a fabrication no arm reading a git listing can see",
++      not extra_on_disk, "untracked: %d %s" % (len(extra_on_disk), extra_on_disk[:5]))
++check("every observation tracked at HEAD is present on disk as a real directory entry",
++      not absent_on_disk, "absent: %d %s" % (len(absent_on_disk), absent_on_disk[:5]))
++check("every observation on disk is a REGULAR FILE — a symlink is not the tracked object "
++      "even when its target's bytes are identical today",
++      not disk_links and not disk_odd,
++      "symlinks=%d other=%d" % (len(disk_links), len(disk_odd)))
++
++print()
++print("=== 7. ARM E — the 27 fork-sha manifest entries OUTSIDE out/ and req/ (T382 F-3) ===")
++print("    These are the scripts that PRODUCED the observations and the red/green evidence")
++print("    that grades them: cap.sh, manifest.py, the mkreq*.py, the run-*.sh, the sql. Until")
++print("    T393 the ONLY thing comparing them to the fork sha was section 4's third arm, and")
++print("    section 4 is adjudicated RED for drift, so that arm was SATURATED — T382 mutated")
++print("    manifest.py, section 4 printed `DIFF manifest.py` BY NAME, and run-all.sh still")
++print("    exited 0 printing RUN-ALL VERDICT: PASS. That is T362's F-1 verbatim, one")
++print("    directory over. The question is asked HERE too, where GREEN is adjudicated.")
++fork_nonobs = []
++if have_fork:
++    try:
++        fork_manifest = parse_manifest(git("show", FORK + ":" + MANREL))
++    except subprocess.CalledProcessError as exc:
++        fork_manifest = {}
++        refuse("the fork-sha manifest %s could not be read: %r" % (MANREL, exc),
++               "ARM E has no population without it. REFUSED.")
++    fork_nonobs = sorted(k for k in fork_manifest if k.split("/")[0] not in OBS_DIRS)
++    print("      entries in the fork-sha manifest     : %d" % len(fork_manifest))
++    print("      of those under out/ or req/          : %d" % (len(fork_manifest) - len(fork_nonobs)))
++    print("      NOT under out/ or req/ (ARM E)       : %d" % len(fork_nonobs))
++    if fork_manifest and len(fork_nonobs) != FORK_NONOBS_PIN:
++        refuse("ARM E's population is %d entries, and it is PINNED at %d."
++               % (len(fork_nonobs), FORK_NONOBS_PIN),
++               "Like ARM A's pin this is a property of an IMMUTABLE commit and cannot drift.",
++               "A disagreement means FORK moved or the selector broke. REFUSED.")
++
++e_identical = 0
++e_adjudicated = 0
++e_diff = []
++e_moved = []
++e_missing = []
++for name in fork_nonobs:
++    rel = CAPREL + "/" + name
++    try:
++        at_fork = git("show", FORK + ":" + rel)
++    except subprocess.CalledProcessError as exc:
++        e_missing.append((name, "not in the fork-point tree: %r" % exc))
++        continue
++    try:
++        with open(os.path.join(ROOT, rel), "rb") as fh:
++            today = fh.read()
++    except OSError as exc:
++        e_missing.append((name, repr(exc)))
++        continue
++    h_fork, h_today = sha(at_fork), sha(today)
++    if name in ADJUDICATED_DIFFERENT:
++        want_fork, want_today = ADJUDICATED_DIFFERENT[name]
++        if h_fork == want_fork and h_today == want_today:
++            e_adjudicated += 1
++        else:
++            e_moved.append((name, want_fork, h_fork, want_today, h_today))
++    elif h_fork == h_today:
++        e_identical += 1
++    else:
++        e_diff.append((name, h_fork, h_today))
++
++print("      byte-identical to the fork sha       : %d" % e_identical)
++print("      adjudicated-different, UNMOVED       : %d" % e_adjudicated)
++print("      DIFFER and are NOT adjudicated       : %d" % len(e_diff))
++print("      adjudicated but MOVED                : %d" % len(e_moved))
++print("      missing / unreadable                 : %d" % len(e_missing))
++for name, h0, h1 in e_diff:
++    print("        DIFF %s\n             fork  %s\n             today %s" % (name, h0, h1))
++for name, wf, gf, wt, gtd in e_moved:
++    print("        ADJUDICATION MOVED %s\n             fork  adjudicated %s got %s"
++          "\n             today adjudicated %s got %s" % (name, wf, gf, wt, gtd))
++for name, exc in e_missing:
++    print("        MISSING %s  %s" % (name, exc))
++check("NO capture script or evidence file from the fork-sha manifest has been MUTATED, "
++      "outside the two differences adjudicated by digest at the top of this file",
++      not e_diff, "unadjudicated differences: %d" % len(e_diff))
++check("the two ADJUDICATED differences are still exactly the differences adjudicated — a "
++      "further mutation moves this, and so does a revert to the fork bytes",
++      not e_moved and e_adjudicated == len(ADJUDICATED_DIFFERENT),
++      "unmoved=%d of %d, moved=%d" % (e_adjudicated, len(ADJUDICATED_DIFFERENT), len(e_moved)))
++check("NO entry from the fork-sha manifest is missing from disk or from the fork tree",
++      not e_missing, "missing=%d" % len(e_missing))
++
++print()
++print("=== 8. POSITIVE CONTROLS — every arm actually READ a non-empty population ===")
++print("    T374's F-2 rule, applied to all five arms and not only at zero: an arm that")
++print("    compared nothing reports no differences, and that is the vacuous pass this")
++print("    review exists to make impossible.")
+ check("ARM A compared a non-empty population", have_fork and len(fork_paths) > 0,
+       "%d observations at the fork sha" % len(fork_paths))
+ check("ARM B compared a non-empty population", len(head_paths) > 0,
+       "%d observations at HEAD" % len(head_paths))
++check("ARM C compared a non-empty manifest population", len(man_obs) > 0,
++      "%d manifest rows under out/ or req/" % len(man_obs))
++check("ARM D walked a non-empty disk population", len(disk_rel) > 0,
++      "%d files on disk under out/ + req/" % len(disk_rel))
++check("ARM E compared a non-empty population", len(fork_nonobs) > 0,
++      "%d non-observation entries in the fork-sha manifest" % len(fork_nonobs))
+ check("ARM B's population is a SUPERSET of ARM A's — every historical observation is still "
+       "tracked, so neither arm is silently narrower than it reads",
+       set(fork_paths) <= set(head_paths),
+       "in fork but not at HEAD: %s" % sorted(set(fork_paths) - set(head_paths))[:10])
++check("ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the "
++      "three populations agree and none of them is silently the empty intersection",
++      set(man_obs) == tracked_rel == set(disk_rel),
++      "manifest=%d tracked=%d disk=%d" % (len(man_obs), len(tracked_rel), len(disk_rel)))
+ 
+ print()
+ if refusals:
+@@ -258,13 +668,17 @@ if refusals:
+     sys.exit(2)
+ if fails:
+     print()
+-    print("VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST.")
+-    print("This is the evidence the whole program grades against. Do not repair it by")
+-    print("re-capturing and committing over the top: that launders the mutation into the")
++    print("VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST,")
++    print("OR THE POPULATION ITSELF HAS MOVED, OR A SCRIPT THAT PRODUCED THE CORPUS HAS")
++    print("CHANGED. This is the evidence the whole program grades against. Do not repair it")
++    print("by re-capturing and committing over the top: that launders the mutation into the")
+     print("record. Establish what changed, and why, first.")
+     sys.exit(1)
+ print()
+ print("VERDICT: PASS (exit 0). Every captured oracle observation under %s/{out,req}/"
+       % CAPREL)
+-print("is byte-identical to both its fork-sha blob and its HEAD blob.")
++print("is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;")
++print("the disk under those directories holds exactly the tracked set and nothing else, all")
++print("of it regular files; and the 27 fork-sha manifest entries outside them are unchanged")
++print("apart from the two adjudicated by digest above.")
+ sys.exit(0)

@@ -1,0 +1,86 @@
+targets: FORKOBS=out/A2-000-glaccounts-preexisting.http  POSTFORK=out/A2-200-glaccounts-live-precheck.http  NONOBS=manifest.py
+############ T393 RED-BEFORE-GREEN DRIVE
+BEFORE = 4eeed2b30d1e48eb9d71b8088de4622574dd2946   (T374's section 10, two arms, untied constant)
+AFTER  = fc51790dd7fc881c48f807aa80104368e9d07efb   (T393's section 10, five arms, cross-checked constant)
+
+--- control @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- control @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-13-commit-mutate-postfork @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-13-commit-mutate-postfork @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f1-14-commit-delete-postfork @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-14-commit-delete-postfork @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f1-15-commit-add-fabricated @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-15-commit-add-fabricated @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f1-16-untracked-fabricated @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-16-untracked-fabricated @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f1-09-symlink-identical-bytes @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-09-symlink-identical-bytes @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f4a-control-commit-mutate-forkobs @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=1  expected=1  as expected
+--- f4a-control-commit-mutate-forkobs @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=1  expected=1  as expected
+--- f4b-move-fork-constant @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      FORK moved: 12a7f8d9a3af4665fd5281a9f9c001d4f1276a53 -> 519ae1dc7bddb7eb69bc83d11ca7ceb0ea46852d
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=1  expected=0  as expected
+--- f4b-move-fork-constant @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      FORK moved: 12a7f8d9a3af4665fd5281a9f9c001d4f1276a53 -> 2d132fb035d8d6fb155c49b90820e56f5a3e5d8c
+      section10=2  run-all rc=1  verdict=FAIL  sec4-named-mutation=1  expected=2  as expected
+--- f3-commit-mutate-nonobs @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f3-commit-mutate-nonobs @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f3b-commit-mutate-nonobs-laundered @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+laundered manifest row for manifest.py -> 4d55cfa83acb103c6893a0a049a7af37f8c6f66d53e5352dbd7c52ba26290c4f
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f3b-commit-mutate-nonobs-laundered @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+laundered manifest row for manifest.py -> 4d55cfa83acb103c6893a0a049a7af37f8c6f66d53e5352dbd7c52ba26290c4f
+      section10=1  run-all rc=1  verdict=FAIL  sec4-named-mutation=0  expected=1  as expected
+--- f1-13b-postfork-laundered-RESIDUAL @ BEFORE (4eeed2b30d1e48eb9d71b8088de4622574dd2946)
+laundered manifest row for out/A2-200-glaccounts-live-precheck.http -> e8a944192935a6e2f09882e15210cdb66625e0af227707e7881108c05bda95aa
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+--- f1-13b-postfork-laundered-RESIDUAL @ AFTER (fc51790dd7fc881c48f807aa80104368e9d07efb)
+laundered manifest row for out/A2-200-glaccounts-live-precheck.http -> e8a944192935a6e2f09882e15210cdb66625e0af227707e7881108c05bda95aa
+      section10=0  run-all rc=0  verdict=PASS  sec4-named-mutation=0  expected=0  as expected
+
+############ MATRIX
+case	ref	sec10	runall_rc	verdict	sec4_named_the_mutation	expected	result
+control	BEFORE	0	0	PASS	0	0	as expected
+control	AFTER	0	0	PASS	0	0	as expected
+f1-13-commit-mutate-postfork	BEFORE	0	0	PASS	0	0	as expected
+f1-13-commit-mutate-postfork	AFTER	1	1	FAIL	0	1	as expected
+f1-14-commit-delete-postfork	BEFORE	0	0	PASS	0	0	as expected
+f1-14-commit-delete-postfork	AFTER	1	1	FAIL	0	1	as expected
+f1-15-commit-add-fabricated	BEFORE	0	0	PASS	0	0	as expected
+f1-15-commit-add-fabricated	AFTER	1	1	FAIL	0	1	as expected
+f1-16-untracked-fabricated	BEFORE	0	0	PASS	0	0	as expected
+f1-16-untracked-fabricated	AFTER	1	1	FAIL	0	1	as expected
+f1-09-symlink-identical-bytes	BEFORE	0	0	PASS	0	0	as expected
+f1-09-symlink-identical-bytes	AFTER	1	1	FAIL	0	1	as expected
+f4a-control-commit-mutate-forkobs	BEFORE	1	1	FAIL	1	1	as expected
+f4a-control-commit-mutate-forkobs	AFTER	1	1	FAIL	1	1	as expected
+f4b-move-fork-constant	BEFORE	0	0	PASS	1	0	as expected
+f4b-move-fork-constant	AFTER	2	1	FAIL	1	2	as expected
+f3-commit-mutate-nonobs	BEFORE	0	0	PASS	0	0	as expected
+f3-commit-mutate-nonobs	AFTER	1	1	FAIL	0	1	as expected
+f3b-commit-mutate-nonobs-laundered	BEFORE	0	0	PASS	0	0	as expected
+f3b-commit-mutate-nonobs-laundered	AFTER	1	1	FAIL	0	1	as expected
+f1-13b-postfork-laundered-RESIDUAL	BEFORE	0	0	PASS	0	0	as expected
+f1-13b-postfork-laundered-RESIDUAL	AFTER	0	0	PASS	0	0	as expected
+
+unexpected results: 0
+DRIVE VERDICT: PASS — every case was RED at 4eeed2b30d1e48eb9d71b8088de4622574dd2946 and GREEN at fc51790dd7fc881c48f807aa80104368e9d07efb, except the
+two rows that are deliberately expected to be unchanged: the f4a control (ARM A caught
+it at both refs) and the f1-13b disclosed residual (undetected at both, which is what
+the boundary statement in verify-capture-integrity.py says).

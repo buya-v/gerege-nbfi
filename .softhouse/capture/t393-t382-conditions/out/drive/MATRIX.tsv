@@ -1,0 +1,23 @@
+case	ref	sec10	runall_rc	verdict	sec4_named_the_mutation	expected	result
+control	BEFORE	0	0	PASS	0	0	as expected
+control	AFTER	0	0	PASS	0	0	as expected
+f1-13-commit-mutate-postfork	BEFORE	0	0	PASS	0	0	as expected
+f1-13-commit-mutate-postfork	AFTER	1	1	FAIL	0	1	as expected
+f1-14-commit-delete-postfork	BEFORE	0	0	PASS	0	0	as expected
+f1-14-commit-delete-postfork	AFTER	1	1	FAIL	0	1	as expected
+f1-15-commit-add-fabricated	BEFORE	0	0	PASS	0	0	as expected
+f1-15-commit-add-fabricated	AFTER	1	1	FAIL	0	1	as expected
+f1-16-untracked-fabricated	BEFORE	0	0	PASS	0	0	as expected
+f1-16-untracked-fabricated	AFTER	1	1	FAIL	0	1	as expected
+f1-09-symlink-identical-bytes	BEFORE	0	0	PASS	0	0	as expected
+f1-09-symlink-identical-bytes	AFTER	1	1	FAIL	0	1	as expected
+f4a-control-commit-mutate-forkobs	BEFORE	1	1	FAIL	1	1	as expected
+f4a-control-commit-mutate-forkobs	AFTER	1	1	FAIL	1	1	as expected
+f4b-move-fork-constant	BEFORE	0	0	PASS	1	0	as expected
+f4b-move-fork-constant	AFTER	2	1	FAIL	1	2	as expected
+f3-commit-mutate-nonobs	BEFORE	0	0	PASS	0	0	as expected
+f3-commit-mutate-nonobs	AFTER	1	1	FAIL	0	1	as expected
+f3b-commit-mutate-nonobs-laundered	BEFORE	0	0	PASS	0	0	as expected
+f3b-commit-mutate-nonobs-laundered	AFTER	1	1	FAIL	0	1	as expected
+f1-13b-postfork-laundered-RESIDUAL	BEFORE	0	0	PASS	0	0	as expected
+f1-13b-postfork-laundered-RESIDUAL	AFTER	0	0	PASS	0	0	as expected

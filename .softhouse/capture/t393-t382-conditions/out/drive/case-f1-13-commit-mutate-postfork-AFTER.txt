@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T18:15:59Z
+generated 2026-08-28T17:33:54Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -499,7 +499,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/capture/tierA-a2
+ROOT: /tmp/t393-drive/after/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -637,7 +637,7 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           70 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/conformance.sh, 349597 bytes
+          /private/tmp/t393-drive/after/.softhouse/conformance.sh, 349597 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
@@ -773,11 +773,14 @@ the same commit. There is no committed baseline older than HEAD for those 632.
           tracked observations with no manifest row: 0 []
   PASS  every MANIFEST row under out/ or req/ names an observation tracked at HEAD — a row whose file is gone is a DELETION, and the population moving is not a clean tree
           manifest rows naming no tracked observation: 0 []
-      manifest digest agrees with disk     : 1035
-      DISAGREES                            : 0
+      manifest digest agrees with disk     : 1034
+      DISAGREES                            : 1
       unreadable                           : 0
-  PASS  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
-          agree=1035 disagree=0 unreadable=0
+        MANIFEST MISMATCH out/A2-200-glaccounts-live-precheck.http
+             manifest c218c9b2f44c2219fe6de90c7f4550cc2e2573f758f62ae7ada4f9d7f2d42d50
+             disk     e8a944192935a6e2f09882e15210cdb66625e0af227707e7881108c05bda95aa
+  FAIL  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
+          agree=1034 disagree=1 unreadable=0
 
 === 6. ARM D — THE DISK, walked. Nothing tracked ARMs A-C were never handed. ===
     T382 FINDING 1, cases 16 and 09. ARMs A, B and C all start from a git or manifest
@@ -839,14 +842,15 @@ the same commit. There is no committed baseline older than HEAD for those 632.
   PASS  ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the three populations agree and none of them is silently the empty intersection
           manifest=1035 tracked=1035 disk=1035
 
-FAILURES: 0
+FAILURES: 1
+  - every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
 
-VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
-is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;
-the disk under those directories holds exactly the tracked set and nothing else, all
-of it regular files; and the 27 fork-sha manifest entries outside them are unchanged
-apart from the two adjudicated by digest above.
-exit=0
+VERDICT: FAIL (exit 1). A CAPTURED ORACLE OBSERVATION HAS BEEN MUTATED OR LOST,
+OR THE POPULATION ITSELF HAS MOVED, OR A SCRIPT THAT PRODUCED THE CORPUS HAS
+CHANGED. This is the evidence the whole program grades against. Do not repair it
+by re-capturing and committing over the top: that launders the mutation into the
+record. Establish what changed, and why, first.
+exit=1
 
 ############ VERDICT — every section against its adjudicated exit code
 
@@ -860,9 +864,15 @@ exit=0
   7         0              0         as adjudicated
   8         0              0         as adjudicated
   9         0              0         as adjudicated
-  10        0              0         as adjudicated
+  10        0              1         *** MOVED ***
 
-  sections run: 10    deviations: 0
-  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
-  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
-  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+  sections run: 10    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt

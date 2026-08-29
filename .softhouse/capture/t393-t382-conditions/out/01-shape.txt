@@ -1,0 +1,16 @@
+manifest rows total                    : 1139
+manifest rows outside out/ req/        : 104
+tracked files under the capture dir    : 1140
+tracked files outside out/ req/        : 105
+manifest non-obs rows naming no tracked file: []
+tracked non-obs files with NO manifest row  : 1
+    MANIFEST.sha256
+
+non-obs manifest rows: digest AGREES with disk : 104
+non-obs manifest rows: digest DISAGREES        : 0 []
+non-obs manifest rows: unreadable              : 0
+
+--- disk walk under out/ and req/: anything not tracked, or not a regular file? ---
+files on disk under out/ + req/        : 1035
+of those NOT tracked at HEAD           : 0 []
+of those that are SYMLINKS             : 0 []

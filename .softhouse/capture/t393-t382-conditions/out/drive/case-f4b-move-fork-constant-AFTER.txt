@@ -1,5 +1,5 @@
 ############ A2-11 independent review of A2-7 — full transcript
-generated 2026-08-28T18:15:59Z
+generated 2026-08-28T18:00:28Z
 
 READ THE EXIT CODES THIS WAY: sections 1 and 2 assert A2-7'S CLAIMS, so a non-zero
 exit there is a FINDING AGAINST A2-7, not a broken script. Sections 3-9 assert things
@@ -289,30 +289,37 @@ those are the only reasons it is adjudicated RED.
       (recomputed from the git blob and from disk; the manifest's recorded hash is
        used only as a THIRD cross-check, never as the source of truth)
       enumerated 430 pre-existing entries
-      byte-identical fork-vs-today       : 428
-      DIFFER                             : 2
+      byte-identical fork-vs-today       : 427
+      DIFFER                             : 3
       missing on disk (named, not skipped): 0 []
       not in the fork tree (named)        : 0 []
-      current manifest hash agrees w/ disk: 430
+      current manifest hash agrees w/ disk: 429
         DIFF CAPTURE-PLAN.md
              fork  7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd
              today da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
         DIFF cap.sh
              fork  67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
              today 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+        DIFF out/A2-000-glaccounts-preexisting.http
+             fork  4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             today 6d94564497d5438449dad666fca11750f9b16a7112c7b2609420314f3d6ce5f8
+        MANIFEST MISMATCH out/A2-000-glaccounts-preexisting.http
+             manifest 4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             disk     6d94564497d5438449dad666fca11750f9b16a7112c7b2609420314f3d6ce5f8
   FAIL  all 430 pre-existing files are byte-identical to the fork sha
-          identical=428 differ=2 missing=0 unreadable=0
-  PASS  and the CURRENT manifest records those same recomputed hashes (no laundering)
-          agrees=430
+          identical=427 differ=3 missing=0 unreadable=0
+  FAIL  and the CURRENT manifest records those same recomputed hashes (no laundering)
+          agrees=429
 
 === 4. the git diff agrees: exactly one pre-existing path modified ===
   PASS  the ONLY non-Added path in the whole branch is MANIFEST.sha256
           non-added: ['M\t.softhouse/capture/tierA-a2/MANIFEST.sha256']
 
-FAILURES: 3
+FAILURES: 4
   - manifest on disk today holds 571 entries
   - 571 - 430 = 141 added
   - all 430 pre-existing files are byte-identical to the fork sha
+  - and the CURRENT manifest records those same recomputed hashes (no laundering)
 exit=1
 
 ############ 5. P-25 float audit of A2-7's scripts (offline)   EXPECTED RC 0
@@ -499,7 +506,7 @@ SUPERSEDED.txt resolves: prove-mkreq7-guard-red.py -> guard-parse-float-ast.py
 ==============================================================================
 T164 -- json.load/loads call-site guard (AST, not source grep)
 ==============================================================================
-ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/capture/tierA-a2
+ROOT: /tmp/t393-drive/after/.softhouse/capture/tierA-a2
 
 SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
   (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
@@ -637,7 +644,7 @@ recorded as an open follow-up in the T270 handoff, not silently absorbed.
   PASS  POSITIVE CONTROL — the vector store was actually READ. An EMPTY population is a SELECTOR failure, not a clean tree: this repository tracks graded vectors under .softhouse/vectors/ and always has. An empty census passes everything. REFUSED
           70 files under .softhouse/vectors/
   PASS  POSITIVE CONTROL — conformance.sh was actually READ; a missing or empty haystack would report every token absent. REFUSED
-          /Users/buv/gerege-nbfi/.claude/worktrees/agent-aaf5791d13570d535/.softhouse/conformance.sh, 349597 bytes
+          /private/tmp/t393-drive/after/.softhouse/conformance.sh, 349597 bytes
       paymentChannelToFundSourceMappings     vectors=0  conformance.sh=False
       feeToIncomeAccountMappings             vectors=0  conformance.sh=False
       penaltyToIncomeAccountMappings         vectors=0  conformance.sh=False
@@ -718,9 +725,17 @@ the same commit. There is no committed baseline older than HEAD for those 632.
     collapsed ARM A onto ARM B (403 -> 1035) and the mutation went invisible while
     section 4 printed it BY NAME and run-all.sh printed PASS. So the constant is now
     tied to tracked files, in the same spelling section 4 already uses for its copy.
-  PASS  literal baseline sha 12a7f8d9a3af is present
-  PASS  prove-a2-7-additive.py carries `BASELINE = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
-  PASS  verify-manifest-independently.py carries `FORK = "12a7f8d9a3af4665fd5281a9f9c001d4f1276a53"`
+  PASS  literal baseline sha 2d132fb035d8 is present
+  REFUSED  .softhouse/capture/tierA-a2/prove-a2-7-additive.py does NOT carry `BASELINE = "2d132fb035d8d6fb155c49b90820e56f5a3e5d8c"`.
+           Either this file's FORK constant was moved, or that file's was. Section 10
+           cannot tell which, and it will not guess: a baseline that no longer agrees
+           with the two tracked files that also carry it is a CALIBRATION failure and
+           is REFUSED, never reported as a clean corpus.
+  REFUSED  .softhouse/reviews/A2-11/verify-manifest-independently.py does NOT carry `FORK = "2d132fb035d8d6fb155c49b90820e56f5a3e5d8c"`.
+           Either this file's FORK constant was moved, or that file's was. Section 10
+           cannot tell which, and it will not guess: a baseline that no longer agrees
+           with the two tracked files that also carry it is a CALIBRATION failure and
+           is REFUSED, never reported as a clean corpus.
 
 === 2. POPULATION — enumerated from the fork tree AND from HEAD, and PINNED ===
     An EMPTY population is a SELECTOR failure, not a clean tree: this repository
@@ -731,14 +746,19 @@ the same commit. There is no committed baseline older than HEAD for those 632.
     population that silently shrank by up to 632, or grew by any number of
     fabricated files, is the same class of selector failure one step short of empty.
     ARM A's size is pinned below; ARM B's is pinned by the manifest in ARM C.
-      at the fork sha : 403 observations  {'out': 327, 'req': 76}
+      at the fork sha : 1035 observations  {'out': 906, 'req': 129}
       at HEAD         : 1035 observations  {'out': 906, 'req': 129}
-  PASS  ARM A's population is the pinned 403 (a property of an immutable commit)
+  REFUSED  ARM A's population is 1035 observations, and it is PINNED at 403.
+           This number is a property of an IMMUTABLE commit. It cannot drift with the rig,
+           so a disagreement means the FORK constant moved or the selector stopped
+           selecting. T382 drove exactly this: moving FORK forward to a later commit takes
+           ARM A's population to ARM B's, the two arms stop being independent, and a
+           mutation ARM A would have caught becomes invisible. REFUSED.
 
 === 3. ARM A — every observation that existed at the fork sha, RECOMPUTED ===
-    git blob at 12a7f8d9a3af  vs  the bytes on disk today.
-      enumerated                : 403
-      byte-identical            : 403
+    git blob at 2d132fb035d8  vs  the bytes on disk today.
+      enumerated                : 1035
+      byte-identical            : 1035
       DIFFER                    : 0
       MISSING on disk           : 0
       unreadable at the fork sha: 0
@@ -749,7 +769,7 @@ the same commit. There is no committed baseline older than HEAD for those 632.
 
 === 4. ARM B — every observation tracked at HEAD, including ones captured SINCE ===
     git blob at HEAD  vs  the bytes on disk. Arm A cannot see an observation that
-    did not exist at the fork sha; 632 of the 1035 tracked today are in that class.
+    did not exist at the fork sha; 0 of the 1035 tracked today are in that class.
       enumerated     : 1035
       byte-identical : 1035
       DIFFER         : 0
@@ -773,11 +793,14 @@ the same commit. There is no committed baseline older than HEAD for those 632.
           tracked observations with no manifest row: 0 []
   PASS  every MANIFEST row under out/ or req/ names an observation tracked at HEAD — a row whose file is gone is a DELETION, and the population moving is not a clean tree
           manifest rows naming no tracked observation: 0 []
-      manifest digest agrees with disk     : 1035
-      DISAGREES                            : 0
+      manifest digest agrees with disk     : 1034
+      DISAGREES                            : 1
       unreadable                           : 0
-  PASS  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
-          agree=1035 disagree=0 unreadable=0
+        MANIFEST MISMATCH out/A2-000-glaccounts-preexisting.http
+             manifest 4fb117c7b50ee50ddde483cfb75abf4712714f98316000340156c892ce569f65
+             disk     6d94564497d5438449dad666fca11750f9b16a7112c7b2609420314f3d6ce5f8
+  FAIL  every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
+          agree=1034 disagree=1 unreadable=0
 
 === 6. ARM D — THE DISK, walked. Nothing tracked ARMs A-C were never handed. ===
     T382 FINDING 1, cases 16 and 09. ARMs A, B and C all start from a git or manifest
@@ -805,18 +828,27 @@ the same commit. There is no committed baseline older than HEAD for those 632.
     manifest.py, section 4 printed `DIFF manifest.py` BY NAME, and run-all.sh still
     exited 0 printing RUN-ALL VERDICT: PASS. That is T362's F-1 verbatim, one
     directory over. The question is asked HERE too, where GREEN is adjudicated.
-      entries in the fork-sha manifest     : 430
-      of those under out/ or req/          : 403
-      NOT under out/ or req/ (ARM E)       : 27
-      byte-identical to the fork sha       : 25
-      adjudicated-different, UNMOVED       : 2
+      entries in the fork-sha manifest     : 1139
+      of those under out/ or req/          : 1035
+      NOT under out/ or req/ (ARM E)       : 104
+  REFUSED  ARM E's population is 104 entries, and it is PINNED at 27.
+           Like ARM A's pin this is a property of an IMMUTABLE commit and cannot drift.
+           A disagreement means FORK moved or the selector broke. REFUSED.
+      byte-identical to the fork sha       : 102
+      adjudicated-different, UNMOVED       : 0
       DIFFER and are NOT adjudicated       : 0
-      adjudicated but MOVED                : 0
+      adjudicated but MOVED                : 2
       missing / unreadable                 : 0
+        ADJUDICATION MOVED CAPTURE-PLAN.md
+             fork  adjudicated 7c2e2795863fa035424aa1cf23e7d1735dad502c535b16f31a0938a3fc0050bd got da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+             today adjudicated da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd got da0760bacc8af5f5fdbe8c0b6d9a56f1904158b4c4b2ada3f3a5547d2e4e99dd
+        ADJUDICATION MOVED cap.sh
+             fork  adjudicated 67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a got 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
+             today adjudicated 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62 got 6a1c5e91bc93df436faa3a965f31402b10bfb0ff28f86c2227bd752a11f31e62
   PASS  NO capture script or evidence file from the fork-sha manifest has been MUTATED, outside the two differences adjudicated by digest at the top of this file
           unadjudicated differences: 0
-  PASS  the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
-          unmoved=2 of 2, moved=0
+  FAIL  the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
+          unmoved=0 of 2, moved=2
   PASS  NO entry from the fork-sha manifest is missing from disk or from the fork tree
           missing=0
 
@@ -825,7 +857,7 @@ the same commit. There is no committed baseline older than HEAD for those 632.
     compared nothing reports no differences, and that is the vacuous pass this
     review exists to make impossible.
   PASS  ARM A compared a non-empty population
-          403 observations at the fork sha
+          1035 observations at the fork sha
   PASS  ARM B compared a non-empty population
           1035 observations at HEAD
   PASS  ARM C compared a non-empty manifest population
@@ -833,20 +865,25 @@ the same commit. There is no committed baseline older than HEAD for those 632.
   PASS  ARM D walked a non-empty disk population
           1035 files on disk under out/ + req/
   PASS  ARM E compared a non-empty population
-          27 non-observation entries in the fork-sha manifest
+          104 non-observation entries in the fork-sha manifest
   PASS  ARM B's population is a SUPERSET of ARM A's — every historical observation is still tracked, so neither arm is silently narrower than it reads
           in fork but not at HEAD: []
   PASS  ARM C's row-set and ARM D's disk-set are the SAME set as ARM B's tracked set, so the three populations agree and none of them is silently the empty intersection
           manifest=1035 tracked=1035 disk=1035
 
-FAILURES: 0
+REFUSALS: 4
+  - .softhouse/capture/tierA-a2/prove-a2-7-additive.py does NOT carry `BASELINE = "2d132fb035d8d6fb155c49b90820e56f5a3e5d8c"`.
+  - .softhouse/reviews/A2-11/verify-manifest-independently.py does NOT carry `FORK = "2d132fb035d8d6fb155c49b90820e56f5a3e5d8c"`.
+  - ARM A's population is 1035 observations, and it is PINNED at 403.
+  - ARM E's population is 104 entries, and it is PINNED at 27.
+FAILURES: 2
+  - every MANIFEST digest is the RECOMPUTED sha256 of the bytes on disk
+  - the two ADJUDICATED differences are still exactly the differences adjudicated — a further mutation moves this, and so does a revert to the fork bytes
 
-VERDICT: PASS (exit 0). Every captured oracle observation under .softhouse/capture/tierA-a2/{out,req}/
-is byte-identical to its fork-sha blob, to its HEAD blob and to its MANIFEST digest;
-the disk under those directories holds exactly the tracked set and nothing else, all
-of it regular files; and the 27 fork-sha manifest entries outside them are unchanged
-apart from the two adjudicated by digest above.
-exit=0
+VERDICT: REFUSED (exit 2). The instrument could not measure. This is NOT a pass,
+and run-all.sh adjudicates this section to 0, so a refusal moves it and fails the
+aggregate verdict.
+exit=2
 
 ############ VERDICT — every section against its adjudicated exit code
 
@@ -860,9 +897,15 @@ exit=0
   7         0              0         as adjudicated
   8         0              0         as adjudicated
   9         0              0         as adjudicated
-  10        0              0         as adjudicated
+  10        0              2         *** MOVED ***
 
-  sections run: 10    deviations: 0
-  RUN-ALL VERDICT: PASS — every section produced exactly the exit code adjudicated
-  for it. Note that this INCLUDES sections 1, 2 and 4, which are adjudicated RED.
-  PASS here means 'the review reproduces', NOT 'A2-7 was right'.
+  sections run: 10    deviations: 1
+  RUN-ALL VERDICT: FAIL — 1 section(s) moved off the adjudicated verdict.
+  Read the moved sections above. A section that moved is either a new defect or a
+  repair that nobody recorded; both need a human, neither is absorbed here.
+
+NOTE (T374 / T362 F-5): this run REWROTE the tracked file
+  .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+so your working tree is now dirty. That is expected — the transcript carries a
+generation timestamp — and it is NOT a finding. To restore it:
+  git checkout -- .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
