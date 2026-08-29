@@ -3622,10 +3622,12 @@ TABLETEXT
     #
     # THE REPAIR IS T375's OWN ARGUMENT, APPLIED WHERE IT WAS NEVER APPLIED — "comparing
     # object ids compares what is COMMITTED, not what is on this host, so it is stable across
-    # checkouts". `member_blob` IS ALREADY IN HAND from the pinned `git ls-files -s` call
-    # sixteen lines up, the same read that decided the mode, so this costs one `cat-file` per
-    # member and creates no second opinion about which entry is being graded (two reads of
-    # one quantity are two chances to disagree).
+    # checkouts". `member_blob` IS ALREADY IN HAND — it was read by the pinned
+    # `git ls-files -s -- ":(literal)$rel"` above, the SAME read that decided the mode — so
+    # this costs one `cat-file` per member and creates no second opinion about which entry is
+    # being graded (two reads of one quantity are two chances to disagree). NO DISTANCE IN
+    # LINES IS RESTATED HERE, on purpose: P-80, "A CORRECTED CARDINAL ROTS IN EVERY PLACE IT
+    # WAS RESTATED. The count is the same defect as the line number."
     #
     # THE FAILURE DIRECTION IS CHECKED AND IT IS CLOSED, WHICH IS WHY NO EXTRA REFUSAL BRANCH
     # IS ADDED HERE. If the blob cannot be read, `member_text` is empty, no REACHED-BY row is
@@ -3912,8 +3914,9 @@ INNER
         #
         # THE REPAIR IS T375's OWN SENTENCE, WHICH WAS NEVER APPLIED TO THE TEST THAT DECIDES:
         # "comparing object ids compares what is COMMITTED, not what is on this host, so it is
-        # stable across checkouts." `self_blob` is already in hand from the pinned lookup on
-        # the line above, so the naming test now grades the same bytes every other test in
+        # stable across checkouts." `self_blob` is already in hand — it is read by the pinned
+        # `git ls-files -s -- ":(literal)$self_norm"` lookup that also produced `self_mode`
+        # and `self_path` — so the naming test now grades the same bytes every other test in
         # this direction grades. It refuses NOTHING legitimate — driven: the honest witness
         # arms are ACCEPTED unchanged.
         #
