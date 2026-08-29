@@ -1,0 +1,5 @@
+bash: 3.2.57(1)-release
+  script file, invoked as `bash def.sh`      -> exit 1
+  same body via `bash -c`                    -> exit 127
+  plain unbound variable in a script file    -> exit 1
+  a genuine 'caught a failing arm'           -> exit 1

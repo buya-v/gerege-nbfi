@@ -1,0 +1,36 @@
+T440 CONSTRUCTION ATTACK on the amended FU-T386-7 guard
+bash: 3.2.57(1)-release   host tee: /usr/bin/tee
+
+== A1: does bash really WAIT for every pipeline member, in the forms used here? ==
+  after the pipeline returned: file=[PAYLOAD]  elapsed=1s
+  [OK]   bash waited for the RIGHTMOST member; its late write is visible
+  form `cmd 2>&1 | writer LOG` -> file=[INNER;E;] PIPESTATUS=(0 0)
+  [OK]   same form: complete after the pipeline returns
+  shopt -s lastpipe        -> bash: line 0: shopt: lastpipe: invalid shell option name in-parent:hi PIPESTATUS=0 0
+  note: lastpipe is OFF by default and is not set anywhere in this drive or patch.
+
+== A2: extract the guard and check the ENV-BYPASS surface ==
+  T381_DRIVE_INNER gate occurrences: 1
+  normal invocation, failing arm                    -> exit 1
+  [OK]   the guard catches the failing arm (exit 1)
+  with T381_DRIVE_INNER=1 EXPORTED, same failing arm -> exit 0
+  [FINDING] ENV BYPASS: an exported T381_DRIVE_INNER makes the drive skip its own grader and exit 0
+  (compare: T402's guard was gated on T381_DRIVE_LOG being set, so it had the mirror-image
+   surface -- UNSETTING that variable skipped it. Both are internal names.)
+  T381_DRIVE_LOG pointed at an unwritable path      -> exit 2
+  [OK]   refuses (2) rather than passing when its transcript will not open
+
+== A3: is the sentinel check defeatable by the drive's own output? ==
+  drive prints the sentinel TWICE                    -> exit 2
+  [OK]   doubled sentinel refuses (2) -- exactly-once is enforced, not at-least-once
+  healthy, sentinel once                            -> exit 0
+  [OK]   healthy passes (0) -- the sentinel check is not vacuous
+
+== A4: GNU tee, if this host has one ==
+  NO GNU coreutils tee on this host. T424's '[UNVERIFIED: any specific tee]' bound STANDS,
+  and T440 could not narrow it either.
+
+== A5: is the guard actually LIVE anywhere, or only shipped as a patch? ==
+  (answered outside this drive, against the tree)
+
+T440-ATTACK-RESULT: findings=1

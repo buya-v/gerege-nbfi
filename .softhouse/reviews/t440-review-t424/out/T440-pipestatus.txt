@@ -1,0 +1,20 @@
+T440 PIPESTATUS DEFECT / REPAIR
+bash: 3.2.57(1)-release
+
+== B1: does x=${PIPESTATUS[0]} really REPLACE PIPESTATUS? ==
+  immediately after the pipeline: PIPESTATUS=(7 0) len=2
+  after  a=${PIPESTATUS[0]}:      PIPESTATUS=(0) len=1  a=0
+
+== B2: the DEFECTIVE shape, under set -u -- what status does it die with? ==
+    bash: line 3: PIPESTATUS[1]: unbound variable
+  DEFECTIVE shape exit status -> 127
+  [FAIL] expected 1, got 127
+
+== B3: the REPAIRED shape (copy the whole array in ONE statement) ==
+  x=7 y=0  (both readable)
+  REPAIRED shape exit status -> 0
+  [OK]   survives and both members are readable
+
+== B4: does set -u actually matter, i.e. is the defect latent without it? ==
+      WITHOUT set -u: x=7 y=[]  <- y is silently EMPTY, not an error
+  -> without set -u the same bug is SILENT: a numeric test on an empty y then returns 2.
