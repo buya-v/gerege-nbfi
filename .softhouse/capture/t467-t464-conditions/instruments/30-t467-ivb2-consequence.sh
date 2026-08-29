@@ -74,7 +74,7 @@ echo
 # CALIBRATION FIRST (P-72): the clean tree is green, so the red below is bought by the case.
 prepare || { echo "REFUSED: could not prepare $AFTER" >&2; exit 3; }
 RC_CAL="$(grade 0-clean)"
-ATTIP_CAL="$(grep -F -- 'observations were born at the tip' "$OUT/ivb2-0-clean.txt" | tail -1 | awk '{print $1}')"
+ATTIP_CAL="$(grep -F -- 'ARM F GRADED ITS WHOLE POPULATION: ' "$OUT/ivb2-0-clean.txt" | tail -1 | awk '{print $(NF-1)}')"
 case "$ATTIP_CAL" in ''|*[!0-9]*) ATTIP_CAL=UNPRINTED ;; esac
 echo "  0  clean tree: exit=$RC_CAL  born-at-tip=$ATTIP_CAL"
 verdict "0 the clean tree is GREEN" "$RC_CAL" 0
