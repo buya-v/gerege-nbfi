@@ -1,0 +1,22 @@
+driver-push-gate: running /private/tmp/t450/clone2/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=bare url=/tmp/t450/remote2.git
+driver-push-gate: pushing ede6d8f0723b83fc39be238f452faa3e17b50eb2 -> refs/heads/main   tree=85bb0e34d84fc745a4922772201feafd52c05f30
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of ede6d8f0723b83fc39be238f452faa3e17b50eb2.
+driver-push-gate:   C2 write-path allowlist: clean (50 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 0d38d884  tree=f7dc5b04b0c21cd778d97bad972029507d2c3d3e
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree 85bb0e34d84fc745a4922772201feafd52c05f30 (from 'ede6d8f0723b83fc39be238f452faa3e17b50eb2')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.qLkihjvC8N
+cheap-subset:   materialised 9734 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13131 definition=102 consistent=674 bare=12189 misdirecting=79 undefined=30 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT PASS -- 0 fatal; 109 report-only findings in committed evidence (corrected FORWARD in patterns.md, never edited in place)
+cheap-subset: PASS -- 0 fatal citation findings in the DIRECTIVE zone of tree 85bb0e34d84fc745a4922772201feafd52c05f30.
+driver-push-gate:   C3 PASS -- cheap subset clean; CHEAP attestation recorded for 85bb0e34d84fc745a4922772201feafd52c05f30.
+driver-push-gate: PUSH ALLOWED.
+To /tmp/t450/remote2.git
+ * [new branch]        HEAD -> main
+PUSH_RC=0

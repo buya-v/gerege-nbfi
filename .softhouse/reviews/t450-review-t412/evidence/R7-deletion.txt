@@ -1,0 +1,23 @@
+driver-push-gate: running /private/tmp/t450/clone2/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=bare url=/tmp/t450/remote2.git
+driver-push-gate: pushing f45782c4ae9f4db0884b595f67d0ce51db887f22 -> refs/heads/main   tree=2b801a86bfab8879ed235a7ef8bec4ed8d49b9fe
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of f45782c4ae9f4db0884b595f67d0ce51db887f22.
+driver-push-gate:   C2 write-path allowlist: clean (50 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 0d38d884  tree=f7dc5b04b0c21cd778d97bad972029507d2c3d3e
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE PUSHED TREE WAS NEVER GRADED, and its delta from the graded ancestor
+driver-push-gate:   0d38d884 leaves the STATE set, so the cheap subset is not
+driver-push-gate:   licensed to stand in for the bar. Offending entries:
+driver-push-gate:     [D] .softhouse/gates-proposed-answers.md
+driver-push-gate: 
+driver-push-gate:   Run:      bash .softhouse/hooks/bar-attest.sh f45782c4ae9f4db0884b595f67d0ce51db887f22
+driver-push-gate: 
+driver-push-gate:   The STATE set is *.md/*.txt/*.json/*.log under .softhouse/ (plus .softhouse/LOCK),
+driver-push-gate:   excluding vectors/, guards/, bin/, toolchain/, conformance.sh and any req/ directory,
+driver-push-gate:   ADDED or MODIFIED only. Everything else can move a guard whose corpus the cheap subset
+driver-push-gate:   does not read.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/tmp/t450/remote2.git'
+PUSH_RC=1

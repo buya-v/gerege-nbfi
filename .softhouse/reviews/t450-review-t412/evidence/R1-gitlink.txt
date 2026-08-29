@@ -1,0 +1,18 @@
+driver-push-gate: running /private/tmp/t450/clone2/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=bare url=/tmp/t450/remote2.git
+driver-push-gate: pushing cc64761b27ba2f02333dcda21c7be1e82a069145 -> refs/heads/main   tree=06ba3649d7919e0c352eeaf35875e8832620e278
+driver-push-gate: 
+driver-push-gate: C1 REFUSED -- THE PUSHED TREE CONTAINS A GITLINK (mode 160000):
+driver-push-gate:     strayworktree
+driver-push-gate: 
+driver-push-gate:   This is instance 3 exactly: a worker left a git worktree inside the repo, the driver's
+driver-push-gate:   `git add -A` staged it as a submodule reference, git printed a warning nobody read,
+driver-push-gate:   and the push succeeded because a gitlink is a legal tree entry (8c08f7d8, reverted at
+driver-push-gate:   c31b0842). Remove the entry -- `git rm --cached <path>` -- and stage explicitly.
+driver-push-gate: 
+driver-push-gate:   THERE IS NO BYPASS FOR C1. No commit in this repository's history has ever legitimately
+driver-push-gate:   carried a gitlink; the only occurrence is the defect.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/tmp/t450/remote2.git'
+PUSH_RC=1

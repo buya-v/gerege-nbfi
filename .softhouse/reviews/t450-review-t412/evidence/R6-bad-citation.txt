@@ -1,0 +1,32 @@
+driver-push-gate: running /private/tmp/t450/clone2/.softhouse/hooks/driver-push-gate.sh (sha256 8fc9d676e850e45c)
+driver-push-gate: T412 driver push gate engaged. remote=bare url=/tmp/t450/remote2.git
+driver-push-gate: pushing 41309cd1330a23db5e1bce9fdb414dada6c90983 -> refs/heads/main   tree=6fe08bbdf4f6f7069d0d7257688744742342ecf7
+driver-push-gate:   C1 gitlinks: none in the pushed tree.
+driver-push-gate:   C2 range: the remote has no readable tip; grading the last 50 commits of 41309cd1330a23db5e1bce9fdb414dada6c90983.
+driver-push-gate:   C2 write-path allowlist: clean (50 non-merge commit(s) examined).
+driver-push-gate:   C3 graded ancestor: 0d38d884  tree=f7dc5b04b0c21cd778d97bad972029507d2c3d3e
+driver-push-gate:   C3 delta from the graded ancestor is confined to the STATE set. Running the cheap subset
+driver-push-gate:   on the PUSHED TREE (not the working tree -- that substitution is instance 2).
+cheap-subset: grading tree 6fe08bbdf4f6f7069d0d7257688744742342ecf7 (from '41309cd1330a23db5e1bce9fdb414dada6c90983')
+cheap-subset:   scratch /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t412-cheap.a9W72oZj7C
+cheap-subset:   materialised 9734 tracked path(s)
+cheap-subset:   checker selftest: PASS
+cheap-subset:   PNUMBER-CITATIONS: register=.softhouse/patterns.md ids=101 gaps=none in-file-collisions=2 cross-register-collisions=[1, 2, 3, 4, 5, 6]
+cheap-subset:   PNUMBER-CITATIONS: sites=13132 definition=102 consistent=674 bare=12189 misdirecting=79 undefined=31 negative-control=57
+cheap-subset:   PNUMBER-CITATIONS: VERDICT FAIL -- 1 fatal (register 0, directive-file 1)
+cheap-subset: 
+cheap-subset: FAILED -- A CITED P-NUMBER IN A DIRECTIVE FILE OF THE PUSHED TREE CARRIES A RULE SENTENCE
+cheap-subset:   THAT patterns.md DEFINES UNDER A DIFFERENT NUMBER, OR NAMES NO RULE AT ALL.
+PNUMBER-CITATIONS: FATAL UNDEFINED .softhouse/RESUME.md:73 P-150 -- P-150 is defined in neither register
+cheap-subset: 
+cheap-subset:   In a full bar this is guard_pnumber_citations, which is HARD: EXIT 2, no probe line, no
+cheap-subset:   verdict. Correct the id, or state the cited rule.
+driver-push-gate: 
+driver-push-gate: C3 REFUSED -- THE CHEAP SUBSET FAILED ON THE PUSHED TREE (exit 1).
+driver-push-gate:   This is instance 1: a directive-zone citation naming a rule that patterns.md does not
+driver-push-gate:   define. guard_pnumber_citations is HARD, so this push would take the whole bar to
+driver-push-gate:   EXIT 2 with NO PROBE LINE and no verdict at all.
+driver-push-gate: 
+driver-push-gate: PUSH REFUSED. Nothing was sent.
+error: failed to push some refs to '/tmp/t450/remote2.git'
+PUSH_RC=1
