@@ -538,3 +538,92 @@ before its value (P-84 — an ABSENT probe line is the guard working, not `down`
 
 <!--BARRESULT-->
 
+### 11.1 MY OWN FIRST BAR REFUSED, ON MY OWN INSTRUMENTS. RECORDED, NOT HIDDEN.
+
+**The sequence, stated plainly.** I committed the review at `54f9c40d`, ran
+`bash .softhouse/conformance.sh` from `/tmp/t446/finalbar` on that committed tree, and it
+**REFUSED**:
+
+```
+EXIT = 2
+grep -c 'probe = ' = 0                      <- ABSENT, which is the guard working (P-84), not `down`
+conformance: CENSUS fail-open instruments — inspected 1595 tracked .sh/.py file(s) …
+              frontier 15, pinned at 11
+conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
++TIER2 .softhouse/reviews/t446-review-t445/instruments/drive-longs.sh
++TIER2 .softhouse/reviews/t446-review-t445/instruments/drive-rwb3-v2.sh
++TIER2 .softhouse/reviews/t446-review-t445/instruments/drive-rwb3-v3.sh
++TIER2 .softhouse/reviews/t446-review-t445/instruments/drive-rwb3.sh
+```
+
+[`evidence/80-my-first-bar-REFUSED-failopen.log`]. The bar on my own committed tree was run, and
+this is what it said; the coordinator independently reached the same four rows on the merge result
+while I was mid-repair. **`guard_no_fail_open_instruments` caught me committing, in the same task,
+an instance of the class I had just spent a review characterising.** That is worth writing down
+rather than tidying away: the four instruments that drove MAJOR-1 and MAJOR-2 could each **print a
+negative they had not measured**.
+
+**The defect, named by the linter** (`50-failopen-lint.py`, criterion `C2`):
+
+```
+C2 :65  failure arm PRINTS instead of exiting:
+        echo "  identical to the committed blob? $( … [ "$(git rev-parse …)" = "$(git hash-object …)" ] && echo YES || echo '*** NO ***' )"
+C2 :79  failure arm PRINTS instead of exiting:  … grep -m1 '^VERDICT' … || echo "VERDICT = (none)"
+C2 :80  failure arm PRINTS instead of exiting:  … grep -m1 'GUARDS-DIR-REGISTRATION: population=' … || echo "(no census line)"
+```
+
+Both are the same mistake, and it is a small cousin of MAJOR-1's:
+
+* `grep … || echo "(none)"` **cannot tell "the line is absent" from "the log is absent"**. If the
+  bar had never produced a log at all, my transcript would have printed `VERDICT = (none)` and
+  `(no census line)` — indistinguishable from a guard refusing — and I would have read a run that
+  never happened as an arm that refused.
+* `[ "$a" = "$b" ] && echo YES || echo '*** NO ***'` reports `*** NO ***` when a hash is EMPTY,
+  i.e. when `git rev-parse` failed. My headline MAJOR-1 line — *"identical to the committed blob?
+  \*\*\* NO \*\*\*"* — could have been printed by an instrument that measured nothing. It was not;
+  the LONGS transcript prints both blob ids and the CONTROL arm prints `YES` from the same code
+  path. But "it happened to be right" is not the standard this file grades against.
+
+**The repair — repair, not pin.** `FAILOPEN_PIN_FILE_LIST` is untouched and
+`.softhouse/conformance.sh` is untouched: T445 owns that file and I am its reviewer, so editing it
+would both collide with the branch under review and destroy the independence this review rests on.
+I adopted `sweeplib.sh`'s invariant — *"an instrument must not be able to emit a negative it did
+not measure; 'zero hits', 'zero corpus' and 'no working engine' are three different facts and must
+have three different exit codes"* — without sourcing the library, because these are single-file
+drives with no sweep engine to calibrate. Concretely, in all four files
+(`instruments/repair-failopen-arms.py` applies it):
+
+* **count first, then read**, for the VERDICT line and the census line exactly as the drives
+  already did for the probe line: `NV="$(grep -c '^VERDICT' …)"`, print `VERDICT line count = $NV`,
+  and only then read the line if `$NV -ge 1`. A count of zero is now a MEASUREMENT with a number
+  beside it, not a sentence;
+* **an absent or empty bar log is an INSTRUMENT FAILURE and `exit 3`**, distinct from both "the
+  guard refused" and "the guard passed";
+* **the two blob ids are read into names and compared in the open**, and an empty hash is its own
+  `exit 3` rather than being folded into `*** NO ***`.
+
+Hashes before → after: `drive-longs.sh` `0af7f7da…`→`e3cfa21d…`; `drive-rwb3.sh`
+`cf27ad74…`→`b21ea5b5…`; `drive-rwb3-v2.sh` `9239b8fd…`→`144c235d…`; `drive-rwb3-v3.sh`
+`0072779b…`→`fd921e6c…`. Re-lint after the repair: **TIER1 = 0, TIER2 = 0, TIER1B = 0.**
+
+**The repair is not argued, it is re-driven.** The repair touches only how an absent line is
+REPORTED, but "it only touches reporting" is exactly the kind of claim this chain punishes, so I
+re-ran the arm that carries MAJOR-2 **using the repaired instrument out of the committed tree**
+[`evidence/33-rwb3-repaired-instrument-exit0.log`]:
+
+```
+EXIT = 0
+probe line count (read BEFORE its value) = 1
+probe value = up
+VERDICT line count = 1
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+census line count  = 1
+GUARDS-DIR-REGISTRATION: population=7 invoked=3 declared=2 reached-by=2 invoked-by-nothing=0 symlink-members=0
+registration decisive lines: 7 present, 2 evaluated on an input …
+  REACHED-BY .softhouse/guards/zz-t446-member.sh — declared in its own header, reached by
+             .softhouse/guards/W.txt (verified: it names zz-t446-member.sh)
+```
+
+Identical cells to the pre-repair drive. **MAJOR-2 stands, and now stands on an instrument that
+cannot report a refusal it did not observe.**
+

@@ -62,7 +62,19 @@ echo "COMMITTED blob of $CONFREL (what a reviewer reads):"
 echo "    $( cd "$C" && git rev-parse "HEAD:$CONFREL" )"
 echo "MATERIALISED file at $CONFREL (what bash executes):"
 echo "    $( cd "$C" && git hash-object "$CONFREL" )"
-echo "    identical to the committed blob? $( cd "$C" && [ "$(git rev-parse "HEAD:$CONFREL")" = "$(git hash-object "$CONFREL")" ] && echo YES || echo '*** NO ***' )"
+# The two hashes are read into names and compared in the open, so an EMPTY hash --
+# which `[ "$a" = "$b" ] && echo YES || echo NO` would silently report as a difference,
+# or as a match if both were empty -- is its own refusal (T238 C2).
+CB="$( cd "$C" && git rev-parse "HEAD:$CONFREL" )" || CB=""
+WB="$( cd "$C" && git hash-object "$CONFREL" )" || WB=""
+if [ -z "$CB" ] || [ -z "$WB" ]; then
+  echo "INSTRUMENT FAILURE: one of the two hashes is EMPTY (committed='$CB' materialised='$WB')."
+  exit 3
+elif [ "$CB" = "$WB" ]; then
+  echo "    identical to the committed blob? YES"
+else
+  echo "    identical to the committed blob? *** NO ***"
+fi
 echo "clone warnings:"; sed 's/^/    /' "$WORK/$ARM/clonewarn"
 echo "git status --porcelain of the graded clone:"
 ( cd "$C" && git status --porcelain | sed 's/^/    /' )
@@ -76,7 +88,19 @@ echo "EXIT = $RC"
 echo "probe line count (read BEFORE its value) = $N"
 if [ "$N" -ge 1 ]; then echo "probe value = $(LC_ALL=C grep -m1 'probe = ' "$WORK/$ARM/bar.log" | sed 's/.*probe = //')"
 else echo "probe value = ABSENT"; fi
-LC_ALL=C grep -m1 '^VERDICT' "$WORK/$ARM/bar.log" || echo "VERDICT = (none)"
-LC_ALL=C grep -m1 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log" || echo "(no census line)"
+# COUNT FIRST, THEN READ -- for the VERDICT line and the census line exactly as for the
+# probe line. `grep … || echo "(none)"` prints a negative it did not measure and cannot
+# tell "the line is absent" from "the log is absent", which is T238's C2 fail-open arm
+# and P-84's own mistake one file over. An absent log is an INSTRUMENT failure and exits.
+if [ ! -s "$WORK/$ARM/bar.log" ]; then
+  echo "INSTRUMENT FAILURE: $WORK/$ARM/bar.log is missing or empty. Nothing was measured."
+  exit 3
+fi
+NV="$(LC_ALL=C grep -c '^VERDICT' "$WORK/$ARM/bar.log")" || NV=0
+echo "VERDICT line count = $NV"
+if [ "$NV" -ge 1 ]; then LC_ALL=C grep -m1 '^VERDICT' "$WORK/$ARM/bar.log"; fi
+NC="$(LC_ALL=C grep -c 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log")" || NC=0
+echo "census line count  = $NC"
+if [ "$NC" -ge 1 ]; then LC_ALL=C grep -m1 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log"; fi
 echo "--- registration sentences ---"
 LC_ALL=C grep -n 'guards_dir_registration\|guards-dir registration\|INVOKED BY NOTHING\|DECLARED against' "$WORK/$ARM/bar.log" | head -20

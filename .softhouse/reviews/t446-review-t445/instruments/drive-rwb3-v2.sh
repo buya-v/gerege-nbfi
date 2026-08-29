@@ -69,8 +69,20 @@ echo "EXIT = $RC"
 echo "probe line count (read BEFORE its value) = $N"
 if [ "$N" -ge 1 ]; then echo "probe value = $(LC_ALL=C grep -m1 'probe = ' "$WORK/$ARM/bar.log" | sed 's/.*probe = //')"
 else echo "probe value = ABSENT"; fi
-LC_ALL=C grep -m1 '^VERDICT' "$WORK/$ARM/bar.log" || echo "VERDICT = (none)"
-LC_ALL=C grep -m1 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log" || echo "(no census line)"
+# COUNT FIRST, THEN READ -- for the VERDICT line and the census line exactly as for the
+# probe line. `grep … || echo "(none)"` prints a negative it did not measure and cannot
+# tell "the line is absent" from "the log is absent", which is T238's C2 fail-open arm
+# and P-84's own mistake one file over. An absent log is an INSTRUMENT failure and exits.
+if [ ! -s "$WORK/$ARM/bar.log" ]; then
+  echo "INSTRUMENT FAILURE: $WORK/$ARM/bar.log is missing or empty. Nothing was measured."
+  exit 3
+fi
+NV="$(LC_ALL=C grep -c '^VERDICT' "$WORK/$ARM/bar.log")" || NV=0
+echo "VERDICT line count = $NV"
+if [ "$NV" -ge 1 ]; then LC_ALL=C grep -m1 '^VERDICT' "$WORK/$ARM/bar.log"; fi
+NC="$(LC_ALL=C grep -c 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log")" || NC=0
+echo "census line count  = $NC"
+if [ "$NC" -ge 1 ]; then LC_ALL=C grep -m1 'GUARDS-DIR-REGISTRATION: population=' "$WORK/$ARM/bar.log"; fi
 echo "--- what the NEW watch reported ---"
 LC_ALL=C grep -n 'registration decisive' "$WORK/$ARM/bar.log" | sed 's/^/    /'
 echo "--- registration sentences ---"
