@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""Further readings of 'numeric run', on BOTH trees, hunting T416's 43 / 37 / 5186."""
+import json, os, re, collections
+
+def refs_for(root):
+    out = set()
+    d = os.path.join(root, ".softhouse/vectors/ledger")
+    def harvest(o):
+        if isinstance(o, dict):
+            for v in o.values(): harvest(v)
+        elif isinstance(o, list):
+            for v in o: harvest(v)
+        elif isinstance(o, str):
+            for m in re.finditer(r"\.softhouse/capture/[A-Za-z0-9._/\-]+", o):
+                out.add(m.group(0))
+    for f in sorted(os.listdir(d)):
+        if f.endswith(".json"):
+            harvest(json.load(open(os.path.join(d, f))))
+    return sorted(r for r in out if os.path.isfile(os.path.join(root, r)))
+
+PATTERNS = {
+    "[0-9]+":            rb"[0-9]+",
+    "[0-9.]+":           rb"[0-9][0-9.]*",
+    "[0-9][0-9,._]*":    rb"[0-9][0-9,._ ]*[0-9]|[0-9]",
+    "[-+]?[0-9.]+":      rb"[-+]?[0-9][0-9.]*",
+}
+
+for root, tag in (("/tmp/t422/pre", "PRE-merge bd86a5e7"), ("/tmp/t422/t416", "POST-merge tip")):
+    rs = refs_for(root)
+    print("\n=== %s : %d readable cited artefacts ===" % (tag, len(rs)))
+    for name, pat in PATTERNS.items():
+        left, right = collections.Counter(), collections.Counter()
+        for r in rs:
+            raw = open(os.path.join(root, r), "rb").read()
+            for m in re.finditer(pat, raw):
+                i, e = m.start(), m.end()
+                if i > 0: left[raw[i-1]] += 1
+                if e < len(raw): right[raw[e]] += 1
+        print("  run=%-18s LEFT=%-4d RIGHT=%-4d ',' R=%-6d ',' L=%d"
+              % (name, len(left), len(right), right[ord(',')], left[ord(',')]))

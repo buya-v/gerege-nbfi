@@ -1,0 +1,238 @@
+package conformance
+
+// T422 — INDEPENDENT adversarial drive of T416's inverted admission classifier.
+// Not committed to the repo; run in a /tmp scratch clone only.
+//
+// It attacks tokenBoundedIndex from BOTH sides, as P-98 requires: a legitimate
+// amount it REFUSES (false refusal), and a prefix/substring it ADMITS (false
+// admission). Every row is text-only; nothing here parses a number.
+
+import (
+	"fmt"
+	"testing"
+)
+
+func admits(hay, needle string) bool {
+	return tokenBoundedIndex([]byte(hay), []byte(needle)) >= 0
+}
+
+type row struct {
+	hay    string
+	needle string
+	want   bool // want ADMIT
+	why    string
+}
+
+func drive(t *testing.T, label string, rows []row) {
+	t.Helper()
+	admitted, refused, bad := 0, 0, 0
+	for _, r := range rows {
+		got := admits(r.hay, r.needle)
+		if got {
+			admitted++
+		} else {
+			refused++
+		}
+		verdict := "REFUSE"
+		if got {
+			verdict = "ADMIT "
+		}
+		mark := "ok  "
+		if got != r.want {
+			mark = "**  "
+			bad++
+		}
+		fmt.Printf("%s%s  %-34q  cited %-14q  -> %s   (%s)\n", mark, label, r.hay, r.needle, verdict, r.why)
+	}
+	if admitted == 0 || refused == 0 {
+		t.Fatalf("%s: anti-vacuity — the table went all one way (admit=%d refuse=%d)", label, admitted, refused)
+	}
+	fmt.Printf("== %s: %d rows, %d admit, %d refuse, %d DIVERGE FROM MY EXPECTATION\n\n", label, len(rows), admitted, refused, bad)
+}
+
+// ---------------------------------------------------------------- T405's twelve
+func TestT422_T405TwelveRows(t *testing.T) {
+	drive(t, "T405", []row{
+		{`{"formatted":"1,250,000.00"}`, "250,000.00", false, "thousands-separated tail"},
+		{`{"formatted":"1,100.12"}`, "100.12", false, "thousands-separated tail"},
+		{`{"formatted":"100.12-"}`, "100.12", false, "accounting trailing minus"},
+		{`{"formatted":"100.12+"}`, "100.12", false, "trailing plus"},
+		{`{"formatted":"1 250 000.00"}`, "250 000.00", false, "space-grouped tail"},
+		{`{"raw":100_125}`, "125", false, "underscore-grouped tail"},
+		{`Total posted was 100.125. See note.`, "100.125", true, "prose full stop"},
+		{`note=paid+100.125&locale=en`, "100.125", true, "URL param, + separates"},
+		{`{"formatted":"100.125EUR"}`, "100.125", true, "currency code beginning with E"},
+		{`{"formatted":"100.125MNT"}`, "100.125", true, "the MNT control of the pair"},
+		{`id-100.125`, "100.125", true, "hyphenated identifier"},
+		{`range 50.00-100.125`, "100.125", true, "range dash"},
+		{`T352-amount-100.125.req`, "100.125", true, "filename"},
+		{`16,-100.125,DEBIT`, "100.125", false, "genuinely negative"},
+	})
+}
+
+// ------------------------------------------------- FALSE ADMISSION hunt (my own)
+func TestT422_FalseAdmissionHunt(t *testing.T) {
+	drive(t, "FA", []row{
+		// A. THE DATE. The old blacklist refused this; the new rule admits it.
+		{`{"transactionDate":"2026-01-15"}`, "15", false, "DATE: 15 is the day, not an amount"},
+		{`{"transactionDate":"2026-01-15"}`, "01", false, "DATE: 01 is the month"},
+		{`"date":"2026-01-15","amount":"250"`, "01-15", false, "DATE fragment"},
+		// B. version / dotted identifiers
+		{`fineract 1.10.125 build`, "10.125", false, "version-string tail"},
+		{`v100.125.3`, "100.125", false, "version prefix"},
+		// C. compact JSON array of numbers
+		{`[1,100.125]`, "100.125", false, "compact JSON array element (the CSV twin)"},
+		{`[100.125,200]`, "100.125", true, "compact JSON array, comma to the RIGHT"},
+		// D. hyphenated numeric ids
+		{`ref-2026-100125`, "100125", true, "hyphenated id, no sign meaning"},
+		{`acct-10-125`, "125", true, "hyphen-separated id tail"},
+		// E. exponent shapes
+		{`{"v":100.12e3}`, "100.12", false, "exponent"},
+		{`{"v":100.12E+3}`, "100.12", false, "signed exponent"},
+		{`{"v":100.12e}`, "100.12", true, "not an exponent shape"},
+		{`{"v":100.125E5}`, "100.125", false, "exponent, digit follows E"},
+		// F. plain prefix/suffix, must still refuse (T387 F-T387-2)
+		{`{"amount":"100.125"}`, "100.12", false, "prefix of a longer number"},
+		{`{"amount":"1100.125"}`, "100.125", false, "tail of a longer number"},
+		{`{"amount":"100.1250"}`, "100.125", false, "prefix with trailing zero"},
+		// G. leading sign
+		{`-100.125`, "100.125", false, "leading sign at offset 0"},
+		{`[-100.125]`, "100.125", false, "leading sign inside a bracket"},
+		{`paid -100.125 today`, "100.125", false, "leading sign after a space"},
+		{`x=-100.125`, "100.125", false, "leading sign after ="},
+		{`{"a":-100.125}`, "100.125", false, "leading sign after a colon"},
+	})
+}
+
+// -------------------------------------------------- FALSE REFUSAL hunt (my own)
+func TestT422_FalseRefusalHunt(t *testing.T) {
+	drive(t, "FR", []row{
+		// live capture shapes measured by T422's own alphabet run: the bytes
+		// actually observed beside a numeric run in the 44 cited artefacts.
+		{`{"amount":"100.125"}`, "100.125", true, "JSON string value"},
+		{`{"amount":100.125}`, "100.125", true, "JSON number value"},
+		{`{"amount":100.125,"b":1}`, "100.125", true, "JSON number then comma"},
+		{`{"a":[100.125]}`, "100.125", true, "JSON array element"},
+		{`  amount   100.125` + "\n", "100.125", true, "aligned text, newline right"},
+		{`amount: 100.125)`, "100.125", true, "close paren right"},
+		{`total=100.125&x=1`, "100.125", true, "query string"},
+		{`| 100.125 |`, "100.125", true, "table cell"},
+		{`amount 100.125₮`, "100.125", true, "high byte right (tugrik)"},
+		{`₮100.125`, "100.125", true, "high byte left"},
+		{`"amount_minor": "10000025",`, "10000025", true, "the real ledger cell shape"},
+		{`total_debits_minor": "12500062",`, "12500062", true, "the real totals shape"},
+		// THE SPACE-GROUP RULE'S COST: a digit, a space and a digit is read as a
+		// group separator even when it is column alignment or prose.
+		{`row 1 100.125 end`, "100.125", false, "digit SPACE digit read as grouping"},
+		{`1 100.125`, "100.125", false, "same, minimal"},
+		{`row 12 100.125 end`, "100.125", false, "two-digit column then amount"},
+		{`row A 100.125 end`, "100.125", true, "non-digit before the space: admits"},
+		// control chars
+		{"amount\t100.125\t", "100.125", true, "tab both sides"},
+		{"100.125\x00", "100.125", false, "NUL right: unnamed byte, refuses"},
+		{"\x01" + `100.125`, "100.125", false, "SOH left: unnamed byte, refuses"},
+		{"100.125\x7f", "100.125", false, "DEL right: unnamed byte, refuses"},
+	})
+}
+
+// ------------------------------------------- the OLD blacklist, for comparison
+func oldAdmits(hay, needle string) bool {
+	raw, nd := []byte(hay), []byte(needle)
+	oldLeft := func(b byte) bool { return (b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+' }
+	oldRight := func(b byte) bool { return (b >= '0' && b <= '9') || b == '.' || b == 'e' || b == 'E' }
+	for off := 0; off+len(nd) <= len(raw); off++ {
+		if string(raw[off:off+len(nd)]) != needle {
+			continue
+		}
+		i, end := off, off+len(nd)
+		if (i == 0 || !oldLeft(raw[i-1])) && (end == len(raw) || !oldRight(raw[end])) {
+			return true
+		}
+	}
+	return false
+}
+
+func TestT422_WhereTheTwoRulesDisagree(t *testing.T) {
+	cases := []string{
+		`{"transactionDate":"2026-01-15"}|15`,
+		`{"transactionDate":"2026-01-15"}|01`,
+		`ref-2026-100125|100125`,
+		`acct-10-125|125`,
+		`id-100.125|100.125`,
+		`range 50.00-100.125|100.125`,
+		`note=paid+100.125&locale=en|100.125`,
+		`{"formatted":"100.125EUR"}|100.125`,
+		`T352-amount-100.125.req|100.125`,
+		`Total posted was 100.125. See note.|100.125`,
+		`{"formatted":"1,250,000.00"}|250,000.00`,
+		`{"formatted":"1,100.12"}|100.12`,
+		`{"formatted":"100.12-"}|100.12`,
+		`{"formatted":"100.12+"}|100.12`,
+		`{"formatted":"1 250 000.00"}|250 000.00`,
+		`{"raw":100_125}|125`,
+		`[1,100.125]|100.125`,
+		`row 1 100.125 end|100.125`,
+	}
+	nOldOnly, nNewOnly := 0, 0
+	for _, c := range cases {
+		var hay, nd string
+		for i := len(c) - 1; i >= 0; i-- {
+			if c[i] == '|' {
+				hay, nd = c[:i], c[i+1:]
+				break
+			}
+		}
+		o, n := oldAdmits(hay, nd), admits(hay, nd)
+		tag := "same"
+		if o && !n {
+			tag = "OLD-admit NEW-refuse (closed hole / new refusal)"
+			nOldOnly++
+		} else if !o && n {
+			tag = "OLD-refuse NEW-admit (closed false refusal / NEW hole)"
+			nNewOnly++
+		}
+		fmt.Printf("  %-36q cited %-12q  old=%-5v new=%-5v  %s\n", hay, nd, o, n, tag)
+	}
+	fmt.Printf("== old-admit-only=%d  new-admit-only=%d\n", nOldOnly, nNewOnly)
+}
+
+// ----------------------------------------------- exhaustive single-byte sweep
+func TestT422_EveryByteBothSides(t *testing.T) {
+	const amt = "100.125"
+	var leftAdmit, rightAdmit []int
+	for b := 0; b < 256; b++ {
+		if admits(string(rune(0))+"", amt) {
+		}
+		hay := string([]byte{byte(b)}) + amt
+		if admits(hay, amt) {
+			leftAdmit = append(leftAdmit, b)
+		}
+		hay = amt + string([]byte{byte(b)})
+		if admits(hay, amt) {
+			rightAdmit = append(rightAdmit, b)
+		}
+	}
+	fmt.Printf("LEFT  neighbour bytes that ADMIT a bare %q: %d of 256\n", amt, len(leftAdmit))
+	fmt.Printf("RIGHT neighbour bytes that ADMIT a bare %q: %d of 256\n", amt, len(rightAdmit))
+	show := func(name string, xs []int) {
+		var s string
+		for _, b := range xs {
+			if b >= 32 && b < 127 {
+				s += fmt.Sprintf("%c", b)
+			}
+		}
+		fmt.Printf("  %s printable: %q  (+%d non-printable/high)\n", name, s, len(xs)-len(s))
+	}
+	show("LEFT ", leftAdmit)
+	show("RIGHT", rightAdmit)
+	var oldLeftAdmit, oldRightAdmit int
+	for b := 0; b < 256; b++ {
+		if oldAdmits(string([]byte{byte(b)})+amt, amt) {
+			oldLeftAdmit++
+		}
+		if oldAdmits(amt+string([]byte{byte(b)}), amt) {
+			oldRightAdmit++
+		}
+	}
+	fmt.Printf("OLD blacklist: LEFT %d of 256 admit, RIGHT %d of 256 admit\n", oldLeftAdmit, oldRightAdmit)
+}

@@ -1,9 +1,9 @@
 # T422 — INDEPENDENT review of T416 (`softhouse/T416-t405-conditions`)
 
-STATUS: IN PROGRESS — committed incrementally. The VERDICT section is written last.
+STATUS: COMPLETE. VERDICT: APPROVED WITH CONDITIONS (5 — two MINOR, three LOW; none blocks the merge).
 
 Reviewer: T422, branch `softhouse/T422-review-t416`.
-Subject: `softhouse/T416-t405-conditions`, 10 commits, tip `9f4fc247`, merge-base current `main` (`e13966dc`).
+Subject: `softhouse/T416-t405-conditions`, 10 commits, tip `9f4fc247`. Merge-base with `main` is `e0eb4fe2`; `main` advanced from `e13966dc` to `e864dd3d` (T421 + T428) during this review, and section 7 uses the LATER value.
 Scratch tree for every drive: `/tmp/t422/t416` (a `git clone --shared` of the repo, checked out at
 T416's tip) — **outside the repository**, as T422's brief requires, so
 `guard_no_narrow_catch_in_capture_rigs`'s recursive walk cannot see it.
@@ -539,3 +539,149 @@ are `main`'s, from T421/T428, and both are `== pinned` there.
 `[VERIFIED: /tmp/t422/mergebuild.sh and the T416-tree run]`.
 
 **MERGING IS SAFE.**
+
+---
+
+## 9. WHAT I CHECKED AND FOUND NOTHING — so silence is distinguishable from not looking
+
+- **Money non-negotiables.** No float, no `strconv`, no `big.`, no `math.`, no division, no parse
+  anywhere in the added code; every arithmetic expression enumerated in section 4. No `int64` holds
+  `100.125`. Money in the touched code is int64 minor units or plain int counters.
+- **Ledger invariants.** This diff contains no posting, balance, hold or reversal code, so
+  append-only / derived-balances / holds-affect-available-only are untouched. The bar's own
+  `ledger invariants 0 violation(s), 25 non-vacuous assertion(s)` line is green on both trees.
+- **Idempotency-Key.** No money-movement endpoint is added or altered.
+- **Database.** No MySQL/MariaDB/Oracle-Database driver, dialect, `ojdbc`, `oracle.jdbc` or port
+  1521. The 13 `MySQL` strings in the diff are replayed lines of an existing harness report about
+  Fineract's own SQL.
+- **Frozen adapter contract.** Untouched — no file under `loanschedule/contract` is in the diff.
+- **Scope.** Files changed outside T416's stated grant: **none**
+  `[VERIFIED: /tmp/t422/mergecheck.sh file list]`. `.softhouse/conformance.sh`: 0 lines.
+- **P-number citations.** T416 cites P-45, P-83, P-84, P-98 among others; all four exist in
+  `.softhouse/patterns.md` (`:1503`, `:2806`, `:2813`, `:3411`), and the bar's `PNUMBER-CITATIONS`
+  gate is `VERDICT PASS` on both trees.
+- **T397's own tests.** Not one test outside T416's two new files goes red against `main`'s bytes,
+  so the inversion did not silently relax an older assertion.
+- **The divergence double-count.** `ledger_divergence_fail_is_counted_once` is RED before / PASS
+  after, and I confirmed `grade.go:628-644` folds a divergence FAIL into `RefusalFail` as well as
+  `DivergenceFail`, so omitting `DivergenceFail` from `ledgerMismatches()` is correct and not an
+  oversight.
+- **The split line's second count.** It is printed from the same two expressions the total is summed
+  from (`lm`, `lv`), so it cannot drift from the total — I read the code and drove the mixed arm,
+  where the split (`LEDGER 2 | LOAN SCHEDULE 1`) and the total (`3`) agree.
+
+---
+
+## 10. FINDINGS
+
+| id | rating | area | one line |
+|---|---|---|---|
+| **F-T422-1** | **MINOR** | `admit.go` §4.1 | `verbatimInCapture`'s doc comment and its **refusal message** still describe the deleted blacklist, and the message is now demonstrably FALSE for an unnamed-byte refusal. |
+| **F-T422-2** | **MINOR** | `admit.go` §3.4(a) | `leftDelimits`'s hyphen-as-separator rule opens a **false admission the old blacklist closed**: `{"transactionDate":"2026-01-15"}` now admits a citation of `15`. Fail-OPEN on money text. Latent, not live. |
+| **F-T422-3** | **LOW** | handoff §3.1 | Three of five published alphabet cardinals do not reproduce, and "37 artefacts" is the **pre-merge** count — a counter-example to the handoff's own "every drive was re-run against the merged tree". |
+| **F-T422-4** | **LOW** | `report.go` §6 | The new third exit-0 branch is **unreachable at exit 0** on the real corpus (two other guards force exit 2 first). Correct to add; the record should not imply the corpus exercised it. |
+| **F-T422-5** | **LOW** | test §3.4(b)(c) | The recorded digit-COMMA-digit decision names only the CSV case; the same rule also refuses **compact JSON arrays** (`[100.125,200]`) and **`digit SPACE digit` columnar text**, and the test's own "unambiguous forms" control set omits exactly those shapes. |
+
+**Nothing I found is a rejection.** No non-negotiable is violated, the money defect F-T405-5 was
+fixed and the fixed count is RIGHT rather than merely non-zero, and both bars are exit 0 with every
+pinned figure held.
+
+---
+
+## VERDICT: **APPROVED WITH CONDITIONS**
+
+T416 closes all six of T405's conditions. The MAJOR money-reporting defect is genuinely fixed, and it
+is fixed **correctly** — I drove the count to 1, 2 and 3 mismatched ledger vectors and the sentence
+said 1, 2 and 3, and I drove a mixed 1-loanschedule + 2-ledger corpus where the old code said `1` and
+the new code says `3` with the split attributing `LEDGER 2 | LOAN SCHEDULE 1`. The admission
+classifier really is inverted, all twelve T405 rows flip, and no number is formed anywhere near an
+amount. Merging onto today's `main` is clean, compiles, tests green and the bar is exit 0.
+
+### Conditions
+
+**C-T422-1 — MINOR. Correct the refusal message and doc comment `verbatimInCapture` still gives for
+the rule T416 deleted.** `admit.go` ~`:1366-1370` (doc) and ~`:1406-1413` (the message a human
+reads). The message asserts *"every occurrence has a digit, a decimal point or a sign immediately
+beside it"*, which is false for any refusal caused by an unnamed byte. **This is the same class of
+defect as F-T405-5 — a right machine decision under a false human sentence — and T416 should not
+close a fire on it while leaving a second instance one file away.**
+
+> **Drive.** RED-before: in the ledger conformance package, assert that a vector whose
+> `request.legs[].amount_major_text` occurs in its `request_capture_ref` artefact **only** beside an
+> unnamed byte (`"100.125"` followed by `\x00`) is refused, and that the refusal reason does NOT
+> contain the substring `has a digit, a decimal point or a sign immediately beside it`. That arm is
+> RED today — I confirmed the refusal itself fires
+> `[VERIFIED: /tmp/t422/t422_attack_test.go row "NUL right", REFUSE]`. GREEN-after: the message names
+> the actual class ("a byte this file has not NAMED as terminating a numeric token"). Control: the
+> genuine glued-to-a-longer-number case (`100.12` against `100.125`) must still produce the
+> prefix/tail wording, so the two reasons stay distinguishable.
+
+**C-T422-2 — MINOR. Close or explicitly accept the hyphen false admission, in writing, with a test
+either way.** `leftDelimits`'s `-`/`+` branch returns `i >= 2 && isTokenByte(raw[i-2])`, so
+`2026-01-15` admits `15`. The old blacklist refused it. The blast radius today is one field
+(`request.legs[].amount_major_text` on divergence vectors — the other field is shielded by
+`hasResidueBeyondMinorUnit`), and today's only divergence artefact uses `"01 June 2026"`, so it is
+latent. **It is one ISO-8601 capture from being live, and it is the fail-OPEN direction T416's own
+comma reasoning names as the more expensive one.**
+
+> **Drive.** RED-before, both directions, in one table:
+> `tokenBoundedIndex([]byte(`{"transactionDate":"2026-01-15"}`), []byte("15"))` must be `< 0`
+> (currently `>= 0` — RED `[VERIFIED: TestT422_FalseAdmissionHunt]`), while
+> `tokenBoundedIndex([]byte("id-100.125"), []byte("100.125"))` and
+> `[]byte("range 50.00-100.125")` must stay `>= 0` (the two F-T405-3 refusals this rule exists to
+> close — they must NOT regress). A candidate discriminator that needs no parse: treat `-` as a
+> separator only when the far side is a **letter or `_`**, not a digit; that keeps `id-100.125` and
+> refuses `2026-01-15`, but it re-refuses `50.00-100.125`, so the range row is the one that decides
+> the design. **If the decision is to ACCEPT the hyphen admission instead, that is defensible — but
+> it must be a named test recording the choice, exactly as the comma ambiguity is, not a silence.**
+
+**C-T422-3 — LOW. Re-measure the capture alphabet on the merged tree and correct the handoff's five
+cardinals, or state the reading that produces them.** I get 44 artefacts / 50 left / 37 right /
+1,415 commas-right / 276 commas-left on T416's tip, and 37 artefacts only at T416's **pre-merge**
+commit. Two of the five reproduce; three do not. The finding does not depend on them — the direction
+is confirmed under every reading I tried, including a 256-byte exhaustive sweep — but the handoff
+asserts "every drive was re-run against the merged tree" and this one was not.
+
+> **Drive.** Re-run the measurement script on the tip, print `artefacts=`, `left=`, `right=` and both
+> comma counts, and commit the transcript. Control: run the same script on `bd86a5e7` and show the
+> two readings side by side, so the difference is visibly the T391 merge and not a method change.
+
+**C-T422-4 — LOW. Say in the record that the new exit-0 third branch is currently unreachable at
+exit 0.** Two guards force exit 2 first: `Ledger.Inadmissible > 0` in `ExitCode()`, and the
+`LEDGER FATAL: DIVERGENCE POPULATION n, PINNED m` check. Adding the branch is right (P-45), but the
+handoff's "driven above" points at a transcript that exits 2, where neither sentence prints.
+
+> **Drive.** Add one assertion to the new arm that documents the reachability, e.g. a comment plus a
+> subtest naming the two guards that stand in front of it, and cite
+> `/tmp/t422/out/f6-removed-AFTER.log:287` (`LEDGER FATAL: DIVERGENCE POPULATION 0, PINNED 1`) as the
+> measurement. Nothing needs to change behaviourally.
+
+**C-T422-5 — LOW. Widen the recorded ambiguity decision to the two other shapes the same rule
+refuses.** `TestTheAmbiguousGroupSeparatorResolvesTowardRefusal` names only CSV. The rule also
+refuses `[100.125,200]` — the exact output of `encoding/json.Marshal` without indent — and
+`row 1 100.125 end`. Its "the unambiguous JSON forms are unaffected" control set
+(`{"a":100.125,"b":2}`, `[16, 100.125]`, `{"a":100.125}`) contains only shapes with a **non-digit**
+beside the comma, so it cannot see the case it omits.
+
+> **Drive.** Add both rows to the ambiguity test with `want=false` and a comment saying the refusal is
+> the accepted cost, so a future capture rig meets the decision instead of an unexplained exit 2.
+> Control: keep `[100.125, 200]` (with the space) as a `want=true` row beside it, which is what makes
+> the pair a rule rather than a blanket refusal.
+
+### On the F-T405-4 REQUEST
+
+**Safe to apply.** Both pin values (`0` and `1`) are measured by running and hold on both of my bar
+runs; both `sed` extractions extract non-empty on all three drive transcripts; T405's narrowing
+reproduces exactly. `conformance.sh` is free (T404 released it), but `main` has edited it since the
+request was written, so **re-anchor the three hunks by context, not by the line numbers in the
+request**. Apply it knowing it is a **second layer under a working first layer** — the state it pins
+already exits 2 today — not the closure of a live fail-open.
+
+### Merge recommendation
+
+**MERGE.** Current `main` (`e864dd3d`) + T416 (`9f4fc247`): merge-tree exit 0, zero conflicts,
+file-disjoint from T421/T428, `go build` / `go vet` / `go test -count=1 ./...` all exit 0, and
+`bash .softhouse/conformance.sh` exit 0 with the probe line printed and every pinned figure held
+(`wrong impls 16 == pinned 16` there, `15 == pinned 15` on T416's own tree — the difference is
+`main`'s). All five conditions above are follow-ups; none of them blocks the merge, and none of them
+touches money arithmetic.
