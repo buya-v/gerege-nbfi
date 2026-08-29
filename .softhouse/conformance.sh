@@ -4986,6 +4986,8 @@ COSTSTALE
 #
 #   selector                                                      7c543532…   d1c45afc…
 #                                                                 (T454 tip)  (T466 tip)
+#   (the parenthesised figure is "LINE contains a fold image", which is what it measures —
+#    NOT "path text carries" one, which is what T466 labelled it; see the note below)
 #   non-comment, non-blank lines in the corpus                       2310        2555
 #   locals assigned from the root variable                             36          40
 #   S0  the root variable is an operand of something that
