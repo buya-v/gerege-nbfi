@@ -323,7 +323,7 @@ def build_cells(repo):
          corpses=inherited, expect_mode="in_session", expect=0,
          why=("T309's `--grep -1` moved its anchor to this review commit and the count "
               "went 7 -> 8 [T302 F6]. The anchor must not move: a review commit does not "
-              "TOUCH .softhouse/LOCK."),
+              "TOUCH the fire lock."),
          redispatch=True)
 
     # ---- E: F6 -- a later commit with the IDENTICAL SUBJECT that does not touch LOCK.

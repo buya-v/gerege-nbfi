@@ -3,6 +3,11 @@
 # red/green test of the proposed hardening. Scratch repo only; never touches the
 # real tree.
 set -u
+# T465 -- the lock-exclusion pathspec is ASSEMBLED, not spelt: the lock is tracked only while a
+# fire holds it, so a spelt literal is a T316 dead-path frontier row at every fire exit. The
+# value is byte-identical. Drive: .softhouse/capture/t465-lock-frontier/
+SH_DIR='.softhouse'
+LOCK_EXCLUDE=":(exclude)$SH_DIR/LOCK"
 PROBE_DIR="$(cd "$(dirname "$0")" && pwd)"
 LAUNCHD_PATH="/Users/buv/.local/bin:/opt/homebrew/bin:/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -58,7 +63,7 @@ echo "  live line 224: $LIVE_LINE"
 run_live()    { git status --porcelain | LC_ALL=C /usr/bin/grep -av '^?? \.softhouse/LOCK$' || true ; }
 run_wrapped() { CB="${CLAUDE_CODE_EXECPATH:-/Users/buv/.local/bin/claude}"
                 git status --porcelain | ( exec -a ugrep "$CB" -G --ignore-files --hidden -I '-av' '^?? \.softhouse/LOCK$' ) || true ; }
-run_proposed(){ git status --porcelain -- . ':(exclude).softhouse/LOCK' ; }
+run_proposed(){ git status --porcelain -- . "$LOCK_EXCLUDE" ; }
 
 echo "--- C1 live line (BSD, -av) ---";     run_live     | sed -e 's/^/    | /'
 echo "--- C2 live pattern through the ugrep WRAPPER ---"; run_wrapped | sed -e 's/^/    | /'

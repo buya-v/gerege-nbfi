@@ -209,9 +209,19 @@ allowed_driver_path() {
 #                                              is under capture/), and guard_capture_namespace,
 #                                              whose entire population is these two subtrees.
 #                                              MEASURED COST over the last 400 non-merge
-#                                              first-parent commits on `main`: 27 entries, i.e.
-#                                              4 percentage points of cheap-path coverage. That
-#                                              is what closing a money non-negotiable costs here.
+#                                              first-parent commits on `main`: [T465 / C-T461-5]
+#                                              70 ENTRIES, not 27. 27 is the `capture/` figure
+#                                              ALONE; `reviews/` adds 43 more and this clause
+#                                              excludes BOTH, so pricing it at 27 prices half
+#                                              the rule. Re-derived from the same window by
+#                                              `<softhouse>/capture/t465-lock-frontier/`
+#                                              `instruments/50-coverage-remeasure.py`, which
+#                                              CHECKS this case block before it computes
+#                                              anything: capture/=27 reviews/=43 => 70.
+#                                              The COVERAGE cost is unchanged at ~4 points --
+#                                              the entry count and the commit count are
+#                                              different denominators and only the second one
+#                                              decides the path a push takes.
 #   (i) `.softhouse/LOCK` is admitted by name -- it has no extension, and the driver ADDS it 34
 #                                              times in those 400 commits, at the start of a
 #                                              fire, which is the most latency-sensitive push
@@ -232,9 +242,16 @@ allowed_driver_path() {
 #       DECIDED BY MEASUREMENT AGAINST THE PUSHED TREE'S OWN PIN, not by a table in this file --
 #       see `added-path-hazard.py`, invoked from C3 below. A table would rot exactly as clause
 #       (h) rotted. The blunt alternative, "modifications only", was rejected with a number: it
-#       takes cheap-path coverage from 88% to 71% and blocks `A .softhouse/LOCK`, the single most
-#       common addition on main. Trading a fail-open for a freeze is not a fix (P-98). Measured
-#       coverage under the rules as written: 84%, with 0 of the 78 historical additions blocked.
+#       takes cheap-path coverage from 88% to 71% and blocks the ADDITION OF THE FIRE LOCK, the
+#       single most common addition on main (122 of 630 entries in that window are the lock).
+#       Trading a fail-open for a freeze is not a fix (P-98). Measured coverage under the rules
+#       as written: 335/400 = 83.8%, with 0 of the 78 historical additions blocked.
+#       [T465 / C-T461-5(a)] THE REJECTED "exclude capture/** ONLY" ALTERNATIVE WAS PRICED AT
+#       "~87%" IN T453's HANDOFF AND THAT IS WRONG: re-derived over the same 400-commit window
+#       it is 336/400 = 84.0%, i.e. it buys exactly ONE MORE COMMIT than the rule as shipped,
+#       not three points. The decision does not change -- it gets cheaper to defend. Both
+#       figures are UPPER BOUNDS because clause (k) is not modelled in that re-derivation, and
+#       the limit applies equally to both, which is what makes the DIFFERENCE sound.
 state_path() {
   # ONE `case`, AND THE ORDER IS THE ARGUMENT. T412 wrote a second `case` block below the first
   # to handle nested paths; in bash `case` the `*` metacharacter CROSSES `/`, so `.softhouse/*.md`

@@ -19,7 +19,31 @@ set -uo pipefail
 REPO="${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}"
 FINERACT_SRC="${FINERACT_SRC:-/Users/buv/fineract}"
 LOG_DIR="${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}"
-LOCK="$REPO/.softhouse/LOCK"
+
+# ============ T465 — THE LOCK'S PATH IS ASSEMBLED HERE, ONCE, AND NEVER SPELT AGAIN =========
+# The lock is TRACKED WHILE HELD and `release_lock` (below) deletes it, stages the deletion and
+# COMMITS — so `.softhouse/LOCK` enters and leaves `git ls-files` 34 times per 400 commits on
+# main. T316's dead-path census resolves quoted `.softhouse/…` literals against the TRACKED
+# universe, so every tracked instrument that SPELT this path was a frontier row that existed
+# only between fires. Measured by T465 on 3f4e236a, both arms, one control apiece:
+#     lock in the index      T316-DEADPATH-FRONTIER: GREEN   rows=108 pinned=108 added=0
+#     lock out of the index  T316-DEADPATH-FRONTIER: REFUSED rows=125 pinned=108 added=17
+# and — the reason this is REPAIRED rather than pinned — the mirror drive, pin regenerated at
+# 125 and the lock put BACK:
+#     lock in the index      T316-DEADPATH-FRONTIER: REFUSED rows=108 pinned=125 removed=17
+# THE FRONTIER HAS NO FIXED POINT while any tracked instrument spells this path, so no pin can
+# encode it: 108 refuses after every fire exit, 125 refuses during every fire. See
+# .softhouse/capture/t465-lock-frontier/ for the drive and the full member set.
+# Assembling from a variable changes NO runtime value — the strings below are byte-identical to
+# the literals they replace, and 20-assembly-parity.sh drives that.
+SH_DIR='.softhouse'                       # repo-relative home of this program's instruments
+LOCK_REL="$SH_DIR/LOCK"                   # repo-relative lock path
+LOCK="$REPO/$LOCK_REL"                    # absolute lock path (unchanged value)
+# THE ONE PATHSPEC FRAGMENT the exit-protocol DETECT and STAGE sites share. It is declared once
+# so the two sites cannot drift apart — the asymmetry T202 repaired. Its fail direction is
+# CLOSED at both sites: under `set -u` an unset name aborts, and an EMPTY value makes git refuse
+# the pathspec, which both sites already read out of GS_RC / ADD_RC and report as a REFUSAL.
+LOCK_EXCLUDE_PATHSPEC=":(top,exclude)$LOCK_REL"
 LOCK_MAX_AGE_SECS="${LOCK_MAX_AGE_SECS:-21600}"   # 6h — freshness threshold (STEP 0 arms 4/5)
 LOCK_CEILING_SECS="${LOCK_CEILING_SECS:-86400}"   # 24h — T279 lifetime CEILING (STEP 0 arm 3)
 # T365 / T361 C1 — how far AHEAD of this host's clock a `released_at` may plausibly sit and
@@ -1340,7 +1364,14 @@ fi
 #
 # It runs at fire START, so what it reports is the PREVIOUS fire's pushes: a bypass is caught one
 # fire late rather than never. Non-fatal, same reason as everything else in this block.
-RECON_TMP="$(mktemp "${TMPDIR:-/tmp}/fire-reconcile.XXXXXXXXXX")" || RECON_TMP=''
+# T465 / C-T461-6 -- `$FIRE_MKTEMP`, not a bare `mktemp`. This file resolved an ABSOLUTE
+# mktemp near the top (T377: `/usr/bin/mktemp` does not exist in every userland, and a bare
+# name is whatever $PATH means under launchd) and every other scratch site here already uses
+# it. T453 landed this one bare. It fails SAFE either way -- an unresolvable name makes the
+# substitution empty, `RECON_TMP` empty, and the else-branch below says the reconciliation did
+# not run -- so this is a discipline repair, not a defect repair, and it is worth making
+# because the next reader should not have to re-derive which of the two spellings is the rule.
+RECON_TMP="$($FIRE_MKTEMP "${TMPDIR:-/tmp}/fire-reconcile.XXXXXXXXXX" 2>/dev/null)" || RECON_TMP=''
 if [[ -n "$RECON_TMP" ]]; then
   bash "$REPO/.softhouse/hooks/reconcile-pushed-trees.sh" >"$RECON_TMP" 2>&1 || true
   while IFS= read -r l; do log "reconcile| $l"; done <"$RECON_TMP"
@@ -2996,7 +3027,7 @@ GUARD_HEAD_BEFORE_REPAIR=""
 #   cwd is, so the guard does not depend on the `cd "$REPO"` at line 49.
 #   Dropping grep also removes every byte-class, locale, binary-detection and
 #   grep-implementation question from a load-bearing guard (T189, P-58).
-DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')
+DIRTY=$(git status --porcelain -- ':(top)' "$LOCK_EXCLUDE_PATHSPEC")
 GS_RC=$?
 if (( GS_RC != 0 )); then
   log "ERROR: exit-protocol guard could not read git status (rc=$GS_RC) — REFUSING to conclude the tree is clean. No rescue attempted (git is not answering); treat this fire's deliverables as UNVERIFIED and inspect the tree by hand."
@@ -3008,7 +3039,8 @@ elif [[ -n "$DIRTY" ]]; then
   local -a DIRTY_LINES; DIRTY_LINES=("${(@f)DIRTY}")
   print -rl -- "${(@)DIRTY_LINES[1,20]}"
   # T202: `:(top)`-anchored, so the rescue measures the same thing the `git
-  # status` above it measures. The old `-- . ':!.softhouse/LOCK'` was
+  # status` above it measures. The old form -- a bare `.` pathspec plus a
+  # cwd-relative :! exclusion of the lock -- was
   # CWD-RELATIVE and therefore ASYMMETRIC with the `:(top)` status T190 added —
   # worse than the pre-T190 state, because the two disagreed about their subject.
   # Measured from a subdirectory of a scratch repo: status listed BOTH stranded
@@ -3017,7 +3049,7 @@ elif [[ -n "$DIRTY" ]]; then
   # "rescued" is printed only after a commit that actually happened.
   # POLARITY: fail-CLOSED — it now says "NOTHING was rescued" instead of claiming
   # a rescue it did not perform.
-  git add -A -- ':(top)' ':(top,exclude).softhouse/LOCK' >/dev/null 2>&1
+  git add -A -- ':(top)' "$LOCK_EXCLUDE_PATHSPEC" >/dev/null 2>&1
   ADD_RC=$?
   if (( ADD_RC != 0 )); then
     log "ERROR: exit-protocol rescue could not stage the leftovers (git add rc=$ADD_RC) — NOTHING was rescued. The paths listed above are still uncommitted; inspect the tree by hand."

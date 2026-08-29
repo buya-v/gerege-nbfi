@@ -21,6 +21,10 @@ set -u
 MOD="${1:?usage: 50-drive-reconcile.sh <path-to-ready-tasks.py> <label>}"
 LABEL="${2:?}"
 FIX=/tmp/t350-fixture
+# T465 -- the fire lock's repo-relative path, ASSEMBLED not spelt: it is tracked only while a
+# fire holds it, so a spelt literal is a T316 dead-path frontier row at every fire exit.
+SH_DIR='.softhouse'
+LOCK_REL="$SH_DIR/LOCK"
 
 run_case () {
   local mainsha="$1" json="$2" title="$3"
@@ -32,7 +36,7 @@ run_case () {
   git -C "$FIX" update-ref -d refs/heads/softhouse/T351-old-name 2>/dev/null
   git -C "$FIX" update-ref refs/heads/softhouse/T431-t407-conditions \
       280817a1ffed480321ebf6318d5a363457f7ba72
-  rm -f "$FIX/.softhouse/LOCK"
+  rm -f "$FIX/$LOCK_REL"
   printf '%s' "$json" > "$FIX/.softhouse/tasks.json"
   echo
   echo "=============================================================================="

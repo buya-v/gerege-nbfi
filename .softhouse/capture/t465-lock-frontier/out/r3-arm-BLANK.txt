@@ -1,0 +1,14 @@
+reconcile-pushed-trees: ref     refs/remotes/origin/main
+reconcile-pushed-trees: ledger  /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-r3.2S2A71i8zu/wt/.git/softhouse-driver-gate/attest.tsv
+reconcile-pushed-trees: ledger rows: 1
+reconcile-pushed-trees: window  tips that DESCEND FROM 267d1d1c (the oldest commit the ledger names)
+reconcile-pushed-trees: reflog  1 distinct tip(s) in the last 1 entries of refs/remotes/origin/main
+reconcile-pushed-trees: bypass  none recorded on this host (the gate creates /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-r3.2S2A71i8zu/wt/.git/softhouse-driver-gate on every run, so the
+reconcile-pushed-trees:           absence of /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t465-r3.2S2A71i8zu/wt/.git/softhouse-driver-gate/bypass.log is a measured zero and not an unread file).
+reconcile-pushed-trees: 
+reconcile-pushed-trees: prov    1 attesting row(s) in the window carry NO usable gate=/headblob= pair. R3 did
+reconcile-pushed-trees:           not grade provenance for this window at all -- that is a MEASURED absence of the
+reconcile-pushed-trees:           fields (rows written before T465), never a clean provenance result.
+reconcile-pushed-trees: T453-RECONCILE: ref=refs/remotes/origin/main window=1 pre-gate=0 unattested=0 gitlinks=0 bypasses=0 provenance-graded=0 provenance-unknown=1 provenance-drift=0
+reconcile-pushed-trees: RECONCILED CLEAN -- 1 tip(s) in the window, every one attested and gitlink-free;
+reconcile-pushed-trees:   provenance graded on 0 attesting row(s), 1 row(s) carried no usable fields.

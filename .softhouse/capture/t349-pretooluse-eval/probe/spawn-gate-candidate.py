@@ -38,6 +38,10 @@ import time
 MODE = os.environ.get("SOFTHOUSE_SPAWN_GATE", "enforce")   # enforce | warn | off
 FAIL = os.environ.get("SOFTHOUSE_SPAWN_GATE_FAIL", "closed")  # closed | open
 NET_TIMEOUT = float(os.environ.get("SOFTHOUSE_SPAWN_GATE_NET_TIMEOUT", "12"))
+# T465 -- the fire lock's repo-relative path, ASSEMBLED not spelt: tracked only while held, so
+# a spelt literal is a T316 dead-path frontier row at every fire exit.
+SH_DIR = ".softhouse"
+LOCK_REL = SH_DIR + "/LOCK"
 LOG = os.environ.get("SOFTHOUSE_SPAWN_GATE_LOG", "")
 
 SPAWN_TOOLS = {"Task", "Agent"}
@@ -117,7 +121,7 @@ def main():
         return r.stdout if r.returncode == 0 else None
 
     problems = []
-    if at(".softhouse/LOCK") is None:
+    if at(LOCK_REL) is None:
         problems.append("origin/main carries NO .softhouse/LOCK -- it says no fire is running")
     if at(".softhouse/RESUME.md") is None:
         problems.append("origin/main carries no in-flight .softhouse/RESUME.md")

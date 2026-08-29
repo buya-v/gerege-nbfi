@@ -137,9 +137,49 @@ if [ "$BARRC" -ne 0 ]; then
   exit 1
 fi
 
+# ---- GRADER IDENTITY ON THE ROW.  [T465 / C-T461-2] -----------------------------------------
+# The CHEAP rows the push gate writes have carried `gate=`/`headblob=` since T453; the FULL rows
+# written here carried NO grader identity at all, so a post-hoc reader could not tell a tree
+# graded by the reviewed bytes from one graded by an uncommitted edit -- for exactly the half of
+# the ledger that claims the most. T465 decided that asymmetry the way m-3 decided `bypass.log`:
+# the field is READ (reconcile-pushed-trees.sh grades it, R3) and therefore it is WRITTEN by
+# BOTH writers. Three shas, and they answer three different questions:
+#     bar=          the conformance.sh that actually ran. It comes OUT OF THE GRADED TREE
+#                   (line ~89), so this row records WHAT the tree used to grade itself -- the
+#                   self-grading T412 named, made legible instead of implicit.
+#     gate=         the bytes of THIS file as they ran. SPELT `gate=`, not `attester=`, on
+#                   purpose: it is the same field name the CHEAP rows use, so ONE reader grades
+#                   BOTH kinds of row. Two names for one fact is how a reader ends up checking
+#                   half the ledger.
+#     headblob=     this file as HEAD has it. gate != headblob means the attestation was
+#                   produced by an edit nobody has reviewed.
+# UNRESOLVABLE IS SPELT, NEVER BLANK: `<unknown>` and `<not-in-HEAD>` are values a reader can
+# act on; an empty field would be indistinguishable from a row written before this change.
+BAR_SHA="$(shasum -a 256 "$BAR" 2>/dev/null | LC_ALL=C cut -c1-16)" || BAR_SHA=''
+[ -n "$BAR_SHA" ] || BAR_SHA='<unknown>'
+ATTESTER_SELF="$0"
+ATTESTER_SHA="$(shasum -a 256 "$ATTESTER_SELF" 2>/dev/null | LC_ALL=C cut -c1-16)" || ATTESTER_SHA=''
+[ -n "$ATTESTER_SHA" ] || ATTESTER_SHA='<unknown>'
+ATTESTER_BLOB='<not-in-HEAD>'
+ATTESTER_REL="$(git -C "$TOPLEVEL" ls-files --full-name -- "$ATTESTER_SELF" 2>/dev/null | LC_ALL=C sed -n '1p')" || ATTESTER_REL=''
+if [ -n "$ATTESTER_REL" ]; then
+  BLOBTMP="$(mktemp "${TMPDIR:-/tmp}/t412-attester-blob.XXXXXXXXXX")" || BLOBTMP=''
+  if [ -n "$BLOBTMP" ]; then
+    if git -C "$TOPLEVEL" show "HEAD:$ATTESTER_REL" >"$BLOBTMP" 2>/dev/null; then
+      ATTESTER_BLOB="$(shasum -a 256 "$BLOBTMP" 2>/dev/null | LC_ALL=C cut -c1-16)" || ATTESTER_BLOB='<unreadable>'
+    fi
+    rm -f "$BLOBTMP"
+  fi
+fi
+say "grader bytes: bar=$BAR_SHA attester=$ATTESTER_SHA HEAD blob=$ATTESTER_BLOB"
+if [ "$ATTESTER_BLOB" != '<not-in-HEAD>' ] && [ "$ATTESTER_SHA" != "$ATTESTER_BLOB" ]; then
+  say "  NOTE: this attester's running bytes DIFFER from the blob HEAD carries. The row below"
+  say "  records both, so the difference survives this log and can be read post hoc (R3)."
+fi
+
 VERDICT="$(LC_ALL=C grep -a 'VERDICT: PASS' "$LOG" | LC_ALL=C sed -n '1p' | LC_ALL=C tr '\t' ' ')"
 printf 'FULL\t%s\t%s\t%s\t%s\n' "$TREE" "$COMMIT" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
-  "exit0 probe=${PROBE_N}xup ${VERDICT}" >>"$ATTEST" \
+  "exit0 probe=${PROBE_N}xup bar=$BAR_SHA gate=$ATTESTER_SHA headblob=$ATTESTER_BLOB ${VERDICT}" >>"$ATTEST" \
   || die "ABORT(3) -- could not append the attestation. An attestation that was not recorded is not an attestation."
 
 cp "$LOG" "$GATE_DIR/attested-${TREE}.log" 2>/dev/null

@@ -26,6 +26,22 @@
 #                  with no row is a push this host's gate never graded.
 #   R2  GITLINK    no mode 160000 anywhere in the tip's tree. This is C1 taken POST HOC, and it
 #                  is the arm `--no-verify` cannot evade -- the entry is in the tree that landed.
+#   R3  PROVENANCE the attesting row's `gate=`/`headblob=` fields agree. [T465 / C-T461-2]
+#                  Those two shas had ONE WRITER AND ZERO READERS: the push gate wrote them into
+#                  every CHEAP row since T453 and nothing ever looked, which is m-3's own finding
+#                  about `bypass.log` one level down. T465 resolved it the same way m-3 did --
+#                  READ IT rather than stop writing it -- because the alternative throws away the
+#                  only DURABLE record that a tree was graded by the reviewed bytes: the gate's
+#                  run-time warning is a line in a log nobody keeps. `bar-attest.sh` now writes
+#                  the same two fields onto FULL rows, which it previously left with no grader
+#                  identity at all, so this arm covers the whole ledger and not half of it.
+#                  DIRECTION, and it is deliberately not symmetric with R1/R2:
+#                    gate != headblob                 -> FINDING (exit 1). The attestation was
+#                                                        produced by bytes nobody reviewed.
+#                    fields ABSENT, or `<unknown>` /
+#                    `<not-in-HEAD>` / `<unreadable>`  -> COUNTED AND NAMED, never a refusal.
+#                  Every row written before this change has no fields, and a census that goes red
+#                  on its own history is a census that gets pinned away within a fire (T299).
 #
 # THE WINDOW IS DERIVED FROM THE LEDGER, NOT TYPED. Commits that predate the gate cannot be
 # attested and counting them would make this instrument cry wolf on its first run, which is how a
@@ -35,7 +51,8 @@
 #
 # EXIT CODES -- three different facts, three different codes (T238's rule):
 #   0   the window was READ and every tip in it is attested and gitlink-free -- a MEASUREMENT
-#   1   at least one tip in the window is UNATTESTED or carries a GITLINK
+#   1   at least one tip in the window is UNATTESTED, carries a GITLINK, or was attested by a
+#       row whose gate= and headblob= disagree (R3)
 #   2   the ledger is absent or empty, the ref has no reflog, or the window could not be built.
 #       NEVER conflated with 0: an unreadable ledger would clear every push it was asked about.
 #
@@ -119,6 +136,7 @@ LC_ALL=C awk -F'\t' 'NF>=2 {print $2}' "$ATTEST" | LC_ALL=C sort -u >"$LTMP.tree
   || die 2 "could not read the tree column of the ledger."
 
 IN=0; PRE=0; UNATT=0; GLK=0
+PKNOWN=0; PUNK=0; PDRIFT=0
 FINDINGS=''
 while IFS= read -r tip; do
   [ -n "$tip" ] || continue
@@ -153,6 +171,33 @@ while IFS= read -r tip; do
     FINDINGS="${FINDINGS}GITLINK     $(git rev-parse --short "$tip")  $(printf '%s' "$G" | LC_ALL=C tr '\n' ' ')
 "
   fi
+
+  # R3 -- GRADER PROVENANCE.  [T465 / C-T461-2]
+  # The NOTE column of every row that attests THIS tree, read for the two shas. A tree may carry
+  # more than one row (a CHEAP row from the push gate and a FULL row from bar-attest.sh); every
+  # one of them is graded, because "one of the attestations was produced by unreviewed bytes" is
+  # the finding, not "the newest one was fine".
+  PROWS="$(mktemp "${TMPDIR:-/tmp}/$ME-prov.XXXXXXXXXX")" || die 2 "could not create a scratch file"
+  LC_ALL=C awk -F'\t' -v t="$t" 'NF>=5 && $2==t {print $5}' "$ATTEST" >"$PROWS" \
+    || { rm -f "$PROWS"; die 2 "could not read the note column of the ledger."; }
+  while IFS= read -r note; do
+    [ -n "$note" ] || continue
+    gsha="$(printf '%s' "$note" | LC_ALL=C sed -n 's/.*[[:space:]]gate=\([^[:space:]]*\).*/\1/p')"
+    hsha="$(printf '%s' "$note" | LC_ALL=C sed -n 's/.*[[:space:]]headblob=\([^[:space:]]*\).*/\1/p')"
+    if [ -z "$gsha" ] || [ -z "$hsha" ]; then
+      PUNK=$((PUNK + 1)); continue
+    fi
+    case "$gsha$hsha" in
+      *'<'*) PUNK=$((PUNK + 1)); continue ;;
+    esac
+    PKNOWN=$((PKNOWN + 1))
+    if [ "$gsha" != "$hsha" ]; then
+      PDRIFT=$((PDRIFT + 1))
+      FINDINGS="${FINDINGS}PROVENANCE  $(git rev-parse --short "$tip")  graded by gate bytes $gsha, HEAD blob $hsha -- the attestation was produced by an edit nobody has reviewed
+"
+    fi
+  done <"$PROWS"
+  rm -f "$PROWS"
 done <"$LTMP.tips"
 
 # --- THE BYPASS LEDGER GETS ITS READER  [m-3] -------------------------------------------------
@@ -170,7 +215,15 @@ else
 fi
 
 say ""
-say "T453-RECONCILE: ref=$REF window=$IN pre-gate=$PRE unattested=$UNATT gitlinks=$GLK bypasses=$NBY"
+# R3's own line, printed BESIDE the totals rather than folded into them: `provenance-unknown`
+# is not a smaller `provenance-drift`, and a reader must be able to tell "the ledger predates the
+# fields" from "every row agreed".
+if [ "$PKNOWN" -eq 0 ] && [ "$PUNK" -gt 0 ]; then
+  say "prov    $PUNK attesting row(s) in the window carry NO usable gate=/headblob= pair. R3 did"
+  say "          not grade provenance for this window at all -- that is a MEASURED absence of the"
+  say "          fields (rows written before T465), never a clean provenance result."
+fi
+say "T453-RECONCILE: ref=$REF window=$IN pre-gate=$PRE unattested=$UNATT gitlinks=$GLK bypasses=$NBY provenance-graded=$PKNOWN provenance-unknown=$PUNK provenance-drift=$PDRIFT"
 if [ -n "$FINDINGS" ]; then
   say ""
   # NO BACKTICKS INSIDE A DOUBLE-QUOTED say ARGUMENT. In bash a backtick pair inside "" is
@@ -188,5 +241,6 @@ if [ "$IN" -lt 1 ]; then
   say "  was reconciled. That is not a clean result -- it is an empty one. REFUSING (P-35)."
   exit 2
 fi
-say "RECONCILED CLEAN -- $IN tip(s) in the window, every one attested and gitlink-free."
+say "RECONCILED CLEAN -- $IN tip(s) in the window, every one attested and gitlink-free;"
+say "  provenance graded on $PKNOWN attesting row(s), $PUNK row(s) carried no usable fields."
 exit 0

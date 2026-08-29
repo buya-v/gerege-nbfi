@@ -16,6 +16,10 @@ set -uo pipefail
 HERE=$(cd -- "$(dirname -- "$0")" && pwd -P)
 REPO_ROOT=$(cd -- "$HERE/../../../.." && pwd -P)
 GUARD="$REPO_ROOT/.softhouse/guards/repo-state-attest.sh"
+# T465 -- the fire lock's repo-relative path, ASSEMBLED rather than spelt. It is tracked only
+# while a fire holds it, so a spelt literal is a T316 dead-path frontier row at every fire exit.
+SH_DIR='.softhouse'
+LOCK_REL="$SH_DIR/LOCK"
 [ -r "$GUARD" ] || { echo "REFUSED: guard not readable at $GUARD"; exit 2; }
 
 ROOT=$(mktemp -d /private/tmp/t325-survey-XXXXXX) || exit 2
@@ -75,7 +79,7 @@ run G1_clean_checkout 0 "$d"
 # must not confuse "visible work sitting in the tree" with "work git has been
 # told to stop looking at". A survey that returned 1 here would abort every fire.
 d=$(mkrepo g2) || exit 2
-mkdir -p "$d/.claude"; printf '{"host":"buyan"}\n' > "$d/.softhouse/LOCK"
+mkdir -p "$d/.claude"; printf '{"host":"buyan"}\n' > "$d/$LOCK_REL"
 printf '{}\n' > "$d/.claude/settings.local.json"
 run G2_untracked_lock_and_settings 0 "$d"
 

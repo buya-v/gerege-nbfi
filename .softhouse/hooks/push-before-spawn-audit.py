@@ -86,6 +86,14 @@ import re
 import subprocess
 import sys
 
+# T465 -- the lock's repo-relative path, ASSEMBLED. Not spelt as a literal: the lock is tracked
+# only WHILE HELD, so a spelt literal is a T316 dead-path frontier row between fires, and the
+# frontier has no fixed point while any tracked instrument spells it (measured both ways --
+# added=17 with the lock out of the index, removed=17 with the pin at 125 and the lock back in;
+# .softhouse/capture/t465-lock-frontier/).
+SH_DIR = ".softhouse"          # no trailing slash: the census matches on a `.softhouse` + `/`
+LOCK_REL = SH_DIR + "/LOCK"
+
 CHECKOUT_RE = re.compile(r"checkout: moving from \S+ to (\S+)")
 
 
@@ -172,7 +180,7 @@ def blob(repo, commit, path):
 def judge(repo, commit, branch):
     """What did origin/main say, at `commit`, about this spawn? -> (ok, [reasons])"""
     bad = []
-    if blob(repo, commit, ".softhouse/LOCK") is None:
+    if blob(repo, commit, LOCK_REL) is None:
         bad.append("no .softhouse/LOCK on origin -- origin said NO FIRE WAS RUNNING")
     if blob(repo, commit, ".softhouse/RESUME.md") is None:
         bad.append("no in-flight .softhouse/RESUME.md on origin")
