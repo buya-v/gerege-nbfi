@@ -328,6 +328,11 @@ run before it prints, which would make "probe != up" trivially true against noth
   it aborts at D-R2 because its BEFORE specimen has rotted. So the GREEN arms of the amended guard
   are proved on synthetic bodies that reproduce the real drive's output shape, plus the real drive's
   real early death — **not** on a full healthy run of that drive, which I could not produce.
+- **The bar was last run at `4a2d95cb`.** Commits after it (`2d271edf` and any that carry this
+  sentence) add only handoff prose and a copy of the bar transcript — no instrument, no guard, no
+  vector, no code. That last delta is `[UNVERIFIED]` by a bar run, and it is stated rather than
+  glossed, because "the tree I graded" and "the tree I shipped" being the same thing is exactly the
+  kind of claim this task is about.
 - **I did not re-derive `T408`'s `A2`/`A3` defeats myself.** I corrected the claim to match what
   `T408` measured; I did not rebuild its defeat harness. `[UNVERIFIED by T424: the two WITNESS defeats]`
 
