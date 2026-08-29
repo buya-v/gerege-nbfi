@@ -685,3 +685,43 @@ file-disjoint from T421/T428, `go build` / `go vet` / `go test -count=1 ./...` a
 (`wrong impls 16 == pinned 16` there, `15 == pinned 15` on T416's own tree — the difference is
 `main`'s). All five conditions above are follow-ups; none of them blocks the merge, and none of them
 touches money arithmetic.
+
+---
+
+## 11. THIS REVIEW BRANCH'S OWN BAR
+
+`bash .softhouse/conformance.sh` on `softhouse/T422-review-t416` itself, from a clean clone at
+`/tmp/t422/mine` — **outside the repository** `[VERIFIED: /tmp/t422/BAR-mine.log]`:
+
+```
+BAR exit=0
+probe line PRESENCE first (P-84): grep -c 'probe = ' = 1
+conformance: reference oracle (https://localhost:8443/...) probe = up
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+T316-DEADPATH-CENSUS: corpus=1453 deadFiles=75 deadOccurrences=108
+dead-path frontier: GREEN — frontier == pinned (all 11 rows, by path)
+exemption census READ: LEDGER parity 10 == 10, refusal 6 == 6, money cells 63 == 63, declared 0 == 0
+all 15 wrong ledger implementations DIED through this harness, not by hand.
+P-number citations: VERDICT PASS
+```
+
+This branch adds documentation only (`REVIEW.md` and two evidence files with inert `.txt`
+extensions). It moves no pinned figure. `P-<n>` tokens used: **P-45, P-83, P-84, P-98** — all four
+defined in `.softhouse/patterns.md` (`:1503`, `:2806`, `:2813`, `:3411`); the bar's
+`PNUMBER-CITATIONS` gate is `VERDICT PASS`.
+
+Its base is `e13966dc`, before T421/T428 landed, which is why `wrong impls` reads 15 here and 16 on
+the merge-result run in section 8. Both are `== pinned` on their own tree.
+
+### Evidence committed beside this review
+
+| file | what |
+|---|---|
+| `t422-attack-drive.go.txt` | my adversarial classifier table — 55 rows, the old-rule/new-rule differ, the exhaustive 256-byte sweep. Drop it into `nexus/internal/apps/ledger/conformance/` as `*_test.go` **in a scratch tree only** and run `go test -run TestT422 -v`. `.txt` so it cannot join the module or a guard's recursive walk. |
+| `t422-alphabet-measure.py.txt` | the capture-alphabet measurement, parameterised over two trees and four definitions of "numeric run", which is how F-T422-3 was found. |
+
+The drive scripts themselves (`drive.sh`, `mixed2.sh`, `units.sh`, `units2.sh`, `pinreq.sh`, `f6.sh`,
+`mergecheck.sh`) lived in `/tmp/t422/` and are **not** committed; every figure they produced is
+transcribed above with the transcript path that produced it. **[UNVERIFIED after this session: those
+`/tmp` transcripts do not survive a reboot. Every claim in this document is stated with the command
+that reproduces it, so nothing here depends on them being still readable.]**
