@@ -280,6 +280,11 @@ The delta from the attested ancestor was `.softhouse/tasks.json` alone, so the g
 path, graded the **pushed tree** `ed1b2ee1`, found no fatal citation, and allowed it. Correct on
 both counts.
 
+**A second live driver push at 10:39:00** — `4e48b7e8`, *"softhouse iter5: T442 complete (bar
+EXIT 0, scope clean); dispatch T447 to review it"*, again `.softhouse/tasks.json` alone — went
+through the same cheap path one second before the ref moved. Two consecutive real driver pushes
+gated, and `bypass.log` **does not exist on this host**: zero bypasses taken.
+
 This also killed an arm and improved it: run 3's arm I3 pushed *the name* `main` and failed its
 marker, because `main` had moved underneath it — the same race that is instance 2. The arm now
 pushes the attested **sha**, and the race is recorded rather than papered over.

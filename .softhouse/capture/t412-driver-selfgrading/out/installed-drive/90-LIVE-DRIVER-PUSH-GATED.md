@@ -43,6 +43,19 @@ CHEAP  0d54d19a9dac257ef7cb551d483e280b7a070d9d  6e137d7e…  2026-08-29T02:31:2
 Timestamps in the ledger are UTC; the table above is UTC+8 (`Asia/Ulaanbaatar`), which is why
 `02:30:10Z` and `10:30:10` are the same instant.
 
+## A SECOND live driver push, nine minutes later — same result, no bypass
+
+```
+10:38:30  the driver commits 4e48b7e8  "softhouse iter5: T442 complete (bar EXIT 0, scope clean);
+                                        dispatch T447 to review it"   [.softhouse/tasks.json, +19]
+10:39:00  THE GATE RUNS ON IT and writes  CHEAP  c166c847…  4e48b7e8…
+10:39:01  origin/main advances to 4e48b7e8
+```
+
+Two consecutive live driver pushes have now gone through the gate. `bypass.log` **does not exist**,
+which is the file's way of saying zero bypasses have been taken: the driver has not once needed the
+escape hatch, and both pushes were state-only deltas that the cheap path graded in under 30 s.
+
 ## The one thing this does NOT prove
 
 It does not prove the gate would have stopped instances 2 or 3 *in the live path*, because
