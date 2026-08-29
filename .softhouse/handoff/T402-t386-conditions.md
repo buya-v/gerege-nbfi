@@ -100,7 +100,28 @@ three independent checks, at both sites:
 - **READ** — `cat`'s status is read. *(T386's check, kept — it catches ARM U.)*
 - **WITNESS** — if the sentinel **survives** the search, the shell never truncated the file, so
   the redirect was never opened and **the command never ran**, whatever status bash returned.
-  This is the only one of the three that is a **positive proof** rather than an inference.
+
+> **CORRECTED BY T424, closing `F-T408-1`.** This paragraph used to end *"this is the only one of
+> the three that is a **positive proof** rather than an inference."* **It is not a proof.** WITNESS
+> proves only *"the file at this path still holds my sentinel"*; *"the redirect was never opened"*
+> follows from that **only if the path→inode binding held across the window**. State it as an
+> **inference under path stability**, and name the two defeats T408 constructed:
+>
+> - **`A2`, mid-window SUBSTITUTION.** PRIME writes the sentinel to `F`; `F` is then replaced by a
+>   different, unwritable file holding plausible stale text. The redirect fails for real, the
+>   command never runs, and `_errf_read` returns **usable** — because the content is no longer the
+>   sentinel. In `sel()` that is a fabricated `MEASURED ZERO`.
+> - **`A3`, sentinel not alone.** The sentinel survives but something appended to the file. Exact
+>   equality fails, WITNESS does not fire, same outcome.
+>
+> **The mechanism still stands, and the bound is honest:** neither defeat is a natural failure
+> mode — both need an external agent inside a microsecond window — and in a whole-file run the
+> resulting unwritable file makes the **next** selector's PRIME refuse, so the run exits 4 anyway
+> and at most one selector can fabricate. T408 could not construct either at whole-file level.
+> `A3` is closable (have `_errf_read` refuse when the text *contains* the sentinel rather than only
+> when it *equals* it); `A2` is not closable without an inode check, which would add a new K1 site,
+> so **leaving `A2` open and documented is the better trade**. T424 did not change the code here —
+> only the claim, which is the part that was wrong.
 
 The sentinel carries **no command substitution** — it is built from `$$`, `$RANDOM` and the
 `mktemp` suffix already in hand. A `$(date …)` there would have been a new member of the very
@@ -154,9 +175,35 @@ $ bash -c 'x=""; [ "$x" -lt 1 ]; echo "[ ] returned $?"'
 ```
 
 The assertion read `if [ "$(git ls-files .softhouse | grep -c .)" -lt 1 ]`. **`[` returns 2 on a
-malformed comparison; `if` reads any non-zero as false; the abort does not fire.** Had
-`git ls-files` failed, the sweep would have run over a corpus nobody counted — and every
-`MEASURED ZERO` beneath it would have been denominated in a number never taken.
+malformed comparison; `if` reads any non-zero as false; the abort does not fire.** The sweep would
+then have run over a corpus nobody counted — and every `MEASURED ZERO` beneath it would have been
+denominated in a number never taken.
+
+> **THE CAUSE STATED HERE WAS WRONG, AND T424 CORRECTED IT — `F-T408-5`.** This paragraph used to
+> read *"Had `git ls-files` failed, the sweep would have run over a corpus nobody counted."*
+> **A failing `git ls-files` ABORTS.** `grep -c .` prints `0` for an empty stream, so the
+> substitution captures the string `0`, `[ "0" -lt 1 ]` is **true**, and the abort fires. Driven
+> by T408 and re-derived independently by T424
+> (`.softhouse/capture/t424/instruments/t424-f2-true-cause.sh`, `arms_failed=0`;
+> transcript `.softhouse/capture/t424/out/T424-F2-true-cause.txt`):
+>
+> | arm | captured | `[ … -lt 1 ]` | old block |
+> |---|---|---|---|
+> | `git ls-files` shim exits 128 | `[0]`, rc 1 | true | **ABORT (exit 2)** — the stated cause does not reproduce |
+> | real `grep` on an invalid regex | `[]`, rc 2 | `[` returns **2** | — |
+> | `grep` shim exits 2, no stdout | `[]`, rc 2 | `[` returns **2** | **FELL THROUGH** — the true cause |
+>
+> **The fall-through needs `grep` ITSELF to fail** (rc ≥ 2 with nothing on stdout): an invalid
+> pattern, a broken locale, a missing binary, EMFILE. Mechanism right, exploit path right,
+> attribution wrong. The finding and the repair are unaffected; the *explanation* was the defect,
+> and it had been committed into the source comment as well, where the next reader would have
+> reasoned from it. Both sites are now corrected.
+>
+> **And one correction to the correction.** T408 adds that the repair "now reads the pipeline
+> status, so pipefail catches the `git ls-files` case as well". **T424 drove that false too:**
+> `set -o pipefail` yields the status of the **rightmost** command that exited non-zero, and that
+> is `grep -c .`'s `1`, not git's `128` — measured `rc=1`. A failing `git ls-files` is still caught
+> by the **value** test, exactly as before; what the status read adds is the `grep`-failed case.
 
 It is a command substitution inside a **numeric test** — neither of T381's two buckets, and not
 in T386's list of six unaudited `$(…)` sites either. **It exists only because I audited the
