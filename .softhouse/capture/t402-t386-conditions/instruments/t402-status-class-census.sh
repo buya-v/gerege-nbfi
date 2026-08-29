@@ -166,7 +166,19 @@ awk -F'\t' '{ n=$1; s=$2; out=""; q=0; qc="";
 K2S=$(awk -F'\t' '$2 ~ /[^|][|][^|]/' "$WORK/stripped.txt" | grep -c '')
 K3S=$(awk -F'\t' '$2 ~ /(^|[^0-9<>])[12]?>/' "$WORK/stripped.txt" | grep -c '')
 printf '    K2s pipelines in shell-operator position : %s\n' "$K2S"
-printf '    K3s redirections in shell-operator position : %s\n\n' "$K3S"
+printf '    K3s redirections in shell-operator position : %s\n' "$K3S"
+# K8s, added by T424. The de-noised view is what DISCRIMINATES for K8: every `sel` line matches
+# the wide K8 through the `|` inside its own quoted ERE, so the wide count cannot tell a bare
+# `sel ...` from `sel ... | cat`. With quoted spans blanked -- and `$((` excluded, since
+# arithmetic expansion is not a subshell -- it can, and t424-k8-discrimination.sh drives that.
+K8S_RIGHT='[^|][|][^|]|[$][(][^(]|^[[:space:]]*[(]|&[[:space:]]*$'
+awk -F'\t' -v l="$K8_LEFT" -v r="$K8S_RIGHT" \
+  '$2 ~ l && $2 ~ r { printf "      %4d | %s\n", $1, substr($2,1,120) }' "$WORK/stripped.txt" \
+  > "$WORK/k8s.txt"
+K8S=$(grep -c '' "$WORK/k8s.txt")
+printf '    K8s state-mutating call with a REAL subshell operator : %s\n' "$K8S"
+cat "$WORK/k8s.txt"
+echo
 
 echo '=== CENSUS TOTALS ========================================================='
 sort "$WORK/counts.txt" | awk '{printf "  %-4s %s\n", $1, $2; t+=$2} END{printf "  ----\n  SITES (a line may belong to more than one kind): %d\n", t}'

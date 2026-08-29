@@ -1,0 +1,14 @@
+specimen base: HEAD:.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh   sha256 63e05208fa871628
+GREEN (unmodified)  K8 wide = 29     K8s de-noised = 6
+RED   (S16 | cat)   K8 wide = 29     K8s de-noised = 7
+
+K8s rows naming a selector:
+  GREEN: (none -- correct)
+  RED  :        730 | sel                                                                    -n -E                                            
+
+K8s moved 6 -> 7: the de-noised view SEES the subshell spelling.
+K8 wide did not move (29), AS EXPECTED and stated in the census: every sel line is
+already in it through the pipe inside its own quoted ERE. The wide list is the corpus to
+adjudicate; K8s is the discriminator.
+
+T424-K8-DISCRIMINATION-RESULT: arms_failed=0
