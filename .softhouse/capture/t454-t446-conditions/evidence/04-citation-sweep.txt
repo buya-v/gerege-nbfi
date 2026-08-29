@@ -1,0 +1,129 @@
+T454 INBOUND CITATION SWEEP
+corpus            : 10096 tracked files
+revisions         : cbc8733c -> f8466f7c
+conformance.sh    : 5907 lines at cbc8733c, 6299 lines at f8466f7c
+citations found   : 1770 occurrences, 439 distinct line numbers
+first changed line: 3276 (measured from the diff, not typed)
+citations at or below that line (i.e. MOVED by this commit): 138
+
+citing file                                                              line    before    after
+.softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt          3611    ROTTED    resolves
+.softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt          3687    resolves  ROTTED
+.softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt          3790    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3441    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3462    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3463    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3464    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3465    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3466    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3468    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3469    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3470    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3471    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3487    ROTTED    resolves
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3530    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3553    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3558    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3635    ROTTED    ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3657    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3658    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3659    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3662    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3952    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           3963    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           4161    resolves  ROTTED
+.softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt           4172    resolves  ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3729    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3750    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3751    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3752    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3753    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3754    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3756    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3757    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3758    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3759    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3775    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3818    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3841    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3846    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3923    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3945    resolves  ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3946    resolves  ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3947    resolves  ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      3950    resolves  ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      4240    resolves  resolves
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      4251    resolves  resolves
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      4449    ROTTED    ROTTED
+.softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt      4460    resolves  ROTTED
+.softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh  4090    ROTTED    resolves
+.softhouse/capture/t445-case-route/evidence/02-condition-by-condition.md 3677    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3296    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3297    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3298    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3299    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3300    ROTTED    ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3741    resolves  resolves
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md        3744    resolves  ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md        3554    resolves  ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md        3567    resolves  ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md        4032    resolves  resolves
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md        4057    resolves  ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md        4058    resolves  ROTTED
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T364.md        3385    resolves  ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3296    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3297    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3298    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3299    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3300    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3741    resolves  resolves
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3744    resolves  ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3769    ROTTED    ROTTED
+.softhouse/reviews/t337-review-t323/REVIEW.md                            3770    ROTTED    ROTTED
+.softhouse/reviews/t364-review-t358/REVIEW.md                            3385    resolves  ROTTED
+.softhouse/reviews/t364-review-t358/REVIEW.md                            3421    ROTTED    ROTTED
+.softhouse/reviews/t364-review-t358/REVIEW.md                            3526    ROTTED    ROTTED
+.softhouse/reviews/t364-review-t358/REVIEW.md                            3567    resolves  ROTTED
+.softhouse/reviews/t364-review-t358/evidence/03-t364-haystack-occurrence 3344    ROTTED    ROTTED
+.softhouse/reviews/t364-review-t358/evidence/03-t364-haystack-occurrence 3421    ROTTED    ROTTED
+.softhouse/reviews/t364-review-t358/evidence/04-t364-path-normalisation. 3380    ROTTED    ROTTED
+.softhouse/reviews/t384-review-t375/REVIEW.md                            3923    ROTTED    ROTTED
+.softhouse/reviews/t387-review-t360/REVIEW.md                            3923    ROTTED    ROTTED
+.softhouse/reviews/t406-review-t391/REVIEW.md                            4551    ROTTED    ROTTED
+.softhouse/reviews/t409-review-t390/REVIEW.md                            5275    ROTTED    ROTTED
+.softhouse/reviews/t409-review-t390/REVIEW.md                            5278    resolves  ROTTED
+.softhouse/reviews/t411-review-t401/REVIEW.md                            4530    ROTTED    ROTTED
+.softhouse/reviews/t411-review-t401/evidence/20-census-enumeration.txt   3865    ROTTED    ROTTED
+.softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt     4530    ROTTED    ROTTED
+.softhouse/reviews/t422-review-t416/REVIEW.md                            4309    resolves  resolves
+.softhouse/reviews/t444-review-t431/REVIEW.md                            3677    ROTTED    ROTTED
+.softhouse/reviews/t444-review-t431/evidence/06-conformance-line-citatio 3677    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/REVIEW.md                            4530    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3296    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3297    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3298    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3299    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3300    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3385    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3469    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3554    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3567    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3741    resolves  resolves
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3744    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 3923    ROTTED    ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 4032    resolves  resolves
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 4057    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 4058    resolves  ROTTED
+.softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citatio 4530    ROTTED    ROTTED
+.softhouse/reviews/t450-review-t412/REVIEW.md                            4800    resolves  resolves
+.softhouse/tasks.json                                                    3385    resolves  ROTTED
+.softhouse/tasks.json                                                    3469    ROTTED    ROTTED
+.softhouse/tasks.json                                                    3923    ROTTED    ROTTED
+.softhouse/tasks.json                                                    4530    ROTTED    ROTTED
+
+citations this commit BROKE (resolved before, rotted after) : 34
+citations ALREADY ROTTED before this commit                 : 70
+
+READING: 'already rotted' is not a defence. It is the reason the remedy is to cite
+by RULE ID and SENTENCE and never by line number -- which is what T445 did to this
+file's outbound patterns.md citations and what T454's handoff does for its own.

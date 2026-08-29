@@ -1,0 +1,18 @@
+T454 HOST AND FOLD PROBES
+host    : Darwin 25.5.0 arm64
+macOS   : 26.5.1 build 25F80
+git     : git version 2.50.1 (Apple Git-155)
+bash    : 3.2.57(1)-release
+fs      : File System Personality:   APFS
+core.precomposeunicode = true
+core.ignorecase        = true
+
+U+212A KELVIN vs ASCII k                           : files=1  first name reads=BBB
+U+017F LONG S in conformance.sh                    : files=1  first name reads=BBB
+U+212A appended where there is no k to fold        : files=2  first name reads=AAA
+
+READING: files=1 with the first name reading BBB means the two spellings are ONE file and
+the second write won. files=2 means they are distinct. The third probe is T446 U+212A row:
+it reports files=2 because there is no `k` in "conformance.sh" for the Kelvin sign to fold
+onto -- which is a fact about that probe, not about the filesystem. Probe 1 is the same
+question asked of a name that DOES contain a `k`, and the fold is there.
