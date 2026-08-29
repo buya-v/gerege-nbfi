@@ -1,0 +1,24 @@
+ARMS PARSED OUT OF THE SHIPPED state_path():
+    .softhouse/vectors/*|.softhouse/guards/*|.softhouse/bin/*|.softhouse/toolchain/* -> not-state
+    .softhouse/capture/*|.softhouse/reviews/*                              -> not-state
+    .softhouse/conformance.sh                                              -> not-state
+    */req/*                                                                -> not-state
+    .softhouse/LOCK                                                        -> STATE
+    .softhouse/*.md|.softhouse/*.txt|.softhouse/*.json|.softhouse/*.log    -> STATE
+    *                                                                      -> not-state
+
+window ref   : 3f4e236a  tip=3f4e236ad458dd945bac26243a90ccc950924164
+window size  : 400 commit(s) requested, 400 resolved
+gate rule    : read out of b9b37f9c
+LIMIT        : clause (k) is NOT modelled -- both coverage figures are CEILINGS.
+
+  entries (name-status rows, all commits)   = 630
+  entries under capture/                    = 27
+  entries under reviews/                    = 43
+  entries that are the fire lock            = 122
+  entries whose status is neither M nor A   = 78
+  commits CHEAP under the rule AS SHIPPED   = 335 / 400 = 83.8%
+  commits CHEAP excluding capture/** ONLY   = 336 / 400 = 84.0%
+  difference between the two rules          = 1 commit(s)
+
+T471-COVERAGE: ref=3f4e236a tip=3f4e236a window=400 entries=630 cheapShipped=335 cheapCaptureOnly=336 captureEntries=27 reviewsEntries=43 capturePlusReviews=70 lockEntries=122

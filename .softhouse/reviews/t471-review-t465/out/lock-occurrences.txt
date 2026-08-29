@@ -1,0 +1,45 @@
+=== BASE  tree=/tmp/t471-scratch/base
+    corpusFiles=1684
+    .softhouse/bin/fire-program.sh                                           occ=4  values=['.softhouse/LOCK']
+    .softhouse/bin/ready-tasks.py                                            occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t279-lock-partition/audit-this-fire.py                occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py            occ=1  values=['.softhouse/LOCK.']
+    .softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py  occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py    occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh      occ=1  values=['.softhouse/LOCK']
+    .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh          occ=3  values=['.softhouse/LOCK']
+    .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh        occ=2  values=['.softhouse/LOCK']
+    .softhouse/hooks/push-before-spawn-audit.py                              occ=1  values=['.softhouse/LOCK']
+    .softhouse/reviews/T189-probe/hardening.sh                               occ=2  values=['.softhouse/LOCK']
+    .softhouse/reviews/T189-probe/reachability.sh                            occ=1  values=['.softhouse/LOCK']
+    .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh             occ=6  values=['.softhouse/LOCK']
+    .softhouse/reviews/t172-probe/run-move-demo.sh                           occ=4  values=['.softhouse/LOCK']
+    .softhouse/reviews/t202-probe/make-mutants-b.py                          occ=2  values=['.softhouse/LOCK']
+    .softhouse/reviews/t202-probe/patch.py                                   occ=3  values=['.softhouse/LOCK']
+    FILES=17 OCCURRENCES=35 ROWS=17
+
+=== HEAD  tree=/tmp/t471-scratch/tip
+    corpusFiles=1690
+    FILES=0 OCCURRENCES=0 ROWS=0
+
+ROWS ONLY AT BASE (17):
+    .softhouse/bin/fire-program.sh                                           | .softhouse/LOCK
+    .softhouse/bin/ready-tasks.py                                            | .softhouse/LOCK
+    .softhouse/capture/t279-lock-partition/audit-this-fire.py                | .softhouse/LOCK
+    .softhouse/capture/t319-reconciler-f5/run-ownership-matrix.py            | .softhouse/LOCK.
+    .softhouse/capture/t325-adopt-attestation/instruments/30-survey-drive.sh | .softhouse/LOCK
+    .softhouse/capture/t349-pretooluse-eval/probe/replay-real-dispatches.py  | .softhouse/LOCK
+    .softhouse/capture/t349-pretooluse-eval/probe/spawn-gate-candidate.py    | .softhouse/LOCK
+    .softhouse/capture/t350-reconcile-content/bin/50-drive-reconcile.sh      | .softhouse/LOCK
+    .softhouse/capture/t353-t342-conditions/bin/lock-host-census.sh          | .softhouse/LOCK
+    .softhouse/capture/t453-t450-conditions/instruments/drive-arms.sh        | .softhouse/LOCK
+    .softhouse/hooks/push-before-spawn-audit.py                              | .softhouse/LOCK
+    .softhouse/reviews/T189-probe/hardening.sh                               | .softhouse/LOCK
+    .softhouse/reviews/T189-probe/reachability.sh                            | .softhouse/LOCK
+    .softhouse/reviews/t172-probe/check-lock-exclusion-anchor.sh             | .softhouse/LOCK
+    .softhouse/reviews/t172-probe/run-move-demo.sh                           | .softhouse/LOCK
+    .softhouse/reviews/t202-probe/make-mutants-b.py                          | .softhouse/LOCK
+    .softhouse/reviews/t202-probe/patch.py                                   | .softhouse/LOCK
+ROWS ONLY AT HEAD (0):
+T471-OCCURRENCES: baseFiles=17 baseOccurrences=35 baseRows=17 headFiles=0 headOccurrences=0 headRows=0 removedOccurrences=35 remain=0

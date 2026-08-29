@@ -1,0 +1,23 @@
+declaration (reconstructed from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t471-anchor.05uolV/target.sh, never transcribed):
+  LOCK_EXCLUDE_PATHSPEC = [:(top,exclude).softhouse/LOCK]
+  value OK: exactly the single-file, top-anchored exclusion
+
+population scan: '"$LOCK_EXCLUDE_PATHSPEC"' found 2 time(s) in /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t471-anchor.05uolV/target.sh
+
+--- site 1: line 3030 ---
+  DIRTY=$(git status --porcelain -- ':(top)' "$LOCK_EXCLUDE_PATHSPEC")
+  classified: DETECT
+  pathspec: uses the declared LOCK_EXCLUDE_PATHSPEC, whose value was checked above
+  CHECK 1 PASS: sibling .softhouse/LOCKED_STATE.md survived in $DIRTY
+  CHECK 2 PASS: .softhouse/LOCK is correctly excluded from $DIRTY
+
+--- site 2: line 3052 ---
+    git add -A -- ':(top)' "$LOCK_EXCLUDE_PATHSPEC" >/dev/null 2>&1
+  classified: STAGE
+  pathspec: uses the declared LOCK_EXCLUDE_PATHSPEC, whose value was checked above
+  CHECK 1S PASS: sibling .softhouse/LOCKED_STATE.md was STAGED (not silently skipped)
+  CHECK 2S PASS: .softhouse/LOCK is correctly excluded from staging
+
+category counts: DETECT=1 STAGE=1
+
+VERDICT: PASS -- all 2 live LOCK-exclusion site(s) hold against /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t471-anchor.05uolV/target.sh (DETECT=1, STAGE=1)
