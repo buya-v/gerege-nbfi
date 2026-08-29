@@ -383,8 +383,17 @@ for an oversight.
 
 ## 5 · THE BAR AT MY BRANCH TIP
 
-**`bash .softhouse/conformance.sh`** (`bash`, never `sh`/`zsh`). Transcript:
-`out/90-BAR-at-382de20d.txt`, plus the final run at the tip below.
+**`bash .softhouse/conformance.sh`** (`bash`, never `sh`/`zsh`), run **TWICE** and **both runs recorded,
+neither discarded**:
+
+| Run | Tree | `grep -c 'probe = '` | Result |
+|---|---|---|---|
+| 1 | `382de20d` (before the stale-citation correction) | **1** | **EXIT 0**, PASS 46 / 7884 — `out/90-BAR-at-382de20d.txt` |
+| 2 | **`f73e82c0`, the tip, committed and clean** | **1** | **EXIT 0**, PASS 46 / 7884 — `out/99-FINAL-BAR-at-f73e82c0.txt` |
+
+Run 2 is the binding one; run 1 is kept because a run that happened is a measurement, and this program
+records rather than discards. The transcript of run 2 was committed **after** it finished, so the tree it
+graded was clean — which the bar itself confirms below.
 
 **PROBE LINE PRESENCE TESTED BEFORE ITS VALUE (`P-84`):**
 
