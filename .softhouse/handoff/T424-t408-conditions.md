@@ -271,7 +271,43 @@ the end of the run. All scratch worktrees were created under `/tmp`, never insid
 (`guard_no_narrow_catch_in_capture_rigs` walks recursively, so a nested checkout would trip a HARD
 guard and exit 2 before the probe line prints).
 
-<!-- BAR-FIGURES -->
+Run at commit `b9b8a3ef` with `git status --porcelain` **empty** before it started.
+Transcript: `.softhouse/capture/t424/out/T424-BAR.txt` (749 lines).
+
+```
+BAR_EXIT=0
+grep -c 'probe = '  ->  1                       <- PRESENCE tested BEFORE value (P-84)
+:201  reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+:713  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle,
+                               7884 cells compared.
+```
+
+| pin the guards printed | measured | fire-start baseline | moved? |
+|---|---|---|---|
+| bar exit | **0** | 0 | no |
+| `probe = ` lines present | **1**, reading `up` | 1, `up` | no |
+| parity vectors / cells | **46 / 7884** | 46 / 7884 | no |
+| `ledger parity` | **PASS 10 FAIL 0** | 10 | no |
+| LEDGER money cells compared | **63 == pinned 63** | 63 == pinned | no |
+| wrong ledger implementations killed | **15 of 15**, all through the harness | 15 | no |
+| dead-path frontier | **11, pinned at 11** — `frontier == pinned (all 11 rows, by path)` | 11 == 11 | no |
+| `T316-DEADPATH-CENSUS` | `deadFiles=75 **deadOccurrences=108** resolving=1397 indeterminate=117 prose=380` | 108 | no |
+| tmp-path census | 18, pinned at 18; `census == pinned (all 18 sites, by path and source line)` | — | no |
+| narrow-catch census | inspected 63 `.java` ≥ 63 tracked | — | no |
+| dead-path frontier verdict | `GREEN, and the T323 reconciliation list is empty` | GREEN | no |
+
+**Nothing on the fire-start baseline moved.** The one figure that did move is the dead-path
+census **corpus**, `1410 → 1459` — that is the tracked-file denominator growing as this fire's
+branches land, and it is a *derived floor*, not a pin. The pinned figure beneath it,
+`deadOccurrences`, held at **108**, so my seven new artefacts added **zero** dead-path occurrences
+and zero frontier rows.
+
+**Every scratch worktree was created under `/tmp`** (`mktemp -d "${TMPDIR:-/tmp}/…"` in all four
+drives; the K8 discrimination drive's scratch **git repo** is also under `/tmp`). Nothing nested a
+checkout inside the repository, so `guard_no_narrow_catch_in_capture_rigs` — which walks
+recursively rather than via `git ls-files` — was not tripped. **The `probe = ` line was PRINTED**;
+its presence was tested before its value, because four exit-2 paths (including a failed HARD guard)
+run before it prints, which would make "probe != up" trivially true against nothing at all.
 
 ---
 
