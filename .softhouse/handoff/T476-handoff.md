@@ -377,9 +377,49 @@ The third row is the one that answers *"is (l) just (k) renamed"*, and it still 
 
 ## 10. THE BAR
 
-_(filled below — taken at the branch tip, `bash`, from a scratch directory outside the
-repository, on a committed clean tree, with the probe line's PRESENCE tested before its value
-was read.)_
+Taken **at the branch tip**, `bash` (never `sh`/`zsh` — exit 3 is a wrong-interpreter refusal
+and says nothing about corpus or oracle), from a scratch directory **outside** the repository,
+on a **committed, clean** tree. The probe line's **PRESENCE was tested before its value was
+read** (P-84).
+
+```
+### bash version: GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)
+### HEAD: 5c47377f299237a457c461f1f1a7949c64d6ea7f
+### git status --porcelain BEFORE the bar (must be 0 lines):
+### lines: 0
+
+BAR EXIT 0
+
+### PROBE PRESENCE TESTED BEFORE ITS VALUE WAS READ:
+grep -c 'probe = '  ->  1
+probe line, verbatim:
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1691 deadFiles=75 deadOccurrences=108 resolving=1594 indeterminate=126 prose=428
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+### git status --porcelain AFTER the bar:
+### lines: 0
+```
+
+**THE FIRST RUN AT THIS SAME TIP WAS EXIT 2, AND IT IS IN THE TRANSCRIPT.** The probe line was
+**PRESENT ×1 and read `down`** — the reference-oracle container was mid-restart (`docker ps`:
+`fineract-fineract-1  Up 5 seconds (health: starting)`; `curl` to actuator/health returned
+nothing). That is a **real outage**, not an absent probe line and not a corpus fault, so it is
+**not a pass and does not become one**. The bar was re-run only after the container reported
+`(healthy)` and actuator/health returned `{"status":"UP",…}`. Both runs are recorded in
+`.softhouse/capture/t476-t472-repair/out/50-BAR.txt`, because a discarded red run is how a
+green one stops meaning anything.
+
+**THE FRONTIER PINS ARE UNMOVED BY THIS BRANCH:** `deadFiles=75 deadOccurrences=108`, the same
+values T467 and T472 report. Only `corpus` moves, **1,687 → 1,691**, by the four `.py`/`.sh`
+instruments this task adds — and none of the four is flagged by the guard they instrument.
+
+**The residue, stated rather than glossed** (F-T464-5 is the lesson in play): the run above is
+at `5c47377f`, which is commit 4 of 5 on this branch. Commit 5 adds only this bar transcript
+and this section. No file the bar grades moves between them, and the
+`git status --porcelain -> 0 lines` line above is the calibration for that.
 
 ### 4.2 COVERAGE — WHICH BYTES THE DRIVES ABOVE ACTUALLY GRADED (F-T464-5, the lesson in play)
 
