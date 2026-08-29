@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -u
+R="/tmp/t431/probe2-$$"
+rm -rf "$R"; mkdir -p "$R"; cd "$R" || exit 2
+git init -q .; git config user.email t@x; git config user.name t
+
+mkdir -p d
+printf 'member\n' > d/m.sh
+printf 'decoy naming m.sh\n' > d/w1.txt
+ln -s m.sh 'd/w?.txt'
+# the file that makes -f pass on the BACKSLASH-ESCAPED typed spelling
+printf 'the -f pacifier\n' > 'd/w\?.txt'
+git add -A >/dev/null 2>&1; git commit -qm a >/dev/null 2>&1
+echo "=== index ==="; git ls-files -s
+echo
+echo "--- -f on typed backslash spelling ---"
+[ -f 'd/w\?.txt' ] && echo "-f YES" || echo "-f NO"
+echo "--- error-unmatch on 'd/w\\?.txt' ---"
+git ls-files --error-unmatch -- 'd/w\?.txt' 2>&1
+echo "--- count ---"
+git ls-files --error-unmatch -- 'd/w\?.txt' 2>/dev/null | grep -c .
+echo
+echo "############ C-QUOTING ARM ############"
+R2="/tmp/t431/probe2q-$$"
+rm -rf "$R2"; mkdir -p "$R2"; cd "$R2" || exit 2
+git init -q .; git config user.email t@x; git config user.name t
+mkdir -p d
+printf '#!/usr/bin/env bash\n# member\n# REACHED-BY d/we.txt\nexit 0\n' > d/m.sh
+NA="$(printf 'w\303\251.txt')"
+ln -s m.sh "d/$NA"
+# the file at the C-QUOTED LITERAL path
+mkdir -p '"d'
+printf 'this file names m.sh and is what grep would read\n' > '"d/w\303\251.txt"'
+git add -A >/dev/null 2>&1; git commit -qm b >/dev/null 2>&1
+echo "=== index ==="; git ls-files -s
+echo "--- -f on typed spelling d/<nonascii> ---"
+[ -f "d/$NA" ] && echo "-f YES" || echo "-f NO"
+echo "--- error-unmatch output (this becomes self_norm) ---"
+NORM="$(git ls-files --error-unmatch -- "d/$NA" 2>/dev/null)"
+printf 'self_norm=<%s>  lines=%s\n' "$NORM" "$(printf '%s' "$NORM" | grep -c .)"
+echo "--- unpinned second lookup on self_norm ---"
+S="$(git ls-files -s -- "$NORM" 2>/dev/null)"; printf 'self_stat=<%s>\n' "$S"
+echo "--- PINNED second lookup on self_norm ---"
+S2="$(git ls-files -s -- ":(literal)$NORM" 2>/dev/null)"; printf 'pinned self_stat=<%s>\n' "$S2"
+echo "--- does the grep target exist? ---"
+[ -f "$PWD/$NORM" ] && echo "grep target EXISTS: $PWD/$NORM" || echo "grep target MISSING: $PWD/$NORM"
+LC_ALL=C grep -qF -- 'm.sh' "$PWD/$NORM" && echo "grep FINDS m.sh -> WOULD BE ACCEPTED" || echo "grep MISSES"
+echo "R=$R R2=$R2"

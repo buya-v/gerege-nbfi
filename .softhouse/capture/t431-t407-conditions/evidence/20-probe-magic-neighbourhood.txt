@@ -1,0 +1,53 @@
+git version: git version 2.50.1 (Apple Git-155)
+core.ignorecase: true
+
+=== INDEX ===
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:!d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(attr:x)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(exclude)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(glob)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(icase)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(literal)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(literal,icase)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(top)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:(top,literal)d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:/d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:^d/w?.txt
+100644 3b88186412515b2abab00986559183e5eaab48c9 0	:d/w?.txt
+120000 6c991ee6ea7c7c0eb3386948fae5817103912277 0	d/link-target
+100644 fa6ecc72251e411d2c95c4042e3066dd0a12330d 0	d/m.sh
+100644 8f96c5b92ad121cb2e17f48862e459f1781c0bc5 0	d/w1.txt
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	d/w?.txt
+
+=== TYPED SPELLINGS OF THE WITNESS d/w?.txt ===
+plain                   -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+literal                 -f=YES  em_rc=0   em_lines=1   norm=<d/w?.txt> plain2nd=2 mode1=100644 | pinned2nd=1 mode1=120000
+top,literal             -f=YES  em_rc=0   em_lines=1   norm=<d/w?.txt> plain2nd=2 mode1=100644 | pinned2nd=1 mode1=120000
+literal,icase           -f=YES  em_rc=0   em_lines=1   norm=<d/w?.txt> plain2nd=2 mode1=100644 | pinned2nd=1 mode1=120000
+glob                    -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+icase                   -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+top                     -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+colonslash              -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+bang                    -f=YES  em_rc=0   em_lines=14  MULTI -> self_multi fires
+caret                   -f=YES  em_rc=0   em_lines=14  MULTI -> self_multi fires
+exclude                 -f=YES  em_rc=0   em_lines=14  MULTI -> self_multi fires
+attr                    -f=YES  em_rc=1   em_lines=2   em_err=<error: pathspec ':(attr:x)d/w?.txt' did not match any file(s) known to git>
+shortmagic-colon        -f=YES  em_rc=0   em_lines=2   MULTI -> self_multi fires
+backslash-esc           -f=NO   em_rc=0   em_lines=1   norm=<d/w?.txt> plain2nd=2 mode1=100644 | pinned2nd=1 mode1=120000
+
+=== C-QUOTING: does ls-files quote non-ASCII / control-char paths? ===
+"q/w\"d.txt"
+"q/w\\b.txt"
+"q/w\303\251.txt"
+--- with core.quotePath=false ---
+"q/w\"d.txt"
+"q/w\\b.txt"
+q/wé.txt
+--- error-unmatch output for the non-ascii one ---
+"q/w\303\251.txt"
+--- and for the backslash one ---
+"q/w\\b.txt"
+--- and for the dquote one ---
+"q/w\"d.txt"
+
+REPO=/tmp/t431/magicprobe-18738

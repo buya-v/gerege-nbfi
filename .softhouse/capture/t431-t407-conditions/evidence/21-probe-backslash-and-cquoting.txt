@@ -1,0 +1,31 @@
+=== index ===
+100644 fa6ecc72251e411d2c95c4042e3066dd0a12330d 0	d/m.sh
+100644 988375f6ba5b8dea9b5e0709d57a43b03609bb86 0	d/w1.txt
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	d/w?.txt
+100644 1352994837367a46d9e901e656b6d7c1a0681dfe 0	"d/w\\?.txt"
+
+--- -f on typed backslash spelling ---
+-f YES
+--- error-unmatch on 'd/w\?.txt' ---
+d/w?.txt
+"d/w\\?.txt"
+--- count ---
+2
+
+############ C-QUOTING ARM ############
+=== index ===
+100644 92d012a62e545dd5568cc9bf284cff9e6b5205dd 0	"\"d/w\\303\\251.txt\""
+100644 681b067e080d6528c95ed5a327b5e2cbf7c789fc 0	d/m.sh
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	"d/w\303\251.txt"
+--- -f on typed spelling d/<nonascii> ---
+-f YES
+--- error-unmatch output (this becomes self_norm) ---
+self_norm=<"d/w\303\251.txt">  lines=1
+--- unpinned second lookup on self_norm ---
+self_stat=<100644 92d012a62e545dd5568cc9bf284cff9e6b5205dd 0	"\"d/w\\303\\251.txt\"">
+--- PINNED second lookup on self_norm ---
+pinned self_stat=<100644 92d012a62e545dd5568cc9bf284cff9e6b5205dd 0	"\"d/w\\303\\251.txt\"">
+--- does the grep target exist? ---
+grep target EXISTS: /tmp/t431/probe2q-38338/"d/w\303\251.txt"
+grep FINDS m.sh -> WOULD BE ACCEPTED
+R=/tmp/t431/probe2-38338 R2=/tmp/t431/probe2q-38338
