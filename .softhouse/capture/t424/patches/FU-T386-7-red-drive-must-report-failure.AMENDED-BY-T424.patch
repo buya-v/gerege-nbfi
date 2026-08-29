@@ -1,8 +1,8 @@
 diff --git a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh b/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
-index 6b244ab7..921b720a 100644
+index 6b244ab7..f26843e9 100644
 --- a/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
 +++ b/.softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh
-@@ -33,6 +33,109 @@
+@@ -33,6 +33,111 @@
  # =============================================================================================
  set -uo pipefail
  
@@ -16,7 +16,9 @@ index 6b244ab7..921b720a 100644
 +# `DID NOT REPRODUCE` line had reached the file when the guard grepped it was a property of the
 +# `tee` binary, not of the guard. T408 measured it: this host's BSD `tee` -> 8/8 correct; a
 +# stdio-buffered `tee` -> 3/3 FAIL-OPEN, guard exit 0 with a failing arm on screen. A guard that
-+# is correct by accident of the local writer's buffering IS NOT A GUARD (P-53, P-96).
++# is correct by accident of the local writer's buffering IS NOT A GUARD -- `P-33` (name the
++# binary you depend on) and `P-53` (the same text scores differently on different engines), now
++# arriving for a WRITER rather than a matcher.
 +#
 +# THE FIX IS STRUCTURAL, NOT A BIGGER BUFFER AND NOT A SLEEP. This script now OWNS its own
 +# transcript: the outer invocation re-execs itself, captures the run, and grades the file only
@@ -112,7 +114,7 @@ index 6b244ab7..921b720a 100644
  BEFORE_REF="${BEFORE_REF:-main}"
  AFTER_REF="${AFTER_REF:-HEAD}"
  TARGET='.softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh'
-@@ -446,3 +549,9 @@ else
+@@ -446,3 +551,9 @@ else
  fi
  echo
  echo "END OF DRIVES."

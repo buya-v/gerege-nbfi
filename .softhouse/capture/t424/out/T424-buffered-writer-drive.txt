@@ -1,5 +1,5 @@
 OLD guard patch sha256: f3c67070ad883a64   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t402-t386-conditions/patches/FU-T386-7-red-drive-must-report-failure.patch
-NEW guard patch sha256: 2256f9864ed80375   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch
+NEW guard patch sha256: 458753830160eb59   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t424/patches/FU-T386-7-red-drive-must-report-failure.AMENDED-BY-T424.patch
 host tee              : /usr/bin/tee
 buffered stand-in     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae3581aa1f7de2563/.softhouse/capture/t424/instruments/t424-buffered-tee-standin.py
 runs per arm          : 8
