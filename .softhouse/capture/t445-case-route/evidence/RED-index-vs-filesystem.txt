@@ -1,0 +1,31 @@
+=== T445 RED: THE INDEX SAYS ONE THING, THE FILESYSTEM ANOTHER ===
+--- arm CASE: git ls-files -s (the INDEX) ---
+100644 482067d184f9bb921edfad0546aed01858650a3f 0	.softhouse/guards/zz-t445k/W.txt
+120000 5e6810c2439e9109b012f82baa0d1b673240c528 0	.softhouse/guards/zz-t445k/w.txt
+100644 236b96200e7583f5b58abaee098f2654845d9c7d 0	.softhouse/guards/zz-t445k/zz-t445k-member.sh
+--- arm CASE: ls -l (the FILESYSTEM) ---
+total 8
+lrwxr-xr-x  1 buv  wheel   18 Aug 29 10:15 w.txt -> zz-t445k-member.sh
+-rw-r--r--  1 buv  wheel  136 Aug 29 10:15 zz-t445k-member.sh
+--- arm CASE: the closing grep reads THIS (filesystem, W.txt) ---
+#!/usr/bin/env bash
+# planted by T445: zz-t445k-member.sh
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/guards/zz-t445k/W.txt
+exit 0
+--- arm CASE: the INDEX entry at that same path is THIS blob ---
+blob 482067d184f9bb921edfad0546aed01858650a3f:
+a decoy that names nothing
+--- arm MCASE: git ls-files -s (the INDEX) ---
+100644 e740787d58ad8117e31b38855c679f6a5fa27614 0	.softhouse/guards/ZZ-T445M/x.sh
+100644 69b98f21c7ab0fb2652e170c4432845595e9cb99 0	.softhouse/guards/zz-t445m/wit.txt
+100644 fae2ebd0074a1aa560cfe045d6a222af5bc7b25e 0	.softhouse/guards/zz-t445m/x.sh
+--- arm MCASE: the member row read reads THIS (filesystem) ---
+#!/usr/bin/env bash
+# honest planted checker x.sh, registered against its witness
+# GUARDS-DIR-REGISTRATION: REACHED-BY .softhouse/guards/zz-t445m/wit.txt
+exit 0
+--- arm MCASE: the INDEX entry at that same path is THIS blob ---
+blob e740787d58ad8117e31b38855c679f6a5fa27614:
+#!/usr/bin/env bash
+# SMUGGLED: an unwired checker with NO registration row of its own.
+exit 0

@@ -95,8 +95,10 @@ plant_LEGA() {
   git -C "$R" commit -q -m 'T445 arm LEGA' >/dev/null
 }
 
-# ---- LEGC: honest witness whose CONTENT is not touched, but whose member is committed
-# with an UNCOMMITTED extra registration row on disk. Reads the member-blob change.
+# ---- LEGDIRTY: the MEMBER's registration row exists ONLY in the working tree. -------
+# The committed member carries no row at all. The row is written into the checkout AFTER the
+# clone, so the index and the filesystem disagree by an ordinary uncommitted edit — the
+# simplest instance of the class, and the one every worker can produce by accident.
 plant_LEGDIRTY() {
   local R="$1" D="$GDR/zz-t445d"
   mkdir -p "$R/$D"
@@ -106,12 +108,44 @@ plant_LEGDIRTY() {
   printf 'the fire driver runs zz-t445d-member.sh\n' > "$R/$D/witness.txt"
   git -C "$R" add "$D" >/dev/null
   git -C "$R" commit -q -m 'T445 arm LEGDIRTY base' >/dev/null
-  # now add the row WITHOUT committing it
+}
+dirty_LEGDIRTY() {
+  local R="$1" D="$GDR/zz-t445d"
   { printf '%s\n' '#!/usr/bin/env bash'
     printf '# honest planted checker, row added but NOT COMMITTED\n'
     printf '# %s %s/witness.txt\n' "$MARK" "$D"
     printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445d-member.sh"
 }
+
+# ---- WDIRTY: the WITNESS names the member ONLY in the working tree. ------------------
+# The committed witness names nothing. The member's basename is written into the witness's
+# checkout after the clone, so the closing naming test is the only thing that can tell the
+# difference between the index and this host.
+plant_WDIRTY() {
+  local R="$1" D="$GDR/zz-t445w"
+  mkdir -p "$R/$D"
+  { printf '%s\n' '#!/usr/bin/env bash'
+    printf '# %s %s/witness.txt\n' "$MARK" "$D"
+    printf '%s\n' 'exit 0'; } > "$R/$D/zz-t445w-member.sh"
+  printf 'a committed witness that names nothing\n' > "$R/$D/witness.txt"
+  git -C "$R" add "$D" >/dev/null
+  git -C "$R" commit -q -m 'T445 arm WDIRTY base' >/dev/null
+}
+dirty_WDIRTY() {
+  local R="$1" D="$GDR/zz-t445w"
+  printf 'the fire driver runs zz-t445w-member.sh\n' > "$R/$D/witness.txt"
+}
+
+# ---- CDIRTY: the DECLARED witness stops naming its token IN THE WORKING TREE ONLY. ----
+# The reverse discrimination: the committed bytes still name the token, the checkout does
+# not. A guard reading the FILESYSTEM refuses; a guard reading the INDEX accepts, and is
+# right to — nothing about the commit changed.
+dirty_CDIRTY() {
+  local R="$1"
+  printf '%s\n' '#!/usr/bin/env bash' > "$R/.softhouse/bin/fire-program.sh"
+  printf '%s\n' '# working-tree stub planted by T445 arm CDIRTY; names no token' >> "$R/.softhouse/bin/fire-program.sh"
+}
+plant_CDIRTY() { :; }
 
 # ---- 2ROW: a member carrying TWO registration rows (T444 LOW-5). ---------------------
 plant_2ROW() {
@@ -154,6 +188,13 @@ run_arm() {
   git -C "$seed" config user.name  T445
   "plant_$arm" "$seed" > "$base/plant.log" 2>&1
   git clone -q "$seed" "$run" 2>"$base/clone2.log"
+  # POST-CLONE mutation. An uncommitted edit is the SIMPLEST index-versus-filesystem
+  # divergence there is, and it has to be applied to the tree that is actually graded — a
+  # working-tree change in the seed does not survive `git clone`, which is how the first
+  # version of arm LEGDIRTY measured nothing.
+  if declare -F "dirty_$arm" >/dev/null 2>&1; then
+    "dirty_$arm" "$run" >> "$base/plant.log" 2>&1
+  fi
   ( cd "$W" && bash "$run/.softhouse/conformance.sh" ) > "$log" 2>&1
   local rc=$?
   local present value census

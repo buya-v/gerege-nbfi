@@ -1,0 +1,36 @@
+=== lower-target-upper-decoy : real=fire-program.sh decoy=Fire-program.sh ===
+index:
+100644 18798eb262603dd540c68c3a8ca6b2cdb3a13f40 0	Fire-program.sh
+100644 be2d46dd064952f9f884736b240975bed063a546 0	fire-program.sh
+what a read of the REAL name returns: REAL CONTENT
+collision warning: warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  'Fire-program.sh'
+  'fire-program.sh'
+
+=== lower-target-shout-decoy : real=fire-program.sh decoy=FIRE-PROGRAM.SH ===
+index:
+100644 18798eb262603dd540c68c3a8ca6b2cdb3a13f40 0	FIRE-PROGRAM.SH
+100644 be2d46dd064952f9f884736b240975bed063a546 0	fire-program.sh
+what a read of the REAL name returns: REAL CONTENT
+collision warning: warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  'FIRE-PROGRAM.SH'
+  'fire-program.sh'
+
+=== upper-target-lower-decoy : real=W.txt decoy=w.txt ===
+index:
+100644 be2d46dd064952f9f884736b240975bed063a546 0	W.txt
+100644 18798eb262603dd540c68c3a8ca6b2cdb3a13f40 0	w.txt
+what a read of the REAL name returns: DECOY CONTENT
+collision warning: warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  'W.txt'
+  'w.txt'
+
