@@ -316,7 +316,8 @@ do not include pinning — and remedy 2 says the hard-exit arm is *"what this gu
 exchange for not pinning the row**."* `P-103` then makes it absolute: *"do **not** … add the row to
 the pin."*
 
-That is not what the guard asks. `check-dead-path-frontier.sh:57-63` is explicit:
+That is not what the guard asks. `check-dead-path-frontier.sh:55-61` — the block headed
+`WHAT A ROW DOES **NOT** MEAN` — is explicit:
 
 > "A dead literal is a SMELL that must be inspected once, by a human, and then **either repaired
 > or pinned with its reason**. This guard counts; it does not judge."
@@ -360,8 +361,8 @@ condition with a specification, not a change.
 
 **Justified.** The brief located the message in `conformance.sh`; the message six workers actually
 read is printed by `guards/check-dead-path-frontier.sh` in the `added_n > 0` branch. I confirmed
-this from the RED transcripts themselves: `T440-BAR-own-RED.txt:185-188` and
-`79-BAR-FIRST-RUN-…txt:188-190` carry the `A '+' row is a NEW site` text, and those are the guard's
+this from the RED transcripts themselves: `grep -n "A '+' row is a NEW site"` lands at
+`T440-BAR-own-RED.txt:185` and at `79-BAR-FIRST-RUN-…txt:187` — those are the guard's
 `echo` lines, not the wrapper's `warn` lines. Editing only `conformance.sh` would have left every
 one of the six citations' actual reading experience unchanged. **Declaring it rather than quietly
 widening the grant is the right disposal.**
@@ -395,7 +396,11 @@ resolves it. Anywhere else in those 6,326 lines, it will not.
    The stated merge-time obligation (re-run the checker on the merge result) is correct. **Open,
    correctly.**
 2. **The remedy is on only one of four wrapper arms.** **True, and correctly chosen.** I read
-   `guard_dead_path_frontier()` at `conformance.sh:2871-2898`: arm 1 is unreadable cardinals, arm 2
+   `guard_dead_path_frontier()` — it opens at `conformance.sh:2794` **on `main` at `267d1d1c`**,
+   and the four-arm block runs `:2871` (`if [ "$added_n" -lt 0 ]`) to `:2899` (`fi`), with the arm
+   heads at `:2873`, `:2877`, `:2882` and `:2892`. (On T458's branch every number after `:2895`
+   shifts by +13; the sentence heads do not move, which is `P-86`'s point.)
+   Arm 1 is unreadable cardinals, arm 2
    is a truncated listing — both *instrument failures*, not this class; arm 3 is `removed_n != 0`,
    which is a frontier *shrink* and a different remedy; arm 4 is `THE FRONTIER MOVED IN A WAY
    NOBODY RECORDED`, the one a new `+` row trips. My own RED full-bar drive fired arm 4 and no
@@ -427,14 +432,46 @@ deliver.
 Run with `bash`, never `sh`/`zsh`. Probe-line **PRESENCE** tested before its value was read,
 because absence is a failed HARD guard and is not `down`. Tree measured clean before the run.
 
-Figures are recorded in `out/40-T468-BAR-own-tree.txt`, taken at the sha named in that file's
-header. Summary: **EXIT 0**, `grep -c 'probe = '` = **1**, `probe = up`,
-**`VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells
-compared`**, `T316-DEADPATH-CENSUS: … deadOccurrences=108` (**pin not moved**), fail-open frontier
-`11 == 11`, `PNUMBER-CITATIONS: … ids=102 gaps=none … VERDICT PASS -- 0 fatal`.
+Taken at **`5b3ada8e`** — this review's own commit, on a tree measured clean *before* the run
+(`git status --porcelain` = **0 paths**). Full transcript, 873 lines:
+[`out/40-T468-BAR-own-tree-5b3ada8e.txt`].
 
-This review adds only prose and transcripts under its own directory — no `.sh`, no `.py`, so it
-adds nothing to the dead-path census corpus and cannot spell the literal `P-103` forbids.
+```
+$ git status --porcelain | grep -ac ''
+0                                          <- clean BEFORE the run
+
+$ bash .softhouse/conformance.sh           # bash, never sh/zsh
+BAR EXIT = 0
+
+$ grep -c 'probe = ' own-bar.txt
+1                                          <- PRESENCE TESTED FIRST. 0 would be a failed HARD
+                                              guard (exit 2 precedes the probe line), never `down`.
+$ grep 'probe = ' own-bar.txt
+conformance: reference oracle (https://localhost:8443/…/actuator/health) probe = up
+
+conformance:   frontier == pinned (all 11 rows, by path).                 <- fail-open, unmoved
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
+conformance:   T316-DEADPATH-CENSUS: corpus=1684 deadFiles=75 deadOccurrences=108
+                                     resolving=1594 indeterminate=126 prose=428
+conformance:   PNUMBER-CITATIONS: register=… ids=101 gaps=none in-file-collisions=2
+conformance:   P-number citations: VERDICT PASS (evidence-zone drift is REPORTED, never fatal)
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+```
+
+**`deadOccurrences=108`. THE DEAD-PATH PIN IS NOT MOVED BY THIS REVIEW.** `corpus=1684` rather
+than T458's `1686` because my tree does not carry its two `.sh` drives — this branch is `main` plus
+this review only, so the guard graded here is `main`'s, which is the correct control.
+
+**One thing about my own tree I will not hide.** `undefined` reads **65** here against `47` on the
+fork point. The +18 are citations inside the bar transcripts and re-derivation notes I committed as
+evidence — including `P-103` itself, which is *undefined on my tree* precisely because I did not
+merge T458's `patterns.md`. They are evidence-zone, report-only, `VERDICT PASS`, and **T458's entry
+retires them on merge** by exactly the mechanism §2 measured. This is the same dangling-citation
+shape T458 documented, appearing here for the same structural reason, and it is why the merge must
+re-run the checker on the merge result rather than on either branch.
+
+This review adds only prose and transcripts under its own directory — no `.sh`, no `.py` — so it
+adds nothing to the dead-path census corpus and spells no `.softhouse/…` literal in an instrument.
 
 ---
 
