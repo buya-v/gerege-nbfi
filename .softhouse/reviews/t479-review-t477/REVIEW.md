@@ -584,7 +584,9 @@ can be moved by it. Full transcript in `evidence/90-residue.txt`:
 --- 3. CONTENT FILTERS, EVERY CONFIG LEVEL
     local 0   global 0   system 0   ALL 0     core.autocrlf : []   core.eol : []
 --- 4. WORKING TREE      git status --porcelain lines : 0
---- 5. tracked paths carrying the forged-marker token : 0 ; naming the scratch root : 0
+--- 5. tracked paths carrying the forged-marker token : 0
+       tracked paths naming the scratch root          : 5  <- this review's own prose and
+              transcripts, 1 .md + 4 .txt; tracked .sh/.py naming it: 0
        tracked .sh/.py added by this review           : 0
 --- 6. LOCK in HEAD = LOCK on disk = bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
        tasks.json / RESUME.md / program.json / patterns.md / conformance.sh /
