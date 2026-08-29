@@ -479,8 +479,62 @@ cmd_attribute() {
   return 1
 }
 
+cmd_coverage() {
+  # THE DECLARED UNGRADED REGION, DERIVED. An ungraded region nobody has declared ungraded is
+  # how a program silently stops grading, so this prints the residual by NAME and by COUNT --
+  # and every count is a SELECT, never a typed cardinal.
+  reachable || return 2
+  local tot seqtot graded seqgraded
+  tot=$(q "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'")
+  seqtot=$(q "SELECT count(*) FROM pg_sequences WHERE schemaname='public'")
+  graded=$(read_tables | wc -l | tr -d ' ')
+  seqgraded=$(read_sequences | wc -l | tr -d ' ')
+  say "COVERAGE OF THIS INSTRUMENT -- every figure derived now, none typed"
+  hr
+  say "TABLES      base tables in the tenant schema : $tot"
+  say "            GRADED by the content digest     : $graded"
+  say "            EXCLUDED, each named below       : $((tot - graded))"
+  local t
+  for t in "${EXCLUDED_TABLES[@]}"; do
+    say "              - $t  ($(q "SELECT count(*) FROM $t" 2>/dev/null) rows)"
+  done
+  hr
+  say "SEQUENCES   sequences in the tenant schema   : $seqtot"
+  say "            GRADED by last_value             : $seqgraded"
+  say "            EXCLUDED (prefix match on the excluded tables' own sequences):"
+  q "SELECT '              - '||sequencename FROM pg_sequences
+     WHERE schemaname='public' AND NOT ($(sql_excluded_seq_pred)) ORDER BY sequencename"
+  hr
+  say "SCHEDULER   job rows / active / inactive     : $(q "SELECT count(*)||' / '||count(*) FILTER (WHERE is_active)||' / '||count(*) FILTER (WHERE NOT is_active) FROM job")"
+  say "            distinct jobs that ran in 24h    : $(q "SELECT count(DISTINCT job_id)::text FROM job_run_history WHERE start_time >= (now() AT TIME ZONE 'UTC') - interval '24 hours'")"
+  say "            ACTIVE jobs with NO run history  :"
+  q "SELECT '              - job '||id||' '||name FROM job j WHERE is_active
+       AND NOT EXISTS (SELECT 1 FROM job_run_history h WHERE h.job_id=j.id) ORDER BY id"
+  say "            (an empty list above means every active job has been seen to run)"
+  hr
+  say "WHAT REMAINS UNWATCHED BY THIS INSTRUMENT, STATED PLAINLY:"
+  say "  1. The $((tot - graded)) excluded tables above. They are the scheduler's OWN bookkeeping."
+  say "     A write to them by anything other than the batch runner would not be reported."
+  say "  2. A job that is IN FLIGHT across a window boundary. job_run_history is written only"
+  say "     when a job FINISHES, so its run is not in the list. This is REFUSED, not missed:"
+  say "     job.currently_running is read at both ends and a non-zero reading refuses the window."
+  say "  3. Movement BETWEEN two windows. The digest compares open to close. Continuity across"
+  say "     captures is the job of 'verify', which compares a stored witness to the oracle now."
+  say "  4. Anything below the granularity of a table's rendered row text -- there is nothing"
+  say "     known to be in this class, and it is listed so the claim is falsifiable rather than"
+  say "     absolute."
+  say "  5. State that is not in this database at all: files on the app container, in-memory"
+  say "     caches, and the OTHER tenant databases (fineract_default, fineract_tenants). This"
+  say "     instrument reads exactly one database, named in its output on every run."
+  hr
+  say "NOT UNWATCHED, though a reader might assume so: the other $((graded - 2)) tables beyond the two"
+  say "  that oracle-state-baseline.sh reads. They ARE in the digest. That is the point of it."
+  return 0
+}
+
 usage() {
   say "usage: oracle-window-witness.sh open|close|verify <label>"
+  say "       oracle-window-witness.sh coverage"
   say "       oracle-window-witness.sh attribute <from-utc> <to-utc>   # 'YYYY-MM-DD HH:MM:SS'"
   say "       oracle-window-witness.sh --self-test"
 }
@@ -490,6 +544,7 @@ case "${1:-}" in
   close)     [ $# -eq 2 ] || { usage; exit 1; }; cmd_close "$2"; exit $?;;
   verify)    [ $# -eq 2 ] || { usage; exit 1; }; cmd_verify "$2"; exit $?;;
   attribute) [ $# -eq 3 ] || { usage; exit 1; }; cmd_attribute "$2" "$3"; exit $?;;
+  coverage)  cmd_coverage; exit $?;;
   --self-test)
     # Cheap structural self-test that contacts the oracle once. It proves the population is
     # non-empty and the exclusion list is a strict subset -- a witness over an empty or
