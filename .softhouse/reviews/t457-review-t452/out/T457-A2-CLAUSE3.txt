@@ -1,0 +1,80 @@
+================================================================================================
+T457 -- INDEPENDENT-CARRIER READ OF EVERY A2 ROW (T452 clause 3)
+subject tree : /tmp/t457/t452tree
+commit       : dda1f0311b484ee078025ddad817b8901e43e7ed   dirty: 0 path(s)
+transcript   : /tmp/t457/t452tree/.softhouse/capture/t452-t447-conditions/out/T452-CLASSIFY-V2.txt
+A2 rows      : 35
+================================================================================================
+
+.softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh:99         PRESENT   enf=no   INDEPENDENT (5 foreign task namespaces)
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:28       PRESENT   enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:40       UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:66       UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:58        UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:69        PRESENT   enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:125       UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t248-failopen-widen/shapes/C0-a2-33-covered-shape.txt:12 UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t248-failopen-widen/shapes/N1-negative-fatal-cd.txt:10  UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t248-failopen-widen/shapes/R1-r11-real-shape.txt:10     UNDECIDED enf=no   INDEPENDENT (3 foreign task namespaces)
+.softhouse/capture/t248-failopen-widen/shapes/R2-swallow-search-then-claim.txt:11 UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:121 PRESENT   enf=YES  NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/capture/t371-t367-conditions/instruments/drive-sweep-failclosed.sh:95 UNDECIDED enf=YES  INDEPENDENT (6 foreign task namespaces)
+.softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh:1708 PRESENT   enf=YES  NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:161       PRESENT   enf=no   HAND-READ (probe not machine-readable from the transcript)
+.softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:104 UNDECIDED enf=YES  HAND-READ (probe not machine-readable from the transcript)
+.softhouse/conformance.sh:1708                                             PRESENT   enf=YES  NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/reviews/T138-evidence/r11-hygiene.sh:78                         UNDECIDED enf=no   INDEPENDENT (14 foreign task namespaces)
+.softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94                             UNDECIDED enf=YES  HAND-READ (probe not machine-readable from the transcript)
+.softhouse/reviews/t245-oracle-pin/measure.sh:130                          UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/reviews/t245-oracle-pin/measure.sh:131                          UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/reviews/t245-oracle-pin/measure.sh:133                          UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/reviews/t245-oracle-pin/measure.sh:134                          UNDECIDED enf=no   INDEPENDENT (40 foreign task namespaces)
+.softhouse/reviews/t245-oracle-pin/measure.sh:135                          UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/reviews/t245-oracle-pin/measure.sh:136                          UNDECIDED enf=no   INDEPENDENT (40 foreign task namespaces)
+.softhouse/reviews/t245-oracle-pin/measure.sh:144                          UNDECIDED enf=no   INDEPENDENT (10 foreign task namespaces)
+.softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:44             UNDECIDED enf=no   INDEPENDENT (5 foreign task namespaces)
+.softhouse/reviews/t367-review-t363/drive-sweep-failopen.sh:46             UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+.softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:51 PRESENT   enf=no   INDEPENDENT (6 foreign task namespaces)
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:90 UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:91 UNDECIDED enf=no   NOT A SEARCH (message text of a say/echo/printf)
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:33      PRESENT   enf=no   INDEPENDENT (24 foreign task namespaces)
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:34      PRESENT   enf=no   INDEPENDENT (21 foreign task namespaces)
+.softhouse/reviews/t386-review-t381/instruments/t386-r3-measure.sh:35      PRESENT   enf=no   INDEPENDENT (21 foreign task namespaces)
+.softhouse/reviews/t414-review-t398/drives/t414-drive-gap-guard.sh:43      UNDECIDED enf=no   INDEPENDENT (carried outside the instrument root)
+
+------------------------------------------------------------------------------------------------
+CLAUSE (1) GATES FIRST -- a row that reaches no control-flow decision cannot be fail-open
+  A2 rows marked ENFORCED by T452                : 6 of 35
+  of those, PRESENT-direction                    : 3
+  A2 rows that are NOT SEARCHES AT ALL           : 10
+      .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:28       printf '  git grep -P      : %s\n' "$(git grep -c -P 'corpus contains 
+      .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:40       printf '  git grep -P  \\brevers\\b   : %s hit line(s)\n' "$(git grep 
+      .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:58        echo "tracked files (git ls-files)      : $(git ls-files | wc -l | tr 
+      .softhouse/capture/t300-census-cardinal/instruments/10-cardinal-sweep.sh:121 echo '  say "conformance:   $REPO_ROOT (git ls-files, whole repository
+      .softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh:1708 say "conformance:   $REPO_ROOT (git ls-files, whole repository); front
+      .softhouse/conformance.sh:1708                                             say "conformance:   $REPO_ROOT (git ls-files, whole repository); front
+      .softhouse/reviews/t245-oracle-pin/measure.sh:130                          echo -n "  CALIB positive  'fineract_gerege' @HEAD .softhouse/  : "; g
+      .softhouse/reviews/t245-oracle-pin/measure.sh:131                          echo -n "  CALIB negative  'zzq_nonexistent' @HEAD .softhouse/  : "; g
+      .softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:90 printf '      git grep -E %-14s hits=%s\n' "'\\\\bmain\\\\b'" "$(git g
+      .softhouse/reviews/t379-review-t371/instruments/t379-third-status-drive.sh:91 printf '      git grep -E %-14s hits=%s   <- if these two agree, -E is
+
+ROWS THIS INSTRUMENT WILL NOT CALL SAFE ON ITS OWN: 3
+
+  .softhouse/capture/t424/instruments/t424-comment-claims-drive.sh:161
+    probe    : None
+    direction: PRESENT   enforced: no
+    source   : git grep -q -F -e "$g_literal" -- .softhouse > /dev/null 2>&1; g_selfmatch=$?
+
+  .softhouse/capture/t452-t447-conditions/instruments/t452-t388-vacuous-calibration.sh:104
+    probe    : None
+    direction: UNDECIDED enforced: YES
+    source   : c_files=$(git grep -l -F "$CTRL" -- .softhouse 2>/dev/null | grep -c '')
+
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh:94
+    probe    : None
+    direction: UNDECIDED enforced: YES
+    source   : CAL_N=$(git grep -c -I -i -E "$CAL_RE" -- "$SELF_DIR" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+
+================================================================================================
+T457-CLAUSE3-RESULT: tree=dda1f031_clean a2_rows=35 independent=22 not_a_search=10 hand_read=3
+================================================================================================

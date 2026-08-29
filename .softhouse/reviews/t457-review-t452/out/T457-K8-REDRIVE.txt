@@ -1,0 +1,64 @@
+==============================================================================
+T457 K8 RE-DERIVATION AND RED DRIVE
+subject tree : /private/tmp/t457/t452tree
+commit       : dda1f0311b484ee078025ddad817b8901e43e7ed
+dirty        : 0 path(s)
+pre-repair   : cbc8733c
+==============================================================================
+
+ARM 1 -- the K8 partition, parsed by THIS file, from the census transcript
+   rows extracted from the --- K8 block : 29   (census printed: 29)
+   of them, sel rows                    : 13
+   of them, SWEEP_*=$((...)) counters    : 10
+   residual, parent-side                : 6
+            145 | SWEEP_ERRF=$(mktemp "${TMPDIR:-/tmp}/casualty-sweep-stderr.XXXXXXXXXX") || {
+            659 | SWEEP_CORPUS_N=$(git ls-files .softhouse | grep -c .); _corpus_rc=$?
+            680 | if ! SWEEP_COMMIT=$(git rev-parse --short HEAD); then SWEEP_COMMIT="UNMEASURED"; fi
+            681 | if ! SWEEP_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ); then SWEEP_DATE="UNMEASURED"; fi
+            682 | SWEEP_UNTRACKED_N=$(git ls-files --others --exclude-standard .softhouse | grep -c .); _unt_rc=$?
+            684 | case "$SWEEP_UNTRACKED_N" in ''|*[!0-9]*) SWEEP_UNTRACKED_N="UNMEASURED" ;; esac
+  extracted rows == the census's own total                 expected=29        actual=29        OK
+  sel cell                                                 expected=13        actual=13        OK
+  counter cell                                             expected=10        actual=10        OK
+  residual cell                                            expected=6         actual=6         OK
+  the three cells sum to the census total                  expected=29        actual=29        OK
+   PARTITION: 13 + 10 + 6 = 29
+   the published split was 16 + 8 + 6 = 30 -- wrong in all three cells and in the total.
+
+ARM 2/3 -- T452's site test, driven RED on the un-repaired handoff and GREEN beside it
+   GREEN control (repaired handoff)  : exit=0 disagreements=0
+   RED     (pre-repair handoff)      : exit=1 disagreements=3
+         measured LIVE site set == declared set                   expected=same       actual=DIFFERENT  *** DRIVE DISAGREES
+         handoff is NOT a live site                               expected=0          actual=1          *** DRIVE DISAGREES
+         handoff carries the CORRECTED cardinals                  expected=3          actual=1          *** DRIVE DISAGREES
+  the test PASSES on the repaired tree                     expected=0         actual=0         OK
+  and FAILS on the un-repaired tree                        expected=1         actual=1         OK
+  it is not merely noisy: green has 0 disagreements        expected=0         actual=0         OK
+
+ARM 4 -- spellings T452's OWN detector cannot see (\bsel\b misses 'selectors')
+   'sixteen/16' within 80 chars of 'selector' : 17 line(s)
+       .softhouse/capture/t363-oracle-baseline/instruments/casualty-sweep.sh:113:#   R3. Both calibrations were `-F`; THIRTEEN OF THE SIXTEEN SELECTORS ARE `
+       .softhouse/capture/t381-t379-conditions/instruments/t381-red-drives.sh:392:  echo "  >>> GREEN: exit 0, all sixteen selectors ran, four calibration ar
+       .softhouse/capture/t381-t379-conditions/out/D-RED-DRIVES.txt:153:  >>> GREEN: exit 0, all sixteen selectors ran, four calibration arms passed.
+       .softhouse/capture/t402-t386-conditions/instruments/t402-errf-class-drive.sh:40:#                      produce a clean sixteen-selector sweep at exit 
+       .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T379.md:107:  `-- .softhouse/` also errors on all sixteen selectors, so the run exits **4**,
+       .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T381.md:17:| **R3** | the calibration exercises `-F`; thirteen of the sixteen selectors are 
+       .softhouse/handoff/T402-t386-conditions.md:278:All sixteen selectors ran, all five arms passed, LIVE lists populated, **zero** `MEASURED ZERO`
+       .softhouse/reviews/t379-review-t371/REVIEW.md:206:enough to error on `-- .softhouse/`, all sixteen selectors error too, each prints `SELECTOR DID
+       .softhouse/reviews/t379-review-t371/REVIEW.md:213:### 3.4 R3 — the calibration exercises `-F`; thirteen of the sixteen selectors use `-E`
+       .softhouse/reviews/t379-review-t371/REVIEW.md:518:   on the anti-calibration's `git grep … -- .softhouse/` errors on all sixteen selectors too, each
+       .softhouse/reviews/t379-review-t371/instruments/t379-anticalibration-drive.sh:26:# enough to error on `-- .softhouse/`, all sixteen selectors error to
+       .softhouse/reviews/t386-review-t381/REVIEW.md:21:| **Is there a SEVENTH instance of the discarded-status shape?** | **YES — `F-1`, and it is NEW IN 
+       .softhouse/reviews/t386-review-t381/REVIEW.md:425:All sixteen selectors ran on both, all four new arms passed, and the LIVE lists are populated.
+       .softhouse/reviews/t386-review-t381/REVIEW.md:703:| **D-GREEN** | — | `exit 0`, four arms pass, `SWEEP OBSERVE … escaped=114 literal=114`, all six
+       .softhouse/reviews/t386-review-t381/out/T386-RERUN-D-RED-DRIVES.txt:153:  >>> GREEN: exit 0, all sixteen selectors ran, four calibration arms passed.
+       .softhouse/tasks.json:5513:      "description": "T379 APPROVED T371 and filed these. R2 is in code T371 added THIS FIRE to close a different fail-open
+       .softhouse/tasks.json:5605:      "description": "T381 applies T379's R1-R4 to `casualty-sweep.sh` under `.softhouse/capture/t363-oracle-baseline/instr
+   'eight/8' within 60 chars of 'counters'    : 0 line(s)
+   P-72 calibration of THIS arm's selector    : 1 (must be 1)
+  arm 4's selector can find a known positive               expected=1         actual=1         OK
+   NOTE: this arm REPORTS; it asserts no zero. Every line above is for a hand read.
+
+==============================================================================
+T457-K8-RESULT: partition=13+10+6=29 census=29 green=0 red=1 alt_spelling_lines=17 disagreements=0
+==============================================================================
