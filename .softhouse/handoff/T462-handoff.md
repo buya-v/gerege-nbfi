@@ -298,7 +298,21 @@ neither `ready-tasks.py` nor my capture directory. **Declared open**, not argued
 
 ## Bar transcript — run on the COMMITTED tree
 
+**One incident, recorded rather than quietly retried.** The first run on the committed
+tree came back **exit 2, UNUSABLE — probe = `down`**. It was not my change: `docker ps`
+showed `fineract-fineract-1  Exited (143)` — SIGTERM — about a minute earlier, while the
+pre-commit run minutes before had read `up`. I restarted `fineract-db-1` and
+`fineract-fineract-1`, waited on `actuator/health`, and re-ran. Every guard was already
+green in the exit-2 run; the only failing arm was oracle reachability, and that run's own
+text says so (`the reference oracle is UNREACHABLE: conformance is exit 2, which is not a
+PASS and never becomes one`). **Whoever else is running in this repo should know the
+oracle went down under them.**
+
 ```
+$ git status --short           # empty: nothing uncommitted
+$ git log --oneline -1
+43e21fd8 T462: a safety refusal bounded by wall clock -- CONFIRMED, floored, driven both ways
+
 $ bash .softhouse/conformance.sh > /tmp/t462/bar-committed.txt 2>&1 ; echo "BAR EXIT=$?"
 BAR EXIT=0
 
@@ -306,15 +320,21 @@ PROBE PRESENCE CHECKED BEFORE ITS VALUE WAS READ:
 $ grep -c 'probe = ' /tmp/t462/bar-committed.txt
 1
 $ grep -n 'probe = ' /tmp/t462/bar-committed.txt
-220:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+219:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+conformance:   HARNESS-TEXT CENSUS: HEAD 43e21fd8323fce26d6b321db6b751252ed125854; tracked paths whose materialised bytes
+conformance:   differ from HEAD: 0 — SUBSTITUTED by another index entry's blob
+conformance:   0, uncommitted edits 0, deleted 0.
+
+conformance:   frontier == pinned (all 11 rows, by path).
+conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
 
 VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
          IT EXCLUDES 1 RECORDED DIVERGENCE(S) — see THE DIVERGENCE CENSUS above.
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 
-conformance:   dead-path frontier: GREEN, and the T323 reconciliation list is empty.
-conformance:   frontier == pinned (all 11 rows, by path).
 conformance:   all 16 wrong ledger implementations DIED through this harness, not by hand.
 ```
 
-Full transcript: `out/90-bar-committed-tree.txt`.
+Full transcript: `out/90-bar-committed-tree-43e21fd8.txt` (added in the follow-up commit,
+so the tree the bar graded is the one named above and this line is not self-referential).
