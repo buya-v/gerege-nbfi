@@ -1,0 +1,19 @@
+core.ignorecase = true
+--- index after first add ---
+100644 18fd7c35b0a83e2cbc78c6e58f8f839fc68a9ba3 0	g/zz/W.txt
+100644 fa6ecc72251e411d2c95c4042e3066dd0a12330d 0	g/zz/m.sh
+--- index after forcing the case-variant entry ---
+100644 18fd7c35b0a83e2cbc78c6e58f8f839fc68a9ba3 0	g/zz/W.txt
+100644 fa6ecc72251e411d2c95c4042e3066dd0a12330d 0	g/zz/m.sh
+100644 c2d08151ff4ed0c18b0d78fa5684c587eae4c071 0	g/zz/w.txt
+--- filesystem ---
+W.txt
+m.sh
+typed=[g/zz/W.txt]
+   self_norm=[g/zz/W.txt] multi=0
+   pinned self_stat=[100644 18fd7c35b0a83e2cbc78c6e58f8f839fc68a9ba3 0	g/zz/W.txt]
+   -> ACCEPT  (grep read the file at g/zz/W.txt)
+typed=[g/zz/w.txt]
+   self_norm=[g/zz/w.txt] multi=0
+   pinned self_stat=[100644 c2d08151ff4ed0c18b0d78fa5684c587eae4c071 0	g/zz/w.txt]
+   -> ACCEPT  (grep read the file at g/zz/w.txt)

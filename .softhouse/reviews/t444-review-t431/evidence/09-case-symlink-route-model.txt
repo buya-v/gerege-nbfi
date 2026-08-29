@@ -1,0 +1,22 @@
+core.ignorecase = true
+--- index ---
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	g/zz/W.txt
+100644 22b5dd25513aa0e91d5bc729ea47b22635761906 0	g/zz/m.sh
+100644 78758e14e062e82b9fb283cadaf4cd3f366aea01 0	g/zz/w.txt
+--- filesystem ---
+total 8
+lrwxr-xr-x  1 buv  wheel   4 Aug 29 09:42 W.txt -> m.sh
+-rw-r--r--  1 buv  wheel  63 Aug 29 09:42 m.sh
+
+typed witness   = [g/zz/w.txt]
+self_norm       = [g/zz/w.txt]   self_multi=0
+pinned self_stat= [100644 78758e14e062e82b9fb283cadaf4cd3f366aea01 0	g/zz/w.txt]
+self_mode       = [100644]   self_blob=[78758e14e062e82b9fb283cadaf4cd3f366aea01]   member_blob=[22b5dd25513aa0e91d5bc729ea47b22635761906]
+self_path       = [g/zz/w.txt]   round-trip holds? YES
+-f on typed     : pass
+grep reads      : g/zz/w.txt  -> bytes seen:
+                  #!/usr/bin/env bash
+                  # m.sh -- PLANTED, UNWIRED checker.
+                  exit 0
+
+VERDICT-MODEL: **ACCEPT** — the member vouched for itself through a case-divergent path

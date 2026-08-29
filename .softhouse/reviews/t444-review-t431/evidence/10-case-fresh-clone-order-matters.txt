@@ -1,0 +1,30 @@
+=== status in the AUTHOR's working tree ===
+ T g/zz/w.txt
+=== the committed TREE ===
+120000 blob 01956d181ae14f50c9b92182e6cc4d7cff86b8e7	g/zz/W.txt
+100644 blob 22b5dd25513aa0e91d5bc729ea47b22635761906	g/zz/m.sh
+100644 blob 78758e14e062e82b9fb283cadaf4cd3f366aea01	g/zz/w.txt
+
+=== FRESH CLONE (what CI sees) ===
+warning: the following paths have collided (e.g. case-sensitive paths
+on a case-insensitive filesystem) and only one from the same
+colliding group is in the working tree:
+
+  'g/zz/W.txt'
+  'g/zz/w.txt'
+--- status in the clone ---
+ T g/zz/W.txt
+--- index in the clone ---
+120000 01956d181ae14f50c9b92182e6cc4d7cff86b8e7 0	g/zz/W.txt
+100644 22b5dd25513aa0e91d5bc729ea47b22635761906 0	g/zz/m.sh
+100644 78758e14e062e82b9fb283cadaf4cd3f366aea01 0	g/zz/w.txt
+--- filesystem in the clone ---
+total 16
+-rw-r--r--  1 buv  wheel  63 Aug 29 09:42 m.sh
+-rw-r--r--  1 buv  wheel  41 Aug 29 09:42 w.txt
+
+self_norm=[g/zz/w.txt] self_mode=[100644] self_path=[g/zz/w.txt] round-trip=YES
+-f on typed: pass
+grep sees:
+    DECOY BLOB. It does NOT name the member.
+VERDICT-MODEL: REFUSE:does-not-name

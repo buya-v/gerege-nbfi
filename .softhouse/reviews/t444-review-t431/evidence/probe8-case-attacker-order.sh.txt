@@ -1,0 +1,51 @@
+#!/bin/bash
+# T444 probe 8 — the case route with the ORDER CHOSEN BY THE ATTACKER, so the SYMLINK wins the
+# collision in a FRESH CLONE. git checks out colliding paths in index order and the last writer
+# wins, so put the symlink at the path that sorts LAST.
+#   index:  g/zz/W.txt  100644  DECOY blob      <- the path the member DECLARES
+#           g/zz/w.txt  120000  symlink -> m.sh <- sorts after 'W', so it wins the collision
+set -u
+W="$1"
+[ -n "$W" ] || { echo "usage: probe8.sh <workroot>"; exit 9; }
+rm -rf "$W"; mkdir -p "$W/r"; cd "$W/r"
+git init -q .; git config user.email r@x; git config user.name r
+mkdir -p g/zz
+{ printf '#!/usr/bin/env bash\n'
+  printf '# m.sh -- PLANTED, UNWIRED checker.\n'
+  printf '# GUARDS-DIR-REGISTRATION: REACHED-BY g/zz/W.txt\n'
+  printf 'exit 0\n'; } > g/zz/m.sh
+ln -s m.sh g/zz/w.txt            # the SYMLINK is at the lowercase path
+git add -A >/dev/null 2>&1
+D="$(printf 'DECOY BLOB. It does NOT name the member.\n' | git hash-object -w --stdin)"
+git update-index --add --cacheinfo 100644,"$D",g/zz/W.txt   # the DECOY is at the uppercase path
+git commit -qm "case route, symlink sorts last"
+echo "=== committed tree ==="
+git ls-tree -r HEAD
+echo
+echo "=== FRESH CLONE ==="
+cd "$W"; git clone -q r c 2>&1; cd c
+echo "--- filesystem in the clone ---"; ls -l g/zz
+echo "--- index in the clone ---"; git ls-files -s
+echo
+CONF_TAB="$(printf '\tx')"; CONF_TAB="${CONF_TAB%x}"
+rel="g/zz/m.sh"; base="m.sh"; wit='g/zz/W.txt'
+member_stat="$(git ls-files -s -- ":(literal)$rel")"
+member_mode="${member_stat%% *}"
+member_blob="${member_stat#* }"; member_blob="${member_blob%% *}"
+norm="$(git ls-files --error-unmatch -- "$wit" 2>/dev/null)" || norm=""
+stat="$(git ls-files -s -- ":(literal)$norm" 2>/dev/null)" || stat=""
+mode="${stat%% *}"; blob="${stat#* }"; blob="${blob%% *}"; path="${stat#*"$CONF_TAB"}"
+echo "member_mode=[$member_mode] member_blob=[$member_blob]"
+echo "typed witness=[$wit]  self_norm=[$norm]  self_mode=[$mode]  self_blob=[$blob]"
+echo "self_path=[$path]  ROUND-TRIP HOLDS? $( [ "$path" = "$norm" ] && echo YES || echo no )"
+echo "-f on typed: $( [ -f "$wit" ] && echo pass || echo FAIL )"
+echo "grep reads $wit and sees:"; LC_ALL=C sed -n '1,4p' "$wit" 2>/dev/null | LC_ALL=C sed 's/^/    /'
+echo
+if   [ -z "$norm" ];         then echo "VERDICT-MODEL: REFUSE:untracked"
+elif [ ! -f "$wit" ];        then echo "VERDICT-MODEL: REFUSE:not-a-file"
+elif [ -z "$stat" ];         then echo "VERDICT-MODEL: REFUSE:empty-result"
+elif [ "$path" != "$norm" ]; then echo "VERDICT-MODEL: REFUSE:round-trip"
+elif [ "$mode" = "120000" ]; then echo "VERDICT-MODEL: REFUSE:symlink-witness"
+elif [ -n "$member_blob" ] && [ "$blob" = "$member_blob" ]; then echo "VERDICT-MODEL: REFUSE:blob-identical"
+elif ! LC_ALL=C grep -qF -- "$base" "$wit" 2>/dev/null; then echo "VERDICT-MODEL: REFUSE:does-not-name"
+else echo "VERDICT-MODEL: **ACCEPT** — the member vouched for ITSELF, in a FRESH CLONE, with the T431 fix applied"; fi
