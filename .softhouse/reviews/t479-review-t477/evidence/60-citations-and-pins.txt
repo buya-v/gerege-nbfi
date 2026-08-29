@@ -1,0 +1,126 @@
+T479 / 60 — THE CITATION SWEEP AND THE PINS
+===========================================
+
+merge-base(main, T477 tip) = 3f4e236ad458dd945bac26243a90ccc950924164
+main tip                   = b810df3cabb0af75aca33c289e9cfa5a0811ea6b
+base blob = 7c54353236aa1b40161173d75eb4d7905f08a306
+tip  blob = 1ced9310c33d561b776e73aafa90e2fbe920f5b7
+main blob = db313f98153126d7024401542a3ba5bc14407828
+TOTAL inbound conformance.sh:NNNN citations : 1797
+  plain form                                : 1295
+  range form                                : 502
+  distinct citing files                     : 232
+  distinct cited line numbers               : 440
+
+merge-base -> tip  (6327 lines -> 7170 lines)
+  citations whose cited line MOVED  : 20   across 10 files
+  citations to a line that VANISHED : 0
+  citations PAST THE END of the base: 0
+         2  .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt
+         2  .softhouse/reviews/t406-review-t391/REVIEW.md
+         2  .softhouse/reviews/t409-review-t390/REVIEW.md
+         2  .softhouse/reviews/t411-review-t401/REVIEW.md
+         3  .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt
+         1  .softhouse/reviews/t446-review-t445/REVIEW.md
+         3  .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt
+         1  .softhouse/reviews/t450-review-t412/REVIEW.md
+         1  .softhouse/reviews/t459-review-t454/REVIEW.md
+         3  .softhouse/tasks.json
+
+main       -> tip  (6340 lines -> 7170 lines)
+  citations whose cited line MOVED  : 233   across 51 files
+  citations to a line that VANISHED : 0
+  citations PAST THE END of the base: 0
+         1  .softhouse/bin/fire-program.sh
+         4  .softhouse/capture/t282-pnumber-drift/out/census.txt
+         8  .softhouse/capture/t282-pnumber-drift/out/live-AFTER-repair.txt
+         3  .softhouse/capture/t282-pnumber-drift/out/live-BEFORE-repair.txt
+        23  .softhouse/capture/t363-oracle-baseline/out/CASUALTY-SWEEP.txt
+        23  .softhouse/capture/t371-t367-conditions/out/CASUALTY-SWEEP-T371.txt
+         1  .softhouse/capture/t390-baseline-attribution/out/conformance-PATCHED.sh
+         2  .softhouse/capture/t401-zsh-census-gap/evidence/30-conformance-selectors.txt
+         1  .softhouse/capture/t401-zsh-census-gap/evidence/45-red-drive-s3-s4.txt
+         3  .softhouse/capture/t401-zsh-census-gap/instruments/30-conformance-own-selectors.sh
+         2  .softhouse/capture/t401-zsh-census-gap/instruments/45-red-drive-conformance-selectors.sh
+         1  .softhouse/capture/t445-case-route/evidence/00-index-vs-worktree-audit.md
+         4  .softhouse/capture/t445-case-route/evidence/02-condition-by-condition.md
+        17  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T323.md
+         5  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T358.md
+         1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T359.md
+         1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T364.md
+         1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T375.md
+         1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T377.md
+         1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T380.md
+         1  .softhouse/handoff/T401-zsh-census-gap.md
+         2  .softhouse/handoff/T431-t407-conditions.md
+         3  .softhouse/handoff/T445-case-route.md
+         2  .softhouse/handoff/T454-longs-route.md
+         1  .softhouse/patterns.md
+         2  .softhouse/reviews/T298/evidence/t298b-20-wider-live-surface.txt
+        12  .softhouse/reviews/t337-review-t323/REVIEW.md
+         4  .softhouse/reviews/t364-review-t358/REVIEW.md
+         3  .softhouse/reviews/t364-review-t358/evidence/03-t364-haystack-occurrences.txt
+         1  .softhouse/reviews/t364-review-t358/evidence/04-t364-path-normalisation.txt
+         1  .softhouse/reviews/t384-review-t375/REVIEW.md
+         2  .softhouse/reviews/t387-review-t360/REVIEW.md
+         2  .softhouse/reviews/t406-review-t391/REVIEW.md
+         3  .softhouse/reviews/t407-review-t404/REVIEW.md
+         2  .softhouse/reviews/t409-review-t390/REVIEW.md
+         3  .softhouse/reviews/t411-review-t401/REVIEW.md
+         5  .softhouse/reviews/t411-review-t401/evidence/20-census-enumeration.txt
+         1  .softhouse/reviews/t411-review-t401/evidence/30-cost-rederive.txt
+         3  .softhouse/reviews/t411-review-t401/evidence/50-bre-blast-radius.txt
+         1  .softhouse/reviews/t411-review-t401/instruments/30-t411-cost-rederive.sh
+         1  .softhouse/reviews/t422-review-t416/REVIEW.md
+         1  .softhouse/reviews/t438-review-t417/REVIEW.md
+         4  .softhouse/reviews/t444-review-t431/REVIEW.md
+         3  .softhouse/reviews/t444-review-t431/evidence/06-conformance-line-citation-sweep.txt
+         2  .softhouse/reviews/t446-review-t445/REVIEW.md
+        41  .softhouse/reviews/t446-review-t445/evidence/05-conformance-line-citation-sweep.txt
+         1  .softhouse/reviews/t450-review-t412/REVIEW.md
+         6  .softhouse/reviews/t459-review-t454/REVIEW.md
+         5  .softhouse/reviews/t459-review-t454/evidence/05-pins-and-cardinals.txt
+         3  .softhouse/reviews/t459-review-t454/instruments/pins.sh
+         9  .softhouse/tasks.json
+
+RECONCILIATION OF THE TOTAL: I count 1797 inbound citations EXCLUDING the harness's own
+two self-citations; 'git grep' over the same tree counts 1799 INCLUDING them. T473's and
+T477's 1799 is the inclusive count and it reproduces exactly. 20 moved / 0 vanished /
+0 past the end, across the same 10 files, is identical.
+
+=== FAILOPEN_PIN_FILE_LIST ===
+   start line  1627  lines   1  md5 8ddc6eb997779c95beb30c965328449c
+     ^ at origin/main
+   start line  1627  lines   1  md5 8ddc6eb997779c95beb30c965328449c
+     ^ at 3f4e236a
+   start line  1627  lines   1  md5 8ddc6eb997779c95beb30c965328449c
+     ^ at 11afb281
+   start line  1627  lines   1  md5 8ddc6eb997779c95beb30c965328449c
+     ^ at a6bf50a3
+=== HOSTSTATE_PIN_TEMP_ASSIGN_LIST ===
+   start line  2097  lines  18  md5 70405fc524207cfcbe75cd153ba18ade
+     ^ at origin/main
+   start line  2097  lines  18  md5 70405fc524207cfcbe75cd153ba18ade
+     ^ at 3f4e236a
+   start line  2097  lines  18  md5 70405fc524207cfcbe75cd153ba18ade
+     ^ at 11afb281
+   start line  2097  lines  18  md5 70405fc524207cfcbe75cd153ba18ade
+     ^ at a6bf50a3
+=== .softhouse/LOCK across revs ===
+  origin/main : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+  3f4e236a : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+  11afb281 : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+  a6bf50a3 : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+=== files T477 must not have touched (diff vs merge base) ===
+  .softhouse/tasks.json : 0 changed
+  .softhouse/RESUME.md : 0 changed
+  .softhouse/program.json : 0 changed
+  .softhouse/patterns.md : 0 changed
+  .softhouse/bin/fire-program.sh : 0 changed
+=== guards dir and .pin files changed by the branch ===
+  (count: 0)
+=== T473 review edited by T477? ===
+  0
+=== trial merge into current main ===
+  merge-tree rc=0
+360338a780fad0a366f5d9ede3c09cb0a4e69d4a

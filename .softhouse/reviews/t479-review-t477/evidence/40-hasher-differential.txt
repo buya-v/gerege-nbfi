@@ -1,0 +1,37 @@
+T479 / 40 — THE HASHER, RE-VERIFIED AFTER T477'S REWRITE, ON MY OWN NASTY CORPUS
+===============================================================================
+
+The hasher is extracted VERBATIM from the harness on disk (between the recpy opening and
+closing quotes) and refused if the extracted text does not contain both 'hashlib' and
+'blobsha'. The corpus is built fresh and committed, so git's own HEAD ids are the oracle
+for symlinks, and 'git hash-object --no-filters' is the oracle for regular files.
+
+EXTRACTED the hasher verbatim: lines 5620..5665, 1340 bytes
+=== CORPUS ===
+  13 100644
+   1 100755
+   5 120000
+entries: 19
+hasher exit=0  stderr bytes=0
+SCANNED row      : SCANNED 19
+DIFFERS rows     : 0
+MODE/UNREADABLE/MALFORMED/MISSING rows : 0
+  regular entries compared = 14   MISMATCHES = 0   OMITTED = 0
+  regular files PERTURBED = 14
+  DIFFERS rows after perturbation = 14
+  symlink rows (should be none)   = 0
+  SCANNED row                     = SCANNED 19
+  MODE 160000 mysub
+  SCANNED 1
+
+READING:
+  * 19 HEAD entries (13 x 100644, 1 x 100755, 5 x 120000). SCANNED 19, ZERO DIFFERS on an
+    unperturbed tree: the hasher reproduces EVERY committed id, including the symlinks,
+    the empty file, the 12 MiB file, invalid-UTF-8 content, CRLF, lone CR, no trailing
+    newline, glob metacharacters, a name containing a NEWLINE, a U+017F name and a
+    ü-umlaut name.
+  * 14 regular entries compared against 'git hash-object --no-filters': 0 MISMATCHES,
+    0 OMITTED. T477's note is confirmed: NUL framing omits the newline-named path where a
+    newline-delimited parser (T473's) dropped it.
+  * 14 of 14 perturbations detected; the 5 symlinks correctly untouched.
+  * A gitlink yields 'MODE 160000 mysub' — the ungradeable-entry refusal, as declared.

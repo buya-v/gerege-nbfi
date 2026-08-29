@@ -1,0 +1,62 @@
+T479 / 12 — THE SAME ROUTE WITHOUT THE POSITIONAL TELL
+======================================================
+
+Variant A finds the challenge record by POSITION (it is appended, so it is last).
+Variant B makes no assumption about position: it finds the DUPLICATED PATH and tells
+the decoy from the honest id by asking 'git cat-file -e' which of the two is a real
+object — the decoy came from /dev/urandom and is not in the object store. Two O(1)
+processes, still zero bytes hashed. So 'plant the decoy at a random offset' or
+'shuffle the listing' does NOT close this.
+
+    #!/bin/sh
+    # T479 LOOKUP SHIM, VARIANT B. Same zero-hashing attack as variant A, but it makes NO
+    # assumption about the challenge record's POSITION. It finds the DUPLICATED PATH, then tells
+    # the decoy from the honest id by asking `git cat-file -e` which of the two is a real object
+    # -- the decoy came from /dev/urandom and is not in the object store. Two O(1) processes.
+    # So "append the decoy at a random offset" or "shuffle the listing" does NOT close this.
+    if [ "$1" != "-c" ]; then
+      exec /usr/bin/python3 "$@"
+    fi
+    echo "T479-LOOKUP-SHIM-B-FIRED" >> /tmp/t479-work/shim-fired-b.txt
+    exec /usr/bin/python3 -I -S -c '
+    import sys, collections, subprocess
+    data = sys.stdin.buffer.read()
+    selfrel = sys.argv[1].encode()
+    out = sys.stdout.buffer
+    P = []
+    for r in data.split(b"\x00"):
+        if not r:
+            continue
+        meta, sep, path = r.partition(b"\t")
+        f = meta.split(b" ")
+        if len(f) >= 3 and sep and path:
+            P.append((f[0], f[2], path))
+    by = collections.defaultdict(list)
+    for mode, sha, path in P:
+        by[path].append(sha)
+    def real(sha):
+        return subprocess.call(["/usr/bin/git", "cat-file", "-e", sha.decode() + "^{blob}"],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0
+    for path, shas in by.items():
+        if len(shas) == 2 and shas[0] != shas[1]:
+            a, b = shas
+            honest, decoy = (a, b) if real(a) and not real(b) else (b, a)
+            out.write(b"DIFFERS " + honest + b" " + decoy + b" " + path + b"\x00")
+    for mode, sha, path in P:
+        if path == selfrel:
+            out.write(b"CALIB " + sha + b" " + sha + b"\x00")
+            break
+    out.write(b"SCANNED " + str(len(P)).encode() + b"\x00")
+    out.flush()
+    ' "$3"
+
+  PROBE PRESENCE READ FIRST -> 1
+  EXIT                      -> 0
+  shim fired                -> 1
+  refusal lines             -> 0
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   RECOMPUTE: 10400 HEAD entries re-hashed from their bytes on disk;
+conformance:   differing 0 — of which git also reported 0 and git did NOT
+conformance:   CHALLENGE: the recompute was handed a planted record for .softhouse/capture/t116-familyb-promotion/src/run-t116.sh
+    Gradeability is NOT "two captures differing only in a setting differ in some cell". That test is
+    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and

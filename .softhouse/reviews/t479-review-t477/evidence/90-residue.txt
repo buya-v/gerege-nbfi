@@ -1,0 +1,45 @@
+=== T479 RESIDUE CHECK, TAKEN IN THE REVIEWER'S OWN WORKTREE ===
+worktree            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0b63faccbca5aadd
+HEAD                : b810df3cabb0af75aca33c289e9cfa5a0811ea6b
+
+--- 1. INDEX BITS ---
+  entries NOT in state H : 0
+
+--- 2. ATTRIBUTE SOURCES, ALL FOUR ---
+    ABSENT : /Users/buv/gerege-nbfi/.git/worktrees/agent-a0b63faccbca5aadd/info/attributes
+    ABSENT : /Users/buv/gerege-nbfi/.git/info/attributes
+    ABSENT : /Users/buv/.config/git/attributes
+    core.attributesFile   : []  (empty = unset)
+    TRACKED .gitattributes files: 0
+
+--- 3. CONTENT FILTERS, EVERY CONFIG LEVEL ---
+    level [--local] : 0
+    level [--global] : 0
+    level [--system] : 0
+    level [ALL] : 0
+    core.autocrlf : []
+    core.eol      : []
+
+--- 4. WORKING TREE ---
+    git status --porcelain lines : 1
+    ?? .softhouse/reviews/t479-review-t477/
+
+--- 5. FORGERY MARKERS AND SCRATCH NAMES IN TRACKED FILES ---
+    tracked paths carrying the forged-marker token : 0
+    tracked paths naming the scratch root          : 0
+    tracked .sh/.py added by this review            : 0
+
+--- 6. PINS AND THE FIRE LOCK ---
+    LOCK in HEAD : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    LOCK on disk : bc5f4a33bb9c3ac1504ae344cbf2466c739d9985
+    changed vs main: .softhouse/tasks.json -> 0
+    changed vs main: .softhouse/RESUME.md -> 0
+    changed vs main: .softhouse/program.json -> 0
+    changed vs main: .softhouse/patterns.md -> 0
+    changed vs main: .softhouse/conformance.sh -> 0
+    changed vs main: .softhouse/bin/fire-program.sh -> 0
+
+--- 7. SCRATCH LIVES OUTSIDE THE REPOSITORY ---
+    scratch root : /tmp/t479-work
+    is it inside the repo? : no
+    clones under it        : 9
