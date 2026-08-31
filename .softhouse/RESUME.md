@@ -1,19 +1,20 @@
 <!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->
-> ## STALE — this manifest was NOT rewritten by fire `20260831-080005`, which ended 2026-08-31T00:02:52Z.
+> ## STALE — this manifest was NOT rewritten by fire `20260831-110002`, which ended 2026-08-31T03:02:34Z.
 >
 > Everything below predates that fire, so its task table, its "next action" and its
 > pause reason are all claims about a world that has moved. The driver did not reach
 > STEP 5.5, which is why a shell script is writing this.
 >
 > - driver outcome: rc=`1` — **QUOTA: THIS FIRE NEVER GOT A TURN** — 0 model turns, rate limit 'seven_day' rejected (resetsAt=1788440400). This is NOT a driver crash and nothing in the repo advanced; the window was spent on nothing.
-> - tasks.json reconcile: ran clean (see the reconcile| lines in /Users/buv/Library/Logs/gerege-nbfi/fire-20260831-080005.log)
+> - tasks.json reconcile: ran clean (see the reconcile| lines in /Users/buv/Library/Logs/gerege-nbfi/fire-20260831-110002.log)
 > - a task shown below as `in_progress` is a DEAD dispatch unless the reconcile line
 >   above says it was refused; read `tasks.json` notes, not this table.
-> - fire log: `/Users/buv/Library/Logs/gerege-nbfi/fire-20260831-080005.log`
+> - fire log: `/Users/buv/Library/Logs/gerege-nbfi/fire-20260831-110002.log`
 >
 > This banner is not maintained by anyone. It disappears when a driver rewrites
 > RESUME.md per STEP 5.5.4, and it comes back on any fire that fails to.
 <!-- /T288-WRAPPER-BANNER -->
+
 
 
 
