@@ -43,15 +43,15 @@ type InterestPeriod struct {
 	// RateFactor and RateFactorTillPeriodDueDate are the segment's rate
 	// factors, carried as exact rationals. A nil value is the oracle's null
 	// BigDecimal and reads as zero.
-	RateFactor                   *big.Rat
-	RateFactorTillPeriodDueDate  *big.Rat
+	RateFactor                  *big.Rat
+	RateFactorTillPeriodDueDate *big.Rat
 
-	creditedPrincipal            Money
-	creditedInterest             Money
-	disbursementAmount           Money
-	balanceCorrectionAmount      Money
-	outstandingLoanBalance       Money
-	capitalizedIncomePrincipal   Money
+	creditedPrincipal          Money
+	creditedInterest           Money
+	disbursementAmount         Money
+	balanceCorrectionAmount    Money
+	outstandingLoanBalance     Money
+	capitalizedIncomePrincipal Money
 
 	rounding Rounding
 	currency Currency
@@ -246,4 +246,75 @@ func (ip *InterestPeriod) AddCreditedInterestAmount(additional Money) {
 // adding the supplied amount [VERIFIED: InterestPeriod.java:181-183].
 func (ip *InterestPeriod) AddCapitalizedIncomePrincipalAmount(additional Money) {
 	ip.capitalizedIncomePrincipal = ip.CapitalizedIncomePrincipal().plus(additional)
+}
+
+// IsPaused mirrors InterestPeriod.isPaused().
+func (ip *InterestPeriod) IsPaused() bool { return ip.Paused }
+
+// SetDueDate mutates the segment's due date [VERIFIED: InterestPeriod.java @Setter].
+func (ip *InterestPeriod) SetDueDate(due time.Time) { ip.DueDate = due }
+
+// SetPaused mutates the segment's paused flag [VERIFIED: InterestPeriod.java @Setter].
+func (ip *InterestPeriod) SetPaused(paused bool) { ip.Paused = paused }
+
+// SetRateFactor mutates the segment's own rate factor.
+func (ip *InterestPeriod) SetRateFactor(f *big.Rat) { ip.RateFactor = f }
+
+// SetRateFactorTillPeriodDueDate mutates the segment's rate factor measured to
+// the enclosing repayment period's due date.
+func (ip *InterestPeriod) SetRateFactorTillPeriodDueDate(f *big.Rat) {
+	ip.RateFactorTillPeriodDueDate = f
+}
+
+// copy is InterestPeriod.copy(repaymentPeriod, interestPeriod) — a deep copy
+// rebound to rp [VERIFIED: InterestPeriod.java:86-92].
+func (ip *InterestPeriod) copy(rp *RepaymentPeriod) *InterestPeriod {
+	c := &InterestPeriod{
+		repaymentPeriod:             rp,
+		FromDate:                    ip.FromDate,
+		DueDate:                     ip.DueDate,
+		RateFactor:                  ratCopy(ip.RateFactor),
+		RateFactorTillPeriodDueDate: ratCopy(ip.RateFactorTillPeriodDueDate),
+		creditedPrincipal:           ip.CreditedPrincipal(),
+		creditedInterest:            ip.CreditedInterest(),
+		disbursementAmount:          ip.DisbursementAmount(),
+		balanceCorrectionAmount:     ip.BalanceCorrectionAmount(),
+		outstandingLoanBalance:      ip.OutstandingLoanBalance(),
+		capitalizedIncomePrincipal:  ip.CapitalizedIncomePrincipal(),
+		rounding:                    ip.rounding,
+		currency:                    ip.currency,
+		Paused:                      ip.Paused,
+	}
+	return c
+}
+
+// withEmptyInterestPeriod is InterestPeriod.withEmptyAmounts(repaymentPeriod,
+// fromDate, dueDate, isPaused): every amount is zero and the rate factors are
+// BigDecimal.ZERO, matching the oracle's three- and four-argument factories
+// [VERIFIED: InterestPeriod.java:94-109].
+func withEmptyInterestPeriod(rp *RepaymentPeriod, from, due time.Time, paused bool) *InterestPeriod {
+	zero := moneyZero(rp.currency, rp.rounding)
+	return &InterestPeriod{
+		repaymentPeriod:             rp,
+		FromDate:                    from,
+		DueDate:                     due,
+		RateFactor:                  new(big.Rat),
+		RateFactorTillPeriodDueDate: new(big.Rat),
+		creditedPrincipal:           zero,
+		creditedInterest:            zero,
+		disbursementAmount:          zero,
+		balanceCorrectionAmount:     zero,
+		outstandingLoanBalance:      zero,
+		capitalizedIncomePrincipal:  zero,
+		rounding:                    rp.rounding,
+		currency:                    rp.currency,
+		Paused:                      paused,
+	}
+}
+
+func ratCopy(r *big.Rat) *big.Rat {
+	if r == nil {
+		return nil
+	}
+	return new(big.Rat).Set(r)
 }

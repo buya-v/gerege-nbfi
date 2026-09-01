@@ -29,27 +29,27 @@ type RepaymentPeriod struct {
 	// InterestPeriods is the ordered list of segments inside the window.
 	InterestPeriods []*InterestPeriod
 
-	emi        Money
-	originalEmi Money
-	paidPrincipal Money
-	paidInterest  Money
+	emi                        Money
+	originalEmi                Money
+	paidPrincipal              Money
+	paidInterest               Money
 	futureUnrecognizedInterest Money
 
-	totalDisbursedAmount        Money
+	totalDisbursedAmount         Money
 	totalCapitalizedIncomeAmount Money
 
 	creditedPrincipalMovedDueReAge Money
 	creditedInterestMovedDueReAge  Money
 	fixedInterest                  Money
 
-	rounding      Rounding
-	currency      Currency
+	rounding       Rounding
+	currency       Currency
 	interestMethod InterestMethod
 
-	InterestMovedUpward       bool
-	InterestPaymentGrace      bool
-	InterestMovedDownward     bool
-	ReAged                    bool
+	InterestMovedUpward        bool
+	InterestPaymentGrace       bool
+	InterestMovedDownward      bool
+	ReAged                     bool
 	ReAgedEarlyRepaymentHolder bool
 }
 
@@ -61,22 +61,22 @@ func NewRepaymentPeriod(previous *RepaymentPeriod, from, due time.Time, emi Mone
 	rounding Rounding, currency Currency, method InterestMethod) *RepaymentPeriod {
 	zero := moneyZero(currency, rounding)
 	p := &RepaymentPeriod{
-		previous:                previous,
-		FromDate:                from,
-		DueDate:                 due,
-		emi:                     emi,
-		originalEmi:             emi,
-		paidPrincipal:           zero,
-		paidInterest:            zero,
-		futureUnrecognizedInterest: zero,
-		totalDisbursedAmount:       zero,
-		totalCapitalizedIncomeAmount: zero,
+		previous:                       previous,
+		FromDate:                       from,
+		DueDate:                        due,
+		emi:                            emi,
+		originalEmi:                    emi,
+		paidPrincipal:                  zero,
+		paidInterest:                   zero,
+		futureUnrecognizedInterest:     zero,
+		totalDisbursedAmount:           zero,
+		totalCapitalizedIncomeAmount:   zero,
 		creditedPrincipalMovedDueReAge: zero,
 		creditedInterestMovedDueReAge:  zero,
 		fixedInterest:                  zero,
-		rounding:        rounding,
-		currency:        currency,
-		interestMethod:  method,
+		rounding:                       rounding,
+		currency:                       currency,
+		interestMethod:                 method,
 	}
 	p.InterestPeriods = []*InterestPeriod{NewInterestPeriod(p, from, due)}
 	return p
@@ -87,17 +87,17 @@ func NewRepaymentPeriod(previous *RepaymentPeriod, from, due time.Time, emi Mone
 // that its money cells are never left as nil-backed zero values.
 func NewInterestPeriod(p *RepaymentPeriod, from, due time.Time) *InterestPeriod {
 	return &InterestPeriod{
-		repaymentPeriod:          p,
-		FromDate:                 from,
-		DueDate:                  due,
-		creditedPrincipal:        moneyZero(p.currency, p.rounding),
-		creditedInterest:         moneyZero(p.currency, p.rounding),
-		disbursementAmount:       moneyZero(p.currency, p.rounding),
-		balanceCorrectionAmount:  moneyZero(p.currency, p.rounding),
-		outstandingLoanBalance:   moneyZero(p.currency, p.rounding),
+		repaymentPeriod:            p,
+		FromDate:                   from,
+		DueDate:                    due,
+		creditedPrincipal:          moneyZero(p.currency, p.rounding),
+		creditedInterest:           moneyZero(p.currency, p.rounding),
+		disbursementAmount:         moneyZero(p.currency, p.rounding),
+		balanceCorrectionAmount:    moneyZero(p.currency, p.rounding),
+		outstandingLoanBalance:     moneyZero(p.currency, p.rounding),
 		capitalizedIncomePrincipal: moneyZero(p.currency, p.rounding),
-		rounding: p.rounding,
-		currency: p.currency,
+		rounding:                   p.rounding,
+		currency:                   p.currency,
 	}
 }
 
@@ -143,10 +143,14 @@ func (p *RepaymentPeriod) TotalCapitalizedIncomeAmount() Money { return p.totalC
 func (p *RepaymentPeriod) FixedInterest() Money { return p.fixedInterest }
 
 // CreditedPrincipalMovedDueReAge returns the principal moved to re-aging.
-func (p *RepaymentPeriod) CreditedPrincipalMovedDueReAge() Money { return p.creditedPrincipalMovedDueReAge }
+func (p *RepaymentPeriod) CreditedPrincipalMovedDueReAge() Money {
+	return p.creditedPrincipalMovedDueReAge
+}
 
 // CreditedInterestMovedDueReAge returns the interest moved to re-aging.
-func (p *RepaymentPeriod) CreditedInterestMovedDueReAge() Money { return p.creditedInterestMovedDueReAge }
+func (p *RepaymentPeriod) CreditedInterestMovedDueReAge() Money {
+	return p.creditedInterestMovedDueReAge
+}
 
 // FirstInterestPeriod returns the first segment [VERIFIED: RepaymentPeriod.java:292-294].
 func (p *RepaymentPeriod) FirstInterestPeriod() *InterestPeriod {
@@ -419,4 +423,123 @@ func (p *RepaymentPeriod) calculateTotalDisbursedAndCapitalizedIncomeAmountTillG
 func (p *RepaymentPeriod) MoveOutstandingDueToReAging() {
 	p.creditedPrincipalMovedDueReAge = p.CreditedPrincipal()
 	p.creditedInterestMovedDueReAge = p.CreditedInterest()
+}
+
+// IsFirstRepaymentPeriod reports whether this period has no predecessor
+// [VERIFIED: RepaymentPeriod.java:206-208].
+func (p *RepaymentPeriod) IsFirstRepaymentPeriod() bool { return p.previous == nil }
+
+// FindInterestPeriod returns the segment whose [from, due] window contains
+// transactionDate, inclusive on both ends [VERIFIED: RepaymentPeriod.java:436-443].
+func (p *RepaymentPeriod) FindInterestPeriod(transactionDate time.Time) (*InterestPeriod, bool) {
+	for _, ip := range p.InterestPeriods {
+		if !transactionDate.Before(ip.FromDate) && !transactionDate.After(ip.DueDate) {
+			return ip, true
+		}
+	}
+	return nil, false
+}
+
+// SetEmi mutates the installment [VERIFIED: RepaymentPeriod.java @Setter].
+func (p *RepaymentPeriod) SetEmi(emi Money) { p.emi = emi }
+
+// SetOriginalEmi mutates the original installment [VERIFIED: RepaymentPeriod.java @Setter].
+func (p *RepaymentPeriod) SetOriginalEmi(originalEmi Money) { p.originalEmi = originalEmi }
+
+// SetFutureUnrecognizedInterest mutates future unrecognized interest.
+func (p *RepaymentPeriod) SetFutureUnrecognizedInterest(m Money) { p.futureUnrecognizedInterest = m }
+
+// SetFixedInterest mutates fixed interest.
+func (p *RepaymentPeriod) SetFixedInterest(m Money) { p.fixedInterest = m }
+
+// SetTotalDisbursedAmount mutates totalDisbursedAmount.
+func (p *RepaymentPeriod) SetTotalDisbursedAmount(m Money) { p.totalDisbursedAmount = m }
+
+// SetTotalCapitalizedIncomeAmount mutates totalCapitalizedIncomeAmount.
+func (p *RepaymentPeriod) SetTotalCapitalizedIncomeAmount(m Money) {
+	p.totalCapitalizedIncomeAmount = m
+}
+
+// SetCreditedPrincipalMovedDueReAge mutates creditedPrincipalMovedDueReAge.
+func (p *RepaymentPeriod) SetCreditedPrincipalMovedDueReAge(m Money) {
+	p.creditedPrincipalMovedDueReAge = m
+}
+
+// SetCreditedInterestMovedDueReAge mutates creditedInterestMovedDueReAge.
+func (p *RepaymentPeriod) SetCreditedInterestMovedDueReAge(m Money) {
+	p.creditedInterestMovedDueReAge = m
+}
+
+// SetInterestMovedUpward mutates the interest-moved-upward flag.
+func (p *RepaymentPeriod) SetInterestMovedUpward(v bool) { p.InterestMovedUpward = v }
+
+// SetInterestMovedDownward mutates the interest-moved-downward flag.
+func (p *RepaymentPeriod) SetInterestMovedDownward(v bool) { p.InterestMovedDownward = v }
+
+// SetInterestPaymentGrace mutates the interest payment grace flag.
+func (p *RepaymentPeriod) SetInterestPaymentGrace(v bool) { p.InterestPaymentGrace = v }
+
+// SetReAged mutates the re-aged flag.
+func (p *RepaymentPeriod) SetReAged(v bool) { p.ReAged = v }
+
+// SetReAgedEarlyRepaymentHolder mutates the re-aged early repayment holder flag.
+func (p *RepaymentPeriod) SetReAgedEarlyRepaymentHolder(v bool) { p.ReAgedEarlyRepaymentHolder = v }
+
+// SetCurrency mutates the period's monetary currency.
+func (p *RepaymentPeriod) SetCurrency(c Currency) { p.currency = c }
+
+// copy is RepaymentPeriod.copy(previous, repaymentPeriod): a full deep copy with
+// the supplied predecessor and a fresh interest-period list [VERIFIED:
+// RepaymentPeriod.java:149-166].
+func (p *RepaymentPeriod) copy(previous *RepaymentPeriod) *RepaymentPeriod {
+	c := &RepaymentPeriod{
+		previous:                       previous,
+		FromDate:                       p.FromDate,
+		DueDate:                        p.DueDate,
+		emi:                            p.Emi(),
+		originalEmi:                    p.OriginalEmi(),
+		paidPrincipal:                  p.PaidPrincipal(),
+		paidInterest:                   p.PaidInterest(),
+		futureUnrecognizedInterest:     p.FutureUnrecognizedInterest(),
+		totalDisbursedAmount:           p.TotalDisbursedAmount(),
+		totalCapitalizedIncomeAmount:   p.TotalCapitalizedIncomeAmount(),
+		creditedPrincipalMovedDueReAge: p.CreditedPrincipalMovedDueReAge(),
+		creditedInterestMovedDueReAge:  p.CreditedInterestMovedDueReAge(),
+		fixedInterest:                  p.FixedInterest(),
+		rounding:                       p.rounding,
+		currency:                       p.currency,
+		interestMethod:                 p.interestMethod,
+		InterestMovedUpward:            p.InterestMovedUpward,
+		InterestPaymentGrace:           p.InterestPaymentGrace,
+		InterestMovedDownward:          p.InterestMovedDownward,
+		ReAged:                         p.ReAged,
+		ReAgedEarlyRepaymentHolder:     p.ReAgedEarlyRepaymentHolder,
+	}
+	c.InterestPeriods = make([]*InterestPeriod, 0, len(p.InterestPeriods))
+	for _, ip := range p.InterestPeriods {
+		c.InterestPeriods = append(c.InterestPeriods, ip.copy(c))
+	}
+	return c
+}
+
+// copyWithoutPaidAmounts is RepaymentPeriod.copyWithoutPaidAmounts(previous,
+// repaymentPeriod): the same as copy but with paid principal, paid interest and
+// future unrecognized interest zeroed, and — when interest has moved downward —
+// the paid interest promoted to fixed interest [VERIFIED: RepaymentPeriod.java:168-194].
+func (p *RepaymentPeriod) copyWithoutPaidAmounts(previous *RepaymentPeriod) *RepaymentPeriod {
+	c := p.copy(previous)
+	c.paidPrincipal = moneyZero(c.currency, c.rounding)
+	c.paidInterest = moneyZero(c.currency, c.rounding)
+	c.futureUnrecognizedInterest = moneyZero(c.currency, c.rounding)
+	if p.InterestMovedDownward {
+		c.fixedInterest = p.PaidInterest()
+	}
+	for _, ip := range c.InterestPeriods {
+		if !ip.BalanceCorrectionAmount().IsZero() {
+			// addBalanceCorrectionAmount(negated) nets the cell to exactly zero,
+			// so writing zero directly is the same result without the extra add.
+			ip.balanceCorrectionAmount = ip.zero()
+		}
+	}
+	return c
 }

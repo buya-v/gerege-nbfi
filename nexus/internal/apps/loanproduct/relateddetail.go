@@ -1,5 +1,29 @@
 package loanproduct
 
+import "math/big"
+
+// DaysInYearCustomStrategy is Fineract's DaysInYearCustomStrategyType, the leap
+// year convention applied when DaysInYearType is ACTUAL. [VERIFIED:
+// DaysInYearCustomStrategyType.java:57-70 — FULL_LEAP_YEAR always considers 366
+// days in a leap year; FEB_29_PERIOD_ONLY considers 366 only when the period
+// contains February 29.]
+//
+// The oracle persists this by code, not by ordinal, and the rate-factor
+// arithmetic only tests "is it FEB_29_PERIOD_ONLY?" (a null value behaves as
+// FULL_LEAP_YEAR), so the zero value here is FullLeapYear and no stored-value
+// table is carried.
+type DaysInYearCustomStrategy int32
+
+const (
+	DaysInYearFullLeapYear DaysInYearCustomStrategy = iota
+	DaysInYearFeb29PeriodOnly
+)
+
+// IsFeb29PeriodOnly mirrors the single comparison the arithmetic performs.
+func (s DaysInYearCustomStrategy) IsFeb29PeriodOnly() bool {
+	return s == DaysInYearFeb29PeriodOnly
+}
+
 // LoanProductRelatedDetail is the Go port of Fineract's
 // LoanProductRelatedDetail value object: the set of related-detail columns that
 // are embedded into m_product_loan and carried into every loan account created
@@ -41,20 +65,20 @@ type LoanProductRelatedDetail struct {
 	// and lets loanschedule remain the single source of derivation truth.
 	AnnualNominalInterestRate int64
 
-	InterestMethod                 InterestMethod
+	InterestMethod                  InterestMethod
 	InterestCalculationPeriodMethod InterestCalculationPeriodMethod
-	AllowPartialPeriodInterestCalc bool
+	AllowPartialPeriodInterestCalc  bool
 
-	RepayEvery               int
+	RepayEvery                   int
 	RepaymentPeriodFrequencyType PeriodFrequencyType
-	NumberOfRepayments       int
+	NumberOfRepayments           int
 
 	GraceOnPrincipalPayment int
 	GraceOnInterestPayment  int
 
 	AmortizationMethod AmortizationMethod
 
-	InArrearsTolerance int64
+	InArrearsTolerance   int64
 	GraceOnArrearsAgeing int
 
 	DaysInMonthType DaysInMonthType
@@ -62,6 +86,30 @@ type LoanProductRelatedDetail struct {
 
 	InterestRecalculationEnabled bool
 	IsEqualAmortization          bool
+
+	// Currency is the monetary metadata the product's money values are
+	// denominated in (getCurrencyData()). It carries the ISO code and the number
+	// of decimal places Money.of normalises to [VERIFIED:
+	// LoanProductRelatedDetail.java:332-334].
+	Currency Currency
+
+	// DaysInYearCustomStrategy is the leap-year convention used only when
+	// DaysInYearType is ACTUAL [VERIFIED: LoanProductRelatedDetail.java:358-360].
+	DaysInYearCustomStrategy DaysInYearCustomStrategy
+
+	// InterestRecognitionOnDisbursementDate mirrors
+	// isInterestRecognitionOnDisbursementDate(): when true, a partial ACTUAL
+	// interest period fraction ends on 1 January of the following year rather
+	// than 31 December [VERIFIED: ProgressiveEMICalculator.java:1579-1584].
+	InterestRecognitionOnDisbursementDate bool
+}
+
+// AnnualNominalInterestRateMajor returns the carried annual nominal interest
+// rate as a major-unit rational in PERCENT terms (a stored 12.000000% is the
+// rational 12), matching getAnnualNominalInterestRate()'s BigDecimal
+// [VERIFIED: LoanProductRelatedDetail.java:353-355].
+func (d LoanProductRelatedDetail) AnnualNominalInterestRateMajor() *big.Rat {
+	return new(big.Rat).SetFrac(big.NewInt(d.AnnualNominalInterestRate), pow10(6))
 }
 
 // GetInterestPeriodFrequencyType mirrors the oracle accessor: a null frequency
