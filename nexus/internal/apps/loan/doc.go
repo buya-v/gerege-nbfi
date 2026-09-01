@@ -8,12 +8,21 @@
 // development plan directs ("largest — split by sub-behaviour"). It owns the
 // stored-value <-> enum tables for LoanStatus and LoanTransactionType, the
 // balance-derived LoanSummary money snapshot (summary.go), and the pure
-// transition logic of DefaultLoanLifecycleStateMachine. It does NOT own:
+// transition logic of DefaultLoanLifecycleStateMachine.
 //
-//   - disbursement / repayment-allocation / penalty-charge / rescheduling /
-//     write-off-delinquency arithmetic — those are separate sub-behaviours that
-//     will land as siblings in this package or under a loan/account subpackage,
-//     and they depend on the schedule generator and ledger first;
+// The repayment-allocation ARITHMETIC slice has also landed here
+// (allocation.go and the allocation enums). It owns the four-bucket Allocation
+// value and the pure greedy bucket allocation — how a payment or credit is
+// spread across penalties, fees, interest and principal in the product's
+// configured order. It deliberately does NOT own the schedule machinery that
+// selects which instalment a due-type targets: that is the repayment
+// processors' job and remains a separate sub-behaviour.
+//
+// This slice does NOT own:
+//
+//   - disbursement / penalty-charge / rescheduling / write-off-delinquency
+//     arithmetic — those remain separate sub-behaviours that depend on the
+//     schedule generator and ledger first;
 //   - persistence. The state machine here is a pure function of (status, event,
 //     facts) so it can be graded without a database, matching the derive-don't-
 //     store ruling: the status field is DERIVED from balances, never stored
