@@ -231,3 +231,24 @@ The same reasoning as P-4 applies, one level up:
 > the rule was never violated; only its illustration went stale. **Read P-6 as freezing PROSE CHURN, never as
 > freezing a NUMBER.** The live figures live in `gates.md` § `G-8` and nowhere else; this file must not carry
 > a second copy of them (P-27).
+
+---
+
+## G-10 — capture vectors only from products the oracle would still accept
+
+**Decision (01 Sep 2026, local fire `20260901-122100`, `chosen_by: agent`).** **Option (c).** This is an
+ENGINEERING gate with no RESERVED content, so the driver decides it (CLAUDE.md § Answering gates). The
+standing rule is: **no vector may be taken from a product whose GL account was retyped underneath a live
+mapping, without explicit disclosure; capture from products the oracle would still re-create today.**
+
+- **(a) reproduce the type-blind laxity** — rejected. It would grade a port against a state the oracle itself
+  refuses to rebuild, which is not parity.
+- **(b) refuse the inconsistent state in Go and mark those products out of the graded domain** — **not chosen
+  here.** It narrows the graded domain and is therefore a hard `user` gate. It is decided only after a vector
+  actually lands on the region, at which point it is raised fresh.
+- **(c)** costs nothing and is reversible: it changes *which products vectors are taken from*, not *what the
+  port does*.
+
+**Buyan may reverse this.** The recommendation and its independent-review refinement (A2-11: "five products
+but six mapping rows") are the record in `gates.md` § G-10; this entry carries only the decision, not a second
+copy of the evidence.

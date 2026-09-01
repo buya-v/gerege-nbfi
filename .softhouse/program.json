@@ -679,7 +679,7 @@
       "class": "ENGINEERING",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
-      "state": "OPEN — driver recommends, Buyan may overrule",
+      "state": "CLOSED — DECIDED (c), local fire 20260901-122100",
       "title": "The oracle holds product mappings whose GL account was retyped underneath them, reports them without complaint, and will not re-create them",
       "evidence": "A2-7 capture A2-214: re-sending the mapping the oracle ITSELF accepted as product 23 now returns 403, because GL account 2 was retyped ASSET->INCOME underneath FIVE live product mappings. The oracle carries the state, serves it without error, and refuses to reproduce it.",
       "why_it_matters": "GET /loanproducts/{id} returns {id, name, glCode} per slot and NO type or usage at all, so THE READ-BACK STRUCTURALLY CANNOT REVEAL THE INCONSISTENCY. Any Go port graded on a vector captured from one of those five products would be graded against a state the oracle would reject if asked to build it again. This is not a bug to fix in Fineract; it is a question about what the PORT should do.",
@@ -687,7 +687,12 @@
       "driver_recommendation": "Prefer (c) first because it costs nothing and is reversible -- it changes which products vectors are taken from, not what the port does. (b) narrows the graded domain and is therefore a HARD USER GATE, per the never-cross list. Decide (a) vs (b) only after a vector actually lands on the region.",
       "blocks": "Nothing today. A2-8 must be TOLD about it, which its brief now does.",
       "raised_by": "A2-7 (capture A2-214), local fire 20260821-054355",
-      "recorded_in": ".softhouse/gates.md"
+      "recorded_in": ".softhouse/gates.md",
+      "chosen_by": "agent",
+      "decided_by": "driver",
+      "decision": "(c) capture vectors only from products whose mappings the oracle would still accept today; no vector from a retyped-account product without explicit disclosure.",
+      "decision_rationale": "ENGINEERING gate, no RESERVED content. (c) costs nothing and is reversible: it changes which products vectors are taken from, not what the port does. (b) narrows the graded domain and stays a hard user gate; (a) vs (b) is decided only after a vector actually lands on the region.",
+      "decided_at": "2026-09-01T12:21:00Z"
     },
     {
       "id": "G-11",
