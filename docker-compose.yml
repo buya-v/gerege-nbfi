@@ -1,0 +1,72 @@
+# Reference-oracle stack for the Fineract -> Go migration.
+#
+# Reproduces the Fineract reference implementation on PostgreSQL -- the ONLY
+# database permitted by CLAUDE.md. There is deliberately no MySQL/MariaDB and no
+# Oracle Database service in this file; the prohibited-engine sweeps in
+# .softhouse/reference-oracle.md remain valid against whatever this brings up.
+#
+# Usage (from the repository root):
+#
+#   docker compose up -d          # PostgreSQL + Fineract, healthy oracle on :8443
+#   docker compose down           # stop (keeps the database and log volumes)
+#   docker compose down -v        # stop AND destroy the database and log volumes
+#
+# The Fineract application image is `fineract:latest`, built by
+# `.softhouse/bin/build-oracle-image.sh` from the pinned checkout. Build that
+# once on a fresh host before the first `docker compose up`.
+#
+# Host ports are overridable so the oracle can run on a host where 5432/8443 are
+# already taken, or behind a non-default mapping:
+#
+#   ORACLE_DB_PORT=55432 ORACLE_APP_PORT=58443 docker compose up -d
+#
+# The connection facts the shell harness reads are in `.softhouse/oracle/env.sh`
+# and carry the same defaults and the same override names.
+
+services:
+  db:
+    image: postgres:18.3
+    container_name: gerege-oracle-db
+    restart: unless-stopped
+    env_file:
+      - ./.softhouse/oracle/env/postgresql.env
+    volumes:
+      - ./.softhouse/oracle/config/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+      - oracle-db-data:/var/lib/postgresql/data
+    ports:
+      - "${ORACLE_DB_PORT:-5432}:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 10s
+      retries: 10
+
+  fineract:
+    image: fineract:latest
+    container_name: gerege-oracle-app
+    restart: unless-stopped
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./.softhouse/oracle/env/fineract.env
+      - ./.softhouse/oracle/env/fineract-common.env
+      - ./.softhouse/oracle/env/fineract-postgresql.env
+    volumes:
+      - ./.softhouse/oracle/config/logback-override.xml:/app/logback-override.xml:ro
+      - ./.softhouse/oracle/config/aws-credentials:/etc/aws/credentials:ro
+      - oracle-fineract-logs:/var/logs/fineract:rw
+    tmpfs:
+      - /tmp:rw,nosuid,size=256m
+    ports:
+      - "${ORACLE_APP_PORT:-8443}:8443"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "sh", "-c", 'echo -e "Checking for the availability of Fineract server deployment"; while ! nc -z "localhost" 8443; do sleep 1; printf "-"; done; echo -e " >> Fineract server has started";' ]
+      timeout: 1s
+      retries: 60
+
+volumes:
+  oracle-db-data:
+  oracle-fineract-logs:

@@ -810,6 +810,12 @@ tasks.
 .softhouse/conformance.sh --prove         # the harness's own red/green mutation proofs
 ```
 
+The reference oracle is reproduced by `docker compose up -d` from the repository
+root (PostgreSQL + Fineract; see `.softhouse/oracle/README.md`). The connection
+facts conformance.sh uses come from `.softhouse/oracle/env.sh`, so a non-default
+host/port is one exported variable away instead of an edit to this file:
+`ORACLE_HOST` / `ORACLE_APP_PORT` (and `ORACLE_DB_PORT` for the database).
+
 **Run it with `bash`, never `sh`.** `bash .softhouse/conformance.sh` or
 `./.softhouse/conformance.sh` (the shebang selects bash). `sh conformance.sh`,
 `bash --posix conformance.sh`, `dash` and `zsh` are all refused up front with

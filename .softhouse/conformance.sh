@@ -410,10 +410,20 @@ NEXUS_DIR="$REPO_ROOT/nexus"
 HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
 CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
 
-# The reference oracle's health endpoint. Overridable ONLY so the unreachable-oracle
-# code path can be demonstrated without touching the live containers, which several
-# captures' comparability rests on having run uninterrupted.
-ORACLE_HEALTH_URL="${CONFORMANCE_ORACLE_HEALTH_URL:-https://localhost:8443/fineract-provider/actuator/health}"
+# The reference oracle's connection facts live in .softhouse/oracle/env.sh and are
+# shared with the repo-root docker-compose.yml: same defaults, same override names
+# (ORACLE_HOST / ORACLE_APP_PORT / ORACLE_DB_PORT / ORACLE_BASE_URL /
+# ORACLE_HEALTH_URL). Sourcing it keeps the harness pointed at whatever
+# `docker compose up` published instead of assuming localhost:8443.
+if [ -f "$REPO_ROOT/.softhouse/oracle/env.sh" ]; then
+  # shellcheck source=oracle/env.sh
+  . "$REPO_ROOT/.softhouse/oracle/env.sh"
+fi
+# The health endpoint actually probed below. CONFORMANCE_ORACLE_HEALTH_URL is the
+# harness-level override (e.g. the self-test that proves the unreachable-oracle
+# code path against https://127.0.0.1:1/health). When it is unset, fall back to
+# the shared oracle env, then to the historical localhost default.
+ORACLE_HEALTH_URL="${CONFORMANCE_ORACLE_HEALTH_URL:-${ORACLE_HEALTH_URL:-https://localhost:8443/fineract-provider/actuator/health}}"
 
 EXIT_UNUSABLE=2
 
