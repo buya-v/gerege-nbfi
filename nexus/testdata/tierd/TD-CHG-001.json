@@ -1,0 +1,41 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-CHG-001",
+  "context": "charges",
+  "class": "source-derived",
+  "title": "Loan flat charge 19.8 (USD, 0 dp, multiples 1) rounds up to 20",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java",
+    "test": "shouldApplyRoundingRules_forFlatCharge",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/charges",
+  "scenario": "Create a flat (chargeCalculationType=1) loan charge of 19.80 on a 10,000 loan whose product has digitsAfterDecimal=0 and inMultiplesOf=1, and read the persisted charge amount back.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "principal_minor": "10000",
+    "charge": {
+      "calculation_type": "FLAT",
+      "amount": "19.8"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_amount_minor": "20"
+  },
+  "grade": "Compute the flat charge amount with the product rounding rule (0 dp, fraction <= 0.5 rounds DOWN, else UP, then round up to the nearest in_multiples_of) and assert charge_amount_minor == 20.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

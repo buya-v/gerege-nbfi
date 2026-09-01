@@ -1,0 +1,41 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-CHG-004",
+  "context": "charges",
+  "class": "source-derived",
+  "title": "Loan percentage-of-amount charge 2.5067% of 10,000 (0 dp, multiples 3) = 252",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java",
+    "test": "shouldApplyRoundingRules_forPercentageOfAmountCharge",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/charges",
+  "scenario": "Create a percentage-of-amount (chargeCalculationType=2) loan charge of 2.5067% on a 10,000 loan (digitsAfterDecimal=0, inMultiplesOf=3). Raw = 10000 * 0.025067 = 250.67 -> 251 (UP, fraction > 0.5) -> 252 (next multiple of 3).",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "principal_minor": "10000",
+    "charge": {
+      "calculation_type": "PERCENT_OF_AMOUNT",
+      "percentage": "2.5067"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 3,
+      "mode": "fraction<=0.5 DOWN else UP, then next multiple"
+    }
+  },
+  "expect": {
+    "charge_amount_minor": "252"
+  },
+  "grade": "Compute raw = principal * (percentage/100), apply the 0-dp rule, round up to the nearest multiple of 3; assert charge_amount_minor == 252.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

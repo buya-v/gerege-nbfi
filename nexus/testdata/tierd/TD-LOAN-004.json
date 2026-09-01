@@ -1,0 +1,45 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-LOAN-004",
+  "context": "loan",
+  "class": "source-derived",
+  "title": "Repayment dated on the business date succeeds (C44)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/LoanRepayment-Part1.feature",
+    "test": "check that the repayment is successful if the repayment date is equal to the business date",
+    "testrail_id": "C44",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/loan",
+  "scenario": "With business date 1 July 2022, make a repayment dated 1 July 2022; a 200 AUTOPAY transaction must be created.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "business_date": {
+      "year": 2022,
+      "month": 7,
+      "day": 1
+    },
+    "repayment_date": {
+      "year": 2022,
+      "month": 7,
+      "day": 1
+    },
+    "repayment_minor": "20000",
+    "repayment_type": "AUTOPAY"
+  },
+  "expect": {
+    "transaction_created": true,
+    "repayment_created_minor": "20000",
+    "repayment_type": "AUTOPAY"
+  },
+  "grade": "Assert a repayment dated exactly on the business date is accepted and creates the 20000-minor AUTOPAY transaction.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

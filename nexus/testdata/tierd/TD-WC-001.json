@@ -1,0 +1,113 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-WC-001",
+  "context": "workingcapital",
+  "class": "source-derived",
+  "title": "Working-capital loan UC1 simple repayment (C76617): 9000 / TPV 100000 / PPR 18, repay 270",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/WorkingCapitalLoanRepayment.feature",
+    "test": "Verify working capital loan repayment - UC1: simple repayment: pay more than expected",
+    "testrail_id": "C76617",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/workingcapital",
+  "scenario": "Approve and disburse a 9000 working-capital loan (totalPaymentVolume 100000, periodPaymentRate 18), run inline COB, repay 270 on 10 Jan; verify the delinquency range period and the amortization schedule key periods.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "loan_product": "WCLP",
+    "submitted_on_date": {
+      "year": 2026,
+      "month": 1,
+      "day": 1
+    },
+    "expected_disbursement_date": {
+      "year": 2026,
+      "month": 1,
+      "day": 1
+    },
+    "principal_minor": "900000",
+    "total_payment_volume_minor": "10000000",
+    "period_payment_rate": "18",
+    "discount": "0",
+    "repayment_minor": "27000",
+    "repayment_date": {
+      "year": 2026,
+      "month": 1,
+      "day": 10
+    }
+  },
+  "expect": {
+    "approved": {
+      "status": "Approved",
+      "proposed_principal_minor": "900000",
+      "approved_principal_minor": "900000",
+      "total_payment_volume_minor": "10000000",
+      "period_payment_rate": "18"
+    },
+    "active": {
+      "status": "Active",
+      "principal_minor": "900000",
+      "approved_principal_minor": "900000",
+      "total_payment_volume_minor": "10000000",
+      "period_payment_rate": "18"
+    },
+    "delinquency_range_schedule_period_1": {
+      "period_number": 1,
+      "from_date": {
+        "year": 2026,
+        "month": 1,
+        "day": 1
+      },
+      "to_date": {
+        "year": 2026,
+        "month": 1,
+        "day": 30
+      },
+      "expected_amount_minor": "27000",
+      "paid_amount_minor": "27000",
+      "outstanding_amount_minor": "0",
+      "min_payment_criteria_met": true,
+      "delinquent_amount_minor": "0",
+      "delinquent_days": 0
+    },
+    "amortization_schedule": {
+      "total_periods": 185,
+      "period_0": {
+        "payment_no": 0,
+        "payment_date": "2026-01-01",
+        "expected_payment_amount_minor": "-900000",
+        "expected_balance_minor": "900000",
+        "actual_balance_minor": "900000",
+        "expected_discount_fee_balance_minor": "0"
+      },
+      "period_1": {
+        "payment_no": 1,
+        "payment_date": "2026-01-02",
+        "expected_payment_amount_minor": "5000",
+        "actual_payment_amount_minor": "0",
+        "expected_balance_minor": "895000",
+        "actual_balance_minor": "900000",
+        "expected_discount_fee_balance_minor": "0"
+      },
+      "period_9": {
+        "payment_no": 9,
+        "payment_date": "2026-01-10",
+        "expected_payment_amount_minor": "5000",
+        "actual_payment_amount_minor": "27000",
+        "expected_balance_minor": "855000",
+        "actual_balance_minor": "873000",
+        "expected_discount_fee_balance_minor": "0"
+      }
+    }
+  },
+  "grade": "Assert approval/disbursal fields, the delinquency range period 1 (expected 27000 paid 27000 outstanding 0), the 185-period amortization schedule, and periods 0/1/9 golden cells.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

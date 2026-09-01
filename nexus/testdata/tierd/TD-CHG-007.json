@@ -1,0 +1,43 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-CHG-007",
+  "context": "charges",
+  "class": "source-derived",
+  "title": "Savings percentage-of-withdrawal charge 2.5% of 615 = 15, balance 370",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/SavingsAccountChargeRoundingTest.java",
+    "test": "shouldApplyRoundingRules_forPercentageOfWithdrawalCharge",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/savings",
+  "scenario": "Deposit 1000, then withdraw 615 with a 2.5% percentage-of-withdrawal savings charge. Raw fee = 615 * 0.025 = 15.375 -> 15 (fraction 0.375 <= 0.5 DOWN). Balance = 1000 - 615 - 15 = 370.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "deposit_minor": "1000",
+    "withdrawal_minor": "615",
+    "charge": {
+      "calculation_type": "PERCENT_OF_WITHDRAWAL",
+      "percentage": "2.5"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_fees_minor": "15",
+    "balance_minor": "370"
+  },
+  "grade": "Assert charge_fees_minor == 15 and balance_minor == 370 after the withdrawal.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

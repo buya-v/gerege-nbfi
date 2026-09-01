@@ -1,0 +1,39 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-SAV-002",
+  "context": "savings",
+  "class": "source-derived",
+  "title": "Withdraw 1000 EUR after a 1000 deposit (C2439)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature",
+    "test": "As a user I would like to Withdraw from my savings account",
+    "testrail_id": "C2439",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/savings",
+  "scenario": "Deposit 1000 then withdraw 1000 on the same date; the withdrawal succeeds against the available balance.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "deposit_minor": "100000",
+    "withdrawal_minor": "100000",
+    "date": {
+      "year": 2022,
+      "month": 6,
+      "day": 1
+    }
+  },
+  "expect": {
+    "withdrawal_successful": true,
+    "withdrawal_minor": "100000"
+  },
+  "grade": "Assert the 100000-minor withdrawal succeeds after a 100000-minor deposit.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-CHG-003",
+  "context": "charges",
+  "class": "source-derived",
+  "title": "Loan flat charge 0.5 (USD, 0 dp) rounds to zero and is refused (HTTP 403)",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java",
+    "test": "shouldFailToAddFlatCharge_whenAmountRoundsToZero",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/charges",
+  "scenario": "Attempt to add a flat loan charge of 0.50 (digitsAfterDecimal=0): fraction 0.5 is <= 0.5 so it rounds DOWN to zero, which the API must refuse without persisting the charge.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "charge": {
+      "calculation_type": "FLAT",
+      "amount": "0.5"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_persisted": false
+  },
+  "grade": "Refuse when the rounded charge amount is zero; no charge row may be persisted.",
+  "refusal": {
+    "http_status": 403,
+    "code": "error.msg.loanCharge.cannot.be.added.as.amount.rounded.to.zero",
+    "message_contains": "error.msg.loanCharge.cannot.be.added.as.amount.rounded.to.zero"
+  },
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

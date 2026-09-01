@@ -1,0 +1,40 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-LP-001",
+  "context": "loanproduct",
+  "class": "source-derived",
+  "title": "Two-disbursement loan: 1000 + 500 -> outstanding 1500, repay 1500 -> 0 (C53)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/LoanProduct.feature",
+    "test": "As a user I would like to fully repay a loan which was disbursed 2 times",
+    "testrail_id": "C53",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/loanproduct",
+  "scenario": "Disburse 1000, then a second disbursement of 500 raises outstanding to 1500; repaying 1500 clears it to 0.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "disbursements_minor": [
+      "100000",
+      "50000"
+    ],
+    "repayment_minor": "150000",
+    "repayment_type": "AUTOPAY"
+  },
+  "expect": {
+    "outstanding_after_first_minor": "100000",
+    "outstanding_after_second_minor": "150000",
+    "repayment_created_minor": "150000",
+    "outstanding_after_minor": "0"
+  },
+  "grade": "Assert outstanding tracks each disbursement (100000, then 150000) and the 150000-minor repayment clears it to 0.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

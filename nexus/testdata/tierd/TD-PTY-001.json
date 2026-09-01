@@ -1,0 +1,35 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-PTY-001",
+  "context": "parties",
+  "class": "source-derived",
+  "title": "Client creation with address (C15)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/Client.feature",
+    "test": "Client creation with address functionality for Fineract",
+    "testrail_id": "C15",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/parties",
+  "scenario": "With 'enable-address' enabled, create a client with first name, last name and address; the client is created successfully.",
+  "inputs": {
+    "global_config": {
+      "enable-address": true
+    },
+    "client": {
+      "first_name": "FirstName2",
+      "last_name": "Test2",
+      "with_address": true
+    }
+  },
+  "expect": {
+    "client_created": true
+  },
+  "grade": "Assert client creation with address succeeds when enable-address is on.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

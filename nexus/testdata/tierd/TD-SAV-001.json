@@ -1,0 +1,38 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-SAV-001",
+  "context": "savings",
+  "class": "source-derived",
+  "title": "Deposit 1000 EUR to an activated savings account (C2438)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature",
+    "test": "As a user I would like to Deposit to my savings account",
+    "testrail_id": "C2438",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/savings",
+  "scenario": "Create, approve and activate a EUR savings account, then deposit 1000 EUR on the submitted-on date.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "deposit_minor": "100000",
+    "date": {
+      "year": 2022,
+      "month": 6,
+      "day": 1
+    }
+  },
+  "expect": {
+    "deposit_successful": true,
+    "deposit_minor": "100000"
+  },
+  "grade": "Assert the 100000-minor deposit is accepted on an activated account.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

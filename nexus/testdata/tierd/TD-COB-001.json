@@ -1,0 +1,42 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-COB-001",
+  "context": "cob",
+  "class": "source-derived",
+  "title": "Last closed business date advances via COB and catch-up (C2501)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/0_COB.feature",
+    "test": "As an admin I would like to see that last closed business date got updated after COB catch up job finished",
+    "testrail_id": "C2501",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/cob",
+  "scenario": "Disburse a 1000 loan on 01 Jan 2022 (last closed business date null), run COB at 02 Jan and 05 Jan, then COB catch-up; the last closed business date becomes 04 Jan 2022 and the loan closes after a 1000 repayment.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "principal_minor": "100000",
+    "disburse_date": {
+      "year": 2022,
+      "month": 1,
+      "day": 1
+    }
+  },
+  "expect": {
+    "last_closed_business_date_initial": null,
+    "last_closed_business_date_after_cob_02Jan": "2022-01-01",
+    "last_closed_business_date_after_cob_05Jan": "2022-01-01",
+    "last_closed_business_date_after_catchup": "2022-01-04",
+    "repay_minor": "100000",
+    "final_loan_status": "CLOSED_OBLIGATIONS_MET"
+  },
+  "grade": "Assert COB advances last_closed_business_date to the prior business day and catch-up walks it to 04 Jan; a full repayment closes the loan CLOSED_OBLIGATIONS_MET.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

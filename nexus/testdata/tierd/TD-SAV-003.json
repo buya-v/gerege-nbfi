@@ -1,0 +1,42 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-SAV-003",
+  "context": "savings",
+  "class": "source-derived",
+  "title": "Withdrawal above balance fails 403 'Insufficient account balance.' (C2441)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature",
+    "test": "verify that withdrawal fails when balance is insufficient",
+    "testrail_id": "C2441",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/savings",
+  "scenario": "Deposit 500, then attempt to withdraw 1000; the withdrawal must fail with HTTP 403 and a developer message containing 'Insufficient account balance.'.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "deposit_minor": "50000",
+    "withdrawal_minor": "100000",
+    "date": {
+      "year": 2022,
+      "month": 6,
+      "day": 1
+    }
+  },
+  "expect": {
+    "withdrawal_successful": false
+  },
+  "grade": "Refuse a withdrawal exceeding the available balance.",
+  "refusal": {
+    "http_status": 403,
+    "message_contains": "Insufficient account balance."
+  },
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

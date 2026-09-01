@@ -1,0 +1,37 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-LOAN-001",
+  "context": "loan",
+  "class": "source-derived",
+  "title": "Full in-time repayment of 1000 clears outstanding to 0 (C52)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/LoanProduct.feature",
+    "test": "As a user I would like to fully repay the loan in time",
+    "testrail_id": "C52",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/loan",
+  "scenario": "Disburse a 1000 loan, then repay 1000 AUTOPAY on the due date; the loan must reach 0 outstanding.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "principal_minor": "100000",
+    "repayment_minor": "100000",
+    "repayment_type": "AUTOPAY"
+  },
+  "expect": {
+    "outstanding_before_minor": "100000",
+    "repayment_created_minor": "100000",
+    "repayment_type": "AUTOPAY",
+    "outstanding_after_minor": "0"
+  },
+  "grade": "Assert disbursement sets outstanding 100000 minor; repayment creates a 100000-minor AUTOPAY transaction and outstanding becomes 0.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

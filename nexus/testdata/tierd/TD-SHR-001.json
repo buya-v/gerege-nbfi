@@ -1,0 +1,40 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-SHR-001",
+  "context": "shares",
+  "class": "source-derived",
+  "title": "Share flat activation charge 19.8 (0 dp) rounds to 20",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/ShareAccountChargeRoundingTest.java",
+    "test": "shouldApplyRoundingRules_forFlatActivationCharge",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/shares",
+  "scenario": "Create a flat share activation charge of 19.80 (digitsAfterDecimal=0, inMultiplesOf=1) and read the persisted charge amount back.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "charge": {
+      "calculation_type": "FLAT",
+      "amount": "19.8"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_amount_minor": "20"
+  },
+  "grade": "Assert share activation charge_amount_minor == 20.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-SHR-002",
+  "context": "shares",
+  "class": "source-derived",
+  "title": "Share percentage-of-purchase charge 2.5% of 100 = 2 (exact half rounds DOWN)",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/ShareAccountChargeRoundingTest.java",
+    "test": "shouldApplyRoundingRules_forPercentagePurchaseCharge",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/shares",
+  "scenario": "Create a percentage-of-purchase share charge of 2.5% on a base of 100 (digitsAfterDecimal=0). Raw = 100 * 0.025 = 2.5; fraction 0.5 is <= 0.5 so it rounds DOWN to 2.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "base_amount_minor": "100",
+    "charge": {
+      "calculation_type": "PERCENT_OF_PURCHASE",
+      "percentage": "2.5"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_amount_minor": "2"
+  },
+  "grade": "Assert share percentage-of-purchase charge_amount_minor == 2 (exact half rounds DOWN at 0 dp).",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

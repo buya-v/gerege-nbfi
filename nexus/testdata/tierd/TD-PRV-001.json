@@ -1,0 +1,35 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-PRV-001",
+  "context": "provisioning",
+  "class": "source-derived",
+  "title": "Provisioning criteria -> entry -> recreate -> journal entry lifecycle",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/common/ProvisioningIntegrationTest.java",
+    "test": "testProvisioningCriteriaLifecycle (create criteria, entry, recreate, createjournalentry)",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/provisioning",
+  "scenario": "Create a provisioning criteria, create a provisioning entry, recreate it, then post its journal entry; the entry must be journalized and carry at least one loan-product provisioning row.",
+  "inputs": {
+    "criteria": {
+      "loan_products_count": 1,
+      "definitions_count": 2
+    }
+  },
+  "expect": {
+    "criteria_created": true,
+    "criteria_roundtrips": true,
+    "entry_created": true,
+    "entry_journalized": true,
+    "entry_rows_gt": 0
+  },
+  "grade": "Assert the criteria round-trips (name/products/definitions), and after recreate+createjournalentry the entry reports journalEntry=true with >0 rows.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

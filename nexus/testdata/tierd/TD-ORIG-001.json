@@ -1,0 +1,39 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-ORIG-001",
+  "context": "origination",
+  "class": "source-derived",
+  "title": "Loan originator persists through approval and disbursal (C4649)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/LoanOrigination.feature",
+    "test": "Verify loan originator registration, attachment to loan, and persistence through approval and disbursal",
+    "testrail_id": "C4649",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/origination",
+  "scenario": "Register an ACTIVE originator, attach it to a 1000 loan, approve and disburse; the loan must still expose the attached originator afterward.",
+  "inputs": {
+    "originator": {
+      "external_id": "Merchant Partner Alpha",
+      "status": "ACTIVE"
+    },
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "principal_minor": "100000"
+  },
+  "expect": {
+    "originator_created": true,
+    "originator_status": "ACTIVE",
+    "originator_attached_after_approval": true,
+    "originator_attached_after_disbursal": true
+  },
+  "grade": "Assert originator registration status ACTIVE and its attachment survives approval and disbursal.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

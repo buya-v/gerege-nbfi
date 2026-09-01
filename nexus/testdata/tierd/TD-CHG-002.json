@@ -1,0 +1,41 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-CHG-002",
+  "context": "charges",
+  "class": "source-derived",
+  "title": "Loan flat charge 0.6 (USD, 0 dp) rounds up to 1 (above half)",
+  "source": {
+    "kind": "integration-test",
+    "path": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java",
+    "test": "shouldRoundUpFlatCharge_whenValueIsAboveHalf",
+    "testrail_id": null,
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/charges",
+  "scenario": "Create a flat loan charge of 0.60 on a 10,000 loan (digitsAfterDecimal=0, inMultiplesOf=1); the fraction 0.6 exceeds 0.5 so it rounds UP to 1.",
+  "inputs": {
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 0
+    },
+    "principal_minor": "10000",
+    "charge": {
+      "calculation_type": "FLAT",
+      "amount": "0.6"
+    },
+    "rounding": {
+      "digits_after_decimal": 0,
+      "in_multiples_of": 1,
+      "mode": "fraction<=0.5 DOWN else UP"
+    }
+  },
+  "expect": {
+    "charge_amount_minor": "1"
+  },
+  "grade": "Assert charge_amount_minor == 1 (round UP because the fraction is above half).",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

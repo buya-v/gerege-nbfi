@@ -1,0 +1,35 @@
+{
+  "schema": "gerege.tierd.vector/v1",
+  "case_id": "TD-LOAN-002",
+  "context": "loan",
+  "class": "source-derived",
+  "title": "AUTOPAY repayment of 200 creates a 200 transaction (C49)",
+  "source": {
+    "kind": "e2e-scenario",
+    "path": "fineract-e2e-tests-runner/src/test/resources/features/LoanRepayment-Part1.feature",
+    "test": "Loan repayment functionality with business date setup",
+    "testrail_id": "C49",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "line": null
+  },
+  "nexus_target": "nexus/internal/apps/loan",
+  "scenario": "Disburse a 5000 loan (24 repayments) and make a 200 AUTOPAY repayment on the business date; a 200 transaction of type AUTOPAY must be created.",
+  "inputs": {
+    "currency": {
+      "code": "EUR",
+      "minor_unit_digits": 2
+    },
+    "principal_minor": "500000",
+    "repayment_minor": "20000",
+    "repayment_type": "AUTOPAY"
+  },
+  "expect": {
+    "repayment_created_minor": "20000",
+    "repayment_type": "AUTOPAY"
+  },
+  "grade": "Assert the repayment transaction is created with amount 20000 minor and type AUTOPAY.",
+  "provenance": {
+    "kind": "source-mining",
+    "note": "Mined from the pinned Fineract test corpus (NOT an oracle capture and NOT a promoted parity vector). The expect values are transcribed from assertions in the referenced test; money is integer minor units per the inputs.currency.minor_unit_digits. Promotion into .softhouse/vectors/<context>/ as a parity vector requires a separate, mandate-carrying task."
+  }
+}

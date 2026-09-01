@@ -1,0 +1,153 @@
+{
+  "schema": "gerege.tierd.index/v1",
+  "title": "Tier D source-derived golden vector corpus (mined from Fineract test corpus)",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "class": "source-derived",
+  "count": 22,
+  "contexts": [
+    "charges",
+    "cob",
+    "loan",
+    "loanproduct",
+    "origination",
+    "parties",
+    "provisioning",
+    "savings",
+    "shares",
+    "workingcapital"
+  ],
+  "vectors": [
+    {
+      "case_id": "TD-CHG-001",
+      "context": "charges",
+      "title": "Loan flat charge 19.8 (USD, 0 dp, multiples 1) rounds up to 20",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java#shouldApplyRoundingRules_forFlatCharge"
+    },
+    {
+      "case_id": "TD-CHG-002",
+      "context": "charges",
+      "title": "Loan flat charge 0.6 (USD, 0 dp) rounds up to 1 (above half)",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java#shouldRoundUpFlatCharge_whenValueIsAboveHalf"
+    },
+    {
+      "case_id": "TD-CHG-003",
+      "context": "charges",
+      "title": "Loan flat charge 0.5 (USD, 0 dp) rounds to zero and is refused (HTTP 403)",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java#shouldFailToAddFlatCharge_whenAmountRoundsToZero"
+    },
+    {
+      "case_id": "TD-CHG-004",
+      "context": "charges",
+      "title": "Loan percentage-of-amount charge 2.5067% of 10,000 (0 dp, multiples 3) = 252",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/LoanChargeRoundingTest.java#shouldApplyRoundingRules_forPercentageOfAmountCharge"
+    },
+    {
+      "case_id": "TD-CHG-005",
+      "context": "charges",
+      "title": "Savings flat charge 19.8 (USD, 0 dp) rounds to 20",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/SavingsAccountChargeRoundingTest.java#shouldApplyRoundingRules_forFlatCharge"
+    },
+    {
+      "case_id": "TD-CHG-006",
+      "context": "charges",
+      "title": "Savings flat charge 0.4 (USD, 0 dp) rounds to zero and is refused (HTTP 400)",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/SavingsAccountChargeRoundingTest.java#shouldFailToAddFlatCharge_whenAmountRoundsToZero"
+    },
+    {
+      "case_id": "TD-CHG-007",
+      "context": "charges",
+      "title": "Savings percentage-of-withdrawal charge 2.5% of 615 = 15, balance 370",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/SavingsAccountChargeRoundingTest.java#shouldApplyRoundingRules_forPercentageOfWithdrawalCharge"
+    },
+    {
+      "case_id": "TD-LOAN-001",
+      "context": "loan",
+      "title": "Full in-time repayment of 1000 clears outstanding to 0 (C52)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanProduct.feature#As a user I would like to fully repay the loan in time"
+    },
+    {
+      "case_id": "TD-LOAN-002",
+      "context": "loan",
+      "title": "AUTOPAY repayment of 200 creates a 200 transaction (C49)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanRepayment-Part1.feature#Loan repayment functionality with business date setup"
+    },
+    {
+      "case_id": "TD-LOAN-003",
+      "context": "loan",
+      "title": "Repayment dated after the business date is refused (C32)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanRepayment-Part1.feature#check that the repayment transaction is failed when the repayment date is after the business date"
+    },
+    {
+      "case_id": "TD-LOAN-004",
+      "context": "loan",
+      "title": "Repayment dated on the business date succeeds (C44)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanRepayment-Part1.feature#check that the repayment is successful if the repayment date is equal to the business date"
+    },
+    {
+      "case_id": "TD-LP-001",
+      "context": "loanproduct",
+      "title": "Two-disbursement loan: 1000 + 500 -> outstanding 1500, repay 1500 -> 0 (C53)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanProduct.feature#As a user I would like to fully repay a loan which was disbursed 2 times"
+    },
+    {
+      "case_id": "TD-WC-001",
+      "context": "workingcapital",
+      "title": "Working-capital loan UC1 simple repayment (C76617): 9000 / TPV 100000 / PPR 18, repay 270",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/WorkingCapitalLoanRepayment.feature#Verify working capital loan repayment - UC1: simple repayment: pay more than expected"
+    },
+    {
+      "case_id": "TD-SAV-001",
+      "context": "savings",
+      "title": "Deposit 1000 EUR to an activated savings account (C2438)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature#As a user I would like to Deposit to my savings account"
+    },
+    {
+      "case_id": "TD-SAV-002",
+      "context": "savings",
+      "title": "Withdraw 1000 EUR after a 1000 deposit (C2439)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature#As a user I would like to Withdraw from my savings account"
+    },
+    {
+      "case_id": "TD-SAV-003",
+      "context": "savings",
+      "title": "Withdrawal above balance fails 403 'Insufficient account balance.' (C2441)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/SavingsAccount.feature#verify that withdrawal fails when balance is insufficient"
+    },
+    {
+      "case_id": "TD-PRV-001",
+      "context": "provisioning",
+      "title": "Provisioning criteria -> entry -> recreate -> journal entry lifecycle",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/common/ProvisioningIntegrationTest.java#testProvisioningCriteriaLifecycle (create criteria, entry, recreate, createjournalentry)"
+    },
+    {
+      "case_id": "TD-ORIG-001",
+      "context": "origination",
+      "title": "Loan originator persists through approval and disbursal (C4649)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/LoanOrigination.feature#Verify loan originator registration, attachment to loan, and persistence through approval and disbursal"
+    },
+    {
+      "case_id": "TD-COB-001",
+      "context": "cob",
+      "title": "Last closed business date advances via COB and catch-up (C2501)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/0_COB.feature#As an admin I would like to see that last closed business date got updated after COB catch up job finished"
+    },
+    {
+      "case_id": "TD-PTY-001",
+      "context": "parties",
+      "title": "Client creation with address (C15)",
+      "source": "fineract-e2e-tests-runner/src/test/resources/features/Client.feature#Client creation with address functionality for Fineract"
+    },
+    {
+      "case_id": "TD-SHR-001",
+      "context": "shares",
+      "title": "Share flat activation charge 19.8 (0 dp) rounds to 20",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/ShareAccountChargeRoundingTest.java#shouldApplyRoundingRules_forFlatActivationCharge"
+    },
+    {
+      "case_id": "TD-SHR-002",
+      "context": "shares",
+      "title": "Share percentage-of-purchase charge 2.5% of 100 = 2 (exact half rounds DOWN)",
+      "source": "integration-tests/src/test/java/org/apache/fineract/integrationtests/ShareAccountChargeRoundingTest.java#shouldApplyRoundingRules_forPercentagePurchaseCharge"
+    }
+  ]
+}
