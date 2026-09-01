@@ -32,7 +32,7 @@ services:
       - ./.softhouse/oracle/env/postgresql.env
     volumes:
       - ./.softhouse/oracle/config/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
-      - oracle-db-data:/var/lib/postgresql/data
+      - oracle-db-data:/var/lib/postgresql
     ports:
       - "${ORACLE_DB_PORT:-5432}:5432"
     healthcheck:
