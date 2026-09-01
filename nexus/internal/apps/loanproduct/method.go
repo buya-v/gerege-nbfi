@@ -84,19 +84,19 @@ const (
 )
 
 var amortizationMethodStoredValue = map[AmortizationMethod]int32{
-	AmortizationEqualPrincipal:   0,
+	AmortizationEqualPrincipal:    0,
 	AmortizationEqualInstallments: 1,
 	AmortizationInvalid:           2,
 }
 
 var amortizationMethodCode = map[AmortizationMethod]string{
-	AmortizationEqualPrincipal:   "amortizationType.equal.principal",
+	AmortizationEqualPrincipal:    "amortizationType.equal.principal",
 	AmortizationEqualInstallments: "amortizationType.equal.installments",
 	AmortizationInvalid:           "amortizationType.invalid",
 }
 
 var amortizationMethodName = map[AmortizationMethod]string{
-	AmortizationEqualPrincipal:   "EQUAL_PRINCIPAL",
+	AmortizationEqualPrincipal:    "EQUAL_PRINCIPAL",
 	AmortizationEqualInstallments: "EQUAL_INSTALLMENTS",
 	AmortizationInvalid:           "INVALID",
 }
@@ -149,19 +149,19 @@ const (
 )
 
 var interestCalcPeriodStoredValue = map[InterestCalculationPeriodMethod]int32{
-	InterestCalcDaily:                0,
+	InterestCalcDaily:                 0,
 	InterestCalcSameAsRepaymentPeriod: 1,
 	InterestCalcInvalid:               2,
 }
 
 var interestCalcPeriodCode = map[InterestCalculationPeriodMethod]string{
-	InterestCalcDaily:                "interestCalculationPeriodType.daily",
+	InterestCalcDaily:                 "interestCalculationPeriodType.daily",
 	InterestCalcSameAsRepaymentPeriod: "interestCalculationPeriodType.same.as.repayment.period",
 	InterestCalcInvalid:               "interestCalculationPeriodType.invalid",
 }
 
 var interestCalcPeriodName = map[InterestCalculationPeriodMethod]string{
-	InterestCalcDaily:                "DAILY",
+	InterestCalcDaily:                 "DAILY",
 	InterestCalcSameAsRepaymentPeriod: "SAME_AS_REPAYMENT_PERIOD",
 	InterestCalcInvalid:               "INVALID",
 }
@@ -199,7 +199,7 @@ func InterestCalculationPeriodMethodFromStoredValue(v int32) (InterestCalculatio
 // IsDaily and IsSameAsRepaymentPeriod mirror
 // InterestCalculationPeriodMethod.isDaily / isSameAsRepaymentPeriod
 // [VERIFIED: InterestCalculationPeriodMethod.java:51-58].
-func (m InterestCalculationPeriodMethod) IsDaily() bool               { return m == InterestCalcDaily }
+func (m InterestCalculationPeriodMethod) IsDaily() bool { return m == InterestCalcDaily }
 func (m InterestCalculationPeriodMethod) IsSameAsRepaymentPeriod() bool {
 	return m == InterestCalcSameAsRepaymentPeriod
 }

@@ -153,9 +153,9 @@ func TestDaysInMonthNotOrdinal(t *testing.T) {
 
 func TestRelatedDetailResetToInvalid(t *testing.T) {
 	d := LoanProductRelatedDetail{
-		NominalInterestRatePerPeriod:  1_250_000,
-		InterestPeriodFrequencyType:   PeriodMonths,
-		AnnualNominalInterestRate:     15_000_000,
+		NominalInterestRatePerPeriod: 1_250_000,
+		InterestPeriodFrequencyType:  PeriodMonths,
+		AnnualNominalInterestRate:    15_000_000,
 	}
 	d.ResetToInvalid()
 	if d.NominalInterestRatePerPeriod != 0 || d.AnnualNominalInterestRate != 0 {
