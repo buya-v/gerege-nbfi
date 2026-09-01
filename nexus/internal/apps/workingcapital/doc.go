@@ -26,12 +26,13 @@
 //
 // # Scope of this slice
 //
-// This is the MODEL slice of tierB-working-capital-loan. It is deliberately a
-// pure model with no database dependency: balances and outstanding amounts are
-// DERIVED from transaction allocations, never stored independently of them, per
-// the G-12 derive-don't-store ruling. The repayment allocation arithmetic, the
-// NPV schedule, the breach/near-breach machinery and the persistence layer are
-// later slices of this context and are not here.
+// This package owns both the model and its PostgreSQL persistence (postgres.go).
+// Balances and outstanding amounts remain DERIVED from transaction allocations
+// rather than stored independently of them, per the G-12 derive-don't-store
+// ruling; postgres.go persists only the identity, the child tables and the
+// transaction/allocation stream the derivation reads. The repayment allocation
+// arithmetic, the NPV schedule and the breach/near-breach machinery are later
+// slices of this context and are not here.
 //
 // The reference oracle is Apache Fineract at /Users/buv/fineract, pinned at
 // commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Every behavioural claim

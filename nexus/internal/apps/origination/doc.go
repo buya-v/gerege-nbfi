@@ -23,8 +23,8 @@
 //     requested set (remove the missing, add the new)
 //     [VERIFIED: LoanOriginatorLinkingServiceImpl.java:102-138].
 //
-// The persistence layer and the JSON command/serialization plumbing around this
-// are later slices and are not here.
+// The PostgreSQL persistence layer (postgres.go) is part of this slice. The JSON
+// command/serialization plumbing around this is a later slice and is not here.
 //
 // The reference oracle is Apache Fineract at /Users/buv/fineract, pinned at
 // commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Every behavioural claim

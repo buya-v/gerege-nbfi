@@ -154,6 +154,23 @@ func SavingsAccountTransactionTypeFromStoredValue(v int32) (SavingsAccountTransa
 func (t SavingsAccountTransactionType) IsAmountHold() bool    { return t == TxnAmountHold }
 func (t SavingsAccountTransactionType) IsAmountRelease() bool { return t == TxnAmountRelease }
 
+// EntryType returns the in-account CREDIT/DEBIT classification encoded on the
+// enum's entryType field, mirroring the oracle's third constructor argument
+// [VERIFIED: SavingsAccountTransactionType.java:36-54]. The balance-neutral and
+// non-posting types (WAIVE_CHARGES, ACCRUAL, the transfer sub-states and
+// WRITTEN_OFF) carry no entry type and return the zero TransactionEntryType.
+func (t SavingsAccountTransactionType) EntryType() TransactionEntryType {
+	switch t {
+	case TxnDeposit, TxnInterestPosting, TxnDividendPayout, TxnAmountRelease:
+		return EntryCredit
+	case TxnWithdrawal, TxnWithdrawalFee, TxnAnnualFee, TxnPayCharge,
+		TxnOverdraftInterest, TxnWithholdTax, TxnEscheat, TxnAmountHold:
+		return EntryDebit
+	default:
+		return 0
+	}
+}
+
 func init() {
 	for t, v := range savingsTxnStoredValue {
 		if _, dup := savingsTxnFromStored[v]; dup {

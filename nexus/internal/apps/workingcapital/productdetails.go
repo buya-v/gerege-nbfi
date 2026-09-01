@@ -84,6 +84,18 @@ func (a WorkingCapitalAmortizationType) String() string {
 // [VERIFIED: WorkingCapitalAmortizationType.java:50-52].
 func (a WorkingCapitalAmortizationType) IsEIR() bool { return a == WCAmortizationEIR }
 
+// WorkingCapitalAmortizationTypeFromString resolves the enum from its
+// case-insensitive name, mirroring fromString
+// [VERIFIED: WorkingCapitalAmortizationType.java:37-52].
+func WorkingCapitalAmortizationTypeFromString(s string) (WorkingCapitalAmortizationType, bool) {
+	for a, n := range wcAmortizationName {
+		if strings.EqualFold(strings.TrimSpace(s), n) {
+			return a, true
+		}
+	}
+	return 0, false
+}
+
 // WorkingCapitalStartType is the "when does the delinquency/breach clock start"
 // dimension. Fineract declares it twice — WorkingCapitalLoanDelinquencyStartType
 // and WorkingCapitalLoanBreachStartType — with identical values; the port
@@ -112,6 +124,20 @@ func (s WorkingCapitalStartType) String() string {
 		return n
 	}
 	return fmt.Sprintf("WorkingCapitalStartType(%d)", int32(s))
+}
+
+// WorkingCapitalStartTypeFromString resolves the enum from its case-insensitive
+// name, mirroring the shared fromString of WorkingCapitalLoanDelinquencyStartType
+// and WorkingCapitalLoanBreachStartType
+// [VERIFIED: WorkingCapitalLoanDelinquencyStartType.java:37-52,
+// WorkingCapitalLoanBreachStartType.java:37-52].
+func WorkingCapitalStartTypeFromString(s string) (WorkingCapitalStartType, bool) {
+	for st, n := range wcStartName {
+		if strings.EqualFold(strings.TrimSpace(s), n) {
+			return st, true
+		}
+	}
+	return 0, false
 }
 
 // WorkingCapitalLoanProductRelatedDetails is the product facts a working-capital
