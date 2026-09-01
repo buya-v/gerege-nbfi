@@ -18,11 +18,26 @@
 // selects which instalment a due-type targets: that is the repayment
 // processors' job and remains a separate sub-behaviour.
 //
+// The remaining tierA-loan-lifecycle arithmetic slices have likewise landed:
+//
+//   - charge.go — LoanCharge money derivation (Penalty & Charge calculations):
+//     outstanding/paid/waived/written-off balance arithmetic and the
+//     paid/waived flag transitions, ported from LoanCharge.
+//   - disbursement.go — Disbursements arithmetic: charges due at disbursement,
+//     the net disbursal amount, and the repayment-at-disbursement charge
+//     settlement loop, ported from Loan and LoanDisbursementService.
+//   - writeoff.go — Write-offs arithmetic: the write-off transaction's
+//     four-bucket breakdown over not-fully-paid-off instalments, ported from
+//     AbstractLoanRepaymentScheduleTransactionProcessor.handleWriteOff.
+//   - delinquency.go — Delinquency arithmetic: the installment-level
+//     delinquency aggregation and the overdue/delinquent-days derivations.
+//   - reschedule.go — Rescheduling state: the reschedule-request status view
+//     over LoanStatus and the approve/reject/recalculate-interest transitions.
+//     The schedule recomputation a reschedule triggers lives in the
+//     loanschedule package, not here.
+//
 // This slice does NOT own:
 //
-//   - disbursement / penalty-charge / rescheduling / write-off-delinquency
-//     arithmetic — those remain separate sub-behaviours that depend on the
-//     schedule generator and ledger first;
 //   - persistence. The state machine here is a pure function of (status, event,
 //     facts) so it can be graded without a database, matching the derive-don't-
 //     store ruling: the status field is DERIVED from balances, never stored
