@@ -2,6 +2,7 @@ package ledger
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -87,6 +88,34 @@ type MinorUnits int64
 
 // MNTMinorDigits is MNT's minor unit: ISO 4217 numeric 496, 2 decimal digits.
 const MNTMinorDigits = 2
+
+// FormatDecimal is the exact inverse of MinorUnitsFromDecimalText: it renders an
+// integer minor-unit count back into major-unit decimal text with exactly
+// minorDigits fraction digits. It is the formatter the persistence layer uses to
+// write an amount column, so a value in and a value out round-trip byte-for-byte.
+func (m MinorUnits) FormatDecimal(minorDigits int) string {
+	neg := m < 0
+	v := int64(m)
+	if neg {
+		v = -v
+	}
+	scale := int64(1)
+	for i := 0; i < minorDigits; i++ {
+		scale *= 10
+	}
+	s := strconv.FormatInt(v/scale, 10)
+	if minorDigits > 0 {
+		frac := strconv.FormatInt(v%scale, 10)
+		for len(frac) < minorDigits {
+			frac = "0" + frac
+		}
+		s = s + "." + frac
+	}
+	if neg {
+		s = "-" + s
+	}
+	return s
+}
 
 // MinorUnitsFromDecimalText converts the reference oracle's exact wire or
 // column text for a monetary amount in MAJOR units into an integer count of

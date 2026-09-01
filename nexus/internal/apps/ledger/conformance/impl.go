@@ -255,17 +255,20 @@ type GoPoster struct{}
 // NewGoPoster returns the port-backed implementation.
 func NewGoPoster() EntryPoster { return GoPoster{} }
 
-// PostEntry implements EntryPoster against the ported ledger package.
+// PostEntry implements EntryPoster against the ported ledger engine (slice A1).
+//
+// Every money decision — the double-entry invariant, the future-date and
+// accounting-closure preconditions, the manual-adjustment rule and the
+// opening-balance contra expansion — lives in ledger.Poster.Post. This adapter
+// only transcribes the vector's inputs into the engine's PostingCommand and the
+// engine's answer back into the harness's PostedEntry/Refusal vocabulary, so the
+// harness grades the engine and not a parallel copy of it.
 func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 	chart := map[int64]Account{}
 	for _, a := range req.Accounts {
 		chart[a.ID] = a
 	}
 
-	// STEP 1 — CONVERT. The oracle's characters become int64 minor units, by
-	// the port's own exact string arithmetic. A residue beyond the currency's
-	// minor unit is REFUSED here, never truncated and never rounded (DEC-2 §4.3
-	// consequence 2, predicate G-08).
 	out := PostedEntry{TransactionID: req.TransactionID}
 	if req.TransactionAmountMajorText != "" {
 		amt, cerr := ledger.MinorUnitsFromDecimalText(
@@ -276,17 +279,24 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 		out.RequestedAmountMinor = amt
 		out.HasRequestedAmount = true
 	}
-	// STEP 1a — RESOLVE THE SLOT, on an accounting-path leg. [T391]
-	//
-	// resolveLegAccount is the PORT'S OWN ledger.Resolver, exactly as the money
-	// conversion is the port's own ledger.MinorUnitsFromDecimalText. Nothing in
-	// this file re-implements the mapping lookup, for the reason this type's doc
-	// comment gives about the arithmetic: a resolver living inside the harness
-	// would be a resolver grading resolvers.
+
+	// Resolve every leg through the port's own ledger.Resolver — the same call
+	// the pre-engine harness made — so an accounting-path leg's account is still
+	// the resolver's output and never an echo of the request.
 	resolver := legResolver(req)
-	legs := make([]ledger.PostingLeg, 0, len(req.Legs))
+	cmd := ledger.PostingCommand{
+		OfficeID:                      req.OfficeID,
+		CurrencyCode:                  req.Currency.Code,
+		TransactionID:                 req.TransactionID,
+		ManualEntry:                   req.ManualEntry,
+		TransactionDate:               req.TransactionDate,
+		BusinessDate:                  req.BusinessDate,
+		LatestClosingDate:             req.LatestClosingDate,
+		Command:                       req.Command,
+		PostedNonContraTransactionIDs: req.PostedNonContraTransactionIDs,
+	}
 	for i, l := range req.Legs {
-		accountID, accountCode, slotName, rerr := resolveLegAccount(req, resolver, chart, l)
+		acct, slotName, rerr := resolveLegAccount(req, resolver, chart, l)
 		if rerr != nil {
 			return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, rerr)
 		}
@@ -294,335 +304,63 @@ func (GoPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
 		if cerr != nil {
 			return PostedEntry{}, nil, fmt.Errorf("leg %d: %w", i, cerr)
 		}
-		out.Legs = append(out.Legs, PostedLeg{
-			AccountID:   accountID,
-			AccountCode: accountCode,
-			Side:        l.Side,
-			AmountMinor: amt,
-			SlotName:    slotName,
-		})
 		var side ledger.EntrySide
 		switch l.Side {
 		case SideDebit:
 			side = ledger.EntryDebit
-			out.TotalDebitsMinor += amt
 		case SideCredit:
 			side = ledger.EntryCredit
-			out.TotalCreditsMinor += amt
 		default:
 			return PostedEntry{}, nil, fmt.Errorf("leg %d: unknown entry side %q", i, l.Side)
 		}
-		legs = append(legs, ledger.PostingLeg{Side: side, Amount: amt})
+		cmd.Legs = append(cmd.Legs, ledger.JournalEntryLeg{
+			Account:  acct,
+			Side:     side,
+			Amount:   amt,
+			SlotName: slotName,
+		})
 	}
 
-	// STEP 1.5 — THE OPENING-BALANCE RULE: opening balances may not be defined
-	// once journal entries have been posted. [T294]
-	//
-	// OBSERVED, not inferred. OB-01 POSTed
-	// /journalentries?command=defineOpeningBalance on tenant `gerege`, where
-	// financial-activity type 300 maps to GL 15 and 26 non-contra transaction
-	// ids exist, and the oracle returned HTTP 403 with
-	// error.msg.journalentry.defining.openingbalance.not.allowed and the
-	// message "Defining Opening balances not allowed after journal entries
-	// posted" — the source string at :814 and the wire string, character for
-	// character.
-	//
-	// THE PREDICATE IS `NON-EMPTY`, NOT `NON-ZERO COUNT`, because that is what
-	// :812 computes: `if (!CollectionUtils.isEmpty(transactionIds))`. The
-	// vector carries the oracle's own list (request.posted_non_contra_
-	// transaction_ids, transcribed from errors[0].args), so this port reads a
-	// length rather than a boolean somebody derived for it.
-	//
-	// ⚠ THE SENTENCE ABOVE OVERCLAIMS, AND IS CORRECTED HERE RATHER THAN
-	// DELETED, because it was quoted in T294's handoff §6 and in the vector's
-	// own `_note` as the reason this vector is non-vacuous, and a reader who
-	// meets it there must be able to find the correction. [T296 F-T296-2,
-	// discharged by T305.] T296 mutated THIS FUNCTION in four arms and
-	// re-graded the whole ledger corpus:
-	//
-	//	arm E  the rule moved BELOW the balance check   -> DIES
-	//	arm A  match on req.Command alone, id list never read  -> SURVIVES
-	//	arm B  match on the id list alone, command never read  -> SURVIVES
-	//
-	// So THIS PORT READS A LENGTH; NOTHING IN THIS STORE REQUIRES IT TO. Arm E
-	// is the part of T294's claim that measured true — the ORDERING of this
-	// rule against the balance rule really is graded, and it is the only
-	// observed refusal precedence in the corpus. But the id list is INERT FOR
-	// GRADING: a port that ignores it scores identically.
-	//
-	// WHAT THAT LET THROUGH — AND IT IS NOW CLOSED. Arm A refuses EVERY
-	// defineOpeningBalance, including on an EMPTY ledger where the oracle
-	// ACCEPTS (:812's CollectionUtils.isEmpty fall-through into the writes at
-	// :742/:745). That is the headerRefusingPoster class — the reasonable thing
-	// to do, which the oracle does not do. Only an ACCEPTING-side capture could
-	// kill it, because every refusal capture in this corpus agrees with it.
-	// T305 TOOK ONE: HTTP 200 and six journal entries on an empty ledger,
-	// promoted as LDG-05-openingbalance-accepted-empty-ledger, and arm A is
-	// registered here as `ledger-wrong-openingbalance-always-refusing` and dies
-	// to it on leg_count while passing every other ledger vector.
-	//
-	// ⚠ AND THE SENTENCE THIS COMMENT OPENS WITH IS WRONG IN THE SAME WAY THE
-	// ORACLE'S OWN MESSAGE IS. "Opening balances may not be defined once journal
-	// entries have been posted" is :814's text and this corpus repeated it.
-	// MEASURED [T305]: findNonContraTransactionIds EXCLUDES every transaction
-	// that touches the contra account, and every entry an opening balance writes
-	// touches it (:796) — so OPENING BALANCES DO NOT BLOCK EACH OTHER. Re-sending
-	// byte-identical opening-balance bytes returned HTTP 200 again, having
-	// REVERSED the previous opening balance first (:726-735). Only after a PLAIN
-	// manual entry existed did the same bytes draw 403, with errors[0].args
-	// carrying exactly that one transaction id. THE RULE IS "AFTER A NON-CONTRA
-	// JOURNAL ENTRY".
-	//
-	// THE PREDICATE BELOW IS LEFT EXACTLY AS IT IS, AND IT WAS RIGHT ALL ALONG —
-	// it reads `posted_non_contra_transaction_ids`, whose name carries the
-	// distinction the prose lost. This is P-11 in one function: the code can be
-	// RIGHT and its stated reason WRONG, and the reason is what the next
-	// contributor checks.
-	//
-	// ITS POSITION IN THIS FUNCTION IS OBSERVED AND NOT CHOSEN, and that is the
-	// one thing about it worth reading twice. OB-01's request body is UNBALANCED
-	// BY EXACTLY ONE MINOR UNIT (debit 250000.25, credit 250000.24) — so the
-	// oracle had two independent grounds to refuse it, and it returned THIS one.
-	// Source agrees and says why: :717 runs BEFORE :724, and the balance check
-	// is inside :724 (validateBusinessRulesForJournalEntries → :651
-	// checkDebitAndCreditAmounts). A port that checks the balance first returns
-	// error.msg.glJournalEntry.invalid.mismatch.debits.credits for this request
-	// and diverges from the oracle on two of the three refusal cells. Unlike the
-	// STEP 2 / STEP 3 precedence below, this ordering is NOT [UNVERIFIED]: one
-	// captured request violates both rules and the oracle answered.
-	if req.Command == "defineOpeningBalance" && len(req.PostedNonContraTransactionIDs) > 0 {
-		return PostedEntry{}, &Refusal{
-			HTTPStatus: 403,
-			Code:       "error.msg.journalentry.defining.openingbalance.not.allowed",
-			Message:    "Defining Opening balances not allowed after journal entries posted",
-		}, nil
-	}
-
-	// STEP 1.6 — THE FUTURE-DATE RULE. [T295]
-	//
-	// :629 `if (DateUtils.isDateInTheFuture(transactionDate))` ->
-	// isAfterBusinessDate -> `isAfter(transactionDate, getBusinessLocalDate())`
-	// [DateUtils.java:258-264]. STRICT: an entry dated ON the business date is
-	// NOT future-dated and this rule does not fire on it.
-	//
-	// OBSERVED: A1-02 posted transactionDate 2026-08-24 against business date
-	// 2026-08-23 and the oracle returned HTTP 403
-	// error.msg.glJournalEntry.invalid.future.date. Promoted as LDG-REFUSE-05.
-	//
-	// THE BUSINESS DATE IS AN INPUT AND THIS FUNCTION READS NO CLOCK. An empty
-	// BusinessDate means the vector asserts nothing about this rule and the rule
-	// is SKIPPED — never "default to today", which would make the harness's
-	// answer depend on the morning it ran, which is the exact defect T289 found
-	// in T287's captures.
-	//
-	// AND IT ECHOES THE **TRANSACTION** DATE, NOT THE BUSINESS DATE. [T307]
-	// :631 constructs the exception with `transactionDate` — the date it just
-	// compared — and NOT with the business date it compared it against. So the
-	// one quantity on this path that is derived from a WALL CLOCK
-	// (getLocalDateOfTenant) never reaches the wire, which is why an args cell
-	// on this refusal is a calendar-independent claim. Graded as
-	// `refusal.arg0_value` via arg_echo "transaction_date" on LDG-REFUSE-05.
-	if req.BusinessDate != "" && req.TransactionDate != "" &&
-		isoAfter(req.TransactionDate, req.BusinessDate) {
-		return PostedEntry{}, &Refusal{
-			HTTPStatus: 403,
-			Code:       codeFutureDate,
-			Message:    msgFutureDate,
-			Arg0Value:  req.TransactionDate,
-		}, nil
-	}
-
-	// STEP 1.7 — THE ACCOUNTING-CLOSURE RULE, AND ITS BOUNDARY IS INCLUSIVE.
-	// [T295]
-	//
-	// :634-639:
-	//	final GLClosure latestGLClosure = getLatestGLClosureByBranch(officeId);
-	//	if (latestGLClosure != null) {
-	//	    if (!DateUtils.isBefore(latestGLClosure.getClosingDate(), transactionDate)) {
-	//	        throw ... ACCOUNTING_CLOSED
-	//
-	// `DateUtils.isBefore(first, second)` is `first.isBefore(second)` for two
-	// non-null LocalDates [DateUtils.java:296-298], so the negation refuses
-	// whenever `closingDate >= transactionDate`, i.e. `transactionDate <=
-	// closingDate`. AN ENTRY DATED **ON** THE CLOSING DATE IS REFUSED.
-	//
-	// THE WIRE MESSAGE DISAGREES WITH THE CODE AND THE CODE IS WHAT RUNS:
-	// "Journal entry cannot be made PRIOR TO last account closing date for the
-	// branch". A port written from that sentence gets `transactionDate <
-	// closingDate` and ACCEPTS an entry dated on the closing date — which is
-	// exactly the day a period-end adjustment carries. That port is registered
-	// as `ledger-wrong-closure-boundary-exclusive` and LDG-REFUSE-04 kills it.
-	//
-	// OBSERVED: A2-01 posted transactionDate 2026-01-31 while the office's
-	// latest GLClosure closed 2026-01-31 — the two EQUAL — and the oracle
-	// returned HTTP 403 error.msg.glJournalEntry.invalid.accounting.closed. The
-	// equal case is the only one that separates the two readings, and it is the
-	// one that was captured.
-	//
-	// EMPTY LatestClosingDate IS THE ORACLE'S `latestGLClosure == null` BRANCH
-	// (:635), not a missing input: the repository returns null when the office
-	// has no closure, and this port then refuses nothing, exactly as :635 does.
-	//
-	// AND IT ECHOES THE **CLOSING** DATE, NOT THE TRANSACTION DATE. [T307]
-	// :637 constructs the exception with `latestGLClosure.getClosingDate()`,
-	// where :631 five lines above constructs its own with `transactionDate`.
-	// THE SAME WIRE FIELD MEANS DIFFERENT THINGS IN THE TWO REFUSALS. On A2-01
-	// the two dates are EQUAL, so that capture cannot show it; A2-02 posted
-	// 2026-01-15 against the same 2026-01-31 closure and the oracle echoed
-	// 2026-01-31, which is the only observation in this corpus that separates
-	// them. Graded as `refusal.arg0_value` via arg_echo "latest_closing_date",
-	// and `ledger-wrong-accounting-closed-echoes-transaction-date` is the port
-	// that gets this line wrong while getting every other cell right.
-	if req.LatestClosingDate != "" && req.TransactionDate != "" &&
-		!isoBefore(req.LatestClosingDate, req.TransactionDate) {
-		return PostedEntry{}, &Refusal{
-			HTTPStatus: 403,
-			Code:       codeAccountingClosed,
-			Message:    msgAccountingClosed,
-			Arg0Value:  req.LatestClosingDate,
-		}, nil
-	}
-
-	// STEP 2 — THE MANUAL-ADJUSTMENT RULE, applied only to a MANUAL entry.
-	//
-	// OBSERVED, not inferred: A2-346 posted a debit leg at GL 18
-	// (manual_journal_entries_allowed = false) and the oracle returned HTTP 403
-	// with error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permitted.
-	// The account attribute is DATA the vector transcribes (§4.5); the RULE is
-	// what this port implements.
-	//
-	// THE ORDER OF THE TWO CHECKS IS OBSERVED, NOT CHOSEN. A2-346's request is
-	// BALANCED, so it cannot separate the order on its own; but the oracle
-	// returns the manual-adjustment error for it, and A2-344 — unbalanced, both
-	// legs on manual-permitted accounts — returns the balance error. Neither
-	// capture exercises a request that violates BOTH, so the precedence between
-	// them is [UNVERIFIED] and no vector in this corpus asserts it. This code
-	// checks manual-permission first only because that is the order the observed
-	// pair is consistent with; a capture that violates both would settle it and
-	// none exists.
-	if req.ManualEntry {
-		for i, l := range req.Legs {
-			acct := chart[l.AccountID]
-			if !acct.ManualEntriesAllowed {
-				return PostedEntry{}, &Refusal{
-					HTTPStatus: 403,
-					Code:       "error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permitted",
-					Message:    "Target account does not allow manual adjustments",
-				}, nil
-			}
-			_ = i
+	if req.ContraGLAccountID != 0 {
+		if contra, ok := chart[req.ContraGLAccountID]; ok {
+			cmd.ContraAccount = ledgerAccount(contra)
 		}
 	}
 
-	// STEP 3 — I-1, DOUBLE ENTRY, by the port's own function.
-	//
-	// NOTE WHAT IS **NOT** HERE: no HEADER-account refusal. A2-345 posted to
-	// GL 1, a HEADER (summary) account, and the oracle returned HTTP 200. DEC-2
-	// brief item (5): "A port that REFUSES summary-account postings therefore
-	// DIVERGES FROM THE ORACLE. Do not 'improve on' the oracle." The temptation
-	// to add three lines here is exactly the divergence the vector
-	// LDG-04-header-account-accepted exists to catch.
-	if err := ledger.DoubleEntryBalances(legs); err != nil {
+	result, refusal, err := ledger.Poster{}.Post(cmd)
+	if err != nil {
+		return PostedEntry{}, nil, err
+	}
+	if refusal != nil {
 		return PostedEntry{}, &Refusal{
-			HTTPStatus: 403,
-			Code:       "error.msg.glJournalEntry.invalid.mismatch.debits.credits",
-			Message:    "Sum of All Debits must equal the sum of all Credits for a Journal Entry",
+			HTTPStatus: refusal.HTTPStatus,
+			Code:       refusal.Code,
+			Message:    refusal.Message,
+			Arg0Value:  refusal.Arg0Value,
 		}, nil
 	}
 
-	// STEP 4 — AN ACCEPTED OPENING BALANCE POSTS TWO ENTRIES PER LEG, NOT ONE.
-	// [T305, and it is OBSERVED — the first accepting-side observation this
-	// program has ever taken.]
-	//
-	// saveAllDebitOrCreditOpeningBalanceEntries (:759-797) calls
-	// helper.persistJournalEntry TWICE INSIDE THE PER-LEG LOOP: the leg's own
-	// entry at :791, and its CONTRA entry on the financial-activity-300 account
-	// with the opposite side at :796. defineOpeningBalance calls it twice, once
-	// for the debits (:742) and once for the credits (:745).
-	//
-	// MEASURED, not read off the source: OB-ACCEPT-01 sent three legs — DEBIT
-	// 250000.25 on GL 2, DEBIT 100000.37 on GL 3, CREDIT 350000.62 on GL 4 —
-	// and the oracle wrote SIX journal entries on ONE transaction (the id is
-	// server-assigned and differs on every re-run of the recipe; it is not a
-	// graded cell and is not quoted here for that reason):
-	//
-	//	id 1  GL 2 T305-1000  DEBIT   250000.250000
-	//	id 2  GL 1 T305-3000  CREDIT  250000.250000   <- contra, per leg
-	//	id 3  GL 3 T305-1100  DEBIT   100000.370000
-	//	id 4  GL 1 T305-3000  CREDIT  100000.370000   <- contra, per leg
-	//	id 5  GL 4 T305-2000  CREDIT  350000.620000
-	//	id 6  GL 1 T305-3000  DEBIT   350000.620000   <- contra, per leg
-	//
-	// [.softhouse/capture/t305-openingbalance-accepting-side/throwaway/out/
-	//  OB-ACCEPT-01-readback-db.json, sha256 1911e2cf…0737db2]
-	//
-	// THE CONTRA IS PER LEG AND NOT SUMMED, and that is the whole reason the
-	// capture carried THREE legs of DIFFERENT amounts rather than a tidy
-	// one-debit-one-credit pair: a two-leg body cannot tell a per-leg contra
-	// from a single netted one, because with one debit and one credit the two
-	// answers are identical.
-	//
-	// WHY DEBITS BEFORE CREDITS, AND WHAT IS [UNVERIFIED] ABOUT IT. The oracle
-	// runs the debit array (:742) before the credit array (:745), so this port
-	// emits every debit leg with its contra and then every credit leg with its
-	// contra, irrespective of the order the vector listed them in. OB-ACCEPT-01's
-	// request happened to list its legs debits-first, so THE CAPTURE CANNOT
-	// SEPARATE "source order" from "request order" — it is consistent with both.
-	// The source can and does, so this follows the source and says so rather than
-	// claiming the capture settled it.
-	//
-	// NOTHING ELSE IN THIS CORPUS REACHES THIS BRANCH: it runs only on
-	// `command == defineOpeningBalance`, and the only other vector carrying that
-	// command is LDG-REFUSE-03, which returns at STEP 1.5 above.
-	if req.Command == "defineOpeningBalance" {
-		contra, ok := chart[req.ContraGLAccountID]
-		if !ok {
-			// A HARNESS ERROR, never a refusal. The oracle resolves the contra
-			// account at :708 BEFORE any of the rules above, so a vector that
-			// reaches here without carrying the contra account in its chart has
-			// described an observation nobody could have taken — and an error is
-			// the outcome that can never be mistaken for a pass.
-			return PostedEntry{}, nil, fmt.Errorf(
-				"command is defineOpeningBalance and request.contra_gl_account_id %d is not in request.accounts: "+
-					"the contra account is resolved at :708 and written on every leg at :796, so it cannot be absent",
-				req.ContraGLAccountID)
-		}
-		expanded := make([]PostedLeg, 0, len(out.Legs)*2)
-		var debits, credits ledger.MinorUnits
-		for _, side := range []EntrySide{SideDebit, SideCredit} {
-			for _, l := range out.Legs {
-				if l.Side != side {
-					continue
-				}
-				expanded = append(expanded, l)
-				expanded = append(expanded, PostedLeg{
-					AccountID:   contra.ID,
-					AccountCode: contra.Code,
-					Side:        oppositeSide(l.Side),
-					AmountMinor: l.AmountMinor,
-				})
-				// Each pair is one debit and one credit of the same amount,
-				// whichever way round the leg itself points, so both totals grow
-				// by the leg amount. Integer minor units throughout; no
-				// intermediate is anything but an int64.
-				debits += l.AmountMinor
-				credits += l.AmountMinor
-			}
-		}
-		out.Legs = expanded
-		out.TotalDebitsMinor = debits
-		out.TotalCreditsMinor = credits
+	out.TotalDebitsMinor = result.TotalDebitsMinor
+	out.TotalCreditsMinor = result.TotalCreditsMinor
+	for _, leg := range result.Legs {
+		out.Legs = append(out.Legs, PostedLeg{
+			AccountID:   leg.Account.ID,
+			AccountCode: leg.Account.GLCode,
+			Side:        postingSide(leg.Side),
+			AmountMinor: leg.Amount,
+			SlotName:    leg.SlotName,
+		})
 	}
-
 	return out, nil, nil
 }
 
-// oppositeSide is the contra side :796 writes (getContraType, :799-805).
-func oppositeSide(s EntrySide) EntrySide {
-	if s == SideDebit {
-		return SideCredit
+// postingSide maps the engine's EntrySide back to the harness's stored-value
+// side. It is the adapter's only conversion of the engine's answer.
+func postingSide(s ledger.EntrySide) EntrySide {
+	if s == ledger.EntryDebit {
+		return SideDebit
 	}
-	return SideDebit
+	return SideCredit
 }
 
 // ---------------------------------------------------------------------------
@@ -707,23 +445,30 @@ func legResolver(req Request) *ledger.Resolver {
 	}
 	accounts := make([]ledger.GLAccount, 0, len(req.Accounts))
 	for _, a := range req.Accounts {
-		usage := ledger.UsageDetail
-		if a.Usage == "HEADER" {
-			usage = ledger.UsageHeader
-		}
-		accounts = append(accounts, ledger.GLAccount{
-			ID:                   a.ID,
-			Name:                 a.Name,
-			GLCode:               a.Code,
-			Disabled:             a.Disabled,
-			ManualEntriesAllowed: a.ManualEntriesAllowed,
-			Usage:                usage,
-		})
+		accounts = append(accounts, ledgerAccount(a))
 	}
 	return &ledger.Resolver{
 		Mappings:            &ledger.InMemoryMappingStore{Rows: rows},
 		FinancialActivities: &ledger.InMemoryFinancialActivityStore{},
 		Accounts:            &ledger.InMemoryAccountStore{Accounts: accounts},
+	}
+}
+
+// ledgerAccount converts one transcribed chart row (a data cell, never graded)
+// into the engine's GLAccount shape. It is the one place the harness's
+// stored-value "DETAIL"/"HEADER" spelling becomes the engine's Usage enum.
+func ledgerAccount(a Account) ledger.GLAccount {
+	usage := ledger.UsageDetail
+	if a.Usage == "HEADER" {
+		usage = ledger.UsageHeader
+	}
+	return ledger.GLAccount{
+		ID:                   a.ID,
+		Name:                 a.Name,
+		GLCode:               a.Code,
+		Disabled:             a.Disabled,
+		ManualEntriesAllowed: a.ManualEntriesAllowed,
+		Usage:                usage,
 	}
 }
 
@@ -744,15 +489,15 @@ func legResolver(req Request) *ledger.Resolver {
 //	               `gl_account_code` are outputs and the comparator is grading a
 //	               computation rather than an echo.
 func resolveLegAccount(req Request, resolver *ledger.Resolver, chart map[int64]Account, l RequestLeg) (
-	accountID int64, accountCode string, slotName string, err error) {
+	acct ledger.GLAccount, slotName string, err error) {
 
 	if l.SlotCode == 0 {
-		acct, ok := chart[l.AccountID]
+		a, ok := chart[l.AccountID]
 		if !ok {
-			return 0, "", "", fmt.Errorf(
+			return ledger.GLAccount{}, "", fmt.Errorf(
 				"points at GL account %d, which the vector's chart does not carry", l.AccountID)
 		}
-		return l.AccountID, acct.Code, "", nil
+		return ledgerAccount(a), "", nil
 	}
 
 	if resolver == nil {
@@ -760,18 +505,18 @@ func resolveLegAccount(req Request, resolver *ledger.Resolver, chart map[int64]A
 		// on a vector with no product_mappings. Kept because a caller building a
 		// Request in memory bypasses admission, and an error is the one outcome
 		// that can never be mistaken for a pass.
-		return 0, "", "", fmt.Errorf(
+		return ledger.GLAccount{}, "", fmt.Errorf(
 			"carries slot_code %d but the request has no product_mappings to resolve it through", l.SlotCode)
 	}
 	slot, serr := loanSlotForCode(req.AccountingRule, l.SlotCode)
 	if serr != nil {
-		return 0, "", "", serr
+		return ledger.GLAccount{}, "", serr
 	}
-	acct, rerr := resolver.ResolveLoanProductAccount(req.ProductID, slot, req.PaymentTypeID)
+	resolved, rerr := resolver.ResolveLoanProductAccount(req.ProductID, slot, req.PaymentTypeID)
 	if rerr != nil {
-		return 0, "", "", fmt.Errorf("resolving %s on product %d: %w", slot.Name(), req.ProductID, rerr)
+		return ledger.GLAccount{}, "", fmt.Errorf("resolving %s on product %d: %w", slot.Name(), req.ProductID, rerr)
 	}
-	return acct.ID, acct.GLCode, slot.Name(), nil
+	return *resolved, slot.Name(), nil
 }
 
 // ---------------------------------------------------------------------------

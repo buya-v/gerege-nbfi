@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // Querier is the read surface application repositories depend on. *pgxpool.Pool
@@ -12,6 +13,21 @@ import (
 // driver type.
 type Querier interface {
 	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
+}
+
+// Executor is the write surface a repository needs. *pgxpool.Pool and pgx.Tx
+// both satisfy it, so a repository that only issues parameterised DML can keep
+// depending on the seam rather than on a concrete driver type.
+type Executor interface {
+	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
+}
+
+// DB is the combined read/write surface an append-only repository depends on.
+// It is satisfied by *pgxpool.Pool and pgx.Tx alike, so repository code stays
+// testable against a transaction and never names the driver's concrete types.
+type DB interface {
+	Querier
+	Executor
 }
 
 // RowScanner is the part of a result row a scan callback needs. pgx.Rows
