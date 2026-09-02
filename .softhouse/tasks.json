@@ -7379,7 +7379,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Analyst behaviour extraction from the PINNED Fineract checkout 426a23544e8426a38ae43ae404670a0a7e85b9eb for slice tierA-gl-accounting-A1 (journal entry posting). ORACLE-FREE by construction: reads source only, contacts no running instance. No Go, no contract change, no vector.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal."
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal. HANDOFF NAME, for the record: T487 wrote .softhouse/handoff/T487.md exactly as this task`s files_hint said, and that made it the ONLY bare Tnnn.md in a directory of 86 Tnnn-slug.md files. The worker obeyed a wrong instruction; the instruction was the driver`s."
     },
     {
       "id": "T488",
@@ -7401,7 +7401,7 @@
     },
     {
       "id": "T489",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7415,7 +7415,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Inventory-and-classify audit of the Tier-C platform surface against the Nexus module. CLASSIFICATION ONLY at module/subsystem granularity -- it does not read 180k LOC and does not port anything.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. CLAUDE.md Tier C: \"Map onto Nexus first; port only the genuine gaps -- re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.\""
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. CLAUDE.md Tier C: \"Map onto Nexus first; port only the genuine gaps -- re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.\" DELIVERED: branch softhouse/T489-tierC-platform-gap-audit @ 0f1028cf, 819 insertions across 2 files. SCOPE CLEAN against merge-base 0aed916d. HANDOFF NAME: the worker wrote .softhouse/handoff/T489-tierC-platform-gap-audit.md, not the .softhouse/handoff/T489.md this task declared. THE DEVIATION IS THE DRIVER`S, NOT THE WORKER`S -- the directory holds 86 files named Tnnn-slug.md and ZERO named bare Tnnn.md, so the worker followed the repo convention and the files_hint was wrong when it was written. Not a finding against T489."
     },
     {
       "id": "T490",
@@ -7428,7 +7428,7 @@
       "branch": "softhouse/T490-review-t487",
       "files_hint": [
         ".softhouse/reviews/t490-review-t487/",
-        ".softhouse/handoff/T490.md"
+        ".softhouse/handoff/T490-review-t487.md"
       ],
       "dependencies": [
         "T487"
@@ -7448,7 +7448,7 @@
       "branch": "softhouse/T491-review-t488",
       "files_hint": [
         ".softhouse/reviews/t491-review-t488/",
-        ".softhouse/handoff/T491.md"
+        ".softhouse/handoff/T491-review-t488.md"
       ],
       "dependencies": [
         "T488"
@@ -7459,7 +7459,7 @@
     },
     {
       "id": "T492",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7468,7 +7468,7 @@
       "branch": "softhouse/T492-review-t489",
       "files_hint": [
         ".softhouse/reviews/t492-review-t489/",
-        ".softhouse/handoff/T492.md"
+        ".softhouse/handoff/T492-review-t489.md"
       ],
       "dependencies": [
         "T489"
@@ -7506,7 +7506,7 @@
       "branch": "softhouse/T494-review-t493",
       "files_hint": [
         ".softhouse/reviews/t494-review-t493/",
-        ".softhouse/handoff/T494.md"
+        ".softhouse/handoff/T494-review-t493.md"
       ],
       "dependencies": [
         "T493"
