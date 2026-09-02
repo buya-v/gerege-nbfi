@@ -4,12 +4,12 @@
 
 | | |
 |---|---|
-| Worker | `T487` |
-| Branch | `softhouse/T487-a1-journalentry-behaviour` |
+| Worker | `T487`; **corrected by `T495`** after independent review `T490` (see §0.1) |
+| Branch | `softhouse/T487-a1-journalentry-behaviour` → corrections on `softhouse/T495-t490-conditions` |
 | Oracle | Fineract reference implementation (the *test oracle*, never Oracle Database), pinned checkout `/home/user/fineract` |
-| Commit | `426a23544e8426a38ae43ae404670a0a7e85b9eb` — verified with `git -C /home/user/fineract log -1 --format=%H` **before any line number below was read**; `git status --porcelain` empty at extraction time |
-| Date | 2026-09-02 |
-| Running instance | **None.** No Fineract process, no PostgreSQL. Every statement below is a statement about *source text this worker opened*. |
+| Commit | `426a23544e8426a38ae43ae404670a0a7e85b9eb` — verified with `git -C /home/user/fineract log -1 --format=%H` **before any line number below was read**; `git status --porcelain` empty at extraction time. **Re-verified independently by `T495`** before any correction below was written; same sha, tree clean. |
+| Date | 2026-09-02 (extraction); 2026-09-02 (corrections) |
+| Running instance | **None.** No Fineract process, no PostgreSQL — at extraction time **or** at correction time. Every statement below is a statement about *source text a worker opened*. |
 
 All `FILE:LINE` citations are relative to the pinned checkout root and were opened and read by this
 worker. Where a claim rests on something this worker could not evaluate from source alone it is
@@ -31,6 +31,30 @@ The reviewer for this slice (`T490`) will re-derive. Four conventions to make th
 **One thing this document deliberately does not contain: an expected numeric output.** There is no
 running oracle in this session. Every arithmetic statement is about the *operations the code
 performs*, never about a value it was observed to produce.
+
+### 0.1 Corrections register — what this document got wrong, and on what evidence it was changed
+
+`T487` produced this document; `T490` reviewed it independently and returned **ACCEPT WITH
+CONDITIONS (4 MAJOR, 5 MINOR)**; `T495` re-derived every finding from the pinned source **before
+applying it** and made the edits below. A behaviour document that quietly changes its mind teaches
+the next reader nothing, so each correction is named here and again at the site.
+
+| # | Section | What T487 said | What is true, and how T495 established it | Status |
+|---|---|---|---|---|
+| **C-1** | §6.3 | The float inventory is *"complete"*, with **four** binary-float money decisions | **Five.** `SavingsTransactionDTO.java:50-51` (`overdraftAmount.doubleValue() > 0`) is a fifth, reached from eight call sites, and unlike the other four it **routes** a posting to a different GL account pair. T495 re-derived it with a *structural* sweep (every `BigDecimal` narrowing and scaling method) over all 63 scope files — see §6.3. | **APPLIED** |
+| **C-2** | §6.2 | Bolded: *"There is exactly ONE rounding site on the whole posting path"* | **False as stated.** `MathContext(19, HALF_UP)` is 19 **significant digits**; `amount` is `numeric(19,6)` — 6 **decimal places**. Those are different quantities, so the INSERT is a **second** reduction, and it is the one that fixes the value parity is graded on. T495 opened `JournalEntry.java:91` (JPA `scale=6, precision=19`), `0001_initial_schema.xml:145` (`DECIMAL(19, 6)`) and `JournalEntry.java:125` (`this.amount = amount`, no coercion). §2.3 already said this; §6.2 contradicted it in bold. Both now agree. | **APPLIED** |
+| **C-3** | §5 | **Four** reversal shapes | **Five.** `AccrualWithDeferredRevenueAmortizationAccountingProcessorForWorkingCapitalLoan.java:364-385` is the only site in the slice that writes `reversed = true` onto a **newly created** row (`:377`) — a row born flagged. T487 lists the file in §3.2 but did not reach its reversal path. Load-bearing for the append-only non-negotiable. | **APPLIED** |
+| **C-4** | §4.1 E-4 | Per-leg non-negativity cited to `JournalEntryCommand.java:108-111` | Those lines are blank + a generic `if (!dataValidationErrors.isEmpty()) throw`. The per-leg check is `:120-126`, specifically `:124-125`. **The conclusion was right; only the pointer was wrong.** | **APPLIED** |
+| **C-5** | §3.1 | Top-level `amount` validator cited to `JournalEntryCommand.java:105` | `:105` is `}` closing an inner `for`. The validator is `:107`, and it carries `.ignoreIfNull()` — so the top-level `amount` is **optional** as well as unused. | **APPLIED** |
+| **C-6** | §6.2 | *"Complete output, six lines"* | Run verbatim at the pin the sweep returns **seven** lines. The five-row table was correct (it collapses two `floatValue` pairs); the count was not. | **APPLIED** |
+| **C-7** | §2.5 | Three drift mechanisms behind G-12 | A **fourth**: all three seed queries are capped `sqlGenerator.limit(10000, 0)` (`:113`, `:138`, `:197`) and an account missing from the seed map silently restarts from `BigDecimal.ZERO` (`:221-224`). Size-dependent, silent. | **APPLIED** |
+| **C-8** | §11 items 5, 8, 12 | Tagged `[UNVERIFIED]` | All three are settleable from source and are settled in place — see §11. **T495 refutes T490's stated evidence for item 5** (its grep does not return what the review says it returns) while confirming T490's conclusion by a stronger route; see §11 item 5. | **APPLIED, one sub-claim refuted** |
+| **C-9** | §4.1 E-2 | *"Yes, once, at the boundary"* | One method, **three** call sites (`:197`, `:217`, `:651`), and `:651` sits in `validateBusinessRulesForJournalEntries`, called from `:157` (Path A) **and `:724` (Path C, opening balances)** — so it is not the manual path alone. | **APPLIED** |
+| **C-10** | §2.5, §4.3 | *"exactly two `UPDATE`s against the table"* | True **of raw SQL only**. The reversal paths mutate managed JPA entities and `saveAndFlush` them (`AccountingProcessorHelper.java:1414-1416`), so Hibernate issues further `UPDATE`s that no string grep can see. Recorded as a qualification, not a correction — T487's §4.3 already named the two ORM-mutable fields. | **QUALIFIED** |
+
+**One question T495 was asked and answers in the negative: is there a *sixth* binary-float money
+site?** **No — on a search whose bounds are stated in §6.3.** "Not found" is a statement about the
+search; §6.3 names the patterns, the file set, and what was deliberately excluded.
 
 ---
 
@@ -176,15 +200,33 @@ one of those is against **`entry_date`** or a SQL alias `as transactionDate` —
 (`JournalEntry.java:91-92`). The same `19,6` shape is used for the two running-balance columns
 (`:166`, `:169`).
 
-**Scale on the way in — there is none.** Tracing every constructor call in §3, the value handed to
-`JournalEntry.createNew` is the caller's `BigDecimal` **unmodified**:
+**Scale on the way in — there is none in Java.** Tracing every constructor call in §3, the value
+handed to `JournalEntry.createNew` is the caller's `BigDecimal` **unmodified**:
 `JournalEntry.java:113-137` assigns `this.amount = amount` at `:125` with no `setScale`, no
 rounding, no currency lookup. The JPA `scale = 6` attribute is DDL-generation metadata, not a
-runtime coercion. So the scale actually stored is whatever the database does when a `numeric` of
-some other scale is inserted into a `numeric(19,6)` column — PostgreSQL rounds to the declared
-scale on insert. **`[UNVERIFIED: no database was available to observe an insert. This is a
-statement about PostgreSQL's documented `numeric` behaviour, not an observation of this
-instance.]`**
+runtime coercion. So the scale actually stored is whatever **the database** does when a `numeric`
+of some other scale is inserted into a `numeric(19,6)` column.
+
+> **The INSERT is a rounding site, and §6.2 now says so too.** `[T495 correction C-2]` As first
+> written, §6.2 asserted in bold that `…JpaRepositoryImpl.java:981` was the *only* rounding site on
+> the posting path, contradicting this paragraph. It is not. `:981` runs at
+> `MoneyHelper.getMathContext()` = `MathContext(19, HALF_UP)` — **19 significant digits**
+> (`MoneyHelper.java:35`, `:91-93`). The column is `numeric(19,6)` — **6 decimal places**
+> (`JournalEntry.java:91`, `0001_initial_schema.xml:145`; the two agree). *Significant digits* and
+> *decimal places* are different quantities, so a value that satisfies the first can still need
+> reducing to satisfy the second. `1 × 1 ÷ 3` at precision 19 is `0.3333333333333333333`; six
+> decimals is what the column keeps. **Nothing in Java performs that reduction** (`:125`, above),
+> so the database performs it, and **the stored value — not the in-memory `BigDecimal` — is the
+> parity target.**
+
+**`[UNVERIFIED: what PostgreSQL actually does on insert into `numeric(19,6)` — round, truncate, or
+raise an error. No PostgreSQL instance was reachable in this session, at extraction time or at
+correction time. Standard SQL `numeric` semantics say it rounds to the declared scale, and that is
+the expectation this document works from, but it is documented product behaviour rather than an
+observation of the reference instance.]`** The direction of the correction above does not depend on
+which of the three it is — any of them makes the INSERT a second reduction — but **the vectors do**:
+a capture that grades `:981` must record what the oracle instance stored, and the rounding rule must
+be measured, not assumed. §10 D-1 and the capture-plan question at §10 item 1/2.
 
 **Six stored decimals against MNT's minor unit of 2.** `CLAUDE.md` fixes MNT at ISO 4217 numeric
 496, minor unit 2. The column can hold four digits of sub-minor-unit residue. Nothing in the three
@@ -235,7 +277,19 @@ independently of `.softhouse/gates.md`, and the two agree.
   the **office-scoped** path, which writes `office_running_balance` alone and sets **neither** the
   flag **nor** the organisation column.
 
-`grep -rn "UPDATE acc_gl_journal_entry"` over the three scope paths returns exactly these two.
+`grep -rn "UPDATE acc_gl_journal_entry"` over the three scope paths returns exactly these two, and a
+repo-wide case-insensitive sweep over `*.java`/`*.xml`/`*.sql` (excluding `old-schema-files/` and
+`multi-tenant-demo-backups/`) returns the same two and nothing else.
+
+> **Qualification — "exactly two" is a claim about raw SQL, not about what the database receives.**
+> `[T495, C-10]` The reversal paths (§5) mutate **managed JPA entities** and hand them to
+> `helper.persistJournalEntry(...)`, which is a `saveAndFlush`
+> (`AccountingProcessorHelper.java:1414-1416`). Hibernate therefore issues further `UPDATE`
+> statements against `acc_gl_journal_entry` that **no grep for the literal string can see**. §4.3
+> already names the two ORM-mutable fields, so this document does not contradict itself — but read
+> alone, "the only two `UPDATE`s against the table" invites the conclusion that a posted row is
+> otherwise never updated, and it is. If **G-22** is ratified into DEC-2 as a normative `§4.4a`,
+> the ORM-issued updates belong in that text. **Nothing here amends G-22 or DEC-2.**
 
 **The seed makes it state, not a projection.** `updateOrganizationRunningBalance` (`:106-189`)
 primes `runningBalanceMap` at `:110-132` by **selecting the previously stored
@@ -247,6 +301,39 @@ last stored value was**; it does not re-derive from the legs. `updateRunningBala
 
 **How far back a recompute reaches** is decided by `MIN(entry_date) WHERE is_running_balance_calculated=false`
 (`:72-73` organisation-wide, `:93-94` per office). Rows older than that are never revisited.
+
+**The seed itself is capped at 10,000 rows, and a miss is silent.** `[T495 correction C-7 — a
+fourth drift mechanism T487 did not list.]` All three seed queries end in the same clause:
+
+```
+:113   + "group by je.id order by je.entry_date DESC " + sqlGenerator.limit(10000, 0);   // organisation-wide
+:138   + "group by je.id order by je.entry_date DESC " + sqlGenerator.limit(10000, 0);   // all offices
+:197   + "group by je.id order by je.entry_date DESC " + sqlGenerator.limit(10000, 0);   // one office
+```
+
+and an account that does not appear in the resulting map does **not** fail — it restarts from zero
+(`calculateRunningBalance`, `:220-224`, opened):
+
+```java
+BigDecimal runningBalance = BigDecimal.ZERO;
+if (runningBalanceMap.containsKey(entry.getGlAccountId())) {
+    runningBalance = runningBalanceMap.get(entry.getGlAccountId());
+}
+```
+
+So once a tenant's (chart of accounts × distinct `entry_date`) rows before `entityDate` exceed
+10,000, some accounts are re-seeded from **zero** instead of from their prior balance, and the
+recompute writes that as the running balance. **No exception, no log line, no partial-result flag.**
+It is a size-dependent correctness cliff, and it is a stronger drift mechanism than the three above
+because it needs no prior corruption to trigger — only a large enough ledger.
+
+**`[UNVERIFIED: whether any real tenant crosses 10,000 seed rows. The cap and the zero fallback are
+source facts, read at the lines above; whether they are ever reached is a deployment fact and no
+database was reachable.]`**
+
+A Go port that **derives** balances, as `CLAUDE.md` requires, does not inherit this defect at all —
+which is itself an argument for the derived-balances non-negotiable rather than a reason to
+reproduce the oracle here. §10 D-7.
 
 **The sign rule** is read from the **GL account's classification joined at recompute time**
 (`:255-258`, `:261-266` select `glAccount.classification_enum`), not from anything stored on the
@@ -273,14 +360,20 @@ with `rs.getBigDecimal` / `rs.getBoolean`. The parameter is
   was made to disagree with the derived sum, the disagreement survived four recomputes and was
   served at the boundary with `runningBalanceComputed: true`. **This worker's source reading
   supplies the mechanism for that measurement and contradicts none of it**: the seed at
-  `:110-116`/`:134-141`, the reach limit at `:72-73`/`:93-94`, and the recompute-time
-  classification join at `:225-242` are exactly the three properties that let a stored value drift
-  and stay drifted. The gate is **OPEN**; option (a)/(b′) is recommended there and this document
-  takes no decision on it.
+  `:110-116`/`:134-141`, the reach limit at `:72-73`/`:93-94`, the recompute-time classification
+  join at `:225-242`, and — added by `T495`, correction C-7 — the **10,000-row seed cap** on all
+  three seed queries (`:113`, `:138`, `:197`) with its silent `BigDecimal.ZERO` fallback
+  (`:221-224`) are **four** properties that let a stored value drift and stay drifted. The fourth
+  is the strongest of them for gate purposes, because it needs no prior corruption: a sufficiently
+  large ledger is enough. The gate is **OPEN**; option (a)/(b′) is recommended there and this
+  document takes no decision on it. **This document does not edit `.softhouse/gates.md`** — the
+  driver files the additional evidence.
 - **G-22** ("the oracle WRITES a balance onto a posted row") — raised by `T429`, which cites
   `JournalEntryRunningBalanceUpdateServiceImpl.java:163-165` and `:211`. **Re-derived here
-  independently: both statements exist, at those lines, and they are the only two `UPDATE`s against
-  the table in the scope paths.** G-22 asks to ratify a normative `§4.4a` in DEC-2 naming three
+  independently: both statements exist, at those lines, and they are the only two ***raw-SQL***
+  `UPDATE`s against the table** — in the scope paths and repo-wide. Read the qualification above
+  before treating that as "the row is otherwise never updated": Hibernate updates it too, on the
+  reversal paths. G-22 asks to ratify a normative `§4.4a` in DEC-2 naming three
   ORACLE_DERIVED columns. That is a `user`/driver gate and this document does not pre-empt it.
 
 **No contradiction with a ratified DEC was found here.** DEC-2 §4.4 row `I-3` explicitly states
@@ -365,8 +458,15 @@ uniqueness"*. Two facts a porter needs:
   transaction id. There is no unique index on `transaction_id` (§2.4).
 
 **The top-level `amount` parameter is accepted, validated, and never used.**
-`JournalEntryJsonInputParams.AMOUNT` is parsed (`…Deserializer.java:84-85`) and validated
-`zeroOrPositiveAmount` (`JournalEntryCommand.java:105`), but
+`JournalEntryJsonInputParams.AMOUNT` is parsed (`…Deserializer.java:84-85`) and validated at
+`JournalEntryCommand.java:107` — `[T495 correction C-5: T487 cited `:105`, which is the `}` closing
+an inner `for`. The validator is `:107`.]` —
+
+```java
+baseDataValidator.reset().parameter("amount").value(this.amount).ignoreIfNull().zeroOrPositiveAmount();  // :107
+```
+
+Note the `.ignoreIfNull()`: the top-level `amount` is **optional** as well as unused. But
 `grep -n "journalEntryCommand.getAmount\|command.getAmount()"` over
 `JournalEntryWritePlatformServiceJpaRepositoryImpl.java` returns **nothing** — every `getAmount()`
 hit in that file is on a `SingleDebitOrCreditEntryCommand` or on a `JournalEntry`. The reason enum
@@ -403,6 +503,7 @@ Loan / savings / shares / client transaction committed
                CashBasedAccountingProcessorForLoan.java            (1,014 LOC)
                AccrualBasedAccountingProcessorForLoan.java         (2,242 LOC)
                AccrualWithDeferredRevenueAmortization…ForWorkingCapitalLoan.java (529)
+                 ← its REVERSAL path is reversal shape 5, §5.5
                CashBasedAccountingProcessorForSavings.java   / AccrualBased…ForSavings.java
                CashBasedAccountingProcessorForShares.java
                CashBasedAccountingProcessorForClientTransactions.java
@@ -486,9 +587,9 @@ none and where this worker looked.
 | # | Invariant | Enforced? | Site | What happens on violation |
 |---|---|---|---|---|
 | E-1 | A manual entry has **at least one debit and at least one credit** | **Yes** | `…JpaRepositoryImpl.java:643-649` | `JournalEntryInvalidException(NO_DEBITS_OR_CREDITS)` → `error.msg.glJournalEntry.invalid.no.debits.or.credits` |
-| E-2 | For a manual entry, **Σ debit amounts == Σ credit amounts** | **Yes**, once, at the boundary | `checkDebitAndCreditAmounts`, `:306-326`; called from `validateBusinessRulesForJournalEntries:651` and again inside the accounting-rule branches at `:197` and `:217` | `JournalEntryInvalidException(DEBIT_CREDIT_SUM_MISMATCH)` → `error.msg.glJournalEntry.invalid.mismatch.debits.credits` |
+| E-2 | For a manual entry, **Σ debit amounts == Σ credit amounts** | **Yes** — by **one** method, at **three** call sites, covering **Path A and Path C** | `checkDebitAndCreditAmounts`, `:306-326` (the comparison is `:323-324`); called at `:197` and `:217` (the accounting-rule branches) and at `:651`, inside `validateBusinessRulesForJournalEntries`, which is itself called from `:157` (**Path A**, manual) **and `:724` (Path C, opening balances)** | `JournalEntryInvalidException(DEBIT_CREDIT_SUM_MISMATCH)` → `error.msg.glJournalEntry.invalid.mismatch.debits.credits` |
 | E-3 | Each leg has both an account and an amount | **Yes** | `:312-314`, `:317-320` | `DEBIT_CREDIT_ACCOUNT_OR_AMOUNT_EMPTY` |
-| E-4 | Each leg's amount is non-negative | **Yes**, but only `zeroOrPositiveAmount` | `JournalEntryCommand.java:108-111` | `PlatformApiDataValidationException` |
+| E-4 | Each leg's amount is non-negative | **Yes**, but only `notNull()` + `zeroOrPositiveAmount()` — so **zero is permitted**, negative is refused | `JournalEntryCommand.java:120-126`, the check itself at **`:124-125`**, inside `validateSingleDebitOrCredit` | `PlatformApiDataValidationException`, collected and thrown at `:109-112` |
 | E-5 | Target account is not disabled, and allows manual entries | **Yes** | `validateGLAccountForTransaction`, `:328-339` | `GL_ACCOUNT_DISABLED` / `GL_ACCOUNT_MANUAL_ENTRIES_NOT_PERMITTED` |
 | E-6 | Entry date is not in the future | **Yes** | `:630-632`, via `DateUtils.isDateInTheFuture` | `FUTURE_DATE` |
 | E-7 | Entry date is after the branch's latest GL closure | **Yes** on the manual path (`:634-640`) and on the reversal path (`:392-400`); on the automatic path only where a processor calls `helper.checkForBranchClosures` (`AccountingProcessorHelper.java:556-564`) | `ACCOUNTING_CLOSED` |
@@ -501,6 +602,27 @@ none and where this worker looked.
 `grep -rn "Meltdown\|DEBIT_CREDIT_SUM_MISMATCH\|does not equal"` over the three scope paths returns
 exactly the sites listed in E-2, E-10 and E-11 (plus the enum declarations). That grep is the basis
 for the "no other balance check exists in this slice" claim.
+
+> **`[T495 correction C-4 — E-4's citation was wrong; its conclusion was not.]`** T487 cited
+> `JournalEntryCommand.java:108-111` for the per-leg non-negativity check. Opened at the pin,
+> `:108` is blank and `:109-112` are the generic collect-and-throw:
+> `if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(…); }` —
+> no amount validation of any kind. The real per-leg check is in `validateSingleDebitOrCredit`:
+>
+> ```java
+> baseDataValidator.reset().parameter(paramSuffix + "[" + arrayPos + "].amount").value(credit.getAmount()).notNull()
+>         .zeroOrPositiveAmount();                                                      // :124-125
+> ```
+>
+> The nearest `zeroOrPositiveAmount` to the range T487 cited is `:107`, and that one validates the
+> **top-level** `amount` — the parameter §3.1 establishes is accepted, validated and never used. So
+> the old citation pointed at neither the per-leg check nor at any check with an effect. §4.1 is the
+> table a porter transcribes and its whole authority is its citations, which is why this is recorded
+> rather than silently fixed.
+>
+> `validateSingleDebitOrCredit` is also called with a **synthetic all-null entry** when a
+> `debits`/`credits` array is present but empty (`:97-98`), which is how an empty array becomes a
+> `notNull` failure rather than a silent no-op.
 
 ### 4.2 Why E-8 is a "no", stated precisely
 
@@ -557,7 +679,12 @@ aggregation helper, not an invariant.
 
 - **two ORM-mutable fields** — `reversalJournalEntry` (`@Setter` at `JournalEntry.java:58`) and
   `reversed` (`@Setter` at `:78`). `grep -n "@Setter"` over `JournalEntry.java` returns exactly
-  those two. Both are set only by a reversal (§5), and both go through `persistJournalEntry`;
+  those two. Both are set only by a reversal (§5), and both go through `persistJournalEntry`,
+  which is a **`saveAndFlush`** (`AccountingProcessorHelper.java:1414-1416`) — so each of these
+  mutations issues a Hibernate `UPDATE` against `acc_gl_journal_entry` **that no grep for a raw
+  SQL string can see** `[T495, qualification C-10; see §2.5]`. In shape 5 (§5.5) `reversed` is
+  additionally set on a row that has not been persisted yet, so *that* one becomes part of the
+  INSERT rather than a later UPDATE;
 - **three fields mutable only by raw batch `UPDATE` from outside the model** — the two running
   balances and the flag (§2.5), plus `last_modified_by` / `last_modified_on_utc`, which those same
   statements rewrite.
@@ -566,6 +693,13 @@ So the oracle's ledger is **append-plus-flag**, not append-only, and separately 
 **rewritten nightly** in three columns the domain model does not know about. Both halves are
 already on the gate register (G-12, G-22); this section records that A1's own reading reaches the
 same conclusion by a different route.
+
+**Fineract says "append-only" and means something narrower than we do.** `[T495, C-3.]` That is not
+an inference: `…ForWorkingCapitalLoan.java:354-356` states it outright in a javadoc — *"keeping the
+ledger append-only (nothing is deleted). The originals are always flagged reversed."* Fineract's
+definition is **nothing is deleted**; `CLAUDE.md`'s forbids the mutation as well. The two
+definitions are not in conflict about the facts, only about the word, and a port that reads
+Fineract's javadocs for its invariants will adopt the weaker one by accident. §5.5.
 
 ### 4.4 `Idempotency-Key` — mandatory for us, optional in the oracle
 
@@ -597,8 +731,38 @@ vector can be captured for that refusal; it is a structural rule, in the same cl
 ## 5. Reversals and corrections
 
 `CLAUDE.md`: *"Corrections are reversing entries."* Fineract agrees on the *adds-a-pair* half and
-disagrees on the *never-mutates* half. There are **four** reversal shapes in this slice and they
+disagrees on the *never-mutates* half. There are **five** reversal shapes in this slice and they
 are not consistent with each other.
+
+> **`[T495 correction C-3 — this section said four.]`** A fifth shape lives in
+> `AccrualWithDeferredRevenueAmortizationAccountingProcessorForWorkingCapitalLoan.java` (§5.5), a
+> file T487 lists in §3.2's processor inventory and in the §1.1 file count but whose reversal path
+> it did not reach. It is the shape that bears most directly on the append-only non-negotiable, so
+> its absence mattered.
+>
+> `T495` re-derived the set with
+> `grep -rn 'setReversed\|setReversalJournalEntry' --include='*.java' . | grep -v '/test/' | grep -v '/build/'`
+> over the **whole checkout**. On the `JournalEntry` type the flagging sites are exactly **four
+> locations**, and they belong to four of the five shapes:
+>
+> | Location | Shape |
+> |---|---|
+> | `…JpaRepositoryImpl.java:423-424` | 1 · manual reverse |
+> | `…JpaRepositoryImpl.java:456-457` | 3 · provisioning |
+> | `…JpaRepositoryImpl.java:618-619` | 4 · shares |
+> | `AccrualWithDeferredRevenue…ForWorkingCapitalLoan.java:377`, `:381`, `:382` | **5 · working-capital restate/undo** |
+>
+> Shape 2 (§5.2) does **not** appear, which independently confirms §5.2's claim that it flags
+> nothing. The remaining hits that pattern returns are outside the three scope paths, in
+> `fineract-working-capital-loan` (`WorkingCapitalLoanChargeOffWriteServiceImpl.java:156`,
+> `WorkingCapitalLoanWritePlatformServiceImpl.java:953`, `:1124`), and are on
+> `WorkingCapitalLoanTransaction` — a loan-transaction type, not a ledger row: they are accompanied
+> by `setReversedOnDate`/`setReversalExternalId`, and `JournalEntry` declares neither field (§2.1).
+> `…JpaRepositoryImpl.java:933` is `transactionDTO.setReversed(...)`, on a DTO.
+>
+> `[T495 note on the review that raised this: T490 described the JpaRepositoryImpl sites as "the
+> four"; there are three locations there, not four. The finding itself — that a fifth shape exists
+> and where it is — is correct and is applied.]`
 
 ### 5.1 Shape 1 — the user-facing reversal (`POST /v1/journalentries/{transactionId}?command=reverse`)
 
@@ -683,18 +847,89 @@ test. `[UNVERIFIED: not executed.]`
 `manualEntry = Boolean.FALSE` (`:603`, `:610`), preserves `entityType`/`entityId`, flags the
 originals (`:618-619`). `continue`s silently on an empty result (`:592-594`).
 
-### 5.5 The four shapes side by side
+### 5.5 Shape 5 — the working-capital-loan restate / undo, the only row born already reversed
 
-| | New txn id? | `manualEntry` | Date used | `entityType`/`entityId` | Flags original? |
-|---|---|---|---|---|---|
-| 1 · manual reverse (`:380-429`) | **yes** | `true` | **original's** | **discarded (null)** | **yes** |
-| 2 · reversed loan txn (`:358-378`) | **no — same id** | `false` | **new, passed in** | preserved | **no** |
-| 3 · provisioning (`:431-463`) | **no — same id** | `false` | new, passed in | preserved | yes |
-| 4 · shares (`:586-624`) | yes | `false` | new, passed in | preserved | yes |
+`[T495, correction C-3.]`
+`AccrualWithDeferredRevenueAmortizationAccountingProcessorForWorkingCapitalLoan.java:364-385` —
+inside the three scope paths, in `fineract-provider/.../journalentry/service/`.
+
+```java
+private void reverseExistingEntries(final WorkingCapitalLoan loan, final WorkingCapitalLoanTransaction txn,
+        final boolean supersede) {
+    final Office office = loan.getClient().getOffice();                                            // :365
+    final LocalDate transactionDate = txn.getReversedOnDate() != null
+            ? txn.getReversedOnDate() : DateUtils.getBusinessLocalDate();                          // :366
+    helper.checkForBranchClosures(helper.getLatestClosureByBranch(office.getId()), transactionDate);// :368
+    final String transactionId = AccountingProcessorHelper.WORKING_CAPITAL_LOAN_TRANSACTION_IDENTIFIER + txn.getId(); // :370
+    final List<JournalEntry> existingEntries = journalEntryRepository.findJournalEntries(transactionId,
+            WORKING_CAPITAL_LOAN_ENTITY_TYPE);                                                     // :371-372
+    for (final JournalEntry journalEntry : existingEntries) {
+        final JournalEntry reversalEntry = createMirrorEntry(journalEntry, transactionId, transactionDate); // :375
+        if (supersede) {
+            reversalEntry.setReversed(true);                    // :377  ← the mirror is flagged BEFORE it is persisted
+        }
+        helper.persistJournalEntry(reversalEntry);              // :379
+        journalEntry.setReversed(true);                         // :381
+        journalEntry.setReversalJournalEntry(reversalEntry);    // :382
+        helper.persistJournalEntry(journalEntry);               // :383
+    }
+}
+```
+
+**Two entry points, differing only in `supersede`:**
+
+- `restateJournalEntries` calls it with **`true`** — `:273`, after `:269` short-circuits when
+  `splitDiffersFromLedger(...)` says the ledger already reflects the recomputed split (*"re-posting
+  would only add cancelling noise"*, `:270`);
+- `postReversalJournalEntries` — the undo — calls it with **`false`**, `:351`.
+
+**What the mirror carries** (`createMirrorEntry`, `:287-294`): the **same `transactionId`** as the
+original (`:370` → `:375`), the **flipped** `JournalEntryType` (`:288`), `manualEntry = Boolean.FALSE`
+(`:290`), the original's `amount`, `description`, `entityType`, `entityId`, `referenceNumber` and
+all four `*TransactionId` columns (`:290-293`), and a date of `txn.getReversedOnDate()` falling back
+to the tenant business date (`:366`).
+
+**Why this is a distinct shape and not a variant of shape 3.** It is the **only** site anywhere in
+the slice that sets `reversed = true` on a **newly created** row before persisting it — a ledger row
+that is *born flagged*. Every other shape flags rows that already existed. For a ledger `CLAUDE.md`
+requires to be append-only, "a row created in the reversed state" is a materially different
+behaviour from "a row later flagged", and a port that models reversal as *append a mirror, flag the
+original* **cannot express it at all**. The reason it exists is given in the javadoc at `:358-362`:
+a superseded pair drops out of the live set (`findJournalEntries` filters `reversed = false`,
+`JournalEntryRepository.java:42-43` — `where … reversed=false and entityType = :entityType order by
+transactionDate asc, createdDate asc, id asc`), so the next restatement cannot mirror these mirrors
+and compound. `WORKING_CAPITAL_LOAN_ENTITY_TYPE` is
+`PortfolioProductType.WORKING_CAPITAL_LOAN.getValue()` — `…ForWorkingCapitalLoan.java:51`.
+
+**And it is the sharpest in-source example of Fineract's "append-only" meaning something else than
+ours.** The method's own javadoc, `:354-356`:
+
+> *"Cancels a transaction's live entries by posting an offsetting mirror for each, **keeping the
+> ledger append-only (nothing is deleted)**. The originals are always flagged reversed."*
+
+Read carefully, that javadoc is internally consistent — it defines append-only as *nothing is
+deleted* and then states plainly that originals are mutated. **That is precisely the divergence.**
+`CLAUDE.md`'s append-only forbids the mutation, not only the delete. A behaviour-extraction document
+is exactly where the two definitions should be put side by side, and §4.3 reaches the same
+conclusion from the entity's `@Setter`s.
+
+### 5.6 The five shapes side by side
+
+| | New txn id? | `manualEntry` | Date used | `entityType`/`entityId` | Flags original? | **Flags the MIRROR too?** |
+|---|---|---|---|---|---|---|
+| 1 · manual reverse (`:380-429`) | **yes** | `true` | **original's** | **discarded (null)** | **yes** | no |
+| 2 · reversed loan txn (`:358-378`) | **no — same id** | `false` | **new, passed in** | preserved | **no** | no |
+| 3 · provisioning (`:431-463`) | **no — same id** | `false` | new, passed in | preserved | yes | no |
+| 4 · shares (`:586-624`) | yes | `false` | new, passed in | preserved | yes | no |
+| **5 · working-capital (`…ForWorkingCapitalLoan.java:364-385`)** | **no — same id** | `false` | `reversedOnDate`, else business date | preserved | yes | **yes, when `supersede`** |
+
+Rows 1–4 cite `JournalEntryWritePlatformServiceJpaRepositoryImpl.java`; row 5 cites
+`AccrualWithDeferredRevenueAmortizationAccountingProcessorForWorkingCapitalLoan.java`.
 
 **Nothing in the slice reconciles these.** A port that implements "reversal" once, uniformly, will
-diverge from the oracle on three of the four. A port that implements four is transcribing an
-inconsistency. §10 D-4.
+diverge from the oracle on **four of the five**. A port that implements five is transcribing an
+inconsistency. And a port whose reversal model is *append a mirror + flag the original* cannot
+represent shape 5's superseded mirror at all, so the choice is forced rather than stylistic. §10 D-4.
 
 ---
 
@@ -719,7 +954,12 @@ parity claim must run at that setting.
 
 The sweep:
 `grep -rn "setScale\|\.divide(\|\.multiply(\|MathContext\|RoundingMode" --include='*.java'` over the
-three scope paths. **Complete output, six lines, all of them:**
+three scope paths. **Complete output, seven lines**, collapsed below into five rows because the two
+`floatValue` pairs share a line each `[T495 correction C-6: T487 said "six lines". Re-run verbatim
+at the pin, `… | wc -l` returns 7 — `:22`, `:964`, `:981`, `AccrualBased…:2208`, `:2222`,
+`CashBased…:980`, `:994`. The table's content was and is correct and complete for that pattern; only
+the count was wrong. It is worth correcting because this section's entire evidentiary weight is
+"here is a grep's complete output":]`
 
 | Site | What it does |
 |---|---|
@@ -729,35 +969,82 @@ three scope paths. **Complete output, six lines, all of them:**
 | `AccrualBasedAccountingProcessorForLoan.java:2208`, `:2222` | `…getAmount().multiply(new BigDecimal(-1))` — sign flip, exact |
 | `CashBasedAccountingProcessorForLoan.java:980`, `:994` | the same sign flip |
 
-**There is exactly ONE rounding site on the whole posting path**, and it is `:981`: the pro-rating
-of a charge's tax component to the amount actually paid,
+#### The corrected headline claim
+
+> **`[T495 correction C-2 — RETRACTED AND RESTATED.]`** T487 asserted here, in bold and as its own
+> nominated most-falsifiable claim: *"There is exactly ONE rounding site on the whole posting path,
+> and it is `:981`."* **That is false as stated, and this document's own §2.3 said so.** The
+> retraction and the restatement are below; the evidence is `JournalEntry.java:91` (JPA
+> `scale = 6, precision = 19`), `0001_initial_schema.xml:145` (`DECIMAL(19, 6)`),
+> `JournalEntry.java:125` (`this.amount = amount`, no coercion), and `MoneyHelper.java:35`, `:91-93`
+> (`MathContext(PRECISION = 19, tenantRoundingMode)`) — every one opened at the pin by `T495`.
+
+**Restated. There are TWO reductions on the posting path, and only the first is in Java.**
+
+| | Where | What it reduces to | Reproduced in Go by |
+|---|---|---|---|
+| **R-1 — in Java, in scope** | `…JpaRepositoryImpl.java:981` | **19 significant digits**, `HALF_UP` — `MoneyHelper.getMathContext()` at `:964` | the port's own arithmetic |
+| **R-2 — in the DATABASE, at every INSERT** | the `amount` column, `numeric(19,6)` | **6 decimal places** | wherever the port decides to reduce, which it must decide **explicitly** |
+
+R-1 is `:981`: the pro-rating of a charge's tax component to the amount actually paid,
 `taxAmount × paidAmount ÷ chargeAmount` at `MathContext(19, HALF_UP)`. It is guarded by
 `chargeAmount != null && chargeAmount.compareTo(BigDecimal.ZERO) > 0 && !lc.getTaxDetails().isEmpty()`
 (`:977`), and its result goes straight into a `ChargeTaxDetailDTO` (`:982`) and from there to a
 journal entry amount.
 
-**`setScale` appears nowhere in the three scope paths.** Nothing rounds an amount to the currency's
-minor unit before persisting. **The amount stored is the amount the caller handed in.**
+**R-1 and R-2 are not the same quantity, which is exactly where the original claim broke.**
+*Significant digits* count from the first non-zero digit; *decimal places* count from the point.
+`1 × 1 ÷ 3` at precision 19 is `0.3333333333333333333` — nineteen significant digits, and still
+thirteen decimals too many for the column. Satisfying R-1 does not satisfy R-2.
 
-That has a sharp consequence for the port: **at `(19, HALF_UP)` a division at precision 19 can
-produce far more than two decimals**, and `numeric(19,6)` will keep six of them. A Go port working
-in integer minor units cannot reproduce `:981` exactly without deciding, explicitly, where the
-rounding to minor units happens. Nothing in this slice makes that decision. §10 D-1.
+**`setScale` appears nowhere in the three scope paths** (0 occurrences; the sweep above is the
+basis). Nothing in **Java** rounds an amount to the currency's minor unit, or to the column's scale,
+before persisting. So R-2 is performed by PostgreSQL, silently, on the way in.
 
-### 6.3 Floating point in the slice — the complete inventory
+**The consequence a porter must not miss: the parity target is the STORED value, not the in-memory
+`BigDecimal`.** A porter who reads only this section as originally written would conclude that
+reproducing `:981` at `(19, HALF_UP)` is sufficient for parity. **It is not.** The port must
+reproduce *both* reductions, and must state in one place where the reduction to MNT minor units
+happens and with which mode. Nothing in this slice makes that decision. §10 D-1.
 
-`grep -rn "double \|float \|Double\|Float" --include='*.java'` over the three scope paths returns
-**exactly one line**:
+**What R-2 actually does is `[UNVERIFIED]` and must be measured, not assumed** — see §2.3: whether
+PostgreSQL rounds, truncates or errors on insert into `numeric(19,6)` was not observable here (no
+database, at extraction time or at correction time). The *existence* of R-2 does not depend on
+which; **the vectors do.**
 
-| Site | What it is |
-|---|---|
-| `fineract-provider/.../journalentry/api/JournalEntriesApiResourceSwagger.java:159` | `public Double amount;` — an **OpenAPI documentation model**, not a runtime money path |
+### 6.3 Floating point in the slice — the inventory, re-derived structurally
 
-That is the whole float inventory *by type declaration*. But the sweep in §6.2 turns up a second
-form the type grep misses, and it is the more interesting one:
+> **`[T495 correction C-1 — this section previously claimed FOUR binary-float money decisions and
+> called itself "the complete inventory". There are FIVE.]`** T487's inventory rested on two
+> *vocabulary* greps, and neither could see the fifth site: the type grep
+> `"double \|float \|Double\|Float"` misses `doubleValue()` (no space after `double`, no capital
+> `D`), and the §6.2 sweep misses it too (the line contains no `setScale`/`divide`/`multiply`/
+> `MathContext`/`RoundingMode` — the four `floatValue` sites were caught by that sweep only
+> incidentally, because they happen to contain `.multiply(`). **This is the vocabulary-grep failure
+> mode in its pure form**, and the fix is not a longer word list but a *structural* sweep. The
+> corrected inventory below rests on one.
 
-**Four sites convert a `BigDecimal` to a 32-bit binary `float` to decide a sign, on the posting
-path.**
+#### The sweep this section now rests on
+
+Over **all 63 files** of the three scope paths (file list built by `find` at the pin), three
+patterns, run by `T495`:
+
+| # | Pattern | Why |
+|---|---|---|
+| S-1 | `\.(doubleValue\|floatValue\|intValue\|longValue\|shortValue\|byteValue\|intValueExact\|longValueExact\|toBigInteger\|toBigIntegerExact\|toPlainString)\s*\(` | **every** `BigDecimal` method that narrows or stringifies — this is what catches `doubleValue()` |
+| S-2 | `setScale\|\.round(\|\.divide(\|MathContext\|RoundingMode\|stripTrailingZeros\|movePointLeft\|movePointRight\|scaleByPowerOfTen\|\.ulp(\|\.precision()\|\.scale()` | every method that scales, rounds or reports scale |
+| S-3 | `\b(double\|float\|Double\|Float)\b` (word-bounded, unlike T487's) plus `new BigDecimal(`, `BigDecimal.valueOf`, `\bMath\.`, `\.compareTo(`, `\.equals(` | type declarations, construction from a binary type, and every comparison |
+
+#### Result — five binary-float money decisions, and one float type declaration
+
+| Site | Form | What it decides | Money? |
+|---|---|---|---|
+| `AccrualBasedAccountingProcessorForLoan.java:2208` (fees), `:2222` (penalties) | `BigDecimal → float` | **sign**, to take an absolute value | **yes** |
+| `CashBasedAccountingProcessorForLoan.java:980` (fees), `:994` (penalties) | `BigDecimal → float` | same | **yes** |
+| **`data/SavingsTransactionDTO.java:50-51`** | **`BigDecimal → double`** | **which GL account pair the posting hits** | **yes** |
+| `api/JournalEntriesApiResourceSwagger.java:159` | `public Double amount;` | nothing at runtime — an **OpenAPI documentation model** (§11 item 12) | contract surface only |
+
+**Sites 1–4 — the sign tests.**
 
 ```java
 chargePaymentDTO.getAmount().floatValue() < 0
@@ -765,17 +1052,103 @@ chargePaymentDTO.getAmount().floatValue() < 0
         : chargePaymentDTO.getAmount()
 ```
 
-- `AccrualBasedAccountingProcessorForLoan.java:2208` (fee payments) and `:2222` (penalty payments);
-- `CashBasedAccountingProcessorForLoan.java:980` (fees) and `:994` (penalties).
+The *value* that flows onward is a `BigDecimal` — `new BigDecimal(-1)` is `new BigDecimal(int)`, an
+exact construction, and the `multiply` is exact — so this is not a precision loss in the amount. It
+is a **binary float in a money decision**. The failure mode is narrow and worth stating precisely
+rather than dramatising: `BigDecimal.floatValue()` of a negative magnitude smaller than the smallest
+positive `float` subnormal returns `-0.0f`, and `-0.0f < 0` is **false**, so such a value would not
+be negated. Under MNT minor units that magnitude is unreachable.
 
-The *value* that flows onward is a `BigDecimal` — the `multiply(new BigDecimal(-1))` is exact — so
-this is not a precision loss in the amount. It is a **binary float in a money decision**, and
-`CLAUDE.md` forbids float "in any monetary code path … including intermediate calculation". The
-failure mode is narrow and worth stating precisely rather than dramatising: `BigDecimal.floatValue()`
-of a negative magnitude smaller than the smallest positive `float` subnormal returns `-0.0f`, and
-`-0.0f < 0` is **false**, so such a value would not be negated. Under MNT minor units that magnitude
-is unreachable. **The point is not that it will bite; it is that the port must not copy it** — the
-Go equivalent is a sign test on an `int64`. §10 D-2.
+**Site 5 — the routing test, and why it is worse than the four above.**
+`fineract-provider/.../journalentry/data/SavingsTransactionDTO.java:44-51`:
+
+```java
+private final BigDecimal overdraftAmount;                                        // :46
+
+public boolean isOverdraftTransaction() {                                        // :50
+    return this.overdraftAmount != null && this.overdraftAmount.doubleValue() > 0;  // :51
+}
+```
+
+`overdraftAmount` is a `BigDecimal` (`:46`). This is a `BigDecimal` → 64-bit binary `double`
+conversion made to decide a money question.
+
+**It is on the posting path, at eight call sites**, all inside the three scope paths
+(`grep -rn 'isOverdraftTransaction' --include='*.java' . | grep -v '/test/' | grep -v '/build/'`):
+
+- `AccrualBasedAccountingProcessorForSavings.java:60`, `:87`, `:155`, `:212`
+- `CashBasedAccountingProcessorForSavings.java:59`, `:83`, `:149`, `:184`
+
+and each reads
+`savingsTransactionDTO.getTransactionType().isWithdrawal() && savingsTransactionDTO.isOverdraftTransaction()`
+or one of its `isDeposit` / `isInterestPosting` / `isFeeDeduction` siblings.
+
+**The four `floatValue` sites choose whether to negate; this one chooses where the money goes.** A
+wrong answer at `:2208` flips a sign; a wrong answer at `:51` **routes the posting to a different GL
+account pair**. That is a strictly worse failure class, and it is the reason this correction is
+MAJOR rather than a footnote.
+
+**The same files make the same kind of decision exactly, three lines away.** In
+`AccrualBasedAccountingProcessorForSavings.java:61` — the line immediately after the call at `:60` —
+the code writes `amount.subtract(overdraftAmount).compareTo(BigDecimal.ZERO) > 0`, an exact
+`BigDecimal` test (and the same at `:88`, `:156`, `:213`, and `CashBasedAccountingProcessorForSavings.java:60`,
+`:84`, `:150`, `:185`). So the binary conversion at `:51` is not a house style; it is an outlier
+inside its own call sites, which is the strongest argument that a port should not carry it forward.
+
+`CLAUDE.md` forbids float "in any monetary code path … including intermediate calculation", and
+that applies to all five. **The point is not that they will bite; it is that the port must not copy
+them** — the Go equivalent of every one is a sign test on an `int64`. §10 D-2.
+
+Under the deposit-taking activation gate the two savings processors ship **disabled** for an NBFI
+deployment (`CLAUDE.md`, ratified tenant parameters), which lowers the operational urgency of site 5
+without changing the correctness of this inventory or of the port note.
+
+#### Is there a SIXTH? No — and here is the boundary of that search
+
+**"Not found" is a statement about the search.** What was searched:
+
+- **all 63 files** of the three scope paths, with S-1, S-2 and S-3 above;
+- plus the five out-of-scope files this document cites as posting-path dependencies —
+  `MoneyHelper.java`, `CurrencyData.java`, `MathUtil.java`,
+  `AbstractAuditableWithUTCDateTimeCustom.java`, `closure/domain/GLClosure.java` — with the
+  narrowing and type patterns. **Zero hits in all five.**
+
+What the sweep returned that is **not** a float money site, and why each was excluded:
+
+- **`intValue()` — six hits, all on identifiers or type codes, none on money.**
+  `ClientTransactionDTO.java:53` (`transactionType.getId()`),
+  `JournalEntryReadPlatformServiceImpl.java:418`, `:440` (`GLAccountType`/`getId`),
+  `JournalEntryRunningBalanceUpdateServiceImpl.java:225`, `:226` (`GLAccountType`,
+  `JournalEntryType`), and `AccrualBasedAccountingProcessorForLoan.java:1850`, which is
+  `debitEntry.getKey().intValue()` over a `Map.Entry<Integer, BigDecimal>` — **the key** (an
+  accounting-type code), while the money is `debitEntry.getValue()`, passed on as a `BigDecimal`.
+  `Long → int` on an id is not a binary-float conversion.
+- **`new BigDecimal(...)` — 16 hits, every one from an `int` literal**: `new BigDecimal(0)` (the
+  `totalDebitAmount` accumulators, §4.2) and `new BigDecimal(-1)` (the four sign flips). `new
+  BigDecimal(int)` is exact. **There is no `new BigDecimal(double)` anywhere in the scope paths** —
+  which is the single most common float-contamination bug in Java money code, and it is absent.
+- **`BigDecimal.valueOf` — zero hits.** (`BigDecimal.valueOf(double)` would be a float path.)
+- **`Math.` — zero hits.** No `Math.round`, no `Math.abs` on a money value.
+- **`compareTo` — every occurrence compares a `BigDecimal` to `BigDecimal.ZERO` or to another
+  `BigDecimal`.** None compares against a float or a `double` literal.
+- **`.equals(` — no `BigDecimal.equals` anywhere** (§6.4 reaches the same conclusion for
+  `JournalEntry.java`; the sweep extends it to all 63 files: every `.equals(` hit is on an
+  `Integer`, a `Long`, a `String`, an enum or a `Set`. The one that looks closest to a money
+  comparison — `…JpaRepositoryImpl.java:1044`, `this.currency.equals(copy.currency)` — is `String`
+  equality: `OfficeCurrencyKey` declares `final String currency` at `:1032`).
+
+**So: five, not six.** What this search does **not** cover, stated so the next reader is not misled:
+code reached *through* the posting path but living outside the 63 files and the five dependencies
+above — in particular the portfolio-side DTO producers that populate `SavingsTransactionDTO` and
+`ChargePaymentDTO`. Those belong to Tier B contexts, and a float introduced there would be invisible
+to this sweep. **`[UNVERIFIED: the producers of the DTOs consumed on the posting path were not
+swept; that is a different slice's file set and was deliberately not entered under the one-context
+scope guard.]`**
+
+**Guard note for the pipeline.** The float guard that greps diffs for `CLAUDE.md`'s no-float rule
+should match `\.(float|double)Value\s*\(` on money types, **not** a `double |float |Double|Float`
+word list. Site 5 is precisely what the word list misses. `[T495: this is a pipeline observation,
+not a change — no guard, gate or config was edited by this document.]`
 
 ### 6.4 Arithmetic that is exact, and where it happens
 
@@ -958,13 +1331,13 @@ Decisions to be **recorded**, not inherited silently.
 
 | # | Decision | Recommendation |
 |---|---|---|
-| D-1 | The single rounding site — the tax pro-rate at `…JpaRepositoryImpl.java:981`, `multiply(mc).divide(mc)` at `(19, HALF_UP)` — has no `setScale` after it and lands in a `numeric(19,6)` column (§6.2) | The port must state, in one place, where a computed money value is rounded to MNT minor units and with which mode. Do **not** leave it implicit. Any parity vector touching a taxed charge must record both the oracle's six-decimal text and the port's minor-unit integer, per DEC-2 §4.3's `principal_minor`/`principal_major_text` pairing. |
-| D-2 | Four `BigDecimal.floatValue() < 0` sign tests on the posting path (§6.3) | Port as an `int64` sign test. Record it as a **deliberate divergence in mechanism with identical behaviour over the reachable domain**, and say why (float subnormals are unreachable at minor-unit granularity). Do not copy the float. |
+| D-1 | **Two** reductions, not one `[T495, C-2]`. **R-1**, in Java: the tax pro-rate at `…JpaRepositoryImpl.java:981`, `multiply(mc).divide(mc)` at `(19, HALF_UP)` — **19 significant digits**, no `setScale` after it. **R-2**, in the database: the INSERT into `amount numeric(19,6)` — **6 decimal places** (§2.3, §6.2) | The port must reproduce **both**, and must state in one place where a computed money value is rounded to MNT minor units and with which mode. Do **not** leave either implicit. **The parity target is the STORED value**, so any vector touching a taxed charge must record the oracle's six-decimal stored text alongside the port's minor-unit integer, per DEC-2 §4.3's `principal_minor`/`principal_major_text` pairing — and the capture must first **measure** whether PostgreSQL rounds, truncates or errors at R-2 (`[UNVERIFIED]`, §2.3), because the vector's expected value depends on the answer. |
+| D-2 | **Five** binary-float money decisions on the posting path `[T495, C-1]`: four `BigDecimal.floatValue() < 0` sign tests (`AccrualBasedAccountingProcessorForLoan.java:2208`, `:2222`; `CashBasedAccountingProcessorForLoan.java:980`, `:994`) **and** `SavingsTransactionDTO.java:51`, `overdraftAmount.doubleValue() > 0`, reached from 8 call sites (§6.3) | Port **all five** as `int64` sign tests. Record as a **deliberate divergence in mechanism with identical behaviour over the reachable domain**, and say why (float subnormals are unreachable at minor-unit granularity). **Distinguish the two kinds in the record:** the four sign tests decide whether to negate; `SavingsTransactionDTO.java:51` decides **which GL account pair the posting hits**, so a wrong answer there is a mis-routed posting, not a sign error. Do not copy the float in either case. The savings processors ship **disabled** for an NBFI deployment, which defers the urgency of the fifth without changing the requirement. |
 | D-3 | Currency decimal places are not on the row, and the two read paths disagree — DB join vs a hard `0` (§7.3) | Carry currency scale from one authority in the port. Assert at construction that a posting's currency scale matches the tenant's configured scale for that code. |
-| D-4 | Four mutually inconsistent reversal shapes (§5.5) | Do not unify them silently — that changes `transaction_id`, `manual_entry`, the date and the `entity_*` columns on three of the four. Pick one shape for the port's own API, and treat the other three as **oracle behaviours to be matched only where a vector exists**. Record the choice. |
+| D-4 | **Five** mutually inconsistent reversal shapes (§5.6) `[T495, C-3]` | Do not unify them silently — that changes `transaction_id`, `manual_entry`, the date and the `entity_*` columns on **four of the five**. Pick one shape for the port's own API, and treat the other four as **oracle behaviours to be matched only where a vector exists**. Record the choice. **Shape 5 forces the choice rather than decorating it:** `…ForWorkingCapitalLoan.java:377` sets `reversed = true` on a **newly created** row, so a port whose reversal model is *append a mirror + flag the original* cannot represent it at all. Decide explicitly whether the Go ledger admits a row born flagged, or whether the superseded-mirror case is modelled some other way — and note that under `CLAUDE.md`'s append-only, all five shapes' mutation of the original is already a divergence (§4.3). |
 | D-5 | Seven throw sites across three distinct messages carry a bare English string and no `error.msg.*` code; one enum constant (`DEBIT_CREDIT_SUM_MISMATCH_WITH_AMOUNT`) is dead and has no code branch at all (§9) | Do not port the dead constant. For the uncoded refusals, decide explicitly whether the port emits a code (a wire divergence, recorded) or the same string. |
 | D-6 | `Idempotency-Key` is **mandatory** for us and **optional** in the oracle (§4.4) | A structural rule in the same class as DEC-2's `I-3`/`I-4`: enforced by a source guard, never by a vector, because the oracle produces no refusal to capture. |
-| D-7 | The two written balance columns and the flag (§2.5) | **Do not decide here.** G-12 and G-22 are open; this document supplies the mechanism and takes no option. What A1 *can* say from source: a conforming Go port that derives balances will differ from the oracle on exactly `office_running_balance`, `organization_running_balance` and `is_running_balance_calculated`, and on `last_modified_*` as a side effect of the nightly rewrite. |
+| D-7 | The two written balance columns and the flag (§2.5) | **Do not decide here.** G-12 and G-22 are open; this document supplies the mechanism and takes no option. What A1 *can* say from source: a conforming Go port that derives balances will differ from the oracle on exactly `office_running_balance`, `organization_running_balance` and `is_running_balance_calculated`, and on `last_modified_*` as a side effect of the nightly rewrite. `[T495, C-7]` It will also **not inherit the 10,000-row seed cap** (`:113`/`:138`/`:197`) or its silent `BigDecimal.ZERO` fallback (`:221-224`) — a size-dependent, unlogged correctness cliff in the oracle. That is an argument *for* the derived-balances non-negotiable, and it is the strongest single piece of source evidence available to G-12. |
 | D-8 | The `transaction_date` column is present, indexed, unmapped and remarked *"Unfinished. Not maintained."*, while the Java field named `transactionDate` maps to `entry_date` (§2.2) | Drop `transaction_date` from the Go schema, or carry it as an explicitly-null legacy column. Never name a Go field after it. |
 | D-9 | `generateTransactionId` is millis+userId+officeId parsed as a `long` (§3.1), with no unique index (§2.4) | The port needs a real, collision-free transaction identifier. That is a **divergence in generated values**, so no vector can pin the id itself; vectors must grade the *grouping*, not the string. |
 | D-10 | Balance holds by construction on the automatic path; nothing checks it (§4.2) | The port should assert Σdebits == Σcredits per `transaction_id` before commit. That is **stricter than the oracle** and cannot fail a parity comparison on well-formed oracle data — but it changes behaviour on malformed data, so record it. |
@@ -977,10 +1350,17 @@ instance and none can be settled by reading:
 
 1. **What scale does a posted `amount` actually come back at**, for an amount supplied with fewer
    than six decimals? (§2.3 — the insert-time coercion.)
+1a. **`[T495, C-2 — raised to the top of the list.]` Does PostgreSQL ROUND, TRUNCATE or ERROR when a
+   `BigDecimal` of scale > 6 is inserted into `amount numeric(19,6)`, and under which rounding
+   rule?** This is `R-2` in §6.2 and it cannot be settled from source — no database was reachable
+   in this session. It matters more than its size suggests: **it fixes the value every parity
+   comparison on this table is graded against.** The probe is one INSERT of a scale-19 value,
+   read back. **No `:981` vector should be graded before it is answered.**
 2. **Can the oracle produce sub-minor-unit residue in `acc_gl_journal_entry.amount` at all?** The
    tax pro-rate at `:981` is the one arithmetic path that could. DEC-2 §4.3 already carries this as
    an `[UNVERIFIED]`; A1 now names the exact line that would produce it. A charge with a tax
-   component, part-paid, is the probe.
+   component, part-paid, is the probe — and the vector must pin **the stored `numeric(19,6)` value,
+   not the in-memory `BigDecimal`** (§2.3, §6.2 R-1/R-2).
 3. **What HTTP status and body does the reverse endpoint return for (a) an automatic transaction id,
    (b) a one-leg transaction?** (§5.1 — both are predicted to be `JournalEntriesNotFoundException`.)
 4. **What does a `POST /v1/journalentries` with no `Idempotency-Key` return?** (§4.4 — predicted:
@@ -991,38 +1371,92 @@ instance and none can be settled by reading:
 7. **Does the office-scoped recompute leave the two balance columns describing different ledgers?**
    `A2-29` measured yes on a one-office tenant; the source reason is `:211` writing one column.
    Re-confirmation is cheap and it is the sharpest evidence for G-12.
+8. **`[T495, C-3]` What does a working-capital-loan restatement leave on the ledger?** Shape 5
+   (§5.5) is predicted to write, per original leg, a mirror row **already flagged
+   `reversed = true`** under the *same* `transaction_id`, plus a flag on the original. A probe that
+   restates a WC-loan transaction twice would show whether the second restatement mirrors the first
+   set (it should not — that is what `supersede` prevents) and whether the live set is what
+   `findJournalEntries` returns. Note this is a Tier B context for *activation* purposes; the
+   ledger rows it writes are A1's table.
+9. **`[T495, C-7]` Does the recompute's 10,000-row seed cap re-seed any account from zero?** Source
+   facts: the cap (`:113`, `:138`, `:197`) and the silent zero fallback (`:221-224`). A tenant with
+   more than 10,000 (account × distinct `entry_date`) rows before the recompute date is the probe.
+   This is expensive to set up and low priority for parity — but it is **cheap and high value as
+   G-12 evidence**, because it demonstrates drift with no prior corruption.
 
 ---
 
-## 11. `[UNVERIFIED]` — what this worker could NOT establish
+## 11. `[UNVERIFIED]` — what could NOT be established
 
 Each is a gap, not a guess.
+
+> **`[T495, correction C-8.]`** Three of the thirteen items below — **5, 8 and 12** — were
+> settleable from source and are settled in place, with the evidence shown and the tag struck.
+> Item 8 is settled only in part, and says which part. Item **2** is *sharpened* rather than
+> settled: it asked a narrower question than the open one. The remaining nine tags stand as
+> written; over-tagging is a far better failure than under-tagging, and items 1, 7 and 13 in
+> particular draw distinctions this document depends on.
 
 1. **Anything about runtime behaviour.** There is no running Fineract and no PostgreSQL in this
    session. Every claim above is about source text. Where a sentence could be read as an
    observation, it is not one.
-2. **The scale PostgreSQL actually stores** when a `BigDecimal` of scale ≠ 6 is inserted into
-   `numeric(19,6)` (§2.3). Standard `numeric` semantics say it rounds to the declared scale; that
-   is documented database behaviour, not something observed on this instance.
+2. **What PostgreSQL actually does** when a `BigDecimal` of scale > 6 is inserted into
+   `numeric(19,6)` — **round, truncate, or raise an error** (§2.3, §6.2 `R-2`). Standard `numeric`
+   semantics say it rounds to the declared scale; that is documented product behaviour, not
+   something observed on this instance, and **no PostgreSQL was reachable at extraction time or at
+   correction time.** `[T495: sharpened. T487's wording ("the scale it stores") presumed a
+   reduction and asked only its size; the open question is which of three behaviours occurs. The
+   distinction is load-bearing — §6.2 `R-2` holds under all three, but the **expected value of any
+   `:981` vector differs between them**, so this must be measured before a vector is graded.
+   §10 capture-plan item 1a.]`
 3. **Whether `Long.parseLong(uniqueVal)` in `generateTransactionId` can overflow in practice**
    (§3.1). The arithmetic is read off `:690`; no user/office id ranges were sampled.
 4. **Whether the opening-balance NPE at `:710` is reachable** — it depends on whether
    `acc_gl_financial_activity_account` can hold a row with a null `gl_account_id`, which is A2's
    table (§3.3).
-5. **Whether anything still writes `created_date` / `lastmodified_date`** (the pre-`0025` audit
-   columns). `grep -rn "created_date\|lastmodified_date"` over the three scope paths returns
-   nothing; `0025:40-41` drops their NOT NULL and `0025:72-76` back-fills `submitted_on_date` from
-   `created_date`. The whole checkout was **not** swept for other writers.
+5. ~~**Whether anything still writes `created_date` / `lastmodified_date`**~~ — **SETTLED. Nothing
+   maps or writes `acc_gl_journal_entry.created_date` / `.lastmodified_date`.** `[T495, C-8.]`
+   The original tag was over-drawn: the answer is available from source, and by a *positive* route
+   rather than an exhaustive negative one. `JournalEntry.java:41` declares
+   `public class JournalEntry extends AbstractAuditableWithUTCDateTimeCustom<Long>`, whose four
+   audit columns are `@Column(name = CREATED_BY_DB_FIELD …)` and siblings
+   (`AbstractAuditableWithUTCDateTimeCustom.java:55`, `:59`, `:63`, `:67`), and those constants
+   resolve to **`created_by`, `created_on_utc`, `last_modified_by`, `last_modified_on_utc`**
+   (`AuditableFieldsConstants.java:28-31`). `JournalEntry` declares no `created_date` or
+   `lastmodified_date` field of its own (§2.1's table is the complete field list), and the two raw
+   `UPDATE`s (§2.5) write `last_modified_by` / `last_modified_on_utc`. The pre-`0025` columns are
+   orphaned: `0025:40-41` drops their NOT NULL and `0025:72-76` back-fills `submitted_on_date` from
+   `created_date`.
+
+   > **`[T495 — one sub-claim of the review that raised this is REFUTED, while its conclusion is
+   > confirmed.]`** `T490` settled this item by asserting that
+   > `grep -rn '"created_date"\|lastmodified_date' --include='*.java' .` (excluding `/build/` and
+   > tests) *"returns hits only on other tables — `fineract-savings` … and `fineract-rates`"*, and
+   > listed five hits. **Run at the pin, that command returns roughly forty-five hits across at
+   > least ten modules**, including `AbstractAuditableCustom.java:46` and `:52` in **`fineract-core`
+   > itself** — a `@MappedSuperclass` that maps exactly those two column names. A reader checking
+   > `T490`'s stated evidence would find a `fineract-core` audit superclass mapping `created_date`
+   > and could reasonably conclude the item was *not* settled. It is settled — but by the class
+   > hierarchy above, not by that grep. `AbstractAuditableCustom` is a **different** superclass from
+   > the one `JournalEntry` extends, which is the fact that actually disposes of the question.
+   > Recorded because a citation that does not return what it is cited for is the failure mode this
+   > document's §0 conventions exist to prevent, and the rule applies to reviewers too.
 6. **The literal names PostgreSQL assigns** to the primary key and to any auto-generated index on
    this table — the changelog names the FK constraints (`0001:7611-7630`, `0025:47-56`) but not the
    PK.
 7. **Whether the automatic paths ever produce an unbalanced transaction.** §4.2 establishes that
    *nothing would catch it*; it does not establish that it happens. That distinction matters and is
    not blurred here.
-8. **Whether `?runningBalance=true` on `GET /v1/journalentries` is reachable on PostgreSQL.**
-   `A2-29` recorded that the *`/glaccounts`* list variant emits MySQL-only `group by … desc` and
-   fails on PostgreSQL. This worker did **not** re-read the `/journalentries` SQL for the same
-   defect, and did not execute either.
+8. **Whether `?runningBalance=true` on `GET /v1/journalentries` is reachable on PostgreSQL** —
+   **PARTLY SETTLED: the specific defect named is ABSENT; reachability remains open.** `[T495,
+   C-8.]` `A2-29` recorded that the *`/glaccounts`* list variant emits MySQL-only
+   `group by … desc` and fails on PostgreSQL. Re-checked here:
+   `grep -niE 'group by.*desc|order by.*group'` over
+   `JournalEntryReadPlatformServiceImpl.java` returns **nothing** — that construct does not appear
+   in this file, so the `/journalentries` read path does not carry the `/glaccounts` defect.
+   **What is still `[UNVERIFIED]`:** whether the endpoint executes cleanly on PostgreSQL at all.
+   That is a runtime question and no instance was reachable. Absence of one known defect is not
+   presence of correctness.
 9. **The consumers of `JournalEntryMapper`'s zero-decimal `CurrencyData`** (§7.3) — the two
    `fineract-investor` files were located by grep but their handling of `decimalPlaces` was not
    traced; that module is Tier B.
@@ -1034,7 +1468,19 @@ Each is a gap, not a guess.
     document describes them because they write to the same table, and takes no position on
     activation.
 12. **Whether `JournalEntriesApiResourceSwagger.java:159`'s `Double amount` reaches any runtime
-    path.** It is an OpenAPI model class; it was read, not traced.
+    path** — **SETTLED: it does not.** `[T495, C-8.]`
+    `grep -rn 'JournalEntriesApiResourceSwagger' --include='*.java' .` (excluding `/build/`)
+    returns the declaration — `:31`, a **package-private `final class`** with a private constructor
+    at `:33` — and five references, **all** inside `@Schema(implementation = …)` / `@RequestBody`
+    annotations in `JournalEntriesApiResource.java` (`:111`, `:175`, `:202`, `:229`, `:230`). It is
+    never instantiated, never deserialized into, never returned. The `Double` is OpenAPI metadata.
+
+    **But it is worth recording what it still is:** the **published contract** therefore types
+    `amount` as a JSON number. `CLAUDE.md` forbids floating point in "any monetary … API field",
+    and this is that, at the documentation surface if not at runtime. A port publishing its own
+    OpenAPI document should type the field as a string or an integer minor-unit value, and record
+    the divergence — the oracle's schema and the port's will not match here. §6.3's inventory
+    carries it in a separate row for exactly this reason.
 13. **Everything `A2-29` measured against a live oracle** is cited here as *`A2-29` measured it*,
     never re-asserted as this worker's own observation. What this worker independently established
     is the **source mechanism** (§2.5), which is a different kind of evidence.
@@ -1057,6 +1503,8 @@ Read only. Nothing outside the scope paths was modified.
 | B-8 | `JournalEntryRepository.findTrialBalanceLinesForDate` (`:52-66`) projects `SUM(CASE WHEN je.type = 1 THEN -1 * je.amount ELSE je.amount END)` **and** an unsigned `SUM(je.amount)` in the same row. A2 §8 identified the unsigned one as what gets stored in `m_trial_balance.closing_balance`. **This query lives in A1's repository and feeds A2's table** — the two slices must agree who owns it. | §12, cross-ref A2 §8 |
 | B-9 | `acc_gl_journal_entry` has **no index on `account_id` + `entry_date`**, the exact pair the running-balance recompute scans (`JournalEntryRunningBalanceUpdateServiceImpl.java:255-258`, `:261-266`). There is an FK index on `account_id` alone (`0001:5643`) and one on `transaction_id` (`0177:31`). Cheap composite index in the Go schema. | §2.4 |
 | B-10 | The nightly recompute calls `platformSecurityContext.authenticatedUser().getId()` **inside the per-row loop** (`:178`) and again per row at `:214`. Not a correctness issue; a porting note. | §2.5 |
+| B-11 | `[T495, C-1]` **The pipeline's float guard should match `\.(float\|double)Value\s*\(` on money types, not a `double \|float \|Double\|Float` word list.** `SavingsTransactionDTO.java:51` is exactly what a word list misses, and it took an independent reviewer to find it. This is a **guard/pattern observation for `.softhouse/patterns.md`**, not a change — this document edits no guard, gate or config. | §6.3 |
+| B-12 | `[T495, C-8]` **The oracle's published OpenAPI contract types `amount` as a JSON number** (`JournalEntriesApiResourceSwagger.java:159`, `public Double amount;`). It is unreachable at runtime (§11 item 12), but `CLAUDE.md` forbids float in "any monetary … API field", so the port's own OpenAPI document will diverge from the oracle's at this field. A contract-surface item, not a money-path one; worth recording before someone generates a client from the oracle's schema. | §6.3, §11 item 12 |
 
 ---
 
@@ -1072,17 +1520,31 @@ Every file this document cites, so the reviewer can re-open them in one pass. Al
 - `service/JournalEntryRunningBalanceUpdateServiceImpl.java` (`:60-284` read)
 - `service/JournalEntryReadPlatformServiceImpl.java` (`:82-235`, `:279-370` read)
 - `service/CashBasedAccountingProcessorForLoan.java` (`:52-56` method map, `:226-315`, `:727-848`, `:965-1005` read)
-- `service/AccrualBasedAccountingProcessorForLoan.java` (`:181-300`, `:2195-2235` read)
+- `service/AccrualBasedAccountingProcessorForLoan.java` (`:181-300`, `:1838-1856`, `:2195-2235` read)
 - `data/GLAccountBalanceHolder.java`
-- `api/JournalEntriesApiResource.java` (`:75-245` read)
-- `api/JournalEntriesApiResourceSwagger.java` (`:159` only)
+- `api/JournalEntriesApiResource.java` (`:75-245` read; `:111`, `:175`, `:202`, `:229-230` re-read by T495 for §11 item 12)
+- `api/JournalEntriesApiResourceSwagger.java` (`:31`, `:33`, `:159`)
 - `handler/CreateJournalEntryCommandHandler.java`
+
+**Added by `T495` while applying the review conditions** — same three scope paths, same pin:
+
+- `service/AccrualWithDeferredRevenueAmortizationAccountingProcessorForWorkingCapitalLoan.java`
+  (`:51`, `:260-300`, `:312-316`, `:340-390` read — the reversal path T487 did not reach; §5.5)
+- `data/SavingsTransactionDTO.java` (`:38-53` read; the fifth float site, §6.3)
+- `service/AccrualBasedAccountingProcessorForSavings.java` (`:60-61`, `:87-88`, `:155-159`, `:212-213` read)
+- `service/CashBasedAccountingProcessorForSavings.java` (`:59-60`, `:83-84`, `:149-153`, `:184-185` read)
+- `data/ClientTransactionDTO.java` (`:53` only — an `intValue()` excluded from the float inventory)
+- `service/JournalEntryRunningBalanceUpdateServiceImpl.java` (`:108-116`, `:131-141`, `:190-200`,
+  `:218-228` re-read for the seed cap, §2.5)
+- `service/JournalEntryWritePlatformServiceJpaRepositoryImpl.java` (`:304-328`, `:714-730`,
+  `:955-1000`, `:1028-1050` re-read)
 
 **In scope — `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/`:**
 
 - `domain/JournalEntry.java` (read in full)
 - `domain/JournalEntryRepository.java` (read in full)
-- `command/JournalEntryCommand.java`, `command/SingleDebitOrCreditEntryCommand.java`
+- `command/JournalEntryCommand.java` (`:95-127` re-read in full by `T495` for corrections C-4 and
+  C-5), `command/SingleDebitOrCreditEntryCommand.java`
 - `serialization/JournalEntryCommandFromApiJsonDeserializer.java`
 - `exception/JournalEntryInvalidException.java` (read in full)
 - `api/JournalEntryJsonInputParams.java`
@@ -1103,7 +1565,17 @@ Every file this document cites, so the reviewer can re-open them in one pass. Al
 - `fineract-core/.../infrastructure/core/service/ThreadLocalContextUtil.java` (`:82-117`)
 - `fineract-core/.../infrastructure/core/service/MathUtil.java` (`:59-65`, `:196-202`, `:364-366`)
 - `fineract-core/.../infrastructure/core/domain/AbstractAuditableWithUTCDateTimeCustom.java`
+  (`:44-75` read; `:55`, `:59`, `:63`, `:67` are the four audit `@Column`s — §11 item 5)
+- `fineract-core/.../infrastructure/core/domain/AbstractAuditableCustom.java` (`:35-53` — read by
+  `T495` **only** to establish that it is a *different* superclass from the one `JournalEntry`
+  extends, and therefore that its `created_date` / `lastmodified_date` mappings do not apply to
+  `acc_gl_journal_entry`. §11 item 5.)
 - `fineract-core/.../infrastructure/core/domain/AuditableFieldsConstants.java` (`:28-31`)
+- `fineract-accounting/.../accounting/closure/domain/GLClosure.java` (float sweep only — §6.3)
+- `fineract-working-capital-loan/.../service/WorkingCapitalLoanChargeOffWriteServiceImpl.java`
+  (`:150-159` only) and `.../WorkingCapitalLoanWritePlatformServiceImpl.java` (`:953`, `:1124`
+  only) — read by `T495` to confirm their `setReversed` calls are on
+  `WorkingCapitalLoanTransaction`, **not** on `JournalEntry`. §5.
 - `fineract-core/.../infrastructure/core/domain/FineractPlatformTenant.java` (`:38` only)
 - `fineract-core/.../infrastructure/businessdate/service/BusinessDateReadPlatformServiceImpl.java` (`:60-84`)
 - `fineract-core/.../infrastructure/core/filters/IdempotencyStoreFilter.java` (`:55-73`)
