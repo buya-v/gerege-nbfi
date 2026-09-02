@@ -7383,7 +7383,7 @@
     },
     {
       "id": "T488",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7397,7 +7397,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Mine the pinned Fineract test corpus for GL/journal-entry cases and turn them into an executable capture plan. PLAN ONLY -- captures nothing, synthesises no vector, stores nothing in contract shape.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture."
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture. DELIVERED: branch softhouse/T488-tierD-gl-corpus-capture-plan @ 7a74ef5c, 1,076 insertions across 2 files, SCOPE CLEAN against merge-base 0aed916d. 27 capture cases in 6 groups + an attestation step + 1 explicitly de-scoped case. The worker reports it swept all 54 FILE:LINE citations mechanically and that the sweep caught ONE FALSE CLAIM OF ITS OWN (a GLAccount is_deleted column inferred from a neighbouring GLClosure fact and never checked; acc_gl_account has no deleted marker), corrected in place with the error named and downgraded to a hypothesis TDG-A4 measures. That self-catch is the reviewer`s starting point, not a reason to trust the rest."
     },
     {
       "id": "T489",
@@ -7439,7 +7439,7 @@
     },
     {
       "id": "T491",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
