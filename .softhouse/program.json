@@ -2559,7 +2559,8 @@
       ],
       "verifier": "Bar on main at fire end and on the merge result alike: EXIT 2, probe PRESENT reading 'down', NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS CLAIMED and none available while the oracle is unreachable. The only claim made: the merge moves nothing the bar can still grade.",
       "gates": "G-23 raised (RESERVED -- where is the Nexus platform tree). G-24 raised and DECIDED by the driver, chosen_by: agent, awaiting veto only. G-20 AMENDED with a git-measured ratio that is worse than when it was raised: capture 34.5 -> 44.2 %, reviews 16.8 -> 22.9 %, nexus/ flat at 2.7 %. No user gate crossed. No CONTRACT gate open.",
-      "known_gap_stated_not_hidden": "The three REPAIRS (T495/T496/T497) landed in their stacks WITHOUT reviewers of their own -- the iteration-6 precedent, but plan-gate check 1 asks for one on every coder task. Filed as T500 rather than left implicit."
+      "known_gap_stated_not_hidden": "The three REPAIRS (T495/T496/T497) landed in their stacks WITHOUT reviewers of their own -- the iteration-6 precedent, but plan-gate check 1 asks for one on every coder task. Filed as T500 rather than left implicit.",
+      "exit_attestation": "repo-state-attest fire-compare rc 0, VERDICT: NO DAMAGE -- every delta inside the declared writ. Working tree clean, LOCK released, all nine worker worktrees removed, one worktree left (the checkout itself). ONE ADVISORY, ATTRIBUTED RATHER THAN WAVED THROUGH as the guard's own text demands: .softhouse/patterns.md changed and the writ does not name it. Attributed by `git log 2815e007..HEAD -- .softhouse/patterns.md` -- exactly two commits, both this driver's, both P-104 (93a35add recorded it, 33f0cbe1 rewrote its heading after it broke the PNUMBER-CITATIONS guard), +44 lines and 0 deletions. No worker touched it."
     }
   ],
   "database": {
