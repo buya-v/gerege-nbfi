@@ -4,17 +4,30 @@
 
 > **READ THIS FIRST — THE LOCAL PIPELINE HAS BEEN DEAD SINCE 2026-08-29 AND NOBODY NOTICED FOR FOUR DAYS.**
 >
-> Measured on `origin/main`, not inferred:
+> Measured on `origin/main`, not inferred — and measured **after `git fetch --unshallow`**, because the
+> clone this sandbox starts from is **shallow** (60 commits, back only to 2026-08-29 21:51) and the first
+> version of this table was truncated at the graft, reporting 14 real commits for 2026-08-29 where the
+> full history says **505**:
 >
 > | Day | commits | lock/reconcile/release no-ops | real work |
 > |---|---|---|---|
-> | 2026-08-29 | 19 | 5 | **14** |
+> | 2026-08-25 | 3 | 3 | **0** |
+> | 2026-08-26 | 18 | 18 | **0** |
+> | 2026-08-27 | 104 | 16 | 88 |
+> | 2026-08-28 | 566 | 7 | 559 |
+> | 2026-08-29 | 513 | 8 | 505 |
 > | 2026-08-30 | 18 | 18 | **0** |
 > | 2026-08-31 | 18 | 18 | **0** |
 > | 2026-09-01 | 2 | 2 | **0** |
 >
 > Eighteen consecutive local launchd fires (six a day: 08/11/14/17/20/23) took the lock, ran the wrapper
-> reconcile and released, in about 90 seconds each, and **advanced nothing**. The wrapper classified the
+> reconcile and released, in about 90 seconds each, and **advanced nothing**.
+>
+> **AND IT HAS HAPPENED BEFORE.** 2026-08-25 and 2026-08-26 are the same shape — 21 fires, 0 real
+> commits — and the program recovered on 08-27 without anything being recorded about why it stopped or
+> why it restarted. So this is a **recurring** failure of the scheduler, not a one-off, and the fact that
+> a four-day and a two-day outage both passed unremarked is the strongest possible evidence for the point
+> in the incident record: **the wrapper detects a zero-turn fire and nothing escalates one.** The wrapper classified the
 > last one itself: *"**THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause
 > UNKNOWN"*, rc=`1`, fire `20260901-080005`.
 >
@@ -66,11 +79,23 @@ with no commit means that worker died before committing and its task must be set
 
 ## WHY THIS WORK, AND NOT THE 53 READY TASKS — G-20 IS NOW THE PROGRAM'S BIGGEST PROBLEM
 
-G-20 was raised on 2026-08-28 measuring the effort ratio at **60 % instrument-building / 39 % porting**.
-The READY list this fire is the gate's own evidence, hardened: `ready-tasks.py` offers **53** tasks, and by
-title **not one of them ports a Fineract behaviour**. They are censuses, fail-open frontiers, guard wiring,
-citation drift and reviews of censuses. The program has been elaborating its instruments while the thing
-the instruments exist to grade — the port — stood still.
+G-20 was raised on 2026-08-28 on the effort ratio. This fire re-measured it with the gate's own git
+instrument and **amended G-20 in `gates.md`**: over the 7 days to 2026-09-02, `.softhouse/capture/` took
+**44.2 %** of 1,227 commits (34.5 % when the gate was raised) and `.softhouse/reviews/` **22.9 %** (16.8 %),
+while `nexus/` — which still includes the grading harness, so it is an *upper* bound on porting — sat flat
+at **2.7 %** and the vector store at **1.1 %**. The ratio did not hold; it got worse.
+
+> **A claim this driver withdrew before relying on it.** It first measured the READY queue by `files_hint`
+> (46 of 53 declaring only `.softhouse/`; the 5 touching `nexus/` all pointing at a `…/conformance/`
+> directory) and was about to write *"not one READY task ports a Fineract behaviour."* **G-20 already
+> warns, in its own text, that `files_hint` undercounts and that exactly that sentence is FALSE and must
+> not be quoted.** Reading the gate before citing it is what caught this. The git measurement above
+> replaces it.
+
+Slice **A1 is the money core of Tier A** (the double-entry engine) and it has no behaviour document at all,
+while A2's has been written for eleven days (`docs/analysis/tierA-a2-behaviour.md`, 1,151 lines). Writing
+A1's costs no oracle, blocks on nothing, and is the input both the capture plan and the eventual Go port
+consume. That is the highest-value oracle-free work available, and it is what this fire spent itself on.
 
 Slice **A1 is the money core of Tier A** (the double-entry engine) and it has no behaviour document at all,
 while A2's has been written for eleven days (`docs/analysis/tierA-a2-behaviour.md`, 1,151 lines). Writing

@@ -4873,3 +4873,64 @@ plus a rights fact the agent cannot supply, so it is escalated rather than decid
 
 Only this: **may a branch ruleset be applied to `main` on the live `origin`, and by whom?**
 Nothing else in this gate needs an answer, and nothing is waiting on it.
+
+---
+
+## G-20 — AMENDMENT, cloud fire `cloud-20260902-2000`, 2026-09-02
+
+**Amends, does not supersede.** The gate's original framing stands, including its warning — repeated
+here because this driver nearly broke it — that **`files_hint` undercounts, and "zero port work is
+happening" is FALSE and should not be quoted.** This driver first measured the READY queue by
+`files_hint` (46 of 53 tasks declaring only `.softhouse/`, 5 touching `nexus/`, and all 5 of those
+pointing at a `…/conformance/` directory) and was about to record it as *"not one READY task ports a
+Fineract behaviour."* **That claim is withdrawn before it was ever relied on.** It is a statement about
+what tasks *declare*, and G-20 already established that what tasks declare is not what they touch.
+
+### The ratio, re-measured on git over the same 7-day window the gate defined
+
+The gate's own instrument, re-run. **A caution about the count itself:** this fire runs in a cloud
+sandbox whose clone arrived **shallow** — 60 commits, reaching back only to 2026-08-29 21:51 — and a
+`--since=7 days` window over a shallow clone silently answers for the shallow part only, giving an
+identical answer for a 7-day and a 14-day window without saying why. The numbers below were taken
+**after `git fetch --unshallow`** (2,809 commits, back to 2026-08-17). Any measurement in a cloud fire
+that predates that fetch is truncated at the graft and must not be compared with a local fire's.
+
+| Area | Commits, 7 days to 2026-09-02 | Share of 1,227 | At G-20's raising (2026-08-28) |
+|---|---|---|---|
+| `.softhouse/capture/` | 542 | **44.2 %** | 34.5 % |
+| `.softhouse/reviews/` | 281 | **22.9 %** | 16.8 % |
+| `.softhouse/conformance.sh` | 46 | 3.7 % | 3.7 % |
+| `.softhouse/bin/` | 38 | 3.1 % | 3.7 % |
+| **`nexus/` (all Go, harness included)** | **33** | **2.7 %** | 2.8 % |
+| **`.softhouse/vectors/`** | **14** | **1.1 %** | 1.1 % |
+| `docs/` | 1 | 0.1 % | — |
+
+**The ratio did not hold; it got worse.** Capture grew 34.5 → 44.2 % of all commits and review grew
+16.8 → 22.9 %, while `nexus/` — which still includes the grading harness, so it is an *upper* bound on
+porting — sat flat at 2.7 %, and the vector store, the thing the whole instrument exists to fill, at
+1.1 %. Five days of the program's largest-ever output moved the instrument and left the port where it
+was.
+
+**One honest confound, stated rather than netted out:** three of those seven days produced no work at
+all (see the outage below), so the window is five working days wide, not seven. That changes the
+denominator, not the direction — every one of the 1,227 commits is from the five days that ran.
+
+### What this fire did about it, without waiting for an answer
+
+Under CLAUDE.md § Answering gates, *decide and record* rather than ask. This fire dispatched three
+tasks and **not one of them touches the instrument**: `T487` (slice A1 behaviour extraction — the
+double-entry engine, the money core of Tier A, which has had no behaviour document at all while A2's
+has existed for eleven days), `T488` (mining the GL test corpus into a capture plan the next
+oracle-reaching fire executes), `T489` (the Tier-C gap audit, which exists to *shrink* the port by
+finding what Nexus already provides). Each has a paired independent reviewer filed in the same commit.
+
+That is a steer, not a fix, and it was available only because the oracle was down: with no reachable
+oracle none of the 53 instrument tasks could be graded, so the fire had to spend itself on source work.
+**The uncomfortable reading is that the program reaches for the port when the instrument is unavailable,
+and reaches for the instrument the rest of the time.**
+
+### What Buyan is being asked — unchanged, and still blocking nothing
+
+A steer on effort allocation. The driver's standing recommendation, `chosen_by: agent`: **cap
+instrument work per fire and require every fire to land at least one task whose deliverable is ported
+behaviour, a behaviour document, or a captured vector.** Nothing waits on the answer.
