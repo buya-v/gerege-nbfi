@@ -7383,7 +7383,7 @@
     },
     {
       "id": "T488",
-      "status": "needs_review",
+      "status": "needs_retry",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7397,7 +7397,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Mine the pinned Fineract test corpus for GL/journal-entry cases and turn them into an executable capture plan. PLAN ONLY -- captures nothing, synthesises no vector, stores nothing in contract shape.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture. DELIVERED: branch softhouse/T488-tierD-gl-corpus-capture-plan @ 7a74ef5c, 1,076 insertions across 2 files, SCOPE CLEAN against merge-base 0aed916d. 27 capture cases in 6 groups + an attestation step + 1 explicitly de-scoped case. The worker reports it swept all 54 FILE:LINE citations mechanically and that the sweep caught ONE FALSE CLAIM OF ITS OWN (a GLAccount is_deleted column inferred from a neighbouring GLClosure fact and never checked; acc_gl_account has no deleted marker), corrected in place with the error named and downgraded to a hypothesis TDG-A4 measures. That self-catch is the reviewer`s starting point, not a reason to trust the rest."
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture. DELIVERED: branch softhouse/T488-tierD-gl-corpus-capture-plan @ 7a74ef5c, 1,076 insertions across 2 files, SCOPE CLEAN against merge-base 0aed916d. 27 capture cases in 6 groups + an attestation step + 1 explicitly de-scoped case. The worker reports it swept all 54 FILE:LINE citations mechanically and that the sweep caught ONE FALSE CLAIM OF ITS OWN (a GLAccount is_deleted column inferred from a neighbouring GLClosure fact and never checked; acc_gl_account has no deleted marker), corrected in place with the error named and downgraded to a hypothesis TDG-A4 measures. That self-catch is the reviewer`s starting point, not a reason to trust the rest. REVIEWED BY T491: ACCEPT WITH CONDITIONS, 4 MAJOR. HELD UNMERGED pending T497."
     },
     {
       "id": "T489",
@@ -7439,7 +7439,7 @@
     },
     {
       "id": "T491",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7455,7 +7455,7 @@
       ],
       "contract_independent": true,
       "description": "Independent adversarial review of T488. The hard question: does any row of the plan state an EXPECTED VALUE the worker did not observe from the oracle? Any such row is a synthesised vector and is a rejection.",
-      "note": "Paired reviewer, filed in the SAME commit as its subject dispatch."
+      "note": "DELIVERED: branch softhouse/T491-review-t488 @ a1e955be, 741 insertions across 2 files, SCOPE CLEAN against merge-base e9f50173. VERDICT ACCEPT WITH CONDITIONS -- 4 MAJOR, 9 MINOR, citation support rate 66 of 67 sampled (98.5%), checked for SUPPORT rather than resolution. THE HEADLINE ANSWER, which is the question the task existed to settle: NO ROW OF THE CAPTURE PLAN STATES AN UNOBSERVED VALUE. It swept all 29 ids plus every prose section; there is no expect column and nothing sits in an expectation position; the SOURCE-DERIVED HYPOTHESIS rows name shapes and branches, never amounts, and each states a refutation condition; every TEST-ASSERTION literal it checked is genuinely what its cited file asserts. One wording over-reach only. It also confirmed BOTH de-scoping decisions correct and better-founded than stated, and found NO third unreachable capability and none wrongly planned. SAFE TO EXECUTE UNATTENDED after 4 text-edit conditions."
     },
     {
       "id": "T492",
@@ -7556,6 +7556,27 @@
       "contract_independent": true,
       "description": "Apply T492's conditions to docs/analysis/tierC-platform-gap-audit.md ON TOP OF T489's branch. F-1 is the expensive direction: a false NOT-APPLICABLE on the fineract-provider half of organisation/teller (3 files, 1,225 LOC of SERVICE IMPLEMENTATIONS) while tierB-branch sits pending -- the same module-split pattern T489 documents in its own section 5.6 and applies correctly to four other cases, missed on the fifth. F-3: N8's PROSE names FineractPlatformTenant{,Connection} NOT-APPLICABLE while the partition assigns core/domain to G1, and getTimezoneId() is the SOLE source read by DateUtils.getDateTimeZoneOfTenant() -- the path that satisfies the two-timezone non-negotiable, so the prose would delete it. F-4: N9 entityaccess NOT-APPLICABLE STANDS (T492 ran both checks T489 conceded it skipped: it IS off by default at 0002_initial_data.xml:186-204 and tierB-branch does NOT depend on it) but the row omits 11 Tier A/B call sites. F-2: a citation that does not support its claim. Corrected subtotals T492 offers: 38,750 / 67,495 / 2,190 / 83,733 = 192,168 -- re-derive them, do not copy them.\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's patch REFUTED by the worker asked to apply it. Re-derive each finding from the pinned source at 426a23544 before writing it in; refute with citations anything that is wrong.\n\nTWO THINGS THE DRIVER ALREADY CHECKED, so do not spend context re-deriving them and do NOT repeat the third as a finding: the dataqueries duplicate is REAL and its mechanism is PREFIX CONTAINMENT (tierC's .../infrastructure contains tierA-provisioning-reporting's .../infrastructure/dataqueries), and it is the ONLY such overlap among all context pairs; and T492's claim that program.json's go_target nexus/internal/platform 'does not exist' is NOT a contradiction -- all fourteen unported contexts have a non-existent go_target because the port creates the directory.",
       "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T492 landed. Oracle-free."
+    },
+    {
+      "id": "T497",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "title": "Apply T491's four MAJORs and nine MINORs to T488's GL capture plan -- and REFUTE any that is wrong",
+      "branch": "softhouse/T497-t491-conditions",
+      "files_hint": [
+        "docs/analysis/tierD-gl-corpus-capture-plan.md",
+        ".softhouse/handoff/T497-t491-conditions.md"
+      ],
+      "dependencies": [
+        "T488",
+        "T491"
+      ],
+      "contract_independent": true,
+      "description": "Apply T491's conditions to docs/analysis/tierD-gl-corpus-capture-plan.md ON TOP OF T488's branch. All four MAJORs are text edits; none needs an oracle. F-1 is an EMPTY-SEARCH failure and the most instructive: 'exactly one POST /journalentries call site, used by one test' is FALSE -- there are five (GLAccountIntegrationTest:115; InitiateExternalAssetOwnerTransferTest:1315, :1349; JournalEntriesStepDef:384,397) -- and the shape-changing claim derived from it, 'Fineract's tests never post a manual JE for its own sake', is REFUTED by addManualJournalEntriesWithAssetExternalization. The cited grep was structurally blind to those sites and the universal claim was made over files the plan's own section 1.3 declares NOT OPENED. Two cheap externalAssetOwner cases were missed and should be added. ('never reverse one' is CONFIRMED and stands.) F-3 is a REASONING defect with the right outcome: the savings/deposit rejection is labelled LEGAL and 'no later agent may re-litigate', which reads an ACTIVATION gate as a SCOPE BLOCK against CLAUDE.md -- porting deposit code is in scope, enabling it is not. Keep the exclusion, fix the grounds and drop the finality. F-4: an unflagged copy hazard in the corpus the plan names as its top follow-up -- JournalEntriesStepDef:366 sets runningBalance=true, which admit.go:141 -> oraclederived.go:230-243 make INADMISSIBLE. F-2: a cited mock contradicts its claim. Also correct the counted MINORs: feature files are 48 not 56 (two searches conflated), the AccountingScenario split is 6/4/1 not 5/5/1, and the glclosures empty search is under-scoped AS CITED though it HOLDS when widened to the whole tree -- widen the citation rather than dropping the claim.\n\nYOU ARE NOT A TYPIST. Two reviewer patches in this program have been refuted by the worker asked to apply them. Re-derive each finding from the pinned source at 426a23544 before writing it in.\n\nTHE PLAN'S CORE PROPERTY MUST SURVIVE YOUR EDIT: no row may state a value that was not observed from a running oracle, and there is no oracle here. T491 swept all 29 ids and confirmed the plan currently holds that line. Adding the two externalAssetOwner cases must not break it -- they get inputs, preconditions and fields-to-record, never an expected value.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T491 landed. Oracle-free."
     }
   ],
   "cross_corroboration": {
