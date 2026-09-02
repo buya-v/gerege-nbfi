@@ -4055,7 +4055,22 @@ forward preserves the audit trail that editing it would erase.
 
 ---
 
-**P-104 — A UNIVERSAL CLAIM BUILT ON A PATTERN MATCH IS A CLAIM ABOUT THE PATTERN'S VOCABULARY, NOT ABOUT THE WORLD. THREE INDEPENDENT REVIEWERS IN ONE FIRE EACH BROKE ONE, AND TWO OF THE THREE BROKE IT THE SAME WAY.**
+**P-104 — A COUNTED CLAIM RESTING ON ONE PATTERN MATCH MEASURES THAT PATTERN'S VOCABULARY, NEVER THE CODE. THREE INDEPENDENT REVIEWERS IN ONE FIRE EACH BROKE ONE, AND TWO OF THE THREE BROKE IT THE SAME WAY.**
+
+> **THIS HEADING WAS REWRITTEN BEFORE IT EVER LANDED, AND THE GUARD IS WHY.** Its first wording ended
+> *"…IS A CLAIM ABOUT THE PATTERN'S VOCABULARY, NOT ABOUT THE WORLD"*, which is P-66/P-70's own
+> distinctive sentence — *"'Not found' is a statement about the search, never about the world"* — with
+> two words changed. `PNUMBER-CITATIONS` went **FATAL, 3 directive-file misdirections**: the glosses at
+> `.softhouse/bin/branch_sweep.py:33`, `.softhouse/bin/fire-program.sh:2934` and
+> `.softhouse/conformance.sh:2009` cite P-66 and P-70, and the new heading scored **10** against those
+> glosses where the ids they actually cite scored **0** and **1**. Three files that instruct future
+> workers were, for one commit, pointing at the wrong rule — and **nobody had edited them.**
+>
+> **A new rule that borrows an existing rule's sentence silently steals its citations.** The register is
+> matched on *text*, so the cost of an evocative heading is paid by every file that already quoted the
+> rule you echoed. Say the new thing in new words. This is `P-86`'s converse: `P-86` says cite a rule by
+> quoting its sentence rather than leaning on its number; P-104 adds that **the sentence is therefore an
+> identifier, and identifiers must not collide.**
 
 **Recorded by:** the `/softhouse-program` driver, cloud fire `cloud-20260902-2000`, 2026-09-02, from the three paired reviews of that fire — the first fire in this program whose entire output was source analysis rather than instrument work, which is very likely why the class became visible at all.
 
