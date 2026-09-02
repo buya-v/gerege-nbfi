@@ -7365,7 +7365,7 @@
     },
     {
       "id": "T487",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7379,7 +7379,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Analyst behaviour extraction from the PINNED Fineract checkout 426a23544e8426a38ae43ae404670a0a7e85b9eb for slice tierA-gl-accounting-A1 (journal entry posting). ORACLE-FREE by construction: reads source only, contacts no running instance. No Go, no contract change, no vector.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle."
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal."
     },
     {
       "id": "T488",
@@ -7419,7 +7419,7 @@
     },
     {
       "id": "T490",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
