@@ -61,21 +61,47 @@ instrument/harness `code` task whose merge would have to be graded on the merge 
 verdict is available on this host.** Grading them here would be exactly the "lower the bar to keep the loop
 moving" that the driver may never do.
 
-## WAVE 1 — DISPATCHED, LIVE (all three ORACLE-FREE by construction)
+## WAVE 1 — ALL THREE LANDED, ALL SCOPE-CLEAN, NOT YET MERGED
 
-| Task | Branch | Subject |
-|---|---|---|
-| `T487` | `softhouse/T487-a1-journalentry-behaviour` | Slice **A1** behaviour extraction — journal-entry posting, the double-entry engine (63 files, 11,374 LOC at the pin) |
-| `T488` | `softhouse/T488-tierD-gl-corpus-capture-plan` | Tier D — mine the GL/journal-entry test corpus into a **capture plan** the next oracle-reaching fire executes |
-| `T489` | `softhouse/T489-tierC-platform-gap-audit` | Tier C — map the platform surface onto what Nexus already provides; classify gaps only |
+| Task | Branch @ commit | Lines | Scope |
+|---|---|---|---|
+| `T487` | `softhouse/T487-a1-journalentry-behaviour` @ `0b2545c1` | 1,313 | CLEAN — its 2 declared files |
+| `T488` | `softhouse/T488-tierD-gl-corpus-capture-plan` @ `7a74ef5c` | 1,076 | CLEAN — its 2 declared files |
+| `T489` | `softhouse/T489-tierC-platform-gap-audit` @ `0f1028cf` | 819 | CLEAN — its 2 declared files |
 
-Wave 2 is the paired INDEPENDENT reviewers `T490`/`T491`/`T492`, one per landed branch, filed in the SAME
-commit as this dispatch and dispatched only after wave 1 lands.
+> **A SCOPE-CHECK TRAP THE NEXT DRIVER WILL HIT.** `git diff --stat main..<branch>` on every one of these
+> showed `.gitignore`, `gates.md`, `RESUME.md`, `program.json` and `tasks.json` as **deletions**, which
+> reads exactly like a worker reverting the driver's work. It is not. Those are *this fire's own later
+> commits to `main`*, absent from a branch cut before them. **The scope signal is the diff from the
+> MERGE-BASE, never from a moved `main`.**
 
-**IF YOU ARE READING THIS AND THE FIRE IS NOT RUNNING, THE WORKERS WERE KILLED.** Each was dispatched to an
-isolated worktree on the branch named above. Check `git log --oneline main..<branch>` for each; a branch
-with no commit means that worker died before committing and its task must be set `needs_retry`, never left
-`in_progress`.
+## WAVE 2 — THE PAIRED INDEPENDENT REVIEWERS, LIVE
+
+| Task | Branch | Reviews | Nominated first attack |
+|---|---|---|---|
+| `T490` | `softhouse/T490-review-t487` | T487 | §6.2 "exactly ONE rounding site on the posting path" — the most consequential and most falsifiable money claim |
+| `T491` | `softhouse/T491-review-t488` | T488 | does any row of the capture plan state a value that was never observed? |
+| `T492` | `softhouse/T492-review-t489` | T489 | N9 `entityaccess` NOT-APPLICABLE, and the zero-NEXUS-PROVIDES structural claim |
+
+**NOTHING IS MERGED AND NOTHING MAY BE MERGED UNTIL THESE LAND.** The branches are all pushed to
+`origin`, so no work is lost if this fire dies here.
+
+## THE MERGE IS PRE-GRADED, AND HERE IS THE HONEST FORM OF THAT CLAIM
+
+The bar cannot give a verdict with the oracle down, so a PASS is unavailable and is **not** claimed.
+What *was* established, by running the bar twice — on `main` and on the trial merge result (tree
+`64748299`, all three branches merged clean in a scratch worktree outside the repo):
+
+- Both runs: **EXIT 2, probe line PRESENT and reading `down`. VERDICT UNUSABLE — THIS IS NOT A PASS.**
+- **Every graded census is IDENTICAL between the two.** Fail-open frontier 11 == pinned 11; census ==
+  pinned across all 18 sites; dead-path frontier GREEN; `T316-DEADPATH-CENSUS` corpus 1757 / deadFiles 75
+  / deadOccurrences 108 / resolving 1577 / indeterminate 126 / prose 427; every exemption census == pinned;
+  LEDGER parity 10, oracle-refusal 6, money cells 63.
+- The **only** two differences in the whole census block are the repo-root path string (a different
+  worktree) and one guard's wall-clock cost (0s vs 1s). Neither is a graded value.
+
+So the defensible statement is narrow and true: **the merge moves nothing the bar is still able to grade
+while the oracle is down.** It is not a parity claim and it is not a cutover argument.
 
 ## WHY THIS WORK, AND NOT THE 53 READY TASKS — G-20 IS NOW THE PROGRAM'S BIGGEST PROBLEM
 
