@@ -4,3 +4,9 @@
 # Repo-local Go toolchain (fire 20260819-170001). NOT committed — reversible with
 # `rm -rf .softhouse/toolchain`. Buyan's machine PATH and /usr/local are untouched.
 .softhouse/toolchain/
+
+# Python bytecode from running .softhouse/bin/*.py (ready-tasks.py, branch_sweep.py).
+# Build residue, never a deliverable — this program already treats probe residue
+# committed into a tree as a defect (T355). Reversible: rm -rf **/__pycache__
+__pycache__/
+*.pyc
