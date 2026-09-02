@@ -7476,6 +7476,44 @@
       "contract_independent": true,
       "description": "Independent adversarial review of T489. Re-derive each classification against BOTH trees. A false NEXUS-PROVIDES silently drops a subsystem from the program; a false GAP costs a re-port of plumbing that already exists.",
       "note": "Paired reviewer, filed in the SAME commit as its subject dispatch."
+    },
+    {
+      "id": "T493",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "NOTHING ESCALATES A ZERO-TURN FIRE -- eighteen no-op fires ran over four days and produced no alert, and it was the SECOND such outage",
+      "branch": "softhouse/T493-zero-turn-fire-escalation",
+      "files_hint": [
+        ".softhouse/guards/no-op-fire-streak.sh",
+        ".softhouse/capture/t493-zero-turn-escalation/"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "THE FACTS, MEASURED BY cloud-20260902-2000 ON origin/main AFTER `git fetch --unshallow` (a cloud clone is SHALLOW and a --since window over it silently answers for the shallow part only): 2026-08-30 = 18 commits / 18 bookkeeping / 0 real; 08-31 = 18 / 18 / 0; 09-01 = 2 / 2 / 0. Eighteen consecutive local launchd fires took the lock, ran the wrapper reconcile, released, and advanced NOTHING. AND IT WAS THE SECOND TIME: 08-25 and 08-26 are the same shape (21 fires, 0 real) and the program recovered on 08-27 with nothing recorded about why it stopped or restarted.\n\nTHE DEFECT IS NOT THE DETECTION. `classify_driver_turns()` at .softhouse/bin/fire-program.sh:2442 already detects a zero-turn fire precisely, and even distinguishes it from a quota rejection by name. It WRITES the finding into the RESUME.md banner and nothing reads it. A fire that cannot run is exactly the fire that cannot report that it could not run, so the alarm cannot live inside the fire -- this is P-45 ('a guard that only works when someone remembers to run it enforces nothing') applied to the scheduler itself.\n\nBUILD: a guard that reads origin/main's commit history and decides, mechanically, whether the last N fires were no-ops -- classifying a commit as bookkeeping (lock / wrapper reconcile / release) vs real. Drive it RED/GREEN against the REAL history, which is the good part of this task: 08-25/26 and 08-30/31/09-01 are known-RED windows and 08-27/28/29 are known-GREEN ones, so the guard can be graded against recorded truth rather than a planted fixture. It MUST unshallow (or refuse and say so) before measuring -- a shallow clone makes a 7-day and a 14-day window return the same answer with no error.\n\nWHERE IT RUNS: the cloud fire, which is alive precisely when the local one is not, and which is the only fire that can observe the local one's silence. The cloud routine should run it at STEP 0 and PUSH-NOTIFY Buyan on a streak. Installing a launchd-level alarm ON the Mac is NOT in scope for any agent -- no agent can reach that host.",
+      "note": "Filed by cloud fire cloud-20260902-2000, NOT dispatched by it: three workers were already live and this fire had no budget to see a fourth through. This is the one instrument task the driver judged worth adding against its own G-20 recommendation, because it protects the program's entire throughput rather than grading a corner of it -- four days of oracle-reaching capacity were lost to a failure that was DETECTED and never ESCALATED."
+    },
+    {
+      "id": "T494",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T493 -- re-derive the no-op classification against the real history, and attack the shallow-clone case",
+      "branch": "softhouse/T494-review-t493",
+      "files_hint": [
+        ".softhouse/reviews/t494-review-t493/",
+        ".softhouse/handoff/T494.md"
+      ],
+      "dependencies": [
+        "T493"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T493. Re-derive the day-by-day classification from origin/main yourself; inherit no count. Attack in this order: (1) does the guard REFUSE, rather than answer, on a shallow clone -- the failure that makes a 7-day and a 14-day window agree is silent and this whole task exists because a silent wrong answer went unnoticed for four days; (2) does the bookkeeping-vs-real predicate misclassify a REAL commit whose subject happens to match the bookkeeping pattern, and vice versa; (3) is the guard FAIL-OPEN -- does it report \"no streak\" when it could not measure at all?",
+      "note": "Paired reviewer, filed in the same commit as T493."
     }
   ],
   "cross_corroboration": {
