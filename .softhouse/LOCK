@@ -1,12 +1,12 @@
 {
-  "holder": "local-launchd",
-  "host": "Buyanmunkhs-Mac-mini",
-  "pid": 56597,
-  "fire": "20260901-080005",
-  "started_at": "2026-09-01T00:01:22Z",
-  "heartbeat": "2026-09-01T00:01:22Z",
+  "holder": "cloud-routine",
+  "host": "claude-code-remote-sandbox",
+  "pid": 0,
+  "fire": "cloud-20260902-2000",
+  "started_at": "2026-09-02T12:35:00Z",
+  "heartbeat": "2026-09-02T12:35:00Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
-  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260901-080005.log",
-  "oracle": "UNREACHABLE at https://localhost:8443/fineract-provider/actuator/health",
-  "postgres": "reachable at localhost:5432"
+  "takeover": "Took over a lock held by local-launchd fire 20260901-080005 (pid 56597 on Buyanmunkhs-Mac-mini) under STEP 0 ARM 3 (CEILING): started_at 2026-09-01T00:01:22Z was 36.5h old, over the 24h ceiling. ARM 5 agrees independently -- origin/main tip 2815e007 is 2026-09-01T00:02:55Z, also 36.5h old. ARM 2 was NOT used: the pid names another host and this driver never judges a pid it cannot see.",
+  "oracle": "UNREACHABLE from this cloud sandbox by design -- no Fineract reference instance and no PostgreSQL here. Vector-capture and conformance work is parked oracle_unreachable for this fire.",
+  "postgres": "not present in this sandbox"
 }
