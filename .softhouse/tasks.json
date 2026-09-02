@@ -7365,7 +7365,7 @@
     },
     {
       "id": "T487",
-      "status": "needs_retry",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7517,7 +7517,7 @@
     },
     {
       "id": "T495",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7534,7 +7534,7 @@
       ],
       "contract_independent": true,
       "description": "Apply T490's conditions to docs/analysis/tierA-a1-behaviour.md on TOP OF T487's branch, so the pair lands corrected rather than landing wrong and being fixed later. THE TWO THAT CHANGE THE MONEY SECTION: F-1, a FIFTH binary-float money decision (SavingsTransactionDTO.java:51, overdraftAmount.doubleValue() > 0) which ROUTES A POSTING rather than taking an absolute value, invisible to both of T487's sweeps because neither pattern contains doubleValue; and F-2, which refutes T487's own bolded headline -- MathContext(19, HALF_UP) is 19 SIGNIFICANT DIGITS while numeric(19,6) is 6 DECIMAL PLACES, so the INSERT is a second rounding site and it is the one that fixes the value parity is graded on. Also F-3 (five reversal shapes, not four; the fifth writes reversed=true onto a NEWLY CREATED row) and F-4 (a citation that does not support its claim).\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's proposed patch REFUTED by the worker asked to apply it (T451 vs T449, T455 vs T448), and an independent third confirmed both refutations -- one of those patches would have shipped RED on a clean tree. RE-DERIVE each finding from the pinned source at 426a23544 before you write it in. If a finding is wrong, say so with your own citations and DO NOT apply it. The driver does not hand-apply a reviewer's patch, and neither do you.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T490 landed. Oracle-free: source reading and document editing only."
+      "note": "DELIVERED: branch softhouse/T495-t490-conditions @ d3280091, +728/-85 across its 2 declared files, SCOPE CLEAN against its T487 base 0b2545c1. ALL NINE of T490`s findings APPLIED. NO SIXTH BINARY-FLOAT SITE -- and it was established the way P-104 prescribes, by a STRUCTURAL sweep over all 63 scope files (every BigDecimal narrowing method, every scaling method, word-bounded float types, new BigDecimal(, BigDecimal.valueOf, Math., compareTo, equals) plus the five cited out-of-scope dependencies, NOT by a wider word list. new BigDecimal(double) appears nowhere in scope. TWO REFUTATIONS OF ITS OWN REVIEWER, neither reversing a finding: T490`s F-8 item 5 grep evidence is wrong at the pin (~45 hits across ~10 modules, not two), though the conclusion holds by a stronger route T495 established instead; and T490`s A-29 count of four flagging sites is THREE, which independently confirms the document`s own section 5.2. That is the THIRD and FOURTH time in this program a worker asked to apply a reviewer`s patch has refuted part of it."
     },
     {
       "id": "T496",
@@ -7577,6 +7577,47 @@
       "contract_independent": true,
       "description": "Apply T491's conditions to docs/analysis/tierD-gl-corpus-capture-plan.md ON TOP OF T488's branch. All four MAJORs are text edits; none needs an oracle. F-1 is an EMPTY-SEARCH failure and the most instructive: 'exactly one POST /journalentries call site, used by one test' is FALSE -- there are five (GLAccountIntegrationTest:115; InitiateExternalAssetOwnerTransferTest:1315, :1349; JournalEntriesStepDef:384,397) -- and the shape-changing claim derived from it, 'Fineract's tests never post a manual JE for its own sake', is REFUTED by addManualJournalEntriesWithAssetExternalization. The cited grep was structurally blind to those sites and the universal claim was made over files the plan's own section 1.3 declares NOT OPENED. Two cheap externalAssetOwner cases were missed and should be added. ('never reverse one' is CONFIRMED and stands.) F-3 is a REASONING defect with the right outcome: the savings/deposit rejection is labelled LEGAL and 'no later agent may re-litigate', which reads an ACTIVATION gate as a SCOPE BLOCK against CLAUDE.md -- porting deposit code is in scope, enabling it is not. Keep the exclusion, fix the grounds and drop the finality. F-4: an unflagged copy hazard in the corpus the plan names as its top follow-up -- JournalEntriesStepDef:366 sets runningBalance=true, which admit.go:141 -> oraclederived.go:230-243 make INADMISSIBLE. F-2: a cited mock contradicts its claim. Also correct the counted MINORs: feature files are 48 not 56 (two searches conflated), the AccountingScenario split is 6/4/1 not 5/5/1, and the glclosures empty search is under-scoped AS CITED though it HOLDS when widened to the whole tree -- widen the citation rather than dropping the claim.\n\nYOU ARE NOT A TYPIST. Two reviewer patches in this program have been refuted by the worker asked to apply them. Re-derive each finding from the pinned source at 426a23544 before writing it in.\n\nTHE PLAN'S CORE PROPERTY MUST SURVIVE YOUR EDIT: no row may state a value that was not observed from a running oracle, and there is no oracle here. T491 swept all 29 ids and confirmed the plan currently holds that line. Adding the two externalAssetOwner cases must not break it -- they get inputs, preconditions and fields-to-record, never an expected value.",
       "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T491 landed. Oracle-free."
+    },
+    {
+      "id": "T498",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "G-12 evidence: the 10,000-row seed cap and the SILENT zero fallback -- the strongest of the four running-balance drift mechanisms",
+      "branch": "softhouse/T498-g12-seed-cap",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/capture/t498-g12-seed-cap/"
+      ],
+      "dependencies": [
+        "T495"
+      ],
+      "contract_independent": true,
+      "description": "T495 found a fourth and strongest drift mechanism for gate G-12 while repairing T487: sqlGenerator.limit(10000, 0) on all three running-balance seed queries (:113 / :138 / :197) plus a silent BigDecimal.ZERO fallback at :221-224. T495 rates it strongest because unlike the other three it needs NO PRIOR CORRUPTION and fails with NO EXCEPTION AND NO LOG LINE -- a ledger over 10,000 rows silently seeds from zero. Verify it independently, then add it to G-12's evidence in .softhouse/gates.md. Note for whoever ratifies G-22 as DEC-2 4.4a: say 'only two RAW-SQL UPDATEs', because saveAndFlush at AccountingProcessorHelper.java:1414-1416 issues more that no string grep can see.",
+      "note": "Filed by cloud fire cloud-20260902-2000 from T495 handoff items. NOT dispatched by it: T499 edits conformance.sh and a guard, which cannot be graded while the oracle is down and the bar returns UNUSABLE."
+    },
+    {
+      "id": "T499",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "B-11: the float guard matches a WORD LIST, and P-104 is the reason that is not good enough",
+      "branch": "softhouse/T499-float-guard-shape",
+      "files_hint": [
+        ".softhouse/guards/",
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t499-float-guard-shape/"
+      ],
+      "dependencies": [
+        "T495"
+      ],
+      "contract_independent": true,
+      "description": "The money float guard should match the SHAPE `\\.(float|double)Value\\s*\\(` on money types rather than a list of words. This is the mechanical form of P-104, recorded this fire: T487's two sweeps both missed SavingsTransactionDTO.java:51 (overdraftAmount.doubleValue() > 0, a POSTING-ROUTING decision reached from 8 call sites) because neither pattern contained a token matching doubleValue, while the four floatValue sites they did find were caught incidentally for containing '.multiply('. Extend the guard to the shape, drive it RED against that exact line and GREEN on a clean tree, and check whether the existing pin moves -- if it does, that is newly VISIBLE, not newly introduced, and the pin bump must say so. Also carries B-12: the oracle's OpenAPI schema types `amount` as a JSON NUMBER, so the port's schema will diverge -- record where.",
+      "note": "Filed by cloud fire cloud-20260902-2000 from T495 handoff items. NOT dispatched by it: T499 edits conformance.sh and a guard, which cannot be graded while the oracle is down and the bar returns UNUSABLE."
     }
   ],
   "cross_corroboration": {
