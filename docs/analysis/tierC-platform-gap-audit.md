@@ -11,10 +11,55 @@
 | Oracle commit | `426a23544e8426a38ae43ae404670a0a7e85b9eb` (2026-08-12 14:59:16 +0200); `git status --porcelain` **empty** at audit time (0 lines) |
 | Nexus tree read | `nexus/` of this worktree at `0aed916db7cc1680b3fecd1e94159f3d33b08418` |
 | Date | 2026-09-02 |
+| Revision | **rev 2** — T492's four conditions applied by `T496` (2026-09-02), see §0.1 |
 
 Throughout this document **"the reference oracle" means the Fineract implementation** we grade Go
 output against. **"Oracle Database"** appears only as the name of the prohibited product (CLAUDE.md,
 *PostgreSQL is the only database*). The two are unrelated.
+
+---
+
+## 0.1 Revision 2 — what the independent review changed, and on what evidence
+
+The independent reviewer **`T492`** re-derived this audit against the same pinned tree and returned
+**ACCEPT WITH CONDITIONS — 4 MAJOR**. It reproduced the measured total (192,168 LOC / 2,235 files),
+re-measured **all 44** row LOC figures, and proved the partition exhaustive and non-overlapping by
+decomposing every parent directory. It found four things wrong. **`T496` re-derived each of the four
+from the pinned checkout independently before applying it** — none was applied on the reviewer's
+say-so — and the result is below.
+
+| # | Finding | Verdict | Where it landed |
+|---|---|---|---|
+| **F-1** | Row N17 `organisation/teller` is a **false NOT-APPLICABLE**: the package is split across two Gradle modules and the Tier C half is `tierB-branch`'s *service layer*. | **APPLIED — and confirmed stronger than reported.** | N17 deleted from §6.2; **new row R5** in §6.1; §5.6 now documents five module splits, not four; subtotals, §7.1, §7.3, §8.1 and B-1 corrected. |
+| **F-2** | Row N8's citation `RoutingDataSource.java:49,108-115` does not support "resolves a datasource from `ThreadLocalContextUtil.getTenant()`". | **APPLIED — and the true citation chain is now given in full.** | N8's evidence rewritten. |
+| **F-3** | N8's **prose** classifies `FineractPlatformTenant{,Connection}` NOT-APPLICABLE, but both files sit in `core/domain/`, which this same partition assigns to **G1** — and one of them is the sole source of the tenant time zone. | **APPLIED.** The arithmetic was already clean; only the prose reached outside its own path. | N8's prose corrected; G1's evidence line now names the tenant context object explicitly. |
+| **F-4** | Row N9 `entityaccess` is correctly NOT-APPLICABLE — the reviewer ran the two checks §9.1 admitted were skipped, and both resolve **in this audit's favour** — but the row omits its Tier A/B call sites. | **APPLIED, with one count corrected.** The class stands; the omission is filled; §9.1's concession is replaced by the completed check. **My own sweep finds 10 files / 21 imports, not the reviewer's 11 / 22** (§6.2 N9 states where I looked). | N9 rewritten; §9.1 rewritten. |
+
+**Effect on the partition.** F-1 moves **1,225 LOC** from NOT-APPLICABLE to reassign. Nothing else
+moves a line. Re-derived subtotals, and the check still holds exactly:
+
+```
+reassign 38,750 + not-applicable 67,495 + partial 2,190 + gap 83,733  =  192,168   ✓
+```
+
+Row counts change with it: **5** reassigned (was 4), **21** NOT-APPLICABLE (was 22); still 44 rows.
+The deferred-`(d)` subtotal in §8.1 drops from 51,196 to **49,971** across **ten** rows, not eleven.
+The GAP total, the **†** total (50,846) and the GAP-real total (32,887) are **unchanged** — the
+correction does not move the number Tier C is planned against.
+
+One reviewer MINOR is folded in because it is a statement about the partition itself: §1.2 said
+"a 273-line residual"; the residual carried as its own row (**G17**) is **42** lines
+(`fineract-core/…/infrastructure/DataIntegrityErrorHandler.java`, the only `.java` file directly
+under that directory, measured at 42). 273 was G16 (231) + G17 (42). Corrected in §1.2. The
+reviewer's other eight MINORs (F-6, F-8 … F-13) are **not** applied by this revision and remain
+open; they are recorded in `.softhouse/handoff/T496-t492-conditions.md`.
+
+**Contradictions with `program.json` that this document cannot fix itself.** `T496` may not edit
+`.softhouse/program.json`. Three conflicts stand and the driver reconciles them: (1) `tierB-branch`
+is scoped to `fineract-branch` alone and so, as written, would be ported **without its service
+layer** — §5.6 and §7.3; (2) `tierA-provisioning-reporting` and this context overlap on
+`…/infrastructure/dataqueries` — §5.6; (3) `main_loc: 180000` for this context is not the measured
+figure — §1.2.
 
 ---
 
@@ -76,7 +121,14 @@ is the one used throughout, and it is *larger*, so no row is understated by usin
 
 The partition in §6 is **exhaustive and non-overlapping over those 192,168 lines**: every row's
 paths are disjoint from every other row's, and the rows sum to the total (the sum is shown, and a
-273-line residual is carried explicitly rather than absorbed).
+42-line residual is carried explicitly as row **G17** rather than absorbed).
+
+*[rev 2 correction] This sentence read "a 273-line residual" in rev 1. 273 is G16 (`fineract-core/…/util`,
+4 files, 231 lines) plus G17 (42) — two rows §8 folds into G1, not one residual. The residual that
+exists only to make the partition sum is **G17 = 42 lines**:
+`fineract-core/src/main/java/org/apache/fineract/infrastructure/DataIntegrityErrorHandler.java`,
+the only `.java` file directly under that directory, measured at 42 lines. Both figures re-measured
+by `T496` at the pin.*
 
 ### 1.3 How I decided each class
 
@@ -331,7 +383,7 @@ the checked-in sources are hand-written adjuncts (`util/FineractClient.java`, `u
 module does not port another language's client SDK, and the boundary the program actually cares
 about is the frozen adapter contract (DEC-1 / DEC-2). NOT-APPLICABLE(c).
 
-### 5.6 Four subsystems inside Tier C's paths belong to Tier A or Tier B, and are being counted twice
+### 5.6 Five subsystems inside Tier C's paths belong to Tier A or Tier B, and are being counted twice
 
 Tier A/B contexts declare their `fineract_paths` under `fineract-provider/.../portfolio/*` and
 `fineract-provider/.../accounting/*`. But Fineract splits every one of those Java packages across
@@ -345,13 +397,57 @@ domain code:
 | `…/infrastructure/dataqueries` (core 1,749 + provider 8,295) | 10,044 | `tierA-provisioning-reporting` — which **already names** `fineract-provider/…/infrastructure/dataqueries` in its own `fineract_paths` |
 | `fineract-core/.../batch` | 1,932 | `tierA-cob-batch` |
 | `fineract-core/.../accounting` | 1,897 | `tierA-gl-accounting` |
-| **Total double-counted** | **37,525** | |
+| `fineract-provider/.../organisation/teller` **[rev 2 — added]** | 1,225 | `tierB-branch` — **the split runs the other way here**: the *provider* half is in Tier C and the `fineract-branch` half is Tier B |
+| **Total double-counted** | **38,750** | |
 
 `dataqueries` is an outright duplicate: it is listed by `tierA-provisioning-reporting` **and** falls
-inside Tier C's `fineract-provider/.../infrastructure` path. The other three are the module-split
-pattern. **Tier C should not carry any of these 37,525 lines**, and the Tier A/B contexts should
-have the `fineract-core` halves added to their `fineract_paths` — otherwise they will be ported
-without their own entities, exactly as `tierA-a2-behaviour.md` §1.2 warned. Recorded as **B-1**.
+inside Tier C's `fineract-provider/.../infrastructure` path. The mechanism is **prefix containment**,
+not a literal repeated string — Tier C names `fineract-provider/…/infrastructure`, which *contains*
+`…/infrastructure/dataqueries`. The driver has swept every context pair in `program.json`: **this is
+the only such overlap in the program.** The other four are the module-split pattern. **Tier C should
+not carry any of these 38,750 lines**, and the Tier A/B contexts should have the missing halves added
+to their `fineract_paths` — otherwise they will be ported without their own entities, exactly as
+`tierA-a2-behaviour.md` §1.2 warned. Recorded as **B-1**.
+
+#### 5.6.1 The teller split — added in rev 2, and it is the one that would have deleted a live subsystem
+
+**This was the audit's own worst error and the reviewer's most expensive finding.** Rev 1 classified
+`fineract-provider/…/organisation/teller` as NOT-APPLICABLE(d) (row N17) and listed teller among the
+capabilities the program would "launch without" — while `tierB-branch` sits `status: pending` in
+`program.json`, i.e. the program intends to build it. The audit had documented this exact pattern in
+this section and applied it correctly to four other packages; it missed the fifth and, missing it,
+**deleted** rather than reassigned.
+
+Re-derived by `T496` at the pin, `426a23544e8426a38ae43ae404670a0a7e85b9eb`:
+
+| Gradle module | Java package | Contents | Files | LOC |
+|---|---|---|---|---|
+| `fineract-branch/` | `org.apache.fineract.organisation.teller.*` | `api` (4), `data` (8), `domain` (13) + `domain/model` (1) + `domain/model/request` (3), `exception` (7), `handler` (9), `serialization` (1), **`service` (3 — interfaces only)**, `util` (1) | **50** | **3,937** |
+| `fineract-provider/…/organisation/teller/` | *the same package* | `service/TellerManagementReadPlatformServiceImpl.java` (704), `service/TellerWritePlatformServiceJpaImpl.java` (450), `starter/OrganisationTellerConfiguration.java` (71) | **3** | **1,225** |
+
+`find fineract-branch -name '*.java' -path '*/src/main/*'` → 50 files / 3,937 lines;
+`find fineract-provider/src/main/java/org/apache/fineract/organisation/teller -name '*.java'` → the
+three files listed, 1,225 lines. Both re-measured, not inherited.
+
+The split is not incidental, and the evidence is stronger than "same package name". The three files
+in `fineract-branch/…/teller/service/` are **interfaces** —
+`TellerManagementReadPlatformService.java`, `TellerWritePlatformService.java`,
+`TellerTransactionWritePlatformService.java` — and the Tier C files **implement them**:
+`TellerWritePlatformServiceJpaImpl.java:64` reads
+`public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformService`, and
+`TellerManagementReadPlatformServiceImpl.java:60` reads
+`public class TellerManagementReadPlatformServiceImpl implements TellerManagementReadPlatformService`.
+`OrganisationTellerConfiguration.java:49-60` is the Spring `@Bean` wiring that supplies them
+(`@ConditionalOnMissingBean(TellerManagementReadPlatformService.class)`,
+`@ConditionalOnMissingBean(TellerWritePlatformService.class)`).
+
+So `tierB-branch` as currently scoped (`fineract_paths: ["fineract-branch"]`, `main_loc: 3937`)
+would be ported as **three interfaces with no implementations behind them** — every till allocation,
+cashier assignment and cash-movement behaviour lives in the 1,225 lines Tier C had marked "never
+port." **Reclassified as R5, reassigned to `tierB-branch`.** Whether teller ships at all is then
+`tierB-branch`'s decision to make, not a line this audit gets to delete. `program.json` needs the
+provider path added and `main_loc` raised 3,937 → **5,162** (§7.3, B-1) — a `program.json` edit
+`T496` is not permitted to make.
 
 ### 5.7 `fineract-db` contains no Java, and the real schema is 93,498 lines of Liquibase XML
 
@@ -383,7 +479,11 @@ over the 192,168 lines; the sum is checked at the foot of the table.
 | R2 | Data queries / datatables / reports | `…/infrastructure/dataqueries` (core + provider) | 10,044 | **reassign** | `tierA-provisioning-reporting.fineract_paths` **already lists** `fineract-provider/…/infrastructure/dataqueries`. Outright duplicate. |
 | R3 | Batch API domain | `fineract-core/…/batch` | 1,932 | **reassign** | Belongs to `tierA-cob-batch` (`fineract-provider/…/batch` is already in its paths). |
 | R4 | Accounting domain types | `fineract-core/…/accounting` | 1,897 | **reassign** | Belongs to `tierA-gl-accounting`; `tierA-a2-behaviour.md` §1.2 already ports from here. |
-| | **Subtotal** | | **37,525** | | |
+| **R5** | **Teller / cashier — service layer** | `fineract-provider/…/organisation/teller` | **1,225** | **reassign** | **[rev 2 — was N17 NOT-APPLICABLE(d); corrected.]** 3 files, re-measured: `TellerManagementReadPlatformServiceImpl.java` (704), `TellerWritePlatformServiceJpaImpl.java` (450), `starter/OrganisationTellerConfiguration.java` (71). They **implement** the interfaces in `fineract-branch/…/teller/service/` (`TellerWritePlatformServiceJpaImpl.java:64`, `TellerManagementReadPlatformServiceImpl.java:60`) and are wired by `OrganisationTellerConfiguration.java:49-60`. Same Java package as the 50 files / 3,937 LOC of `fineract-branch`, split across two Gradle modules — §5.6.1. Belongs to **`tierB-branch`** (`status: pending`), which as scoped would otherwise be ported without its service layer. |
+| | **Subtotal** | | **38,750** | | |
+
+*Rev 1 gave this subtotal as 37,525 with four rows. R5 adds 1,225, moved out of NOT-APPLICABLE — see
+§0.1 F-1 and §5.6.1. No other line moves.*
 
 ### 6.2 NOT-APPLICABLE
 
@@ -396,8 +496,8 @@ over the 192,168 lines; the sum is checked at the foot of the table.
 | N5 | Interoperation (FSP interop scheme) | `…/interoperation` (core + provider) | 4,248 | (b) | `InteropIdentifierRequestData`, `InteropQuoteRequestData`, `InteropTransactionData`, `InteropKycData` — the quote/transfer/party-lookup shape of an inter-FSP scheme. Mongolia's rails are **RTGS (Banksuljee)** above MNT 5,000,000, **ACH+** at or below, **NETC** for cards. Fineract has no code for any of them, so this row is not a substitute for that work — it is a different scheme entirely. |
 | N6 | Scheduled report mailing | `…/infrastructure/reportmailingjob` | 3,831 | (d) | Emails report output on a cron. Depends on R2 and on SMTP config. FRC reporting is a Mongolia-specific requirement with no Fineract source; building this first would be building the wrong thing. |
 | N7 | Outbound hooks | `…/infrastructure/hooks` (core + provider) | 3,128 | (d) | `HookProcessorProvider.java:41-45` dispatches to `twilioHookProcessor`, `webHookProcessor`, `elasticSearchHookProcessor` — two vendor bridges and one generic webhook. **Replacement if wanted:** an HTTP subscriber on the G12 event bus, order 200 LOC. |
-| N8 | DB dialect abstraction + per-tenant datasource routing | `fineract-core/…/infrastructure/core/service/database` | 2,605 | (a) + (d) | **(a)** `DatabaseType.java:21-25` = `{MYSQL, POSTGRESQL}`; `DatabaseTypeResolver.java:31-33` maps mariadb/mysql drivers; `MySQLQueryService.java` (73) and the dialect branches of `DatabaseSpecificSQLGenerator.java` (369) exist only for a prohibited engine. Go speaks Postgres via `pgx`; the abstraction has nothing left to abstract. **(d)** `RoutingDataSource.java:49,108-115` resolves a datasource from `ThreadLocalContextUtil.getTenant()` — multi-tenant routing (~896 LOC with `DataSourcePerTenantServiceFactory`, `TomcatJdbcDataSourcePerTenantService`, `FineractPlatformTenant{,Connection}`) that a single-licensed-entity deployment does not use. **Residue kept elsewhere:** `JavaType.java` (369), `JdbcJavaType.java` (362), `SqlOperator.java` (220) are Postgres-relevant datatable type mapping and follow R2 into `tierA-provisioning-reporting`. |
-| N9 | Entity-to-entity access mapping | `…/infrastructure/entityaccess` | 2,382 | (d) | An optional office↔product visibility matrix (`FineractEntityToEntityMapping`, `FineractEntityAccessType`), gated by global configuration and off by default. If branch-scoped product visibility is wanted it is a policy rule in `tierB-branch`, not a 2.4k-LOC subsystem. |
+| N8 | DB dialect abstraction + per-tenant datasource routing | `fineract-core/…/infrastructure/core/service/database` | 2,605 | (a) + (d) | **(a)** `DatabaseType.java:21-25` = `{MYSQL, POSTGRESQL}`; `DatabaseTypeResolver.java:31-33` maps mariadb/mysql drivers; `MySQLQueryService.java` (73) and the dialect branches of `DatabaseSpecificSQLGenerator.java` (369) exist only for a prohibited engine. Go speaks Postgres via `pgx`; the abstraction has nothing left to abstract. **(d)** Multi-tenant datasource routing — **[rev 2: citation corrected, see §0.1 F-2]** the resolution chain is `RoutingDataSource.getConnection()` at `:60-71`, which calls `determineTargetDataSource()` at **`RoutingDataSource.java:73-75`** (`return this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource();`); the line that actually reads the thread-local tenant is **`TomcatJdbcDataSourcePerTenantService.java:69`** (`final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();`), which at `:75-76` caches per `connectionId` via `createNewDataSourceFor`; the per-tenant HikariCP pool is built in **`DataSourcePerTenantServiceFactory.java:58,70-96`** (reads `tenantConnection`, branches on `getMode().isReadOnlyMode()` at `:72`, `toJdbcUrl` at `:81`, pool name `schemaName + "_pool"` at `:87`). ~896 LOC of routing that a single-licensed-entity deployment does not use. **[rev 2 — F-3: `FineractPlatformTenant{,Connection}` struck from this row.]** Those two files are in `fineract-core/…/infrastructure/core/**domain**/`, which this partition assigns to **G1** (`core/domain`, 17 files / 1,267 LOC), not to N8 (`core/service/database`, 22 files / 2,605 LOC — re-measured; neither file is under it). **The tenant *context object* is retained under G1 and must be ported: `FineractPlatformTenant.getTimezoneId()` is the sole source read by `DateUtils.getDateTimeZoneOfTenant()` (`DateUtils.java:65-67`), the path that satisfies CLAUDE.md's two-time-zone non-negotiable** (`Asia/Ulaanbaatar` +08 / `Asia/Hovd` +07, no DST, never a hard-coded offset). 30 files under `src/main` call `ThreadLocalContextUtil.getTenant()` and 32 reference `FineractPlatformTenant` (both counts re-derived tree-wide at the pin). **Only the routing machinery under `core/service/database` is NOT-APPLICABLE.** **Residue kept elsewhere:** `JavaType.java` (369), `JdbcJavaType.java` (362), `SqlOperator.java` (220) are Postgres-relevant datatable type mapping and follow R2 into `tierA-provisioning-reporting`. |
+| N9 | Entity-to-entity access mapping | `…/infrastructure/entityaccess` | 2,382 | (d) | An optional office↔product visibility matrix (`FineractEntityToEntityMapping`, `FineractEntityAccessType`). **[rev 2 — the two checks §9.1 admitted were skipped have now been run, and both resolve in favour of this class. Class unchanged; evidence added. See §0.1 F-4.]** **(i) It is off by default — verified, not asserted.** `fineract-provider/src/main/resources/db/changelog/tenant/parts/0002_initial_data.xml:185-195` seeds `c_configuration` id 20 `office-specific-products-enabled` with `value = 0` and **`enabled = false`**; `:196-206` seeds id 21 `restrict-products-to-user-office` the same way. Every behaviour in `FineractEntityAccessUtil.java` is gated behind `property.isEnabled()` on `OFFICE_SPECIFIC_PRODUCTS_ENABLED`: `:79-100` (the save path — no mapping is written when disabled) and `:104-125` (`getSQLWhereClauseForProductIDsForUserOffice_ifGlobalConfigEnabled`, which returns the **empty string** when disabled, so the generated `IN` clause is empty). *Runtime claim caveat: this is a claim about seed data and code I read; there is no running Fineract or PostgreSQL in this session.* **(ii) `tierB-branch` does not depend on it — verified.** `grep -rn "entityaccess" fineract-branch/` returns **0 hits** across the whole module (not just `src/main`). `fineract-branch` is teller/cashier management (§5.6.1); it has no product-visibility concern. So the row's original worry — that a branch-scoped visibility requirement would make this a GAP — does not arise from `tierB-branch` as it exists. If branch-scoped product visibility is later wanted it is a policy rule in `tierB-branch`, not a 2.4k-LOC subsystem. **(iii) Port-time obligation — the part rev 1 omitted, and it lands on Tier A.** `entityaccess` is referenced from **10 files outside its own package**, in **21 `import` statements**, and **not one of them is in `fineract-branch`**: `portfolio/loanaccount/serialization/LoanApplicationValidator.java` (6 imports — **Tier A, loan lifecycle**); `portfolio/loanproduct/service/LoanProduct{Read,Write}PlatformService*.java` + `loanproduct/starter/LoanProductConfiguration.java` (**Tier A**); `portfolio/charge/service/Charge{Read,Write}PlatformService*.java` + `charge/starter/ChargeConfiguration.java` (**Tier A**); `portfolio/savings/service/SavingsProduct{Read,Write}PlatformService*.java` + `savings/starter/SavingsConfiguration.java` (**Tier B**). Sharpest, opened and read: `LoanApplicationValidator.java:1853-1866`, `private void officeSpecificLoanProductValidation(final Long productId, final Long officeId)` — gated at `:1856` on `OFFICE_SPECIFIC_PRODUCTS_ENABLED.isEnabled()`, and when on it throws `NotOfficeSpecificProductException(productId, officeId)` at `:1862`. That is a validator **on the loan-application path**. **Therefore:** because both flags are seeded `enabled = false`, each ported call site resolves to the disabled path — no mapping saved, empty `IN` clause, `officeSpecificLoanProductValidation` a no-op — and **each ported call site must carry a comment saying so**, rather than silently dropping the check or porting a dangling call into a subsystem this audit deletes. **Where I looked, for (iii):** `grep -rn "entityaccess" --include=*.java .` over the whole pinned tree, filtered to `/src/main/` and excluding `/infrastructure/entityaccess/` itself — 10 files, 21 lines. *(T492 reported 11 files / 22 imports; my sweep finds 10 / 21 and this row states mine. The discrepancy is one file and does not change the finding.)* |
 | N10 | SMS gateway bridge | `…/infrastructure/sms` | 1,993 | (d) | Outbound message bridge to a gateway. A Mongolian aggregator integration is a few hundred lines against a documented API; porting Fineract's bridge buys nothing. |
 | N11 | Server-side document templates | `…/template` | 1,971 | (d) | Mustache-style templates rendered by the platform. Deferred; small and reversible. |
 | N12 | Push notification (FCM) | `…/infrastructure/gcm` | 1,954 | (b)+(c) | A hand-rolled HTTP shim for Google Cloud Messaging: `gcm/domain/Sender.java:106` "FCM Server Key obtained through the Firebase Web Console", `NotificationConfigurationData.java:33` `fcmEndPoint`. Re-porting a decade-old protocol shim instead of using a maintained client is waste. |
@@ -405,13 +505,16 @@ over the 192,168 lines; the sum is checked at the foot of the table.
 | N14 | Generated Java client SDK | `fineract-client` | 1,530 | (c) | §5.5. `build.gradle` applies `org.openapi.generator`. A Go module does not port a Java SDK; the contract boundary is DEC-1/DEC-2. |
 | N15 | Spring Batch glue | `…/infrastructure/springbatch` (core 60 + provider 1,296) | 1,356 | (c) | Step-scope, partitioning and `JobRepository` wiring for a specific JVM framework. **The capability** (ordered, restartable, chunked execution) is not dropped — it reappears in G4. |
 | N16 | Ad-hoc query | `…/adhocquery` | 1,289 | (d)+(c) | Stores user-supplied SQL and runs it on a schedule. Fineract carries `SqlInjectionPreventerServiceImpl` (in `fineract-security`) precisely because of this family of features. Re-implementing an arbitrary-SQL execution surface in a ledger system is a security regression, not a port. |
-| N17 | Teller / cashier management | `…/organisation/teller` | 1,225 | (d) | Till allocation and cashier cash management. Not required for an NBFI lending launch; deferred. |
+| ~~N17~~ | ~~Teller / cashier management~~ | — | — | — | **[rev 2 — WITHDRAWN. Reclassified as R5 (§6.1), reassigned to `tierB-branch`.]** Rev 1 read: *"Till allocation and cashier cash management. Not required for an NBFI lending launch; deferred."* That was wrong on the evidence: these 1,225 lines are the **service-implementation half** of `org.apache.fineract.organisation.teller`, whose other 3,937 lines are the whole of the `tierB-branch` context — a module split, not a standalone Tier C feature. Full re-derivation in **§5.6.1**. The row number is retained struck-through so the 44-row count and any citation of "N17" still resolve. |
 | N18 | Cache abstraction | `fineract-core/…/infrastructure/cache` | 786 | (c) | Ehcache/no-op `CacheManager` selection for a Spring application. |
 | N19 | Instance mode | `…/infrastructure/instancemode` (core + provider) | 279 | (c) | Read/write/batch instance gating for a horizontally split Fineract deployment. Nexus is a single binary. |
 | N20 | OpenAPI doc customisation | `…/infrastructure/openapi` | 240 | (c) | Swagger customisation for the JAX-RS layer. |
 | N21 | Patched Spring Batch classes | `fineract-core/src/main/java/org/springframework/batch/…` | 134 | (c) | Two classes (`StepSynchronizationManager`, `JobSynchronizationManager`) placed in Spring's own package to patch the framework. Not Fineract behaviour. |
 | N22 | Avro schema generator | `fineract-avro-schemas` | 28 | (c) | One `ByteBufferSerializable` interface plus Velocity code-generation templates. Follows N3. |
-| | **Subtotal** | | **68,720** | | |
+| | **Subtotal** | | **67,495** | | |
+
+*Rev 1 gave this subtotal as 68,720 across 22 rows. Withdrawing N17 (1,225) leaves **21** rows and
+**67,495** LOC. Every other row is unchanged.*
 
 ### 6.3 PARTIAL
 
@@ -427,7 +530,7 @@ Nexus platform tree before scheduling a port task.
 
 | # | Subsystem | Fineract path | LOC | Class | Evidence / justification |
 |---|---|---|---|---|---|
-| G1 | Core runtime: REST resources, JSON serialization, validation builders, exception mapping, filters, config | `fineract-core/…/infrastructure/core` **minus** `service/database` | 16,078 | **GAP †** | 209 files. `core/api` (2,020), `core/serialization` (2,267), `core/data` (2,404), `core/exceptionmapper` (1,728), `core/exception` (1,188), `core/service` (2,029 flat, incl. `DateUtils`, `MathUtil`, `ExternalIdFactory`, `ThreadLocalContextUtil`), `core/config` (886), `core/filters` (556, incl. the three `Idempotency*` filters of §5.2), `core/domain` (1,267). Absent from Nexus (§3.4 — no `net/http`, no serialization layer). **The non-plumbing part that survives any Nexus re-grade:** the **API error envelope** (`ApiParameterError`, `DataValidatorBuilder`, the `exceptionmapper` package) is observable output the golden vectors grade, so its exact shape is contract, not plumbing. |
+| G1 | Core runtime: REST resources, JSON serialization, validation builders, exception mapping, filters, config | `fineract-core/…/infrastructure/core` **minus** `service/database` | 16,078 | **GAP †** | 209 files. `core/api` (2,020), `core/serialization` (2,267), `core/data` (2,404), `core/exceptionmapper` (1,728), `core/exception` (1,188), `core/service` (2,029 flat, incl. `DateUtils`, `MathUtil`, `ExternalIdFactory`, `ThreadLocalContextUtil`), `core/config` (886), `core/filters` (556, incl. the three `Idempotency*` filters of §5.2), `core/domain` (1,267 — 17 files, and **[rev 2, F-3]** this is where `FineractPlatformTenant.java` and `FineractPlatformTenantConnection.java` live; N8's rev-1 prose named them NOT-APPLICABLE, which was wrong — they are G1's and they are **not optional**, because `FineractPlatformTenant.getTimezoneId()` is the sole source read by `DateUtils.getDateTimeZoneOfTenant()` at `DateUtils.java:65-67`, the only non-hard-coded time-zone path in the tree). Absent from Nexus (§3.4 — no `net/http`, no serialization layer). **The non-plumbing part that survives any Nexus re-grade:** the tenant context object above — CLAUDE.md's *two time zones, no DST, never hard-code an offset* has no other implementation here — and the **API error envelope** (`ApiParameterError`, `DataValidatorBuilder`, the `exceptionmapper` package) is observable output the golden vectors grade, so its exact shape is contract, not plumbing. |
 | G2 | Provider runtime: boot, Jersey wiring, diagnostics, auditing, HTTP config | `fineract-provider/…/infrastructure/core` | 5,469 | **GAP †** | `config` (1,844), `service` (1,158), `diagnostics` (898), `jersey` (877), `domain` (184), `auditing` (181), `boot` (108), `http` (91), `serialization` (66), `messaging` (62). Almost entirely JVM-container wiring; expect most of it to vanish on re-grade. |
 | G3 | Command bus, maker-checker, **idempotency** | `fineract-core/…/commands` (6,589) + `fineract-provider/…/commands` (1,253) + `fineract-command{,-jdbc,-async,-audit,-disruptor}` (2,246) | 10,088 | **GAP** | §5.2. This is the **spine of every write path** and it is not generic plumbing: `CommandSource` is the audit record, maker-checker approval is a banking control (`Permission.java`, `SynchronousCommandProcessingService`, `PortfolioCommandSourceWritePlatformServiceImpl`), and the `Idempotency-Key` contract is a CLAUDE.md non-negotiable. **Two live sub-decisions:** (i) Fineract carries *two* command buses — the legacy `commands` package that all money endpoints actually use, and the newer `fineract-command*` modules whose own idempotency test is `@Disabled` (`CommandSampleApiTest.java:130`); the port should target the legacy semantics, which is what vectors can grade. (ii) `IdempotencyKeyResolver.java:36` *generates* a missing key — Gerege must **refuse** instead, a deliberate divergence with no oracle vector. |
 | G4 | Job scheduling and execution | `…/infrastructure/jobs` (core 615 + provider 7,593) | 8,208 | **GAP †** | `JobRegisterServiceImpl`, `JobSchedulerServiceImpl`, `StuckJobExecutorService`, `SchedulerJobListener`, per-job tasklets (`updatenpa`, `retainedearning`, `aggregationjob`, `increasedateby1day`). `docs/softhouse-engagement-plan.md:68` says Nexus's scheduler is to be reused — **doctrine, not evidence**. **The part that survives re-grade regardless:** the *job catalogue* (which jobs exist, in what order, what each one posts) and the stuck-job / restart-after-failure semantics — those are business behaviour, and Tier A's COB context depends on them. |
@@ -448,11 +551,18 @@ Nexus platform tree before scheduling a port task.
 
 ### 6.5 Partition check
 
+**[rev 2 — re-derived after F-1.]**
+
 ```
-reassign 37,525 + not-applicable 68,720 + partial 2,190 + gap 83,733  =  192,168   ✓
+reassign 38,750 + not-applicable 67,495 + partial 2,190 + gap 83,733  =  192,168   ✓
 ```
 
-Equal to the measured total in §4. No row is double-counted and no line is unassigned.
+Equal to the measured total in §4. No row is double-counted and no line is unassigned. The
+correction moved 1,225 LOC **between two classes** and added no line and removed none, so the
+partition is still exhaustive and non-overlapping over the same 192,168 lines and still sums exactly.
+
+Rev 1 read `37,525 + 68,720 + 2,190 + 83,733 = 192,168`. Row counts: **5** reassign (was 4), **21**
+NOT-APPLICABLE (was 22), 1 PARTIAL, 17 GAP — **44 rows**, unchanged.
 
 ---
 
@@ -465,16 +575,40 @@ It must not.
 
 | Class | LOC | % of measured Tier C |
 |---|---|---|
-| **Reassign** to Tier A/B (already scoped elsewhere) | 37,525 | 19.5% |
-| **NOT-APPLICABLE** (never ported) | 68,720 | 35.8% |
+| **Reassign** to Tier A/B (already scoped elsewhere) | 38,750 | 20.2% |
+| **NOT-APPLICABLE** (never ported) | 67,495 | 35.1% |
 | **PARTIAL** (extend ported code; ≈1,800 remaining) | 2,190 | 1.1% |
 | **GAP** — must be ported | 83,733 | 43.6% |
 | **NEXUS-PROVIDES** | **0** | 0% — and §2 explains why that zero is a statement about the evidence, not about Nexus |
 
+*[rev 2] Reassign was 37,525 (19.5%) and NOT-APPLICABLE 68,720 (35.8%) in rev 1; F-1 moved 1,225 LOC
+between them (§0.1, §5.6.1). The GAP row — the only one a planner sizes work from — is unchanged.*
+
 **Tier C's genuine port is ~83.7k LOC of Fineract-equivalent behaviour, not 180k — a 54% reduction
 before a single line of Nexus platform code has been read.** More than half of what the program is
-carrying for Tier C is either someone else's context (19.5%) or work that should never happen
-(35.8%).
+carrying for Tier C is either someone else's context (20.2%) or work that should never happen
+(35.1%).
+
+> ### Read this before planning anything in Tier C
+>
+> **Carry Tier C as a range — ~33k to ~84k LOC — not as a single number.** The 83,733 figure above
+> is a **ceiling with an unmeasured floor**. 32,887 of it is provably genuine work; **50,846 is
+> unproven in both directions** because the Gerege Nexus platform tree is not in this repository
+> (§2). Quoting 83,733 as *the* cost of Tier C overstates it by up to 2.5×; quoting 33k understates
+> it by the same factor. §7.2 has the split.
+>
+> **What is safe to plan from this document, and what is not** — this is also the independent
+> reviewer's conclusion, reached separately:
+>
+> - **Safe now:** the *shape* of Tier C, and slices **C-1 … C-5** (§8). None of those rows is
+>   marked **†**; their measurements, classifications and ordering are independently reproduced.
+>   C-4 remains blocked on gate **G-C1** for its own reason (three-field names).
+> - **Not safe:** every **†** row — G1, G2, G4, G5, G6, G7, G11, **50,846 LOC**. No port task for
+>   any of them until **R-1** (§2) attaches the real Nexus platform tree and they are re-graded.
+>   **Scheduling one now risks precisely the unjustified plumbing port CLAUDE.md calls a rejection**
+>   — the audit cannot tell you whether Nexus already serves HTTP, auth, jobs or blob storage, and
+>   porting them on the assumption that it does not is unrecoverable waste.
+> - **Not established at all:** that Tier C costs 83,733 rather than ~33,000.
 
 ### 7.2 The number that is still unresolved, and it is the larger one
 
@@ -498,11 +632,18 @@ survive any re-grade. When those rows are scheduled they must be split, not take
 
 1. **`tierC-platform-map-first.main_loc` 180,000 → 83,733** (or 32,887 + 50,846-pending, if the
    schema can express the split).
-2. **Move four paths out of Tier C** (§5.6, B-1): `fineract-core/…/portfolio`,
-   `fineract-core/…/batch`, `fineract-core/…/accounting`, and both halves of `…/dataqueries`; add
-   the corresponding `fineract-core` paths to the Tier A/B contexts that own them, whose `main_loc`
-   rise accordingly. `dataqueries` is currently in **two** contexts' paths at once.
-3. **Record the NOT-APPLICABLE set** (68,720 LOC, 22 rows) somewhere a later planner will see it,
+2. **Move five paths out of Tier C** **[rev 2 — was four]** (§5.6, §5.6.1, B-1):
+   `fineract-core/…/portfolio`, `fineract-core/…/batch`, `fineract-core/…/accounting`, both halves
+   of `…/dataqueries`, and **`fineract-provider/src/main/java/org/apache/fineract/organisation/teller`**;
+   add the corresponding missing halves to the Tier A/B contexts that own them, whose `main_loc`
+   rise accordingly. `dataqueries` is currently in **two** contexts' paths at once, by prefix
+   containment (§5.6).
+2a. **`tierB-branch` specifically** **[rev 2]**: add
+   `fineract-provider/src/main/java/org/apache/fineract/organisation/teller` to its `fineract_paths`
+   and raise `main_loc` **3,937 → 5,162**. Without this the context ports three service interfaces
+   with no implementations (§5.6.1). This is the correction that would otherwise have deleted a
+   subsystem the program intends to build, and it is the highest-priority item in this list.
+3. **Record the NOT-APPLICABLE set** (**67,495** LOC, **21** rows — rev 2) somewhere a later planner will see it,
    so no future run proposes a bulk-import or campaigns task and is rejected for it.
 4. `fineract-db` contributes **0** Java LOC (§5.7); the Liquibase changelog (93,498 XML lines) is
    run, not ported, and should be recorded as an operational dependency rather than a port target.
@@ -514,9 +655,16 @@ survive any re-grade. When those rows are scheduled they must be split, not take
 Ordering principle: **what Tier A is blocked on, then what every write path needs, then the rest** —
 and nothing **†** is scheduled before R-1 resolves it.
 
+> **[rev 2] Planning boundary, stated where the planner reads it.** Slices **C-1 through C-5** are
+> plannable from this document today. Slice **C-6…** (the seven **†** rows, 50,846 LOC) is **not**,
+> in either direction: this audit cannot tell you whether Nexus already provides HTTP, auth, jobs or
+> blob storage, so scheduling a port for those rows risks the unjustified plumbing port CLAUDE.md
+> treats as a rejection — and *not* porting them, if Nexus turns out not to provide them, leaves a
+> hole. Resolve R-1 first. And size Tier C as a **range, ~33k–84k LOC**, never as 83,733 alone (§7.1).
+
 | Slice | Rows | LOC | Why here |
 |---|---|---|---|
-| **C-0** *(not a port)* | — | — | **R-1: attach the Nexus platform tree and re-grade the 7 † rows.** Everything below assumes this has happened; slices C-1…C-4 are safe to run even if it has not, because none of them is **†**. |
+| **C-0** *(not a port)* | — | — | **R-1: attach the Nexus platform tree and re-grade the 7 † rows.** Everything below assumes this has happened; slices **C-1…C-5** are safe to run even if it has not, because none of them is **†**. **[rev 2: rev 1 said "C-1…C-4"; C-5 (G12, in-process business events) is not **†** either, so it belongs in the safe set. The independent reviewer reached the same boundary — C-1…C-5 plannable now, nothing **†** plannable at all.]** |
 | **C-1** Business date + working days + holidays | G14, part of G9 (holiday 2,089 + workingdays 1,390) | 4,377 | **Tier A is blocked on it.** Loan schedule date arithmetic already needs holiday and working-day rules, and COB needs the business-date/actual-date distinction. Smallest slice with the largest downstream unblock. Vectors are cheap: date-in/date-out. |
 | **C-2** Command bus, maker-checker, idempotency | G3 | 10,088 | The spine of every money-movement write. Nothing else in Tier A/B can be *cut over* without it, and its `Idempotency-Key` behaviour is a CLAUDE.md non-negotiable. Carries the one deliberate oracle divergence (§5.2), so it needs its own property test alongside vectors. |
 | **C-3** Codes, account-number formats, global configuration | G10, G13, G8 | 8,458 | Referenced by nearly every Tier A/B entity; each is small and independently vectorable. G8 is where the RTGS/ACH+ threshold must live as configuration. |
@@ -552,8 +700,12 @@ veto; each is reversible by moving one row):
   ratified tenant parameters describe one entity (Buyan, NBFI) and multi-tenancy would put a second,
   unvectored variable into every parity run. Reversing this restores ~896 LOC to GAP.
 - **Launch without** bulk import (N1), campaigns (N2), external event delivery (N3), report mailing
-  (N6), hooks (N7), entity-access (N9), SMS (N10), templates (N11), surveys (N13), ad-hoc query
-  (N16) and teller (N17) — the eleven rows carrying argument shape (d), **51,196 LOC**. Each records
+  (N6), hooks (N7), entity-access (N9), SMS (N10), templates (N11), surveys (N13) and ad-hoc query
+  (N16) — the **ten** rows carrying argument shape (d), **49,971 LOC**. **[rev 2: teller (N17) is no
+  longer on this list. It was withdrawn from NOT-APPLICABLE and reassigned to `tierB-branch` as R5
+  — §5.6.1 — so whether teller ships is that context's decision, not a deferral this audit records.
+  Rev 1 read "eleven rows … 51,196 LOC"; 51,196 − 1,225 = 49,971, re-derived by summing the ten
+  remaining (d) rows.]** Each records
   the cheaper replacement if the capability is wanted later. *Alternative rejected:* porting them
   now, rejected under "features deferred rather than shipped unvectored" — none is gradeable against
   the reference oracle in a way that adds parity confidence. (N8's tenant-routing half is (d) too
@@ -594,15 +746,39 @@ veto; each is reversible by moving one row):
   row. The rows most likely to move that way are G1 (some of it is contract, most is plumbing) and
   N2 (the email/SMS *delivery* primitive is reusable even though campaigns are not).
 
-### 9.1 The classification I am least confident in
+### 9.1 The row rev 1 was least confident in — now checked, and it holds
 
-**N9 — `entityaccess` (2,382 LOC), NOT-APPLICABLE.** It is the row where my argument rests most on
-judgement and least on evidence. I established what it *is* (an office↔product visibility matrix,
-`FineractEntityToEntityMapping` / `FineractEntityAccessType`, gated by global configuration) but I
-did **not** verify that it is off by default, and I did not check whether `tierB-branch` depends on
-it. If Gerege's branch model needs product visibility scoped per office, this row is a **GAP**, not
-a NOT-APPLICABLE, and I would have dropped a real subsystem by assertion. It is the first row a
-reviewer should re-derive.
+**N9 — `entityaccess` (2,382 LOC), NOT-APPLICABLE. [rev 2: this section formerly recorded an open
+concession. The concession is discharged; the class survives.]**
+
+Rev 1 nominated N9 as the row whose argument rested most on judgement, and conceded two specific
+checks it had not run: *"I did **not** verify that it is off by default, and I did not check whether
+`tierB-branch` depends on it."* **Both checks have now been run** — by the independent reviewer
+`T492` and re-derived from the pin by `T496` — and both resolve in this classification's favour:
+
+- **Off by default: CONFIRMED.** `…/db/changelog/tenant/parts/0002_initial_data.xml:185-195` and
+  `:196-206` seed `office-specific-products-enabled` and `restrict-products-to-user-office` with
+  `value = 0` and **`enabled = false`**; `FineractEntityAccessUtil.java:79-100` and `:104-125` gate
+  every behaviour behind `property.isEnabled()`, returning an **empty** `IN` clause and writing no
+  mapping when disabled. *This is a claim about seed data and code read at the pin, not about a
+  running system — there is no Fineract instance and no PostgreSQL in this session.*
+- **`tierB-branch` does not depend on it: CONFIRMED.** `grep -rn "entityaccess" fineract-branch/`
+  returns **0 hits** over the whole module. `fineract-branch` is teller/cashier management (§5.6.1),
+  which has no product-visibility concern.
+
+So the conditional rev 1 stated — *"if Gerege's branch model needs product visibility scoped per
+office, this row is a GAP"* — does not fire. **N9 stays NOT-APPLICABLE(d) on evidence rather than on
+assertion**, and the row itself now carries the citations. What the check *did* turn up is different
+and is recorded in the row: `entityaccess` is called from **10 Tier A/B files**, sharpest being
+`LoanApplicationValidator.java:1853-1866` on the loan-application path — an omission in the row, not
+an error in the class.
+
+Runners-up, in order, and **still open**: **N19 `instancemode`** (rests on "Nexus is a single
+binary", which is itself U-1 doctrine — the reviewer proposes a stronger evidence-based
+justification from `FineractInstanceModeApiFilter`, recorded as an unapplied MINOR in §0.1) and
+**N16 `adhocquery`** (rev 1 extended a deferral into a recommended permanent exclusion on a security
+argument that is this audit's own, not the program's; the reviewer additionally reports finding no
+executor for the stored schedule in the pinned tree — also an unapplied MINOR).
 
 Runners-up, in order: **N19 `instancemode`** (rests on "Nexus is a single binary", which is itself
 U-1 doctrine) and **N16 `adhocquery`** (I extended a deferral into a recommended permanent exclusion
@@ -615,11 +791,17 @@ on a security argument that is mine, not the program's).
 Read only; nothing outside `docs/analysis/` and `.softhouse/handoff/` was written, and the pinned
 oracle checkout was never modified (`git status --porcelain` empty before and after).
 
-- **B-1 — `program.json` path assignments need four moves.** §5.6, §7.3. `dataqueries` sits in two
-  contexts' `fineract_paths` simultaneously; three `fineract-core` domain packages sit in Tier C
-  while their `fineract-provider` twins sit in Tier A/B. The Tier A/B contexts as currently written
-  would port a context without its own entity classes — the same trap
-  `tierA-a2-behaviour.md` §1.2 documented for `glaccount`.
+- **B-1 — `program.json` path assignments need five moves.** **[rev 2 — was four.]** §5.6, §5.6.1,
+  §7.3. `dataqueries` sits in two contexts' `fineract_paths` simultaneously, by prefix containment
+  (Tier C names `…/infrastructure`, which contains `…/infrastructure/dataqueries`; the driver has
+  swept every context pair and this is the program's only such overlap). Three `fineract-core`
+  domain packages sit in Tier C while their `fineract-provider` twins sit in Tier A/B. And **the
+  fifth, added in rev 2: `fineract-provider/…/organisation/teller` (1,225 LOC) is the service layer
+  of `tierB-branch`** and must be added to that context's paths, `main_loc` 3,937 → 5,162. The Tier
+  A/B contexts as currently written would port a context without its own entity classes — the same
+  trap `tierA-a2-behaviour.md` §1.2 documented for `glaccount` — and `tierB-branch` would be ported
+  without its *implementations*, which is that trap inverted. **`T496` may not edit
+  `.softhouse/program.json`; the driver reconciles this.**
 - **B-2 — time zone is per-tenant, not per-office.** §5.4. `Office.java` has no zone column;
   `timezone_id` is on the tenant-store table. A deployment spanning Ulaanbaatar (+08) and Hovd (+07)
   needs the zone on `m_office`. Schema-affecting, Tier C row G9, and worth raising before Tier B's
@@ -640,5 +822,8 @@ oracle checkout was never modified (`git status --porcelain` empty before and af
 
 ---
 
-*End of Tier C platform gap audit. 44 subsystem rows: 0 NEXUS-PROVIDES, 17 GAP (7 marked
-host-candidate), 1 PARTIAL, 22 NOT-APPLICABLE, 4 reassigned to Tier A/B.*
+*End of Tier C platform gap audit, **rev 2**. 44 subsystem rows: 0 NEXUS-PROVIDES, 17 GAP (7 marked
+host-candidate, 50,846 LOC, **not plannable** until R-1), 1 PARTIAL, **21** NOT-APPLICABLE,
+**5** reassigned to Tier A/B. Partition: `38,750 + 67,495 + 2,190 + 83,733 = 192,168` ✓.
+**Tier C is a range: ~33k–84k LOC.** Rev 1 by `T489`; independently reviewed by `T492`
+(ACCEPT WITH CONDITIONS, 4 MAJOR); conditions re-derived at the pin and applied by `T496` — §0.1.*
