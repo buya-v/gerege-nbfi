@@ -7365,7 +7365,7 @@
     },
     {
       "id": "T487",
-      "status": "needs_review",
+      "status": "needs_retry",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7379,7 +7379,7 @@
       "dependencies": [],
       "contract_independent": true,
       "description": "Analyst behaviour extraction from the PINNED Fineract checkout 426a23544e8426a38ae43ae404670a0a7e85b9eb for slice tierA-gl-accounting-A1 (journal entry posting). ORACLE-FREE by construction: reads source only, contacts no running instance. No Go, no contract change, no vector.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal. HANDOFF NAME, for the record: T487 wrote .softhouse/handoff/T487.md exactly as this task`s files_hint said, and that made it the ONLY bare Tnnn.md in a directory of 86 Tnnn-slug.md files. The worker obeyed a wrong instruction; the instruction was the driver`s."
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal. HANDOFF NAME, for the record: T487 wrote .softhouse/handoff/T487.md exactly as this task`s files_hint said, and that made it the ONLY bare Tnnn.md in a directory of 86 Tnnn-slug.md files. The worker obeyed a wrong instruction; the instruction was the driver`s. REVIEWED BY T490: ACCEPT WITH CONDITIONS, 4 MAJOR. HELD UNMERGED pending T495, per this program`s own precedent from iteration 6 -- two stacks were held on their reviewer MAJORs and repaired before landing. F-2 makes the document`s BOLDED headline false as stated, and a false bolded claim in a behaviour document is what the next fire and the capture plan both read first."
     },
     {
       "id": "T488",
@@ -7419,7 +7419,7 @@
     },
     {
       "id": "T490",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7435,7 +7435,7 @@
       ],
       "contract_independent": true,
       "description": "Independent adversarial review of T487. RE-DERIVE every money claim from the pinned source; inherit no number from T487.",
-      "note": "Paired reviewer, filed in the SAME commit as its subject dispatch so plan-gate check 1 holds AT dispatch rather than after it."
+      "note": "DELIVERED: branch softhouse/T490-review-t487 @ 5b0b96e6, 646 insertions across 2 files, SCOPE CLEAN against merge-base f0bdcf58. VERDICT ACCEPT WITH CONDITIONS -- 4 MAJOR, 5 MINOR, citation spot-check 2 wrong of 52 sampled (3.8%). The pairing earned its cost: F-1 found a FIFTH binary-float money decision the author`s two sweeps both missed (SavingsTransactionDTO.java:51 overdraftAmount.doubleValue() > 0, reached from 8 call sites, and unlike the four floatValue sites it ROUTES THE POSTING to a different GL account pair rather than taking an absolute value), and F-2 REFUTED T487`s own nominated headline. T487 is NOT redone -- every condition is an edit to its document."
     },
     {
       "id": "T491",
@@ -7514,6 +7514,27 @@
       "contract_independent": true,
       "description": "Independent adversarial review of T493. Re-derive the day-by-day classification from origin/main yourself; inherit no count. Attack in this order: (1) does the guard REFUSE, rather than answer, on a shallow clone -- the failure that makes a 7-day and a 14-day window agree is silent and this whole task exists because a silent wrong answer went unnoticed for four days; (2) does the bookkeeping-vs-real predicate misclassify a REAL commit whose subject happens to match the bookkeeping pattern, and vice versa; (3) is the guard FAIL-OPEN -- does it report \"no streak\" when it could not measure at all?",
       "note": "Paired reviewer, filed in the same commit as T493."
+    },
+    {
+      "id": "T495",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "title": "Apply T490's four MAJORs and five MINORs to T487's A1 behaviour document -- and REFUTE any of them that is wrong",
+      "branch": "softhouse/T495-t490-conditions",
+      "files_hint": [
+        "docs/analysis/tierA-a1-behaviour.md",
+        ".softhouse/handoff/T495-t490-conditions.md"
+      ],
+      "dependencies": [
+        "T487",
+        "T490"
+      ],
+      "contract_independent": true,
+      "description": "Apply T490's conditions to docs/analysis/tierA-a1-behaviour.md on TOP OF T487's branch, so the pair lands corrected rather than landing wrong and being fixed later. THE TWO THAT CHANGE THE MONEY SECTION: F-1, a FIFTH binary-float money decision (SavingsTransactionDTO.java:51, overdraftAmount.doubleValue() > 0) which ROUTES A POSTING rather than taking an absolute value, invisible to both of T487's sweeps because neither pattern contains doubleValue; and F-2, which refutes T487's own bolded headline -- MathContext(19, HALF_UP) is 19 SIGNIFICANT DIGITS while numeric(19,6) is 6 DECIMAL PLACES, so the INSERT is a second rounding site and it is the one that fixes the value parity is graded on. Also F-3 (five reversal shapes, not four; the fifth writes reversed=true onto a NEWLY CREATED row) and F-4 (a citation that does not support its claim).\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's proposed patch REFUTED by the worker asked to apply it (T451 vs T449, T455 vs T448), and an independent third confirmed both refutations -- one of those patches would have shipped RED on a clean tree. RE-DERIVE each finding from the pinned source at 426a23544 before you write it in. If a finding is wrong, say so with your own citations and DO NOT apply it. The driver does not hand-apply a reviewer's patch, and neither do you.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T490 landed. Oracle-free: source reading and document editing only."
     }
   ],
   "cross_corroboration": {
