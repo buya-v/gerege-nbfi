@@ -1,19 +1,20 @@
 <!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->
-> ## STALE — this manifest was NOT rewritten by fire `20260901-230003`, which ended 2026-09-01T15:02:26Z.
+> ## STALE — this manifest was NOT rewritten by fire `20260902-080010`, which ended 2026-09-02T00:02:37Z.
 >
 > Everything below predates that fire, so its task table, its "next action" and its
 > pause reason are all claims about a world that has moved. The driver did not reach
 > STEP 5.5, which is why a shell script is writing this.
 >
-> - driver outcome: rc=`1` — **THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause UNKNOWN, read /Users/buv/Library/Logs/gerege-nbfi/fire-20260901-230003.jsonl before blaming the driver's logic.
-> - tasks.json reconcile: ran clean (see the reconcile| lines in /Users/buv/Library/Logs/gerege-nbfi/fire-20260901-230003.log)
+> - driver outcome: rc=`1` — **THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause UNKNOWN, read /Users/buv/Library/Logs/gerege-nbfi/fire-20260902-080010.jsonl before blaming the driver's logic.
+> - tasks.json reconcile: ran clean (see the reconcile| lines in /Users/buv/Library/Logs/gerege-nbfi/fire-20260902-080010.log)
 > - a task shown below as `in_progress` is a DEAD dispatch unless the reconcile line
 >   above says it was refused; read `tasks.json` notes, not this table.
-> - fire log: `/Users/buv/Library/Logs/gerege-nbfi/fire-20260901-230003.log`
+> - fire log: `/Users/buv/Library/Logs/gerege-nbfi/fire-20260902-080010.log`
 >
 > This banner is not maintained by anyone. It disappears when a driver rewrites
 > RESUME.md per STEP 5.5.4, and it comes back on any fire that fails to.
 <!-- /T288-WRAPPER-BANNER -->
+
 
 
 
