@@ -425,9 +425,10 @@
       "tier": "B",
       "title": "Branch / teller / cash management",
       "fineract_paths": [
-        "fineract-branch"
+        "fineract-branch",
+        "fineract-provider/src/main/java/org/apache/fineract/organisation/teller"
       ],
-      "main_loc": 3937,
+      "main_loc": 5162,
       "go_target": "nexus/internal/apps/branch",
       "dependencies": [
         "tierA-gl-accounting"
@@ -435,8 +436,10 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "",
-      "analysis_ready": true
+      "notes": "BLOCKED-ADJACENT, read before planning: the two-timezone non-negotiable is currently satisfied by exactly ONE scalar per deployment -- Fineract's timezone is PER-TENANT (0001_initial_schema.xml:77), read via FineractPlatformTenant.getTimezoneId(), and m_office has NO zone column. Branches are precisely what span Asia/Ulaanbaatar (+08) and Asia/Hovd (+07), so Asia/Ulaanbaatar and Asia/Hovd CANNOT COEXIST in one Fineract tenant as the schema stands. Resolve that before planning this context. Raised by T489 as B-2, sharpened by T496.",
+      "analysis_ready": true,
+      "measured_main_loc": 5162,
+      "measurement_note": "Re-measured at the pin 426a23544 by fire cloud-20260902-2000. fineract-branch 50 files / 3,937 LOC + fineract-provider/.../organisation/teller 3 files / 1,225 LOC = 5,162. THE SECOND PATH WAS MISSING AND ITS ABSENCE WAS A PLANNING DEFECT, not a bookkeeping one: the three files under fineract-branch/.../teller/service/ are INTERFACES, and the two Tier C files implement them -- TellerManagementReadPlatformServiceImpl.java:60 and TellerWritePlatformServiceJpaImpl.java:64, wired at OrganisationTellerConfiguration.java:49-60 [driver re-verified all three at the pin]. Scoped as it was, this context would have ported three interfaces WITH NO IMPLEMENTATIONS. Found by T489/T492/T496; the split runs the OPPOSITE way from the other four module splits in this program (the provider half sat in Tier C, not the core half), which is why four correct applications of the same rule missed the fifth."
     },
     {
       "id": "tierB-shares",
@@ -543,7 +546,13 @@
       "run_id": null,
       "cutover_gate": true,
       "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections.",
-      "analysis_ready": true
+      "analysis_ready": true,
+      "measured_main_loc": 192168,
+      "measurement_note": "Measured at the pin by T489 (192,168 main-Java LOC / 2,235 files) and INDEPENDENTLY re-measured row by row by T492, which re-derived all 44 of the audit's row LOCs and proved the partition exhaustive and non-overlapping by decomposing every parent directory. main_loc 180000 understates by 12,168 and is left in place as the historical figure. THE PORTABLE NUMBER IS NOT A NUMBER: after the gap audit, Tier C is a RANGE of roughly 33k-84k LOC. 32,887 LOC is GAP-real (port regardless), 50,846 is GAP-dagger (unresolved because the Gerege Nexus PLATFORM TREE IS NOT IN THIS REPOSITORY -- see gate G-23), 67,495 is not-applicable, 2,190 partial, and 38,750 is reassigned to Tier A/B. Slices C-1..C-5 are plannable now; the seven dagger rows are NOT plannable in either direction until G-23 is answered, because planning them risks the unjustified plumbing port CLAUDE.md calls a rejection.",
+      "scope_overlap_resolved": "This context's fineract-provider/.../infrastructure CONTAINS tierA-provisioning-reporting's explicitly listed .../infrastructure/dataqueries, so one run had to breach the per-run scope guard. Resolved by the driver, fire cloud-20260902-2000, ENGINEERING: dataqueries belongs to tierA-provisioning-reporting, which names it EXPLICITLY while this context reaches it only by prefix containment. Tier C EXCLUDES .../infrastructure/dataqueries. The driver swept every context pair and this is the ONLY such overlap in the program.",
+      "excludes": [
+        "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"
+      ]
     },
     {
       "id": "tierD-test-corpus-to-vectors",

@@ -7401,7 +7401,7 @@
     },
     {
       "id": "T489",
-      "status": "needs_retry",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7538,7 +7538,7 @@
     },
     {
       "id": "T496",
-      "status": "in_progress",
+      "status": "needs_review",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -7555,7 +7555,7 @@
       ],
       "contract_independent": true,
       "description": "Apply T492's conditions to docs/analysis/tierC-platform-gap-audit.md ON TOP OF T489's branch. F-1 is the expensive direction: a false NOT-APPLICABLE on the fineract-provider half of organisation/teller (3 files, 1,225 LOC of SERVICE IMPLEMENTATIONS) while tierB-branch sits pending -- the same module-split pattern T489 documents in its own section 5.6 and applies correctly to four other cases, missed on the fifth. F-3: N8's PROSE names FineractPlatformTenant{,Connection} NOT-APPLICABLE while the partition assigns core/domain to G1, and getTimezoneId() is the SOLE source read by DateUtils.getDateTimeZoneOfTenant() -- the path that satisfies the two-timezone non-negotiable, so the prose would delete it. F-4: N9 entityaccess NOT-APPLICABLE STANDS (T492 ran both checks T489 conceded it skipped: it IS off by default at 0002_initial_data.xml:186-204 and tierB-branch does NOT depend on it) but the row omits 11 Tier A/B call sites. F-2: a citation that does not support its claim. Corrected subtotals T492 offers: 38,750 / 67,495 / 2,190 / 83,733 = 192,168 -- re-derive them, do not copy them.\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's patch REFUTED by the worker asked to apply it. Re-derive each finding from the pinned source at 426a23544 before writing it in; refute with citations anything that is wrong.\n\nTWO THINGS THE DRIVER ALREADY CHECKED, so do not spend context re-deriving them and do NOT repeat the third as a finding: the dataqueries duplicate is REAL and its mechanism is PREFIX CONTAINMENT (tierC's .../infrastructure contains tierA-provisioning-reporting's .../infrastructure/dataqueries), and it is the ONLY such overlap among all context pairs; and T492's claim that program.json's go_target nexus/internal/platform 'does not exist' is NOT a contradiction -- all fourteen unported contexts have a non-existent go_target because the port creates the directory.",
-      "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T492 landed. Oracle-free."
+      "note": "DELIVERED: branch softhouse/T496-t492-conditions @ 47192650, +568/-43 across its 2 declared files, SCOPE CLEAN against its T489 base 0f1028cf. All four MAJORs re-derived from the pin before any edit; NONE REFUTED, two stronger than reported, one count corrected DOWNWARD (entityaccess call sites 10 files / 21 imports, not T492`s 11 / 22 -- T496 could not reproduce an eleventh from any search it ran, states its own number and flags the discrepancy). F-1 is worse than T492 reported and the driver re-verified it at the pin: the three files under fineract-branch/.../teller/service/ are INTERFACES and the two Tier C files IMPLEMENT them (TellerManagementReadPlatformServiceImpl.java:60, TellerWritePlatformServiceJpaImpl.java:64), so tierB-branch as scoped would have ported three interfaces with NO IMPLEMENTATIONS. Subtotals recomputed not copied and the partition still reconciles exactly at 192,168; GAP, GAP-real 32,887 and GAP-dagger 50,846 are UNCHANGED, so the correction does not move the number Tier C is planned against."
     },
     {
       "id": "T497",
