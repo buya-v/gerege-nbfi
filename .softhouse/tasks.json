@@ -7362,6 +7362,120 @@
       "dependencies": [],
       "description": "FILED 2026-08-29 by fire 20260829-080002 iter6 from T483's independent review of T470. Both merged, ATTESTED FULL at tree 3d09026c. RE-DERIVE; do not inherit T483's numbers.\n\n## C-T483-1 (MINOR) -- THE ERRATUM NOBODY IS POINTED TO\nP-103 is formally coherent (defined exactly once at patterns.md:3835, checker VERDICT PASS on the real merge). But SUBSTANTIVELY TWO READINGS STAY LIVE: the refusal cites P-103 BY SENTENCE, that sentence lands on the SUPERSEDED clause, and T470's erratum sits 131 LINES BELOW, UNANNOUNCED -- measured ERRATUM printed = 0. Append-only prevented fixing it at :3835, and the stale reading fails SAFE, so this is a pointer problem, not a correctness one. T483 DROVE a four-echo-line repair BEFORE/AFTER with BOTH predecessor drives re-run PASS. Re-derive it; reviewer patches have been refuted by their assigned workers FOUR times in this program, most recently T470 itself.\n\n## THE ONE WORTH THE MOST -- P-103'S CITATIONS MAY NAME THE WRONG TRANSCRIPTS\nT483 explicitly DECLINED to re-derive two claims and flagged the second as live:\n  (a) the 'six of six workers repaired at the instrument' figure;\n  (b) that `rows=109 pinned=108 added=1 removed=0` is specifically T440/T447/T448/T452's refusal -- **T483 measured that this cardinal RECURS IN 12 TRANSCRIPTS, NONE OF THEM THEIRS.**\nP-103 is a PERMANENT REGISTER ENTRY whose whole evidentiary weight is those six citations, and T458 was praised for verifying them. If the cardinal is not distinguishing, the citations may point at the right claim through the wrong transcript -- which is the exact defect class P-103 itself prosecutes, one level in. GO AND MEASURE IT: for each of the six, find the transcript that is ACTUALLY that worker's first refused bar, quote it with its tree, and correct FORWARD any citation that names the wrong artefact. An honest 'all six are correct and the 12 are unrelated recurrences' is a fine outcome -- but it must be measured, not assumed.\n\n## C-T483-2 (MINOR)\nT470's handoff carries the claim that T458's drive 'would NOT have passed under the literal section 6 text'. MEASURED FALSE by T483 with a sensitive control. Correct it FORWARD in the handoff record.\n\n## C-T483-3 (LOW) -- AND IT IS A RECURRING PROCESS DEFECT\nT470 NEVER GRADED ITS OWN DELIVERED TIP: its bar is at f73e82c0, 911 lines below tip 28fdfee3; T483 graded the tip itself (EXIT 0, probe present then up, PASS 46/7884). This is the THIRD time in two iterations a worker has shipped a tip its own bar never saw (T455 F-T464-5, T467 F-T464-5, now T470). Propose a mechanical fix -- the handoff template demanding the bar commit BE the tip, or a check that compares the bar transcript's recorded HEAD to the branch tip -- and drive it.\n\n## C-T483-4 (NIT)\nA 120-char line.\n\nSCOPE: the guard, a FORWARD correction in patterns.md, and your own capture dir. patterns.md is APPEND-ONLY and read by a HARD guard -- a citation to a P-number that does not exist is FATAL to the bar. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103 -- the pattern you are repairing). Bar AT YOUR BRANCH TIP, probe PRESENCE before value. If the oracle is down (it was SIGTERMed twice in fire 20260829-080002), record the failed run rather than discarding it and do NOT report a PASS.",
       "note": "Filed by the driver of fire 20260829-080002 iter6 from T483's 2 MINOR, 1 LOW and 1 NIT, plus the two claims T483 explicitly declined to re-derive."
+    },
+    {
+      "id": "T487",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "analyst",
+      "title": "Tier A slice A1 behaviour extraction -- journal-entry posting, the double-entry engine",
+      "branch": "softhouse/T487-a1-journalentry-behaviour",
+      "files_hint": [
+        "docs/analysis/tierA-a1-behaviour.md",
+        ".softhouse/handoff/T487.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Analyst behaviour extraction from the PINNED Fineract checkout 426a23544e8426a38ae43ae404670a0a7e85b9eb for slice tierA-gl-accounting-A1 (journal entry posting). ORACLE-FREE by construction: reads source only, contacts no running instance. No Go, no contract change, no vector.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle."
+    },
+    {
+      "id": "T488",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "test_writer",
+      "title": "Tier D -- mine the Fineract GL/journal-entry test corpus into a CAPTURE PLAN for the next oracle-reaching fire",
+      "branch": "softhouse/T488-tierD-gl-corpus-capture-plan",
+      "files_hint": [
+        "docs/analysis/tierD-gl-corpus-capture-plan.md",
+        ".softhouse/handoff/T488.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Mine the pinned Fineract test corpus for GL/journal-entry cases and turn them into an executable capture plan. PLAN ONLY -- captures nothing, synthesises no vector, stores nothing in contract shape.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture."
+    },
+    {
+      "id": "T489",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "spec_writer",
+      "title": "Tier C platform gap audit -- map Fineract platform modules onto what Nexus already provides; port only genuine gaps",
+      "branch": "softhouse/T489-tierC-platform-gap-audit",
+      "files_hint": [
+        "docs/analysis/tierC-platform-gap-audit.md",
+        ".softhouse/handoff/T489.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Inventory-and-classify audit of the Tier-C platform surface against the Nexus module. CLASSIFICATION ONLY at module/subsystem granularity -- it does not read 180k LOC and does not port anything.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. CLAUDE.md Tier C: \"Map onto Nexus first; port only the genuine gaps -- re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.\""
+    },
+    {
+      "id": "T490",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T487 -- RE-DERIVE the A1 double-entry posting behaviour from source, do not inherit T487 numbers",
+      "branch": "softhouse/T490-review-t487",
+      "files_hint": [
+        ".softhouse/reviews/t490-review-t487/",
+        ".softhouse/handoff/T490.md"
+      ],
+      "dependencies": [
+        "T487"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T487. RE-DERIVE every money claim from the pinned source; inherit no number from T487.",
+      "note": "Paired reviewer, filed in the SAME commit as its subject dispatch so plan-gate check 1 holds AT dispatch rather than after it."
+    },
+    {
+      "id": "T491",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T488 -- does the capture plan capture what A1 needs, and is any row a synthesised vector?",
+      "branch": "softhouse/T491-review-t488",
+      "files_hint": [
+        ".softhouse/reviews/t491-review-t488/",
+        ".softhouse/handoff/T491.md"
+      ],
+      "dependencies": [
+        "T488"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T488. The hard question: does any row of the plan state an EXPECTED VALUE the worker did not observe from the oracle? Any such row is a synthesised vector and is a rejection.",
+      "note": "Paired reviewer, filed in the SAME commit as its subject dispatch."
+    },
+    {
+      "id": "T492",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T489 -- re-derive the gap classification; a false NEXUS-PROVIDES silently drops a subsystem",
+      "branch": "softhouse/T492-review-t489",
+      "files_hint": [
+        ".softhouse/reviews/t492-review-t489/",
+        ".softhouse/handoff/T492.md"
+      ],
+      "dependencies": [
+        "T489"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T489. Re-derive each classification against BOTH trees. A false NEXUS-PROVIDES silently drops a subsystem from the program; a false GAP costs a re-port of plumbing that already exists.",
+      "note": "Paired reviewer, filed in the SAME commit as its subject dispatch."
     }
   ],
   "cross_corroboration": {
