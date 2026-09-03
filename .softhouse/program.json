@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260829-080002 (local, Buyan's Mac, oracle REACHABLE throughout with one transient container restart observed by T446 and recovered). ITERATION 5, TWO WAVES, TWENTY BRANCHES MERGED IN TEN REVIEWED PAIRS -- wave 1: T350+T449, T442+T447, T412+T450, T445+T446, T433+T448; wave 2: T451+T456, T452+T457, T453+T461, T454+T459, T455+T464. EVERY merge was graded ON THE MERGE RESULT in a scratch worktree outside the repo, its tree identity verified against the graded tree, and ATTESTED BY TREE SHA before main was touched. Bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, frontier 11==11, deadOccurrences 108, 16 guards timed, all 16 wrong ledger implementations dead. THE FIRE'S RESULTS: (1) THE DRIVER PUSH GATE WAS BUILT, INSTALLED AND ENFORCED, AND IT REFUSED THE DRIVER -- at the T350+T449 merge the driver had graded the merge result AND verified tree identity by hand and was STILL refused, because a transcript is bytes and nothing binds it to the tree it claims to have graded; the remedy was to attest properly, never to bypass, and bypass.log still does not exist. (2) TWO REVIEWER-PROPOSED PATCHES WERE REFUTED BY THE WORKERS ASKED TO APPLY THEM, and an independent third confirmed both refutations -- T451 vs T449 (the anywhere relaxation adds exactly 0 carriers and breaks R2) and T455 vs T448 (the one-predicate repair PASSES case B, and shipped as written would have been RED ON A CLEAN TREE for two of the four files it guards). The rule that the driver does not hand-apply a reviewer's patch paid twice in one day. (3) THE WITNESS-FORGERY CHAIN REACHED LINKS SEVEN AND EIGHT -- U+017F folds onto ASCII s on APFS and sorts after it, so conformance.<U+017F>h wins the checkout and the harness that RUNS is forged while the committed blob stays honest; then LONGSTRIP and LONGNOP. T454 BROKE THE SIX-LINK STREAK by DECLARING its open route instead of arguing it shut. (4) A HEADLINE COUNT OF 0 FAIL-OPENS BECAME 2, with a strictly-vacuous member two purpose-built censuses had missed. (5) T448 SHOWED THAT T433's TWO INDEPENDENT DERIVATIONS WERE ONE PRIMITIVE READ TWICE, and T456 showed that a 288-state enumeration catching 3 planted defects missed a fourth of a kind its author had not thought to plant -- it checks WELL-FORMEDNESS, not CORRECTNESS. (6) A SAFETY REFUSAL BOUNDED BY WALL CLOCK was driven to demote on a slow host what it refuses on a fast one. (7) The driver caught its OWN filed task specifying a remedy T459 had already defeated, and amended T460 before any worker started it. ZERO LIVE WORKERS AT EXIT. No user gate crossed; no CONTRACT gate open.",
+  "cursor": "Fire cloud-20260902-2000 (CLOUD CATCH-UP, oracle UNREACHABLE by design). THE HEADLINE IS AN OUTAGE, NOT A DELIVERABLE: the local launchd pipeline has produced ZERO model turns since 2026-08-29 and eighteen consecutive fires advanced nothing -- and it was the SECOND such outage (08-25/26 was the first, 21 fires, 0 real commits, recovered unexplained). The wrapper DETECTS a zero-turn fire and NOTHING ESCALATES one, which is why four days passed unremarked; filed as T493/T494. Only Buyan can clear it: the Mac mini is not reachable from the cloud sandbox. THIS FIRE'S WORK, all oracle-free: three reviewed stacks merged with the landed tree attested identical to the graded tree 265f9192 -- the A1 behaviour document (the double-entry engine, the money core of Tier A, which had none), the Tier D GL capture plan (30 cases, ordered for scarce oracle time), and the Tier C gap audit (Tier C is a RANGE ~33k-84k, not 180k). EVERY ONE of the three independent reviews returned MAJORs and two broke the same way -- a bolded cardinal resting on a single grep -- recorded as P-104. The driver broke the bar with its own P-104 heading (it stole P-66/P-70's sentence, 3 directive files misdirected, EXIT 2 with NO PROBE LINE for two commits) and caught it by reading the absence of the probe line while grading a merge. tierB-branch was found MIS-SCOPED to interfaces with no implementations and corrected before anything was planned on it. G-23 raised (RESERVED: the Nexus PLATFORM tree is not in this repository, so 'map onto Nexus first' is unexecutable and 50,846 LOC stays unclassified). G-24 raised and DECIDED. No user gate crossed.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -425,9 +425,10 @@
       "tier": "B",
       "title": "Branch / teller / cash management",
       "fineract_paths": [
-        "fineract-branch"
+        "fineract-branch",
+        "fineract-provider/src/main/java/org/apache/fineract/organisation/teller"
       ],
-      "main_loc": 3937,
+      "main_loc": 5162,
       "go_target": "nexus/internal/apps/branch",
       "dependencies": [
         "tierA-gl-accounting"
@@ -435,8 +436,10 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "",
-      "analysis_ready": true
+      "notes": "BLOCKED-ADJACENT, read before planning: the two-timezone non-negotiable is currently satisfied by exactly ONE scalar per deployment -- Fineract's timezone is PER-TENANT (0001_initial_schema.xml:77), read via FineractPlatformTenant.getTimezoneId(), and m_office has NO zone column. Branches are precisely what span Asia/Ulaanbaatar (+08) and Asia/Hovd (+07), so Asia/Ulaanbaatar and Asia/Hovd CANNOT COEXIST in one Fineract tenant as the schema stands. Resolve that before planning this context. Raised by T489 as B-2, sharpened by T496.",
+      "analysis_ready": true,
+      "measured_main_loc": 5162,
+      "measurement_note": "Re-measured at the pin 426a23544 by fire cloud-20260902-2000. fineract-branch 50 files / 3,937 LOC + fineract-provider/.../organisation/teller 3 files / 1,225 LOC = 5,162. THE SECOND PATH WAS MISSING AND ITS ABSENCE WAS A PLANNING DEFECT, not a bookkeeping one: the three files under fineract-branch/.../teller/service/ are INTERFACES, and the two Tier C files implement them -- TellerManagementReadPlatformServiceImpl.java:60 and TellerWritePlatformServiceJpaImpl.java:64, wired at OrganisationTellerConfiguration.java:49-60 [driver re-verified all three at the pin]. Scoped as it was, this context would have ported three interfaces WITH NO IMPLEMENTATIONS. Found by T489/T492/T496; the split runs the OPPOSITE way from the other four module splits in this program (the provider half sat in Tier C, not the core half), which is why four correct applications of the same rule missed the fifth."
     },
     {
       "id": "tierB-shares",
@@ -543,7 +546,13 @@
       "run_id": null,
       "cutover_gate": true,
       "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections.",
-      "analysis_ready": true
+      "analysis_ready": true,
+      "measured_main_loc": 192168,
+      "measurement_note": "Measured at the pin by T489 (192,168 main-Java LOC / 2,235 files) and INDEPENDENTLY re-measured row by row by T492, which re-derived all 44 of the audit's row LOCs and proved the partition exhaustive and non-overlapping by decomposing every parent directory. main_loc 180000 understates by 12,168 and is left in place as the historical figure. THE PORTABLE NUMBER IS NOT A NUMBER: after the gap audit, Tier C is a RANGE of roughly 33k-84k LOC. 32,887 LOC is GAP-real (port regardless), 50,846 is GAP-dagger (unresolved because the Gerege Nexus PLATFORM TREE IS NOT IN THIS REPOSITORY -- see gate G-23), 67,495 is not-applicable, 2,190 partial, and 38,750 is reassigned to Tier A/B. Slices C-1..C-5 are plannable now; the seven dagger rows are NOT plannable in either direction until G-23 is answered, because planning them risks the unjustified plumbing port CLAUDE.md calls a rejection.",
+      "scope_overlap_resolved": "This context's fineract-provider/.../infrastructure CONTAINS tierA-provisioning-reporting's explicitly listed .../infrastructure/dataqueries, so one run had to breach the per-run scope guard. Resolved by the driver, fire cloud-20260902-2000, ENGINEERING: dataqueries belongs to tierA-provisioning-reporting, which names it EXPLICITLY while this context reaches it only by prefix containment. Tier C EXCLUDES .../infrastructure/dataqueries. The driver swept every context pair and this is the ONLY such overlap in the program.",
+      "excludes": [
+        "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"
+      ]
     },
     {
       "id": "tierD-test-corpus-to-vectors",
@@ -810,6 +819,32 @@
       "why_it_matters_now": [
         "THIS IS A DIVERGENCE OF PRINCIPLE, NOT A BOOKKEEPING GAP. CLAUDE.md makes the ledger APPEND-ONLY with balances DERIVED AND NEVER WRITTEN. The reference oracle we grade against does the opposite: it stores a denormalised running balance ON the posted journal-entry row and a nightly job rewrites it in place. So (1) a Go port that honours the non-negotiable will diverge from the oracle on any field fed by that recompute, and the divergence is CORRECT behaviour by the port; (2) any parity or shadow-parity comparison that reads those columns compares the port against a moving target and may fail for the CLOCK rather than the code -- and parity sign-off is a user gate; (3) `last_modified_by = 2` is now true of EVERY ROW IN THE TABLE, so an attribution rule keyed on user 2 would retroactively excuse the entire ledger. T390 warned against exactly that rule and T409 measured the warning as fatal rather than hypothetical."
       ]
+    },
+    {
+      "id": "G-23",
+      "class": "RESERVED",
+      "task": "T489/T492",
+      "context": "tierC-platform-map-first",
+      "state": "OPEN",
+      "title": "The Gerege Nexus PLATFORM tree is not in this repository, so CLAUDE.md's 'map onto Nexus first' is currently unexecutable",
+      "asking_for": "One fact only: where is the Gerege Nexus platform tree, and should it be attached to this session's repository set? RESERVED because no amount of reading source can tell an agent where a repository is, or whether it exists yet.",
+      "recorded_in": ".softhouse/gates.md",
+      "raised_by": "cloud fire cloud-20260902-2000",
+      "found_by": "T489 (the audit), reproduced IN FULL by its independent reviewer T492, then verified a THIRD time by the driver: nexus/go.mod has zero require directives, go list returns 6 packages all Tier 0/A domain work or the conformance harness, nexus/internal contains only apps/{ledger,loanschedule}, no .gitmodules, no second module.",
+      "blocks": "Nothing today -- tierC-platform-map-first depends on tierA-provisioning-reporting, which is not started. It blocks FINISHING the Tier C audit: 50,846 LOC stays classified GAP-dagger, so Tier C's size is a RANGE of ~33k-84k rather than a number, a 2.5x spread on the largest unported context. Slices C-1..C-5 are plannable now; the seven dagger rows are not plannable in either direction."
+    },
+    {
+      "id": "G-24",
+      "class": "ENGINEERING/PRODUCT -- DECIDED BY THE DRIVER, chosen_by: agent",
+      "task": "T489/T492",
+      "context": "tierC-platform-map-first slice C-4, and tierB-clients-groups",
+      "state": "OPEN -- decided, awaiting veto only",
+      "title": "Fineract's own AppUser and Staff tables are two-field names, and CLAUDE.md's name rule is three fields",
+      "asking_for": "Nothing, unless Buyan disagrees. Per CLAUDE.md's Answering gates the driver decides and recommends: the three-field rule GOVERNS and the deviation goes on the schema side, bounded to the person tables, keeping Fineract's firstname/lastname as DERIVED compatibility columns so the reference oracle still starts and shadow parity still means something. Overrule only if an FRC reporting format constrains how a staff name is stored.",
+      "recorded_in": ".softhouse/gates.md",
+      "raised_by": "cloud fire cloud-20260902-2000",
+      "found_by": "T489, confirmed by T492, then VERIFIED DIRECTLY BY THE DRIVER at the pin: AppUser.java:73-78 firstname/lastname both nullable=false; Staff.java:41-48 firstname/lastname/display_name.",
+      "blocks": "Nothing today; neither context is started."
     }
   ],
   "history": [
@@ -2465,6 +2500,72 @@
       ],
       "verifier": "bar on main at fire end: EXIT 0, probe PRESENT x1 up, VERDICT PASS 46 parity vectors / 7884 cells, frontier 11==11, deadOccurrences 108, 16 guards timed, 0 ceiling breaches, all 16 wrong ledger implementations dead. Every one of the ten merges additionally graded on its MERGE RESULT and ATTESTED BY TREE SHA before main was touched.",
       "gates": "No user gate crossed. No CONTRACT gate open. G-4, G-5, G-8, G-10, G-12, G-19, G-20, G-21, G-22 remain pending and none blocks work. NEW for Buyan's attention: server-side prevention of --no-verify is PARTLY a user item (repo-admin rights; pre-receive is Enterprise-only on github.com, so the realistic instrument is a branch ruleset) -- raised by T461 C-T461-4 and carried into T465."
+    },
+    {
+      "fire": "cloud-20260902-2000",
+      "host": "claude-code-remote cloud sandbox",
+      "date": "2026-09-02",
+      "oracle": "UNREACHABLE and MEASURED, not assumed: conformance EXIT 2 with the probe line PRESENT and reading 'down'. No Docker daemon, no PostgreSQL, pg_isready no response. Every vector and conformance task parked oracle_unreachable; all work this fire was oracle-free by construction.",
+      "why_this_fire_existed": "CATCH-UP. It found the local pipeline DEAD FOR FOUR DAYS -- see incident LOCAL-FIRE-DEAD-2026-08-30. Eighteen consecutive local fires advanced nothing and the outage was the SECOND, not the first.",
+      "merges": [
+        "T487+T490+T495",
+        "T488+T491+T497",
+        "T489+T492+T496"
+      ],
+      "merge_attestation": "Graded on the MERGE RESULT in a scratch worktree outside the repo; landed tree ATTESTED byte-identical to the graded tree 265f9192b6eea682f8975ec57dfebf201442f7cd. 7,305 insertions / 15 files.",
+      "tasks_filed": [
+        "T487",
+        "T488",
+        "T489",
+        "T490",
+        "T491",
+        "T492",
+        "T493",
+        "T494",
+        "T495",
+        "T496",
+        "T497",
+        "T498",
+        "T499",
+        "T500"
+      ],
+      "deliverables": [
+        "docs/analysis/tierA-a1-behaviour.md (A1 -- the double-entry engine, the money core of Tier A, which had NO behaviour document at all)",
+        "docs/analysis/tierD-gl-corpus-capture-plan.md (30 capture cases + attestation + a de-scoped case, for the next oracle-reaching fire)",
+        "docs/analysis/tierC-platform-gap-audit.md (44 rows; Tier C is a RANGE ~33k-84k, not 180k)"
+      ],
+      "reviewer_catches_that_changed_the_outcome": [
+        "T490 vs T487: a FIFTH binary-float money decision both of T487's sweeps missed -- SavingsTransactionDTO.java:51 overdraftAmount.doubleValue() > 0, reached from 8 call sites, and unlike the four floatValue sites it ROUTES THE POSTING to a different GL account pair. Neither sweep pattern contained a token matching doubleValue.",
+        "T490 vs T487: REFUTED T487's own nominated headline -- MathContext(19, HALF_UP) is 19 SIGNIFICANT DIGITS while numeric(19,6) is 6 DECIMAL PLACES, so the INSERT is a second rounding site and it is the one that fixes the value parity is graded on.",
+        "T491 vs T488: 'exactly one POST /journalentries call site' is FALSE (five), and the shape-changing conclusion built on it was refuted by a test doing exactly what it said no test does -- asserted over files the plan's own section 1.3 declares NOT OPENED.",
+        "T492 vs T489: a false NOT-APPLICABLE deleting a live Tier B subsystem -- the 1,225-LOC teller SERVICE IMPLEMENTATIONS, while tierB-branch sat pending scoped to interfaces only.",
+        "T492 vs T489: N9 entityaccess NOT-APPLICABLE STANDS -- it ran both checks T489 conceded it had skipped, and T489's own nominated worry resolved in its favour."
+      ],
+      "workers_refuting_their_reviewers": [
+        "T495 refuted two of T490's evidence claims (F-8 item 5's grep is wrong at the pin; the count of four flagging sites is three) without reversing either finding -- the THIRD and FOURTH time in this program.",
+        "T496 corrected an entityaccess call-site count DOWNWARD, 11/22 to 10/21, and stated it could not reproduce the eleventh.",
+        "T497 corrected two of T491's citations and refuted its 'both cases are cheap' cost claim."
+      ],
+      "driver_own_catches": [
+        "THE BAR WAS BROKEN BY THIS DRIVER'S OWN COMMIT AND THE DRIVER CAUGHT IT WHILE GRADING A MERGE. P-104's first heading reused P-66/P-70's distinctive sentence, so PNUMBER-CITATIONS went FATAL with 3 directive-file misdirections and the bar ran EXIT 2 with NO PROBE LINE for two commits -- the dangerous exit-2 case, where a failed HARD guard is trivially mistaken for an oracle outage. Caught by reading the ABSENCE of the probe line. Heading rewritten; guard green; directive MISDIRECTING 6 -> 2.",
+        "WITHDREW its own files_hint-based claim that 'not one READY task ports a Fineract behaviour' after reading G-20, which warns IN ITS OWN TEXT that files_hint undercounts and that this exact sentence is false. Replaced with G-20's git instrument.",
+        "The cloud clone is SHALLOW (60 commits). The first outage table was truncated at the graft, reporting 14 real commits for 08-29 where the full history says 505. Re-measured after git fetch --unshallow.",
+        "Checked T492's three 'contradictions for the driver' rather than acting on them: 2 of 3 held; 'go_target nexus/internal/platform does not exist' is NOT one, because all FOURTEEN unported contexts have a non-existent go_target.",
+        "The handoff files_hint the driver wrote (Tnnn.md) contradicted the directory's own convention (86 files Tnnn-slug.md, zero bare Tnnn.md). The deviation was the driver's; T487 obeyed a wrong instruction."
+      ],
+      "patterns_added": [
+        "P-104 -- a counted claim resting on one pattern match measures that pattern's vocabulary, never the code. Number verified FREE repo-wide before it was claimed, per P-103's convention."
+      ],
+      "program_json_corrections": [
+        "tierB-branch WAS MIS-SCOPED: fineract_paths was only 'fineract-branch', whose teller/service files are INTERFACES implemented by the 1,225 LOC in fineract-provider. As scoped it would have ported three interfaces with no implementations. Path added, main_loc 3,937 -> 5,162. Driver re-verified the implements relation at the pin.",
+        "tierC measured_main_loc 192,168 recorded (main_loc 180,000 understates by 12,168), and Tier C recorded as a RANGE ~33k-84k rather than a number.",
+        "The dataqueries overlap RESOLVED to tierA-provisioning-reporting, which names it explicitly, vs Tier C which reached it only by prefix containment. Driver swept every context pair: the program's ONLY overlap.",
+        "in_flight replaced -- it had named six 'dispatched' tasks from fire 20260828-080001, every one terminal or reconciled, for five days."
+      ],
+      "verifier": "Bar on main at fire end and on the merge result alike: EXIT 2, probe PRESENT reading 'down', NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS CLAIMED and none available while the oracle is unreachable. The only claim made: the merge moves nothing the bar can still grade.",
+      "gates": "G-23 raised (RESERVED -- where is the Nexus platform tree). G-24 raised and DECIDED by the driver, chosen_by: agent, awaiting veto only. G-20 AMENDED with a git-measured ratio that is worse than when it was raised: capture 34.5 -> 44.2 %, reviews 16.8 -> 22.9 %, nexus/ flat at 2.7 %. No user gate crossed. No CONTRACT gate open.",
+      "known_gap_stated_not_hidden": "The three REPAIRS (T495/T496/T497) landed in their stacks WITHOUT reviewers of their own -- the iteration-6 precedent, but plan-gate check 1 asks for one on every coder task. Filed as T500 rather than left implicit.",
+      "exit_attestation": "repo-state-attest fire-compare rc 0, VERDICT: NO DAMAGE -- every delta inside the declared writ. Working tree clean, LOCK released, all nine worker worktrees removed, one worktree left (the checkout itself). ONE ADVISORY, ATTRIBUTED RATHER THAN WAVED THROUGH as the guard's own text demands: .softhouse/patterns.md changed and the writ does not name it. Attributed by `git log 2815e007..HEAD -- .softhouse/patterns.md` -- exactly two commits, both this driver's, both P-104 (93a35add recorded it, 33f0cbe1 rewrote its heading after it broke the PNUMBER-CITATIONS guard), +44 lines and 0 deletions. No worker touched it."
     }
   ],
   "database": {
@@ -2491,23 +2592,27 @@
       "benefit": "The duplicated T251 produced TWO independent reviews that AGREED on every load-bearing fact and whose site lists were COMPLEMENTARY — neither found the other's sites. A reason to duplicate reviews DELIBERATELY, never a reason to tolerate a broken lock.",
       "rule": "Push the lock, the dispatch record and the in-flight manifest BEFORE spawning the first worker. A HEAD that says 'closed clean' while a session is live is an active lie to the next orchestrator.",
       "pattern": "P-85"
+    },
+    {
+      "id": "LOCAL-FIRE-DEAD-2026-08-30",
+      "what": "The local launchd fire produced ZERO model turns on every fire for four days, and no fire since 2026-08-29 has advanced the migration at all.",
+      "discovered_by": "cloud fire cloud-20260902-2000, from origin/main's own commit history",
+      "measurement": "Commits on origin/main by day, classified into wrapper bookkeeping (lock / wrapper reconcile / release) vs real work, measured AFTER `git fetch --unshallow` -- the cloud sandbox's clone arrives SHALLOW (60 commits, back only to 2026-08-29 21:51) and the first pass of this table was truncated at the graft, reporting 14 real commits for 08-29 where the full history says 505. TRUE COUNTS: 08-25 = 3 total / 3 bookkeeping / 0 real. 08-26 = 18 / 18 / 0. 08-27 = 104 / 16 / 88. 08-28 = 566 / 7 / 559. 08-29 = 513 / 8 / 505. 08-30 = 18 / 18 / 0. 08-31 = 18 / 18 / 0. 09-01 = 2 / 2 / 0. Eighteen consecutive fires (six a day at 08/11/14/17/20/23) advanced nothing.",
+      "wrapper_classification": "The wrapper diagnosed it itself and the line is in RESUME.md's T288 banner: 'THE DRIVER PRODUCED 0 MODEL TURNS and no quota rejection was recorded -- cause UNKNOWN', driver rc=1, fire 20260901-080005.",
+      "it_is_not_the_quota": "classify_driver_turns() at .softhouse/bin/fire-program.sh:2442 emits a DIFFERENT and explicitly named line when a rate limit rejected the fire ('QUOTA: THIS FIRE NEVER GOT A TURN'). That line was not the one written. Zero assistant events WITH no rejection recorded means the CLI never produced a turn, which is an environment or credential failure on the host, not a driver-logic failure. Each fire lasted about 90 seconds end to end.",
+      "second_effect": "Fire 20260901-080005 also died before releasing .softhouse/LOCK, leaving a held lock on the repo for 36.5 hours.",
+      "lock_takeover": "This fire took the lock under STEP 0 ARM 3 (the 24h CEILING); ARM 5 agreed independently since origin/main's tip was equally old. ARM 2 was deliberately NOT used -- the lock named pid 56597 on Buyanmunkhs-Mac-mini and this driver never judges a pid on another host.",
+      "cost": "Four days of oracle-reaching capacity spent on nothing. The oracle-reaching half of the program -- every vector capture and every conformance verdict -- is stopped for as long as that host produces no turns. The cloud fire cannot substitute: it has no Fineract instance and no PostgreSQL.",
+      "what_only_buyan_can_do": "On Buyanmunkhs-Mac-mini: read /Users/buv/Library/Logs/gerege-nbfi/fire-20260901-080005.jsonl, then run `claude -p \"ok\"` by hand and read the actual error. An expired credential is the first hypothesis, not the confirmed cause -- the wrapper says the cause is UNKNOWN and this incident does not claim otherwise.",
+      "the_gap_this_exposes": "Eighteen no-op fires in a row produced no alert of any kind. The wrapper detects and RECORDS a zero-turn fire; nothing ESCALATES one. A fire that cannot run is exactly the fire that cannot report that it could not run, so the detection has to live somewhere other than the fire -- this is the P-45 shape ('a guard that only works when someone remembers to run it enforces nothing') applied to the scheduler itself. Filed for a future task; no agent can install a launchd-level alert on a host it cannot reach.",
+      "it_has_happened_before": "2026-08-25 and 2026-08-26 are the SAME SHAPE -- 21 fires, 0 real commits -- and the program recovered on 08-27 with nothing recorded about why it stopped or why it restarted. This is a RECURRING scheduler failure, not a one-off, and a two-day outage passing unremarked before a four-day one did is the strongest evidence for the escalation gap below.",
+      "shallow_clone_caution": "A cloud fire's clone is shallow. `git log --since=7.days` over a shallow clone silently answers for the shallow part only and returns the SAME number for a 7-day and a 14-day window without saying why. Any cloud-fire measurement taken before `git fetch --unshallow` is truncated at the graft and must not be compared with a local fire's."
     }
   ],
   "in_flight": {
-    "fire": "20260828-080001",
-    "chain_iteration": 2,
-    "batch": 1,
-    "dispatched": [
-      "T323",
-      "T280",
-      "T266",
-      "T270",
-      "T258",
-      "T335"
-    ],
-    "dispatch_record_commit": "fc23ad0b",
-    "pushed_before_first_worktree_add": true,
-    "min_margin_seconds": 40,
-    "warning": "If you are reading this after an interruption, these six are NOT done. Recover WIP from each branch and mark them needs_retry with 'worker killed mid-flight; completeness unverified'."
+    "fire": "cloud-20260902-2000",
+    "dispatched": [],
+    "live_at_exit": 0,
+    "note": "ZERO live workers at exit. All nine dispatched tasks (T487-T492, T495-T497) completed, were reviewed or reviewed another, and merged. Nothing was killed."
   }
 }

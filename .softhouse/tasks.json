@@ -7362,6 +7362,284 @@
       "dependencies": [],
       "description": "FILED 2026-08-29 by fire 20260829-080002 iter6 from T483's independent review of T470. Both merged, ATTESTED FULL at tree 3d09026c. RE-DERIVE; do not inherit T483's numbers.\n\n## C-T483-1 (MINOR) -- THE ERRATUM NOBODY IS POINTED TO\nP-103 is formally coherent (defined exactly once at patterns.md:3835, checker VERDICT PASS on the real merge). But SUBSTANTIVELY TWO READINGS STAY LIVE: the refusal cites P-103 BY SENTENCE, that sentence lands on the SUPERSEDED clause, and T470's erratum sits 131 LINES BELOW, UNANNOUNCED -- measured ERRATUM printed = 0. Append-only prevented fixing it at :3835, and the stale reading fails SAFE, so this is a pointer problem, not a correctness one. T483 DROVE a four-echo-line repair BEFORE/AFTER with BOTH predecessor drives re-run PASS. Re-derive it; reviewer patches have been refuted by their assigned workers FOUR times in this program, most recently T470 itself.\n\n## THE ONE WORTH THE MOST -- P-103'S CITATIONS MAY NAME THE WRONG TRANSCRIPTS\nT483 explicitly DECLINED to re-derive two claims and flagged the second as live:\n  (a) the 'six of six workers repaired at the instrument' figure;\n  (b) that `rows=109 pinned=108 added=1 removed=0` is specifically T440/T447/T448/T452's refusal -- **T483 measured that this cardinal RECURS IN 12 TRANSCRIPTS, NONE OF THEM THEIRS.**\nP-103 is a PERMANENT REGISTER ENTRY whose whole evidentiary weight is those six citations, and T458 was praised for verifying them. If the cardinal is not distinguishing, the citations may point at the right claim through the wrong transcript -- which is the exact defect class P-103 itself prosecutes, one level in. GO AND MEASURE IT: for each of the six, find the transcript that is ACTUALLY that worker's first refused bar, quote it with its tree, and correct FORWARD any citation that names the wrong artefact. An honest 'all six are correct and the 12 are unrelated recurrences' is a fine outcome -- but it must be measured, not assumed.\n\n## C-T483-2 (MINOR)\nT470's handoff carries the claim that T458's drive 'would NOT have passed under the literal section 6 text'. MEASURED FALSE by T483 with a sensitive control. Correct it FORWARD in the handoff record.\n\n## C-T483-3 (LOW) -- AND IT IS A RECURRING PROCESS DEFECT\nT470 NEVER GRADED ITS OWN DELIVERED TIP: its bar is at f73e82c0, 911 lines below tip 28fdfee3; T483 graded the tip itself (EXIT 0, probe present then up, PASS 46/7884). This is the THIRD time in two iterations a worker has shipped a tip its own bar never saw (T455 F-T464-5, T467 F-T464-5, now T470). Propose a mechanical fix -- the handoff template demanding the bar commit BE the tip, or a check that compares the bar transcript's recorded HEAD to the branch tip -- and drive it.\n\n## C-T483-4 (NIT)\nA 120-char line.\n\nSCOPE: the guard, a FORWARD correction in patterns.md, and your own capture dir. patterns.md is APPEND-ONLY and read by a HARD guard -- a citation to a P-number that does not exist is FATAL to the bar. Do not move any pin. Do not spell a real .softhouse/... path as a literal in a fixture (P-103 -- the pattern you are repairing). Bar AT YOUR BRANCH TIP, probe PRESENCE before value. If the oracle is down (it was SIGTERMed twice in fire 20260829-080002), record the failed run rather than discarding it and do NOT report a PASS.",
       "note": "Filed by the driver of fire 20260829-080002 iter6 from T483's 2 MINOR, 1 LOW and 1 NIT, plus the two claims T483 explicitly declined to re-derive."
+    },
+    {
+      "id": "T487",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "analyst",
+      "title": "Tier A slice A1 behaviour extraction -- journal-entry posting, the double-entry engine",
+      "branch": "softhouse/T487-a1-journalentry-behaviour",
+      "files_hint": [
+        "docs/analysis/tierA-a1-behaviour.md",
+        ".softhouse/handoff/T487.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Analyst behaviour extraction from the PINNED Fineract checkout 426a23544e8426a38ae43ae404670a0a7e85b9eb for slice tierA-gl-accounting-A1 (journal entry posting). ORACLE-FREE by construction: reads source only, contacts no running instance. No Go, no contract change, no vector.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. The oracle is UNREACHABLE from the cloud sandbox (conformance exit 2, probe line PRESENT and reading down -- all three outage conditions met), so this fire does only work that needs no oracle. DELIVERED: branch softhouse/T487-a1-journalentry-behaviour @ 0b2545c1, 1,313 insertions across EXACTLY its two declared files (docs/analysis/tierA-a1-behaviour.md 1,127 lines + .softhouse/handoff/T487.md). Scope check clean against the MERGE-BASE 0aed916d -- note that `git diff main..branch` shows this fire`s own later main commits as deletions and is NOT a scope signal. HANDOFF NAME, for the record: T487 wrote .softhouse/handoff/T487.md exactly as this task`s files_hint said, and that made it the ONLY bare Tnnn.md in a directory of 86 Tnnn-slug.md files. The worker obeyed a wrong instruction; the instruction was the driver`s. REVIEWED BY T490: ACCEPT WITH CONDITIONS, 4 MAJOR. HELD UNMERGED pending T495, per this program`s own precedent from iteration 6 -- two stacks were held on their reviewer MAJORs and repaired before landing. F-2 makes the document`s BOLDED headline false as stated, and a false bolded claim in a behaviour document is what the next fire and the capture plan both read first. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T488",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "test_writer",
+      "title": "Tier D -- mine the Fineract GL/journal-entry test corpus into a CAPTURE PLAN for the next oracle-reaching fire",
+      "branch": "softhouse/T488-tierD-gl-corpus-capture-plan",
+      "files_hint": [
+        "docs/analysis/tierD-gl-corpus-capture-plan.md",
+        ".softhouse/handoff/T488.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Mine the pinned Fineract test corpus for GL/journal-entry cases and turn them into an executable capture plan. PLAN ONLY -- captures nothing, synthesises no vector, stores nothing in contract shape.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. Division of labour: the cloud fire cannot capture, so it prepares exactly what the oracle-reaching local fire must capture. DELIVERED: branch softhouse/T488-tierD-gl-corpus-capture-plan @ 7a74ef5c, 1,076 insertions across 2 files, SCOPE CLEAN against merge-base 0aed916d. 27 capture cases in 6 groups + an attestation step + 1 explicitly de-scoped case. The worker reports it swept all 54 FILE:LINE citations mechanically and that the sweep caught ONE FALSE CLAIM OF ITS OWN (a GLAccount is_deleted column inferred from a neighbouring GLClosure fact and never checked; acc_gl_account has no deleted marker), corrected in place with the error named and downgraded to a hypothesis TDG-A4 measures. That self-catch is the reviewer`s starting point, not a reason to trust the rest. REVIEWED BY T491: ACCEPT WITH CONDITIONS, 4 MAJOR. HELD UNMERGED pending T497. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T489",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "spec_writer",
+      "title": "Tier C platform gap audit -- map Fineract platform modules onto what Nexus already provides; port only genuine gaps",
+      "branch": "softhouse/T489-tierC-platform-gap-audit",
+      "files_hint": [
+        "docs/analysis/tierC-platform-gap-audit.md",
+        ".softhouse/handoff/T489.md"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "Inventory-and-classify audit of the Tier-C platform surface against the Nexus module. CLASSIFICATION ONLY at module/subsystem granularity -- it does not read 180k LOC and does not port anything.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000. CLAUDE.md Tier C: \"Map onto Nexus first; port only the genuine gaps -- re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.\" DELIVERED: branch softhouse/T489-tierC-platform-gap-audit @ 0f1028cf, 819 insertions across 2 files. SCOPE CLEAN against merge-base 0aed916d. HANDOFF NAME: the worker wrote .softhouse/handoff/T489-tierC-platform-gap-audit.md, not the .softhouse/handoff/T489.md this task declared. THE DEVIATION IS THE DRIVER`S, NOT THE WORKER`S -- the directory holds 86 files named Tnnn-slug.md and ZERO named bare Tnnn.md, so the worker followed the repo convention and the files_hint was wrong when it was written. Not a finding against T489. REVIEWED BY T492: ACCEPT WITH CONDITIONS, 4 MAJOR. HELD UNMERGED pending T496. F-1 is the expensive direction of error the task warned about -- a false NOT-APPLICABLE that would delete a live Tier B subsystem. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T490",
+      "status": "done",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T487 -- RE-DERIVE the A1 double-entry posting behaviour from source, do not inherit T487 numbers",
+      "branch": "softhouse/T490-review-t487",
+      "files_hint": [
+        ".softhouse/reviews/t490-review-t487/",
+        ".softhouse/handoff/T490-review-t487.md"
+      ],
+      "dependencies": [
+        "T487"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T487. RE-DERIVE every money claim from the pinned source; inherit no number from T487.",
+      "note": "DELIVERED: branch softhouse/T490-review-t487 @ 5b0b96e6, 646 insertions across 2 files, SCOPE CLEAN against merge-base f0bdcf58. VERDICT ACCEPT WITH CONDITIONS -- 4 MAJOR, 5 MINOR, citation spot-check 2 wrong of 52 sampled (3.8%). The pairing earned its cost: F-1 found a FIFTH binary-float money decision the author`s two sweeps both missed (SavingsTransactionDTO.java:51 overdraftAmount.doubleValue() > 0, reached from 8 call sites, and unlike the four floatValue sites it ROUTES THE POSTING to a different GL account pair rather than taking an absolute value), and F-2 REFUTED T487`s own nominated headline. T487 is NOT redone -- every condition is an edit to its document. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T491",
+      "status": "done",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T488 -- does the capture plan capture what A1 needs, and is any row a synthesised vector?",
+      "branch": "softhouse/T491-review-t488",
+      "files_hint": [
+        ".softhouse/reviews/t491-review-t488/",
+        ".softhouse/handoff/T491-review-t488.md"
+      ],
+      "dependencies": [
+        "T488"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T488. The hard question: does any row of the plan state an EXPECTED VALUE the worker did not observe from the oracle? Any such row is a synthesised vector and is a rejection.",
+      "note": "DELIVERED: branch softhouse/T491-review-t488 @ a1e955be, 741 insertions across 2 files, SCOPE CLEAN against merge-base e9f50173. VERDICT ACCEPT WITH CONDITIONS -- 4 MAJOR, 9 MINOR, citation support rate 66 of 67 sampled (98.5%), checked for SUPPORT rather than resolution. THE HEADLINE ANSWER, which is the question the task existed to settle: NO ROW OF THE CAPTURE PLAN STATES AN UNOBSERVED VALUE. It swept all 29 ids plus every prose section; there is no expect column and nothing sits in an expectation position; the SOURCE-DERIVED HYPOTHESIS rows name shapes and branches, never amounts, and each states a refutation condition; every TEST-ASSERTION literal it checked is genuinely what its cited file asserts. One wording over-reach only. It also confirmed BOTH de-scoping decisions correct and better-founded than stated, and found NO third unreachable capability and none wrongly planned. SAFE TO EXECUTE UNATTENDED after 4 text-edit conditions. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T492",
+      "status": "done",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T489 -- re-derive the gap classification; a false NEXUS-PROVIDES silently drops a subsystem",
+      "branch": "softhouse/T492-review-t489",
+      "files_hint": [
+        ".softhouse/reviews/t492-review-t489/",
+        ".softhouse/handoff/T492-review-t489.md"
+      ],
+      "dependencies": [
+        "T489"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T489. Re-derive each classification against BOTH trees. A false NEXUS-PROVIDES silently drops a subsystem from the program; a false GAP costs a re-port of plumbing that already exists.",
+      "note": "DELIVERED: branch softhouse/T492-review-t489 @ 6648f706, 865 insertions across 2 files, SCOPE CLEAN against merge-base 68399446. VERDICT ACCEPT WITH CONDITIONS -- 4 MAJOR, citation spot-check 32 of 33 confirmed (97.0%), 44 of 44 row LOCs re-measured, ~12 of 44 classifications re-derived in depth with the other ~32 accepted on T489`s reasoning AS A STATED BOUNDARY. It independently reproduced the zero-NEXUS-PROVIDES structural claim IN FULL and grepped the WHOLE tree on Oracle Database rather than T489`s subset. DRIVER CHECK OF ITS THREE \"CONTRADICTIONS FOR THE DRIVER\": 2 of 3 CONFIRMED, 1 OVER-READ. (a) the dataqueries duplicate is REAL and the driver verified the mechanism is PREFIX CONTAINMENT, not a literal repeat -- tierC lists .../infrastructure which CONTAINS tierA-provisioning-reporting`s .../infrastructure/dataqueries; the driver then swept all context pairs and this is the ONLY such overlap in the program. (b) the teller/tierB-branch conflict is REAL: tierB-branch`s fineract_paths is ONLY \"fineract-branch\", so the 1,225 LOC of teller service implementations under fineract-provider/.../organisation/teller are genuinely outside it and inside tierC`s .../organisation. (c) \"program.json`s own go_target nexus/internal/platform does not exist\" is NOT a contradiction -- ALL FOURTEEN unported contexts have a non-existent go_target, because the directory is created by the port. Expected state, not a defect. Recorded so it is not carried forward as one. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T493",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "NOTHING ESCALATES A ZERO-TURN FIRE -- eighteen no-op fires ran over four days and produced no alert, and it was the SECOND such outage",
+      "branch": "softhouse/T493-zero-turn-fire-escalation",
+      "files_hint": [
+        ".softhouse/guards/no-op-fire-streak.sh",
+        ".softhouse/capture/t493-zero-turn-escalation/"
+      ],
+      "dependencies": [],
+      "contract_independent": true,
+      "description": "THE FACTS, MEASURED BY cloud-20260902-2000 ON origin/main AFTER `git fetch --unshallow` (a cloud clone is SHALLOW and a --since window over it silently answers for the shallow part only): 2026-08-30 = 18 commits / 18 bookkeeping / 0 real; 08-31 = 18 / 18 / 0; 09-01 = 2 / 2 / 0. Eighteen consecutive local launchd fires took the lock, ran the wrapper reconcile, released, and advanced NOTHING. AND IT WAS THE SECOND TIME: 08-25 and 08-26 are the same shape (21 fires, 0 real) and the program recovered on 08-27 with nothing recorded about why it stopped or restarted.\n\nTHE DEFECT IS NOT THE DETECTION. `classify_driver_turns()` at .softhouse/bin/fire-program.sh:2442 already detects a zero-turn fire precisely, and even distinguishes it from a quota rejection by name. It WRITES the finding into the RESUME.md banner and nothing reads it. A fire that cannot run is exactly the fire that cannot report that it could not run, so the alarm cannot live inside the fire -- this is P-45 ('a guard that only works when someone remembers to run it enforces nothing') applied to the scheduler itself.\n\nBUILD: a guard that reads origin/main's commit history and decides, mechanically, whether the last N fires were no-ops -- classifying a commit as bookkeeping (lock / wrapper reconcile / release) vs real. Drive it RED/GREEN against the REAL history, which is the good part of this task: 08-25/26 and 08-30/31/09-01 are known-RED windows and 08-27/28/29 are known-GREEN ones, so the guard can be graded against recorded truth rather than a planted fixture. It MUST unshallow (or refuse and say so) before measuring -- a shallow clone makes a 7-day and a 14-day window return the same answer with no error.\n\nWHERE IT RUNS: the cloud fire, which is alive precisely when the local one is not, and which is the only fire that can observe the local one's silence. The cloud routine should run it at STEP 0 and PUSH-NOTIFY Buyan on a streak. Installing a launchd-level alarm ON the Mac is NOT in scope for any agent -- no agent can reach that host.",
+      "note": "Filed by cloud fire cloud-20260902-2000, NOT dispatched by it: three workers were already live and this fire had no budget to see a fourth through. This is the one instrument task the driver judged worth adding against its own G-20 recommendation, because it protects the program's entire throughput rather than grading a corner of it -- four days of oracle-reaching capacity were lost to a failure that was DETECTED and never ESCALATED."
+    },
+    {
+      "id": "T494",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T493 -- re-derive the no-op classification against the real history, and attack the shallow-clone case",
+      "branch": "softhouse/T494-review-t493",
+      "files_hint": [
+        ".softhouse/reviews/t494-review-t493/",
+        ".softhouse/handoff/T494-review-t493.md"
+      ],
+      "dependencies": [
+        "T493"
+      ],
+      "contract_independent": true,
+      "description": "Independent adversarial review of T493. Re-derive the day-by-day classification from origin/main yourself; inherit no count. Attack in this order: (1) does the guard REFUSE, rather than answer, on a shallow clone -- the failure that makes a 7-day and a 14-day window agree is silent and this whole task exists because a silent wrong answer went unnoticed for four days; (2) does the bookkeeping-vs-real predicate misclassify a REAL commit whose subject happens to match the bookkeeping pattern, and vice versa; (3) is the guard FAIL-OPEN -- does it report \"no streak\" when it could not measure at all?",
+      "note": "Paired reviewer, filed in the same commit as T493."
+    },
+    {
+      "id": "T495",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "title": "Apply T490's four MAJORs and five MINORs to T487's A1 behaviour document -- and REFUTE any of them that is wrong",
+      "branch": "softhouse/T495-t490-conditions",
+      "files_hint": [
+        "docs/analysis/tierA-a1-behaviour.md",
+        ".softhouse/handoff/T495-t490-conditions.md"
+      ],
+      "dependencies": [
+        "T487",
+        "T490"
+      ],
+      "contract_independent": true,
+      "description": "Apply T490's conditions to docs/analysis/tierA-a1-behaviour.md on TOP OF T487's branch, so the pair lands corrected rather than landing wrong and being fixed later. THE TWO THAT CHANGE THE MONEY SECTION: F-1, a FIFTH binary-float money decision (SavingsTransactionDTO.java:51, overdraftAmount.doubleValue() > 0) which ROUTES A POSTING rather than taking an absolute value, invisible to both of T487's sweeps because neither pattern contains doubleValue; and F-2, which refutes T487's own bolded headline -- MathContext(19, HALF_UP) is 19 SIGNIFICANT DIGITS while numeric(19,6) is 6 DECIMAL PLACES, so the INSERT is a second rounding site and it is the one that fixes the value parity is graded on. Also F-3 (five reversal shapes, not four; the fifth writes reversed=true onto a NEWLY CREATED row) and F-4 (a citation that does not support its claim).\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's proposed patch REFUTED by the worker asked to apply it (T451 vs T449, T455 vs T448), and an independent third confirmed both refutations -- one of those patches would have shipped RED on a clean tree. RE-DERIVE each finding from the pinned source at 426a23544 before you write it in. If a finding is wrong, say so with your own citations and DO NOT apply it. The driver does not hand-apply a reviewer's patch, and neither do you.",
+      "note": "DELIVERED: branch softhouse/T495-t490-conditions @ d3280091, +728/-85 across its 2 declared files, SCOPE CLEAN against its T487 base 0b2545c1. ALL NINE of T490`s findings APPLIED. NO SIXTH BINARY-FLOAT SITE -- and it was established the way P-104 prescribes, by a STRUCTURAL sweep over all 63 scope files (every BigDecimal narrowing method, every scaling method, word-bounded float types, new BigDecimal(, BigDecimal.valueOf, Math., compareTo, equals) plus the five cited out-of-scope dependencies, NOT by a wider word list. new BigDecimal(double) appears nowhere in scope. TWO REFUTATIONS OF ITS OWN REVIEWER, neither reversing a finding: T490`s F-8 item 5 grep evidence is wrong at the pin (~45 hits across ~10 modules, not two), though the conclusion holds by a stronger route T495 established instead; and T490`s A-29 count of four flagging sites is THREE, which independently confirms the document`s own section 5.2. That is the THIRD and FOURTH time in this program a worker asked to apply a reviewer`s patch has refuted part of it. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T496",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "title": "Apply T492's four MAJORs to T489's Tier C gap audit -- and REFUTE any that is wrong",
+      "branch": "softhouse/T496-t492-conditions",
+      "files_hint": [
+        "docs/analysis/tierC-platform-gap-audit.md",
+        ".softhouse/handoff/T496-t492-conditions.md"
+      ],
+      "dependencies": [
+        "T489",
+        "T492"
+      ],
+      "contract_independent": true,
+      "description": "Apply T492's conditions to docs/analysis/tierC-platform-gap-audit.md ON TOP OF T489's branch. F-1 is the expensive direction: a false NOT-APPLICABLE on the fineract-provider half of organisation/teller (3 files, 1,225 LOC of SERVICE IMPLEMENTATIONS) while tierB-branch sits pending -- the same module-split pattern T489 documents in its own section 5.6 and applies correctly to four other cases, missed on the fifth. F-3: N8's PROSE names FineractPlatformTenant{,Connection} NOT-APPLICABLE while the partition assigns core/domain to G1, and getTimezoneId() is the SOLE source read by DateUtils.getDateTimeZoneOfTenant() -- the path that satisfies the two-timezone non-negotiable, so the prose would delete it. F-4: N9 entityaccess NOT-APPLICABLE STANDS (T492 ran both checks T489 conceded it skipped: it IS off by default at 0002_initial_data.xml:186-204 and tierB-branch does NOT depend on it) but the row omits 11 Tier A/B call sites. F-2: a citation that does not support its claim. Corrected subtotals T492 offers: 38,750 / 67,495 / 2,190 / 83,733 = 192,168 -- re-derive them, do not copy them.\n\nYOU ARE NOT A TYPIST. This program has TWICE had a reviewer's patch REFUTED by the worker asked to apply it. Re-derive each finding from the pinned source at 426a23544 before writing it in; refute with citations anything that is wrong.\n\nTWO THINGS THE DRIVER ALREADY CHECKED, so do not spend context re-deriving them and do NOT repeat the third as a finding: the dataqueries duplicate is REAL and its mechanism is PREFIX CONTAINMENT (tierC's .../infrastructure contains tierA-provisioning-reporting's .../infrastructure/dataqueries), and it is the ONLY such overlap among all context pairs; and T492's claim that program.json's go_target nexus/internal/platform 'does not exist' is NOT a contradiction -- all fourteen unported contexts have a non-existent go_target because the port creates the directory.",
+      "note": "DELIVERED: branch softhouse/T496-t492-conditions @ 47192650, +568/-43 across its 2 declared files, SCOPE CLEAN against its T489 base 0f1028cf. All four MAJORs re-derived from the pin before any edit; NONE REFUTED, two stronger than reported, one count corrected DOWNWARD (entityaccess call sites 10 files / 21 imports, not T492`s 11 / 22 -- T496 could not reproduce an eleventh from any search it ran, states its own number and flags the discrepancy). F-1 is worse than T492 reported and the driver re-verified it at the pin: the three files under fineract-branch/.../teller/service/ are INTERFACES and the two Tier C files IMPLEMENT them (TellerManagementReadPlatformServiceImpl.java:60, TellerWritePlatformServiceJpaImpl.java:64), so tierB-branch as scoped would have ported three interfaces with NO IMPLEMENTATIONS. Subtotals recomputed not copied and the partition still reconciles exactly at 192,168; GAP, GAP-real 32,887 and GAP-dagger 50,846 are UNCHANGED, so the correction does not move the number Tier C is planned against. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T497",
+      "status": "merged",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "coder",
+      "title": "Apply T491's four MAJORs and nine MINORs to T488's GL capture plan -- and REFUTE any that is wrong",
+      "branch": "softhouse/T497-t491-conditions",
+      "files_hint": [
+        "docs/analysis/tierD-gl-corpus-capture-plan.md",
+        ".softhouse/handoff/T497-t491-conditions.md"
+      ],
+      "dependencies": [
+        "T488",
+        "T491"
+      ],
+      "contract_independent": true,
+      "description": "Apply T491's conditions to docs/analysis/tierD-gl-corpus-capture-plan.md ON TOP OF T488's branch. All four MAJORs are text edits; none needs an oracle. F-1 is an EMPTY-SEARCH failure and the most instructive: 'exactly one POST /journalentries call site, used by one test' is FALSE -- there are five (GLAccountIntegrationTest:115; InitiateExternalAssetOwnerTransferTest:1315, :1349; JournalEntriesStepDef:384,397) -- and the shape-changing claim derived from it, 'Fineract's tests never post a manual JE for its own sake', is REFUTED by addManualJournalEntriesWithAssetExternalization. The cited grep was structurally blind to those sites and the universal claim was made over files the plan's own section 1.3 declares NOT OPENED. Two cheap externalAssetOwner cases were missed and should be added. ('never reverse one' is CONFIRMED and stands.) F-3 is a REASONING defect with the right outcome: the savings/deposit rejection is labelled LEGAL and 'no later agent may re-litigate', which reads an ACTIVATION gate as a SCOPE BLOCK against CLAUDE.md -- porting deposit code is in scope, enabling it is not. Keep the exclusion, fix the grounds and drop the finality. F-4: an unflagged copy hazard in the corpus the plan names as its top follow-up -- JournalEntriesStepDef:366 sets runningBalance=true, which admit.go:141 -> oraclederived.go:230-243 make INADMISSIBLE. F-2: a cited mock contradicts its claim. Also correct the counted MINORs: feature files are 48 not 56 (two searches conflated), the AccountingScenario split is 6/4/1 not 5/5/1, and the glclosures empty search is under-scoped AS CITED though it HOLDS when widened to the whole tree -- widen the citation rather than dropping the claim.\n\nYOU ARE NOT A TYPIST. Two reviewer patches in this program have been refuted by the worker asked to apply them. Re-derive each finding from the pinned source at 426a23544 before writing it in.\n\nTHE PLAN'S CORE PROPERTY MUST SURVIVE YOUR EDIT: no row may state a value that was not observed from a running oracle, and there is no oracle here. T491 swept all 29 ids and confirmed the plan currently holds that line. Adding the two externalAssetOwner cases must not break it -- they get inputs, preconditions and fields-to-record, never an expected value.",
+      "note": "Filed and dispatched by cloud fire cloud-20260902-2000 after T491 landed. Oracle-free. MERGED into main by cloud fire cloud-20260902-2000 as a reviewed stack. The merge RESULT was graded in a scratch worktree OUTSIDE the repo and the landed tree was ATTESTED IDENTICAL to the graded tree, 265f9192b6eea682f8975ec57dfebf201442f7cd. Bar on both main and the merge result: EXIT 2, probe line PRESENT and reading down, NO HARD guard failure, every graded census IDENTICAL including PNUMBER-CITATIONS. VERDICT UNUSABLE -- NO PASS IS CLAIMED and none is available while the oracle is unreachable. What is claimed is only this: the merge moves nothing the bar can still grade."
+    },
+    {
+      "id": "T498",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "G-12 evidence: the 10,000-row seed cap and the SILENT zero fallback -- the strongest of the four running-balance drift mechanisms",
+      "branch": "softhouse/T498-g12-seed-cap",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/capture/t498-g12-seed-cap/"
+      ],
+      "dependencies": [
+        "T495"
+      ],
+      "contract_independent": true,
+      "description": "T495 found a fourth and strongest drift mechanism for gate G-12 while repairing T487: sqlGenerator.limit(10000, 0) on all three running-balance seed queries (:113 / :138 / :197) plus a silent BigDecimal.ZERO fallback at :221-224. T495 rates it strongest because unlike the other three it needs NO PRIOR CORRUPTION and fails with NO EXCEPTION AND NO LOG LINE -- a ledger over 10,000 rows silently seeds from zero. Verify it independently, then add it to G-12's evidence in .softhouse/gates.md. Note for whoever ratifies G-22 as DEC-2 4.4a: say 'only two RAW-SQL UPDATEs', because saveAndFlush at AccountingProcessorHelper.java:1414-1416 issues more that no string grep can see.",
+      "note": "Filed by cloud fire cloud-20260902-2000 from T495 handoff items. NOT dispatched by it: T499 edits conformance.sh and a guard, which cannot be graded while the oracle is down and the bar returns UNUSABLE."
+    },
+    {
+      "id": "T499",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "title": "B-11: the float guard matches a WORD LIST, and P-104 is the reason that is not good enough",
+      "branch": "softhouse/T499-float-guard-shape",
+      "files_hint": [
+        ".softhouse/guards/",
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/t499-float-guard-shape/"
+      ],
+      "dependencies": [
+        "T495"
+      ],
+      "contract_independent": true,
+      "description": "The money float guard should match the SHAPE `\\.(float|double)Value\\s*\\(` on money types rather than a list of words. This is the mechanical form of P-104, recorded this fire: T487's two sweeps both missed SavingsTransactionDTO.java:51 (overdraftAmount.doubleValue() > 0, a POSTING-ROUTING decision reached from 8 call sites) because neither pattern contained a token matching doubleValue, while the four floatValue sites they did find were caught incidentally for containing '.multiply('. Extend the guard to the shape, drive it RED against that exact line and GREEN on a clean tree, and check whether the existing pin moves -- if it does, that is newly VISIBLE, not newly introduced, and the pin bump must say so. Also carries B-12: the oracle's OpenAPI schema types `amount` as a JSON NUMBER, so the port's schema will diverge -- record where.",
+      "note": "Filed by cloud fire cloud-20260902-2000 from T495 handoff items. NOT dispatched by it: T499 edits conformance.sh and a guard, which cannot be graded while the oracle is down and the bar returns UNUSABLE."
+    },
+    {
+      "id": "T500",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of the three REPAIRS (T495, T496, T497) -- the one round of this fire that landed without its own reviewer",
+      "branch": "softhouse/T500-review-repairs",
+      "files_hint": [
+        ".softhouse/reviews/t500-review-repairs/",
+        ".softhouse/handoff/T500-review-repairs.md"
+      ],
+      "dependencies": [
+        "T495",
+        "T496",
+        "T497"
+      ],
+      "contract_independent": true,
+      "description": "T487/T488/T489 each got a paired independent reviewer (T490/T491/T492) and each came back ACCEPT WITH CONDITIONS with MAJORs. The three REPAIRS that applied those conditions -- T495, T496, T497 -- were merged in their stacks WITHOUT a reviewer of their own. That follows this program's iteration-6 precedent, but it is a real gap and it is stated rather than hidden: plan-gate check 1 asks for a paired reviewer on every coder task, and these three are coder tasks that rewrote money-path prose.\n\nWHAT MAKES IT WORTH DOING RATHER THAN CEREMONY: each repair REFUTED part of what it was asked to apply -- T495 refuted two of T490's evidence claims (its F-8 item 5 grep is wrong at the pin; its count of four flagging sites is three), T496 corrected an entityaccess call-site count DOWNWARD from 11/22 to 10/21 and could not reproduce the eleventh, and T497 corrected two of T491's citations and refuted its 'both cases are cheap' cost claim. Every one of those refutations is itself unreviewed.\n\nATTACK FIRST, in this order: (1) T495's claim that there is NO SIXTH binary-float money site, which is the load-bearing money claim of the whole A1 document and rests on ITS OWN structural sweep -- re-derive it independently, and note that P-104 was recorded this fire precisely because such sweeps are how counted claims go wrong; (2) T497's confirmation that after its edit NO ROW of the capture plan states an unobserved value, including the three cases it ADDED (TDG-O1, TDG-O2, TDG-P1); (3) T496's re-derived Tier C subtotals and whether the partition still reconciles at 192,168.",
+      "note": "Filed by cloud fire cloud-20260902-2000 at merge time, naming its own process gap rather than leaving it implicit."
     }
   ],
   "cross_corroboration": {

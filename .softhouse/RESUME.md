@@ -1,113 +1,114 @@
-<!-- T288-WRAPPER-BANNER — written by fire-program.sh, not by a driver -->
-> ## STALE — this manifest was NOT rewritten by fire `20260903-140005`, which ended 2026-09-03T06:02:11Z.
->
-> Everything below predates that fire, so its task table, its "next action" and its
-> pause reason are all claims about a world that has moved. The driver did not reach
-> STEP 5.5, which is why a shell script is writing this.
->
-> - driver outcome: rc=`1` — **THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause UNKNOWN, read /Users/buv/Library/Logs/gerege-nbfi/fire-20260903-140005.jsonl before blaming the driver's logic.
-> - tasks.json reconcile: ran clean (see the reconcile| lines in /Users/buv/Library/Logs/gerege-nbfi/fire-20260903-140005.log)
-> - a task shown below as `in_progress` is a DEAD dispatch unless the reconcile line
->   above says it was refused; read `tasks.json` notes, not this table.
-> - fire log: `/Users/buv/Library/Logs/gerege-nbfi/fire-20260903-140005.log`
->
-> This banner is not maintained by anyone. It disappears when a driver rewrites
-> RESUME.md per STEP 5.5.4, and it comes back on any fire that fails to.
-<!-- /T288-WRAPPER-BANNER -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260829-080002` ITERATION 6 — **WAVE 2 IN FLIGHT. FIVE WORKERS LIVE.**
+## FIRE `cloud-20260902-2000` — CLOSED CLEAN. ZERO LIVE WORKERS. THREE REVIEWED STACKS MERGED.
 
-**WAVE 1 IS COMPLETE AND MERGED: FIVE REVIEWED PAIRS, TEN BRANCHES, EVERY MERGE ATTESTED BY TREE SHA.**
-`T458+T468` (373bf176) · `T465+T471` (dbfbae4f) · `T462+T469` (8f3136cb) · `T466+T477+T479` (4cb2103c) · `T467+T476+T481` (44966ad8).
-TWO STACKS WERE HELD UNMERGED ON THEIR REVIEWER MAJORS AND REPAIRED BEFORE LANDING -- T466 opened a fourth forgery route while closing three; T467 regressed two spellings its predecessor caught. Neither was merged on its first delivery.
-**THE FIRE EXIT NO LONGER REDDENS THE BAR** (T465): a lock-released tree now grades exit 0 probe 1 PASS, where the base tree gave exit 2 probe 0.
-**ORACLE SIGTERMed TWICE** (`Exited (143)`), the second time taking the Docker daemon with it; both recovered, both recorded in `.softhouse/reference-oracle.md`.
+> # ⚠ READ THIS BEFORE ANY OTHER LINE: THE LOCAL PIPELINE IS DEAD AND ONLY BUYAN CAN FIX IT
+>
+> **No fire has advanced this migration since 2026-08-29.** Measured on `origin/main` after
+> `git fetch --unshallow` (the cloud clone arrives shallow at 60 commits, and the first version of this
+> table was truncated at the graft — it said 14 real commits for 08-29 where the truth is 505):
+>
+> | Day | commits | bookkeeping no-ops | real work |
+> |---|---|---|---|
+> | 2026-08-25 | 3 | 3 | **0** |
+> | 2026-08-26 | 18 | 18 | **0** |
+> | 2026-08-27 | 104 | 16 | 88 |
+> | 2026-08-28 | 566 | 7 | 559 |
+> | 2026-08-29 | 513 | 8 | 505 |
+> | 2026-08-30 | 18 | 18 | **0** |
+> | 2026-08-31 | 18 | 18 | **0** |
+> | 2026-09-01 | 2 | 2 | **0** |
+>
+> Eighteen consecutive local launchd fires (six a day) took the lock, ran the wrapper reconcile,
+> released, and did nothing — about 90 seconds each. The wrapper classified the last one itself:
+> ***"THE DRIVER PRODUCED 0 MODEL TURNS** and no quota rejection was recorded — cause UNKNOWN"*, rc=`1`.
+>
+> **It is not the quota.** `classify_driver_turns()` (`.softhouse/bin/fire-program.sh:2442`) emits a
+> *different, named* line when a rate limit rejects a fire, and that line was not written. Zero assistant
+> events with no rejection is the CLI failing to produce a turn at all.
+>
+> **AND IT IS THE SECOND OUTAGE, NOT THE FIRST.** 08-25/26 is the same shape — 21 fires, 0 real commits —
+> and the program recovered on 08-27 with nothing recorded about why it stopped or restarted. So the
+> failure recurs, and both times it passed unremarked. **The wrapper DETECTS a zero-turn fire; nothing
+> ESCALATES one.** A fire that cannot run is exactly the fire that cannot report that it could not run,
+> so the alarm cannot live inside the fire. Filed as **`T493`/`T494`**, with the good property that it can
+> be driven RED/GREEN against *recorded truth*: 08-25/26 and 08-30/31/09-01 are known-RED windows and
+> 08-27/28/29 known-GREEN.
+>
+> **WHAT BUYAN MUST DO — no agent can, the Mac mini is unreachable from the cloud sandbox:** read
+> `/Users/buv/Library/Logs/gerege-nbfi/fire-20260901-080005.jsonl`, then run `claude -p "ok"` by hand and
+> read the real error. An expired credential is the first hypothesis, not the established cause.
+> **Until that host produces model turns again, the oracle-reaching half of this program is stopped** —
+> no vector can be captured and no conformance verdict can be reached at all.
 
-Oracle **REACHABLE** (`https://localhost:8443/fineract-provider/actuator/health`), PostgreSQL `localhost:5432`,
-pinned Fineract `/Users/buv/fineract @ 426a23544`.
+## Oracle state — MEASURED, NOT ASSUMED
 
-**IF YOU ARE READING THIS AND THE FIRE IS NOT RUNNING, THE WORKERS WERE KILLED.** Each was dispatched to an
-isolated worktree on the branch named below. Check `git log --oneline main..<branch>` for each; a branch with
-no commit means that worker died before committing and its task must be set `needs_retry`, never left
-`in_progress`.
+`conformance.sh` on main at fire end: **EXIT 2, probe line PRESENT and reading `down`**, no HARD guard
+failure. All three STEP-4 outage conditions hold. No Docker daemon, no PostgreSQL, `pg_isready` silent.
+**VERDICT: UNUSABLE — THIS IS NOT A PASS**, and this fire never claimed one.
 
-## WAVE 1 — DISPATCHED, LIVE
+## What landed — three reviewed stacks, tree-attested
 
-| Task | Branch | Subject |
-|---|---|---|
-| `T465` | `softhouse/T465-lock-frontier` | C-T461-1 MAJOR — the dead-path frontier is a function of whether the fire LOCK is tracked; releasing it reddens the bar |
-| `T466` | `softhouse/T466-skipwt-smudge` | T459's two MAJORs on T454 — SKIPWT and SMUDGE reach PASS with a CLEAN `git status`; the two-deletion cost claim is false |
-| `T462` | `softhouse/T462-wallclock-refusal` | T456's MAJOR on T451 — a safety refusal bounded by wall clock demotes on a slow host what it refuses on a fast one |
-| `T458` | `softhouse/T458-fixture-literal-pattern` | Six workers refused in one fire by the same reflex — record the pattern, make the refusal teach the fix |
-| `T467` | `softhouse/T467-t464-conditions` | T464's conditions on T455 — abuse B re-opens through `printf`; the F-6 fail-closed branch is reachable only by a crash |
+| Stack | Deliverable |
+|---|---|
+| `T487`+`T490`+`T495` | **`docs/analysis/tierA-a1-behaviour.md`** — slice A1, journal-entry posting: the double-entry engine and the money core of Tier A, which **had no behaviour document at all** while A2's has existed for eleven days |
+| `T488`+`T491`+`T497` | **`docs/analysis/tierD-gl-corpus-capture-plan.md`** — 30 capture cases + attestation step + one de-scoped case, ranked for scarce oracle time |
+| `T489`+`T492`+`T496` | **`docs/analysis/tierC-platform-gap-audit.md`** — 44 rows; **Tier C is a RANGE, ~33k–84k LOC, not 180k** |
 
-Wave 2 is the paired INDEPENDENT reviewers, one per landed worker branch, dispatched only after wave 1 lands.
+**Merge attestation:** graded on the **merge result** in a scratch worktree outside the repo; landed tree
+verified byte-identical to the graded tree **`265f9192b6eea682f8975ec57dfebf201442f7cd`**. Bar identical on
+`main` and on the merge result — exit 2, probe present reading `down`, no HARD guard failure, every graded
+census identical including `PNUMBER-CITATIONS`. **The only claim made: the merge moves nothing the bar can
+still grade.** 7,305 insertions / 15 files.
 
-## BAR ON `main` AT ITERATION START
-`bash .softhouse/conformance.sh` was re-run on the iteration-5 tip `9f341a2b` at iteration 6 start; result
-recorded in the iteration-6 close block. Iteration 5 attested EXIT 0, probe PRESENT x1 `up`, PASS 46 vectors /
-7884 cells, frontier 11 == 11, deadOccurrences 108, 16 guards timed.
+## The findings a future fire must not lose
 
-## ⚠ WHAT A WORKER OR THE NEXT FIRE MOST NEEDS TO KNOW
+1. **A fifth binary-float money decision, and it ROUTES a posting.** `SavingsTransactionDTO.java:51`,
+   `overdraftAmount.doubleValue() > 0`, reached from 8 call sites. The four `floatValue` sites take an
+   absolute value; this one sends the posting to a **different GL account pair**. `T495` then proved by a
+   **structural** sweep over all 63 scope files that there is **no sixth**, and that
+   `new BigDecimal(double)` appears nowhere in scope.
+2. **There are TWO rounding sites, not one.** `MathContext(19, HALF_UP)` is 19 **significant digits**;
+   `numeric(19,6)` is 6 **decimal places**. The INSERT is the second, and it is the one that fixes the
+   value parity is graded against. **`TDG-P1` (rank 1a) exists to observe what PostgreSQL does there —
+   round, truncate or error — and no vector on an oracle-computed amount may be promoted until it is
+   answered.** Unanswerable without a database.
+3. **`tierB-branch` was MIS-SCOPED and is now fixed.** Its paths held only `fineract-branch`, whose
+   `teller/service/` files are **interfaces**; the implementations are the 1,225 LOC in
+   `fineract-provider` that the Tier C audit had classified away. As scoped it would have ported three
+   interfaces with no implementations. Corrected to 5,162 LOC **before** anything was planned on it.
+4. **Reversal MUTATES the original row**, in **five** mutually inconsistent shapes — one of which writes
+   `reversed = true` onto a **newly created** row. Load-bearing against our append-only ledger.
+5. **Before planning `tierB-branch`:** Fineract's timezone is **per-tenant**, `m_office` has no zone
+   column, and `FineractPlatformTenant.getTimezoneId()` is its **sole** source. Ulaanbaatar (+08) and
+   Hovd (+07) **cannot coexist in one tenant** as the schema stands — and branches are what span them.
 
-**1. THE DRIVER PUSH GATE IS LIVE AND IT REFUSES THE DRIVER.** A transcript is bytes and nothing binds it to
-the tree it claims to have graded. The remedy is `bash .softhouse/hooks/bar-attest.sh HEAD`, which checks the
-tree out itself. **Never bypass; attest.** `bypass.log` does not exist and should stay that way.
+## OPEN GATES — none blocks work today
 
-**2. PUSH EVERYTHING BEFORE THE LOCK RELEASE.** `D .softhouse/LOCK` leaves the STATE set, so the release push
-takes the full-bar path, and the full bar on a lock-released tree is `EXIT 2` with **no probe line**. Nothing
-should depend on the exit push landing. `T465` is the task that fixes this and it is live above.
+`G-2`…`G-6`, `G-8`…`G-13`, `G-19`, `G-20` (**amended this fire**), `G-21`, `G-22`, **`G-23` (new, RESERVED)**,
+**`G-24` (new, DECIDED by the driver — veto only)**. No CONTRACT gate open, no `user` gate crossed.
 
-**3. THE WITNESS-FORGERY CHAIN IS AT EIGHT LINKS AND STILL OPEN.**
-`T404→T407→T431→T444→T445→T446→T454→T459`. Open and driven: `LONGSTRIP`, `LONGNOP`, `SKIPWT`, `SMUDGE` — the
-last two reach `PASS` with the guard fully intact **and `git status --porcelain` EMPTY**. `T466` is live on
-SKIPWT/SMUDGE; `T460` (the external verifier) follows and **is amended** — bare `git hash-object` is defeated
-by SMUDGE, use `--no-filters`.
+**`G-23` is the one for Buyan:** CLAUDE.md's Tier C rule is *"map onto Nexus first"* and **there is nothing
+here to map onto** — `nexus/go.mod` has zero `require` directives, `go list` returns six packages that are
+all Tier 0/A domain work or the conformance harness, `nexus/internal` holds only `apps/{ledger,loanschedule}`,
+no `.gitmodules`, no second module. Found by `T489`, reproduced in full by `T492`, verified a third time by
+the driver. Cost: 50,846 LOC unclassified, so Tier C is a 2.5× range instead of a number.
 
-**4. RUN THE BAR ON YOUR OWN INSTRUMENTS BEFORE YOU COMMIT.** Seven workers last iteration had a first bar
-refused, six for the same reflex: **spelling a real `.softhouse/...` path as a literal in a fixture**. Assemble
-paths from a variable (`S='.softhouse'`) or at run time. `T458` is live writing this into `patterns.md`.
+## NEXT FIRE STARTS HERE
 
-## QUEUE AFTER THIS WAVE
-`T463` → `T460` (**after** reading the amendment) → `T403` → `T443`, `T441` → `T419` → `T437` →
-`T434`/`T435`/`T436` → `T399`, `T425`, `T394`, `T395`.
-
-## OPEN GATES — none blocks anything, no CONTRACT gate open
-`G-4`, `G-5`, `G-8`, `G-10`, `G-12`, `G-19`, `G-20`, `G-21`, `G-22`.
-
-**For Buyan:** server-side prevention of `--no-verify` is partly a `user` item — designing and driving it
-against a throwaway bare remote is ENGINEERING and needs no gate; applying it to live `origin` needs repo-admin
-rights the agent does not hold. Note `pre-receive` is **not available on github.com** (Enterprise Server only),
-so the realistic instrument is a branch ruleset.
+1. **If you reach the oracle** — `TDG-P1` **first** (rank 1a): it unblocks a whole class of vectors and is
+   four SQL statements. Then the capture plan in its stated order.
+2. **`T500`** — the one round of this fire that landed **without its own reviewer**: the three repairs
+   `T495`/`T496`/`T497`. Stated rather than hidden. Each **refuted** part of what it was asked to apply, and
+   those refutations are unreviewed — starting with "there is no sixth float site".
+3. **`T493`/`T494`** — make a no-op fire streak *escalate*. Four days were lost twice to a failure that was
+   detected and never reported.
+4. **`T498`** (G-12's strongest drift mechanism: a 10,000-row seed cap with a silent zero fallback — no
+   prior corruption needed, no exception, no log line) and **`T499`** (B-11: make the float guard match the
+   **shape** `\.(float|double)Value\s*\(`, not a word list — the mechanical form of P-104).
+5. The 53 instrument tasks remain READY and were **deliberately not touched**: each must be graded on its
+   merge result, and no trustworthy verdict exists while the bar is UNUSABLE.
 
 ## Pause reason
-Not paused — iteration 6 wave 1 in flight at dispatch time.
+**Not paused. Fire closed clean, zero live workers, lock released.** The program's next move is gated on
+one thing this driver cannot reach: the Mac mini producing model turns again.

@@ -4052,3 +4052,47 @@ handoff's own §6 re-specification at `:362` says *"insert those seven `warn` li
 only the two summary figures were wrong, so the specification was never defective. `T458`'s committed
 bytes are left as written — a handoff is a dated record of what its author measured, and correcting it
 forward preserves the audit trail that editing it would erase.
+
+---
+
+**P-104 — A COUNTED CLAIM RESTING ON ONE PATTERN MATCH MEASURES THAT PATTERN'S VOCABULARY, NEVER THE CODE. THREE INDEPENDENT REVIEWERS IN ONE FIRE EACH BROKE ONE, AND TWO OF THE THREE BROKE IT THE SAME WAY.**
+
+> **THIS HEADING WAS REWRITTEN BEFORE IT EVER LANDED, AND THE GUARD IS WHY.** Its first wording ended
+> *"…IS A CLAIM ABOUT THE PATTERN'S VOCABULARY, NOT ABOUT THE WORLD"*, which is P-66/P-70's own
+> distinctive sentence — *"'Not found' is a statement about the search, never about the world"* — with
+> two words changed. `PNUMBER-CITATIONS` went **FATAL, 3 directive-file misdirections**: the glosses at
+> `.softhouse/bin/branch_sweep.py:33`, `.softhouse/bin/fire-program.sh:2934` and
+> `.softhouse/conformance.sh:2009` cite P-66 and P-70, and the new heading scored **10** against those
+> glosses where the ids they actually cite scored **0** and **1**. Three files that instruct future
+> workers were, for one commit, pointing at the wrong rule — and **nobody had edited them.**
+>
+> **A new rule that borrows an existing rule's sentence silently steals its citations.** The register is
+> matched on *text*, so the cost of an evocative heading is paid by every file that already quoted the
+> rule you echoed. Say the new thing in new words. This is `P-86`'s converse: `P-86` says cite a rule by
+> quoting its sentence rather than leaning on its number; P-104 adds that **the sentence is therefore an
+> identifier, and identifiers must not collide.**
+
+**Recorded by:** the `/softhouse-program` driver, cloud fire `cloud-20260902-2000`, 2026-09-02, from the three paired reviews of that fire — the first fire in this program whose entire output was source analysis rather than instrument work, which is very likely why the class became visible at all.
+
+This program already has the rule *"'Not found' is a statement about the search, never about the world."* **P-104 is the sharper, more dangerous special case: not the negative claim, but the COUNTED one.** *"There is exactly one X."* *"There are exactly four Y."* *"Z appears nowhere in these 63 files."* A reader takes those as facts about the code. They are facts about a regular expression.
+
+**Three reviewers, three authors, one class:**
+
+| Review | The author's counted claim | What the reviewer found | Why the search missed it |
+|---|---|---|---|
+| `T490` vs `T487` | *"exactly ONE rounding site on the posting path"*, and `setScale` appears **nowhere** in 63 files | A **fifth** binary-float money decision — `SavingsTransactionDTO.java:51`, `overdraftAmount.doubleValue() > 0`, reached from 8 call sites — and a **second** rounding site, the INSERT itself | Both of the author's sweeps (`"double \|float \|Double\|Float"` and the §6.2 pattern) contain **no token matching `doubleValue`**. The four `floatValue` sites it *did* find were caught **incidentally**, because they happen to contain `.multiply(` |
+| `T491` vs `T488` | *"exactly ONE `POST /journalentries` call site in the whole integration corpus"* | **Five** sites, and the shape-changing conclusion built on the count — *"Fineract's tests never post a manual JE for its own sake"* — **refuted** by a test that does exactly that | The cited grep was structurally blind to those sites, **and the universal was asserted over files the document's own §1.3 declares NOT OPENED** |
+| `T492` vs `T489` | `organisation.teller` → NOT-APPLICABLE | A **false NOT-APPLICABLE deleting a live Tier B subsystem**: teller is split across two Gradle modules and the 1,225-LOC service half was classified away while `tierB-branch` sits `pending` | Not a grep, but the same shape — a conclusion drawn over **one** search domain (a module) and stated over **the subsystem**. The author documents this exact split trap in its own §5.6 and applies it correctly to four other cases |
+
+**THE TELL, and it is cheap to check:** the claim contains a **cardinal or a quantifier** — *exactly one*, *all four*, *nowhere*, *never*, *the only* — and its evidence is a **single pattern match**. One search cannot establish a universal over a domain it does not cover, and **the vocabulary of the pattern IS the domain it covers.** `floatValue` and `doubleValue` are the same idea and share no substring; a sweep naming one and not the other is not a sweep for binary floats, it is a sweep for the word the author happened to think of.
+
+**Worse, the failure is silently self-confirming.** A grep that finds four sites *looks like it worked*. Nothing about a result set announces the members it could not match, so the author gets positive evidence for a number that is wrong, and the more sites the pattern does find, the more confident the wrong count becomes.
+
+**THE REMEDY IS NOT A BETTER PATTERN — that is the same move again, one word wider.** Do one of these instead, and say in the document which one you did:
+
+1. **Enumerate the domain, then classify it.** Read all 63 files, or list every method on the type. Bounded and finite beats clever.
+2. **Search for the SHAPE, not the word.** *"Any method whose return type is a Java primitive, called on a `BigDecimal`"* covers `doubleValue`, `floatValue`, `intValue` and `longValue` at once. A conversion is not a spelling.
+3. **Search for the COMPLEMENT and check it is empty**, which is a different query that fails differently.
+4. **Downgrade the claim to what the evidence actually supports.** *"The following four sites, found by this pattern"* is TRUE, useful, and costs the author nothing. **`[UNVERIFIED]` has no penalty in this program; a confident wrong cardinal does.**
+
+**AND THE GENERAL LESSON THE THREE CASES SHARE:** every one of these documents was **good** — three reviewers rated them ACCEPT WITH CONDITIONS and the citation support rates were 96.2 %, 98.5 % and 97.0 %. **The counted claims were the defects, and they were the BOLDED HEADLINES.** The most confident sentence in each document was the wrong one, because a cardinal is what an author bolds. So: **when reviewing, go to the bolded number first.** When authoring, treat your own bolded cardinal as the claim most likely to be wrong, and say which of the four remedies above earned it.

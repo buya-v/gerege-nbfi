@@ -4885,3 +4885,143 @@ plus a rights fact the agent cannot supply, so it is escalated rather than decid
 
 Only this: **may a branch ruleset be applied to `main` on the live `origin`, and by whom?**
 Nothing else in this gate needs an answer, and nothing is waiting on it.
+
+---
+
+## G-20 — AMENDMENT, cloud fire `cloud-20260902-2000`, 2026-09-02
+
+**Amends, does not supersede.** The gate's original framing stands, including its warning — repeated
+here because this driver nearly broke it — that **`files_hint` undercounts, and "zero port work is
+happening" is FALSE and should not be quoted.** This driver first measured the READY queue by
+`files_hint` (46 of 53 tasks declaring only `.softhouse/`, 5 touching `nexus/`, and all 5 of those
+pointing at a `…/conformance/` directory) and was about to record it as *"not one READY task ports a
+Fineract behaviour."* **That claim is withdrawn before it was ever relied on.** It is a statement about
+what tasks *declare*, and G-20 already established that what tasks declare is not what they touch.
+
+### The ratio, re-measured on git over the same 7-day window the gate defined
+
+The gate's own instrument, re-run. **A caution about the count itself:** this fire runs in a cloud
+sandbox whose clone arrived **shallow** — 60 commits, reaching back only to 2026-08-29 21:51 — and a
+`--since=7 days` window over a shallow clone silently answers for the shallow part only, giving an
+identical answer for a 7-day and a 14-day window without saying why. The numbers below were taken
+**after `git fetch --unshallow`** (2,809 commits, back to 2026-08-17). Any measurement in a cloud fire
+that predates that fetch is truncated at the graft and must not be compared with a local fire's.
+
+| Area | Commits, 7 days to 2026-09-02 | Share of 1,227 | At G-20's raising (2026-08-28) |
+|---|---|---|---|
+| `.softhouse/capture/` | 542 | **44.2 %** | 34.5 % |
+| `.softhouse/reviews/` | 281 | **22.9 %** | 16.8 % |
+| `.softhouse/conformance.sh` | 46 | 3.7 % | 3.7 % |
+| `.softhouse/bin/` | 38 | 3.1 % | 3.7 % |
+| **`nexus/` (all Go, harness included)** | **33** | **2.7 %** | 2.8 % |
+| **`.softhouse/vectors/`** | **14** | **1.1 %** | 1.1 % |
+| `docs/` | 1 | 0.1 % | — |
+
+**The ratio did not hold; it got worse.** Capture grew 34.5 → 44.2 % of all commits and review grew
+16.8 → 22.9 %, while `nexus/` — which still includes the grading harness, so it is an *upper* bound on
+porting — sat flat at 2.7 %, and the vector store, the thing the whole instrument exists to fill, at
+1.1 %. Five days of the program's largest-ever output moved the instrument and left the port where it
+was.
+
+**One honest confound, stated rather than netted out:** three of those seven days produced no work at
+all (see the outage below), so the window is five working days wide, not seven. That changes the
+denominator, not the direction — every one of the 1,227 commits is from the five days that ran.
+
+### What this fire did about it, without waiting for an answer
+
+Under CLAUDE.md § Answering gates, *decide and record* rather than ask. This fire dispatched three
+tasks and **not one of them touches the instrument**: `T487` (slice A1 behaviour extraction — the
+double-entry engine, the money core of Tier A, which has had no behaviour document at all while A2's
+has existed for eleven days), `T488` (mining the GL test corpus into a capture plan the next
+oracle-reaching fire executes), `T489` (the Tier-C gap audit, which exists to *shrink* the port by
+finding what Nexus already provides). Each has a paired independent reviewer filed in the same commit.
+
+That is a steer, not a fix, and it was available only because the oracle was down: with no reachable
+oracle none of the 53 instrument tasks could be graded, so the fire had to spend itself on source work.
+**The uncomfortable reading is that the program reaches for the port when the instrument is unavailable,
+and reaches for the instrument the rest of the time.**
+
+### What Buyan is being asked — unchanged, and still blocking nothing
+
+A steer on effort allocation. The driver's standing recommendation, `chosen_by: agent`: **cap
+instrument work per fire and require every fire to land at least one task whose deliverable is ported
+behaviour, a behaviour document, or a captured vector.** Nothing waits on the answer.
+
+---
+
+## G-23 — the Gerege Nexus platform tree is NOT IN THIS REPOSITORY, so "map onto Nexus first" is currently unexecutable
+
+**Raised by:** the `/softhouse-program` driver, cloud fire `cloud-20260902-2000`, 2026-09-02.
+**Class:** **RESERVED** under CLAUDE.md § Answering gates — no amount of reading source can tell an agent where a repository is, or whether it exists yet.
+**Blocks:** nothing today. `tierC-platform-map-first` depends on `tierA-provisioning-reporting`, which is not started. It blocks **finishing** the Tier-C audit, not any current work.
+
+### What was found, and it was established three times independently
+
+CLAUDE.md's Tier C rule is:
+
+> **Map onto Nexus first; port only the genuine gaps** — re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.
+
+**There is nothing here to map onto.** `T489` (the audit) found it, `T492` (its independent reviewer) reproduced it "in full", and the driver then checked it a third time rather than relaying it on two workers' word:
+
+- `nexus/go.mod` declares `module github.com/gerege/nexus`, `go 1.23`, and **zero `require` directives** — no `pgx`, no HTTP framework, no scheduler.
+- `go list ./...` returns **6 packages**, every one Tier 0 / Tier A domain work or the conformance harness: `apps/ledger`, `apps/ledger/conformance`, `apps/loanschedule`, `apps/loanschedule/conformance`, `…/conformance/cmd/conformance`, `apps/loanschedule/contract`.
+- `nexus/internal/` contains **only** `apps/`, and `apps/` contains **only** `ledger` and `loanschedule`.
+- No `.gitmodules`. The only other `go.mod` files in the repository are probe and guard fixtures under `.softhouse/`.
+
+So the composition layer this program calls "Nexus" is, in this repository, **two ported domain packages and a grading harness**. The platform — auth, tenancy, jobs, persistence, HTTP — is not present.
+
+### What it costs, stated as a range because that is what is known
+
+`T489` recorded **zero** NEXUS-PROVIDES rows rather than dropping subsystems on the strength of doctrine, which was the right call: *"doctrine is not a `FILE:LINE`."* The consequence is that **50,846 LOC of Tier C is unresolved** — classified `GAP-†`, meaning "would be a gap **if** Nexus provides nothing." So Tier C's true size is a **range, ~33k–84k LOC, a 2.5× spread on the largest unported context**, and it cannot be narrowed from inside this repository.
+
+`T492` is explicit about the planning consequence: **safe to plan slices C-1…C-5 from; not safe to plan the 7 `†` rows**, because planning those now risks exactly the unjustified plumbing port CLAUDE.md calls a rejection.
+
+### What Buyan is being asked
+
+**One question: where is the Gerege Nexus platform tree, and should it be attached to this session's repository set?** Three shapes of answer, and the driver cannot pick between them because each is a fact about Gerege, not about code:
+
+1. It exists in another repository → name it, and it can be attached (`add_repo`) and the 7 `†` rows re-graded. This is `R-1` in the audit.
+2. It exists but is not something this program should read → say so, and Tier C is planned at the upper bound (~84k) with the `†` rows treated as real gaps.
+3. It does not exist yet → then "map onto Nexus first" is a rule about a future artefact, CLAUDE.md's Tier C wording should say so, and Tier C is planned at the upper bound.
+
+**Until it is answered, the driver plans Tier C as a range and does not plan the `†` rows.** Nothing else waits on it.
+
+---
+
+## G-24 — Fineract's own user and staff tables are two-field names, and our name rule is three fields
+
+**Raised by:** the `/softhouse-program` driver, cloud fire `cloud-20260902-2000`, 2026-09-02, from a `T489` finding confirmed by `T492` and then **verified directly by the driver at the pin**.
+**Class:** **ENGINEERING / PRODUCT** — so, per CLAUDE.md § Answering gates, the driver **decides and recommends** rather than asking, and Buyan retains veto. It is filed as a gate because it sits on the seam between **two** ratified positions, not because an agent may not act.
+**Blocks:** nothing today. It lands on `tierC-platform-map-first` slice C-4 and on `tierB-clients-groups`, neither started.
+
+### The collision, verified at `426a23544`
+
+Two CLAUDE.md non-negotiables meet here and, read literally, cannot both hold:
+
+> **Names are three fields** — ovog (clan), patronymic, given name. Never `first_name`/`last_name`.
+
+> **Contract-first, schema-first, strangler.** … **adopt Fineract's PostgreSQL schema**.
+
+And Fineract's schema is two-field, in both person tables the platform owns — opened and read by the driver, not relayed:
+
+| Type | File | Fields |
+|---|---|---|
+| `AppUser` | `fineract-core/…/useradministration/domain/AppUser.java:73-78` | `firstname` **NOT NULL** (100), `lastname` **NOT NULL** (100) |
+| `Staff` | `fineract-core/…/organisation/staff/domain/Staff.java:41-48` | `firstname` (50), `lastname` (50), `display_name` (100) |
+
+`firstname`/`lastname` are `nullable = false` on `AppUser`, so this is not a field we can simply leave empty.
+
+### The driver's decision, `chosen_by: agent`
+
+**The three-field rule governs, and the deviation is from the schema — named, documented and bounded to the person tables.** Reasoning:
+
+- The name rule is a **correctness** requirement about Mongolian people, whose given name is not a "first name" and whose patronymic is not a "last name". Storing a Mongolian name in `firstname`/`lastname` does not merely look wrong; it loses which field is which, and CLAUDE.md separately requires matching on **registration number** precisely because names do not identify.
+- "Adopt Fineract's schema" is a **migration-safety** rule: it exists so the reference oracle and the Go module read the same tables and parity means something. That purpose is fully served by keeping the columns and **adding** the three, not by keeping the two alone.
+- So: carry `ovog`, `patronymic`, `given_name` as the **source of truth**, and keep Fineract's `firstname`/`lastname` as **derived compatibility columns** populated from them, so the oracle instance still runs and shadow parity still works. Fineract's own `display_name` on `Staff` is the precedent that a derived name column is already this schema's idiom.
+- **Rejected alternative:** deviate the schema outright and drop `firstname`/`lastname`. It breaks the reference oracle, which needs those columns NOT NULL to start, and parity across two different schemas is not parity.
+
+**This is reversible and pre-ratification.** No DEC covers it yet; the decision above is what the driver will plan against unless Buyan overrules.
+
+### What Buyan is being asked — nothing, unless he disagrees
+
+The decision is recorded and the program proceeds on it. Overrule it if the compatibility-column approach is wrong for a reason the driver cannot see from source — for example, if an FRC reporting format constrains how a staff name is stored.
