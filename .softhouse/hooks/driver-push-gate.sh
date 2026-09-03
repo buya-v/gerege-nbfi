@@ -382,19 +382,29 @@ while read -r LREF LSHA RREF RSHA; do
 
   # -------------------------------------------------------------------------------------------
   # THE PUSHED RANGE, resolved ONCE, before C1 -- because C1 needs it too now (L-6).
+  # C2 RANGE CORRECTION (2026-09-03). C2's stated rule is about the driver's own NON-MERGE
+  # FIRST-PARENT commits on `main` -- both comments above say so. The implementation walked
+  # `git rev-list --no-merges <range>`, WITHOUT --first-parent, which also returns every commit
+  # that arrived lawfully as the second parent of a merge. It therefore refused T508
+  # (1abd3a11), which was written on softhouse/T508-journalentry-insert-schema, independently
+  # reviewed by T520, and merged at 7330d5ae. Measured on that push: rev-list saw 5 commits,
+  # --first-parent saw 3, and 1abd3a11 was absent from the second. Driven both ways before the
+  # change: a lawful worker merge yields 1 hit without --first-parent and 0 with it; a real
+  # driver-written commit on main yields 1 BOTH ways. The flag removes the false positive and
+  # keeps the refusal. This is the T509 shape -- matching a SHAPE, not the PROPERTY -- in C2.
   # -------------------------------------------------------------------------------------------
   if [ "$RSHA" = "$ZERO" ] || ! git rev-parse --verify --quiet "$RSHA^{commit}" >/dev/null; then
     RANGE="$LSHA"
     say "  range: the remote has no readable tip; grading the last 50 commits of $LSHA."
     ALLCOMMITS="$(git rev-list --max-count=50 "$LSHA")" \
       || die "ABORT -- git rev-list failed over $LSHA. An error is never an empty range."
-    NONMERGE="$(git rev-list --no-merges --max-count=50 "$LSHA")" \
+    NONMERGE="$(git rev-list --no-merges --first-parent --max-count=50 "$LSHA")" \
       || die "ABORT -- git rev-list failed over $LSHA. An error is never an empty range."
   else
     RANGE="$RSHA..$LSHA"
     ALLCOMMITS="$(git rev-list "$RANGE")" \
       || die "ABORT -- git rev-list failed over $RANGE. An error is never an empty range."
-    NONMERGE="$(git rev-list --no-merges "$RANGE")" \
+    NONMERGE="$(git rev-list --no-merges --first-parent "$RANGE")" \
       || die "ABORT -- git rev-list failed over $RANGE. An error is never an empty range."
   fi
 
