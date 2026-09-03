@@ -7678,7 +7678,7 @@
       "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
     },
     {
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "contract_independent": false,
@@ -7695,7 +7695,7 @@
       ],
       "dependencies": [],
       "description": "Four sites pass SQL to a mutating driver call in a form `guard_ledger_invariants` cannot statically read — assembled at run time, or a batch/copy call carrying no SQL string:\n  - ledger/journalentry_postgres.go:59 `r.db.Exec(...)`   <-- THIS ONE IS ON THE JOURNAL-ENTRY PATH\n  - workingcapital/postgres.go:366 `r.db.Exec(...)`\n  - platform/postgres/migrate.go:75 `pool.Exec(...)` and :93 `tx.Exec(...)`\n\nTHESE ARE NOT ACCUSATIONS. The guard is refusing to ASSUME a statement it cannot read is clean — it cannot certify the call is not an UPDATE or DELETE against acc_gl_journal_entry (I-4, append-only) or a write to a balance column (I-3). An unreadable statement is refused rather than waved through, which is correct.\n\nREPAIR, per the guard's own text: build the SQL as a string literal so it is statically readable, or state the exemption in DEC-2 and amend the guard. PREFER THE LITERAL. Amending a guard over a money non-negotiable to stop it complaining about your code is the shape this program rejects; if you genuinely need the exemption (migrate.go executing migration text read from files is the plausible candidate), argue it in the handoff and state precisely what the exemption does and does not cover. A DEC-2 amendment is a `user` gate — propose, do not ratify.\n\nGRADE journalentry_postgres.go:59 HARDEST. acc_gl_journal_entry is the append-only ledger itself: I-4 says no UPDATE and no DELETE reaches it, corrections are reversing entries. If that Exec turns out to mutate journal entries, you have found something far more serious than an unreadable string, and it goes in the handoff as a MAJOR with the evidence, not as a quiet fix.\n\nPostgreSQL only, via pgx. Do not introduce any MySQL/MariaDB/Oracle driver or dialect.\n\nBAR: the repair is done when `bash .softhouse/conformance.sh` no longer reports YOUR sites under `ledger-invariants`. Run it with **bash**, never sh/zsh/dash — exit 3 is the harness's wrong-interpreter refusal, not a result. EXIT 2 WITH NO `probe = ` LINE PRINTED means a HARD guard failed, which is the state the tree is in right now; it is NOT an oracle outage and you must not park for it. Note the bar is red for OTHER tasks' sites too, so grade yourself on the disappearance of your own lines, not on a green run. `go build ./...` and `go test ./...` in nexus/ must stay green. Money stays INTEGER MINOR UNITS everywhere, including intermediates and fixtures: no float32/float64/big.Float in any money path.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
-      "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
+      "note": "landed c482b07d on softhouse/T503-opaque-sql. VERIFIED BY THE DRIVER: check-ledger-invariants.sh run against the branch reports ZERO OPAQUE-SQL (the remaining 9 are T501's savings and T502's loanproduct). SCOPE VIOLATION, minor but destructive if merged naively: it committed .softhouse/tasks.json, which is outside its files_hint, carrying a STALE copy that would revert T501->in_progress, T504->pending and DELETE T507. Merge must take main's tasks.json. Recorded rather than waved through. Awaiting T506 review."
     },
     {
       "status": "in_progress",
@@ -7737,7 +7737,7 @@
       "description": "INDEPENDENT review of T502. Read its handoff FROM ITS BRANCH (`git show softhouse/T502-loanproduct-i3:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
     },
     {
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "contract_independent": false,
@@ -7753,7 +7753,8 @@
       "dependencies": [
         "T503"
       ],
-      "description": "INDEPENDENT review of T503. Read its handoff FROM ITS BRANCH (`git show softhouse/T503-opaque-sql:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
+      "description": "INDEPENDENT review of T503. Read its handoff FROM ITS BRANCH (`git show softhouse/T503-opaque-sql:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
+      "note": "dispatched by fire 20260903-170002; branch recorded BEFORE spawn"
     },
     {
       "id": "T507",
@@ -7773,6 +7774,46 @@
         "T504"
       ],
       "description": "T501 raised this as backlog rather than fixing it out of scope, and it is a CLAUDE.md 'schema-first' violation, not a style point.\n\nTHE CLAIM TO RE-VERIFY FIRST (do not inherit it): in Fineract, `SavingsAccountSummary` is @Embeddable and @Embedded into SavingsAccount, so those columns live on `m_savings_account` keyed by id — there is NO `m_savings_account_summary` TABLE. Check it yourself against the pinned checkout /Users/buv/fineract (commit 426a23544) and against 0001_initial_schema.xml. If T501 was wrong, say so and close this.\n\nIF IT HOLDS: nexus/ creates no such table in any migration either, so the code T501 deleted could never have executed, and the SELECT that survives cannot either. CLAUDE.md: 'Contract-first, schema-first' and 'adopt Fineract's PostgreSQL schema' — and parity is only meaningful when the reference oracle and the Go module read the SAME schema. A read against a table that exists in neither is not a port.\n\nRetarget the reads onto the real Fineract schema. This is a SCHEMA repair, and it must not reintroduce any write to a balance column — T501 established that the savings balance is a fold over the append-only transaction stream, held in nothing and stored nowhere. Keep it that way; check-ledger-invariants.sh must still report zero savings sites when you are done.\n\nLook for the same shape elsewhere while you are in there: a Go repository reading or writing a table that the adopted schema does not define is a class, and T501 found one instance by accident. Report the census in your handoff even if you only repair savings."
+    },
+    {
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T508",
+      "target": "code",
+      "role": "coder",
+      "title": "MAJOR (T503): the journal-entry INSERT CANNOT EXECUTE — wrong column names and three missing NOT NULL columns",
+      "branch": "softhouse/T508-journalentry-insert-schema",
+      "files_hint": [
+        "nexus/internal/apps/ledger/journalentry_postgres.go",
+        "nexus/internal/apps/ledger/journalentry_test.go",
+        ".softhouse/handoff/T508-journalentry-insert-schema.md"
+      ],
+      "dependencies": [
+        "T506"
+      ],
+      "description": "T503 made the journal-entry INSERT statically readable and, being able to read it for the first time, PROVED AGAINST THE REFERENCE ORACLE'S PLANNER that it cannot run. Re-verify with your own PREPARE/ROLLBACK probes before acting — do not inherit the claim.\n\n  1. It names `createdby_id` / `lastmodifiedby_id`; the schema has `created_by` / `last_modified_by`. Postgres: ERROR: column \"createdby_id\" ... does not exist.\n  2. Correcting only those, it plans clean but STILL omits three NOT NULL columns with no default: `created_on_utc`, `last_modified_on_utc`, `submitted_on_date`.\n  3. The IDENTICAL error reproduces against main's pre-T503 statement, so this is PRE-EXISTING and was merely invisible while the SQL was unreadable.\n\nWHY NOBODY NOTICED, and this is the part that matters more than the bug: PostgresJournalEntryRepository has NO CALLERS and no test touches a database. The write path of the append-only ledger — the money core of this entire migration — is unreachable, untested, and was until now unreadable. A green `go test ./...` said nothing about it.\n\nT503 deliberately did NOT fix this: choosing values for those three columns is a schema-parity decision that needs oracle vectors, not a side effect of a readability repair. That judgement is endorsed. Capture the vectors from the reference oracle (Fineract, reachable on a local fire) and derive the values; NEVER synthesise a vector you did not observe. Integer minor units; the INSERT must stay an INSERT — I-4 forbids UPDATE and DELETE against acc_gl_journal_entry, corrections are reversing entries."
+    },
+    {
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T509",
+      "target": "code",
+      "role": "coder",
+      "title": "THE LEDGER GUARD HAS A BLIND SPOT ON ITS OWN NON-NEGOTIABLE: a stored balance table it cannot see (T503 B-2, B-1)",
+      "branch": "softhouse/T509-ledgerguard-blindspot",
+      "files_hint": [
+        ".softhouse/guards/ledgerguard/",
+        ".softhouse/guards/drive-red-ledger-invariants.sh",
+        ".softhouse/handoff/T509-ledgerguard-blindspot.md"
+      ],
+      "dependencies": [
+        "T506"
+      ],
+      "description": "B-2, AND IT IS THE MORE SERIOUS OF THE TWO. `m_wc_loan_balance` is a STORED BALANCE TABLE and guard_ledger_invariants cannot see it, because `balanceNameRe` tests COLUMN names and not one of that table's 13 columns contains the string `balance` — the TABLE NAME does. So the I-3 findings this program has been acting on are the ones whose columns HAPPEN to be spelled `..._balance_derived`. That is a fact about the spelling, not about the tree (P-104).\n\nTHE QUESTION TO ANSWER, and it is a census not an opinion: how many stored-balance shapes does this guard currently miss? Extend the detection to the table name, then RE-RUN THE WHOLE TREE and report what appears. Expect new findings; that is the point. If the census comes back empty, prove the search was capable of finding something by driving it RED on a planted case.\n\nB-1 (smaller, fail-closed in the right direction): `sqlArgOf` only skips a leading context argument when it is a bare identifier, so `db.Exec(r.ctx, <plain literal>, ...)` is classed OPAQUE-SQL EVEN WITH READABLE SQL. This forced T503 to write a `ctx := r.ctx` local in Append, which it commented rather than hid. T503's handoff §7 carries an exact patch — re-derive it, do not paste it.\n\nTHIS IS A GUARD OVER A MONEY NON-NEGOTIABLE. Widening it may not weaken it: every existing detection class must still fire, and drive-red-ledger-invariants.sh must still drive every polarity. A guard change that makes the bar greener is presumed wrong until the RED drives say otherwise."
     }
   ],
   "cross_corroboration": {
