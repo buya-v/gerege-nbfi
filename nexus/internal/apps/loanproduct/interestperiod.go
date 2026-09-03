@@ -46,9 +46,27 @@ type InterestPeriod struct {
 	RateFactor                  *big.Rat
 	RateFactorTillPeriodDueDate *big.Rat
 
-	creditedPrincipal          Money
-	creditedInterest           Money
-	disbursementAmount         Money
+	creditedPrincipal  Money
+	creditedInterest   Money
+	disbursementAmount Money
+
+	// balanceCorrectionAmount and outstandingLoanBalance are NOT LEDGER
+	// BALANCES and never become a database column — see the package comment in
+	// doc.go, "The two \"balance\"-named cells in this package are NOT ledger
+	// balances", for the oracle evidence. In one line each:
+	//
+	// balanceCorrectionAmount is a SIGNED DELTA applied to the schedule's
+	// principal projection; the oracle only ever adds a negated amount to it
+	// [VERIFIED: ProgressiveEMICalculator.java:922, :952, :1129]. It is a
+	// summand of the roll-forward below, exactly like disbursementAmount and
+	// capitalizedIncomePrincipal.
+	//
+	// outstandingLoanBalance is the principal base of THIS SEGMENT's
+	// declining-balance interest arithmetic and nothing else
+	// [VERIFIED: InterestPeriod.java:151]. It is a SWEPT SNAPSHOT, refreshed
+	// only by UpdateOutstandingLoanBalance below; between sweeps the oracle
+	// deliberately leaves it stale, so it is not equivalent to an on-demand
+	// derivation and must not be replaced by one.
 	balanceCorrectionAmount    Money
 	outstandingLoanBalance     Money
 	capitalizedIncomePrincipal Money
@@ -188,6 +206,28 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 // last segment, subtracting the previous period's due principal and adding back
 // its paid principal; a later segment seeds from the immediately preceding
 // segment in the same period.
+//
+// THE TWO ASSIGNMENTS BELOW ARE NOT LEDGER-BALANCE WRITES, and they are the
+// reason the I-3 source guard refuses this package. They write a SWEPT SNAPSHOT
+// of a schedule projection that never becomes a database column anywhere in the
+// oracle — see doc.go for the full evidence. What matters here is why the cell
+// cannot simply be derived on read instead:
+//
+// This function is the WHOLE refresh mechanism. The oracle calls it only from
+// explicit sweeps [VERIFIED: ProgressiveEMICalculator.java:1254-1256, and the
+// per-repayment-period sweeps at :1647, :1654 and :1667], and it deliberately
+// leaves the cell unrefreshed in between — RepaymentPeriod.copyWithoutPaidAmounts
+// zeroes each copied segment's balanceCorrectionAmount, which is a summand of
+// the expression below, and does NOT re-run this function
+// [VERIFIED: RepaymentPeriod.java:173-197]. So the value read between two sweeps
+// is, by construction, not the value this expression would produce if evaluated
+// at that moment. Turning the cell into an on-demand derivation would change the
+// numbers at every such point, which is a parity break, not a repair.
+//
+// This is the opposite of RepaymentPeriod's derived cells: those carry an oracle
+// Memo with an invalidation key, are observationally inert, and are therefore
+// recomputed on every read by this port (see repaymentperiod.go). This cell has
+// no invalidation key and is observationally live.
 func (ip *InterestPeriod) UpdateOutstandingLoanBalance() {
 	if ip.IsFirstInterestPeriod() {
 		previous := ip.repaymentPeriod.Previous()
@@ -220,6 +260,15 @@ func (ip *InterestPeriod) CreditedAmounts() Money {
 
 // AddBalanceCorrectionAmount mutates balanceCorrectionAmount by adding the
 // supplied amount [VERIFIED: InterestPeriod.java:165-167].
+//
+// balanceCorrectionAmount is a SIGNED DELTA, not a balance: every oracle caller
+// adds a NEGATED principal amount to it
+// [VERIFIED: ProgressiveEMICalculator.java:922, :952, :1129;
+// RepaymentPeriod.java:192-194; ProgressiveLoanInterestScheduleModel.java:257,
+// :290]. It is one summand of UpdateOutstandingLoanBalance's roll-forward above,
+// structurally identical to disbursementAmount and capitalizedIncomePrincipal,
+// whose Add* methods the I-3 guard does not flag. This one is flagged because
+// its name contains the substring "balance" — see doc.go.
 func (ip *InterestPeriod) AddBalanceCorrectionAmount(additional Money) {
 	ip.balanceCorrectionAmount = ip.BalanceCorrectionAmount().plus(additional)
 }

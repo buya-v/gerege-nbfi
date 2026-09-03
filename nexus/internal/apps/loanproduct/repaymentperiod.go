@@ -537,7 +537,17 @@ func (p *RepaymentPeriod) copyWithoutPaidAmounts(previous *RepaymentPeriod) *Rep
 	for _, ip := range c.InterestPeriods {
 		if !ip.BalanceCorrectionAmount().IsZero() {
 			// addBalanceCorrectionAmount(negated) nets the cell to exactly zero,
-			// so writing zero directly is the same result without the extra add.
+			// so writing zero directly is the same result without the extra add
+			// [VERIFIED: RepaymentPeriod.java:192-194].
+			//
+			// NOT A LEDGER-BALANCE WRITE. balanceCorrectionAmount is a signed
+			// delta on the schedule's principal projection, never a column —
+			// see doc.go. Note also what the oracle does NOT do here: it clears
+			// this summand and leaves the segment's outstandingLoanBalance, which
+			// the summand feeds, untouched until the next explicit sweep. That
+			// is the staleness UpdateOutstandingLoanBalance's comment describes,
+			// and it is why neither cell may be replaced by an on-demand
+			// derivation.
 			ip.balanceCorrectionAmount = ip.zero()
 		}
 	}
