@@ -356,15 +356,31 @@ func NewPostgresWorkingCapitalLoanBalanceRepository(db postgres.DB) *PostgresWor
 	return &PostgresWorkingCapitalLoanBalanceRepository{db: db}
 }
 
+// wcBalanceColumns is the READ path's column list. The write path below spells
+// the same thirteen columns out literally instead of splicing this const in, so
+// that its statement is statically readable; the two must move together, and a
+// column added here without being added there will fail against the placeholder
+// count in Upsert. [T503]
 const wcBalanceColumns = `principal, principal_paid, principal_adjustment, fee,
 fee_paid, penalty, penalty_paid, realized_income_from_discount_fee,
 overpayment_amount, total_disbursement, total_discount_fee,
 total_discount_fee_adjustment, breach_pastdue_amount`
 
 // Upsert writes (or replaces) the balance for one loan.
+//
+// THE STATEMENT IS SPELLED OUT RATHER THAN ASSEMBLED FROM wcBalanceColumns.
+// [T503] Splicing the column const in made this a statement the I-3/I-4 guard
+// could not read, so it was refused as OPAQUE-SQL — it could not certify that a
+// mutating Exec was not an UPDATE against acc_gl_journal_entry or a write to a
+// balance column. Thirteen column names repeated once is the price of a
+// statement a reader and a guard can both check; the const still serves the
+// read path below, where an opaque SELECT cannot violate either invariant.
 func (r *PostgresWorkingCapitalLoanBalanceRepository) Upsert(ctx context.Context, loanID int64, b WorkingCapitalLoanBalance) error {
 	if _, err := r.db.Exec(ctx, `INSERT INTO m_wc_loan_balance
-(wc_loan_id, `+wcBalanceColumns+`)
+(wc_loan_id, principal, principal_paid, principal_adjustment, fee,
+fee_paid, penalty, penalty_paid, realized_income_from_discount_fee,
+overpayment_amount, total_disbursement, total_discount_fee,
+total_discount_fee_adjustment, breach_pastdue_amount)
 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
 ON CONFLICT (wc_loan_id) DO UPDATE SET
  principal = EXCLUDED.principal,
