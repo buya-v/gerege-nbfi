@@ -1244,3 +1244,57 @@ bar was re-run green after each recovery, 46 vectors / 7884 cells against the pi
 Connection facts unchanged: `https://localhost:8443/fineract-provider/actuator/health`, PostgreSQL `localhost:5432`,
 pinned Fineract checkout `/Users/buv/fineract @ 426a23544`. **PostgreSQL only** — no MySQL/MariaDB/Oracle Database
 image was started at any point.
+
+---
+
+## CORRECTION — 2026-09-03, fire `20260903-170002` iter2: **THE RATIFIED TENANT NO LONGER EXISTS**
+
+Raised by **T508** while capturing journal-entry columns; **independently re-measured by the driver**
+before being recorded here. Everything above that assumes a `gerege` tenant is **stale**.
+
+Measured directly against the running instance (`docker exec gerege-oracle-db psql`):
+
+```
+select identifier, name, timezone_id from tenants;
+  default | Default Demo Tenant | Asia/Kolkata          <- ONE row. That is all of them.
+
+select id, schema_name from tenant_server_connections;
+  1 | fineract_default
+
+select datname from pg_database;
+  fineract_default, fineract_tenants, postgres, root, template0, template1
+
+select name, value, enabled from c_configuration where name ilike '%round%';
+  rounding-mode | 6 | t
+```
+
+**`rounding-mode = 6` is `HALF_EVEN`.** `java.math.RoundingMode` ordinals: `UP`=0, `DOWN`=1,
+`CEILING`=2, `FLOOR`=3, **`HALF_UP`=4**, `HALF_DOWN`=5, **`HALF_EVEN`=6**, `UNNECESSARY`=7.
+
+### What this means for vector work — read it before planning any capture
+
+CLAUDE.md ratifies **`(19, HALF_UP)`**, **MNT (ISO 496)**, **`Asia/Ulaanbaatar` (+08)**. The running
+instance offers **`HALF_EVEN`**, **no MNT tenant**, **`Asia/Kolkata` (+05:30)**. Therefore:
+
+| Capture is sensitive to | Status on this instance |
+|---|---|
+| **Rounding at a midpoint** | **NOT REPRESENTATIVE.** `HALF_UP` and `HALF_EVEN` differ exactly at the midpoint — which is where interest posting lives. A discrimination probe, never a parity vector. |
+| **Time zone / date boundaries** | **NOT REPRESENTATIVE.** +05:30 vs +08 is 2h30m; a boundary can land on a different **day**. |
+| **Shape** (which row carries which quantity; whether a column moved at all) | **Usable.** Shape is not rounding. T513's hold/release capture stands as shape evidence. |
+| **Exact minor-unit quantities with no midpoint** | **Usable**, but label the tenant. |
+
+**The rule, and it is not negotiable:** a number captured here and entered anywhere without the
+label `captured at (HALF_EVEN, Asia/Kolkata, tenant default)` is a **trap for the next fire**, which
+will read it as parity. An **unlabelled non-representative capture is worse than no capture.** This
+does not license synthesising a value you did not observe — the honest move is to leave it unpinned
+and say so.
+
+**Restoring the tenant is filed as `T521`.** Until it lands, the parity corpus cannot grow; probe and
+shape work continue.
+
+**Also corrected:** the containers were renamed. They are `gerege-oracle-app` (fineract:latest) and
+`gerege-oracle-db` (postgres:18.3), both healthy, 2 days up. Driver-verified this fire:
+`FINERACT_HIKARI_DRIVER_SOURCE_CLASS_NAME=org.postgresql.Driver`,
+`FINERACT_HIKARI_JDBC_URL=jdbc:postgresql://db:5432/fineract_tenants`, PostgreSQL **18.3**, and
+**zero** prohibited-engine references (`mysql|mariadb|ojdbc|oracle.jdbc|1521`) in the app
+environment. `actuator/health` returns HTTP 200 `{"status":"UP"}`.
