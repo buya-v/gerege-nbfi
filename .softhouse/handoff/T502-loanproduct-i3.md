@@ -21,6 +21,26 @@ guard's discrimination; the guard is outside my scope, so §5 below carries the
 exact patch, and I built and ran that patch out-of-tree so the proposal is a
 measurement and not a suggestion.
 
+> **[T511, applying T505's blocking conditions C-1 and C-2. Read this before
+> anything below.]**
+>
+> - **The conclusion (b) stands and the four sites stay RED.** Nothing was
+>   renamed, no arithmetic changed. T505 verified both independently.
+> - **C-1: the §5 guard patch is WITHDRAWN.** T505 reproduced its output exactly
+>   and then defeated it: moving `nexus/internal/apps/savings/summary.go` (which
+>   carries a real `s.AccountBalance += effect`) into
+>   `internal/apps/savings/model/` reclassifies that genuine balance write to a
+>   never-refusing class. One file move, zero code change. **The recommendation
+>   is now T502's own §7 fallback: these four sites stay RED until a
+>   `go/types`-based discriminator exists that follows the value to a persisted
+>   column.** Building it is T509's task. See §5.
+> - **C-2: E-1's leg is SUPERSEDED.** "Never a column" fails — both cells *are*
+>   serialised into `m_loan_progressive_model.json_model` and *are* read back as
+>   starting state. The ground that holds, and that reconciles this with T501, is
+>   **there is no posting stream**. See the block at E-1 and the rewritten
+>   `doc.go`.
+> - Full record: `.softhouse/handoff/T511-t505-conditions.md`.
+
 ---
 
 ## 1. (a) or (b), per site, with the oracle evidence
@@ -32,7 +52,43 @@ measurement and not a suggestion.
 | `interestperiod.go:273` | `balanceCorrectionAmount` | **(b)** signed delta, not a balance |
 | `repaymentperiod.go:551` | `balanceCorrectionAmount` | **(b)** signed delta, not a balance |
 
-### E-1. Neither cell is ever a column, anywhere in the oracle
+### E-1. SUPERSEDED — "neither cell is ever a column" does not carry the conclusion
+
+> **[T511, on T505 condition C-2 (blocking).] The citations in E-1 are each
+> true — T505 opened all of them — and they DO NOT ENTAIL the conclusion. Two
+> facts kill it:**
+>
+> - **Both cells ARE serialised into `m_loan_progressive_model.json_model`.**
+>   `InterestPeriod` carries `@JsonExclude` on exactly two fields —
+>   `repaymentPeriod` (`:45`) and `mc` (`:68`). `balanceCorrectionAmount`
+>   (`:65`) and `outstandingLoanBalance` (`:66`) carry none, and
+>   `JsonExcludeAnnotationBasedExclusionStrategy.shouldSkipField` skips **only**
+>   annotated fields [VERIFIED: `JsonExcludeAnnotationBasedExclusionStrategy.java:31-34`].
+> - **The blob is read back as STARTING STATE, not discarded.** `getSavedModel`
+>   loads it via `extractModel` and, when the stored business date is stale,
+>   re-processes transactions **onto the loaded model** rather than rebuilding it
+>   [VERIFIED: `InterestScheduleModelRepositoryWrapperImpl.java:95, :110-128`;
+>   `recalculateInterestForDate` at `:122`].
+>
+> So the values are stored and read back. On **T501's ratified standard** — which
+> deleted a *field*, not a column, holding that *"a decoded balance is a number
+> this port did not derive, arriving through the `SELECT` instead of the
+> `INSERT`"* — *"it is a `text` blob, not a typed column"* does not survive. Left
+> standing, E-1 and T501 would contradict each other in the record.
+>
+> **THE GROUND THAT ACTUALLY HOLDS, and that reconciles them: THERE IS NO
+> POSTING STREAM.** I-3 governs ledger balances; a ledger balance is defined by
+> the posting stream it folds; the prescribed remedy *"derive by summation over
+> the postings"* presupposes that stream. `SavingsAccountSummary.AccountBalance`
+> has one, so T501's remedy was available and obligatory. A schedule cell has
+> none — a schedule projects the FUTURE, postings record the PAST — so the remedy
+> **names no computation**: it is definitionally inapplicable, not merely
+> inconvenient. **The conclusion (b) survives; this leg of the reasoning does
+> not.** The rewritten argument is in `nexus/internal/apps/loanproduct/doc.go`
+> and the three per-site comments, per T511.
+>
+> The material below is kept as the record of the citations, which remain
+> accurate as citations.
 
 `InterestPeriod` is a plain value object in
 `org.apache.fineract.portfolio.loanproduct.calc.data` — the **calc** package. It
@@ -61,6 +117,23 @@ carries `principal_amount`, `interest_amount`, the `*_completed_derived` /
 `*_writtenoff_derived` settlement cells and the charge cells, and **nothing named
 for a balance** [VERIFIED: `LoanRepaymentScheduleInstallment.java:60-162`].
 
+> **[T511, T505 MINOR-2 — the column this check missed.** The downstream sweep
+> looked only at `m_loan_repayment_schedule`. It missed
+> `m_loan_transaction.outstanding_loan_balance_derived`
+> [VERIFIED: `LoanTransaction.java:127` — `@Column(name = "outstanding_loan_balance_derived",
+> scale = 6, precision = 19)`], a real stored balance column **bearing the same
+> name as the cell under review**. It is written by
+> `LoanBalanceService.updateLoanOutstandingBalances`
+> [VERIFIED: `LoanBalanceService.java:160-208`, writes at `:174`, `:194`,
+> `:203`] from a **separate running accumulator** folded over the loan's
+> non-reversed monetary `LoanTransaction`s — a different quantity, in a different
+> package (`loanaccount.domain` vs `loanproduct.calc.data`), with no data path
+> from `InterestPeriod`. **The conclusion survives — but by luck rather than by
+> the check that was performed**, and that is worth saying plainly. It also
+> illustrates the correct test: that column HAS a posting stream and IS derived
+> by summation over it, which is exactly why it is a ledger balance and the
+> schedule cells are not. Carried to T509 as guard backlog.]
+
 So DEC-2 §4.4 I-3 — *"No write path to any balance **column** exists in the Go
 tree"* — has no column to be about here.
 
@@ -87,10 +160,12 @@ Every oracle caller adds a **negated** principal amount to it:
 lastInterestPeriod.addBalanceCorrectionAmount(effectivePaidPrincipal.negated());        // :922
 lastInterestPeriod.addBalanceCorrectionAmount(paidPrincipal.negated());                 // :952
 lastInterestPeriod.addBalanceCorrectionAmount(rp.getOutstandingPrincipal().negated());  // :1129
-ip.addBalanceCorrectionAmount(ip.getBalanceCorrectionAmount().negated());               // :906, :946, :1124
+ip.addBalanceCorrectionAmount(ip.getBalanceCorrectionAmount().negated());               // :907, :946, :1124
 ```
 
-[VERIFIED: `ProgressiveEMICalculator.java:906, 922, 946, 952, 1124, 1129`;
+[VERIFIED: `ProgressiveEMICalculator.java:907, 922, 946, 952, 1124, 1129` —
+`:906` in the original text was off by one; T511 opened all six and the other
+five were exact;
 `RepaymentPeriod.java:192-194`;
 `ProgressiveLoanInterestScheduleModel.java:257, 290`].
 
@@ -268,12 +343,71 @@ those two files and nothing else, before my commit exists. Grade my scope on
 
 ---
 
-## 5. The proposed guard change — exact patch, and it has been run
+## 5. WITHDRAWN — the persistence-surface guard patch, and why it must not land
 
-**File: `.softhouse/guards/ledgerguard/main.go`. Anchored on text, not line
-numbers.**
+> **WITHDRAWN BY T511, on T505's condition C-1 (blocking). This section is NO
+> LONGER A RECOMMENDATION.** It is kept in full, and only in full, so the patch
+> is not re-proposed by someone who has not seen the counterexample. **Do not
+> implement it.** The replacement recommendation is immediately below; the
+> refutation follows it; the withdrawn patch text starts at "The rule".
 
-### The rule
+### THE RECOMMENDATION THAT REPLACES IT
+
+> **These four sites stay RED until a `go/types`-based discriminator exists that
+> follows the value across the import graph to a persisted column. No rename, no
+> per-package waiver, no directory-shaped heuristic. A red bar that is understood
+> and argued is a better state than a green bar bought with a check that a file
+> move defeats.**
+
+That is T502's own §7 fallback, promoted from alternative to recommendation.
+T505 endorses it. Building the discriminator is **T509's** work, not this
+branch's; this branch's obligation is only to stop recommending the wrong thing.
+
+### WHY THE PATCH BELOW IS UNSAFE — measured by T505, not argued
+
+T505 rebuilt the patch from `/tmp/t502guard/main.go`, **reproduced its claimed
+output exactly** (the measurement in "Measured effect of the patch" below is
+honest and is not what is wrong with it), and then broke it:
+
+```
+$ cp -R nexus /tmp/t505cx
+$ mkdir -p /tmp/t505cx/internal/apps/savings/model
+$ sed 's/^package savings$/package model/' internal/apps/savings/summary.go \
+      > internal/apps/savings/model/summary.go && rm internal/apps/savings/summary.go
+$ /tmp/t505-lg --root /tmp/t505cx
+  [I3-FIELD-WRITE-NONPERSISTENT] internal/apps/savings/model/summary.go:53:2
+  [I3-FIELD-WRITE]               internal/apps/savings/postgres.go:243:7
+  [I3-FIELD-WRITE]               internal/apps/savings/postgres.go:302:5
+```
+
+`nexus/internal/apps/savings/summary.go:53` carries `s.AccountBalance += effect`
+— **a genuine savings account-balance write, and one of the three this section
+claims "stay refused — nothing amnestied."** Moving that one file into a
+`model/` subdirectory moves it from REFUSES to NEVER-REFUSES. One file move,
+zero code change, byte-identical but for the `package` clause, and `model/` or
+`domain/` beside a `postgres.go` repository is the ordinary Go layering — not an
+exotic evasion.
+
+The reason is structural, not a tuning error: **"the package imports a db driver"
+tracks *shares a directory with a string containing SQL*, not *reaches a balance
+column*.** A guard that a file move disarms is not a guard, and for a money
+non-negotiable "printed but not refused" is not enough — the bar is the exit
+code. This is P-45's shape: an enforcement that works only if someone remembers
+to read the output.
+
+Two aggravating facts T505 records:
+
+- `CANNOT-CATCH` item 8 already advises a tripped author that *"the fix is a
+  constructor, not an exemption"* — which B-2 below shows defeats the check.
+  Proposed item 9 would sanction a second evasion: move the file one directory
+  down. The guard would ship advice for two ways around itself.
+- The milder attack **fails**, which is a point in the patch's favour and is
+  recorded as such: rewording the two English error strings in `savings/money.go`
+  does not flip that package, because `postgres.go:42` carries real SQL. So
+  "nothing was amnestied" is true of the tree *as it stands*. It is not a
+  property of the design, and it does not survive one refactor.
+
+### The rule (WITHDRAWN — recorded, not recommended)
 
 `I3-FIELD-WRITE` should **refuse** only in a package that has a *persistence
 surface* — one that imports a database driver, holds an SQL-shaped literal, or
@@ -285,7 +419,14 @@ reclassified site plus every package judged persistent (with the evidence that
 judged it) is printed. DEC-2 §4.4 I-3's own words are *"no write path to any
 balance **COLUMN**"*; a package with no database surface has no column.
 
-### The patch, in five pieces
+**[T511] The last sentence is the flaw in miniature.** DEC-2 §4.4 I-3's word
+"COLUMN" was also the load-bearing word in E-1, and E-1 does not hold either
+(see §1 note and `doc.go`): both cells *are* serialised into
+`m_loan_progressive_model.json_model` and *are* read back as starting state. The
+patch and the argument fail together, and for the same reason — neither tests
+what it claims to test.
+
+### The patch, in five pieces (WITHDRAWN — recorded so it is not re-proposed)
 
 **(1) `type finding struct` — add the package.**
 
@@ -491,7 +632,15 @@ sites move out of the refusal; the three `savings` sites — which write
 `account_balance_derived` and `running_balance_derived` for real, on a package
 that holds the SQL — **stay refused**. Nothing was amnestied.
 
-### Two things whoever lands this must do (I could not, out of scope)
+### Two things whoever lands this must do (MOOT — nobody lands this)
+
+> **[T511] Kept for the record only. T505 independently reproduced the run above
+> exactly, so the measurement is honest; what it measures is a property of this
+> tree on this day, not of the design. Item 2 below is also weaker than it reads:
+> it calls the `sqlShapedRe` over-match "fail-CLOSED … the safe side" without
+> checking whether the over-match was load-bearing for the packages that must
+> stay refused. T505 checked (it is not, for `savings`); the claim held, the check
+> that should have supported it was never performed (T505 MINOR-3).]
 
 1. **Drive it RED and GREEN in the selftest** (P-22/P-50), which is not optional
    here: add a case planting a balance field write in a scratch package that
@@ -517,6 +666,13 @@ exemption is a per-package waiver that goes stale silently the day the package
 grows a repository, whereas the persistence surface is *recomputed from the tree
 on every run* and re-refuses automatically the moment the package acquires a
 database import.
+
+> **[T511] The reasoning against a DEC-2 exemption still stands — a per-package
+> waiver does go stale silently. But "prefer the patch above" is withdrawn, and
+> the choice is not between those two. It is: NEITHER. The four sites stay RED
+> until a `go/types` discriminator exists (T509). A per-package waiver goes stale
+> when the package grows a repository; the persistence-surface check goes stale
+> the moment somebody moves a file. Both fail open; only the red bar does not.**
 
 ---
 

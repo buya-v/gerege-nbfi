@@ -51,22 +51,34 @@ type InterestPeriod struct {
 	disbursementAmount Money
 
 	// balanceCorrectionAmount and outstandingLoanBalance are NOT LEDGER
-	// BALANCES and never become a database column — see the package comment in
-	// doc.go, "The two \"balance\"-named cells in this package are NOT ledger
-	// balances", for the oracle evidence. In one line each:
+	// BALANCES. THE REASON IS THAT NEITHER HAS A POSTING STREAM: they are cells
+	// of a SCHEDULE, which projects the FUTURE, while postings record the PAST.
+	// I-3's remedy "derive by summation over the postings" therefore names no
+	// computation here — there is nothing to sum. See the package comment in
+	// doc.go, "THE TEST THAT DECIDES IT: IS THERE A POSTING STREAM?".
+	//
+	// DO NOT restate this as "it never becomes a database column." Both cells
+	// ARE serialised into m_loan_progressive_model.json_model (no @JsonExclude
+	// on InterestPeriod.java:65-66) and ARE read back as starting state
+	// [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:95, :110-128].
+	// The column test fails on this package's own evidence; the posting-stream
+	// test is the one that holds. doc.go carries the full argument.
 	//
 	// balanceCorrectionAmount is a SIGNED DELTA applied to the schedule's
 	// principal projection; the oracle only ever adds a negated amount to it
-	// [VERIFIED: ProgressiveEMICalculator.java:922, :952, :1129]. It is a
-	// summand of the roll-forward below, exactly like disbursementAmount and
-	// capitalizedIncomePrincipal.
+	// [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124,
+	// :1129]. It is a summand of the roll-forward below, exactly like
+	// disbursementAmount and capitalizedIncomePrincipal.
 	//
 	// outstandingLoanBalance is the principal base of THIS SEGMENT's
 	// declining-balance interest arithmetic and nothing else
-	// [VERIFIED: InterestPeriod.java:151]. It is a SWEPT SNAPSHOT, refreshed
-	// only by UpdateOutstandingLoanBalance below; between sweeps the oracle
-	// deliberately leaves it stale, so it is not equivalent to an on-demand
-	// derivation and must not be replaced by one.
+	// [VERIFIED: InterestPeriod.java:151]. Downstream it reaches only DTOs —
+	// RepaymentPeriod.java:389-403 -> ProgressiveLoanScheduleGenerator.java:132
+	// -> LoanScheduleModelRepaymentPeriod, and LoanSchedulePlan.java:65, :77.
+	// No journal entry, no GL account, no posting. It is also a SWEPT SNAPSHOT,
+	// refreshed only by UpdateOutstandingLoanBalance below; between sweeps the
+	// oracle deliberately leaves it stale, so it is not equivalent to an
+	// on-demand derivation and must not be replaced by one.
 	balanceCorrectionAmount    Money
 	outstandingLoanBalance     Money
 	capitalizedIncomePrincipal Money
@@ -208,10 +220,24 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 // segment in the same period.
 //
 // THE TWO ASSIGNMENTS BELOW ARE NOT LEDGER-BALANCE WRITES, and they are the
-// reason the I-3 source guard refuses this package. They write a SWEPT SNAPSHOT
-// of a schedule projection that never becomes a database column anywhere in the
-// oracle — see doc.go for the full evidence. What matters here is why the cell
-// cannot simply be derived on read instead:
+// reason the I-3 source guard refuses this package. The sites are left RED
+// deliberately; nothing here was renamed to clear the bar.
+//
+// WHY THEY ARE NOT LEDGER-BALANCE WRITES: THERE IS NO POSTING STREAM. A ledger
+// balance is defined by the postings it folds, and I-3's remedy is "derive by
+// summation over the postings." This expression sums no postings and could not:
+// it rolls a SCHEDULE forward from the preceding segment's terms. A schedule
+// projects the FUTURE; postings record the PAST. The remedy is not
+// inconvenient here, it names no computation at all. The value's whole
+// downstream reach is InterestPeriod.java:151 (the declining-balance interest
+// base) -> RepaymentPeriod.java:389-403 ->
+// ProgressiveLoanScheduleGenerator.java:132 -> LoanScheduleModelRepaymentPeriod
+// and LoanSchedulePlan.java:65, :77 — all DTOs. No journal entry, no GL
+// account, no posting anywhere on that path. doc.go carries the full argument
+// and explains why the older "it never becomes a column" version of it fails.
+//
+// A SECOND, INDEPENDENT REASON, which is a parity argument rather than a
+// category one: the cell cannot simply be derived on read.
 //
 // This function is the WHOLE refresh mechanism. The oracle calls it only from
 // explicit sweeps [VERIFIED: ProgressiveEMICalculator.java:1254-1256, and the
@@ -261,9 +287,15 @@ func (ip *InterestPeriod) CreditedAmounts() Money {
 // AddBalanceCorrectionAmount mutates balanceCorrectionAmount by adding the
 // supplied amount [VERIFIED: InterestPeriod.java:165-167].
 //
-// balanceCorrectionAmount is a SIGNED DELTA, not a balance: every oracle caller
-// adds a NEGATED principal amount to it
-// [VERIFIED: ProgressiveEMICalculator.java:922, :952, :1129;
+// NOT A LEDGER-BALANCE WRITE, and left RED deliberately. THERE IS NO POSTING
+// STREAM behind this cell: it is a summand of a SCHEDULE roll-forward, and a
+// schedule projects the FUTURE while postings record the PAST, so I-3's remedy
+// "derive by summation over the postings" names no computation for it. See
+// doc.go, "THE TEST THAT DECIDES IT: IS THERE A POSTING STREAM?".
+//
+// balanceCorrectionAmount is moreover a SIGNED DELTA, not a balance: every
+// oracle caller adds a NEGATED principal amount to it
+// [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124, :1129;
 // RepaymentPeriod.java:192-194; ProgressiveLoanInterestScheduleModel.java:257,
 // :290]. It is one summand of UpdateOutstandingLoanBalance's roll-forward above,
 // structurally identical to disbursementAmount and capitalizedIncomePrincipal,
