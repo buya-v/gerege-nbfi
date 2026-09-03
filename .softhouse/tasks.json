@@ -7640,6 +7640,119 @@
       "contract_independent": true,
       "description": "T487/T488/T489 each got a paired independent reviewer (T490/T491/T492) and each came back ACCEPT WITH CONDITIONS with MAJORs. The three REPAIRS that applied those conditions -- T495, T496, T497 -- were merged in their stacks WITHOUT a reviewer of their own. That follows this program's iteration-6 precedent, but it is a real gap and it is stated rather than hidden: plan-gate check 1 asks for a paired reviewer on every coder task, and these three are coder tasks that rewrote money-path prose.\n\nWHAT MAKES IT WORTH DOING RATHER THAN CEREMONY: each repair REFUTED part of what it was asked to apply -- T495 refuted two of T490's evidence claims (its F-8 item 5 grep is wrong at the pin; its count of four flagging sites is three), T496 corrected an entityaccess call-site count DOWNWARD from 11/22 to 10/21 and could not reproduce the eleventh, and T497 corrected two of T491's citations and refuted its 'both cases are cheap' cost claim. Every one of those refutations is itself unreviewed.\n\nATTACK FIRST, in this order: (1) T495's claim that there is NO SIXTH binary-float money site, which is the load-bearing money claim of the whole A1 document and rests on ITS OWN structural sweep -- re-derive it independently, and note that P-104 was recorded this fire precisely because such sweeps are how counted claims go wrong; (2) T497's confirmation that after its edit NO ROW of the capture plan states an unobserved value, including the three cases it ADDED (TDG-O1, TDG-O2, TDG-P1); (3) T496's re-derived Tier C subtotals and whether the partition still reconciles at 192,168.",
       "note": "Filed by cloud fire cloud-20260902-2000 at merge time, naming its own process gap rather than leaving it implicit."
+    },
+    {
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T501",
+      "target": "code",
+      "role": "coder",
+      "title": "I-3 BREACH, the worst three: savings STORES a summed balance in a column named for it",
+      "branch": "softhouse/T501-savings-i3",
+      "files_hint": [
+        "nexus/internal/apps/savings/",
+        ".softhouse/handoff/T501-savings-i3.md"
+      ],
+      "dependencies": [],
+      "description": "`guard_ledger_invariants` REFUSES the Go tree and six of its fourteen findings are in savings. This is the CLAUDE.md non-negotiable 'The ledger is double-entry and append-only. Balances are derived, never written.'\n\nTHE THREE THAT MATTER (I3-SQL-BALANCE) — a written, stored sum wearing a balance's name, which DEC-2 §7 refuses to port as the m_trial_balance shape:\n  - postgres.go:113 INSERT INTO m_savings_account_summary populating `account_balance_derived`\n  - postgres.go:113 the UPDATE arm assigning `account_balance_derived`\n  - postgres.go:210 INSERT INTO m_savings_account_transaction populating `running_balance_derived`\n\nREAD THE TRAP BEFORE YOU ARGUE WITH THE GUARD: the columns are spelled `..._derived`, and in Fineract they are derived BY BEING WRITTEN. CLAUDE.md says adopt Fineract's PostgreSQL SCHEMA — it does not say adopt Fineract's WRITE PATHS. Keeping the column and never writing it is consistent; writing it is not. If you conclude the column must be written, you are proposing a DEC-2 amendment, which is a `user` gate: STOP, write the argument in your handoff, change no code.\n\nAND THE FOUR FIELD WRITES (I3-FIELD-WRITE): postgres.go:243 `t.RunningBalance =` in FindByAccountID, postgres.go:302 `s.AccountBalance =` in decodeSummary, summary.go:53 `s.AccountBalance +=` in Add.\nNote 243 and 302 are DECODE paths — they populate a struct from a row read back. Decide honestly whether 'derived, never written' is even engaged by a read-back decode, or whether the right repair is that the field should not exist because the balance should be summed from postings on demand. The guard names the shape it does NOT flag: a bare local accumulator (`var debit, credit MinorUnits`), as in nexus/internal/apps/ledger/money.go. Derive by summation over the postings.\n\nCONTEXT YOU NEED: savings/deposit code is IN SCOPE to port but ships DISABLED — the tenant licence is NBFI (ББСБ) and deposit-taking is prohibited (Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4). That does not soften this repair; inert code still has to satisfy the ledger invariants. Never describe member savings as insured, protected or guaranteed in any string you touch.\n\nBAR: the repair is done when `bash .softhouse/conformance.sh` no longer reports YOUR sites under `ledger-invariants`. Run it with **bash**, never sh/zsh/dash — exit 3 is the harness's wrong-interpreter refusal, not a result. EXIT 2 WITH NO `probe = ` LINE PRINTED means a HARD guard failed, which is the state the tree is in right now; it is NOT an oracle outage and you must not park for it. Note the bar is red for OTHER tasks' sites too, so grade yourself on the disappearance of your own lines, not on a green run. `go build ./...` and `go test ./...` in nexus/ must stay green. Money stays INTEGER MINOR UNITS everywhere, including intermediates and fixtures: no float32/float64/big.Float in any money path.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
+      "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
+    },
+    {
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T502",
+      "target": "code",
+      "role": "coder",
+      "title": "I-3 BREACH: four balance-field writes in the loanproduct schedule arithmetic",
+      "branch": "softhouse/T502-loanproduct-i3",
+      "files_hint": [
+        "nexus/internal/apps/loanproduct/",
+        ".softhouse/handoff/T502-loanproduct-i3.md"
+      ],
+      "dependencies": [],
+      "description": "`guard_ledger_invariants` REFUSES the Go tree; four findings are in loanproduct, against the CLAUDE.md non-negotiable 'Balances are derived, never written' / DEC-2 §4.4 I-3 'No write path to any balance column exists in the Go tree.'\n\n  - interestperiod.go:196 and :207 — `ip.outstandingLoanBalance =` in UpdateOutstandingLoanBalance\n  - interestperiod.go:224 — `ip.balanceCorrectionAmount =` in AddBalanceCorrectionAmount\n  - repaymentperiod.go:541 — `ip.balanceCorrectionAmount =` in copyWithoutPaidAmounts\n\nTHINK ABOUT WHAT THESE ACTUALLY ARE BEFORE REWRITING THEM. This is progressive-schedule arithmetic ported from Fineract, where `outstandingLoanBalance` on an interest period is an INTERMEDIATE of the schedule computation, not a posted ledger balance. The invariant protects the LEDGER. So there are two defensible outcomes and you must pick one and argue it, not split the difference:\n  (a) these are genuine ledger-balance writes -> derive by summation over postings, as the guard says;\n  (b) these are schedule intermediates that merely COLLIDE WITH THE GUARD'S NAME PATTERN -> then the honest       repair is to the NAMING and/or the guard's discrimination, and it must be argued in the handoff with       the Fineract source cited (pinned commit 426a23544, /Users/buv/fineract), not asserted.\nIf you take (b), you are claiming a guard over a money non-negotiable is over-matching. That is allowed — the guard already documents two measured over-matches by name — but the bar for it is EVIDENCE, and a rename that merely dodges the pattern while keeping the write is the worst possible outcome: it turns a RED bar green while changing nothing. Say explicitly in your handoff which of (a)/(b) you chose and why.\n\nBAR: the repair is done when `bash .softhouse/conformance.sh` no longer reports YOUR sites under `ledger-invariants`. Run it with **bash**, never sh/zsh/dash — exit 3 is the harness's wrong-interpreter refusal, not a result. EXIT 2 WITH NO `probe = ` LINE PRINTED means a HARD guard failed, which is the state the tree is in right now; it is NOT an oracle outage and you must not park for it. Note the bar is red for OTHER tasks' sites too, so grade yourself on the disappearance of your own lines, not on a green run. `go build ./...` and `go test ./...` in nexus/ must stay green. Money stays INTEGER MINOR UNITS everywhere, including intermediates and fixtures: no float32/float64/big.Float in any money path.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
+      "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
+    },
+    {
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T503",
+      "target": "code",
+      "role": "coder",
+      "title": "OPAQUE-SQL: four mutating driver calls the ledger guard CANNOT READ, so it refuses to certify them",
+      "branch": "softhouse/T503-opaque-sql",
+      "files_hint": [
+        "nexus/internal/apps/ledger/journalentry_postgres.go",
+        "nexus/internal/apps/workingcapital/postgres.go",
+        "nexus/internal/platform/postgres/migrate.go",
+        ".softhouse/handoff/T503-opaque-sql.md"
+      ],
+      "dependencies": [],
+      "description": "Four sites pass SQL to a mutating driver call in a form `guard_ledger_invariants` cannot statically read — assembled at run time, or a batch/copy call carrying no SQL string:\n  - ledger/journalentry_postgres.go:59 `r.db.Exec(...)`   <-- THIS ONE IS ON THE JOURNAL-ENTRY PATH\n  - workingcapital/postgres.go:366 `r.db.Exec(...)`\n  - platform/postgres/migrate.go:75 `pool.Exec(...)` and :93 `tx.Exec(...)`\n\nTHESE ARE NOT ACCUSATIONS. The guard is refusing to ASSUME a statement it cannot read is clean — it cannot certify the call is not an UPDATE or DELETE against acc_gl_journal_entry (I-4, append-only) or a write to a balance column (I-3). An unreadable statement is refused rather than waved through, which is correct.\n\nREPAIR, per the guard's own text: build the SQL as a string literal so it is statically readable, or state the exemption in DEC-2 and amend the guard. PREFER THE LITERAL. Amending a guard over a money non-negotiable to stop it complaining about your code is the shape this program rejects; if you genuinely need the exemption (migrate.go executing migration text read from files is the plausible candidate), argue it in the handoff and state precisely what the exemption does and does not cover. A DEC-2 amendment is a `user` gate — propose, do not ratify.\n\nGRADE journalentry_postgres.go:59 HARDEST. acc_gl_journal_entry is the append-only ledger itself: I-4 says no UPDATE and no DELETE reaches it, corrections are reversing entries. If that Exec turns out to mutate journal entries, you have found something far more serious than an unreadable string, and it goes in the handoff as a MAJOR with the evidence, not as a quiet fix.\n\nPostgreSQL only, via pgx. Do not introduce any MySQL/MariaDB/Oracle driver or dialect.\n\nBAR: the repair is done when `bash .softhouse/conformance.sh` no longer reports YOUR sites under `ledger-invariants`. Run it with **bash**, never sh/zsh/dash — exit 3 is the harness's wrong-interpreter refusal, not a result. EXIT 2 WITH NO `probe = ` LINE PRINTED means a HARD guard failed, which is the state the tree is in right now; it is NOT an oracle outage and you must not park for it. Note the bar is red for OTHER tasks' sites too, so grade yourself on the disappearance of your own lines, not on a green run. `go build ./...` and `go test ./...` in nexus/ must stay green. Money stays INTEGER MINOR UNITS everywhere, including intermediates and fixtures: no float32/float64/big.Float in any money path.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
+      "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
+    },
+    {
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T504",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T501 — the savings I-3 repair, RE-DERIVED not read",
+      "branch": "softhouse/T504-review-t501",
+      "files_hint": [
+        ".softhouse/reviews/t504-review-t501/",
+        ".softhouse/handoff/T504-review-t501.md"
+      ],
+      "dependencies": [
+        "T501"
+      ],
+      "description": "INDEPENDENT review of T501. Read its handoff FROM ITS BRANCH (`git show softhouse/T501-savings-i3:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
+    },
+    {
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T505",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T502 — the loanproduct I-3 repair, RE-DERIVED not read",
+      "branch": "softhouse/T505-review-t502",
+      "files_hint": [
+        ".softhouse/reviews/t505-review-t502/",
+        ".softhouse/handoff/T505-review-t502.md"
+      ],
+      "dependencies": [
+        "T502"
+      ],
+      "description": "INDEPENDENT review of T502. Read its handoff FROM ITS BRANCH (`git show softhouse/T502-loanproduct-i3:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
+    },
+    {
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "contract_independent": false,
+      "id": "T506",
+      "target": "docs",
+      "role": "reviewer",
+      "title": "INDEPENDENT review of T503 — the OPAQUE-SQL repair, RE-DERIVED not read",
+      "branch": "softhouse/T506-review-t503",
+      "files_hint": [
+        ".softhouse/reviews/t506-review-t503/",
+        ".softhouse/handoff/T506-review-t503.md"
+      ],
+      "dependencies": [
+        "T503"
+      ],
+      "description": "INDEPENDENT review of T503. Read its handoff FROM ITS BRANCH (`git show softhouse/T503-opaque-sql:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
     }
   ],
   "cross_corroboration": {
