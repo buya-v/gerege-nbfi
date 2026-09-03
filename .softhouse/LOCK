@@ -4,7 +4,7 @@
   "pid": 29956,
   "fire": "20260903-170002",
   "started_at": "2026-09-03T09:01:19Z",
-  "heartbeat": "2026-09-03T10:49:49Z",
+  "heartbeat": "2026-09-03T10:51:37Z",
   "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260903-170002.log",
   "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
@@ -13,8 +13,8 @@
   "dispatched": [
     "T509",
     "T515",
-    "T516",
     "T508",
-    "T517"
+    "T517",
+    "T519"
   ]
 }
