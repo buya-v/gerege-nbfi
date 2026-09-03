@@ -27,9 +27,9 @@ type SavingsAccount struct {
 	// CurrencyCode is the ISO 4217 code of the account's monetary currency.
 	CurrencyCode string
 
-	// Summary is the derived account summary (totals and running balance).
-	// It is always recomputed from its transactions, never a primary write
-	// target.
+	// Summary is the derived category-total read model. It carries NO balance:
+	// the balance is AccountBalanceOf(transactions), folded from the
+	// append-only stream, never a stored or stored-summary figure.
 	Summary SavingsAccountSummary
 
 	// InterestRateChart is the account-level chart of interest-rate slabs.

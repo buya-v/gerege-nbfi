@@ -3,7 +3,6 @@ package savings
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/gerege/nexus/internal/platform/postgres"
 )
@@ -93,6 +92,17 @@ func (r *PostgresAccountRepository) UpdateStatus(ctx context.Context, id int64, 
 }
 
 // SummaryRepository is the persistence surface for m_savings_account_summary.
+//
+// NOTE ON "STORED IN PIECES". The twelve columns retained here are category
+// totals, not a balance, and the balance column is deliberately absent — see
+// Upsert. But nine of the twelve are verbatim the nine terms of Fineract's own
+// `account_balance_derived` expression [SavingsAccountSummary.updateSummary], so
+// a caller can reconstruct the stored balance in one line by summing them and
+// hold it in a field whose name matches none of the guard's balance patterns.
+// That is a guard-invisible reintroduction of a stored sum. Nothing in this
+// package does so; every derivation here folds the append-only transaction
+// stream instead. Keep it that way: the summary row is an inbound read model
+// written by Fineract during the strangler window, not a place to hide a sum.
 type SummaryRepository interface {
 	Upsert(ctx context.Context, accountID int64, summary SavingsAccountSummary) error
 	FindByAccountID(ctx context.Context, accountID int64) (*SavingsAccountSummary, error)
@@ -109,6 +119,13 @@ func NewPostgresSummaryRepository(db postgres.DB) *PostgresSummaryRepository {
 }
 
 // Upsert writes the derived summary for one account, replacing it if present.
+//
+// NOTE — the balance column is deliberately ABSENT. CLAUDE.md ("balances are
+// derived, never written") and DEC-2 §4.4 I-3 forbid a write path to a
+// balance-named column; the table keeps its `account_balance_derived` column
+// for Fineract's nightly batch, but the Go module never populates it. A caller
+// that wants the balance derives it with AccountBalanceOf over the transaction
+// stream, never by reading this row's stored sum.
 func (r *PostgresSummaryRepository) Upsert(ctx context.Context, accountID int64, summary SavingsAccountSummary) error {
 	if _, err := r.db.Exec(ctx, `INSERT INTO m_savings_account_summary
 (savings_account_id, total_deposits_derived, total_withdrawals_derived,
@@ -116,9 +133,8 @@ func (r *PostgresSummaryRepository) Upsert(ctx context.Context, accountID int64,
  total_withdrawal_fees_derived, total_fees_charge_derived,
  total_penalty_charge_derived, total_annual_fees_derived,
  total_fee_charges_waived_derived, total_penalty_charges_waived_derived,
- total_overdraft_interest_derived, total_withhold_tax_derived,
- account_balance_derived)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+ total_overdraft_interest_derived, total_withhold_tax_derived)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
 ON CONFLICT (savings_account_id) DO UPDATE SET
  total_deposits_derived = EXCLUDED.total_deposits_derived,
  total_withdrawals_derived = EXCLUDED.total_withdrawals_derived,
@@ -131,8 +147,7 @@ ON CONFLICT (savings_account_id) DO UPDATE SET
  total_fee_charges_waived_derived = EXCLUDED.total_fee_charges_waived_derived,
  total_penalty_charges_waived_derived = EXCLUDED.total_penalty_charges_waived_derived,
  total_overdraft_interest_derived = EXCLUDED.total_overdraft_interest_derived,
- total_withhold_tax_derived = EXCLUDED.total_withhold_tax_derived,
- account_balance_derived = EXCLUDED.account_balance_derived`,
+ total_withhold_tax_derived = EXCLUDED.total_withhold_tax_derived`,
 		accountID,
 		summary.TotalDeposits.FormatDecimal(MNTMinorDigits),
 		summary.TotalWithdrawals.FormatDecimal(MNTMinorDigits),
@@ -145,8 +160,7 @@ ON CONFLICT (savings_account_id) DO UPDATE SET
 		summary.TotalFeeChargesWaived.FormatDecimal(MNTMinorDigits),
 		summary.TotalPenaltyChargesWaived.FormatDecimal(MNTMinorDigits),
 		summary.TotalOverdraftInterestDerived.FormatDecimal(MNTMinorDigits),
-		summary.TotalWithholdTax.FormatDecimal(MNTMinorDigits),
-		summary.AccountBalance.FormatDecimal(MNTMinorDigits)); err != nil {
+		summary.TotalWithholdTax.FormatDecimal(MNTMinorDigits)); err != nil {
 		return fmt.Errorf("savings: upsert summary: %w", err)
 	}
 	return nil
@@ -161,20 +175,20 @@ total_interest_posted_derived::text, total_withdrawal_fees_derived::text,
 total_fees_charge_derived::text, total_penalty_charge_derived::text,
 total_annual_fees_derived::text, total_fee_charges_waived_derived::text,
 total_penalty_charges_waived_derived::text, total_overdraft_interest_derived::text,
-total_withhold_tax_derived::text, account_balance_derived::text
+total_withhold_tax_derived::text
 FROM m_savings_account_summary WHERE savings_account_id = $1`, []any{accountID},
 		func(s postgres.RowScanner) error {
 			var deposits, withdrawals, interestEarned, interestPosted, withdrawalFees,
 				feeCharge, penaltyCharge, annualFees, feeWaived, penaltyWaived,
-				overdraftInterest, withholdTax, balance string
+				overdraftInterest, withholdTax string
 			if err := s.Scan(&deposits, &withdrawals, &interestEarned, &interestPosted,
 				&withdrawalFees, &feeCharge, &penaltyCharge, &annualFees, &feeWaived,
-				&penaltyWaived, &overdraftInterest, &withholdTax, &balance); err != nil {
+				&penaltyWaived, &overdraftInterest, &withholdTax); err != nil {
 				return err
 			}
 			summary, err := decodeSummary(deposits, withdrawals, interestEarned,
 				interestPosted, withdrawalFees, feeCharge, penaltyCharge, annualFees,
-				feeWaived, penaltyWaived, overdraftInterest, withholdTax, balance)
+				feeWaived, penaltyWaived, overdraftInterest, withholdTax)
 			if err != nil {
 				return err
 			}
@@ -205,14 +219,17 @@ func NewPostgresTransactionRepository(db postgres.DB) *PostgresTransactionReposi
 }
 
 // Insert writes one transaction, returning its id. The entry classification is
-// derived from the transaction type (it is not a stored column in the oracle).
+// derived from the transaction type (it is not a stored column in the oracle),
+// and `running_balance_derived` is deliberately NOT written — the running
+// balance is RunningBalancesOf(stream)[i], folded from these rows, never a
+// stored sum (CLAUDE.md: balances are derived, never written).
 func (r *PostgresTransactionRepository) Insert(ctx context.Context, t SavingsAccountTransaction) (int64, error) {
 	id, err := postgres.InsertReturningInt64(ctx, r.db, `INSERT INTO m_savings_account_transaction
-(savings_account_id, transaction_type_enum, amount, running_balance_derived)
-VALUES ($1,$2,$3,$4) RETURNING id`,
+(savings_account_id, transaction_type_enum, amount, is_reversed, is_reversal)
+VALUES ($1,$2,$3,$4,$5) RETURNING id`,
 		t.AccountID, t.Type.StoredValue(),
 		t.Amount.FormatDecimal(MNTMinorDigits),
-		t.RunningBalance.FormatDecimal(MNTMinorDigits))
+		t.Reversed, t.Reversal)
 	if err != nil {
 		return 0, fmt.Errorf("savings: insert transaction: %w", err)
 	}
@@ -223,13 +240,13 @@ VALUES ($1,$2,$3,$4) RETURNING id`,
 func (r *PostgresTransactionRepository) FindByAccountID(ctx context.Context, accountID int64) ([]SavingsAccountTransaction, error) {
 	var out []SavingsAccountTransaction
 	err := postgres.QueryRows(ctx, r.db, `SELECT id, savings_account_id,
-transaction_type_enum, amount::text, running_balance_derived::text
+transaction_type_enum, amount::text, is_reversed, is_reversal
 FROM m_savings_account_transaction WHERE savings_account_id = $1 ORDER BY id`,
 		[]any{accountID}, func(s postgres.RowScanner) error {
 			var t SavingsAccountTransaction
 			var typeEnum int32
-			var amount, balance string
-			if err := s.Scan(&t.ID, &t.AccountID, &typeEnum, &amount, &balance); err != nil {
+			var amount string
+			if err := s.Scan(&t.ID, &t.AccountID, &typeEnum, &amount, &t.Reversed, &t.Reversal); err != nil {
 				return err
 			}
 			tx, ok := SavingsAccountTransactionTypeFromStoredValue(typeEnum)
@@ -240,11 +257,7 @@ FROM m_savings_account_transaction WHERE savings_account_id = $1 ORDER BY id`,
 			if t.Amount, err = MinorUnitsFromDecimalText(amount, MNTMinorDigits); err != nil {
 				return err
 			}
-			if t.RunningBalance, err = MinorUnitsFromDecimalText(balance, MNTMinorDigits); err != nil {
-				return err
-			}
 			t.Type = tx
-			t.Entry = tx.EntryType()
 			out = append(out, t)
 			return nil
 		})
@@ -256,8 +269,8 @@ FROM m_savings_account_transaction WHERE savings_account_id = $1 ORDER BY id`,
 
 func decodeSummary(fields ...string) (SavingsAccountSummary, error) {
 	var s SavingsAccountSummary
-	if len(fields) != 13 {
-		return s, fmt.Errorf("savings: decode summary: expected 13 fields, got %d", len(fields))
+	if len(fields) != 12 {
+		return s, fmt.Errorf("savings: decode summary: expected 12 fields, got %d", len(fields))
 	}
 	dec := func(text string) (MinorUnits, error) {
 		return MinorUnitsFromDecimalText(text, MNTMinorDigits)
@@ -299,9 +312,6 @@ func decodeSummary(fields ...string) (SavingsAccountSummary, error) {
 	if s.TotalWithholdTax, err = dec(fields[11]); err != nil {
 		return s, err
 	}
-	if s.AccountBalance, err = dec(fields[12]); err != nil {
-		return s, err
-	}
 	return s, nil
 }
 
@@ -310,13 +320,6 @@ func nullStr(s string) any {
 		return nil
 	}
 	return s
-}
-
-func nullTime(t time.Time) any {
-	if t.IsZero() {
-		return nil
-	}
-	return t
 }
 
 // Compile-time proof that the pgx-backed stores satisfy their interfaces.
