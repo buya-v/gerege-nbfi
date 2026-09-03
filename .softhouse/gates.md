@@ -5025,3 +5025,83 @@ And Fineract's schema is two-field, in both person tables the platform owns — 
 ### What Buyan is being asked — nothing, unless he disagrees
 
 The decision is recorded and the program proceeds on it. Overrule it if the compatibility-column approach is wrong for a reason the driver cannot see from source — for example, if an FRC reporting format constrains how a staff name is stored.
+
+---
+
+## G-25 / G-26 / G-27 — THREE PLACES WHERE THE SAVINGS BALANCE FOLD DELIBERATELY DOES NOT REPRODUCE FINERACT
+
+**Raised by:** `T510` (coder), applying `T504`'s review conditions on top of `T501`, 2026-09-03.
+**Class:** **ENGINEERING** — so, per CLAUDE.md § Answering gates, decided and recorded, not asked.
+`chosen_by: agent`. Buyan retains veto.
+**Blocks:** nothing. **Authorises no cutover and no activation** — savings ships disabled (NBFI,
+Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4) and this is a statement about a
+derivation, not about switching one on.
+**Why filed at all:** CLAUDE.md makes Fineract the oracle. A savings golden vector that crosses
+any of these three will FAIL, and unless it is written down here the failure reads as a port bug
+and gets "fixed" back into a defect. Sites: `nexus/internal/apps/savings/summary.go`, block
+"THE THREE RATIFIED DIVERGENCES FROM THE REFERENCE ORACLE".
+
+Fineract is **internally inconsistent** across all three: its `account_balance_derived` and its
+`running_balance_derived` are computed by different code that disagrees. There is no option that
+matches "Fineract" — only options that match one of Fineract's two answers.
+
+### G-25 — a HOLD moves `running_balance_derived` and we refuse to let it
+
+`recalculateDailyBalances` folds `if (transaction.isCredit() || transaction.isAmountRelease())`
+… `else if (transaction.isDebit() || transaction.isAmountOnHold())`
+[VERIFIED: `SavingsAccount.java:902,912`], so a hold DEBITS Fineract's stored running balance.
+
+**Decision: we do not move.** CLAUDE.md is a non-negotiable here — holds "alter `available` only,
+never posted `balance`" — and Fineract's *other* answer agrees with us: neither `AMOUNT_HOLD` nor
+`AMOUNT_RELEASE` appears in any of the nine terms of `updateSummary`
+[`SavingsAccountSummary.java:110-112`], in any of the twelve calculators of
+`SavingsAccountTransactionSummaryWrapper`, or anywhere but `default: break;` in
+`updateSummaryWithPivotConfig` [`:182-183`]. **Rejected alternative:** match
+`running_balance_derived`, which would breach a CLAUDE.md non-negotiable to match the less
+authoritative of two Fineract numbers.
+
+**Vector consequence, stated so the harness expects it.** For
+`{DEPOSIT 1,000.00; AMOUNT_HOLD 400.00; WITHDRAWAL 250.00; INTEREST 3.21}`,
+`RunningBalancesOf` = `{100000, 100000, 75000, 75321}` and `running_balance_derived` =
+`{100000, 60000, 35000, 35321}` (minor units). Pinned, as a divergence, by
+`TestRunningBalancesArePrefixFoldsAndDivergeFromTheOracleOnHolds`.
+
+### G-26 — a VOID row: Fineract states NO running balance, we state the unchanged one
+
+On a reversed or reversal row Fineract calls `zeroBalanceFields()`, which sets `runningBalance`
+to **NULL** [VERIFIED: `SavingsAccount.java:897-898`; `SavingsAccountTransaction.java:586-591`].
+`[]MinorUnits` has no NULL, and a zero would read as "the account emptied here".
+
+**Decision: the void row carries the unchanged prefix balance.** It is the same rule as G-25 — a
+posting that does not move the posted balance leaves the running value alone — so the two
+divergences share one rationale rather than accumulating two. **Rejected alternative:** a
+`[]*MinorUnits` or a parallel validity mask, which imports Fineract's NULL into a Go API for a
+row nobody renders a balance for anyway.
+
+### G-27 — `ESCHEAT` debits our balance and does not move `account_balance_derived`
+
+`ESCHEAT(19)` is `TransactionEntryType.DEBIT` in Fineract's own enum and debits
+`running_balance_derived` via `isDebit()`. But it appears in **none** of the nine terms of
+`updateSummary` and falls to `default: break;` in `updateSummaryWithPivotConfig`, so Fineract's
+stored `account_balance_derived` does **not** move — and `SavingsAccount.escheat` appends an
+`ESCHEAT` transaction for the *whole balance* and then calls `updateSummary`
+[VERIFIED: `:3382-3396`]. An account escheated for 500,000₮ therefore still reports 500,000₮.
+
+**Decision: we debit.** Three reasons, in order of weight: (a) two of Fineract's three
+authorities — the entry-type classification and the running-balance derivation — agree with us,
+and only the stored aggregate does not; (b) that stored aggregate is precisely the artefact
+DEC-2 §4.4 I-3 refuses, so "match it" is the one instruction this port cannot follow; (c) the
+other side leaves the full balance readable on a CLOSED account whose funds have gone to the
+state — an overstatement of available funds, in the permissive direction, on the operation that
+closes the account. **Rejected alternative:** exclude `ESCHEAT` to match
+`account_balance_derived`, i.e. adopt the number the invariant refuses in order to match an
+oracle that contradicts itself.
+
+**Vector consequence:** a vector comparing `AccountBalanceOf` against `account_balance_derived`
+across an escheat differs by the **whole balance**. Pinned by `TestEscheatDebitsThePostedBalance`.
+
+### What Buyan is being asked — nothing, unless he disagrees
+
+All three are recorded and the program proceeds on them. Overrule if a **vector-parity** policy
+should outrank a CLAUDE.md non-negotiable (G-25) or the I-3 invariant (G-27) — which is the only
+reading under which the other side of either wins.

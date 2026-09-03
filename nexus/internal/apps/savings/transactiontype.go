@@ -33,7 +33,7 @@ func (t TransactionEntryType) IsDebit() bool  { return t == EntryDebit }
 
 // SavingsAccountTransactionType is m_savings_account_transaction.transaction_type_enum
 // — Fineract's SavingsAccountTransactionType.
-// [VERIFIED: SavingsAccountTransactionType.java:24-47]
+// [VERIFIED: SavingsAccountTransactionType.java:35-54]
 //
 //	INVALID(0)                       DEPOSIT(1)
 //	WITHDRAWAL(2)                    INTEREST_POSTING(3)
@@ -156,9 +156,15 @@ func (t SavingsAccountTransactionType) IsAmountRelease() bool { return t == TxnA
 
 // EntryType returns the in-account CREDIT/DEBIT classification encoded on the
 // enum's entryType field, mirroring the oracle's third constructor argument
-// [VERIFIED: SavingsAccountTransactionType.java:36-54]. The balance-neutral and
-// non-posting types (WAIVE_CHARGES, ACCRUAL, the transfer sub-states and
-// WRITTEN_OFF) carry no entry type and return the zero TransactionEntryType.
+// [VERIFIED: SavingsAccountTransactionType.java:35-54]. EIGHT types pass `null`
+// as that argument and so carry no entry type, returning the zero
+// TransactionEntryType: INVALID(0), WAIVE_CHARGES(6), ACCRUAL(10),
+// INITIATE_TRANSFER(12), APPROVE_TRANSFER(13), WITHDRAW_TRANSFER(14),
+// REJECT_TRANSFER(15) and WRITTEN_OFF(16). INVALID(0) belongs on that list and
+// was missing from it before T510 — it is the value FromStoredValue refuses,
+// but a zero-valued SavingsAccountTransactionType is the Go zero value and so
+// is what an uninitialised struct carries, which makes it the one that most
+// needs to fold to nothing rather than to a credit.
 func (t SavingsAccountTransactionType) EntryType() TransactionEntryType {
 	switch t {
 	case TxnDeposit, TxnInterestPosting, TxnDividendPayout, TxnAmountRelease:

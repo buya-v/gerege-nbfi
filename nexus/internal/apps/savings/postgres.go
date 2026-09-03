@@ -3,7 +3,6 @@ package savings
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/gerege/nexus/internal/platform/postgres"
 )
@@ -40,6 +39,20 @@ import (
 //
 // Callers get the balance from AccountBalanceOf / RunningBalancesOf / AvailableOf
 // in summary.go, which fold the append-only transaction stream on demand.
+//
+// # A FACT ABOUT A POSTING IS NOT A BALANCE
+//
+// The statements below DO select `is_reversed`, `is_reversal` and
+// `release_id_of_hold_amount`, and that is not a softening of the rule above.
+// A fold over an append-only stream is only correct if it can see which
+// postings count: Fineract's own credit/debit classification is
+// `isCreditType() && !isReversed() && !isReversalTransaction()`
+// [SavingsAccountTransaction.java:786-799], and reversal is the mechanism
+// CLAUDE.md names as the only legal correction. These three columns are facts
+// about a single row — flags and a foreign key, not sums, not aggregates, not
+// derivable from anything else — so reading them introduces no number this port
+// did not derive. `account_balance_derived` and `running_balance_derived` are
+// aggregates of other rows, which is exactly why they stay unread.
 
 // AccountRepository is the persistence surface for m_savings_account.
 type AccountRepository interface {
@@ -126,6 +139,29 @@ func (r *PostgresAccountRepository) UpdateStatus(ctx context.Context, id int64, 
 // reference oracle (Fineract) is what maintains these columns; the Go module
 // reads them as an inbound read model and derives the balance itself, from the
 // postings, via AccountBalanceOf.
+//
+// ⚠ THE SAME ARGUMENT APPLIES TO THE READ DIRECTION, AND IT IS NOT AN I-3
+// VIOLATION ONLY BECAUSE I-3 IS ABOUT WRITES. It is stated here because the
+// deletion of the write path was justified on exactly this ground and the
+// symmetry should not have to be rediscovered.
+//
+// Nine of the twelve columns selected below are, verbatim, the definition of
+// `account_balance_derived`:
+//
+//	accountBalance = totalDeposits + totalInterestPosted - totalWithdrawals
+//	    - totalWithdrawalFees - totalAnnualFees - totalFeeCharge
+//	    - totalPenaltyCharge - totalOverdraftInterestDerived - totalWithholdTax
+//
+// [VERIFIED: SavingsAccountSummary.updateSummary, :110-112.] All nine are
+// fields of SavingsAccountSummary, so any caller can difference them and hold
+// Fineract's stored balance in a local, having gone nowhere near a posting and
+// tripping no guard — the ledger guard's `(?i)balance` matcher matches none of
+// those nine identifiers. The read model is retained anyway, because the
+// strangler window needs it and because the balance-shaped answer it enables is
+// Fineract's number, correctly labelled, rather than this port's. But a caller
+// that wants THIS PORT'S balance must call AccountBalanceOf(stream); the two
+// are not interchangeable, and D-1/D-3 in summary.go list exactly where they
+// disagree.
 type SummaryRepository interface {
 	FindByAccountID(ctx context.Context, accountID int64) (*SavingsAccountSummary, error)
 }
@@ -150,10 +186,12 @@ func NewPostgresSummaryRepository(db postgres.DB) *PostgresSummaryRepository {
 // query itself; that is a harness concern and it is not this read model's job.
 //
 // ⚠ PRE-EXISTING DEFECT, NOT INTRODUCED HERE AND NOT REPAIRED HERE (T501
-// handoff, backlog): `m_savings_account_summary` DOES NOT EXIST IN FINERACT.
-// SavingsAccountSummary is an @Embeddable [VERIFIED: SavingsAccountSummary.java
-// :36; SavingsAccount.java:225 @Embedded], so in the adopted schema these
-// columns live on m_savings_account and the key is `id`, not
+// handoff, backlog; routed as T507): `m_savings_account_summary` DOES NOT EXIST
+// IN FINERACT. SavingsAccountSummary is an @Embeddable [VERIFIED:
+// SavingsAccountSummary.java:36], @Embedded into SavingsAccount at
+// SavingsAccount.java:306-307 (T501 cited :225, which is the @Embedded
+// MonetaryCurrency and is wrong — corrected here by T510), so in the adopted
+// schema these columns live on m_savings_account and the key is `id`, not
 // `savings_account_id`. Nothing in this repository creates the table either.
 // Retargeting the statement is a schema-first repair outside a ledger-invariant
 // task's remit; it is raised rather than done quietly.
@@ -211,18 +249,37 @@ func NewPostgresTransactionRepository(db postgres.DB) *PostgresTransactionReposi
 // Insert appends one transaction, returning its id. The entry classification is
 // derived from the transaction type (it is not a stored column in the oracle).
 //
+// `is_reversed` and `is_reversal` ARE written, and must be: `is_reversed` is
+// NOT NULL with no default [VERIFIED: 0001_initial_schema.xml:3852-3854] and
+// `is_reversal` is NOT NULL DEFAULT false [0005_savings_transaction_reversal
+// .xml:27-30]. They are per-row facts, not aggregates — see the file header.
+//
 // It does NOT populate `running_balance_derived`. That column is Fineract's
 // stored prefix sum, and populating it is the m_trial_balance shape DEC-2 §7
 // refuses — the `_derived` spelling describes how Fineract obtains the number,
 // not permission to store it here. The column keeps existing (it is nullable
 // with no default, so omitting it is valid) and stays NULL on rows this port
 // appends. The running balance is RunningBalancesOf(stream), folded on demand.
+//
+// ⚠ PRE-EXISTING DEFECT, RAISED NOT REPAIRED (T510 handoff). This statement
+// still omits three columns that are NOT NULL with no default on
+// m_savings_account_transaction — `office_id` (:3845-3847),
+// `transaction_date` (:3855-3857) and `created_date` (:3866-3868) — so it
+// cannot succeed against the adopted schema. Supplying them needs an office
+// model and a business-date clock, neither of which exists in this package;
+// that is an account-model slice, not a ledger-invariant repair, and inventing
+// values here would be worse than the omission.
+//
+// ⚠ AND `release_id_of_hold_amount` IS NOT WRITTEN, because this port has no
+// hold/release service to pair the two rows with. HeldOf therefore refuses a
+// stream of holds and releases this port appended itself, rather than guessing
+// at the pairing. See HeldOf's "KNOWN GAP, FAILING CLOSED".
 func (r *PostgresTransactionRepository) Insert(ctx context.Context, t SavingsAccountTransaction) (int64, error) {
 	id, err := postgres.InsertReturningInt64(ctx, r.db, `INSERT INTO m_savings_account_transaction
-(savings_account_id, transaction_type_enum, amount)
-VALUES ($1,$2,$3) RETURNING id`,
+(savings_account_id, transaction_type_enum, amount, is_reversed, is_reversal)
+VALUES ($1,$2,$3,$4,$5) RETURNING id`,
 		t.AccountID, t.Type.StoredValue(),
-		t.Amount.FormatDecimal(MNTMinorDigits))
+		t.Amount.FormatDecimal(MNTMinorDigits), t.Reversed, t.Reversal)
 	if err != nil {
 		return 0, fmt.Errorf("savings: insert transaction: %w", err)
 	}
@@ -235,16 +292,27 @@ VALUES ($1,$2,$3) RETURNING id`,
 // It does not select `running_balance_derived`, for the reason Insert does not
 // write it — and additionally because this port leaves that column NULL, so
 // decoding it would fail or, worse, quietly yield zero.
+//
+// It DOES select `is_reversed`, `is_reversal` and `release_id_of_hold_amount`.
+// Without the first two the fold cannot tell a live posting from a corrected
+// one, and Fineract's correction shape is a SAME-TYPE copy, so the error would
+// double rather than cancel; without the third, holds are paired by arithmetic
+// instead of by identity. See the file header for why a per-row fact is not the
+// stored aggregate I-3 refuses. `release_id_of_hold_amount` is nullable, so it
+// is decoded through a nullable int and zero means "not released", matching
+// Fineract's `== null` test [SavingsAccountTransaction.java:898-899].
 func (r *PostgresTransactionRepository) FindByAccountID(ctx context.Context, accountID int64) ([]SavingsAccountTransaction, error) {
 	var out []SavingsAccountTransaction
 	err := postgres.QueryRows(ctx, r.db, `SELECT id, savings_account_id,
-transaction_type_enum, amount::text
+transaction_type_enum, amount::text, is_reversed, is_reversal,
+COALESCE(release_id_of_hold_amount, 0)
 FROM m_savings_account_transaction WHERE savings_account_id = $1 ORDER BY id`,
 		[]any{accountID}, func(s postgres.RowScanner) error {
 			var t SavingsAccountTransaction
 			var typeEnum int32
 			var amount string
-			if err := s.Scan(&t.ID, &t.AccountID, &typeEnum, &amount); err != nil {
+			if err := s.Scan(&t.ID, &t.AccountID, &typeEnum, &amount,
+				&t.Reversed, &t.Reversal, &t.ReleaseIDOfHoldAmount); err != nil {
 				return err
 			}
 			tx, ok := SavingsAccountTransactionTypeFromStoredValue(typeEnum)
@@ -322,13 +390,6 @@ func nullStr(s string) any {
 		return nil
 	}
 	return s
-}
-
-func nullTime(t time.Time) any {
-	if t.IsZero() {
-		return nil
-	}
-	return t
 }
 
 // Compile-time proof that the pgx-backed stores satisfy their interfaces.

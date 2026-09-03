@@ -53,7 +53,7 @@
 // A port that encodes these as an iota would collapse the transfer sub-states
 // (303/304) and every band after 300. The transaction types are likewise
 // non-contiguous (there is no 9 or 11, and 20/21 are the hold/release pair
-// that does not move the account balance) [VERIFIED: SavingsAccountTransactionType.java:24-47].
+// that does not move the account balance) [VERIFIED: SavingsAccountTransactionType.java:35-54].
 // Both therefore carry an explicit StoredValue() table and a separately tested
 // FromStoredValue() decoder, exactly as the ledger and loan packages do.
 package savings
