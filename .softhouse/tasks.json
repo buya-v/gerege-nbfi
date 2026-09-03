@@ -7642,7 +7642,7 @@
       "note": "Filed by cloud fire cloud-20260902-2000 at merge time, naming its own process gap rather than leaving it implicit."
     },
     {
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "contract_independent": false,
@@ -7657,7 +7657,7 @@
       ],
       "dependencies": [],
       "description": "`guard_ledger_invariants` REFUSES the Go tree and six of its fourteen findings are in savings. This is the CLAUDE.md non-negotiable 'The ledger is double-entry and append-only. Balances are derived, never written.'\n\nTHE THREE THAT MATTER (I3-SQL-BALANCE) — a written, stored sum wearing a balance's name, which DEC-2 §7 refuses to port as the m_trial_balance shape:\n  - postgres.go:113 INSERT INTO m_savings_account_summary populating `account_balance_derived`\n  - postgres.go:113 the UPDATE arm assigning `account_balance_derived`\n  - postgres.go:210 INSERT INTO m_savings_account_transaction populating `running_balance_derived`\n\nREAD THE TRAP BEFORE YOU ARGUE WITH THE GUARD: the columns are spelled `..._derived`, and in Fineract they are derived BY BEING WRITTEN. CLAUDE.md says adopt Fineract's PostgreSQL SCHEMA — it does not say adopt Fineract's WRITE PATHS. Keeping the column and never writing it is consistent; writing it is not. If you conclude the column must be written, you are proposing a DEC-2 amendment, which is a `user` gate: STOP, write the argument in your handoff, change no code.\n\nAND THE FOUR FIELD WRITES (I3-FIELD-WRITE): postgres.go:243 `t.RunningBalance =` in FindByAccountID, postgres.go:302 `s.AccountBalance =` in decodeSummary, summary.go:53 `s.AccountBalance +=` in Add.\nNote 243 and 302 are DECODE paths — they populate a struct from a row read back. Decide honestly whether 'derived, never written' is even engaged by a read-back decode, or whether the right repair is that the field should not exist because the balance should be summed from postings on demand. The guard names the shape it does NOT flag: a bare local accumulator (`var debit, credit MinorUnits`), as in nexus/internal/apps/ledger/money.go. Derive by summation over the postings.\n\nCONTEXT YOU NEED: savings/deposit code is IN SCOPE to port but ships DISABLED — the tenant licence is NBFI (ББСБ) and deposit-taking is prohibited (Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4). That does not soften this repair; inert code still has to satisfy the ledger invariants. Never describe member savings as insured, protected or guaranteed in any string you touch.\n\nBAR: the repair is done when `bash .softhouse/conformance.sh` no longer reports YOUR sites under `ledger-invariants`. Run it with **bash**, never sh/zsh/dash — exit 3 is the harness's wrong-interpreter refusal, not a result. EXIT 2 WITH NO `probe = ` LINE PRINTED means a HARD guard failed, which is the state the tree is in right now; it is NOT an oracle outage and you must not park for it. Note the bar is red for OTHER tasks' sites too, so grade yourself on the disappearance of your own lines, not on a green run. `go build ./...` and `go test ./...` in nexus/ must stay green. Money stays INTEGER MINOR UNITS everywhere, including intermediates and fixtures: no float32/float64/big.Float in any money path.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
-      "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
+      "note": "landed 2e1a09df on softhouse/T501-savings-i3. VERIFIED BY THE DRIVER, not taken on report: guard findings 14->8 with ZERO savings sites remaining (ran check-ledger-invariants.sh against the branch in a detached worktree), build rc=0, 0 test FAILs, no float in the package, git diff --stat main..branch confined to savings/ + handoff. Awaiting T504 independent review."
     },
     {
       "status": "in_progress",
@@ -7698,7 +7698,7 @@
       "note": "dispatched by fire 20260903-170002 into an isolated worktree; branch recorded BEFORE spawn per STEP 0"
     },
     {
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "contract_independent": false,
@@ -7714,7 +7714,8 @@
       "dependencies": [
         "T501"
       ],
-      "description": "INDEPENDENT review of T501. Read its handoff FROM ITS BRANCH (`git show softhouse/T501-savings-i3:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
+      "description": "INDEPENDENT review of T501. Read its handoff FROM ITS BRANCH (`git show softhouse/T501-savings-i3:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit.",
+      "note": "dispatched by fire 20260903-170002; branch recorded BEFORE spawn"
     },
     {
       "status": "pending",
@@ -7753,6 +7754,25 @@
         "T503"
       ],
       "description": "INDEPENDENT review of T503. Read its handoff FROM ITS BRANCH (`git show softhouse/T503-opaque-sql:.softhouse/handoff/...`) so you are not reading its working tree, and re-derive the question from SOURCE — the pinned Fineract checkout at /Users/buv/fineract (commit 426a23544) and the guard's own text — rather than checking the author's reasoning for internal consistency.\n\nTHE ONE QUESTION THAT MATTERS: did this repair make the tree CORRECT, or did it make the GUARD QUIET? Those look identical on a green bar and they are opposites. Specifically hunt for: a field renamed so it no longer matches the guard's name pattern while the write survives; a balance still stored but through a path the static walk cannot see (which converts an I-3 finding into an OPAQUE-SQL one and looks like progress); a guard amended to carve out the author's own code; a test weakened or deleted.\n\nIf the author chose to argue the guard over-matches, that claim is YOURS to re-derive from the Fineract source, and 'the author cited a file' is not evidence — open it. P-104: a counted claim resting on a single pattern match is a claim ABOUT THE PATTERN. Verify cardinals by running something, and say what you ran.\n\nMoney math is settled by RE-DERIVATION from source, never by agreement with the author. Integer minor units throughout. Verdict: ACCEPT / ACCEPT WITH CONDITIONS / REJECT, with every finding graded MAJOR/MINOR and each carrying a concrete failure scenario.\n\nISOLATION: you are in your own git worktree. Commit to your branch. Do NOT touch files outside your files_hint — the scope check is `git diff --stat main..<branch>`. Anything you discover outside your scope goes in your handoff as backlog, never as an edit."
+    },
+    {
+      "id": "T507",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "role": "coder",
+      "contract_independent": false,
+      "title": "SCHEMA-FIRST VIOLATION found by T501: m_savings_account_summary DOES NOT EXIST in Fineract",
+      "branch": "softhouse/T507-savings-summary-schema",
+      "files_hint": [
+        "nexus/internal/apps/savings/",
+        ".softhouse/handoff/T507-savings-summary-schema.md"
+      ],
+      "dependencies": [
+        "T504"
+      ],
+      "description": "T501 raised this as backlog rather than fixing it out of scope, and it is a CLAUDE.md 'schema-first' violation, not a style point.\n\nTHE CLAIM TO RE-VERIFY FIRST (do not inherit it): in Fineract, `SavingsAccountSummary` is @Embeddable and @Embedded into SavingsAccount, so those columns live on `m_savings_account` keyed by id — there is NO `m_savings_account_summary` TABLE. Check it yourself against the pinned checkout /Users/buv/fineract (commit 426a23544) and against 0001_initial_schema.xml. If T501 was wrong, say so and close this.\n\nIF IT HOLDS: nexus/ creates no such table in any migration either, so the code T501 deleted could never have executed, and the SELECT that survives cannot either. CLAUDE.md: 'Contract-first, schema-first' and 'adopt Fineract's PostgreSQL schema' — and parity is only meaningful when the reference oracle and the Go module read the SAME schema. A read against a table that exists in neither is not a port.\n\nRetarget the reads onto the real Fineract schema. This is a SCHEMA repair, and it must not reintroduce any write to a balance column — T501 established that the savings balance is a fold over the append-only transaction stream, held in nothing and stored nowhere. Keep it that way; check-ledger-invariants.sh must still report zero savings sites when you are done.\n\nLook for the same shape elsewhere while you are in there: a Go repository reading or writing a table that the adopted schema does not define is a class, and T501 found one instance by accident. Report the census in your handoff even if you only repair savings."
     }
   ],
   "cross_corroboration": {
