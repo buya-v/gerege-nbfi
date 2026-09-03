@@ -1,8 +1,9 @@
 # T501 — savings I-3 repair (`softhouse/T501-savings-i3`)
 
 **Verdict: all six assigned findings REPAIRED. None argued away, none escalated as a DEC-2 gate.**
-`guard_ledger_invariants` went from 14 findings to 4; the 4 that remain are other tasks'
-(`loanproduct` ×4 `I3-FIELD-WRITE`), plus the pre-existing `OPAQUE-SQL` pair.
+`guard_ledger_invariants` went from **14 findings to 8**, and the 14 decompose exactly:
+6 mine (all gone) + 4 `loanproduct` `I3-FIELD-WRITE` + 4 `OPAQUE-SQL`. The 8 that remain are the
+latter two groups, untouched and outside my scope.
 
 The organising principle for every site below is one sentence: **the savings balance is a fold
 over the append-only transaction stream, computed on demand, held in nothing and stored
@@ -175,10 +176,12 @@ whether the read model is wanted at all.**
 Fineract's DDL and entity mapping, not from a capture. Nothing in this repair depends on a captured
 value, but nobody should read a green bar as parity evidence for savings persistence.
 
-**C. Backlog, other tasks' sites, untouched (in the transcript, outside my scope):**
-`loanproduct/interestperiod.go:196,207,224` and `loanproduct/repaymentperiod.go:541`
-(`ip.outstandingLoanBalance =`, `ip.balanceCorrectionAmount =`); `OPAQUE-SQL` at
-`ledger/journalentry_postgres.go:59` and `workingcapital/postgres.go:366`.
+**C. Backlog, other tasks' sites, untouched (in the transcript, outside my scope) — all 8 of them,
+listed in full rather than as "and others":**
+`I3-FIELD-WRITE` at `loanproduct/interestperiod.go:196,207,224` and
+`loanproduct/repaymentperiod.go:541` (`ip.outstandingLoanBalance =`, `ip.balanceCorrectionAmount =`);
+`OPAQUE-SQL` at `ledger/journalentry_postgres.go:59`, `workingcapital/postgres.go:366`,
+`platform/postgres/migrate.go:75` and `platform/postgres/migrate.go:93`.
 
 ---
 
@@ -186,17 +189,38 @@ value, but nobody should read a green bar as parity evidence for savings persist
 
 Run with `bash`, per the harness's interpreter rule.
 
+The selector below matches **every** finding class, not just `I3-*`. Stated because my first pass
+grepped `^\s*\[I[0-9]` and reported "4 remaining", which silently dropped the four `OPAQUE-SQL`
+findings — a narrow selector producing a flattering count is the same defect this program keeps
+finding, and it is corrected here rather than left in the number.
+
+The `-o` form is deliberate: the guard prints its finding list **twice** per run, at two different
+indentations (once inline in the census, once under `REFUSED`), so a line-based `sort -u` returns
+16 and invites a doubled count. Matching the finding text itself collapses the pair honestly.
+
 ```
-$ bash .softhouse/guards/check-ledger-invariants.sh 2>&1 | grep -E '^\s*\[I[0-9]' | sort -u
-  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:196:4
-  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:207:2
-  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:224:2
-  [I3-FIELD-WRITE] internal/apps/loanproduct/repaymentperiod.go:541:4
+$ bash .softhouse/guards/check-ledger-invariants.sh 2>&1 \
+    | grep -oE '\[[A-Z0-9-]+\] internal/[^ ]+' | sort -u
+[I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:196:4
+[I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:207:2
+[I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:224:2
+[I3-FIELD-WRITE] internal/apps/loanproduct/repaymentperiod.go:541:4
+[OPAQUE-SQL] internal/apps/ledger/journalentry_postgres.go:59:15
+[OPAQUE-SQL] internal/apps/workingcapital/postgres.go:366:15
+[OPAQUE-SQL] internal/platform/postgres/migrate.go:75:12
+[OPAQUE-SQL] internal/platform/postgres/migrate.go:93:16
+
+$ ... | grep -oE '\[[A-Z0-9-]+\] internal/[^ ]+' | grep -c savings
+0
 ```
 
-**Before: 14 findings, six of them mine. After: 4, none of them mine.** Gone from the `REFUSED`
-block: `savings/postgres.go:113` ×2, `savings/postgres.go:210`, `savings/postgres.go:243`,
-`savings/postgres.go:302`, `savings/summary.go:53`.
+**Before: 14 findings, six of them mine. After: 8, none of them mine** — and the arithmetic closes
+exactly, 14 − 6 = 8, with no finding of mine surviving under another class or another line number.
+The guard's own census header agrees independently: `Findings: 8`.
+
+Gone from the `REFUSED` block: `savings/postgres.go:113` ×2, `savings/postgres.go:210`,
+`savings/postgres.go:243`, `savings/postgres.go:302`, `savings/summary.go:53`. No `savings/` path
+appears anywhere in the finding list.
 
 **Gone by deletion, not by the walk losing sight of the package** — the disappearance is not a
 coverage artefact, and the census proves it:
