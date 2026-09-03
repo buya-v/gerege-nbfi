@@ -1,13 +1,13 @@
 package ledger
 
 import (
-	"strings"
+	"reflect"
 	"testing"
 )
 
 // These tests hold the A1 engine's two structural invariants directly — the
 // double-entry check and the refusal precedence — plus the persistence layer's
-// SQL builder, without a database. The end-to-end parity and mutation grading
+// argument builder, without a database. The end-to-end parity and mutation grading
 // lives in the conformance harness; these pin the engine the harness now calls.
 
 func testAccount(id int64, code string) GLAccount {
@@ -130,10 +130,21 @@ func TestPosterExpandsOpeningBalanceContraPerLeg(t *testing.T) {
 	}
 }
 
-// TestBuildJournalEntryInsertPinsTheSQLShape asserts the multi-row INSERT the
-// persistence layer emits — one statement, 11 positional args per row, and the
-// amount rendered back to exact decimal text — without touching a database.
-func TestBuildJournalEntryInsertPinsTheSQLShape(t *testing.T) {
+// TestBuildJournalEntryInsertArgsPinsTheColumnArrays asserts the arguments the
+// persistence layer binds — ELEVEN parallel column arrays, one element per
+// entry, with the amount rendered back to exact decimal text — without touching
+// a database.
+//
+// WHAT THIS TEST NO LONGER PINS, AND WHY THAT IS NOT A LOSS. [T503] It used to
+// reconstruct the SQL string and assert its shape, because the statement was
+// assembled at run time and existed nowhere a reader could see it. The
+// statement is now a fixed literal at the single call site in
+// journalentry_postgres.go Append, so it is read directly from source — by a
+// reviewer and by the I-3/I-4 guard, which is what the guard demanded. A test
+// that re-derived it would only be asserting a copy against itself. The row
+// count moved out of the SQL and into these arrays, which is exactly what this
+// test now pins.
+func TestBuildJournalEntryInsertArgsPinsTheColumnArrays(t *testing.T) {
 	entries := []JournalEntry{
 		{
 			AccountID:     2,
@@ -155,17 +166,34 @@ func TestBuildJournalEntryInsertPinsTheSQLShape(t *testing.T) {
 		},
 	}
 
-	sql, args := buildJournalEntryInsert(entries, 1, 1)
-	if !strings.HasPrefix(sql, "INSERT INTO acc_gl_journal_entry ") {
-		t.Fatalf("unexpected SQL: %s", sql)
+	args := buildJournalEntryInsertArgs(entries, 1, 1)
+	if got := len(args); got != 11 {
+		t.Fatalf("arg count = %d, want 11 column arrays ($1..$11)", got)
 	}
-	if got := strings.Count(sql, "VALUES"); got != 1 {
-		t.Errorf("VALUES count = %d, want a single multi-row INSERT", got)
+
+	// Every array must be the same length as the batch, or unnest would zip
+	// rows out of alignment and a leg would be written against another leg's
+	// account.
+	for i, a := range args {
+		n := reflect.ValueOf(a).Len()
+		if n != len(entries) {
+			t.Errorf("arg $%d has %d elements, want %d (one per entry)", i+1, n, len(entries))
+		}
 	}
-	if got := len(args); got != 22 {
-		t.Errorf("arg count = %d, want 22 (11 per row)", got)
+
+	if got := args[3].([]string); got[0] != "T1" || got[1] != "T1" {
+		t.Errorf("transaction_id array = %q, want both legs on T1", got)
 	}
-	if args[3] != "T1" || args[8] != "250000.25" || args[14] != "T1" || args[19] != "250000.25" {
-		t.Errorf("transaction id / amount cells wrong: %q %q %q %q", args[3], args[8], args[14], args[19])
+	if got := args[8].([]string); got[0] != "250000.25" || got[1] != "250000.25" {
+		t.Errorf("amount array = %q, want exact decimal text for 25000025 minor units", got)
+	}
+	if got := args[0].([]int64); got[0] != 2 || got[1] != 1 {
+		t.Errorf("account_id array = %v, want [2 1] in entry order", got)
+	}
+	if got := args[7].([]int32); got[0] != int32(EntryDebit) || got[1] != int32(EntryCredit) {
+		t.Errorf("type_enum array = %v, want [debit credit] in entry order", got)
+	}
+	if got := args[6].([]string); got[0] != "2026-08-24" || got[1] != "2026-08-24" {
+		t.Errorf("entry_date array = %q, want the strict yyyy-MM-dd text both legs carry", got)
 	}
 }
