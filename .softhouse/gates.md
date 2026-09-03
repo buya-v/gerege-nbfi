@@ -5025,3 +5025,198 @@ And Fineract's schema is two-field, in both person tables the platform owns — 
 ### What Buyan is being asked — nothing, unless he disagrees
 
 The decision is recorded and the program proceeds on it. Overrule it if the compatibility-column approach is wrong for a reason the driver cannot see from source — for example, if an FRC reporting format constrains how a staff name is stored.
+
+---
+
+## G-25 / G-26 / G-27 — SAVINGS BALANCE FOLD vs FINERACT — **G-25 and G-27 DELETED, G-26 DOWNGRADED**
+
+**Raised by:** `T510` (coder), 2026-09-03, as three ratified divergences from the reference
+oracle (Fineract).
+**Rejected by:** `T513` (independent review of T510), same day.
+**Resolved by:** `T515` (rework), same day, against the **live oracle instance**.
+**Class:** **ENGINEERING**. `chosen_by: agent`. Buyan retains veto.
+**Blocks:** nothing. **Authorises no cutover and no activation** — savings ships disabled (NBFI,
+Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4).
+
+### Outcome, first
+
+| gate | T510 claimed | outcome |
+|---|---|---|
+| **G-25** | a HOLD moves `running_balance_derived` and we refuse to let it | **DELETED** — premise false; the column is reproduced faithfully and nothing is refused |
+| **G-26** | a VOID row: Fineract states NO running balance, we state the unchanged one | **DOWNGRADED to a MINOR note**; the remedy is implemented, no divergence remains |
+| **G-27** | `ESCHEAT` debits our balance and Fineract's does not move | **DELETED** — it was a live money bug, not a design choice |
+
+**No `user` decision is required, and none ever was.** All three rested on a checkable claim
+about the reference oracle's source, and the claim was false.
+
+### The false premise, and why it was false
+
+All three gates shared this preamble, which is now struck:
+
+> ~~Fineract is **internally inconsistent** across all three: its `account_balance_derived` and
+> its `running_balance_derived` are computed by different code that disagrees. There is no option
+> that matches "Fineract" — only options that match one of Fineract's two answers.~~
+
+Fineract's credit/debit classification is **three calls deep** and T510 walked two of them,
+binding the Go port to the enum's **raw `entryType` field** — which Fineract itself never folds
+on. The third call is `SavingsAccountTransactionType.java:180-188`, and its own inline comments
+state the conclusion T510 spent three gate entries arguing against
+[VERIFIED at those exact lines by T513, by the driver, and again by T515]:
+
+```java
+public boolean isCredit() {
+    // AMOUNT_RELEASE is not credit, because the account balance is not changed
+    return isCreditEntryType() && !isAmountRelease();
+}
+public boolean isDebit() {
+    // AMOUNT_HOLD, ESCHEAT are not debit, because the account balance is not changed
+    return isDebitEntryType() && !isAmountOnHold() && !isEscheat();
+}
+```
+
+So the oracle already implements "a hold does not move the posted balance" — the very rule G-25
+invoked CLAUDE.md to justify **diverging from an oracle that agreed with it all along**. The port
+re-derived that rule by hand as an exclusion list at each fold site, got it right for AMOUNT_HOLD
+and AMOUNT_RELEASE, and omitted ESCHEAT, which the oracle excludes by name on the same line as
+AMOUNT_HOLD. T515 ports the third call and **deletes the exclusion lists**.
+
+### The evidence is a capture, not an argument
+
+[VERIFIED: live capture from the running oracle instance, Fineract @ `426a23544`, tenant
+`default`, PostgreSQL `gerege-oracle-db`/`fineract_default`, 2026-09-03. Savings product 2 —
+**MNT, `currency_digits` 2, `nominal_annual_interest_rate` 0.000000**, so no interest posting
+perturbs the rows. Raw `m_savings_account_transaction` / `m_savings_account` output.]
+
+> ⚠ **THESE ARE NOT PARITY VECTORS, AND THEY ARE NOT IN `.softhouse/vectors/`.** The running
+> instance is **not at the ratified tenant settings**, measured independently this fire
+> [VERIFIED: psql against `gerege-oracle-db`]: `tenants` holds exactly **one** row — `default`,
+> **`Asia/Kolkata`** — there is **no `gerege` tenant and no `fineract_gerege` database**, and
+> `c_configuration` carries **`rounding-mode = 6`**, which is **HALF_EVEN**
+> (`java.math.RoundingMode`: UP=0, DOWN=1, CEILING=2, FLOOR=3, HALF_UP=4, HALF_DOWN=5,
+> HALF_EVEN=6, UNNECESSARY=7). CLAUDE.md ratifies **HALF_UP (4)**, precision 19,
+> **Asia/Ulaanbaatar**.
+>
+> **Why the two captures below are still decisive for THIS question.** They engage neither
+> setting. Every amount was supplied at two decimals or fewer (1000.00, 400.00, 250.00,
+> 500000.00) and the balance chain is addition and subtraction of those exact quantities at 0%
+> interest — HALF_UP and HALF_EVEN differ only at a midpoint, and no midpoint arises. Nothing
+> asserted here is a date. What they establish is **which transaction types move a balance at
+> all**, which is a classification fact, not a rounding one.
+>
+> **What they must not be used for.** Any rounding-sensitive value — savings interest posting
+> above all — and any date-sensitive value. The `balance_number_of_days_derived` / 
+> `cumulative_balance_derived` figures quoted in `postgres.go` are +05:30-dependent and are
+> flagged there. All captured numbers here are **[UNVERIFIED at (19, HALF_UP) /
+> Asia-Ulaanbaatar]** and must be re-captured from a correctly configured tenant before any of
+> them is promoted to the vector store.
+
+**CAPTURE-B — savings account 3, a hold and a withdrawal.** Created via the stock API
+(`deposit`, `holdAmount`, `withdrawal`):
+
+| txn id | type | amount | `running_balance_derived` |
+|---|---|---|---|
+| 14 | 1 DEPOSIT | 1000.000000 | 1000.000000 |
+| 15 | 20 AMOUNT_HOLD | 400.000000 | **600.000000** |
+| 16 | 2 WITHDRAWAL | 250.000000 | **350.000000** |
+
+`account_balance_derived` = **750.000000**; `total_savings_amount_on_hold` = **400.000000**;
+`on_hold_funds_derived` = NULL.
+
+**CAPTURE-A — savings account 2, escheated for its whole balance** by the stock
+`Update Savings Dormant Accounts` job (jobId 21), which is the **only** caller of
+`SavingsAccount.escheat` [VERIFIED: `UpdateSavingsDormantAccountsTasklet.java:63`]:
+
+| txn id | type | amount | `running_balance_derived` |
+|---|---|---|---|
+| 12 | 1 DEPOSIT | 500000.000000 | 500000.000000 |
+| 13 | **19 ESCHEAT** | 500000.000000 | **500000.000000 — UNMOVED** |
+
+`account_balance_derived` = **500000.000000 — UNMOVED**; `status_enum` = 600 (CLOSED);
+`sub_status_enum` = 300 (ESCHEAT).
+
+### G-25 — DELETED
+
+The **fact** T510 asserted is real and CAPTURE-B confirms it: a hold does debit
+`running_balance_derived`. The **interpretation** was wrong. `account_balance_derived` and
+`running_balance_derived` are not two answers to one question; they are **two different
+quantities**, and CAPTURE-B measures the gap as exactly the hold — 750.00 posted against a 350.00
+hold-net chain, differing by the 400.00 in `total_savings_amount_on_hold`:
+
+- `account_balance_derived` — the **POSTED** balance. Holds never touch it, and the oracle says
+  why in source: *"AMOUNT_HOLD … not debit, because the account balance is not changed."*
+- `running_balance_derived` — a **hold-net, available-shaped** per-row chain. Holds are
+  subtracted, releases added back, by the explicit `|| isAmountOnHold()` / `|| isAmountRelease()`
+  terms of `recalculateDailyBalances` [VERIFIED: `SavingsAccount.java:902,912`].
+
+CLAUDE.md's *"Holds are postings and alter `available` only, never posted `balance`"* is
+therefore **already satisfied** by `AccountBalanceOf`, which excludes holds and now equals
+`account_balance_derived` on both captures. **G-25 cited that non-negotiable to refuse the one
+Fineract column that implements it.** There is no conflict between oracle fidelity and the
+non-negotiable — each governs a different function.
+
+Nothing is refused any more: `HoldNetRunningBalancesOf` in `summary.go` is a faithful port of the
+column, graded against CAPTURE-B and CAPTURE-A.
+
+*Recorded because it makes the deleted gate look less severe, not more:* T513 expected this to
+corrupt interest, since `SavingsAccountInterestPostingServiceImpl.java:382,399` reads
+`tx.getRunningBalance()`. Its capture showed otherwise — interest was computed on ~1009.25, not
+on the hold-net 609.25 — so the old divergence would have cost **vector parity, not interest**.
+
+### G-26 — DOWNGRADED to a MINOR note; the remedy is implemented
+
+On a reversed or reversal row Fineract calls `zeroBalanceFields()`, which sets `runningBalance`
+to **NULL** [VERIFIED: `SavingsAccount.java:897-898`; `SavingsAccountTransaction.java:586-591`].
+Fineract is **unambiguous** here and no second derivation disagrees, so this was never a
+divergence in the *answer* — only a **representation gap**, because `[]MinorUnits` has no NULL.
+It was filed under a preamble ("Fineract contradicts itself") that had no application to it.
+
+T513 identified the remedy and **T515 implemented it**: `HoldNetRunningBalancesOf` returns
+`[]RunningBalance`, a two-field struct whose `Valid` field carries the oracle's NULL exactly
+(a struct rather than `*MinorUnits`, because a nil pointer on a money path is a dereference away
+from a panic).
+
+**What remains is a note, not a divergence:** `RunningBalancesOf` still returns `[]MinorUnits`
+and states the unchanged prefix on a void row. That is *correct for what it computes* — the
+posted-balance prefix, which a void row does not move — and it no longer claims to be a port of
+`running_balance_derived`. Both behaviours are pinned by
+`TestAVoidRowStatesNoRunningBalanceAndDoesNotAdvanceTheChain`.
+
+### G-27 — DELETED. It was a live money bug.
+
+ESCHEAT matches **neither** branch of `recalculateDailyBalances`: `isDebit()` excludes it by name,
+and the loop carries an explicit `|| transaction.isAmountOnHold()` term to re-admit holds and
+**no `|| isEscheat()` term** — the asymmetry that shows the exclusion is deliberate and complete.
+It also appears in **none** of the nine terms of `updateSummary`
+[VERIFIED: `SavingsAccountSummary.java:96-112`], in **no** calculator of
+`SavingsAccountTransactionSummaryWrapper` [VERIFIED: read end to end by T515 — the file names no
+transaction type outside DEPOSIT, DIVIDEND_PAYOUT, WITHDRAWAL, INTEREST_POSTING, WITHDRAWAL_FEE,
+ANNUAL_FEE, the charge/waiver pairs, OVERDRAFT_INTEREST and WITHHOLD_TAX], and in **no** case of
+`updateSummaryWithPivotConfig`'s switch.
+
+**Both derivations agree that escheat moves nothing, and CAPTURE-A observed both of them not
+moving.** There was never a choice to make.
+
+G-27's stated reason (a) — *"two of Fineract's three authorities … agree with us"* — was false on
+both legs: the type-level classification excludes ESCHEAT by name and the running-balance
+derivation does not move on it. **Zero of the three agreed.** Reason (b), that matching would
+adopt the artefact DEC-2 §4.4 I-3 refuses, does not engage either: matching here means **folding
+ESCHEAT to zero**, i.e. computing a number, not reading `account_balance_derived`.
+
+**Before / after, the number that matters.** For `{DEPOSIT 500,000.00; ESCHEAT 500,000.00}`:
+
+| | `AccountBalanceOf` | oracle `account_balance_derived` |
+|---|---|---|
+| T510 | **0** | 50000000 |
+| T515 | **50000000** | 50000000 |
+
+A **500,000₮ error on the operation that closes the account**, pinned by a test
+(`TestEscheatDebitsThePostedBalance`) that asserted the wrong number — precisely the failure T510
+said it was repairing when it wrote *"a test that pins a wrong number is worse than none"*. The
+test is inverted and renamed `TestEscheatMovesNeitherBalance`.
+
+### What Buyan is being asked — nothing
+
+Two gates are deleted because their premise was checkable and false; the third is a MINOR note
+whose remedy is already in the tree. Nothing here was ever a `user` question. Overrule only if
+the program should prefer a Go-side answer to a captured oracle answer, which is the opposite of
+CLAUDE.md's "Fineract is the oracle and fallback".
