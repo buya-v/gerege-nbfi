@@ -148,12 +148,11 @@ func SavingsAccountTransactionTypeFromStoredValue(v int32) (SavingsAccountTransa
 	return t, ok
 }
 
-// IsAmountHold / IsAmountRelease / IsEscheat are the single-value predicates the
-// folded classification below subtracts with
-// [VERIFIED: SavingsAccountTransactionType.java:96-102, :164-174].
+// IsAmountHold / IsAmountRelease select the hold/release pair, which the oracle
+// uses to move a hold without moving the account balance
+// [VERIFIED: SavingsAccountTransactionType.java:96-102].
 func (t SavingsAccountTransactionType) IsAmountHold() bool    { return t == TxnAmountHold }
 func (t SavingsAccountTransactionType) IsAmountRelease() bool { return t == TxnAmountRelease }
-func (t SavingsAccountTransactionType) IsEscheat() bool       { return t == TxnEscheat }
 
 // EntryType returns the in-account CREDIT/DEBIT classification encoded on the
 // enum's entryType field, mirroring the oracle's third constructor argument
@@ -170,58 +169,6 @@ func (t SavingsAccountTransactionType) EntryType() TransactionEntryType {
 	default:
 		return 0
 	}
-}
-
-// IsCreditEntryType / IsDebitEntryType test the RAW entry-type field, and are
-// the port of the oracle's methods of the same names
-// [VERIFIED: SavingsAccountTransactionType.java:83-89]:
-//
-//	isCreditEntryType() = entryType != null && entryType.isCredit()
-//	isDebitEntryType()  = entryType != null && entryType.isDebit()
-//
-// The `!= null` guard is the zero TransactionEntryType here: EntryCredit(1) and
-// EntryDebit(2) are the only non-zero values, so a type with no entry type
-// answers false to both, exactly as Fineract's null does. These are NOT the
-// balance classification; the folded IsCredit/IsDebit below are defined in
-// terms of them.
-func (t SavingsAccountTransactionType) IsCreditEntryType() bool {
-	return t.EntryType().IsCredit()
-}
-
-// IsDebitEntryType — see IsCreditEntryType.
-func (t SavingsAccountTransactionType) IsDebitEntryType() bool {
-	return t.EntryType().IsDebit()
-}
-
-// IsCredit and IsDebit are THE type-level balance classification — the third
-// arrow of Fineract's chain, and the one this port previously stopped short of.
-// Verbatim, with the oracle's own inline comments
-// [VERIFIED: SavingsAccountTransactionType.java:180-188]:
-//
-//	public boolean isCredit() {
-//	    // AMOUNT_RELEASE is not credit, because the account balance is not changed
-//	    return isCreditEntryType() && !isAmountRelease();
-//	}
-//
-//	public boolean isDebit() {
-//	    // AMOUNT_HOLD, ESCHEAT are not debit, because the account balance is not changed
-//	    return isDebitEntryType() && !isAmountOnHold() && !isEscheat();
-//	}
-//
-// The chain is THREE calls deep. Fineract never folds on the raw entry-type
-// field: every balance derivation goes through these two, which subtract the
-// three balance-neutral types (AMOUNT_HOLD, AMOUNT_RELEASE, ESCHEAT). Binding a
-// fold to EntryType() instead treats a hold as a debit, a release as a credit,
-// and an escheat as a debit — which is how a port re-derives "a hold does not
-// move the posted balance" by hand, gets it right for two types, and wrong for
-// the third. ESCHEAT is excluded by the oracle on the same line as AMOUNT_HOLD.
-func (t SavingsAccountTransactionType) IsCredit() bool {
-	return t.IsCreditEntryType() && !t.IsAmountRelease()
-}
-
-// IsDebit — see IsCredit.
-func (t SavingsAccountTransactionType) IsDebit() bool {
-	return t.IsDebitEntryType() && !t.IsAmountHold() && !t.IsEscheat()
 }
 
 func init() {
