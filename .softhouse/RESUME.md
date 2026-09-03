@@ -1,62 +1,56 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260903-170002` (local, oracle REACHABLE) — **IN FLIGHT. THREE WORKERS LIVE.**
+## FIRE `20260903-170002` (local, oracle REACHABLE) — **IN FLIGHT. T510 + T511 LIVE.**
 
-> # ⚠ THE BAR IS RED ON A MONEY NON-NEGOTIABLE. NOTHING CAN BE GRADED UNTIL IT IS GREEN.
+> # ⚠ THE BAR IS RED ON A MONEY NON-NEGOTIABLE, AND IT IS NOW RED **BY DESIGN**
 >
-> `bash .softhouse/conformance.sh` exits **2 with NO probe line printed**. Per STEP 4 that is **NOT**
-> an oracle outage and **nothing may be parked for it** — a HARD guard failed before the probe is
-> reached. The oracle is fine (`{"status":"UP"}`), Postgres is up, prohibited ports closed.
+> `bash .softhouse/conformance.sh` exits **2 with NO probe line**. Per STEP 4 that is a HARD guard
+> failure, **NOT** an oracle outage, and **nothing may be parked for it**. The oracle is UP.
 >
-> **`guard_ledger_invariants` REFUSES the Go tree: 14 violations of DEC-2 §4.4**, against the
-> CLAUDE.md non-negotiable *"Balances are derived, never written."* While it refuses, **no vector,
-> no context and no conformance verdict can be graded on any fire.** The 47 READY tasks in the
-> backlog are all downstream of this.
+> `guard_ledger_invariants` refuses the tree: **9 unique I-3 sites** (was 14). Four of them are RED
+> **deliberately** — T502 argued, and its reviewer T505 agreed, that they are not balance writes, and
+> the correct fix is to the **guard**, not the code. **The bar cannot go green until T509 lands.**
 
-### What this fire did before dispatching
+### The finding this fire actually produced
 
-1. **Closed a 2.5-day fork.** `main` and `origin/main` had diverged at `2815e007` (2026-09-01
-   08:02): **60 local-only commits, never published**, vs 37 from cloud fire `cloud-20260902-2000`.
-   Merged (real merge commit `087d57f9`), pushed. `origin/main...main` now reads `0 0`.
-2. **Diagnosed the outage.** 15 consecutive local fires produced **zero model turns** —
-   `Failed to authenticate: OAuth session expired and could not be refreshed` — abutting an earlier
-   weekly-limit outage. Auth is working again as of this fire. Every push in the window was
-   rejected non-fast-forward, and the wrapper logged `failed` and continued past it, four times per
-   fire, for two days.
-3. **Published 14 un-isolated commits and did not launder them.** ~184 Go files were written
-   straight onto `main` on 2026-09-01 with no worker branch, no reviewer, no vectors. Push-gate C2
-   and C3 both refused; both bypassed with the reason logged to
-   `.git/softhouse-driver-gate/bypass.log`. **The affected contexts remain `pending` in
-   program.json — publication is not approval.** C1 (gitlinks) passed with no bypass.
+**`guard_ledger_invariants` detects how a thing is SPELLED, not what it DOES** — and it is wrong in
+**both** directions on a money non-negotiable. Seven items, each verified by at least two independent
+tasks or by the driver reading source. All are consolidated in **T509, which is now the program's
+critical path**. Order is fixed: **repair the blindness FIRST**, then re-run the whole tree, because
+that arm can only *add* findings. Never narrow a money guard while it is known blind.
 
-Full record: `docs/incidents/2026-09-03-publishing-outage-and-i3-breach.md`.
+### What landed
+
+| | |
+|---|---|
+| **Published** | Closed a 2.5-day fork — 60 local commits that had **never** been pushed, plus the cloud fire's 37. `origin/main...main` = `0 0`. |
+| **Merged** | **T503** (4 `OPAQUE-SQL` sites made statically readable, no DEC-2 exemption) + reviews **T504/T505/T506**. Merged tree: build rc=0, 0 test FAILs, **zero OPAQUE-SQL**. |
+| **Held** | **T501** — real I-3 repair, but introduced a **reversal-blind fold** (reversed deposit *doubles*). **T502** — right conclusion, refuted reasoning, defeatable guard patch. |
 
 ### Live workers — DO NOT assume these finished
 
-| Task | Branch | What |
-|---|---|---|
-| T501 | `softhouse/T501-savings-i3` | 6 findings in savings. The three that matter STORE a summed balance in `account_balance_derived` / `running_balance_derived` — the `m_trial_balance` shape DEC-2 §7 refuses to port. |
-| T502 | `softhouse/T502-loanproduct-i3` | 4 balance-field writes in progressive-schedule arithmetic. May be genuine I-3 writes, or schedule intermediates colliding with the guard's name pattern — the worker must pick one and argue it. |
-| T503 | `softhouse/T503-opaque-sql` | 4 mutating `Exec` calls whose SQL the guard cannot read. `ledger/journalentry_postgres.go:59` is on the **append-only journal-entry path** and is graded hardest. |
+| Task | Branch | Base | What |
+|---|---|---|---|
+| T510 | `softhouse/T510-savings-fold-reversal` | `softhouse/T501-savings-i3` | Carry `is_reversed`/`is_reversal` through the fold; apply T504's 6 MINORs. Must not reinstate a stored balance. |
+| T511 | `softhouse/T511-t505-conditions` | `softhouse/T502-loanproduct-i3` | Drop the refuted guard patch; restate the argument on the posting-stream ground. |
 
-Paired independent reviewers **T504 / T505 / T506** are filed `pending`, each depending on its
-upstream, to be dispatched when the coders land.
+**Each is based on the held branch it repairs, not on `main`.** Merge order: T510 → then T501; T511 → then T502.
 
-### Next action
+### Next fire picks up
 
-Await T501/T502/T503 → dispatch T504/T505/T506 → merge only what its reviewer accepts → re-run
-`bash .softhouse/conformance.sh` and confirm those 14 lines are gone. **A green bar is not the
-test; the test is whether the tree became correct or the guard merely went quiet.**
+1. **T509** — the guard repair. Critical path; nothing can be graded until it lands.
+2. **T508** — the append-only ledger `INSERT` cannot execute (wrong column names, 3 missing NOT NULL). T506 found the origin: Fineract changeset `journal-entry-3` **renamed** `createdby_id`→`created_by` and the Go port copied the **pre-rename** spellings.
+3. **T512** — the scope instrument `git diff --stat main..<branch>` cannot tell "the worker wrote it" from "main moved on". It produced a **false accusation against T503 in this fire**, which the driver published and T506 caught. Use the merge base.
+4. **T507** — `m_savings_account_summary` may not exist in Fineract at all.
 
-### If you are the next fire and these tasks still say `in_progress`
+### If these tasks still say `in_progress` when you read this
 
-Their worker was killed with its session. They are **not** running. Mark them `needs_retry`, rescue
-whatever is on each branch (`git log --oneline main..<branch>`), and treat completeness as
-unverified.
+Their worker was killed with its session. They are **not** running. Mark `needs_retry`, rescue what
+is on each branch, treat completeness as unverified.
 
-### Standing blocker for Buyan (no agent can clear it)
+### Standing item for Buyan — no agent can clear it
 
-The local launchd pipeline burned **15 fires over 2.5 days on an expired OAuth session**, and
-nothing escalates a zero-turn fire (filed T493/T494). It self-repaired before this fire. If it
-recurs, the migration stops dead and silently — the wrapper's own warning says *"cause UNKNOWN"*
-while the cause sits one record below in the `.jsonl` it names.
+15 consecutive fires over 2.5 days burned on `OAuth session expired`, and **nothing escalates a
+zero-turn fire** (T493/T494). Every push in the same window was rejected and the wrapper logged
+`failed` and continued. It self-repaired before this fire. The detection exists; the consequence
+does not.
