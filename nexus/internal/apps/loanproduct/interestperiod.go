@@ -51,18 +51,24 @@ type InterestPeriod struct {
 	disbursementAmount Money
 
 	// balanceCorrectionAmount and outstandingLoanBalance are NOT LEDGER
-	// BALANCES. THE REASON IS THAT NEITHER HAS A POSTING STREAM: they are cells
-	// of a SCHEDULE, which projects the FUTURE, while postings record the PAST.
-	// I-3's remedy "derive by summation over the postings" therefore names no
-	// computation here — there is nothing to sum. See the package comment in
-	// doc.go, "THE TEST THAT DECIDES IT: IS THERE A POSTING STREAM?".
+	// BALANCES, on two legs set out in doc.go, "THE TEST THAT DECIDES IT: TWO
+	// LEGS". LEG 1, PARITY: the segment cell is a SWEPT SNAPSHOT the oracle
+	// deliberately reads stale, so I-3's remedy "derive by summation" CHANGES
+	// THE MONEY here — TestOutstandingLoanBalanceIsASweptSnapshot executes that
+	// claim. LEG 2, REACHABILITY: neither cell reaches a journal entry, a GL
+	// posting, or a column any aggregate reads as an account balance; the
+	// forward trace terminates in DTOs and the calc package emits no journal
+	// entry at all.
 	//
-	// DO NOT restate this as "it never becomes a database column." Both cells
-	// ARE serialised into m_loan_progressive_model.json_model (no @JsonExclude
-	// on InterestPeriod.java:65-66) and ARE read back as starting state
-	// [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:95, :110-128].
-	// The column test fails on this package's own evidence; the posting-stream
-	// test is the one that holds. doc.go carries the full argument.
+	// TWO ARGUMENTS THAT DO NOT WORK, both tried here and both retired; doc.go
+	// carries the counterexamples. (i) "It never becomes a database column" —
+	// false: both cells ARE serialised into m_loan_progressive_model.json_model
+	// (no @JsonExclude on InterestPeriod.java:65-66) and ARE read back as
+	// starting state [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:95,
+	// :110-128]. (ii) "There is no posting stream behind it" — also false, and
+	// refuted by UpdateOutstandingLoanBalance itself, which folds the previous
+	// period's PaidPrincipal [VERIFIED: InterestPeriod.java:178], a quantity the
+	// transaction processor accumulates from real LoanTransactions.
 	//
 	// balanceCorrectionAmount is a SIGNED DELTA applied to the schedule's
 	// principal projection; the oracle only ever adds a negated amount to it
@@ -223,21 +229,30 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 // reason the I-3 source guard refuses this package. The sites are left RED
 // deliberately; nothing here was renamed to clear the bar.
 //
-// WHY THEY ARE NOT LEDGER-BALANCE WRITES: THERE IS NO POSTING STREAM. A ledger
-// balance is defined by the postings it folds, and I-3's remedy is "derive by
-// summation over the postings." This expression sums no postings and could not:
-// it rolls a SCHEDULE forward from the preceding segment's terms. A schedule
-// projects the FUTURE; postings record the PAST. The remedy is not
-// inconvenient here, it names no computation at all. The value's whole
+// WHY THEY ARE NOT LEDGER-BALANCE WRITES — LEG 1, PARITY, and it is the
+// load-bearing leg. I-3's remedy is "derive by summation over the postings."
+// Applied to THIS cell that remedy CHANGES THE MONEY, because the cell is a
+// swept snapshot the oracle deliberately reads stale; the mechanism is set out
+// immediately below and TestOutstandingLoanBalanceIsASweptSnapshot executes it.
+// A repair that moves numbers away from the reference oracle is not a repair.
+//
+// LEG 2, REACHABILITY: this value reaches no ledger balance to be one. Its whole
 // downstream reach is InterestPeriod.java:151 (the declining-balance interest
 // base) -> RepaymentPeriod.java:389-403 ->
 // ProgressiveLoanScheduleGenerator.java:132 -> LoanScheduleModelRepaymentPeriod
-// and LoanSchedulePlan.java:65, :77 — all DTOs. No journal entry, no GL
-// account, no posting anywhere on that path. doc.go carries the full argument
-// and explains why the older "it never becomes a column" version of it fails.
+// and LoanSchedulePlan.java:65, :77 — all DTOs, none carrying @Entity, @Table or
+// @Column. No journal entry, no GL account, no posting anywhere on that path,
+// and the calc package emits none at all.
 //
-// A SECOND, INDEPENDENT REASON, which is a parity argument rather than a
-// category one: the cell cannot simply be derived on read.
+// DO NOT SUBSTITUTE EITHER RETIRED ARGUMENT FOR THOSE. "It never becomes a
+// column" is false, and so is "there is no posting stream": the expression below
+// folds previous.PaidPrincipal() [VERIFIED: InterestPeriod.java:178], which
+// ProgressiveEMICalculator.payPrincipal accumulates from real LoanTransactions
+// [VERIFIED: RepaymentPeriod.java:405-407; ProgressiveEMICalculator.java:421;
+// AdvancedPaymentScheduleTransactionProcessor.java:929, :967, :2912]. doc.go
+// carries both counterexamples in full.
+//
+// LEG 1's MECHANISM: the cell cannot simply be derived on read.
 //
 // This function is the WHOLE refresh mechanism. The oracle calls it only from
 // explicit sweeps [VERIFIED: ProgressiveEMICalculator.java:1254-1256, and the
@@ -287,17 +302,24 @@ func (ip *InterestPeriod) CreditedAmounts() Money {
 // AddBalanceCorrectionAmount mutates balanceCorrectionAmount by adding the
 // supplied amount [VERIFIED: InterestPeriod.java:165-167].
 //
-// NOT A LEDGER-BALANCE WRITE, and left RED deliberately. THERE IS NO POSTING
-// STREAM behind this cell: it is a summand of a SCHEDULE roll-forward, and a
-// schedule projects the FUTURE while postings record the PAST, so I-3's remedy
-// "derive by summation over the postings" names no computation for it. See
-// doc.go, "THE TEST THAT DECIDES IT: IS THERE A POSTING STREAM?".
+// NOT A LEDGER-BALANCE WRITE, and left RED deliberately. LEG 2, REACHABILITY:
+// this cell reaches no journal entry, no GL posting and no column any aggregate
+// reads as an account balance — it is a summand of UpdateOutstandingLoanBalance's
+// roll-forward, whose own reach terminates in DTOs. LEG 1, PARITY: the segment
+// balance this summand feeds is a swept snapshot, so deriving it on read changes
+// the numbers. See doc.go, "THE TEST THAT DECIDES IT: TWO LEGS".
 //
-// balanceCorrectionAmount is moreover a SIGNED DELTA, not a balance: every
-// oracle caller adds a NEGATED principal amount to it
+// DO NOT restate this as "there is no posting stream behind it." That argument
+// is retired and doc.go says why: at two of the six call sites below the amount
+// added IS a negated paid principal, and paid principal is accumulated from real
+// LoanTransactions [VERIFIED: ProgressiveEMICalculator.java:922, :952].
+//
+// balanceCorrectionAmount is a SIGNED DELTA, not a balance: every oracle caller
+// adds a NEGATED amount to it
 // [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124, :1129;
 // RepaymentPeriod.java:192-194; ProgressiveLoanInterestScheduleModel.java:257,
-// :290]. It is one summand of UpdateOutstandingLoanBalance's roll-forward above,
+// :290] — a claim about SIGN DISCIPLINE, never about provenance. It is one
+// summand of UpdateOutstandingLoanBalance's roll-forward above,
 // structurally identical to disbursementAmount and capitalizedIncomePrincipal,
 // whose Add* methods the I-3 guard does not flag. This one is flagged because
 // its name contains the substring "balance" — see doc.go.

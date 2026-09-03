@@ -47,38 +47,63 @@
 // was renamed to clear the bar and no arithmetic was changed — see "The bar is
 // red on purpose", below.
 //
-// # THE TEST THAT DECIDES IT: IS THERE A POSTING STREAM?
+// # THE TEST THAT DECIDES IT: TWO LEGS, AND NEITHER IS "IS THERE A POSTING STREAM?"
 //
-// READ THIS BEFORE REUSING THE ARGUMENT. The operative test is NOT "does the
-// value ever become a database column." That test was tried here first and it
-// FAILS — on this package's own evidence, set out under "The column argument
-// does not work" below. Do not carry it anywhere else. The test that holds is:
+// READ THIS BEFORE REUSING THE ARGUMENT. TWO tests have now been tried here and
+// BOTH FAILED on this package's own evidence — "does the value ever become a
+// database column" and "does the value fold a posting stream." Both are set out
+// under "Two arguments that do not work" below, each with the counterexample
+// that killed it. Do not carry either anywhere else.
 //
-//	I-3 governs LEDGER BALANCES, and a ledger balance is defined by the
-//	POSTING STREAM it folds. The guard's prescribed remedy — "derive by
-//	summation over the postings" — presupposes that stream. Where the stream
-//	exists the remedy is available and I-3 obliges it. Where NO posting stream
-//	exists, "derive by summation over the postings" NAMES NO COMPUTATION:
-//	there is nothing to sum. The cell is then not a ledger balance that was
-//	wrongly written. It is not a ledger balance.
+// What holds is a PAIR of legs, ranked. Neither needs a taxonomy of what a
+// "balance" IS — which is precisely what both retired tests needed and neither
+// could supply.
 //
-// A schedule is a projection of the FUTURE; postings are records of the PAST.
-// InterestPeriod.outstandingLoanBalance is a cell of a projection — computed
-// FORWARD from the preceding segment's terms, never folded BACKWARD over
-// anything that happened. No transaction is summed to produce it and none could
-// be. The remedy is therefore not inconvenient here, and not a trade someone
-// accepted: it is definitionally inapplicable.
+//	LEG 1 — PARITY, and it is the load-bearing one. Applying I-3's prescribed
+//	remedy to this cell CHANGES THE MONEY. The oracle refreshes
+//	InterestPeriod.outstandingLoanBalance only at explicit sweeps and
+//	deliberately reads it stale in between, so an on-demand derivation returns
+//	a different number at every such point. A "repair" that moves money away
+//	from the reference oracle is not a repair. This leg is EXECUTABLE:
+//	TestOutstandingLoanBalanceIsASweptSnapshot goes red (it would read 70000
+//	where the oracle's stored cell still holds 90000) the moment someone
+//	adopts the derive-on-read shape. Mechanism and citations: evidence item 4.
 //
-// This is the ground on which this package and T501's savings repair agree.
-// SavingsAccountSummary.AccountBalance HAS a posting stream — the savings
-// transaction stream — so "derive by summation" names a real computation there,
-// and T501 was right to stop storing it and fold the postings instead. These
-// four cells have no such stream. Same guard class, opposite disposition, one
-// test.
+//	LEG 2 — REACHABILITY. The harm I-3 exists to prevent is a stored number
+//	standing in for a derived ledger balance WHERE ACCOUNTING READS IT. That
+//	requires the value to REACH one: a journal entry or GL posting, or a
+//	persisted column another aggregate reads as an account balance. These
+//	cells reach neither. The forward trace terminates in DTOs carrying no
+//	@Entity, @Table or @Column, and the whole calc package emits no journal
+//	entry at all. The one place these cells ARE persisted —
+//	m_loan_progressive_model.json_model — is the projection's own working
+//	state, reloaded as the SAME projection's starting state: a closed loop
+//	inside loanproduct.calc, not a reach into the ledger. Trace and citations:
+//	evidence item 1.
 //
-// The same oracle carries a cell of the SAME NAME that does have a posting
-// stream, and it is instructive:
-// m_loan_transaction.outstanding_loan_balance_derived
+// LEG 1 IS RANKED FIRST DELIBERATELY. An earlier draft of this comment demoted
+// it to "corroboration" beneath a category argument; that ranking was inverted,
+// because LEG 1 is the leg an author cannot talk past — a test executes it, and
+// a wrong answer is a failing build rather than a losing argument. LEG 2 is a
+// hand-walked forward closure plus greps at one oracle commit. It is exactly the
+// claim the go/types discriminator described under "The bar is red on purpose"
+// would decide mechanically, and it is precisely because nothing decides it
+// mechanically today that these four sites STAY RED.
+//
+// THE RECONCILIATION WITH T501's SAVINGS REPAIR runs on LEG 2, not on any
+// category claim. SavingsAccountSummary.AccountBalance IS
+// m_savings_account_summary.account_balance_derived — a persisted balance column
+// the account is read from [VERIFIED: the oracle selects
+// `sa.account_balance_derived as accountBalance` at
+// SavingsAccountReadPlatformServiceImpl.java:306 and :751; the Go port INSERTs
+// that column at nexus/internal/apps/savings/postgres.go:113, which is why the
+// guard reports it under class I3-SQL-BALANCE as well as I3-FIELD-WRITE]. It
+// REACHES a ledger balance, so I-3 bites and T501 was right to stop storing it
+// and fold the postings instead. These four cells reach no such column. Same
+// guard class, opposite disposition, one criterion.
+//
+// The same oracle carries a cell of the SAME NAME that does reach one, and it is
+// instructive: m_loan_transaction.outstanding_loan_balance_derived
 // [VERIFIED: LoanTransaction.java:127] is written by
 // LoanBalanceService.updateLoanOutstandingBalances, which sorts the loan's
 // non-reversed, monetary transactions and folds a running `outstanding` over
@@ -90,10 +115,10 @@
 // The name collision is the whole trap, and whoever ports LoanBalanceService
 // will meet the real one.
 //
-// # The rest of the evidence, which supports that test
+// # The evidence
 //
-//  1. THE DOWNSTREAM TRACE TERMINATES IN DTOs — no journal entry, no GL
-//     account, no posting derives from this cell anywhere:
+//  1. LEG 2's TRACE — THE DOWNSTREAM PATH TERMINATES IN DTOs. No journal entry,
+//     no GL account, no posting derives from this cell anywhere:
 //
 //     InterestPeriod.outstandingLoanBalance
 //     -> InterestPeriod.java:151            the DECLINING_BALANCE interest base
@@ -102,10 +127,18 @@
 //     -> LoanScheduleModelRepaymentPeriod.setOutstandingLoanBalance (a DTO)
 //     -> LoanSchedulePlan.java:65, :77                                   (a DTO)
 //
-//     Both terminals are plain DTOs carrying no @Entity, @Table or @Column, and
-//     the whole calc package posts nothing — a grep for JournalEntry across
-//     fineract-progressive-loan/.../loanproduct/calc/ returns zero hits
-//     [VERIFIED at oracle 426a23544].
+//     Both terminals carry zero @Entity, @Table and @Column annotations; the
+//     whole calc package carries zero of them too; and a grep for JournalEntry
+//     across fineract-progressive-loan/.../loanproduct/calc/ returns zero hits
+//     [VERIFIED at oracle 426a23544 — all four counts re-run]. The next
+//     aggregate down the path, m_loan_repayment_schedule, declares 34 @Column
+//     fields and not one of them is an outstanding or balance column
+//     [VERIFIED: LoanRepaymentScheduleInstallment.java:60-162].
+//
+//     THE LIMIT OF THIS ITEM, stated so nobody over-reads it: it is a
+//     hand-walked forward closure plus greps at ONE oracle commit, not a
+//     type-checked closure. It is LEG 2's whole warrant, and its being
+//     unmechanised is why the bar stays red.
 //
 //  2. outstandingLoanBalance IS THE INTEREST BASE OF ONE SCHEDULE SEGMENT, not
 //     the balance of an account. Its single arithmetic consumer is the
@@ -113,19 +146,25 @@
 //     `case DECLINING_BALANCE -> getOutstandingLoanBalance().getAmount()`
 //     [VERIFIED: InterestPeriod.java:151].
 //
-//  3. balanceCorrectionAmount IS NOT A BALANCE AT ALL. It is a SIGNED DELTA
-//     applied to that projection — the oracle only ever adds a negated amount
-//     to it [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952,
-//     :1124, :1129 — all six opened]. It is one summand of the roll-forward,
-//     sitting beside disbursementAmount and capitalizedIncomePrincipal
+//  3. balanceCorrectionAmount IS NOT A BALANCE, IT IS A SIGNED DELTA applied to
+//     that projection — the oracle only ever adds a NEGATED amount to it
+//     [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124,
+//     :1129 — all six opened]. It is one summand of the roll-forward, sitting
+//     beside disbursementAmount and capitalizedIncomePrincipal
 //     [VERIFIED: InterestPeriod.java:168-188]; those two summands are not
 //     flagged, and the only thing distinguishing this one is that its name
 //     contains the substring "balance".
 //
-//  4. THE CELL IS A SWEPT SNAPSHOT, AND ITS STALENESS IS PART OF THE ALGORITHM.
-//     Unlike RepaymentPeriod's derived cells — whose oracle Memo carries an
-//     invalidation key, is observationally inert and is therefore dropped by
-//     this port (see repaymentperiod.go) — the SEGMENT cell
+//     NOTE PRECISELY WHAT THIS ITEM DOES NOT SAY. At :922 and :952 the negated
+//     amount IS a paid principal — a transaction-driven quantity. "Signed delta"
+//     is a claim about the cell's SIGN DISCIPLINE, never about its provenance.
+//     Reading it as provenance is exactly what sank the posting-stream test
+//     below, and this item is the evidence that refuted it.
+//
+//  4. LEG 1's MECHANISM — THE CELL IS A SWEPT SNAPSHOT, AND ITS STALENESS IS
+//     PART OF THE ALGORITHM. Unlike RepaymentPeriod's derived cells — whose
+//     oracle Memo carries an invalidation key, is observationally inert and is
+//     therefore dropped by this port (see repaymentperiod.go) — the SEGMENT cell
 //     InterestPeriod.outstandingLoanBalance has NO invalidation key. It is
 //     refreshed only where the oracle explicitly sweeps it
 //     [VERIFIED: ProgressiveEMICalculator.java:1254-1256, and the per-period
@@ -146,12 +185,9 @@
 //     every read. Snapshot semantics are a property of the SEGMENT cell
 //     specifically; do not generalise them to the period cell.
 //
-//     Note the standing of this item. It is a PARITY argument — deriving on
-//     read changes the numbers. The posting-stream argument above is a CATEGORY
-//     argument — the derivation does not exist. The category argument is the
-//     load-bearing one; this is corroboration.
+// # Two arguments that do not work — do not reuse either
 //
-// # The column argument does not work — do not reuse it
+// ## RETIRED 1: "neither cell is ever a database column"
 //
 // The first argument written for these four sites was "neither cell is ever a
 // column, so DEC-2 §4.4 I-3's phrase 'no write path to any balance COLUMN' has
@@ -185,9 +221,71 @@
 // which deleted a FIELD, not a column, holding that "a decoded balance is a
 // number this port did not derive, arriving through the SELECT instead of the
 // INSERT" — "it is a text blob and not a typed column" does not survive. A
-// stored balance is a stored balance whatever its type. What makes these four
-// cells lawful is that they are not balances at all in the I-3 sense: there is
-// no posting stream. Nothing else.
+// stored balance is a stored balance whatever its type.
+//
+// LEG 2 IS NOT THIS ARGUMENT WEARING A NEW NAME, and the difference is the whole
+// point: LEG 2 does not claim the cells are unpersisted. It claims their
+// persistence is a CLOSED LOOP — json_model is written by the projection and
+// read back as the same projection's starting state, and nothing outside
+// loanproduct.calc reads a balance out of it. "Never stored" would be false;
+// "never reaches an aggregate that reads it as an account balance" is what
+// item 1's trace establishes.
+//
+// ## RETIRED 2: "there is no posting stream, so I-3's remedy names no computation"
+//
+// The second argument ran: a ledger balance is defined by the POSTING STREAM it
+// folds; I-3's remedy "derive by summation over the postings" presupposes that
+// stream; a schedule projects the FUTURE while postings record the PAST, so no
+// transaction is summed to produce this cell AND NONE COULD BE; the remedy names
+// no computation, and the cell is therefore not a ledger balance at all. IT IS
+// RETIRED, for two independent reasons — the premise is false, and rewording it
+// does not save it.
+//
+//   - ITS FACTUAL PREMISE IS FALSE. A transaction-derived quantity IS summed
+//     into this cell, in the very function the argument annotated.
+//     updateOutstandingLoanBalance folds
+//     previousRepaymentPeriod.getPaidPrincipal()
+//     [VERIFIED: InterestPeriod.java:178], and this port reproduces that fold
+//     verbatim — `plus(previous.PaidPrincipal())`, the last summand of
+//     UpdateOutstandingLoanBalance's first-segment branch in interestperiod.go
+//     (line 282 at the time of writing; grep the expression, not the line, since
+//     comment edits move it). paidPrincipal is
+//     accumulated by RepaymentPeriod.addPaidPrincipalAmount
+//     [VERIFIED: RepaymentPeriod.java:405-407] from
+//     ProgressiveEMICalculator.payPrincipal [VERIFIED: :421], which the
+//     transaction processor calls while walking real LoanTransactions
+//     [VERIFIED: AdvancedPaymentScheduleTransactionProcessor.java:929, :967,
+//     :2912]. And balanceCorrectionAmount is, at two of its six call sites,
+//     literally a negated paid principal
+//     [VERIFIED: ProgressiveEMICalculator.java:922 — effectivePaidPrincipal.negated();
+//     :952 — paidPrincipal.negated()]. Evidence item 3 above always carried
+//     those citations: the retired headline contradicted its own evidence.
+//
+//   - IT IS NOT WELL-DEFINED AT THE BOUNDARY, so restating the premise does not
+//     save it. "The posting stream it folds" admits two readings and BOTH are
+//     wrong somewhere. Take m_loan.principal_outstanding_derived
+//     [VERIFIED: LoanSummary.java:62-63 —
+//     @Column(name = "principal_outstanding_derived")], a PERSISTED
+//     outstanding-principal column that is unmistakably the thing I-3 governs.
+//     It is computed at LoanSummary.java:203-204 from
+//     calculateTotalPrincipalRepaid, which folds SCHEDULE INSTALLMENTS
+//     [VERIFIED: :339-346] — not postings. On the DIRECT reading ("the cell's
+//     own defining expression must fold postings") the test CLEARS that column,
+//     which is plainly the wrong answer. On the TRANSITIVE reading ("some
+//     ancestor in the dataflow folds postings") it condemns that column
+//     correctly — the installment's principal_completed_derived
+//     [VERIFIED: LoanRepaymentScheduleInstallment.java:72-73] is written by
+//     payPrincipalComponent [VERIFIED: :672] from a LoanTransaction — but it
+//     then condemns THESE FOUR SITES TOO, because paidPrincipal is
+//     transaction-driven exactly one hop away by the trace above. Nothing in the
+//     test supplies a stopping rule that admits one hop and refuses two.
+//
+// LEG 2 DOES NOT INHERIT THAT DEFECT, and naming the difference is what keeps
+// this from being the same mistake a third time. The posting-stream test asked a
+// BACKWARD question about ancestry with no stopping rule. Reachability asks a
+// FORWARD question with an ENUMERABLE TERMINAL SET: you stop at the terminals
+// and you list them, which item 1 does. That is also why it is mechanisable, and
+// the go/types discriminator named below is precisely its mechanisation.
 //
 // # The bar is red on purpose
 //
@@ -209,9 +307,12 @@
 // string containing SQL is not reachability to a balance column.
 //
 // The correct repair is a go/types-based discriminator that follows the value
-// across the import graph to a persisted column. Until that exists THESE FOUR
-// SITES STAY RED, and that is the honest state — a known, argued, test-pinned
-// refusal, not a cleared bar. See .softhouse/handoff/T511-t505-conditions.md.
+// across the import graph to a persisted column — LEG 2, mechanised. Until that
+// exists THESE FOUR SITES STAY RED, and that is the honest state — a known,
+// argued, test-pinned refusal, not a cleared bar. See
+// .softhouse/handoff/T511-t505-conditions.md for the withdrawn patch and its
+// measurement, and .softhouse/handoff/T516-t514-conditions.md for the retirement
+// of the posting-stream test and the corrected guard census.
 //
 // # Deliberately NOT ported
 //

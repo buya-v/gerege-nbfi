@@ -540,14 +540,18 @@ func (p *RepaymentPeriod) copyWithoutPaidAmounts(previous *RepaymentPeriod) *Rep
 			// so writing zero directly is the same result without the extra add
 			// [VERIFIED: RepaymentPeriod.java:192-194].
 			//
-			// NOT A LEDGER-BALANCE WRITE, and left RED deliberately. THERE IS
-			// NO POSTING STREAM behind balanceCorrectionAmount: it is a signed
-			// delta on the schedule's principal projection, and a schedule
-			// projects the FUTURE while postings record the PAST, so I-3's
-			// remedy "derive by summation over the postings" names no
-			// computation for it. That, not "it is never a column", is the
-			// argument — see doc.go, which also records why the column version
-			// fails.
+			// NOT A LEDGER-BALANCE WRITE, and left RED deliberately, on the two
+			// legs in doc.go, "THE TEST THAT DECIDES IT: TWO LEGS". LEG 1,
+			// PARITY: the segment balance this summand feeds is a swept
+			// snapshot the oracle reads stale, so I-3's remedy "derive by
+			// summation" changes the numbers — this very function is where it
+			// does, as the paragraph below records. LEG 2, REACHABILITY:
+			// balanceCorrectionAmount reaches no journal entry, no GL posting
+			// and no column any aggregate reads as an account balance.
+			//
+			// Neither "it is never a column" nor "there is no posting stream"
+			// is the argument; both were tried here and both are retired with
+			// their counterexamples in doc.go.
 			//
 			// Note also what the oracle does NOT do here: it clears this
 			// summand and leaves the segment's outstandingLoanBalance, which

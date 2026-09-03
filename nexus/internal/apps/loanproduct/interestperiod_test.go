@@ -21,11 +21,28 @@ import "testing"
 // (.softhouse/guards/ledgerguard, class I3-FIELD-WRITE) refuses the assignment
 // in UpdateOutstandingLoanBalance because the field's name contains "balance",
 // and prescribes "derive by summation over the postings". Applied here that
-// prescription is a parity break: this cell is a schedule-projection intermediate
-// that never becomes a database column (doc.go carries the oracle evidence), and
-// deriving it on read would silently change the numbers at every point where the
-// oracle leaves it stale. If a later change adopts the derive-on-read shape, this
-// test fails instead of the divergence shipping unnoticed.
+// prescription is A PARITY BREAK: deriving the cell on read would silently
+// change the numbers at every point where the oracle leaves it stale. That, on
+// its own, is why the prescription is not the repair — and this test is what
+// makes it a failing build rather than an argument. If a later change adopts the
+// derive-on-read shape, this test fails instead of the divergence shipping
+// unnoticed.
+//
+// DO NOT SUBSTITUTE EITHER RETIRED ARGUMENT FOR THAT, and this comment is where
+// you would be standing when you were tempted to. "It never becomes a database
+// column" is FALSE — the cell is serialised into
+// m_loan_progressive_model.json_model and read back
+// [VERIFIED: InterestPeriod.java:65-66 carry no @JsonExclude;
+// InterestScheduleModelRepositoryWrapperImpl.java:95, :110-128]. "There is no
+// posting stream behind it" is ALSO FALSE — UpdateOutstandingLoanBalance folds
+// the previous period's PaidPrincipal [VERIFIED: InterestPeriod.java:178], which
+// is accumulated from real LoanTransactions
+// [VERIFIED: RepaymentPeriod.java:405-407; ProgressiveEMICalculator.java:421;
+// AdvancedPaymentScheduleTransactionProcessor.java:929, :967, :2912]. doc.go,
+// "Two arguments that do not work", carries both counterexamples; the argument
+// that does hold is the parity leg this test executes, plus the reachability
+// leg (the value's forward trace terminates in DTOs and the oracle's calc
+// package emits no journal entry).
 func TestOutstandingLoanBalanceIsASweptSnapshot(t *testing.T) {
 	r := testRounding()
 	cur := testCurrency()
