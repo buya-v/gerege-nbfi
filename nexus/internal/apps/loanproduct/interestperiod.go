@@ -46,9 +46,45 @@ type InterestPeriod struct {
 	RateFactor                  *big.Rat
 	RateFactorTillPeriodDueDate *big.Rat
 
-	creditedPrincipal          Money
-	creditedInterest           Money
-	disbursementAmount         Money
+	creditedPrincipal  Money
+	creditedInterest   Money
+	disbursementAmount Money
+
+	// balanceCorrectionAmount and outstandingLoanBalance are NOT LEDGER
+	// BALANCES, on two legs set out in doc.go, "THE TEST THAT DECIDES IT: TWO
+	// LEGS". LEG 1, PARITY: the segment cell is a SWEPT SNAPSHOT the oracle
+	// deliberately reads stale, so I-3's remedy "derive by summation" CHANGES
+	// THE MONEY here — TestOutstandingLoanBalanceIsASweptSnapshot executes that
+	// claim. LEG 2, REACHABILITY: neither cell reaches a journal entry, a GL
+	// posting, or a column any aggregate reads as an account balance; the
+	// forward trace terminates in DTOs and the calc package emits no journal
+	// entry at all.
+	//
+	// TWO ARGUMENTS THAT DO NOT WORK, both tried here and both retired; doc.go
+	// carries the counterexamples. (i) "It never becomes a database column" —
+	// false: both cells ARE serialised into m_loan_progressive_model.json_model
+	// (no @JsonExclude on InterestPeriod.java:65-66) and ARE read back as
+	// starting state [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:95,
+	// :110-128]. (ii) "There is no posting stream behind it" — also false, and
+	// refuted by UpdateOutstandingLoanBalance itself, which folds the previous
+	// period's PaidPrincipal [VERIFIED: InterestPeriod.java:178], a quantity the
+	// transaction processor accumulates from real LoanTransactions.
+	//
+	// balanceCorrectionAmount is a SIGNED DELTA applied to the schedule's
+	// principal projection; the oracle only ever adds a negated amount to it
+	// [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124,
+	// :1129]. It is a summand of the roll-forward below, exactly like
+	// disbursementAmount and capitalizedIncomePrincipal.
+	//
+	// outstandingLoanBalance is the principal base of THIS SEGMENT's
+	// declining-balance interest arithmetic and nothing else
+	// [VERIFIED: InterestPeriod.java:151]. Downstream it reaches only DTOs —
+	// RepaymentPeriod.java:389-403 -> ProgressiveLoanScheduleGenerator.java:132
+	// -> LoanScheduleModelRepaymentPeriod, and LoanSchedulePlan.java:65, :77.
+	// No journal entry, no GL account, no posting. It is also a SWEPT SNAPSHOT,
+	// refreshed only by UpdateOutstandingLoanBalance below; between sweeps the
+	// oracle deliberately leaves it stale, so it is not equivalent to an
+	// on-demand derivation and must not be replaced by one.
 	balanceCorrectionAmount    Money
 	outstandingLoanBalance     Money
 	capitalizedIncomePrincipal Money
@@ -188,6 +224,51 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 // last segment, subtracting the previous period's due principal and adding back
 // its paid principal; a later segment seeds from the immediately preceding
 // segment in the same period.
+//
+// THE TWO ASSIGNMENTS BELOW ARE NOT LEDGER-BALANCE WRITES, and they are the
+// reason the I-3 source guard refuses this package. The sites are left RED
+// deliberately; nothing here was renamed to clear the bar.
+//
+// WHY THEY ARE NOT LEDGER-BALANCE WRITES — LEG 1, PARITY, and it is the
+// load-bearing leg. I-3's remedy is "derive by summation over the postings."
+// Applied to THIS cell that remedy CHANGES THE MONEY, because the cell is a
+// swept snapshot the oracle deliberately reads stale; the mechanism is set out
+// immediately below and TestOutstandingLoanBalanceIsASweptSnapshot executes it.
+// A repair that moves numbers away from the reference oracle is not a repair.
+//
+// LEG 2, REACHABILITY: this value reaches no ledger balance to be one. Its whole
+// downstream reach is InterestPeriod.java:151 (the declining-balance interest
+// base) -> RepaymentPeriod.java:389-403 ->
+// ProgressiveLoanScheduleGenerator.java:132 -> LoanScheduleModelRepaymentPeriod
+// and LoanSchedulePlan.java:65, :77 — all DTOs, none carrying @Entity, @Table or
+// @Column. No journal entry, no GL account, no posting anywhere on that path,
+// and the calc package emits none at all.
+//
+// DO NOT SUBSTITUTE EITHER RETIRED ARGUMENT FOR THOSE. "It never becomes a
+// column" is false, and so is "there is no posting stream": the expression below
+// folds previous.PaidPrincipal() [VERIFIED: InterestPeriod.java:178], which
+// ProgressiveEMICalculator.payPrincipal accumulates from real LoanTransactions
+// [VERIFIED: RepaymentPeriod.java:405-407; ProgressiveEMICalculator.java:421;
+// AdvancedPaymentScheduleTransactionProcessor.java:929, :967, :2912]. doc.go
+// carries both counterexamples in full.
+//
+// LEG 1's MECHANISM: the cell cannot simply be derived on read.
+//
+// This function is the WHOLE refresh mechanism. The oracle calls it only from
+// explicit sweeps [VERIFIED: ProgressiveEMICalculator.java:1254-1256, and the
+// per-repayment-period sweeps at :1647, :1654 and :1667], and it deliberately
+// leaves the cell unrefreshed in between — RepaymentPeriod.copyWithoutPaidAmounts
+// zeroes each copied segment's balanceCorrectionAmount, which is a summand of
+// the expression below, and does NOT re-run this function
+// [VERIFIED: RepaymentPeriod.java:173-197]. So the value read between two sweeps
+// is, by construction, not the value this expression would produce if evaluated
+// at that moment. Turning the cell into an on-demand derivation would change the
+// numbers at every such point, which is a parity break, not a repair.
+//
+// This is the opposite of RepaymentPeriod's derived cells: those carry an oracle
+// Memo with an invalidation key, are observationally inert, and are therefore
+// recomputed on every read by this port (see repaymentperiod.go). This cell has
+// no invalidation key and is observationally live.
 func (ip *InterestPeriod) UpdateOutstandingLoanBalance() {
 	if ip.IsFirstInterestPeriod() {
 		previous := ip.repaymentPeriod.Previous()
@@ -220,6 +301,28 @@ func (ip *InterestPeriod) CreditedAmounts() Money {
 
 // AddBalanceCorrectionAmount mutates balanceCorrectionAmount by adding the
 // supplied amount [VERIFIED: InterestPeriod.java:165-167].
+//
+// NOT A LEDGER-BALANCE WRITE, and left RED deliberately. LEG 2, REACHABILITY:
+// this cell reaches no journal entry, no GL posting and no column any aggregate
+// reads as an account balance — it is a summand of UpdateOutstandingLoanBalance's
+// roll-forward, whose own reach terminates in DTOs. LEG 1, PARITY: the segment
+// balance this summand feeds is a swept snapshot, so deriving it on read changes
+// the numbers. See doc.go, "THE TEST THAT DECIDES IT: TWO LEGS".
+//
+// DO NOT restate this as "there is no posting stream behind it." That argument
+// is retired and doc.go says why: at two of the six call sites below the amount
+// added IS a negated paid principal, and paid principal is accumulated from real
+// LoanTransactions [VERIFIED: ProgressiveEMICalculator.java:922, :952].
+//
+// balanceCorrectionAmount is a SIGNED DELTA, not a balance: every oracle caller
+// adds a NEGATED amount to it
+// [VERIFIED: ProgressiveEMICalculator.java:907, :922, :946, :952, :1124, :1129;
+// RepaymentPeriod.java:192-194; ProgressiveLoanInterestScheduleModel.java:257,
+// :290] — a claim about SIGN DISCIPLINE, never about provenance. It is one
+// summand of UpdateOutstandingLoanBalance's roll-forward above,
+// structurally identical to disbursementAmount and capitalizedIncomePrincipal,
+// whose Add* methods the I-3 guard does not flag. This one is flagged because
+// its name contains the substring "balance" — see doc.go.
 func (ip *InterestPeriod) AddBalanceCorrectionAmount(additional Money) {
 	ip.balanceCorrectionAmount = ip.BalanceCorrectionAmount().plus(additional)
 }

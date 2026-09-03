@@ -537,7 +537,28 @@ func (p *RepaymentPeriod) copyWithoutPaidAmounts(previous *RepaymentPeriod) *Rep
 	for _, ip := range c.InterestPeriods {
 		if !ip.BalanceCorrectionAmount().IsZero() {
 			// addBalanceCorrectionAmount(negated) nets the cell to exactly zero,
-			// so writing zero directly is the same result without the extra add.
+			// so writing zero directly is the same result without the extra add
+			// [VERIFIED: RepaymentPeriod.java:192-194].
+			//
+			// NOT A LEDGER-BALANCE WRITE, and left RED deliberately, on the two
+			// legs in doc.go, "THE TEST THAT DECIDES IT: TWO LEGS". LEG 1,
+			// PARITY: the segment balance this summand feeds is a swept
+			// snapshot the oracle reads stale, so I-3's remedy "derive by
+			// summation" changes the numbers — this very function is where it
+			// does, as the paragraph below records. LEG 2, REACHABILITY:
+			// balanceCorrectionAmount reaches no journal entry, no GL posting
+			// and no column any aggregate reads as an account balance.
+			//
+			// Neither "it is never a column" nor "there is no posting stream"
+			// is the argument; both were tried here and both are retired with
+			// their counterexamples in doc.go.
+			//
+			// Note also what the oracle does NOT do here: it clears this
+			// summand and leaves the segment's outstandingLoanBalance, which
+			// the summand feeds, untouched until the next explicit sweep. That
+			// is the staleness UpdateOutstandingLoanBalance's comment describes,
+			// and it is why neither cell may be replaced by an on-demand
+			// derivation.
 			ip.balanceCorrectionAmount = ip.zero()
 		}
 	}
