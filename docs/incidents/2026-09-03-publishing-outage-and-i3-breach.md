@@ -149,3 +149,34 @@ The instruments were right every time. **What is missing is not detection. It is
 and that is the same lesson this program has now recorded under P-45, P-66, P-85 and T493/T494.
 A fourth instance is no longer evidence for the pattern; it is evidence that recording the pattern
 is not the same as fixing it.
+
+---
+
+## 7. The timeline, which is the actual finding
+
+Reconstructed from `git log` and the fire `.jsonl` records, not from recollection:
+
+| When | What |
+|---|---|
+| **2026-08-29 22:44** | Bar last graded **GREEN**, at `a2e59abd` — a properly reviewed merge, `softhouse/T483-review-t470`. This is the `driver-push-gate` C3 "graded ancestor". |
+| **2026-08-31** | Weekly usage limit reached. Fires begin returning 0 turns. |
+| **2026-09-01 10:33 → 20:37** | **14 non-merge commits put ~184 Go files onto `main`** — the Tier A cores, repayment allocation, progressive schedule recomputation, the Tier B port, the Tier D vectors. No worker branch. No reviewer. No grading. |
+| **2026-09-01 08:00** | OAuth session expires. Every subsequent fire produces 0 turns; every push is rejected non-fast-forward. |
+| 2026-09-01 → 09-03 | **15 zero-turn fires.** The wrapper prints `VERDICT: NO DAMAGE` on each, truthfully, because it grades the working tree. |
+| **2026-09-02 20:00** | Cloud fire takes the lock under STEP 0 arm 3, does real oracle-free work, and records that the local pipeline is dead — a message the local fires cannot read, because reading it needs the pull that is failing. |
+| **2026-09-03 17:00** | This fire. Auth restored. Fork closed, 61 commits published, bar run for the first time since 08-29 → **RED on I-3**. |
+
+**The breach landed in exactly the window in which every grader was blind, and it stayed there for
+two days behind a push that could not go out.** That is not a coincidence to be noted; it is the
+mechanism. The pipeline's guarantee is not that bad code cannot be written — it is that bad code
+cannot be *merged unreviewed*. On 2026-09-01 the code did not go through the pipeline at all, and
+the one instrument that would have caught it (`conformance.sh`) is run **by the driver**, which
+could not start.
+
+### 7.1 The detail worth keeping
+
+**`go build ./...` is green and all 18 test packages pass on the breaching tree.** The code is not
+broken; it does what its author intended. What it violates is the program's non-negotiable — and
+its tests were written in the same un-isolated commits as the code, so they assert **what the code
+does**, never **what the program requires**. This is why the bar is a separate instrument from the
+test suite, and why "tests are green" was never the bar.
