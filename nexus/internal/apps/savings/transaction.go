@@ -14,10 +14,22 @@ type SavingsAccountTransaction struct {
 	ID int64
 	// AccountID is m_savings_account_transaction.savings_account_id.
 	AccountID int64
-	// Type is transaction_type_enum.
+	// Type is transaction_type_enum. It is the ONLY input to the credit/debit
+	// classification, exactly as in the oracle: SavingsAccountTransaction has
+	// no entryType field and no entry-type column, and every classification
+	// method on it delegates to getTransactionType()
+	// [VERIFIED: SavingsAccountTransaction.java:790-799 — isCreditType() is
+	// `getTransactionType().isCredit()`; the entity declares no entryType].
+	//
+	// T515 DELETED THE `Entry TransactionEntryType` FIELD THAT USED TO SIT
+	// HERE. It was a cached copy of Type.EntryType() that the fold then
+	// consulted instead of the type, which meant (a) the fold read the RAW
+	// entry type rather than the folded classification — the T513 defect — and
+	// (b) any caller could hand-build a transaction whose Entry disagreed with
+	// its Type and get a silently wrong balance out of it. A derived value
+	// stored beside the thing it is derived from is the same failure mode as a
+	// stored balance, one type down.
 	Type SavingsAccountTransactionType
-	// Entry is the in-account CREDIT/DEBIT classification.
-	Entry TransactionEntryType
 	// Amount is the signed minor-unit amount of the transaction.
 	Amount MinorUnits
 
@@ -77,19 +89,36 @@ type SavingsAccountTransaction struct {
 // that honours neither flag does not cancel the error, it DOUBLES it.
 func (t SavingsAccountTransaction) IsVoid() bool { return t.Reversed || t.Reversal }
 
+// IsCreditType and IsDebitType are the row's TYPE-level classification, the
+// port of SavingsAccountTransaction.isCreditType() / isDebitType()
+// [VERIFIED: SavingsAccountTransaction.java:790-791, :798-799]:
+//
+//	isCreditType() = getTransactionType().isCredit()
+//	isDebitType()  = getTransactionType().isDebit()
+//
+// Note which method on the enum they call: the FOLDED IsCredit/IsDebit in
+// transactiontype.go, which subtract AMOUNT_RELEASE from credit and AMOUNT_HOLD
+// and ESCHEAT from debit — not the raw EntryType field. Before T515 these two
+// delegated to the raw field, and every derivation below inherited the error.
+func (t SavingsAccountTransaction) IsCreditType() bool { return t.Type.IsCredit() }
+
+// IsDebitType — see IsCreditType.
+func (t SavingsAccountTransaction) IsDebitType() bool { return t.Type.IsDebit() }
+
 // IsCredit and IsDebit are the port of SavingsAccountTransaction.isCredit() /
 // isDebit() [VERIFIED: SavingsAccountTransaction.java:786-799]:
 //
 //	isCredit() = isCreditType() && !isReversed() && !isReversalTransaction()
 //	isDebit()  = isDebitType()  && !isReversed() && !isReversalTransaction()
 //
-// The TYPE half alone (Entry.IsCredit() / Entry.IsDebit(), i.e. Fineract's
-// isCreditType() / isDebitType()) is NOT the classification any Fineract
-// balance derivation folds over, and using it alone was T510's defect.
-func (t SavingsAccountTransaction) IsCredit() bool { return t.Entry.IsCredit() && !t.IsVoid() }
+// Both conjuncts are load-bearing and they were added in different tasks: the
+// void half by T510 (reversals are the correction mechanism), the type half by
+// T515 (the three balance-neutral types). Together they are the complete
+// classification, so a fold over Effect() needs no exclusion list of its own.
+func (t SavingsAccountTransaction) IsCredit() bool { return t.IsCreditType() && !t.IsVoid() }
 
 // IsDebit — see IsCredit.
-func (t SavingsAccountTransaction) IsDebit() bool { return t.Entry.IsDebit() && !t.IsVoid() }
+func (t SavingsAccountTransaction) IsDebit() bool { return t.IsDebitType() && !t.IsVoid() }
 
 // IsHoldNotReleased reports whether this row is an AMOUNT_HOLD that is still
 // holding funds: a hold, not voided, with no release row pointing back at it.
@@ -110,19 +139,22 @@ func (t SavingsAccountTransaction) IsHoldNotReleased() bool {
 	return t.Type.IsAmountHold() && !t.IsVoid() && t.ReleaseIDOfHoldAmount == 0
 }
 
-// Effect returns the signed effect of this transaction on the account's
-// AVAILABLE amount, implied by the credit/debit classification and the amount.
-// A credit adds, a debit subtracts; the amount is treated as a magnitude
-// (absolute) so a negative sign never double-negates a debit. A VOID row
-// (reversed, or a reversal) has no effect at all.
+// Effect returns the signed effect of this transaction on the POSTED balance,
+// implied by the credit/debit classification and the amount. A credit adds, a
+// debit subtracts; the amount is treated as a magnitude (absolute) so a
+// negative sign never double-negates a debit. A row that is void (reversed, or
+// a reversal) or balance-neutral by type (AMOUNT_HOLD, AMOUNT_RELEASE, ESCHEAT,
+// or any type carrying no entry type) has no effect at all.
 //
-// It is NOT, on its own, the effect on the POSTED balance: Fineract classifies
-// HOLD as a debit and RELEASE as a credit, and CLAUDE.md is explicit that holds
-// "alter `available` only, never posted `balance`". AccountBalanceOf therefore
-// skips the hold/release pair before it consults this method. Call one of the
-// derivations in summary.go rather than summing Effect() by hand.
+// It IS the posted-balance effect, in full — that changed in T515. Its callers
+// used to skip the hold/release pair by hand before consulting it, because the
+// classification underneath it was the raw entry type; now IsCredit()/IsDebit()
+// are the oracle's own folded classification and there is no exclusion list
+// left anywhere in this package. Still call the derivations in summary.go
+// rather than summing Effect() by hand: the fold there keeps the two sides
+// separate so it stays double-entry-shaped.
 //
-// TWO DEFECTS FIXED HERE, BOTH FOUND BY REVIEW OF THE FOLD.
+// THREE DEFECTS FIXED HERE, ALL FOUND BY REVIEW OF THE FOLD.
 //
 //	T501 — the body was `if t.Entry.IsDebit() { return -amount }; return amount`:
 //	an if/else over a THREE-valued classification, so every type carrying NO
@@ -133,9 +165,16 @@ func (t SavingsAccountTransaction) IsHoldNotReleased() bool {
 //	on the classification and the unclassified case is explicitly zero.
 //
 //	T510 — the switch still consulted only the TYPE half of Fineract's
-//	classification (isCreditType/isDebitType), so a reversed posting and its
-//	same-type reversal row both counted, at full value, in the same direction.
-//	It now calls IsCredit()/IsDebit(), which carry the two void conjuncts.
+//	classification, so a reversed posting and its same-type reversal row both
+//	counted, at full value, in the same direction. It now calls
+//	IsCredit()/IsDebit(), which carry the two void conjuncts.
+//
+//	T515 — the TYPE half itself was the RAW entry type rather than the oracle's
+//	folded SavingsAccountTransactionType.isCredit()/isDebit(). ESCHEAT was
+//	therefore a debit here and debited the balance, where the oracle moves
+//	nothing: measured against the live instance, an account escheated for
+//	500,000.00 read 0 here and 500000.000000 in account_balance_derived. See
+//	transactiontype.go IsCredit for the capture.
 func (t SavingsAccountTransaction) Effect() MinorUnits {
 	amount := t.Amount
 	if amount < 0 {

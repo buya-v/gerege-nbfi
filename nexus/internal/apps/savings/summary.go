@@ -63,55 +63,123 @@ type SavingsAccountSummary struct {
 	TotalWithholdTax MinorUnits
 }
 
-// THE THREE RATIFIED DIVERGENCES FROM THE REFERENCE ORACLE, STATED ONCE
+// WHERE THESE DERIVATIONS STAND RELATIVE TO THE REFERENCE ORACLE, STATED ONCE
 //
-// CLAUDE.md makes Fineract the oracle, so a place where these derivations
-// deliberately do NOT reproduce a Fineract number has to be written down, or
-// the first failing savings golden vector will be read as a port bug and
-// "fixed" back into a defect. All three are routed as ENGINEERING gate entries
-// G-25, G-26 and G-27 in .softhouse/gates.md so the vector harness expects them.
+// CLAUDE.md makes Fineract the oracle, so any place where these derivations do
+// NOT reproduce a Fineract number has to be written down, or the first failing
+// savings golden vector will be read as a port bug and "fixed" back into a
+// defect. T510 recorded THREE such places and routed them as gate entries
+// G-25, G-26 and G-27. T513's independent review found the load-bearing premise
+// under all three — "Fineract's account_balance_derived and its
+// running_balance_derived are computed by code that disagrees" — to be FALSE,
+// and T515 confirmed it against the live instance rather than by argument.
+// G-25 and G-27 are DELETED. What is left is written below.
 //
-//	D-1  HOLDS DO NOT MOVE A RUNNING BALANCE (AccountBalanceOf, RunningBalancesOf)
-//	     Fineract's recalculateDailyBalances moves running_balance_derived on
-//	     AMOUNT_HOLD / AMOUNT_RELEASE — `if (transaction.isCredit() ||
-//	     transaction.isAmountRelease())` … `else if (transaction.isDebit() ||
-//	     transaction.isAmountOnHold())` [VERIFIED: SavingsAccount.java:902,912].
-//	     We do not. CLAUDE.md is a non-negotiable here: holds "alter `available`
-//	     only, never posted `balance`". Fineract's own STORED account balance
-//	     agrees with us — neither type appears in any of the nine terms of
-//	     updateSummary [SavingsAccountSummary.java:110-112] nor in any of the
-//	     twelve calculators of SavingsAccountTransactionSummaryWrapper, and both
-//	     fall to `default: break;` in updateSummaryWithPivotConfig [:182-183].
-//	     So Fineract is internally inconsistent and we follow its account
-//	     balance, not its running balance.
+// # THE PREMISE WAS FALSE BECAUSE THE CLASSIFICATION WAS HALF-PORTED
 //
-//	D-2  A VOID ROW CARRIES THE UNCHANGED PREFIX VALUE (RunningBalancesOf)
-//	     Fineract calls zeroBalanceFields() on a reversed / reversal row, which
+// Fineract's credit/debit test is three calls deep and this port stopped at
+// two, binding itself to the RAW entryType field of the enum. The third call is
+// SavingsAccountTransactionType.isCredit()/isDebit(), which subtract exactly the
+// balance-neutral types, with the reason in the oracle's own inline comments
+// [VERIFIED: SavingsAccountTransactionType.java:180-188]:
+//
+//	isCredit() = isCreditEntryType() && !isAmountRelease()
+//	           // AMOUNT_RELEASE is not credit, because the account balance is not changed
+//	isDebit()  = isDebitEntryType() && !isAmountOnHold() && !isEscheat()
+//	           // AMOUNT_HOLD, ESCHEAT are not debit, because the account balance is not changed
+//
+// So the oracle had already implemented "a hold does not move the posted
+// balance" — the very rule G-25 cited CLAUDE.md to justify diverging from it
+// over. The port re-derived that rule by hand as an exclusion list at each fold
+// site, got it right for AMOUNT_HOLD and AMOUNT_RELEASE, and omitted ESCHEAT,
+// which the oracle excludes by name on the same line as AMOUNT_HOLD. T515
+// ports the third call and DELETES the exclusion lists; see
+// transactiontype.go IsCredit/IsDebit.
+//
+// # TWO CAPTURES, NOT TWO ARGUMENTS
+//
+// [VERIFIED: live oracle capture, Fineract @ 426a23544, tenant `default`,
+// PostgreSQL `gerege-oracle-db`/`fineract_default`, 2026-09-03. Both accounts
+// are on savings product 2 — MNT, currency_digits 2, nominal_annual_interest_rate
+// 0.000000, so no interest posting perturbs the rows. Raw
+// `m_savings_account_transaction` / `m_savings_account` output; amounts as
+// stored, at 6 decimal places.]
+//
+// ⚠ THE INSTANCE IS NOT AT THE RATIFIED TENANT SETTINGS: one tenant, `default`,
+// on **Asia/Kolkata**, with `c_configuration.rounding-mode = 6` — **HALF_EVEN**,
+// where CLAUDE.md ratifies HALF_UP (ordinal 4) at precision 19 on
+// Asia/Ulaanbaatar; no `gerege` tenant and no `fineract_gerege` database exist
+// on it [VERIFIED: psql against `gerege-oracle-db`, this fire]. These captures
+// are still sound for what they are used for here, because they engage neither
+// setting: the amounts are exact two-decimal quantities added and subtracted at
+// 0% interest, so no midpoint arises for a rounding mode to decide, and nothing
+// below turns on a date. They establish WHICH TRANSACTION TYPES MOVE A BALANCE.
+// They are **[UNVERIFIED at (19, HALF_UP) / Asia-Ulaanbaatar]**, are not in
+// `.softhouse/vectors/`, and must be re-captured from a correctly configured
+// tenant before any of them is treated as a parity vector.
+//
+//	CAPTURE-B — savings account 3, a hold and a withdrawal
+//	  id 14  type  1 DEPOSIT        1000.000000   running_balance_derived 1000.000000
+//	  id 15  type 20 AMOUNT_HOLD     400.000000   running_balance_derived  600.000000
+//	  id 16  type  2 WITHDRAWAL      250.000000   running_balance_derived  350.000000
+//	  account_balance_derived 750.000000   total_savings_amount_on_hold 400.000000
+//
+//	CAPTURE-A — savings account 2, escheated for its whole balance by the stock
+//	  `Update Savings Dormant Accounts` job (jobId 21), the only caller of
+//	  SavingsAccount.escheat [VERIFIED: UpdateSavingsDormantAccountsTasklet.java:63]
+//	  id 12  type  1 DEPOSIT      500000.000000   running_balance_derived 500000.000000
+//	  id 13  type 19 ESCHEAT      500000.000000   running_balance_derived 500000.000000
+//	  account_balance_derived 500000.000000   status_enum 600 (CLOSED)  sub_status_enum 300 (ESCHEAT)
+//
+// Read together they settle both deleted gates:
+//
+//	G-27, DELETED. An ESCHEAT for the whole balance moves NEITHER stored column.
+//	It matches neither branch of recalculateDailyBalances — isDebit() excludes it
+//	by name, and the loop carries an explicit `|| transaction.isAmountOnHold()`
+//	term to re-admit holds but NO `|| isEscheat()` term
+//	[VERIFIED: SavingsAccount.java:902,912] — and it appears in none of the nine
+//	terms of updateSummary [VERIFIED: SavingsAccountSummary.java:96-112], in no
+//	calculator of SavingsAccountTransactionSummaryWrapper, and in no case of
+//	updateSummaryWithPivotConfig's switch. Both derivations agree; there was
+//	never a choice to make. T510 folded ESCHEAT as a debit and pinned
+//	AccountBalanceOf = 0 where the oracle stores 500000.000000 — a 500,000₮
+//	error on the operation that closes the account. AccountBalanceOf now
+//	returns 50000000 minor units on CAPTURE-A.
+//
+//	G-25, DELETED. `account_balance_derived` and `running_balance_derived` are
+//	not two answers to one question; they are two DIFFERENT QUANTITIES, and
+//	CAPTURE-B measures the gap as exactly the hold: 750.00 posted against a
+//	350.00 hold-net chain, differing by the 400.00 in
+//	total_savings_amount_on_hold. `account_balance_derived` is the POSTED
+//	balance and holds never touch it; `running_balance_derived` is a hold-net,
+//	available-shaped, per-row chain. CLAUDE.md's "holds alter `available` only,
+//	never posted `balance`" is therefore SATISFIED by AccountBalanceOf, which
+//	now equals `account_balance_derived` on both captures — and G-25 had cited
+//	that non-negotiable to refuse the one Fineract column that implements it.
+//	Reproducing the hold-net chain breaches nothing, so it is no longer refused:
+//	HoldNetRunningBalancesOf below is the faithful port, graded against
+//	CAPTURE-B.
+//
+// # WHAT IS LEFT — ONE MINOR REPRESENTATION GAP (G-26)
+//
+//	R-1  A VOID ROW HAS NO RUNNING BALANCE, AND []MinorUnits HAS NO NULL.
+//	     On a reversed or reversal row Fineract calls zeroBalanceFields(), which
 //	     sets runningBalance to NULL [VERIFIED: SavingsAccount.java:897-898;
-//	     SavingsAccountTransaction.java:586-591]. Fineract therefore states NO
-//	     running balance on such a row; we state the balance unchanged by it,
-//	     because []MinorUnits has no NULL and a zero would read as "the account
-//	     emptied here". Same rule as D-1: a posting that does not move the
-//	     posted balance leaves the running value alone.
+//	     SavingsAccountTransaction.java:586-591]. Fineract is UNAMBIGUOUS here —
+//	     no second derivation disagrees — so this was never a divergence in the
+//	     answer, only in how the answer can be spelled in Go.
 //
-//	D-3  ESCHEAT DEBITS THE POSTED BALANCE (AccountBalanceOf, RunningBalancesOf)
-//	     ESCHEAT(19) is TransactionEntryType.DEBIT in the oracle's own enum, and
-//	     Fineract's running_balance_derived does debit on it (isDebit()). But it
-//	     appears in NONE of the nine terms of updateSummary and falls to
-//	     `default: break;` in updateSummaryWithPivotConfig, so Fineract's STORED
-//	     account_balance_derived does NOT move: an account escheated for its
-//	     whole balance still reports that balance [VERIFIED:
-//	     SavingsAccount.escheat, :3382-3396, which appends the ESCHEAT
-//	     transaction for the full balance and then calls updateSummary].
-//	     We debit. Chosen because (a) two of the three Fineract authorities —
-//	     the entry-type classification and the running-balance derivation —
-//	     agree with us and only the stored aggregate does not; (b) that stored
-//	     aggregate is precisely the artefact I-3 refuses; and (c) the other side
-//	     leaves the full balance readable on a closed account whose funds have
-//	     gone to the state, which is an overstatement of available funds in the
-//	     permissive direction. Recorded, not hidden: a vector comparing
-//	     AccountBalanceOf against account_balance_derived across an escheat WILL
-//	     differ by the whole balance, and that is expected.
+//	     T513 identified the remedy and T515 applies it: HoldNetRunningBalancesOf
+//	     returns []RunningBalance, whose Valid field carries the oracle's NULL
+//	     exactly. RunningBalancesOf keeps returning []MinorUnits and states the
+//	     unchanged prefix on a void row — which is correct for what IT computes,
+//	     the posted-balance prefix, because a void row does not move the posted
+//	     balance. It is not modelling `running_balance_derived` and no longer
+//	     claims to, so the gap does not arise there either.
+//
+//	     G-26 is retained in .softhouse/gates.md as a MINOR note recording that
+//	     the two functions represent the void row differently and why. It
+//	     authorises no divergence.
 
 // AccountBalanceOf derives the POSTED balance of an account from its postings,
 // in integer minor units. It is the replacement for the deleted
@@ -132,26 +200,34 @@ type SavingsAccountSummary struct {
 // behind. See SavingsAccountTransaction.IsVoid for why both flags are needed
 // and why honouring only one would double the error rather than cancel it.
 //
-// HOLDS ARE EXCLUDED, AND THAT IS A NON-NEGOTIABLE, NOT AN OPTIMISATION.
-// CLAUDE.md: "Holds are postings and alter `available` only, never posted
-// `balance`." Fineract's SavingsAccountTransactionType does classify HOLD as a
-// DEBIT and RELEASE as a CREDIT [VERIFIED: SavingsAccountTransactionType.java:
-// 35-54, ported at transactiontype.go EntryType], so a naive fold over
-// Effect() would let placing a hold REDUCE the posted balance. It does not
-// here: the hold/release pair is skipped, and its effect appears only in
-// AvailableOf. See D-1 above.
+// HOLDS AND ESCHEATS MOVE NOTHING HERE, AND THERE IS NO EXCLUSION LIST SAYING
+// SO. CLAUDE.md: "Holds are postings and alter `available` only, never posted
+// `balance`." Until T515 this function enforced that with a hand-written
+// `if t.Type.IsAmountHold() || t.Type.IsAmountRelease() { continue }`, because
+// the classification underneath it was the enum's RAW entryType field, which
+// does mark HOLD a debit and RELEASE a credit. That list was a re-derivation of
+// a rule the oracle already implements — and it omitted ESCHEAT, which the
+// oracle excludes on the same line as AMOUNT_HOLD, so an escheated account read
+// zero here and its full balance in the oracle.
 //
-// Amount is treated as a magnitude; the direction comes from the entry type, so
-// a negative amount can never double-negate a debit. Types that carry no entry
-// classification at all (INVALID, WAIVE_CHARGES, ACCRUAL, the transfer
-// sub-states, WRITTEN_OFF — EntryType returns the zero value) move neither
-// side.
+// The list is gone. AMOUNT_HOLD, AMOUNT_RELEASE and ESCHEAT are excluded by
+// SavingsAccountTransactionType.IsCredit/IsDebit, which is where Fineract
+// excludes them, so this fold is now a plain sum over Effect() with no
+// type-specific knowledge in it at all. A hold's effect appears only in
+// AvailableOf, via HeldOf.
+//
+// THIS FUNCTION EQUALS `account_balance_derived`, MEASURED. On CAPTURE-B it
+// returns 75000 minor units against the oracle's stored 750.000000; on
+// CAPTURE-A, 50000000 against 500000.000000. Equal on both, and that is a
+// parity result rather than a design claim — see the capture block above.
+//
+// Amount is treated as a magnitude; the direction comes from the classification,
+// so a negative amount can never double-negate a debit. Types that carry no
+// entry classification at all (INVALID, WAIVE_CHARGES, ACCRUAL, the transfer
+// sub-states, WRITTEN_OFF — EntryType returns the zero value) move neither side.
 func AccountBalanceOf(txns []SavingsAccountTransaction) MinorUnits {
 	var debit, credit MinorUnits
 	for _, t := range txns {
-		if t.Type.IsAmountHold() || t.Type.IsAmountRelease() {
-			continue
-		}
 		switch e := t.Effect(); {
 		case e < 0:
 			debit += -e
@@ -211,6 +287,31 @@ func (e *ErrOrphanRelease) Error() string {
 // number — it over-holds rather than over-releases, which is the safe direction
 // on money. Reading Fineract's own rows, which carry the FK, is the strangler
 // path this function is built for and is exact.
+//
+// ⚠ IT DOES NOT FAIL CLOSED ON EVERYTHING, AND HERE IS THE ONE INPUT WHERE IT
+// FAILS OPEN (T513 MINOR-3, measured on the T510 tree: `HeldOf(hold paired to a
+// REVERSED release) = 0, err = <nil>`). A hold whose release row was later
+// REVERSED still reads as discharged, because the discharge test is the FK
+// alone — IsHoldNotReleased is `IsAmountHold() && !IsVoid() && ReleaseIDOfHoldAmount == 0`
+// and the void flag it consults is the HOLD's, not the RELEASE's. The funds
+// read as drawable. That is a fail-OPEN on money and the doc above should not
+// be read as covering it.
+//
+// It is nonetheless LEFT AS IS, because it is what the oracle does and CLAUDE.md
+// makes the oracle authoritative. Fineract's outstanding-hold test is
+// `isAmountOnHold() && getReleaseIdOfHoldAmountTransaction() == null`
+// [VERIFIED: SavingsAccountTransaction.java:898-899], which likewise never looks
+// at the release row's reversal flags; and the FK is only ever assigned a
+// release transaction id, never cleared — the three assignment sites are
+// SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:1953 and
+// InteropServiceImpl.java:451,494, and `updateReleaseId`
+// [SavingsAccountTransaction.java:466-468] has no null-ing caller anywhere in
+// the pinned tree [VERIFIED: grep for `updateReleaseId` across
+// /Users/buv/fineract, 4 non-test sites, all passing a transaction id].
+// Diverging here would be a unilateral safety improvement over the oracle, which
+// is a decision for a hold/release service task with a vector behind it, not for
+// a derivation. Pinned by TestAReversedReleaseStillDischargesItsHold so the
+// behaviour cannot change by accident.
 func HeldOf(txns []SavingsAccountTransaction) (MinorUnits, error) {
 	claimed := make(map[int64]struct{}, len(txns))
 	for _, t := range txns {
@@ -259,6 +360,17 @@ func HeldOf(txns []SavingsAccountTransaction) (MinorUnits, error) {
 // overstates, i.e. it fails OPEN, which is why the limitation is stated at the
 // top of the doc rather than the bottom.
 //
+// The split between the two hold columns is the oracle's own, stated in its
+// field comments [VERIFIED: SavingsAccountSummaryData.java:52-64 —
+// on_hold_funds_derived is "guarantor" holds; total_savings_amount_on_hold is
+// "user-initiated holds explicitly placed on the account, including lien
+// holds … through hold/release transactions"; availableBalance is
+// "accountBalance - onHoldFunds (guarantor holds) - savingsAmountOnHold
+// (user/lien holds)"]. CAPTURE-B agrees: after a 400.00 holdAmount call,
+// total_savings_amount_on_hold moved to 400.000000 while on_hold_funds_derived
+// stayed NULL. So HeldOf is the transaction-stream derivation of the SECOND
+// column, and the first is genuinely unported rather than merely mislabelled.
+//
 // Completing it is an account-model port, not a ledger-invariant repair: it
 // needs min_required_balance, on_hold_funds_derived, total_savings_amount_on_hold,
 // enforce_min_required_balance, allow_overdraft and overdraft_limit on
@@ -272,26 +384,34 @@ func AvailableOf(txns []SavingsAccountTransaction) (MinorUnits, error) {
 	return AccountBalanceOf(txns) - held, nil
 }
 
-// RunningBalancesOf derives the posted balance as at each transaction in turn,
+// RunningBalancesOf derives the POSTED balance as at each transaction in turn,
 // returning one value per element of txns in the order given. It is the
-// replacement for the deleted SavingsAccountTransaction.RunningBalance field
-// and for `running_balance_derived`: a statement view gets its running column
-// by asking for it, from the postings, at the moment it renders — never by
-// reading back a number some earlier write path decided.
+// replacement for the deleted SavingsAccountTransaction.RunningBalance field: a
+// statement view gets its running column by asking for it, from the postings, at
+// the moment it renders — never by reading back a number some earlier write path
+// decided.
 //
-// The invariant, stated once so the divergences below follow from it rather
-// than being special cases: RunningBalancesOf(txns)[i] is the POSTED BALANCE
-// after applying postings 0..i, so a posting that does not move the posted
-// balance leaves the running value unchanged, and the last element equals
-// AccountBalanceOf(txns) by construction.
+// ⚠ IT IS NOT A PORT OF `running_balance_derived`, AND NO LONGER CLAIMS TO BE.
+// T510's doc called it "the replacement … for `running_balance_derived`" and
+// then listed three divergences from it; T513 showed that the two are different
+// QUANTITIES rather than disagreeing answers, so the right repair was to stop
+// conflating them, not to ratify a divergence. This function is the
+// posted-balance prefix; HoldNetRunningBalancesOf below is the faithful port of
+// the column, and it agrees with the oracle on CAPTURE-B.
 //
-// ⚠ THIS IS DELIBERATELY NOT `running_balance_derived`. It diverges on three
-// classes of row — holds/releases (D-1), void rows (D-2) and ESCHEAT (D-3),
-// all documented above and routed as gate entries G-25/G-26/G-27. Worked
-// example, the fixture in TestRunningBalancesArePrefixFolds: for
-// {DEPOSIT 1,000.00; AMOUNT_HOLD 400.00; WITHDRAWAL 250.00; INTEREST 3.21}
-// this function returns {100000, 100000, 75000, 75321} and Fineract's
-// running_balance_derived holds {100000, 60000, 35000, 35321}.
+// The invariant, stated once: RunningBalancesOf(txns)[i] is the POSTED BALANCE
+// after applying postings 0..i. So a posting that does not move the posted
+// balance — a hold, a release, an escheat, a void row, an unclassified type —
+// leaves the running value unchanged, and the last element equals
+// AccountBalanceOf(txns) by construction. That is now a property of the
+// classification rather than of a skip list: the loop body is a plain fold over
+// Effect(), the same one AccountBalanceOf runs, emitting the prefix each step.
+//
+// Worked example, CAPTURE-B's three rows: this function returns
+// {100000, 100000, 75000} minor units — the posted balance, unmoved by the hold
+// — while the oracle's `running_balance_derived` holds {100000, 60000, 35000},
+// which HoldNetRunningBalancesOf reproduces exactly. Neither is wrong; they
+// answer different questions, and the 40000 between them is the hold.
 //
 // The caller is responsible for passing the stream in the oracle's own order
 // (PostgresTransactionRepository.FindByAccountID returns it ORDER BY id). A
@@ -302,15 +422,104 @@ func RunningBalancesOf(txns []SavingsAccountTransaction) []MinorUnits {
 	out := make([]MinorUnits, 0, len(txns))
 	var debit, credit MinorUnits
 	for _, t := range txns {
-		if !t.Type.IsAmountHold() && !t.Type.IsAmountRelease() {
-			switch e := t.Effect(); {
-			case e < 0:
-				debit += -e
-			case e > 0:
-				credit += e
-			}
+		switch e := t.Effect(); {
+		case e < 0:
+			debit += -e
+		case e > 0:
+			credit += e
 		}
 		out = append(out, credit-debit)
+	}
+	return out
+}
+
+// RunningBalance is one element of the oracle's `running_balance_derived`
+// column: a minor-unit value, or the absence of one.
+//
+// Valid = false is Fineract's NULL, which it writes on a void row via
+// zeroBalanceFields() [VERIFIED: SavingsAccountTransaction.java:586-591, called
+// from SavingsAccount.java:897-898]. It is a two-field struct rather than a
+// *MinorUnits because a nil pointer on a money path is a dereference away from a
+// panic and a shared backing array away from aliasing, while a zero-valued
+// RunningBalance is unambiguously "no balance stated" and cannot be mistaken for
+// a zero balance by a caller that forgot to check.
+//
+// This closes the representation gap T510 recorded as G-26 and T513 downgraded
+// to a MINOR: []MinorUnits has no NULL, so a faithful port needed a type that
+// does.
+type RunningBalance struct {
+	// Value is the running balance in integer minor units. It is meaningful
+	// only when Valid is true.
+	Value MinorUnits
+	// Valid reports whether the oracle states a running balance on this row.
+	// False is `running_balance_derived IS NULL`.
+	Valid bool
+}
+
+// HoldNetRunningBalancesOf is the faithful port of Fineract's
+// `running_balance_derived`: the hold-net, available-shaped per-row chain that
+// recalculateDailyBalances writes [VERIFIED: SavingsAccount.java:895-919, the
+// balance arm; the overdraft and interest arms of that loop are not ported here
+// and are named below]. It returns one element per element of txns, in the order
+// given, and opening is the oracle's `openingAccountBalance` argument — zero for
+// a full recompute, as in SavingsAccount.escheat [:3396], and the pivot balance
+// for a backdated run.
+//
+// It exists because T513 rejected the claim that reproducing this column would
+// breach CLAUDE.md's "holds alter `available` only, never posted `balance`". It
+// would not: this column is not the posted balance. The posted balance is
+// AccountBalanceOf, which excludes holds and equals `account_balance_derived`.
+// Refusing to port an available-shaped column in the name of a rule about
+// available was the inversion at the centre of the deleted gate G-25.
+//
+// THE THREE BRANCHES, IN THE ORACLE'S OWN ORDER:
+//
+//	VOID ROW  -> zeroBalanceFields(): NO running balance is stated, and the
+//	             chain does not advance. RunningBalance{Valid:false}.
+//	CREDIT OR RELEASE -> `if (transaction.isCredit() || transaction.isAmountRelease())`
+//	             [SavingsAccount.java:902]. isCredit() excludes AMOUNT_RELEASE at
+//	             the type level and the `||` term re-admits it, which is how a
+//	             release ADDS BACK here while moving no posted balance.
+//	DEBIT OR HOLD -> `else if (transaction.isDebit() || transaction.isAmountOnHold())`
+//	             [:912]. Same shape: isDebit() excludes AMOUNT_HOLD and the `||`
+//	             term re-admits it.
+//
+// ESCHEAT MATCHES NO BRANCH, AND THAT IS THE ASYMMETRY THAT SETTLED G-27. The
+// loop re-admits holds and releases by name and never re-admits ESCHEAT, so an
+// escheat leaves the chain where it was and the row carries the unchanged
+// prefix. CAPTURE-A observed exactly that: 500000.000000 on the DEPOSIT row and
+// 500000.000000 again on the ESCHEAT row.
+//
+// GRADED, NOT ASSERTED. On CAPTURE-B this returns {100000, 60000, 35000} minor
+// units against the oracle's stored {1000.000000, 600.000000, 350.000000}, and
+// on CAPTURE-A {50000000, 50000000} against {500000.000000, 500000.000000}.
+// Both are pinned by TestHoldNetRunningBalancesMatchTheCapturedOracleRows.
+//
+// NOT PORTED FROM THAT LOOP, DELIBERATELY: `overdraft_amount_derived`, the
+// interest-recalculation copy path, and the `balance_end_date_derived` /
+// `balance_number_of_days_derived` pair. They need the account's overdraft
+// configuration and a business-date clock, neither of which exists in this
+// package, and they do not affect the balance chain this function returns.
+// Raised as backlog in the T515 handoff rather than guessed at.
+func HoldNetRunningBalancesOf(opening MinorUnits, txns []SavingsAccountTransaction) []RunningBalance {
+	out := make([]RunningBalance, 0, len(txns))
+	running := opening
+	for _, t := range txns {
+		if t.IsVoid() {
+			out = append(out, RunningBalance{})
+			continue
+		}
+		amount := t.Amount
+		if amount < 0 {
+			amount = -amount
+		}
+		switch {
+		case t.IsCredit() || t.Type.IsAmountRelease():
+			running += amount
+		case t.IsDebit() || t.Type.IsAmountHold():
+			running -= amount
+		}
+		out = append(out, RunningBalance{Value: running, Valid: true})
 	}
 	return out
 }

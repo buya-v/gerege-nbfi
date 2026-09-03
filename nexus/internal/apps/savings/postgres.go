@@ -40,7 +40,7 @@ import (
 // Callers get the balance from AccountBalanceOf / RunningBalancesOf / AvailableOf
 // in summary.go, which fold the append-only transaction stream on demand.
 //
-// # A FACT ABOUT A POSTING IS NOT A BALANCE
+// # WHAT MAY BE READ: THE TEST IS PROVENANCE, NOT LOCATION
 //
 // The statements below DO select `is_reversed`, `is_reversal` and
 // `release_id_of_hold_amount`, and that is not a softening of the rule above.
@@ -48,11 +48,58 @@ import (
 // postings count: Fineract's own credit/debit classification is
 // `isCreditType() && !isReversed() && !isReversalTransaction()`
 // [SavingsAccountTransaction.java:786-799], and reversal is the mechanism
-// CLAUDE.md names as the only legal correction. These three columns are facts
-// about a single row — flags and a foreign key, not sums, not aggregates, not
-// derivable from anything else — so reading them introduces no number this port
-// did not derive. `account_balance_derived` and `running_balance_derived` are
-// aggregates of other rows, which is exactly why they stay unread.
+// CLAUDE.md names as the only legal correction.
+//
+// The criterion, corrected by T515 (T513 MINOR-1):
+//
+//	READABLE — an INDEPENDENT INPUT. A value some command RECORDED: it was
+//	supplied or decided by the operation that wrote the row, and nothing can
+//	recompute it from the other rows. `is_reversed`, `is_reversal`,
+//	`release_id_of_hold_amount`, `transaction_type_enum`, `amount`.
+//
+//	REFUSED — a DERIVED OUTPUT. A value some earlier code FOLDED out of other
+//	rows and then stored. This port derives those itself, from the postings, or
+//	not at all. `account_balance_derived`, `running_balance_derived`,
+//	`cumulative_balance_derived`, `balance_end_date_derived`,
+//	`balance_number_of_days_derived`, `overdraft_amount_derived`, and the twelve
+//	category totals in the sense set out at SummaryRepository.
+//
+// T510 WROTE THIS RULE DOWN AS "per-row facts are readable; aggregates of other
+// rows are not", AND THAT VERSION LETS A STORED BALANCE THROUGH. Counterexample
+// from the live adopted schema, which is where a rule about the schema has to be
+// checked [VERIFIED: `select column_name, data_type from
+// information_schema.columns where table_name='m_savings_account_transaction'`,
+// run against `gerege-oracle-db`/`fineract_default` on 2026-09-03]:
+// `m_savings_account_transaction` carries FOUR derived columns, and every one of
+// them is stored ON THE ROW —
+//
+//	balance_end_date_derived       | date
+//	balance_number_of_days_derived | integer
+//	running_balance_derived        | numeric
+//	cumulative_balance_derived     | numeric
+//
+// `cumulative_balance_derived` is a stored balance living on a single row, so
+// the "per-row" wording admits it. It is not readable here, and neither is
+// `running_balance_derived`, which the old wording also misdescribes: it is one
+// number on one row, not an aggregate stored elsewhere. Location was never the
+// distinction. Provenance is.
+//
+// The columns are populated, so this is not a hypothetical. Captured on the same
+// rows as CAPTURE-B in summary.go, the WITHDRAWAL row carries
+// `cumulative_balance_derived = 85050.000000` alongside a
+// `running_balance_derived` of 350.000000 and a
+// `balance_number_of_days_derived` of 243 — the column is a balance-DAYS
+// product (350 × 243 = 85050), the input to interest accrual, and it is neither
+// a balance nor in minor units. A reader who took the per-row rule at face value
+// would have decoded it into a balance field and been wrong by a factor of the
+// day count.
+//
+// ⚠ THE DAY COUNT IS THE ONE NUMBER ON THIS PAGE THAT IS TIME-ZONE DEPENDENT.
+// 243 is days-to-business-date on an instance running tenant `default` at
+// **Asia/Kolkata (+05:30)**, not the ratified Asia/Ulaanbaatar (+08)
+// [VERIFIED: `select timezone_id from tenants`, this fire]. It is quoted to show
+// the SHAPE of the column — a balance × days product — and nothing in this port
+// derives, asserts or depends on it. **[UNVERIFIED at Asia/Ulaanbaatar.]**
 
 // AccountRepository is the persistence surface for m_savings_account.
 type AccountRepository interface {
@@ -159,9 +206,16 @@ func (r *PostgresAccountRepository) UpdateStatus(ctx context.Context, id int64, 
 // those nine identifiers. The read model is retained anyway, because the
 // strangler window needs it and because the balance-shaped answer it enables is
 // Fineract's number, correctly labelled, rather than this port's. But a caller
-// that wants THIS PORT'S balance must call AccountBalanceOf(stream); the two
-// are not interchangeable, and D-1/D-3 in summary.go list exactly where they
-// disagree.
+// that wants THIS PORT'S balance must call AccountBalanceOf(stream).
+//
+// SINCE T515 THE TWO AGREE, AND THAT IS A MEASUREMENT, NOT A DESIGN CLAIM.
+// T510's version of this paragraph pointed at two ratified divergences (D-1,
+// D-3) that were said to make the numbers differ; both rested on a half-ported
+// credit/debit classification and both are gone. AccountBalanceOf now returns
+// exactly `account_balance_derived` on the two live captures recorded in
+// summary.go — 750.000000 across a hold, 500000.000000 across an escheat. A
+// caller may still prefer one over the other for provenance reasons (this port
+// derives, the column was written by Fineract), but not because they disagree.
 type SummaryRepository interface {
 	FindByAccountID(ctx context.Context, accountID int64) (*SavingsAccountSummary, error)
 }
@@ -246,8 +300,10 @@ func NewPostgresTransactionRepository(db postgres.DB) *PostgresTransactionReposi
 	return &PostgresTransactionRepository{db: db}
 }
 
-// Insert appends one transaction, returning its id. The entry classification is
-// derived from the transaction type (it is not a stored column in the oracle).
+// Insert appends one transaction, returning its id. There is no entry-type
+// column to write: the oracle has none either, and since T515 the Go struct has
+// no cached copy of one — the classification is computed from
+// transaction_type_enum on every call.
 //
 // `is_reversed` and `is_reversal` ARE written, and must be: `is_reversed` is
 // NOT NULL with no default [VERIFIED: 0001_initial_schema.xml:3852-3854] and
@@ -261,14 +317,36 @@ func NewPostgresTransactionRepository(db postgres.DB) *PostgresTransactionReposi
 // with no default, so omitting it is valid) and stays NULL on rows this port
 // appends. The running balance is RunningBalancesOf(stream), folded on demand.
 //
-// ⚠ PRE-EXISTING DEFECT, RAISED NOT REPAIRED (T510 handoff). This statement
-// still omits three columns that are NOT NULL with no default on
-// m_savings_account_transaction — `office_id` (:3845-3847),
-// `transaction_date` (:3855-3857) and `created_date` (:3866-3868) — so it
-// cannot succeed against the adopted schema. Supplying them needs an office
-// model and a business-date clock, neither of which exists in this package;
-// that is an account-model slice, not a ledger-invariant repair, and inventing
-// values here would be worse than the omission.
+// ⚠ PRE-EXISTING DEFECT, RAISED NOT REPAIRED. This statement omits SEVEN
+// columns that are NOT NULL with no default on m_savings_account_transaction,
+// so it cannot succeed against the adopted schema.
+//
+// THE COUNT WAS WRONG BEFORE T515 AND SO WAS ONE OF ITS NAMES. T510 said
+// "three — office_id, transaction_date, created_date", having read the Liquibase
+// changelog rather than the schema the statement must actually satisfy. Measured
+// against the live adopted schema [VERIFIED: `select column_name, is_nullable,
+// column_default from information_schema.columns where
+// table_name='m_savings_account_transaction'`, run against
+// `gerege-oracle-db`/`fineract_default` on 2026-09-03], NOT NULL with no default
+// and not supplied below:
+//
+//	office_id             bigint
+//	transaction_date      date
+//	created_by            bigint
+//	submitted_on_date     date
+//	last_modified_by      bigint
+//	created_on_utc        timestamp with time zone
+//	last_modified_on_utc  timestamp with time zone
+//
+// And `created_date`, which T510 named as one of its three blockers, is
+// **nullable** in the adopted schema (`created_date | YES |`) — it is not a
+// blocker at all. `id` is `GENERATED BY DEFAULT AS IDENTITY`, so its lack of a
+// column_default is not an omission either.
+//
+// Supplying the seven needs an office model, a business-date clock and an
+// authenticated-user context, none of which exists in this package; that is an
+// account-model slice, not a ledger-invariant repair, and inventing values here
+// would be worse than the omission. Raised as backlog in the T515 handoff.
 //
 // ⚠ AND `release_id_of_hold_amount` IS NOT WRITTEN, because this port has no
 // hold/release service to pair the two rows with. HeldOf therefore refuses a
@@ -324,7 +402,6 @@ FROM m_savings_account_transaction WHERE savings_account_id = $1 ORDER BY id`,
 				return err
 			}
 			t.Type = tx
-			t.Entry = tx.EntryType()
 			out = append(out, t)
 			return nil
 		})
