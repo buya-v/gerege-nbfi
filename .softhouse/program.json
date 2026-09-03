@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "Fire 20260903-170002 (LOCAL, oracle REACHABLE). THE FINDING IS THE GUARD, NOT THE FOURTEEN. (1) Closed a 2.5-day publishing fork: 60 local commits had NEVER been pushed (main and origin diverged at 2815e007 on 2026-09-01) while FIFTEEN consecutive fires produced ZERO model turns on 'OAuth session expired' and every push was rejected non-fast-forward, the wrapper logging 'failed' and continuing four times per fire. origin/main...main now reads 0 0. Auth self-repaired before this fire; nothing escalates a zero-turn fire (T493/T494). (2) Publishing exposed 14 non-merge commits that put ~184 Go files straight onto main on 2026-09-01 with no branch, no reviewer, no vectors; push-gate C2/C3 bypassed with reasons logged, contexts left PENDING because publication is not approval. (3) The bar, run for the first time since 2026-08-29, REFUSED: 14 DEC-2 4.4 violations of 'balances are derived, never written'. The regression landed on 09-01, in the exact window when every grader was blind, and build + all 18 test packages were GREEN on the breaching tree. (4) THE REAL FINDING, now T509 and the program's critical path: guard_ledger_invariants detects how a thing is SPELLED, not what it DOES, and is wrong in BOTH directions on a money non-negotiable — SEVEN items, each verified twice. Blind to: a stored balance TABLE (column names tested, table name not); an IDENTICAL roll-forward in emi.go shipping GREEN because spelled outstandingMinor (6 balance-in-substance assignments tree-wide, guard reports 4); 6 composite-literal writes, with CANNOT-CATCH item 8 RECOMMENDING the constructor that defeats it; a stored balance column T502 missed; and InsertReturningInt64, a mutating wrapper the exec regex does not name across 20+ call sites. Over-matching on 4 loanschedule intermediates. (5) MERGED with reviews: T503 (4 OPAQUE-SQL sites now statically readable, no DEC-2 exemption) + T504/T505/T506. Merged tree builds, 0 test FAILs, zero OPAQUE-SQL, 14->9 sites. (6) HELD UNMERGED on reviewer MAJORs, and this is the fire's best evidence that the pipeline works: T501's I-3 repair was REAL (proved by planted-regression probes) and introduced a REVERSAL-BLIND fold — deposit 100,000 then reverse it and Fineract says 0 while the Go fold says +200,000, because the reversal row is a same-type copy so the error DOUBLES. Build, vet, 20 test packages and the guard itself ALL AGREED with that trade; only re-derivation caught it. T502's conclusion was right, its citation list did not entail it, and its proposed guard patch is DEFEATABLE BY ONE git mv (T505 built the counterexample). T510/T511 dispatched to repair both. (7) The driver published a FALSE scope-violation accusation against T503; T506 caught it and the driver verified and withdrew it. Cause: the scope instrument this pipeline prescribes, git diff --stat main..<branch>, cannot distinguish 'the worker wrote it' from 'main moved on' — filed as T512. Also filed: T507, T508 (the append-only ledger INSERT CANNOT EXECUTE — pre-existing, undetected because the repository has no callers and no test touches a DB). THE BAR IS RED BY DESIGN until T509 lands. No user gate crossed. Incident: docs/incidents/2026-09-03-publishing-outage-and-i3-breach.md",
+  "cursor": "Fire 20260903-170002 (LOCAL, oracle REACHABLE) CLOSED CLEAN, zero live workers, 8 dispatched / 8 completed, every coder paired with an independent reviewer. THE HEADLINE IS THE GUARD, NOT THE FOURTEEN. (1) Closed a 2.5-day publishing fork: 60 local commits had NEVER been pushed while FIFTEEN consecutive fires produced ZERO model turns on 'OAuth session expired' and every push was rejected non-fast-forward, the wrapper logging 'failed' and continuing four times per fire. origin/main...main now 0 0. (2) Publishing exposed 14 non-merge commits that put ~184 Go files onto main on 2026-09-01 with no branch, no reviewer, no vectors; C2/C3 bypassed with logged reasons, contexts left PENDING because publication is not approval. (3) The bar, run for the first time since 2026-08-29, REFUSED with 14 DEC-2 4.4 violations. The regression landed in the exact window when every grader was blind, and build + all 18 test packages were GREEN on the breaching tree. (4) THE REAL FINDING, now T509 and the critical path: guard_ledger_invariants detects a SPELLING not a PROPERTY and is wrong in BOTH directions — TEN verified items, including a stored balance TABLE it cannot see, an IDENTICAL roll-forward shipping GREEN because spelled differently, 6 composite-literal writes with CANNOT-CATCH item 8 RECOMMENDING the constructor that defeats it, a mutating wrapper across 20+ call sites, and no firing on a SELECT of a balance column. T514 set the design constraint: the go/types discriminator MUST FAIL CLOSED on unresolved value flow. (5) MERGED with reviews: T503 + five review branches; tree builds, 0 FAILs, zero OPAQUE-SQL, 14->9 sites. (6) THE REVIEWERS ARE THE STORY. T504 caught that T501's correct I-3 repair INTRODUCED a reversal-blind fold — deposit 100,000, reverse it, Fineract 0 vs Go +200,000, the error DOUBLING because the reversal row is a same-type copy — and build, vet, 20 test packages and the guard itself ALL AGREED with that trade. T505 DEFEATED a proposed guard patch with one git mv. T513 REJECTED T510: its 'Fineract contradicts itself' premise is FALSE, T510 having ported the credit/debit classification halfway and stopped one call short of SavingsAccountTransactionType.java:180-188 [driver-verified] where Fineract already says AMOUNT_HOLD and ESCHEAT do not move the account balance — so two of its three gates are DELETED rather than escalated, and G-27 is a live money bug (0 vs 50000000) whose test PINNED THE WRONG NUMBER. T513 also ran a LIVE ORACLE CAPTURE and volunteered evidence that WEAKENED its own severity rating. T514 found a P-104 hit inside T511's own P-104 section. (7) The driver published a FALSE scope-violation accusation against T503 and withdrew it after T506 caught it; cause filed as T512 — the prescribed scope instrument cannot distinguish 'the worker wrote it' from 'main moved on'. Also filed: T507, T508 (the append-only ledger INSERT CANNOT EXECUTE, undetected because the repository has no callers and no test touches a DB), T515, T516. THE BAR IS RED BY DESIGN until T509. No user gate crossed. Incident: docs/incidents/2026-09-03-publishing-outage-and-i3-breach.md",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -2567,6 +2567,41 @@
       "gates": "G-23 raised (RESERVED -- where is the Nexus platform tree). G-24 raised and DECIDED by the driver, chosen_by: agent, awaiting veto only. G-20 AMENDED with a git-measured ratio that is worse than when it was raised: capture 34.5 -> 44.2 %, reviews 16.8 -> 22.9 %, nexus/ flat at 2.7 %. No user gate crossed. No CONTRACT gate open.",
       "known_gap_stated_not_hidden": "The three REPAIRS (T495/T496/T497) landed in their stacks WITHOUT reviewers of their own -- the iteration-6 precedent, but plan-gate check 1 asks for one on every coder task. Filed as T500 rather than left implicit.",
       "exit_attestation": "repo-state-attest fire-compare rc 0, VERDICT: NO DAMAGE -- every delta inside the declared writ. Working tree clean, LOCK released, all nine worker worktrees removed, one worktree left (the checkout itself). ONE ADVISORY, ATTRIBUTED RATHER THAN WAVED THROUGH as the guard's own text demands: .softhouse/patterns.md changed and the writ does not name it. Attributed by `git log 2815e007..HEAD -- .softhouse/patterns.md` -- exactly two commits, both this driver's, both P-104 (93a35add recorded it, 33f0cbe1 rewrote its heading after it broke the PNUMBER-CITATIONS guard), +44 lines and 0 deletions. No worker touched it."
+    },
+    {
+      "fire": "20260903-170002",
+      "when": "2026-09-03",
+      "context": "cross-cutting: I-3 ledger-invariant breach + guard defect",
+      "dispatched": 8,
+      "completed": 8,
+      "killed": 0,
+      "merged": [
+        "T503",
+        "T504",
+        "T505",
+        "T506",
+        "T513",
+        "T514"
+      ],
+      "held": [
+        "T501",
+        "T502",
+        "T510",
+        "T511"
+      ],
+      "filed": [
+        "T507",
+        "T508",
+        "T509",
+        "T510",
+        "T511",
+        "T512",
+        "T515",
+        "T516"
+      ],
+      "reviewer_catches": "T504 MAJOR (reversal-blind fold, a money defect every automated check passed); T505 2 MAJOR (guard patch defeated by one git mv; citation list not entailing its conclusion); T506 MAJOR (driver's own false scope accusation, withdrawn); T513 REJECT (halfway-ported classification; two gates deleted; live money bug); T514 3 blocking (doc headline refuted by the function it annotates)",
+      "uat": "conformance EXIT 2, no probe line — HARD guard failure, not an oracle outage; RED BY DESIGN pending T509",
+      "note": "first authenticated local fire in 2.5 days; closed a 60-commit unpublished fork"
     }
   ],
   "database": {

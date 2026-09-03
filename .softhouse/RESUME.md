@@ -1,56 +1,64 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `20260903-170002` (local, oracle REACHABLE) — **IN FLIGHT. T510 + T511 LIVE.**
+## FIRE `20260903-170002` (local, oracle REACHABLE) — **CLOSED CLEAN. ZERO LIVE WORKERS.**
 
-> # ⚠ THE BAR IS RED ON A MONEY NON-NEGOTIABLE, AND IT IS NOW RED **BY DESIGN**
+Eight tasks dispatched, eight completed, none killed. Every coder task got a paired independent
+reviewer. **Three of the five reviews returned MAJORs and one returned REJECT.**
+
+> # ⚠ THE BAR IS RED, AND IT IS RED **BY DESIGN**
 >
-> `bash .softhouse/conformance.sh` exits **2 with NO probe line**. Per STEP 4 that is a HARD guard
-> failure, **NOT** an oracle outage, and **nothing may be parked for it**. The oracle is UP.
+> `bash .softhouse/conformance.sh` exits **2 with NO probe line** — a HARD guard failure, **NOT** an
+> oracle outage (the oracle is UP). **Nothing may be parked for it.**
 >
-> `guard_ledger_invariants` refuses the tree: **9 unique I-3 sites** (was 14). Four of them are RED
-> **deliberately** — T502 argued, and its reviewer T505 agreed, that they are not balance writes, and
-> the correct fix is to the **guard**, not the code. **The bar cannot go green until T509 lands.**
+> `guard_ledger_invariants` refuses the tree. Four `loanproduct` sites are RED **deliberately**: two
+> independent reviewers agree the code is right and the **guard** is wrong. **The bar cannot go green
+> until T509 lands.**
 
-### The finding this fire actually produced
+## THE FINDING: the guard matches a SPELLING, not a PROPERTY
 
-**`guard_ledger_invariants` detects how a thing is SPELLED, not what it DOES** — and it is wrong in
-**both** directions on a money non-negotiable. Seven items, each verified by at least two independent
-tasks or by the driver reading source. All are consolidated in **T509, which is now the program's
-critical path**. Order is fixed: **repair the blindness FIRST**, then re-run the whole tree, because
-that arm can only *add* findings. Never narrow a money guard while it is known blind.
+Wrong in **both directions** on a money non-negotiable. **Ten items**, each verified by ≥2 tasks or by
+the driver reading source — consolidated in **T509, the program's critical path**. Order is fixed:
+**repair the blindness FIRST**, then re-run the tree; that arm can only *add* findings. Never narrow a
+money guard while it is known blind. T514 supplied the decisive design constraint: the `go/types`
+discriminator **must fail closed on unresolved value flow**.
 
-### What landed
+## What landed
 
 | | |
 |---|---|
-| **Published** | Closed a 2.5-day fork — 60 local commits that had **never** been pushed, plus the cloud fire's 37. `origin/main...main` = `0 0`. |
-| **Merged** | **T503** (4 `OPAQUE-SQL` sites made statically readable, no DEC-2 exemption) + reviews **T504/T505/T506**. Merged tree: build rc=0, 0 test FAILs, **zero OPAQUE-SQL**. |
-| **Held** | **T501** — real I-3 repair, but introduced a **reversal-blind fold** (reversed deposit *doubles*). **T502** — right conclusion, refuted reasoning, defeatable guard patch. |
+| **Published** | Closed a **2.5-day fork** — 60 local commits that had never been pushed, plus the cloud fire's 37. `origin/main...main` = `0 0`. |
+| **Merged** | **T503** (4 `OPAQUE-SQL` sites made statically readable, no DEC-2 exemption) + reviews **T504 / T505 / T506 / T513 / T514**. Merged tree: build rc=0, 0 test FAILs, **zero OPAQUE-SQL**, 14 → 9 sites. |
+| **Held** | **T501+T510** (savings) and **T502+T511** (loanproduct) — all four on reviewer findings, none on a technicality. |
 
-### Live workers — DO NOT assume these finished
+## Next fire — the queue, in order
 
-| Task | Branch | Base | What |
-|---|---|---|---|
-| T510 | `softhouse/T510-savings-fold-reversal` | `softhouse/T501-savings-i3` | Carry `is_reversed`/`is_reversal` through the fold; apply T504's 6 MINORs. Must not reinstate a stored balance. |
-| T511 | `softhouse/T511-t505-conditions` | `softhouse/T502-loanproduct-i3` | Drop the refuted guard patch; restate the argument on the posting-stream ground. |
+1. **T509 — CRITICAL PATH.** The guard repair. Nothing in the program can be graded until it lands.
+2. **T515** — rework T510. **Preserve its reversal repair** (T513 verified it and flagged it for
+   preservation); the REJECT is about what was built on a half-ported classification. Port
+   `SavingsAccountTransactionType.java:180-188` — the third arrow T510 stopped short of. That one root
+   fixes ESCHEAT, deletes the hand-rolled hold special case, and **deletes G-25 and G-27**.
+3. **T516** — T514's three blocking conditions on T511.
+4. **T508** — the append-only ledger `INSERT` cannot execute. T506 found the origin: Fineract
+   changeset `journal-entry-3` **renamed** `createdby_id`→`created_by`; the port copied the
+   **pre-rename** spellings.
+5. **T512** — the scope instrument `git diff --stat main..<branch>` cannot tell "the worker wrote it"
+   from "main moved on". It produced a **false accusation in this fire**, which the driver published
+   and T506 caught. Use the merge base.
+6. **T507** — `m_savings_account_summary` may not exist in Fineract at all.
 
-**Each is based on the held branch it repairs, not on `main`.** Merge order: T510 → then T501; T511 → then T502.
+**Merge order when repairs land:** T515 → T510 → T501; T516 → T511 → T502.
 
-### Next fire picks up
+## Gates
 
-1. **T509** — the guard repair. Critical path; nothing can be graded until it lands.
-2. **T508** — the append-only ledger `INSERT` cannot execute (wrong column names, 3 missing NOT NULL). T506 found the origin: Fineract changeset `journal-entry-3` **renamed** `createdby_id`→`created_by` and the Go port copied the **pre-rename** spellings.
-3. **T512** — the scope instrument `git diff --stat main..<branch>` cannot tell "the worker wrote it" from "main moved on". It produced a **false accusation against T503 in this fire**, which the driver published and T506 caught. Use the merge base.
-4. **T507** — `m_savings_account_summary` may not exist in Fineract at all.
+**G-25 / G-26 / G-27 resolved against the divergence — no user gate needed**, because the premise was
+checkable and false. T510 claimed "Fineract contradicts itself"; it does not. G-27 must match the
+oracle (a live money bug, 0 vs 50000000). G-26 survives as a MINOR representation gap.
 
-### If these tasks still say `in_progress` when you read this
+**No `user` gate was crossed this fire.**
 
-Their worker was killed with its session. They are **not** running. Mark `needs_retry`, rescue what
-is on each branch, treat completeness as unverified.
-
-### Standing item for Buyan — no agent can clear it
+## Standing item for Buyan — no agent can clear it
 
 15 consecutive fires over 2.5 days burned on `OAuth session expired`, and **nothing escalates a
-zero-turn fire** (T493/T494). Every push in the same window was rejected and the wrapper logged
-`failed` and continued. It self-repaired before this fire. The detection exists; the consequence
-does not.
+zero-turn fire** (T493/T494). Every push in that window was rejected non-fast-forward while the
+wrapper logged `failed` and continued, four times per fire. It self-repaired before this fire.
+**The detection exists; the consequence does not.**
