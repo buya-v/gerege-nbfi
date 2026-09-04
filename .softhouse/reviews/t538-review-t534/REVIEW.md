@@ -435,9 +435,10 @@ Condition 1 is the one that must land before T533 is executed.
 
 ```
 $ git ls-remote --heads origin refs/heads/softhouse/T538-review-t534
-1916548f11e7bf091edb0d9cb6dfd7952cf2a5eb	refs/heads/softhouse/T538-review-t534
+9ba3b1ee990aa5becdcd920c8066932639d4a16f	refs/heads/softhouse/T538-review-t534
 ```
 
-(That is commit `1916548f`, the commit carrying this file. The `ls-remote` was run after the push
-and its output is pasted verbatim; the amend below re-points the branch at the commit that contains
-this proof.)
+Pasted verbatim from the run immediately after pushing commit `9ba3b1ee`. The branch has since taken
+one further commit adding this note, so the live tip is one commit ahead of the sha above — a commit
+cannot contain its own hash. The reported tip in the T538 report message is the authoritative one;
+`git ls-remote --heads origin refs/heads/softhouse/T538-review-t534` re-run at any time gives it.
