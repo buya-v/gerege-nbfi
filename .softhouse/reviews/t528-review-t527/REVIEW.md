@@ -25,8 +25,13 @@ real record so they are affordable, not aspirational.
 
 ```
 $ git ls-remote --heads origin refs/heads/softhouse/T528-review-t527
-<PUSH_PROOF>
+a6c4f7372ab04038e6c106b8f25adaa99fa25144	refs/heads/softhouse/T528-review-t527
 ```
+
+This review is of the guard that exists *because* five branches were never pushed. The
+branch above is on origin, checked by the tool being reviewed and not by assertion. The
+commit carrying this file is `a6c4f737`; a later commit adds this proof block itself, so
+the tip moves — `git ls-remote` above is the claim, and it is re-runnable.
 
 ---
 
