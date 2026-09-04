@@ -17,6 +17,32 @@
 // UNVERIFIED marker. Oracle Database is a prohibited product in this program
 // and appears nowhere in this stack; PostgreSQL is the only permitted database.
 //
+// # Citation-audit status — read this before trusting a [VERIFIED:] range
+//
+// A citation being present is not a citation being resolved, and the audit is
+// PARTIAL. Do not read the paragraph above as a warrant for the whole package.
+//
+//   - repaymentperiod.go — SWEPT. Every [VERIFIED: RepaymentPeriod.java:a-b]
+//     was re-derived mechanically against the pinned commit by T530 and
+//     re-derived again, row by row, by the independent review T531.
+//   - interestperiod.go — UNSWEPT. Its [VERIFIED: InterestPeriod.java:a-b]
+//     ranges have NOT been audited. T530 measured 23 of 28 failing to resolve,
+//     10 of them citing past the end of a 237-line file — the strongest
+//     available evidence that the block was never derived against this commit.
+//     The sweep is task T532, which owns that file; nothing here has covered
+//     it. Treat those ranges as unverified until T532 lands, and do not apply
+//     an offset: on repaymentperiod.go the drift changed sign and was
+//     non-monotonic, so an offset theory makes an unswept remainder merely look
+//     accounted for.
+//   - Every other file in the package — UNSWEPT, and never claimed otherwise.
+//
+// The unswept verdict is about the CODE FILES, not about this comment: the
+// InterestPeriod.java ranges cited in the arguments below — :43-73, :45, :65,
+// :66, :68 and :178 — were each re-read directly against the pinned commit by
+// T534 and all six resolve. That is a spot check of the six ranges those
+// arguments stand on, and it is not a sweep of interestperiod.go; do not cite
+// it as one.
+//
 // # One trap this port is built around
 //
 // TRAP — DaysInYearType and DaysInMonthType do NOT store their ordinal. The
