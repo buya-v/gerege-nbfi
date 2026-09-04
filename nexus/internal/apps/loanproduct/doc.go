@@ -299,12 +299,20 @@
 // writes by their PACKAGE's persistence surface — a database import, an SQL
 // literal or a column struct tag somewhere in the same directory — was
 // proposed, built and measured, and it has been WITHDRAWN. Moving
-// nexus/internal/apps/savings/summary.go, which carries a genuine
-// `s.AccountBalance += effect`, into an internal/apps/savings/model/
-// subdirectory reclassifies that real balance write into a class that prints
-// and never refuses. One file move, zero code change, ordinary Go layering. A
-// guard that a file move disarms is not a guard: directory adjacency to a
-// string containing SQL is not reachability to a balance column.
+// nexus/internal/apps/savings/summary.go, whose Add method folds
+// `s.AccountBalance += effect` on a value receiver [VERIFIED:
+// savings/summary.go:52-55] — a pure fold over a copy, not itself a write to
+// stored state, the same shape as the four sites above — into an
+// internal/apps/savings/model/ subdirectory reclassifies a write that IS
+// reachable to a persisted column: the folded AccountBalance field is what
+// PostgresSummaryRepository.Upsert sends as account_balance_derived
+// [VERIFIED: savings/postgres.go:113,120,149]. That reachability, not the
+// value-receiver mutation itself, is why this one belongs in the
+// guard-flagged class while this package's four sites do not — and a
+// directory move would erase the distinction by disarming both alike. One
+// file move, zero code change, ordinary Go layering. A guard that a file move
+// disarms is not a guard: directory adjacency to a string containing SQL is
+// not reachability to a balance column.
 //
 // The correct repair is a go/types-based discriminator that follows the value
 // across the import graph to a persisted column — LEG 2, mechanised. Until that
