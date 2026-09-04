@@ -142,6 +142,9 @@ repair not on main; not caused by this change and out of scope to fix.
 softhouse/T526-t519-residuals
 ```
 
-`git ls-remote` proof pasted into the final commit message / conversation
-after push (see below) — will be re-pasted here if this file is re-read
-post-push; at write time the branch had not yet been pushed.
+Pushed. `git ls-remote --heads origin refs/heads/softhouse/T526-t519-residuals`:
+
+```
+7187d6ec221609eb0c371e3d10ffa0e60a1b1859	refs/heads/softhouse/T526-t519-residuals
+```
+
