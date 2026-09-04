@@ -1,19 +1,23 @@
 {
-  "holder": "local-launchd",
-  "host": "Buyanmunkhs-Mac-mini",
-  "pid": 29956,
-  "fire": "20260903-170002",
-  "started_at": "2026-09-03T09:01:19Z",
-  "heartbeat": "2026-09-03T11:09:37Z",
-  "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
-  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260903-170002.log",
-  "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
-  "postgres": "reachable at localhost:5432",
-  "chain_iteration": 2,
+  "holder": "cloud-routine",
+  "host": "claude-code-remote-sandbox",
+  "pid": 7981,
+  "fire": "cloud-20260904-1200",
+  "started_at": "2026-09-04T12:35:00Z",
+  "heartbeat": "2026-09-04T12:35:00Z",
+  "heartbeat_note": "CORROBORATION ONLY. Authoritative liveness is the newest commit on origin/main (STEP 0).",
+  "took_over_from": {
+    "holder": "local-launchd",
+    "host": "Buyanmunkhs-Mac-mini",
+    "fire": "20260903-170002",
+    "their_started_at": "2026-09-03T09:01:19Z",
+    "arm": "ARM 3 (CEILING) — started_at was 27.5 h old, over the 24 h ceiling.",
+    "corroborating": "ARM 5 also matched: origin/main tip 2026-09-03T11:09:38Z was 25.3 h old at 2026-09-04T12:28:57Z. Both stale arms agreed; no arm said HELD."
+  },
+  "oracle": "UNREACHABLE by design from the cloud sandbox — vector/conformance work parked, analysis continues",
+  "postgres": "not reachable from this sandbox",
   "dispatched": [
-    "T520",
-    "T522",
-    "T523",
-    "T524"
+    "T526",
+    "T527"
   ]
 }
