@@ -1,0 +1,35 @@
+T527 wiring drive -- every verdict below is ready-tasks.py's own exit code.
+repo: /home/user/gerege-nbfi/.claude/worktrees/agent-ab69b5f57b4863b66
+
+A. the real record, real origin
+  A-real-repo-refuses: PASS  (ready-tasks.py exit 5, saw "check-branch-published: REFUSE")
+     findings named: 18
+       UNBACKED-BRANCH    T508      softhouse/T508-journalentry-insert-schema
+       UNBACKED-BRANCH    T509      softhouse/T509-ledgerguard-blindspot
+       UNBACKED-BRANCH    T510      softhouse/T510-savings-fold-reversal
+       UNBACKED-BRANCH    T512      softhouse/T512-scope-instrument
+       UNBACKED-BRANCH    T515      softhouse/T515-savings-classification-rework
+       UNBACKED-BRANCH    T520      softhouse/T508-journalentry-insert-schema
+       UNBACKED-BRANCH    T522      softhouse/T515-savings-classification-rework
+       UNBACKED-BRANCH    T523      softhouse/T509-ledgerguard-blindspot
+       UNBACKED-COMMIT    T508      1abd3a11
+       UNBACKED-COMMIT    T509      857dd4d8
+       UNBACKED-COMMIT    T512      8ff5ff15
+       UNBACKED-COMMIT    T515      2e1a09df
+       UNBACKED-COMMIT    T515      5c4233fc
+       UNBACKED-COMMIT    T515      78a17873
+       UNBACKED-COMMIT    T515      84dc208e
+       UNBACKED-COMMIT    T520      1abd3a11
+       UNBACKED-COMMIT    T522      84dc208e
+       UNBACKED-COMMIT    T523      857dd4d8
+
+B. origin unreachable -- must be a DISTINCT refusal, never a pass
+  B-unreachable-fails-closed: PASS  (ready-tasks.py exit 5, saw "CANNOT ESTABLISH ORIGIN")
+
+C. a record whose one branch IS on origin -- the control that must PASS
+  C-clean-record-passes: PASS  (ready-tasks.py exit 0, saw "check-branch-published: CLEAN")
+
+D. the checker deleted -- the WIRING's own fail-closed arm
+  D-missing-checker-is-not-a-pass: PASS  (ready-tasks.py exit 5, saw "checker is not on disk")
+
+0 cell(s) failed. fixtures: /tmp/t527-wiring.Q92IEp
