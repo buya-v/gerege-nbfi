@@ -8158,7 +8158,7 @@
    "description": "T509 filed seven follow-ups (FU-T509-1..7). None were T509 to do -- all but two live in nexus/, which it was forbidden to touch. They are recorded here so they survive the handoff.\n\nFU-T509-1 (MONEY, HIGHEST VALUE). internal/apps/investor/postgres.go:108 and :199-211 -- five *_outstanding_derived columns written at INSERT and decoded back into authoritative fields. This is T501 exact shape in a package nobody has examined. [VERIFIED by T509: ExternalAssetOwnerTransferDetails.java:49.] Needs T501 treatment: derive from the posting stream, never store.\n\nFU-T509-2. internal/apps/workingcapital/postgres.go:379 -- decide whether a written m_wc_loan_balance is lawful under DEC-2 I-3 or is the m_trial_balance shape section 7 refuses to port. T503 raised it and correctly declined to close it inside a readability task.\n\nFU-T509-3. internal/apps/workingcapital/postgres.go:168 -- inline the spliced wcProductDetailColumns into the write path literal, exactly as T503 did for the other four sites. One OPAQUE-SQL, one-line fix, removes the last unreadable mutation in the tree.\n\nFU-T509-4. internal/apps/loan/charge.go -- AmountOutstanding x11. Same question as the loanproduct four: schedule intermediate, or stored balance? It HAS an oracle column (LoanCharge.java:108), which the loanproduct cells do not, so the answer may legitimately differ. Do not assume it inherits their verdict.\n\nFU-T509-5. internal/apps/loanschedule/emi.go:1720,:1726 -- the twin of the four argued loanproduct sites. WHATEVER VERDICT THOSE GET, THIS MUST GET THE SAME ONE, IN WRITING. The entire point of T509 item 2 is that identical constructs cannot keep receiving different answers because they are spelled differently.\n\nFU-T509-6 (THE REAL FIX FOR THE OVER-MATCHING ARM). The go/types reachability discriminator. T514 constraint is NOT OPTIONAL: it MUST FAIL CLOSED on unresolved value flow. An analysis answering \"not persisted\" on an edge it cannot resolve reintroduces the fail-open one layer up -- and unlike a waiver, which is a visible document a human must amend, a heuristic failure produces NO ARTEFACT AT ALL. Until this exists, the four loanproduct sites stay RED.\n\nFU-T509-7 (guard, small). CANNOT-CATCH item 10 residual: a value literal assigned to a variable and then stored by address, and append of a composite literal into a slice. Needs the same go/types work as FU-T509-6 and should ride with it.\n\nSPLIT THIS BEFORE DISPATCH. It is a backlog record, not a single runnable task -- FU-1 alone is a full coder task with its own reviewer. Plan FU-1 first (highest money value), then FU-3 (one line), then FU-2/FU-4/FU-5 as a linked verdict-consistency task, then FU-6/FU-7 together."
   },
   {
-   "status": "done",
+   "status": "merged",
    "executor": "agent",
    "model": "sonnet",
    "contract_independent": true,
@@ -8173,11 +8173,12 @@
    ],
    "dependencies": [],
    "attempts": 1,
-   "note": "landed 4d7c1bc0 on softhouse/T526-t519-residuals, BRANCH VERIFIED PRESENT ON ORIGIN by `git ls-remote` (the failure this whole fire is about). DRIVER-VERIFIED BY RE-DERIVATION, not by reading the report: opened /home/user/fineract @ 426a23544 and read RepaymentPeriod.java myself. :389-403 IS getOutstandingLoanBalance() and its body matches the Go comment term-for-term (balanceCorrection + capitalizedIncome + disbursement + paidPrincipal - duePrincipal, negativeToZero = 'floored at zero'); :405-407 IS addPaidPrincipalAmount; and the OLD :377-389 held getUnrecognizedInterest/getCreditedAmounts — so the drift was real and the correction is right. Scope clean at the merge-base form: 3 files, all inside files_hint, zero float, savings untouched. Awaiting independent review T529.",
+   "note": "landed 4d7c1bc0 on softhouse/T526-t519-residuals, BRANCH VERIFIED PRESENT ON ORIGIN by `git ls-remote` (the failure this whole fire is about). DRIVER-VERIFIED BY RE-DERIVATION, not by reading the report: opened /home/user/fineract @ 426a23544 and read RepaymentPeriod.java myself. :389-403 IS getOutstandingLoanBalance() and its body matches the Go comment term-for-term (balanceCorrection + capitalizedIncome + disbursement + paidPrincipal - duePrincipal, negativeToZero = 'floored at zero'); :405-407 IS addPaidPrincipalAmount; and the OLD :377-389 held getUnrecognizedInterest/getCreditedAmounts — so the drift was real and the correction is right. Scope clean at the merge-base form: 3 files, all inside files_hint, zero float, savings untouched. Awaiting independent review T529. MERGED. T529 returned ACCEPT WITH CONDITIONS (2 conditions, neither blocking); filed as T530.",
    "description": "T519 found these while reviewing T516 and correctly attributed them AWAY from T516 -- each is present verbatim at merge-base 14cf6c1f or on main, so T516 did not introduce any of them. They are real and small.\n\n  1. TWO STALE [VERIFIED:] CITATIONS. repaymentperiod.go:342 cites :377-389 and :354 cites :391-393. The actual ranges are :389-403 and :405-407. A [VERIFIED:] tag whose line range is wrong is worse than no tag: the honesty rule exists so a reader can CHECK a claim, and a citation that does not resolve trains readers to stop checking. Re-verify against the pinned checkout /Users/buv/fineract @ 426a23544 and correct both. Confirm the SUBSTANCE still holds at the corrected lines -- if the cited code says something different there, that is a finding, not a typo.\n\n  2. ONE LOOSE DOC CLAIM, inherited from T511 and untouched by T516. doc.go describes savings/summary.go:53 as a \"genuine real balance write\". T519 measured it as a VALUE-RECEIVER PURE FOLD, which is a materially different thing: it mutates a copy, not stored state. The sentence is doing rhetorical work in an argument about what counts as a balance write, so an imprecise example weakens the argument it is offered to support. Restate it accurately. NOTE the file it describes is owned by the savings work (T515/T522) -- do NOT edit savings; only fix the DESCRIPTION in loanproduct/doc.go.\n\n  3. FOUR gofmt -l HITS module-wide, all identical on main, so pre-existing. Fix them only if they are inside nexus/internal/apps/loanproduct/; anything outside that directory belongs to whichever task owns it -- report those rather than reaching into another worker's package.\n\nDo not re-open T516's argument; it is APPROVED and merged. This is cleanup of things found beside it.",
    "dispatched_at": "2026-09-04T12:35:00Z",
    "dispatched_by_fire": "cloud-20260904-1200",
-   "tip": "4d7c1bc0"
+   "tip": "4d7c1bc0",
+   "merged": true
   },
   {
    "id": "T527",
@@ -8224,7 +8225,7 @@
   },
   {
    "id": "T529",
-   "status": "in_progress",
+   "status": "merged",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -8243,7 +8244,51 @@
    "description": "INDEPENDENT review of T526 (T519's residuals in nexus/internal/apps/loanproduct/).\nSmall, but it is a review of CITATION HONESTY, which is the mechanism the whole program leans on.\n\n  1. OPEN THE PINNED CHECKOUT YOURSELF at /home/user/fineract @ 426a23544 (detached; the driver\n     checked it out this fire) and read the corrected line ranges. Confirm BOTH that the new ranges\n     resolve AND that the code at those lines says what the Go comment claims. T526 was told a\n     citation whose range is wrong is worse than none; a citation CORRECTED to a range that still\n     does not support the claim is worse again.\n  2. THE doc.go RESTATEMENT. T519 measured savings/summary.go:53 as a VALUE-RECEIVER PURE FOLD, not\n     a \"genuine real balance write\". Verify that measurement independently from the source on main\n     (savings/summary.go IS on main), then judge whether T526's replacement sentence is accurate AND\n     still supports the argument it sits inside. Note the guard currently REFUSES that exact line as\n     [I3-FIELD-WRITE] — so \"pure fold\" and \"the guard flags it\" are both true, and a restatement\n     that hides the tension is a finding.\n  3. SCOPE. T526 was forbidden to edit nexus/internal/apps/savings/ (it belongs to the unpushed\n     T515 stack) and forbidden to fix gofmt hits outside loanproduct/. Verify by\n     `git diff --stat main..softhouse/T526-t519-residuals` that it obeyed both.\n  4. Confirm it did NOT re-open T516's argument, which is APPROVED and merged.",
    "dispatched_at": "2026-09-04T12:40:53Z",
    "dispatched_by_fire": "cloud-20260904-1200",
+   "note": "landed 17e502da on softhouse/T529-review-t526, branch VERIFIED on origin. Verdict ACCEPT WITH CONDITIONS. IT EARNED ITS KEEP: found ~18 sibling [VERIFIED:] citations in the SAME FILE still stale, and — the load-bearing part — that T526 asserted a SYSTEMIC CAUSE ('a 12-14 line offset in this region') without testing it against one neighbour, where the real drift runs +12, +14 and +38. DRIVER-VERIFIED the sharpest instance by measurement: AddPaidInterestAmount cites :395-397, which is INSIDE getOutstandingLoanBalance's body, and the true range is :409-411 [read both spans in the pinned Java myself]. Also independently walked the reachability claim T526 added and found it TRUE (account_balance_derived is the 14th column and summary.AccountBalance the 14th exec arg), and volunteered that as evidence STRENGTHENING the work it was grading.",
+   "merged": true,
+   "tip": "17e502da"
+  },
+  {
+   "id": "T530",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "contract_independent": true,
+   "branch": "softhouse/T530-t529-conditions",
+   "attempts": 1,
+   "dependencies": [],
+   "fire": "cloud-20260904-1200",
+   "files_hint": [
+    "nexus/internal/apps/loanproduct/",
+    ".softhouse/handoff/T530-t529-conditions.md"
+   ],
+   "title": "T529's two conditions on T526 — the ~18 stale citations the fix walked past, and a receiver-semantics conflation inside the sentence written to fix a receiver-semantics conflation",
+   "description": "Apply T529's two conditions on T526. Neither blocked the merge; both are real.\n\nCONDITION 1 (MAJOR). Roughly EIGHTEEN further `[VERIFIED: RepaymentPeriod.java:...]` citations in\nnexus/internal/apps/loanproduct/repaymentperiod.go are stale, most pointing at a DIFFERENT METHOD.\nT529's inventory table is in .softhouse/reviews/t529-review-t526/REVIEW.md — treat it as a lead, not\nas truth, and re-derive every row yourself against /home/user/fineract @ 426a23544 (detached).\n\n  The sharpest instance, DRIVER-VERIFIED by reading both spans: `AddPaidInterestAmount` (Go ~:360)\n  cites :395-397, which lies INSIDE getOutstandingLoanBalance's body — the very method whose citation\n  T526 had just corrected six lines above. Its true range is :409-411.\n\n  WHY THIS IS A FINDING AND NOT MERELY MORE WORK: T526 asserted a systemic cause — \"roughly a 12-14\n  line offset in this region\" — WITHOUT TESTING IT against a single neighbour, and the assertion is\n  false: the drift is +12, +14, and +38 further down (420 -> 458). One neighbouring check would have\n  falsified it. A wrong theory of the cause is worse than no theory, because it makes the unswept\n  remainder look accounted for.\n\n  ACCEPTANCE, checkable: every `[VERIFIED: RepaymentPeriod.java:a-b]` in the file resolves to its\n  method's signature-to-closing-brace span, AND the Java at that span supports the Go sentence above\n  it. Where it does NOT support it, that is a SUBSTANTIVE finding — report it, do not silently\n  re-point the range at whatever happens to match. Say how many you checked and how many moved.\n\nCONDITION 2 (MINOR). doc.go now says the savings fold is \"the same shape as the four sites above\".\nFalse for three of the four: UpdateOutstandingLoanBalance and AddBalanceCorrectionAmount are\n*InterestPeriod POINTER-receiver mutations of live objects, not folds over a copy; only\ncopyWithoutPaidAmounts is comparable. The sentence conflates receiver semantics with persistence\nINSIDE THE SENTENCE WRITTEN TO FIX EXACTLY THAT CONFLATION. Strike or qualify it. Do NOT weaken the\nsurrounding argument, which T529 independently verified as TRUE and better grounded than before:\naccount_balance_derived really is reachable from the folded field via PostgresSummaryRepository.Upsert.\n\nSCOPE GUARD: nexus/internal/apps/loanproduct/ and your handoff ONLY. Do NOT edit\nnexus/internal/apps/savings/, .softhouse/conformance.sh, or .softhouse/guards/ledgerguard/ — each is\nedited by commits that exist on exactly one machine and cannot be read here.",
+   "dispatched_at": "2026-09-04T12:48:55Z",
+   "dispatched_by_fire": "cloud-20260904-1200",
    "note": "dispatched by cloud fire cloud-20260904-1200 into an isolated worktree"
+  },
+  {
+   "id": "T531",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "role": "reviewer",
+   "contract_independent": true,
+   "branch": "",
+   "attempts": 0,
+   "dependencies": [
+    "T530"
+   ],
+   "fire": "cloud-20260904-1200",
+   "files_hint": [
+    ".softhouse/reviews/t531-review-t530/REVIEW.md"
+   ],
+   "title": "INDEPENDENT review of T530 — the citation sweep, re-derived row by row rather than spot-checked",
+   "description": "INDEPENDENT review of T530. Assume defects exist. Do not read T530's handoff as evidence.\n\n  1. RE-DERIVE THE WHOLE TABLE, not a sample. T530's subject is citation integrity, so a review that\n     spot-checks it reproduces the very defect under repair — T526 fixed two and asserted the rest\n     followed a pattern, and T529 falsified that by checking neighbours. Open\n     /home/user/fineract @ 426a23544 and resolve EVERY `[VERIFIED: RepaymentPeriod.java:a-b]` in\n     nexus/internal/apps/loanproduct/repaymentperiod.go yourself. Report your own count against T530's.\n  2. RANGES THAT RESOLVE ARE NOT RANGES THAT SUPPORT. For each corrected citation, read the Java and\n     decide whether it actually backs the Go sentence above it. A range re-pointed at code that merely\n     LOOKS similar is the failure mode here — especially on the money paths, where you must re-derive\n     the arithmetic operation-for-operation rather than matching method names.\n  3. DID IT REPORT SUBSTANTIVE DIVERGENCES, or quietly re-point them? T530 was told that a citation\n     whose Java does not support the claim is a FINDING. Check for a range that moved to make a\n     mismatch disappear.\n  4. CONDITION 2: verify no surviving equivalence between a value-receiver fold and pointer-receiver\n     mutations, AND that the surrounding reachability argument (account_balance_derived via\n     PostgresSummaryRepository.Upsert) is intact — T529 verified it end-to-end and it must not have\n     been collateral damage.\n  5. SCOPE: `git diff --stat` in the MERGE-BASE form. savings/, conformance.sh and ledgerguard/ must\n     be untouched.\n  Verdict: APPROVED / ACCEPT WITH CONDITIONS / REJECT, findings rated MINOR/MAJOR/CRITICAL."
   }
  ],
  "cross_corroboration": {
