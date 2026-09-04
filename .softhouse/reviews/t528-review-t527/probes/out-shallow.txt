@@ -1,0 +1,10 @@
+merged sha: 5d2f432bd2c6
+
+BASELINE full clone                -> exit 0  CLEAN
+s1 is-shallow before: true
+S1 shallow, tool as shipped        -> exit 0  ['check-branch-published: CLEAN']
+   is-shallow after: false
+S2 shallow, --unshallow fails      -> exit 3  ['check-branch-published: REFUSE -- CANNOT ESTABLISH ORIGIN', 'reason: REPOSITORY IS SHALLOW AND COULD NOT BE DEEPENED']
+S3 shallow, PROBE fails (tool thinks it is deep)
+   -> exit 2  ['check-branch-published: REFUSE -- 2 claim(s) origin has never heard of', 'UNBACKED CLAIMS -- the record asserts work that is not on origin:', '  UNBACKED-BRANCH    TM        softhouse/TM-merged']
+   VERDICT: acceptable -- it did not pass

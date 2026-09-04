@@ -1,0 +1,38 @@
+PRUNED-PROVED waivers today          : 73
+survive the SMALL fix                : 66
+would newly become findings          : 7
+   T353     softhouse/T353-t342-conditions
+   T357     softhouse/T357-a2-11-section1-red
+   T358     softhouse/T358-t323-conditions
+   T361     softhouse/T361-review-t353
+   T387     softhouse/T387-review-t360
+   T477     softhouse/T466-skipwt-smudge
+   T477     softhouse/T477-t473-repair
+case                       LANDING  want     
+--------------------------------------------------------------
+A-merge-base-plain         False    False    ok
+     done and scope-checked (merge base a1b2c3d4)
+B-merge-base-COMMIT        False    False    ok
+     done; merge-base commit a1b2c3d4, scope clean
+C-branched-from-at         False    False    ok
+     branched from main @ a1b2c3d4; work is on the branch
+E-base-branch-paren        False    False    ok
+     based on softhouse/TOTHER-x (a1b2c3d4) -- stacked on top
+G-review-cites-other       False    False    ok
+     reviewed T400 which landed a1b2c3d4; my own work is on the branch
+H-diverges-at              False    False    ok
+     diverges from origin/main at commit a1b2c3d4
+K-stack-region-base        False    False    ok
+     stack a1b2c3d4 (T400 base) -> my work
+L-supersedes               True     False    *** STILL BROKEN ***
+     supersedes the work merged as a1b2c3d4 by T400
+I-genuine-landing          True     True     ok
+     landed a1b2c3d4 on softhouse/TN-mine
+P1-pipeline-MERGED-at      True     True     ok
+     MERGED at a1b2c3d4 by fire 20260828-080001
+P2-pipeline-COMPLETE-at    True     True     ok
+     COMPLETE @ a1b2c3d4, scope clean
+P3-tip                     True     True     ok
+     tip a1b2c3d4, 3 files
+
+1 case(s) still wrong

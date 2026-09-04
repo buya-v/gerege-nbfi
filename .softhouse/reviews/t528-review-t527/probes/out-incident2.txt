@@ -1,0 +1,24 @@
+1. before any baseline           -> exit 2
+     UNBACKED-BRANCH    T540      softhouse/T540-critical-path
+     UNBACKED-COMMIT    T540      deadbe1f
+
+2. `--write-baseline` (what an agent staring at a red guard would reach for)
+   exit 0
+     wrote 2 waiver(s) to /tmp/t528-fc-az9lqnl0/inc2/work/.softhouse/capture/t527-branch-published/baseline.json
+     WAIVE  UNBACKED-COMMIT    T540      deadbe1f
+     WAIVE  UNBACKED-BRANCH    T540      softhouse/T540-critical-path
+     REFUSED TO WAIVE 0 finding(s) -- these are the 2026-09-04 incident and no regeneration may launder them:
+
+3. re-run after the regeneration -> exit 0
+     ['check-branch-published: CLEAN']
+
+   INCIDENT #2 IS NOW LAUNDERED -- the guard is green on lost work
+
+4. does the lock-out list protect T540? entries now in the baseline:
+     T540   deadbe1f                           UNBACKED-COMMIT
+     T540   softhouse/T540-critical-path       UNBACKED-BRANCH
+   refuses_to_waive = {'tasks': ['T508', 'T509', 'T510', 'T512', 'T515', 'T520', 'T522', 'T523'], 'commits': ['1abd3a11', '857dd4d8', '5c4233fc', '8ff5ff15', '84dc208e']}
+
+5. case sensitivity of the lock-out: a record spelling the id 't508'
+     WAIVED: ['WAIVE  UNBACKED-BRANCH    t508      softhouse/T508-journalentry-insert-schema']
+     KEPT  : ['KEEP   UNBACKED-COMMIT    t508      1abd3a11']
