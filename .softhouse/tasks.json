@@ -8250,7 +8250,7 @@
   },
   {
    "id": "T530",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -8268,18 +8268,19 @@
    "description": "Apply T529's two conditions on T526. Neither blocked the merge; both are real.\n\nCONDITION 1 (MAJOR). Roughly EIGHTEEN further `[VERIFIED: RepaymentPeriod.java:...]` citations in\nnexus/internal/apps/loanproduct/repaymentperiod.go are stale, most pointing at a DIFFERENT METHOD.\nT529's inventory table is in .softhouse/reviews/t529-review-t526/REVIEW.md — treat it as a lead, not\nas truth, and re-derive every row yourself against /home/user/fineract @ 426a23544 (detached).\n\n  The sharpest instance, DRIVER-VERIFIED by reading both spans: `AddPaidInterestAmount` (Go ~:360)\n  cites :395-397, which lies INSIDE getOutstandingLoanBalance's body — the very method whose citation\n  T526 had just corrected six lines above. Its true range is :409-411.\n\n  WHY THIS IS A FINDING AND NOT MERELY MORE WORK: T526 asserted a systemic cause — \"roughly a 12-14\n  line offset in this region\" — WITHOUT TESTING IT against a single neighbour, and the assertion is\n  false: the drift is +12, +14, and +38 further down (420 -> 458). One neighbouring check would have\n  falsified it. A wrong theory of the cause is worse than no theory, because it makes the unswept\n  remainder look accounted for.\n\n  ACCEPTANCE, checkable: every `[VERIFIED: RepaymentPeriod.java:a-b]` in the file resolves to its\n  method's signature-to-closing-brace span, AND the Java at that span supports the Go sentence above\n  it. Where it does NOT support it, that is a SUBSTANTIVE finding — report it, do not silently\n  re-point the range at whatever happens to match. Say how many you checked and how many moved.\n\nCONDITION 2 (MINOR). doc.go now says the savings fold is \"the same shape as the four sites above\".\nFalse for three of the four: UpdateOutstandingLoanBalance and AddBalanceCorrectionAmount are\n*InterestPeriod POINTER-receiver mutations of live objects, not folds over a copy; only\ncopyWithoutPaidAmounts is comparable. The sentence conflates receiver semantics with persistence\nINSIDE THE SENTENCE WRITTEN TO FIX EXACTLY THAT CONFLATION. Strike or qualify it. Do NOT weaken the\nsurrounding argument, which T529 independently verified as TRUE and better grounded than before:\naccount_balance_derived really is reachable from the folded field via PostgresSummaryRepository.Upsert.\n\nSCOPE GUARD: nexus/internal/apps/loanproduct/ and your handoff ONLY. Do NOT edit\nnexus/internal/apps/savings/, .softhouse/conformance.sh, or .softhouse/guards/ledgerguard/ — each is\nedited by commits that exist on exactly one machine and cannot be read here.",
    "dispatched_at": "2026-09-04T12:48:55Z",
    "dispatched_by_fire": "cloud-20260904-1200",
-   "note": "dispatched by cloud fire cloud-20260904-1200 into an isolated worktree"
+   "note": "landed 0d4b0e00 on softhouse/T530-t529-conditions, branch VERIFIED on origin. 52 citations checked, 38 moved, 12 already correct, 2 tightened, 1 substantive mismatch. DRIVER-VERIFIED BY MEASUREMENT, not by reading the report: (a) diffed added/removed lines and confirmed NOTHING executable changed — the single non-comment line is a citation inside a t.Fatalf FAILURE MESSAGE (:173-197 -> :173-198), a diagnostic string, not a compared value, so no vector can move; (b) confirmed the not-swept finding by reading the file myself: InterestPeriod.java is 237 lines, the cited :252-254 IS past EOF, and isFirstInterestPeriod() really is at :197-199. IT REFUSED THE TEMPTING MOVE: on FindInterestPeriod the Java did not support the Go sentence, and it reported a DIVERGENCE block rather than re-pointing the range at whatever matched — the single worst outcome available to this task, declined. It also declined to half-sweep InterestPeriod.java, on the ground that half-auditing a second file reproduces the defect under repair. Both filed: T532 (the InterestPeriod sweep) and T533 (the segment-assignment divergence, needs vectors). Awaiting independent review T531.",
+   "tip": "0d4b0e00"
   },
   {
    "id": "T531",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
    "role": "reviewer",
    "contract_independent": true,
-   "branch": "",
-   "attempts": 0,
+   "branch": "softhouse/T531-review-t530",
+   "attempts": 1,
    "dependencies": [
     "T530"
    ],
@@ -8288,7 +8289,53 @@
     ".softhouse/reviews/t531-review-t530/REVIEW.md"
    ],
    "title": "INDEPENDENT review of T530 — the citation sweep, re-derived row by row rather than spot-checked",
-   "description": "INDEPENDENT review of T530. Assume defects exist. Do not read T530's handoff as evidence.\n\n  1. RE-DERIVE THE WHOLE TABLE, not a sample. T530's subject is citation integrity, so a review that\n     spot-checks it reproduces the very defect under repair — T526 fixed two and asserted the rest\n     followed a pattern, and T529 falsified that by checking neighbours. Open\n     /home/user/fineract @ 426a23544 and resolve EVERY `[VERIFIED: RepaymentPeriod.java:a-b]` in\n     nexus/internal/apps/loanproduct/repaymentperiod.go yourself. Report your own count against T530's.\n  2. RANGES THAT RESOLVE ARE NOT RANGES THAT SUPPORT. For each corrected citation, read the Java and\n     decide whether it actually backs the Go sentence above it. A range re-pointed at code that merely\n     LOOKS similar is the failure mode here — especially on the money paths, where you must re-derive\n     the arithmetic operation-for-operation rather than matching method names.\n  3. DID IT REPORT SUBSTANTIVE DIVERGENCES, or quietly re-point them? T530 was told that a citation\n     whose Java does not support the claim is a FINDING. Check for a range that moved to make a\n     mismatch disappear.\n  4. CONDITION 2: verify no surviving equivalence between a value-receiver fold and pointer-receiver\n     mutations, AND that the surrounding reachability argument (account_balance_derived via\n     PostgresSummaryRepository.Upsert) is intact — T529 verified it end-to-end and it must not have\n     been collateral damage.\n  5. SCOPE: `git diff --stat` in the MERGE-BASE form. savings/, conformance.sh and ledgerguard/ must\n     be untouched.\n  Verdict: APPROVED / ACCEPT WITH CONDITIONS / REJECT, findings rated MINOR/MAJOR/CRITICAL."
+   "description": "INDEPENDENT review of T530. Assume defects exist. Do not read T530's handoff as evidence.\n\n  1. RE-DERIVE THE WHOLE TABLE, not a sample. T530's subject is citation integrity, so a review that\n     spot-checks it reproduces the very defect under repair — T526 fixed two and asserted the rest\n     followed a pattern, and T529 falsified that by checking neighbours. Open\n     /home/user/fineract @ 426a23544 and resolve EVERY `[VERIFIED: RepaymentPeriod.java:a-b]` in\n     nexus/internal/apps/loanproduct/repaymentperiod.go yourself. Report your own count against T530's.\n  2. RANGES THAT RESOLVE ARE NOT RANGES THAT SUPPORT. For each corrected citation, read the Java and\n     decide whether it actually backs the Go sentence above it. A range re-pointed at code that merely\n     LOOKS similar is the failure mode here — especially on the money paths, where you must re-derive\n     the arithmetic operation-for-operation rather than matching method names.\n  3. DID IT REPORT SUBSTANTIVE DIVERGENCES, or quietly re-point them? T530 was told that a citation\n     whose Java does not support the claim is a FINDING. Check for a range that moved to make a\n     mismatch disappear.\n  4. CONDITION 2: verify no surviving equivalence between a value-receiver fold and pointer-receiver\n     mutations, AND that the surrounding reachability argument (account_balance_derived via\n     PostgresSummaryRepository.Upsert) is intact — T529 verified it end-to-end and it must not have\n     been collateral damage.\n  5. SCOPE: `git diff --stat` in the MERGE-BASE form. savings/, conformance.sh and ledgerguard/ must\n     be untouched.\n  Verdict: APPROVED / ACCEPT WITH CONDITIONS / REJECT, findings rated MINOR/MAJOR/CRITICAL.",
+   "dispatched_at": "2026-09-04T13:00:33Z",
+   "dispatched_by_fire": "cloud-20260904-1200",
+   "note": "dispatched by cloud fire cloud-20260904-1200 into an isolated worktree"
+  },
+  {
+   "id": "T532",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "contract_independent": true,
+   "branch": "",
+   "attempts": 0,
+   "dependencies": [
+    "T531"
+   ],
+   "fire": "cloud-20260904-1200",
+   "files_hint": [
+    "nexus/internal/apps/loanproduct/",
+    ".softhouse/handoff/T532-interestperiod-citations.md"
+   ],
+   "title": "THE SECOND FILE HAS THE SAME DEFECT AND IT IS WORSE — 23 of 28 InterestPeriod.java citations fail to resolve, 10 of them past the end of the file",
+   "description": "Found by T530 while sweeping RepaymentPeriod.java, and DELIBERATELY NOT SWEPT by it —\ncorrectly: half-auditing a second file reproduces the exact defect under repair. It needs its own task.\n\nDRIVER-VERIFIED, by reading the pinned file rather than the report:\n  /home/user/fineract/.../calc/data/InterestPeriod.java is 237 LINES LONG.\n  `IsFirstInterestPeriod` cites :252-254 — FIFTEEN LINES PAST THE END OF THE FILE.\n  The real isFirstInterestPeriod() is at :197-199. [both spans read directly]\n\nT530 measured 23 of 28 citations failing to resolve, 10 citing past EOF. Re-derive that count\nyourself; treat it as a lead, not as truth.\n\nA citation past the end of the file is the strongest possible evidence that the block was NEVER\nderived against this commit — so DO NOT look for an offset to apply. T530 established on\nRepaymentPeriod.java that the error CHANGES SIGN (-14 to +243) and is non-monotonic, and that T526's\n\"12-14 line offset\" theory was false and actively harmful, because a wrong theory of the cause makes\nthe unswept remainder look accounted for. Read every range.\n\nMETHOD, adopt T530's since it was independently better than hand-enumeration: derive method spans\nMECHANICALLY (brace counting) rather than by grep. T530's grep-based pass MISSED FIVE citations that\nsit on comment continuation lines not containing the word VERIFIED, and only the mechanical pass\nfound them. Report the two counts separately so the gap stays visible.\n\nACCEPTANCE: every `[VERIFIED: InterestPeriod.java:a-b]` resolves to its method's\nsignature-to-closing-brace span AND the Java there supports the Go sentence above it. Where it does\nNOT support it, that is a SUBSTANTIVE finding — report it as a DIVERGENCE block and leave behaviour\nunchanged, exactly as T530 did for FindInterestPeriod. NEVER re-point a range to make a mismatch\ndisappear.\n\nSCOPE: nexus/internal/apps/loanproduct/ and your handoff only. Forbidden: savings/, conformance.sh,\nguards/ledgerguard/ — each edited by commits that exist on one machine and cannot be read here.\nComments and citations only; if you believe an executable line must change, STOP and file it."
+  },
+  {
+   "id": "T533",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "role": "coder",
+   "contract_independent": false,
+   "requires_local_fire": true,
+   "blocked_reason": "oracle_unreachable",
+   "branch": "",
+   "attempts": 0,
+   "dependencies": [],
+   "fire": "cloud-20260904-1200",
+   "files_hint": [
+    "nexus/internal/apps/loanproduct/",
+    ".softhouse/vectors/",
+    ".softhouse/capture/"
+   ],
+   "title": "FindInterestPeriod: the Go sentence claimed inclusive-on-both-ends and the oracle is FROM-EXCLUSIVE, and it reduces to the LAST match not the first — latent, no caller, needs vectors",
+   "description": "FILED PARKED — needs golden vectors from the live reference oracle (Fineract), which\nthe cloud fire cannot reach. Unpark on the next local fire.\n\nFound by T530 while applying T529's conditions, and handled exactly right: it did NOT re-point the\ncitation to hide the mismatch and did NOT change behaviour. It corrected the range to :442-447,\nreplaced the false sentence with an explicit DIVERGENCE block, and filed this.\n\nTHE TWO DIVERGENCES, as reported (RE-DERIVE BOTH before writing code):\n  1. The Go sentence claimed the interval is \"inclusive on both ends\". Fineract's\n     isInPeriod(..., isFirstRepaymentPeriod() && ip.isFirstInterestPeriod()) is FROM-EXCLUSIVE for\n     every segment except the first segment of the first repayment period\n     [reported at LoanRepaymentScheduleProcessingWrapper.java:251-254 — verify this citation too,\n     given what this fire has just learned about this codebase's citations].\n  2. It reduces to the LAST match, not the first.\n\nWHY IT IS PARKED AND NOT URGENT: the function has NO CALLER in the Go tree, so nothing observable\ndepends on it today. WHY IT IS NOT DISMISSED: it is a transaction-to-segment ASSIGNMENT rule, so the\nmoment it acquires a caller it decides which period a repayment lands in — money, and a boundary\ncase at that. A from-exclusive vs inclusive boundary differs on exactly the dates a repayment is\nmost likely to fall on.\n\nREQUIRED: golden vectors captured from the reference oracle covering (a) a transaction ON the from\nboundary of a non-first segment, (b) the same on the first segment of the first repayment period,\n(c) a date matching MORE THAN ONE segment, to pin first-vs-last. No Go change lands before the\nvectors exist — CLAUDE.md: no ported context is correct until its vectors match. NEVER synthesise a\nvector you did not observe.\n\nT530 notes both helpers already exist and the repair is small. That is a reason to do it properly,\nnot quickly."
   }
  ],
  "cross_corroboration": {

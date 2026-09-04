@@ -4,7 +4,7 @@
   "pid": 7981,
   "fire": "cloud-20260904-1200",
   "started_at": "2026-09-04T12:35:00Z",
-  "heartbeat": "2026-09-04T12:48:55Z",
+  "heartbeat": "2026-09-04T13:00:33Z",
   "heartbeat_note": "CORROBORATION ONLY. Authoritative liveness is the newest commit on origin/main (STEP 0).",
   "took_over_from": {
     "holder": "local-launchd",
@@ -20,6 +20,7 @@
     "T526",
     "T527",
     "T529",
-    "T530"
+    "T530",
+    "T531"
   ]
 }
