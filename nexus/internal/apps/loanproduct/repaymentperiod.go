@@ -10,7 +10,7 @@ import (
 // progressive-loan schedule whose due-interest, due-principal and outstanding
 // balance are DERIVED from the interest-period segments and the paid amounts.
 //
-// [VERIFIED: RepaymentPeriod.java:60-97 for the field list.]
+// [VERIFIED: RepaymentPeriod.java:46-113 for the field list.]
 //
 // Unlike the schedule GENERATOR's private repayment period (in
 // nexus/internal/apps/loanschedule), this value object is public and mutation
@@ -55,7 +55,7 @@ type RepaymentPeriod struct {
 
 // NewRepaymentPeriod builds a repayment period with one empty interest period
 // spanning [from, due], mirroring RepaymentPeriod.create
-// [VERIFIED: RepaymentPeriod.java:141-147]. emi is the level installment and
+// [VERIFIED: RepaymentPeriod.java:143-151]. emi is the level installment and
 // becomes both emi and originalEmi; all paid and credited cells start at zero.
 func NewRepaymentPeriod(previous *RepaymentPeriod, from, due time.Time, emi Money,
 	rounding Rounding, currency Currency, method InterestMethod) *RepaymentPeriod {
@@ -102,7 +102,7 @@ func NewInterestPeriod(p *RepaymentPeriod, from, due time.Time) *InterestPeriod 
 }
 
 // Previous returns the preceding repayment period, or nil for the first period
-// [VERIFIED: RepaymentPeriod.java:214-216].
+// [VERIFIED: RepaymentPeriod.java:200-202].
 func (p *RepaymentPeriod) Previous() *RepaymentPeriod { return p.previous }
 
 // Zero returns the currency- and rounding-correct zero money value.
@@ -115,11 +115,11 @@ func (p *RepaymentPeriod) Currency() Currency { return p.currency }
 // InterestMethod returns the interest method the due-interest derivation reads.
 func (p *RepaymentPeriod) InterestMethod() InterestMethod { return p.interestMethod }
 
-// Emi returns the installment, zero when absent [VERIFIED: RepaymentPeriod.java:417-419].
+// Emi returns the installment, zero when absent [VERIFIED: RepaymentPeriod.java:501-503].
 func (p *RepaymentPeriod) Emi() Money { return p.emi }
 
 // OriginalEmi returns the original installment before any re-adjustment, zero
-// when absent [VERIFIED: RepaymentPeriod.java:421-423].
+// when absent [VERIFIED: RepaymentPeriod.java:505-507].
 func (p *RepaymentPeriod) OriginalEmi() Money { return p.originalEmi }
 
 // PaidPrincipal returns paid principal, zero when absent.
@@ -152,12 +152,12 @@ func (p *RepaymentPeriod) CreditedInterestMovedDueReAge() Money {
 	return p.creditedInterestMovedDueReAge
 }
 
-// FirstInterestPeriod returns the first segment [VERIFIED: RepaymentPeriod.java:292-294].
+// FirstInterestPeriod returns the first segment [VERIFIED: RepaymentPeriod.java:433-435].
 func (p *RepaymentPeriod) FirstInterestPeriod() *InterestPeriod {
 	return p.InterestPeriods[0]
 }
 
-// LastInterestPeriod returns the last segment [VERIFIED: RepaymentPeriod.java:296-299].
+// LastInterestPeriod returns the last segment [VERIFIED: RepaymentPeriod.java:437-440].
 func (p *RepaymentPeriod) LastInterestPeriod() *InterestPeriod {
 	return p.InterestPeriods[len(p.InterestPeriods)-1]
 }
@@ -173,7 +173,10 @@ func (p *RepaymentPeriod) interestPeriodIndex(ip *InterestPeriod) int {
 }
 
 // RateFactorPlus1 is the sum of (rate factor + 1) over the segments
-// [VERIFIED: RepaymentPeriod.java:218-229].
+// [VERIFIED: RepaymentPeriod.java:209-218 — the span covers both halves the
+// oracle splits this across: the memoised accessor getRateFactorPlus1 at
+// :209-214 and the computation calculateRateFactorPlus1 at :216-218, which is
+// the reduce(BigDecimal.ONE, BigDecimal::add) this function reproduces].
 func (p *RepaymentPeriod) RateFactorPlus1() *big.Rat {
 	sum := big.NewRat(1, 1)
 	for _, ip := range p.InterestPeriods {
@@ -183,13 +186,13 @@ func (p *RepaymentPeriod) RateFactorPlus1() *big.Rat {
 }
 
 // CalculatedDueInterest returns the calculated due interest plus credited
-// interest, wrapped in Money [VERIFIED: RepaymentPeriod.java:232-241].
+// interest, wrapped in Money [VERIFIED: RepaymentPeriod.java:226-233].
 func (p *RepaymentPeriod) CalculatedDueInterest() Money {
 	return p.CalculateCalculatedDueInterest()
 }
 
 // CalculateCalculatedDueInterest is calculateCalculatedDueInterest
-// [VERIFIED: RepaymentPeriod.java:262-272]: the exact sum of the segments'
+// [VERIFIED: RepaymentPeriod.java:252-265]: the exact sum of the segments'
 // raw due interest, normalised to Money, plus fixed interest, future
 // unrecognized interest and the previous period's unrecognized interest, all
 // floored at zero.
@@ -211,7 +214,7 @@ func (p *RepaymentPeriod) CalculateCalculatedDueInterest() Money {
 }
 
 // CalculateFixedInterestTillDate prorates the fixed interest over the window
-// [VERIFIED: RepaymentPeriod.java:243-261].
+// [VERIFIED: RepaymentPeriod.java:235-250].
 func (p *RepaymentPeriod) CalculateFixedInterestTillDate() Money {
 	calculated := p.Zero()
 	if !p.FixedInterest().IsZero() {
@@ -234,7 +237,7 @@ func (p *RepaymentPeriod) CalculateFixedInterestTillDate() Money {
 }
 
 // DueInterest returns due interest plus credited interest or paid interest,
-// whichever applies [VERIFIED: RepaymentPeriod.java:274-294].
+// whichever applies [VERIFIED: RepaymentPeriod.java:272-286].
 func (p *RepaymentPeriod) DueInterest() Money {
 	if p.InterestPaymentGrace {
 		return p.PaidInterest()
@@ -250,20 +253,20 @@ func (p *RepaymentPeriod) DueInterest() Money {
 
 // EmiPlusCreditedAmountsPlusFutureUnrecognizedInterest is the installment plus
 // credited amounts and future unrecognized interest
-// [VERIFIED: RepaymentPeriod.java:299-301].
+// [VERIFIED: RepaymentPeriod.java:293-295].
 func (p *RepaymentPeriod) EmiPlusCreditedAmountsPlusFutureUnrecognizedInterest() Money {
 	return p.Emi().plus(p.TotalCreditedAmount()).plus(p.FutureUnrecognizedInterest())
 }
 
 // CalculatedDuePrincipal is EMI plus credited amounts minus calculated due
-// interest, floored at zero [VERIFIED: RepaymentPeriod.java:306-309].
+// interest, floored at zero [VERIFIED: RepaymentPeriod.java:302-305].
 func (p *RepaymentPeriod) CalculatedDuePrincipal() Money {
 	return p.EmiPlusCreditedAmountsPlusFutureUnrecognizedInterest().
 		minus(p.CalculatedDueInterest()).negToZero()
 }
 
 // CreditedPrincipal is the floored sum of credited principal over the segments
-// [VERIFIED: RepaymentPeriod.java:314-317].
+// [VERIFIED: RepaymentPeriod.java:312-316].
 func (p *RepaymentPeriod) CreditedPrincipal() Money {
 	res := p.Zero()
 	for _, ip := range p.InterestPeriods {
@@ -273,7 +276,7 @@ func (p *RepaymentPeriod) CreditedPrincipal() Money {
 }
 
 // CreditedInterest is the floored sum of credited interest over the segments
-// [VERIFIED: RepaymentPeriod.java:322-325].
+// [VERIFIED: RepaymentPeriod.java:323-327].
 func (p *RepaymentPeriod) CreditedInterest() Money {
 	res := p.Zero()
 	for _, ip := range p.InterestPeriods {
@@ -283,7 +286,7 @@ func (p *RepaymentPeriod) CreditedInterest() Money {
 }
 
 // CapitalizedIncomePrincipal is the floored sum of capitalized income principal
-// over the segments [VERIFIED: RepaymentPeriod.java:330-333].
+// over the segments [VERIFIED: RepaymentPeriod.java:334-338].
 func (p *RepaymentPeriod) CapitalizedIncomePrincipal() Money {
 	res := p.Zero()
 	for _, ip := range p.InterestPeriods {
@@ -293,7 +296,7 @@ func (p *RepaymentPeriod) CapitalizedIncomePrincipal() Money {
 }
 
 // DuePrincipal is EMI plus credited amounts minus due interest, floored at zero,
-// or paid principal, whichever is greater [VERIFIED: RepaymentPeriod.java:338-343].
+// or paid principal, whichever is greater [VERIFIED: RepaymentPeriod.java:345-350].
 func (p *RepaymentPeriod) DuePrincipal() Money {
 	return moneyMax(
 		p.EmiPlusCreditedAmountsPlusFutureUnrecognizedInterest().minus(p.DueInterest()).negToZero(),
@@ -301,7 +304,7 @@ func (p *RepaymentPeriod) DuePrincipal() Money {
 }
 
 // TotalCreditedAmount is credited principal plus credited interest, less the
-// amounts moved to re-aging [VERIFIED: RepaymentPeriod.java:348-352].
+// amounts moved to re-aging [VERIFIED: RepaymentPeriod.java:357-360].
 func (p *RepaymentPeriod) TotalCreditedAmount() Money {
 	return p.CreditedPrincipal().
 		plus(p.CreditedInterest()).
@@ -310,25 +313,25 @@ func (p *RepaymentPeriod) TotalCreditedAmount() Money {
 }
 
 // TotalPaidAmount is paid principal plus paid interest
-// [VERIFIED: RepaymentPeriod.java:357-359].
+// [VERIFIED: RepaymentPeriod.java:367-369].
 func (p *RepaymentPeriod) TotalPaidAmount() Money {
 	return p.PaidPrincipal().plus(p.PaidInterest())
 }
 
 // IsFullyPaid reports whether the installment plus credited amounts equals the
-// total paid [VERIFIED: RepaymentPeriod.java:361-363].
+// total paid [VERIFIED: RepaymentPeriod.java:371-373].
 func (p *RepaymentPeriod) IsFullyPaid() bool {
 	return p.EmiPlusCreditedAmountsPlusFutureUnrecognizedInterest().isEqualTo(p.TotalPaidAmount())
 }
 
 // UnrecognizedInterest is the calculated due interest that had no room in the
-// installment, floored at zero [VERIFIED: RepaymentPeriod.java:369-371].
+// installment, floored at zero [VERIFIED: RepaymentPeriod.java:381-383].
 func (p *RepaymentPeriod) UnrecognizedInterest() Money {
 	return p.CalculatedDueInterest().minus(p.DueInterest()).negToZero()
 }
 
 // CreditedAmounts is the sum of the segments' principal-like credited amounts
-// [VERIFIED: RepaymentPeriod.java:373-375].
+// [VERIFIED: RepaymentPeriod.java:385-387].
 func (p *RepaymentPeriod) CreditedAmounts() Money {
 	res := p.Zero()
 	for _, ip := range p.InterestPeriods {
@@ -357,14 +360,14 @@ func (p *RepaymentPeriod) AddPaidPrincipalAmount(paid Money) {
 }
 
 // AddPaidInterestAmount accumulates paid interest
-// [VERIFIED: RepaymentPeriod.java:395-397].
+// [VERIFIED: RepaymentPeriod.java:409-411].
 func (p *RepaymentPeriod) AddPaidInterestAmount(paid Money) {
 	p.paidInterest = p.PaidInterest().plus(paid)
 }
 
 // InitialBalanceForEmiRecalculation is the previous period's outstanding
 // balance (or zero) plus this period's disbursed and capitalized amounts
-// [VERIFIED: RepaymentPeriod.java:399-415].
+// [VERIFIED: RepaymentPeriod.java:413-427].
 func (p *RepaymentPeriod) InitialBalanceForEmiRecalculation() Money {
 	var initial Money
 	if p.previous != nil {
@@ -382,19 +385,19 @@ func (p *RepaymentPeriod) InitialBalanceForEmiRecalculation() Money {
 }
 
 // OutstandingInterest is due interest minus paid interest, floored at zero
-// [VERIFIED: RepaymentPeriod.java:420-422].
+// [VERIFIED: RepaymentPeriod.java:458-460].
 func (p *RepaymentPeriod) OutstandingInterest() Money {
 	return p.DueInterest().minus(p.PaidInterest()).negToZero()
 }
 
 // OutstandingPrincipal is due principal minus paid principal, floored at zero
-// [VERIFIED: RepaymentPeriod.java:424-426].
+// [VERIFIED: RepaymentPeriod.java:462-464].
 func (p *RepaymentPeriod) OutstandingPrincipal() Money {
 	return p.DuePrincipal().minus(p.PaidPrincipal()).negToZero()
 }
 
 // ResetDerivedComponents zeroes the paid amounts, leaving the schedule cells
-// intact [VERIFIED: RepaymentPeriod.java:428-431].
+// intact [VERIFIED: RepaymentPeriod.java:466-469].
 func (p *RepaymentPeriod) ResetDerivedComponents() {
 	p.paidInterest = moneyZero(p.currency, p.rounding)
 	p.paidPrincipal = moneyZero(p.currency, p.rounding)
@@ -403,7 +406,7 @@ func (p *RepaymentPeriod) ResetDerivedComponents() {
 // calculateTotalDisbursedAndCapitalizedIncomeAmountTillGivenPeriod is the total
 // disbursed and capitalized amount through the given segment, inclusive of the
 // period's carried totals and of every segment BEFORE the given one whose due
-// date differs from the period's from-date [VERIFIED: RepaymentPeriod.java:436-449].
+// date differs from the period's from-date [VERIFIED: RepaymentPeriod.java:476-492].
 func (p *RepaymentPeriod) calculateTotalDisbursedAndCapitalizedIncomeAmountTillGivenPeriod(till *InterestPeriod) Money {
 	res := p.TotalDisbursedAmount().plus(p.TotalCapitalizedIncomeAmount())
 	for _, ip := range p.InterestPeriods {
@@ -419,18 +422,45 @@ func (p *RepaymentPeriod) calculateTotalDisbursedAndCapitalizedIncomeAmountTillG
 }
 
 // MoveOutstandingDueToReAging records the current credited amounts as moved to
-// re-aging [VERIFIED: RepaymentPeriod.java:450-453].
+// re-aging [VERIFIED: RepaymentPeriod.java:533-536].
 func (p *RepaymentPeriod) MoveOutstandingDueToReAging() {
 	p.creditedPrincipalMovedDueReAge = p.CreditedPrincipal()
 	p.creditedInterestMovedDueReAge = p.CreditedInterest()
 }
 
 // IsFirstRepaymentPeriod reports whether this period has no predecessor
-// [VERIFIED: RepaymentPeriod.java:206-208].
+// [VERIFIED: RepaymentPeriod.java:449-451].
 func (p *RepaymentPeriod) IsFirstRepaymentPeriod() bool { return p.previous == nil }
 
-// FindInterestPeriod returns the segment whose [from, due] window contains
-// transactionDate, inclusive on both ends [VERIFIED: RepaymentPeriod.java:436-443].
+// FindInterestPeriod returns the FIRST segment whose [from, due] window
+// contains transactionDate, inclusive on both ends.
+//
+// DIVERGENCE FROM THE ORACLE — DO NOT CITE THIS AS PARITY. The oracle's
+// findInterestPeriod [VERIFIED: RepaymentPeriod.java:442-447] differs on two
+// axes, and this port matches it on neither:
+//
+//  1. BOUNDARY. The oracle filters with isInPeriod(transactionDate, from, due,
+//     isFirstRepaymentPeriod() && interestPeriod.isFirstInterestPeriod()), and
+//     that fourth argument selects the boundary rule: inclusive on both ends
+//     only for the first segment of the first repayment period, and
+//     from-EXCLUSIVE / due-inclusive everywhere else
+//     [VERIFIED: LoanRepaymentScheduleProcessingWrapper.java:251-254]. This
+//     function is unconditionally inclusive on both ends, so it accepts a
+//     transaction dated exactly on a later segment's from-date, which the
+//     oracle assigns to the PRECEDING segment.
+//  2. WHICH MATCH. The oracle terminates with .reduce((one, two) -> two),
+//     which returns the LAST match, not the first. The loop below returns the
+//     first.
+//
+// Both helpers this needs already exist and are graded: isInPeriod and
+// isDateInRangeFromExclusiveToInclusive in dates.go, and IsFirstInterestPeriod
+// in interestperiod.go. The repair was NOT made here because T530 is a
+// citation-integrity task and this is a behavioural change to a
+// transaction-to-segment assignment rule — it needs its own golden vector
+// against the oracle before the numbers move. It is latent rather than live:
+// this function has no caller anywhere in the module at the time of writing
+// (grep FindInterestPeriod). Recorded in
+// .softhouse/handoff/T530-t529-conditions.md as substantive finding 1.
 func (p *RepaymentPeriod) FindInterestPeriod(transactionDate time.Time) (*InterestPeriod, bool) {
 	for _, ip := range p.InterestPeriods {
 		if !transactionDate.Before(ip.FromDate) && !transactionDate.After(ip.DueDate) {
@@ -440,10 +470,10 @@ func (p *RepaymentPeriod) FindInterestPeriod(transactionDate time.Time) (*Intere
 	return nil, false
 }
 
-// SetEmi mutates the installment [VERIFIED: RepaymentPeriod.java @Setter].
+// SetEmi mutates the installment [VERIFIED: RepaymentPeriod.java:57-58 @Setter].
 func (p *RepaymentPeriod) SetEmi(emi Money) { p.emi = emi }
 
-// SetOriginalEmi mutates the original installment [VERIFIED: RepaymentPeriod.java @Setter].
+// SetOriginalEmi mutates the original installment [VERIFIED: RepaymentPeriod.java:59-60 @Setter].
 func (p *RepaymentPeriod) SetOriginalEmi(originalEmi Money) { p.originalEmi = originalEmi }
 
 // SetFutureUnrecognizedInterest mutates future unrecognized interest.
@@ -490,7 +520,7 @@ func (p *RepaymentPeriod) SetCurrency(c Currency) { p.currency = c }
 
 // copy is RepaymentPeriod.copy(previous, repaymentPeriod): a full deep copy with
 // the supplied predecessor and a fresh interest-period list [VERIFIED:
-// RepaymentPeriod.java:149-166].
+// RepaymentPeriod.java:153-171].
 func (p *RepaymentPeriod) copy(previous *RepaymentPeriod) *RepaymentPeriod {
 	c := &RepaymentPeriod{
 		previous:                       previous,
@@ -525,7 +555,7 @@ func (p *RepaymentPeriod) copy(previous *RepaymentPeriod) *RepaymentPeriod {
 // copyWithoutPaidAmounts is RepaymentPeriod.copyWithoutPaidAmounts(previous,
 // repaymentPeriod): the same as copy but with paid principal, paid interest and
 // future unrecognized interest zeroed, and — when interest has moved downward —
-// the paid interest promoted to fixed interest [VERIFIED: RepaymentPeriod.java:168-194].
+// the paid interest promoted to fixed interest [VERIFIED: RepaymentPeriod.java:173-198].
 func (p *RepaymentPeriod) copyWithoutPaidAmounts(previous *RepaymentPeriod) *RepaymentPeriod {
 	c := p.copy(previous)
 	c.paidPrincipal = moneyZero(c.currency, c.rounding)

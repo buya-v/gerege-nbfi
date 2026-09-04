@@ -171,7 +171,7 @@
 //     sweeps at :1647, :1654, :1667], and the oracle deliberately leaves it
 //     unrefreshed elsewhere: RepaymentPeriod.copyWithoutPaidAmounts zeroes each
 //     copied segment's balanceCorrectionAmount and does NOT recompute the
-//     balance that summand feeds [VERIFIED: RepaymentPeriod.java:173-197].
+//     balance that summand feeds [VERIFIED: RepaymentPeriod.java:173-198].
 //     Replacing the cell with an on-demand derivation would therefore CHANGE
 //     THE NUMBERS at every such point.
 //     TestOutstandingLoanBalanceIsASweptSnapshot pins exactly this property, so
@@ -300,19 +300,40 @@
 // literal or a column struct tag somewhere in the same directory — was
 // proposed, built and measured, and it has been WITHDRAWN. Moving
 // nexus/internal/apps/savings/summary.go, whose Add method folds
-// `s.AccountBalance += effect` on a value receiver [VERIFIED:
-// savings/summary.go:52-55] — a pure fold over a copy, not itself a write to
-// stored state, the same shape as the four sites above — into an
-// internal/apps/savings/model/ subdirectory reclassifies a write that IS
-// reachable to a persisted column: the folded AccountBalance field is what
-// PostgresSummaryRepository.Upsert sends as account_balance_derived
-// [VERIFIED: savings/postgres.go:113,120,149]. That reachability, not the
-// value-receiver mutation itself, is why this one belongs in the
-// guard-flagged class while this package's four sites do not — and a
-// directory move would erase the distinction by disarming both alike. One
+// `s.AccountBalance += effect` on a VALUE receiver and returns a new summary
+// [VERIFIED: savings/summary.go:52-55] — a pure fold over a copy, not itself a
+// write to stored state — into an internal/apps/savings/model/ subdirectory
+// reclassifies a write that IS reachable to a persisted column: the folded
+// AccountBalance field is what PostgresSummaryRepository.Upsert sends as
+// account_balance_derived [VERIFIED: savings/postgres.go:113,120,149]. That
+// reachability, not the value-receiver mutation itself, is why this one
+// belongs in the guard-flagged class while this package's four sites do not —
+// and a directory move would erase the distinction by disarming both alike. One
 // file move, zero code change, ordinary Go layering. A guard that a file move
 // disarms is not a guard: directory adjacency to a string containing SQL is
 // not reachability to a balance column.
+//
+// DO NOT restate that parenthesis as "the same shape as the four sites above."
+// A previous revision did, and it was FALSE FOR THREE OF THE FOUR. The savings
+// Add is `func (s SavingsAccountSummary) Add(...) SavingsAccountSummary` — a
+// value receiver mutating its own copy. This package's
+// UpdateOutstandingLoanBalance (two of the four writes) and
+// AddBalanceCorrectionAmount are `func (ip *InterestPeriod) ...` — POINTER
+// receivers mutating a live object that other holders of the pointer observe.
+// Only copyWithoutPaidAmounts, which writes into the fresh copy it has just
+// built, is shaped like the savings fold.
+//
+// The slip is worth this much space because it smuggles back the exact
+// conflation this section exists to refuse, inside the sentence written to fix
+// it: RECEIVER SEMANTICS ARE NOT THE CRITERION AND NEVER WERE. Value-versus-
+// pointer decides nothing about I-3 — if it did, the savings fold (a value
+// receiver) would be the safe one and these three (pointer receivers) the
+// violations, which is the reverse of the correct answer. What decides it is
+// REACHABILITY to a persisted balance column, which cuts the other way: the
+// savings fold is guard-flagged despite its value receiver because
+// account_balance_derived is one Upsert away, and these four are not despite
+// three of them mutating live state because no such column is downstream of
+// them at all. Argue the reachability; never the receiver.
 //
 // The correct repair is a go/types-based discriminator that follows the value
 // across the import graph to a persisted column — LEG 2, mechanised. Until that
