@@ -339,7 +339,7 @@ func (p *RepaymentPeriod) CreditedAmounts() Money {
 
 // OutstandingLoanBalance rolls the last segment's balance forward by the
 // balance correction, capitalized income, disbursement and paid principal and
-// back by the due principal, floored at zero [VERIFIED: RepaymentPeriod.java:377-389].
+// back by the due principal, floored at zero [VERIFIED: RepaymentPeriod.java:389-403].
 func (p *RepaymentPeriod) OutstandingLoanBalance() Money {
 	last := p.LastInterestPeriod()
 	return last.OutstandingLoanBalance().
@@ -351,7 +351,7 @@ func (p *RepaymentPeriod) OutstandingLoanBalance() Money {
 }
 
 // AddPaidPrincipalAmount accumulates paid principal
-// [VERIFIED: RepaymentPeriod.java:391-393].
+// [VERIFIED: RepaymentPeriod.java:405-407].
 func (p *RepaymentPeriod) AddPaidPrincipalAmount(paid Money) {
 	p.paidPrincipal = p.PaidPrincipal().plus(paid)
 }
