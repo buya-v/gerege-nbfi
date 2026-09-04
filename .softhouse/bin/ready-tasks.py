@@ -175,7 +175,18 @@ Exit codes:
       established as the lock holder at all (including: no LOCK on disk and no
       `--no-live-session-established-out-of-band`), or it is `in_session` and no
       `in_progress` task passed all three ownership terms. Fail-closed in every case.
+  5   T527 -- the report printed IN FULL and is usable, but STEP 0's
+      `check-branch-published.py` did not answer CLEAN: the record claims a branch or a
+      commit `origin` has never heard of, or the check could not reach origin to decide.
+      Report mode only; `--reconcile` never runs the gate and never returns 5.
   64  usage error
+
+T527 -- STEP 0 IS NOW PART OF THIS REPORT. `main()` runs
+`.softhouse/bin/check-branch-published.py` FIRST and prints it above the ready list. See
+`branch_published_gate()` for why it is called from here rather than shipped as a tool the
+driver is asked to remember, and for the fail-closed handling of a checker that cannot
+run. On 2026-09-03 five terminal tasks in this very file named branches and commits that
+had never reached `origin`, and this resolver reported them as finished work.
 """
 import json
 import glob
@@ -2178,7 +2189,88 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
     return 0
 
 
+def branch_published_gate(out=sys.stdout):
+    """T527 -- STEP 0. RUN `check-branch-published.py` AND PRINT IT ABOVE EVERYTHING ELSE.
+
+    WHY IT IS CALLED FROM HERE. On 2026-09-03 five completed tasks -- `T508`, `T509` (the
+    program's recorded critical path), `T510`, `T512`, `T515` -- were written into
+    `tasks.json` as terminal, with notes naming the branch and the commit that "landed",
+    and NOT ONE of those branches or commits ever reached `origin`. The next fire read
+    this resolver, saw five finished tasks, and planned on top of work that exists on one
+    laptop. Nothing in the toolchain contradicted it: this file's `landed_index()` arm
+    warns when work bearing a task id is ALREADY ON MAIN -- the OPPOSITE direction -- and
+    `conformance.sh` grades the tree, which was fine. The lie was about work NOT in the
+    tree.
+
+    WHY IT IS CALLED AT ALL, rather than shipped as a tool the driver is told to run. A
+    built-and-unwired guard is this program's single most-repeated defect: `T303`, `T311`,
+    `T313`, `T333` and `T425` are all that shape, and `T399` censused SEVEN of them. `P-45`
+    is the rule -- "a guard that only works when someone remembers to run it enforces
+    nothing". The reader that matters is the orchestrator at STEP 0/1, and the thing it
+    actually runs is this file, so this is where the check has to fire.
+
+    FAIL CLOSED AT THE WIRING LAYER TOO. If the checker is missing, unreadable, times out
+    or answers with a code this function does not recognise, that is NOT a pass and is not
+    printed as one. `P-45`'s recorded cost is a guard that goes green when it could not
+    look, and a wrapper that swallows its exit code reproduces exactly that one layer out.
+
+    Returns True when the check answered CLEAN, False otherwise.
+    """
+    tool = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "check-branch-published.py")
+    p = lambda t="": print(t, file=out)
+    p("=" * 78)
+    p("STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)")
+    p("=" * 78)
+    if not os.path.exists(tool):
+        p("NOT CLEAN -- the checker is not on disk at %s." % tool)
+        p("This is not a pass. Nothing verified that the branches and commits this")
+        p("file reports as finished have ever reached origin.")
+        return False
+    try:
+        res = subprocess.run([sys.executable or "/usr/bin/python3", tool,
+                            "--repo", repo],
+                           capture_output=True, text=True, timeout=180)
+    except (subprocess.TimeoutExpired, OSError) as e:
+        p("NOT CLEAN -- could not run the checker: %s" % e)
+        p("This is not a pass; see the fail-closed note in this function.")
+        return False
+    if res.returncode == 0:
+        # Print the whole thing anyway. A CLEAN verdict carries the counts that make it
+        # inspectable -- how many claims were backed, how many were WAIVED and by which
+        # exemption -- and a bare "CLEAN" is the kind of claim this program has learned
+        # not to take on trust.
+        out.write(res.stdout)
+        return True
+    out.write(res.stdout)
+    if res.stderr.strip():
+        out.write(res.stderr)
+    if res.returncode == 2:
+        p()
+        p(">>> THE RECORD BELOW CLAIMS WORK THAT origin HAS NEVER HEARD OF. A task")
+        p(">>> listed as done, merged, needs_retry or needs_conditions above is not")
+        p(">>> evidence that its work exists. Read the named findings BEFORE you")
+        p(">>> plan anything that depends on them.")
+    elif res.returncode == 3:
+        p()
+        p(">>> THE CHECK COULD NOT LOOK. Treat every terminal task below as")
+        p(">>> UNVERIFIED, not as verified-clean.")
+    else:
+        p()
+        p(">>> check-branch-published.py exited %s, which this wrapper does not"
+              % res.returncode)
+        p(">>> recognise. NOT a pass.")
+    return False
+
+
 def main():
+    # T527 -- STEP 0, ABOVE THE READY LIST, because the ready list is what gets acted on.
+    # In `--json` mode the report goes to stderr so it cannot corrupt the document, and
+    # the VERDICT rides in the JSON as `branch_published`; a machine reader that ignores
+    # that key is choosing to, which is a different failure from never being told.
+    gate_clean = branch_published_gate(out=sys.stderr if "--json" in sys.argv
+                                       else sys.stdout)
+    print(file=(sys.stderr if "--json" in sys.argv else sys.stdout))
     cur, arch = load()
     ready, blocked, unresolved, live = [], [], [], []
     for tid, t in cur.items():
@@ -2198,9 +2290,11 @@ def main():
         json.dump({"ready": [r[0] for r in ready],
                    "in_progress": [l[0] for l in live],
                    "blocked": {b[0]: [u[0] for u in b[2]] for b in blocked},
-                   "unresolved_edges": unresolved}, sys.stdout, indent=2)
+                   "unresolved_edges": unresolved,
+                   "branch_published": "CLEAN" if gate_clean else "NOT_CLEAN"},
+                  sys.stdout, indent=2)
         print()
-        return 0
+        return 0 if gate_clean else 5
 
     print("IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (%d)" % len(live))
     # T288. THIS CLAIM IS ONLY TRUE WHILE THE DISPATCHING FIRE IS ALIVE. On 2026-08-22
@@ -2419,6 +2513,21 @@ def main():
         print("  and this line is printed only after checking both -- it is not a default.")
     for tid, dep in unresolved:
         print("  %s -> %s" % (tid, dep))
+
+    # T527. The verdict is REPEATED HERE, at the BOTTOM, because the top of this report is
+    # hundreds of lines away by the time a reader reaches the ready list, and because the
+    # exit code is the only part of it a shell can see. `5` is new and is documented in
+    # the module docstring's exit-code table; `fire-program.sh` calls this file only with
+    # `--reconcile`, which does not run the gate, so nothing in the wrapper changes
+    # behaviour on it. The reader this is FOR is the orchestrator agent at STEP 0/1.
+    if not gate_clean:
+        print()
+        print("=" * 78)
+        print("STEP 0 VERDICT: NOT CLEAN -- check-branch-published.py did not say CLEAN.")
+        print("The task list above records work as finished that origin cannot confirm")
+        print("exists. Scroll back to the STEP 0 block for the named claims. Exit 5.")
+        print("=" * 78)
+        return 5
     return 0
 
 

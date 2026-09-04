@@ -1,0 +1,2538 @@
+{
+ "generated_by": "T527 .softhouse/bin/check-branch-published.py --write-baseline",
+ "generated_at_origin_main": "dd27570094febf4233c5209be0000c2f38f73bfd",
+ "note": "Keys are exact <task-id>\\t<branch-or-commit> pairs, so this file can only forgive claims that already existed when it was written. Every entry is printed on every run under WAIVED (baseline). Removing an entry re-arms the check for that subject. A DIFF TO THIS FILE IS A CLAIM THAT WORK WAS LOST -- read it as one.",
+ "refuses_to_waive": {
+  "tasks": [
+   "T508",
+   "T509",
+   "T510",
+   "T512",
+   "T515",
+   "T520",
+   "T522",
+   "T523"
+  ],
+  "commits": [
+   "1abd3a11",
+   "857dd4d8",
+   "5c4233fc",
+   "8ff5ff15",
+   "84dc208e"
+  ]
+ },
+ "waived": [
+  {
+   "key": "A2-1\tsofthouse/A2-1-behaviour",
+   "task": "A2-1",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-1-behaviour",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-11\tsofthouse/A2-11-review-a2-7",
+   "task": "A2-11",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-11-review-a2-7",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-12\tsofthouse/A2-12-a2-8-microfix",
+   "task": "A2-12",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-12-a2-8-microfix",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-13\tsofthouse/A2-13-dec2-gl-contract",
+   "task": "A2-13",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-13-dec2-gl-contract",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-14\tsofthouse/A2-14-review-dec2",
+   "task": "A2-14",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-14-review-dec2",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-15\tsofthouse/A2-15-ledger-parity-vectors",
+   "task": "A2-15",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-15-ledger-parity-vectors",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-16\tsofthouse/A2-16-dec2-rev2",
+   "task": "A2-16",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-16-dec2-rev2",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-17\tsofthouse/A2-17-review-dec2-rev2",
+   "task": "A2-17",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-17-review-dec2-rev2",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-18\tsofthouse/A2-18-ledger-invariant-guard",
+   "task": "A2-18",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-18-ledger-invariant-guard",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-19\tsofthouse/A2-19-review-dec2-rev2-second",
+   "task": "A2-19",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-19-review-dec2-rev2-second",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-2\tsofthouse/A2-2-review-a2-1",
+   "task": "A2-2",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-2-review-a2-1",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-20\tsofthouse/A2-20-context-allowlist",
+   "task": "A2-20",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-20-context-allowlist",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-21\tsofthouse/A2-21-dec2-rev3",
+   "task": "A2-21",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-21-dec2-rev3",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-22\tsofthouse/A2-22-refused-vector-coverage",
+   "task": "A2-22",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-22-refused-vector-coverage",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-23\tsofthouse/A2-23-empty-context-dir",
+   "task": "A2-23",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-23-empty-context-dir",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-24\tsofthouse/A2-24-corroborations-adjudication",
+   "task": "A2-24",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-24-corroborations-adjudication",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-25\tsofthouse/A2-25-dec2-rev3-review",
+   "task": "A2-25",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-25-dec2-rev3-review",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-26\tsofthouse/A2-26-ledger-capture-readiness",
+   "task": "A2-26",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-26-ledger-capture-readiness",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-27\tsofthouse/A2-27-corroboration-followups",
+   "task": "A2-27",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-27-corroboration-followups",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-28\tsofthouse/A2-28-dec2-rev4",
+   "task": "A2-28",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-28-dec2-rev4",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-29\tsofthouse/A2-29-running-balance",
+   "task": "A2-29",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-29-running-balance",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-3\tsofthouse/A2-3-capture",
+   "task": "A2-3",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-3-capture",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-32\tsofthouse/A2-32-dec2-rev5",
+   "task": "A2-32",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-32-dec2-rev5",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-33\tsofthouse/A2-33-review-dec2-rev5",
+   "task": "A2-33",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-33-review-dec2-rev5",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-34\tsofthouse/A2-34-review-a2-15",
+   "task": "A2-34",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-34-review-a2-15",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-4\tsofthouse/A2-4-review-a2-3",
+   "task": "A2-4",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-4-review-a2-3",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-6\tsofthouse/A2-6-a2-1-microfix",
+   "task": "A2-6",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-6-a2-1-microfix",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "A2-6\tsofthouse/A2-6-behaviour-doc-microfix",
+   "task": "A2-6",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/A2-6-behaviour-doc-microfix",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T10\tsofthouse/T10-go-schedule-port",
+   "task": "T10",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T10-go-schedule-port",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T101\tsofthouse/T100-g8-two-families",
+   "task": "T101",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T100-g8-two-families",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T101\tsofthouse/T101-review-t100",
+   "task": "T101",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T101-review-t100",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T102\tsofthouse/T102-literal-fork-sha",
+   "task": "T102",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T102-literal-fork-sha",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T102\tsofthouse/T82-pass3i-defects",
+   "task": "T102",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T82-pass3i-defects",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T103\tsofthouse/T103-review-t102",
+   "task": "T103",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T103-review-t102",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T104\tsofthouse/T104-review-t90",
+   "task": "T104",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T104-review-t90",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T106\tsofthouse/T106-review-t97",
+   "task": "T106",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T106-review-t97",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T107\tsofthouse/T107-review-t91",
+   "task": "T107",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T107-review-t91",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T107\tsofthouse/rescued-agent-a73334f89c8eb3d16-20260820-230001",
+   "task": "T107",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T108\tsofthouse/T108-grep-adjudication",
+   "task": "T108",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T108-grep-adjudication",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T109\tsofthouse/T109-fork-point-digest-compare",
+   "task": "T109",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T109-fork-point-digest-compare",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T11\tsofthouse/T11-go-port-review",
+   "task": "T11",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T11-go-port-review",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T110\tsofthouse/T110-duplicate-caseid-refusal",
+   "task": "T110",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T110-duplicate-caseid-refusal",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T112\tsofthouse/T112-g8-rework-retry",
+   "task": "T112",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T112-g8-rework-retry",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T114\tsofthouse/T114-review-t112",
+   "task": "T114",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T114-review-t112",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T115\tsofthouse/T115-t91-microfixes",
+   "task": "T115",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T115-t91-microfixes",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T116\tsofthouse/T116-familyb-promotion",
+   "task": "T116",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T116-familyb-promotion",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T117\tsofthouse/T117-familyb-probe",
+   "task": "T117",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T117-familyb-probe",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T119\tsofthouse/T119-review-t110",
+   "task": "T119",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T119-review-t110",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T121\tsofthouse/T121-review-t113",
+   "task": "T121",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T121-review-t113",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T122\t7e49bd93",
+   "task": "T122",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "7e49bd93",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T122\tsofthouse/T122-g8-t114-fixes",
+   "task": "T122",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T122-g8-t114-fixes",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T125\tsofthouse/T125-attest-canary-gates",
+   "task": "T125",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T125-attest-canary-gates",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T127\tsofthouse/T127-review-t109",
+   "task": "T127",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T127-review-t109",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T128\tsofthouse/T128-review-t96",
+   "task": "T128",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T128-review-t96",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T129\tsofthouse/T129-review-t122",
+   "task": "T129",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T129-review-t122",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T13\tsofthouse/T13-uat",
+   "task": "T13",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T13-uat",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T130\tsofthouse/T130-t113-microfixes",
+   "task": "T130",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T130-t113-microfixes",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T131\tsofthouse/T131-review-t108",
+   "task": "T131",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T131-review-t108",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T135\tsofthouse/T135-review-t99",
+   "task": "T135",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T135-review-t99",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T136\tsofthouse/T136-review-t125",
+   "task": "T136",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T136-review-t125",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T153\tsofthouse/T153-review-t149",
+   "task": "T153",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T153-review-t149",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T154\tsofthouse/T154-nofloat-guards",
+   "task": "T154",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T154-nofloat-guards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T155\tsofthouse/T155-review-t154",
+   "task": "T155",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T155-review-t154",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T156\tsofthouse/T156-redgreen-exit-trap",
+   "task": "T156",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T156-redgreen-exit-trap",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T157\tsofthouse/T157-fire-program-grep-hardening",
+   "task": "T157",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T157-fire-program-grep-hardening",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T16\tsofthouse/T16-tier0-vector-capture-plan",
+   "task": "T16",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T16-tier0-vector-capture-plan",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T161\tsofthouse/T161-provef1-trap-and-recovery",
+   "task": "T161",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T161-provef1-trap-and-recovery",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T162\tsofthouse/T162-mutator-sigterm-coverage",
+   "task": "T162",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T162-mutator-sigterm-coverage",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T163\tsofthouse/T163-resolve7-money-literals",
+   "task": "T163",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T163-resolve7-money-literals",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T164\tsofthouse/T164-analyze7-float-guard",
+   "task": "T164",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T164-analyze7-float-guard",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T165\tsofthouse/T165-findreporoot-cwd",
+   "task": "T165",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T165-findreporoot-cwd",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T166\tsofthouse/T166-nofloat-guard-widening",
+   "task": "T166",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T166-nofloat-guard-widening",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T167\tsofthouse/T167-adr-rewriter-atomic-and-refusing",
+   "task": "T167",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T167-adr-rewriter-atomic-and-refusing",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T168\tsofthouse/T168-sigquit-trap-sweep",
+   "task": "T168",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T168-sigquit-trap-sweep",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T169\tsofthouse/T169-capture-rig-throwable",
+   "task": "T169",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T169-capture-rig-throwable",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T17\tsofthouse/T17-vector-capture-plan-review",
+   "task": "T17",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T17-vector-capture-plan-review",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T176\tsofthouse/T176-t159-generator-reproduces",
+   "task": "T176",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T176-t159-generator-reproduces",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T180\tsofthouse/T180-remove-attester-overwrite",
+   "task": "T180",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T180-remove-attester-overwrite",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T181\tsofthouse/T181-review-t178",
+   "task": "T181",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T181-review-t178",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T182\tsofthouse/T182-review-t177",
+   "task": "T182",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T182-review-t177",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T183\tsofthouse/T183-review-t179",
+   "task": "T183",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T183-review-t179",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T184\tsofthouse/T184-review-t173",
+   "task": "T184",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T184-review-t173",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T185\tsofthouse/T185-review-t175",
+   "task": "T185",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T185-review-t175",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T186\tsofthouse/T186-wire-money-form-ruling",
+   "task": "T186",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T186-wire-money-form-ruling",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T187\tsofthouse/T187-t41probe-rewriters-guarded",
+   "task": "T187",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T187-t41probe-rewriters-guarded",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T188\tsofthouse/T188-review-driver-merge-fix",
+   "task": "T188",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T188-review-driver-merge-fix",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T189\tsofthouse/T189-grep-adjudication-final",
+   "task": "T189",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T189-grep-adjudication-final",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T190\tsofthouse/T190-fireprogram-dirty-failopen",
+   "task": "T190",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T190-fireprogram-dirty-failopen",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T191\tsofthouse/T191-failopen-money-guards",
+   "task": "T191",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T191-failopen-money-guards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T193\tsofthouse/T193-request-body-guard",
+   "task": "T193",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T193-request-body-guard",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T194\tsofthouse/T194-census-value-read",
+   "task": "T194",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T194-census-value-read",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T196\tsofthouse/T196-backstep-classifier",
+   "task": "T196",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T196-backstep-classifier",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T197\tsofthouse/T197-review-t194",
+   "task": "T197",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T197-review-t194",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T198\tsofthouse/T198-review-t196",
+   "task": "T198",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T198-review-t196",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T199\tsofthouse/T199-review-t165",
+   "task": "T199",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T199-review-t165",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T200\tsofthouse/T200-review-t190",
+   "task": "T200",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T200-review-t190",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T201\tsofthouse/T201-repo-root-bypass",
+   "task": "T201",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T201-repo-root-bypass",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T202\tsofthouse/T202-fireprogram-twin",
+   "task": "T202",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T202-fireprogram-twin",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T203\tsofthouse/T203-vectorstore-rewriters",
+   "task": "T203",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T203-vectorstore-rewriters",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T204\tsofthouse/T204-correct-t178-split",
+   "task": "T204",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T204-correct-t178-split",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T205\tsofthouse/T205-classifier-unknown",
+   "task": "T205",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T205-classifier-unknown",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T206\tsofthouse/T206-seventh-writer",
+   "task": "T206",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T206-seventh-writer",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T208\tsofthouse/T208-wire-ledger-guard",
+   "task": "T208",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T208-wire-ledger-guard",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T209\tsofthouse/T209-cannot-catch-reaches-green",
+   "task": "T209",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T209-cannot-catch-reaches-green",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T21\tsofthouse/T21-capture-pass3-audit",
+   "task": "T21",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T21-capture-pass3-audit",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T210\tsofthouse/T210-anchor-regression-unfreeze",
+   "task": "T210",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T210-anchor-regression-unfreeze",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T211\tsofthouse/T211-sigterm-prompt-stop",
+   "task": "T211",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T211-sigterm-prompt-stop",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T212\tsofthouse/T212-enforce-zero-population",
+   "task": "T212",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T212-enforce-zero-population",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T214\tsofthouse/T214-unmerged-evidence",
+   "task": "T214",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T214-unmerged-evidence",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T215\tsofthouse/T215-lock-exclusion-second-site",
+   "task": "T215",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T215-lock-exclusion-second-site",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T216\tsofthouse/T216-quit-trap-tail",
+   "task": "T216",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T216-quit-trap-tail",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T217\tsofthouse/T217-release-lock-followups",
+   "task": "T217",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T217-release-lock-followups",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T218\tsofthouse/T218-t127-microfixes",
+   "task": "T218",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T218-t127-microfixes",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T219\tsofthouse/T219-g8-residual-measurement",
+   "task": "T219",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T219-g8-residual-measurement",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T22\tsofthouse/T22-pathb-capture-audit",
+   "task": "T22",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T22-pathb-capture-audit",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T220\tsofthouse/T220-review-t116",
+   "task": "T220",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T220-review-t116",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T227\tsofthouse/T227-retracted-claim-third-file",
+   "task": "T227",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T227-retracted-claim-third-file",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T228\tsofthouse/T228-dead-concept-sweep",
+   "task": "T228",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T228-dead-concept-sweep",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T229\tsofthouse/T229-g8-rescue-site3",
+   "task": "T229",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T229-g8-rescue-site3",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T230\tsofthouse/T230-rework-t222-grounding",
+   "task": "T230",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T230-rework-t222-grounding",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T231\tsofthouse/T231-g8-section-rebuild",
+   "task": "T231",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T231-g8-section-rebuild",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T232\tsofthouse/T232-pattern-p72-sweep-calibration",
+   "task": "T232",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T232-pattern-p72-sweep-calibration",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T233\tsofthouse/T233-exemption-citation-gate",
+   "task": "T233",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T233-exemption-citation-gate",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T234\tsofthouse/T234-sweep-instrument-audit",
+   "task": "T234",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T234-sweep-instrument-audit",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T236\tsofthouse/T236-cap9-quit",
+   "task": "T236",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T236-cap9-quit",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T237\tsofthouse/T237-stale-selftest",
+   "task": "T237",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T237-stale-selftest",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T238\tsofthouse/T238-failopen-dead-cd",
+   "task": "T238",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T238-failopen-dead-cd",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T239\tsofthouse/T239-r11-hygiene-rerun",
+   "task": "T239",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T239-r11-hygiene-rerun",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T241\tsofthouse/T241-site3-formula",
+   "task": "T241",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T241-site3-formula",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T242\tsofthouse/T242-ledger-coverage-derived",
+   "task": "T242",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T242-ledger-coverage-derived",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T243\tsofthouse/T243-wire-the-guards",
+   "task": "T243",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T243-wire-the-guards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T244\tsofthouse/T244-dec2-rev6-prepared",
+   "task": "T244",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T244-dec2-rev6-prepared",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T245\tsofthouse/T245-oracle-pin",
+   "task": "T245",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T245-oracle-pin",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T246\tsofthouse/T246-review-dec2-rev6",
+   "task": "T246",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T246-review-dec2-rev6",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T247\tsofthouse/T247-dec2-rev7",
+   "task": "T247",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T247-dec2-rev7",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T248\tsofthouse/T248-failopen-widen",
+   "task": "T248",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T248-failopen-widen",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T249\tsofthouse/T249-g14-scope",
+   "task": "T249",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T249-g14-scope",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T250\tsofthouse/T250-tenant-attestation",
+   "task": "T250",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T250-tenant-attestation",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T251\tsofthouse/T251-review-dec2-rev7",
+   "task": "T251",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T251-review-dec2-rev7",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T252\tsofthouse/T252-failopen-counts",
+   "task": "T252",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T252-failopen-counts",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T253\tsofthouse/T253b-harness-portability-mac",
+   "task": "T253",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T253b-harness-portability-mac",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T255\tsofthouse/T255-dec2-rev8",
+   "task": "T255",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T255-dec2-rev8",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T258\tsofthouse/T258-frontier-rot-residuals",
+   "task": "T258",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T258-frontier-rot-residuals",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T259\tsofthouse/T259-verdict-predicate",
+   "task": "T259",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T259-verdict-predicate",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T260\tsofthouse/T260-review-dec2-rev8",
+   "task": "T260",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T260-review-dec2-rev8",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T261\tsofthouse/T261-review-tenant-attestation",
+   "task": "T261",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T261-review-tenant-attestation",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T262\tsofthouse/T262-review-verdict-predicate",
+   "task": "T262",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T262-review-verdict-predicate",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T263\tsofthouse/T263-review-analyze7-float-guard",
+   "task": "T263",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T263-review-analyze7-float-guard",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T264\tsofthouse/t264-review-cloud-t241",
+   "task": "T264",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t264-review-cloud-t241",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T265\tsofthouse/t265-review-lock-fix",
+   "task": "T265",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t265-review-lock-fix",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T268\tsofthouse/t268-rvpa-failopen",
+   "task": "T268",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t268-rvpa-failopen",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T270\tsofthouse/T270-superseded-trap",
+   "task": "T270",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T270-superseded-trap",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T271\tsofthouse/t271-b1-t219",
+   "task": "T271",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t271-b1-t219",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T273\tsofthouse/t273-tmp-residue",
+   "task": "T273",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t273-tmp-residue",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T274\tsofthouse/t274-attestation-failopen",
+   "task": "T274",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t274-attestation-failopen",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T275\tsofthouse/t275-a2-gap-capture",
+   "task": "T275",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t275-a2-gap-capture",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T276\tsofthouse/t276-review-t275-capture",
+   "task": "T276",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t276-review-t275-capture",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T280\tsofthouse/T280-review-t279",
+   "task": "T280",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T280-review-t279",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T281\tsofthouse/t281-review-t268",
+   "task": "T281",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t281-review-t268",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T283\tsofthouse/rescued-agent-af19d6f14414d32f0-20260822-140002",
+   "task": "T283",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-af19d6f14414d32f0-20260822-140002",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T283\tsofthouse/t283-review-t274",
+   "task": "T283",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t283-review-t274",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T285\tsofthouse/rescued-agent-ad4264728c497493b-20260822-140002",
+   "task": "T285",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-ad4264728c497493b-20260822-140002",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T285\tsofthouse/t285-review-t273",
+   "task": "T285",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t285-review-t273",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T286\tsofthouse/t286-t268-retry",
+   "task": "T286",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t286-t268-retry",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T287\tsofthouse/t287-closure-refusals",
+   "task": "T287",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t287-closure-refusals",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T297\tsofthouse/t297-review-t295",
+   "task": "T297",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t297-review-t295",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T298\tsofthouse/T298-review-t256",
+   "task": "T298",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T298-review-t256",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T299\tsofthouse/t299-t256-namespace-collision",
+   "task": "T299",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t299-t256-namespace-collision",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T302\tsofthouse/T302-review-t288",
+   "task": "T302",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T302-review-t288",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T304\tsofthouse/T304-evidence-destruction",
+   "task": "T304",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T304-evidence-destruction",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T304\tsofthouse/T304b-evidence-destruction",
+   "task": "T304",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T304b-evidence-destruction",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T305\tsofthouse/t305-openingbalance-accepting-side",
+   "task": "T305",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t305-openingbalance-accepting-side",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T308\tsofthouse/T308-review-t292",
+   "task": "T308",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T308-review-t292",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T309\tsofthouse/t309-sigterm-reconcile-bypass",
+   "task": "T309",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/t309-sigterm-reconcile-bypass",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T312\tsofthouse/T312-branch-case-collision",
+   "task": "T312",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T312-branch-case-collision",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T314\tsofthouse/T314-witness-path-forgery",
+   "task": "T314",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T314-witness-path-forgery",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T316\tsofthouse/T316-dead-path-guards",
+   "task": "T316",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T316-dead-path-guards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T318\tsofthouse/T318-committed-clobber-blindness",
+   "task": "T318",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T318-committed-clobber-blindness",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T319\tsofthouse/T319-reconciler-f5",
+   "task": "T319",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T319-reconciler-f5",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T320\tsofthouse/T320-review-t305",
+   "task": "T320",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T320-review-t305",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T323\tsofthouse/T323-wire-unwired-guards",
+   "task": "T323",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T323-wire-unwired-guards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T329\t61c0f382",
+   "task": "T329",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "61c0f382",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T329\tsofthouse/T329-date-zone-disagreement",
+   "task": "T329",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T329-date-zone-disagreement",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T335\tsofthouse/T335-rvpa-list-traversal",
+   "task": "T335",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T335-rvpa-list-traversal",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T335\tsofthouse/rescued-agent-afc904cf109cb64cf-20260828-080001",
+   "task": "T335",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-afc904cf109cb64cf-20260828-080001",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T336\tsofthouse/T336-post-checkout-decision",
+   "task": "T336",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T336-post-checkout-decision",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T337\tsofthouse/T337-review-t323",
+   "task": "T337",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T337-review-t323",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T339\tsofthouse/T339-review-t270",
+   "task": "T339",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T339-review-t270",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T340\tsofthouse/T340-review-t258",
+   "task": "T340",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T340-review-t258",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T342\tsofthouse/T342-releasedat-failopen",
+   "task": "T342",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T342-releasedat-failopen",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T350\tsofthouse/T350-reconcile-content",
+   "task": "T350",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T350-reconcile-content",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T351\ta0139c5d",
+   "task": "T351",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "a0139c5d",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T351\te10e3f07",
+   "task": "T351",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "e10e3f07",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T351\tsofthouse/T351-progress-accounting",
+   "task": "T351",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T351-progress-accounting",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T352\tsofthouse/T352-a2-next-tranche",
+   "task": "T352",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T352-a2-next-tranche",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T359\tsofthouse/T359-review-t352",
+   "task": "T359",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T359-review-t352",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T369\te10e3f07",
+   "task": "T369",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "e10e3f07",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T369\tsofthouse/T369-review-t351",
+   "task": "T369",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T369-review-t351",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T370\t4925bbef",
+   "task": "T370",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "4925bbef",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T370\tsofthouse/T370-t351-retry",
+   "task": "T370",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T370-t351-retry",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T371\tsofthouse/T371-t367-conditions",
+   "task": "T371",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T371-t367-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T376\tsofthouse/T376-review-t370",
+   "task": "T376",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T376-review-t370",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T38\tsofthouse/T38-dec1-v7",
+   "task": "T38",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T38-dec1-v7",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T38\tsofthouse/T38-dec1-v7-pass2",
+   "task": "T38",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T38-dec1-v7-pass2",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T384\tsofthouse/T384-review-t375",
+   "task": "T384",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T384-review-t375",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T39\tsofthouse/T39-periodratio-observation",
+   "task": "T39",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T39-periodratio-observation",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T390\tsofthouse/T390-baseline-attribution",
+   "task": "T390",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T390-baseline-attribution",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T392\tsofthouse/T392-vacuous-pass-pattern",
+   "task": "T392",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T392-vacuous-pass-pattern",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T393\tsofthouse/T393-t382-conditions",
+   "task": "T393",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T393-t382-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T397\tsofthouse/T397-t387-conditions",
+   "task": "T397",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T397-t387-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T398\tsofthouse/T398-measured-but-backwards",
+   "task": "T398",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T398-measured-but-backwards",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T3b\tsofthouse/T3b-progressive-schedule-rereview",
+   "task": "T3b",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T3b-progressive-schedule-rereview",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T4\tsofthouse/T4-dec1-contract-v2",
+   "task": "T4",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T4-dec1-contract-v2",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T40\tsofthouse/T40-charges-capture",
+   "task": "T40",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T40-charges-capture",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T400\tsofthouse/T400-t385-conditions",
+   "task": "T400",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T400-t385-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T404\tsofthouse/T404-t384-conditions",
+   "task": "T404",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T404-t384-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T405\tsofthouse/T405-review-t397",
+   "task": "T405",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T405-review-t397",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T406\tsofthouse/T406-review-t391",
+   "task": "T406",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T406-review-t391",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T407\tsofthouse/T407-review-t404",
+   "task": "T407",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T407-review-t404",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T408\tsofthouse/T408-review-t402",
+   "task": "T408",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T408-review-t402",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T409\tsofthouse/T409-review-t390",
+   "task": "T409",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T409-review-t390",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T41\tsofthouse/T41-dec1-v8",
+   "task": "T41",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T41-dec1-v8",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T410\tsofthouse/T410-review-t400",
+   "task": "T410",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T410-review-t400",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T411\tsofthouse/T411-review-t401",
+   "task": "T411",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T411-review-t401",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T412\tsofthouse/T412-driver-selfgrading",
+   "task": "T412",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T412-driver-selfgrading",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T414\tsofthouse/T414-review-t398",
+   "task": "T414",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T414-review-t398",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T416\tsofthouse/T416-t405-conditions",
+   "task": "T416",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T416-t405-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T417\tsofthouse/T417-scheduler-attribution",
+   "task": "T417",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T417-scheduler-attribution",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T42\tsofthouse/T42-mathcontext-inforce",
+   "task": "T42",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T42-mathcontext-inforce",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T421\tsofthouse/T421-t406-conditions",
+   "task": "T421",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T421-t406-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T422\tsofthouse/T416-t405-conditions",
+   "task": "T422",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T416-t405-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T422\tsofthouse/T422-review-t416",
+   "task": "T422",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T422-review-t416",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T423\tsofthouse/T423-review-t393",
+   "task": "T423",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T423-review-t393",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T424\tsofthouse/T424-t408-conditions",
+   "task": "T424",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T424-t408-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T428\tsofthouse/T428-review-t421",
+   "task": "T428",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T428-review-t421",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T428\tsofthouse/rescued-agent-aba498d1a28770847-20260828-140005",
+   "task": "T428",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-aba498d1a28770847-20260828-140005",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T429\tsofthouse/T429-oracle-derived-columns",
+   "task": "T429",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T429-oracle-derived-columns",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T43\tsofthouse/T43-dec1-v8-rereview",
+   "task": "T43",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T43-dec1-v8-rereview",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T431\tsofthouse/T431-t407-conditions",
+   "task": "T431",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T431-t407-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T433\tsofthouse/T433-t423-c1",
+   "task": "T433",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T433-t423-c1",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T438\tsofthouse/T438-review-t417",
+   "task": "T438",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T438-review-t417",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T439\tsofthouse/T439-review-t429",
+   "task": "T439",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T439-review-t429",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T44\tsofthouse/T44-capture-audit",
+   "task": "T44",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T44-capture-audit",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T440\tsofthouse/T440-review-t424",
+   "task": "T440",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T440-review-t424",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T442\tsofthouse/T442-t440-conditions",
+   "task": "T442",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T442-t440-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T444\tsofthouse/T444-review-t431",
+   "task": "T444",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T444-review-t431",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T446\tsofthouse/T446-review-t445",
+   "task": "T446",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T446-review-t445",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T447\tsofthouse/T447-review-t442",
+   "task": "T447",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T447-review-t442",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T448\tsofthouse/T448-review-t433",
+   "task": "T448",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T448-review-t433",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T449\tsofthouse/T449-review-t350",
+   "task": "T449",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T449-review-t350",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T45\tsofthouse/T45-dec1-v9",
+   "task": "T45",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T45-dec1-v9",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T450\tsofthouse/T450-review-t412",
+   "task": "T450",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T450-review-t412",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T455\tsofthouse/T455-t448-conditions",
+   "task": "T455",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T455-t448-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T456\tsofthouse/T456-review-t451",
+   "task": "T456",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T456-review-t451",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T457\tsofthouse/T457-review-t452",
+   "task": "T457",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T457-review-t452",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T459\tsofthouse/T459-review-t454",
+   "task": "T459",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T459-review-t454",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T46\tsofthouse/T46-capture-corrections",
+   "task": "T46",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T46-capture-corrections",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T461\tsofthouse/T461-review-t453",
+   "task": "T461",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T461-review-t453",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T464\tsofthouse/T464-review-t455",
+   "task": "T464",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T464-review-t455",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T469\tsofthouse/T469-review-t462",
+   "task": "T469",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T469-review-t462",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T47\tsofthouse/T47-dec1-v10",
+   "task": "T47",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T47-dec1-v10",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T471\tsofthouse/T471-review-t465",
+   "task": "T471",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T471-review-t465",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T472\t0accb769",
+   "task": "T472",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "0accb769",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T473\t4bce914a",
+   "task": "T473",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "4bce914a",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T473\tsofthouse/T473-review-t466",
+   "task": "T473",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T473-review-t466",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T474\t409c7693",
+   "task": "T474",
+   "kind": "UNBACKED-COMMIT",
+   "subject": "409c7693",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T474\tsofthouse/T474-t471-conditions",
+   "task": "T474",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T474-t471-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T475\tsofthouse/T475-t469-conditions",
+   "task": "T475",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T475-t469-conditions",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T479\tsofthouse/T479-review-t477",
+   "task": "T479",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T479-review-t477",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T48\tsofthouse/T48-actualactual-captures",
+   "task": "T48",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T48-actualactual-captures",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T480\tsofthouse/T480-challenge-repair",
+   "task": "T480",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T480-challenge-repair",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T482\tsofthouse/T482-superset-control",
+   "task": "T482",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T482-superset-control",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T483\tsofthouse/T483-review-t470",
+   "task": "T483",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T483-review-t470",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T484\tsofthouse/T484-review-t474",
+   "task": "T484",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T484-review-t474",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T484\tsofthouse/rescued-agent-a79caaa539cd4992d-20260829-080002",
+   "task": "T484",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-a79caaa539cd4992d-20260829-080002",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T485\tsofthouse/T485-review-t480",
+   "task": "T485",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T485-review-t480",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T49\tsofthouse/T49-dec1-v10-rereview",
+   "task": "T49",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T49-dec1-v10-rereview",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T5\tsofthouse/T5-dec1-contract-review",
+   "task": "T5",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T5-dec1-contract-review",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T50\tsofthouse/T50-ambient-vs-threaded-rounding",
+   "task": "T50",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T50-ambient-vs-threaded-rounding",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T501\tsofthouse/T501-savings-i3",
+   "task": "T501",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T501-savings-i3",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T502\tsofthouse/T502-loanproduct-i3",
+   "task": "T502",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T502-loanproduct-i3",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T504\tsofthouse/T504-review-t501",
+   "task": "T504",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T504-review-t501",
+   "source": ".softhouse/tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T51\tsofthouse/T51-alias-and-tranche-captures",
+   "task": "T51",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T51-alias-and-tranche-captures",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T52\tsofthouse/T52-dec1-v11",
+   "task": "T52",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T52-dec1-v11",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T53\tsofthouse/T53-dec1-v11-diffcheck",
+   "task": "T53",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T53-dec1-v11-diffcheck",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T54\tsofthouse/T54-dec1-v12",
+   "task": "T54",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T54-dec1-v12",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T55\tsofthouse/T55-leap-boundary-capture",
+   "task": "T55",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T55-leap-boundary-capture",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T59\tsofthouse/T59-cancellation-and-cost",
+   "task": "T59",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T59-cancellation-and-cost",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T60\tsofthouse/T60-unrecorded-cell-grading",
+   "task": "T60",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T60-unrecorded-cell-grading",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T61\tsofthouse/T61-mutation-hunt-round-2",
+   "task": "T61",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T61-mutation-hunt-round-2",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T63\tsofthouse/T63-review-memo-and-cancellation",
+   "task": "T63",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T63-review-memo-and-cancellation",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T66\tsofthouse/T66-unrecognized-interest",
+   "task": "T66",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T66-unrecognized-interest",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T67\tsofthouse/T67-review-t65",
+   "task": "T67",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T67-review-t65",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T69\tsofthouse/T65-t63-p1s",
+   "task": "T69",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T65-t63-p1s",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T7\tsofthouse/T7-conformance-harness",
+   "task": "T7",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T7-conformance-harness",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T73\tsofthouse/T73-review-t72",
+   "task": "T73",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T73-review-t72",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T74\tsofthouse/T74-pathA-multiplesof",
+   "task": "T74",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T74-pathA-multiplesof",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T77\tsofthouse/T77-review-t76",
+   "task": "T77",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T77-review-t76",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T79\tsofthouse/T79-review-t78",
+   "task": "T79",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T79-review-t78",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T80\tsofthouse/T80-pathb-recipe-hardening",
+   "task": "T80",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T80-pathb-recipe-hardening",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T81\tsofthouse/T81-conformance-shell-guard",
+   "task": "T81",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T81-conformance-shell-guard",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T82\tsofthouse/T82-pass3i-defects",
+   "task": "T82",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T82-pass3i-defects",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T84\tsofthouse/T84-review-t83",
+   "task": "T84",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T84-review-t83",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T85\tsofthouse/T85-review-t80",
+   "task": "T85",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T85-review-t80",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T86\tsofthouse/T86-review-t81",
+   "task": "T86",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T86-review-t81",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T87\tsofthouse/T87-review-t82",
+   "task": "T87",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T87-review-t82",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T88\tsofthouse/T88-fui-marker-d6",
+   "task": "T88",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T88-fui-marker-d6",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T89\tsofthouse/T89-review-t88",
+   "task": "T89",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T89-review-t88",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T9\tsofthouse/T9-harness-vectors-review",
+   "task": "T9",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T9-harness-vectors-review",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T90\tsofthouse/T90-report-determinism",
+   "task": "T90",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T90-report-determinism",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T91\tsofthouse/T91-preconditions-copy",
+   "task": "T91",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T91-preconditions-copy",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T96\tsofthouse/T96-sole-caller-census",
+   "task": "T96",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T96-sole-caller-census",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T99\tsofthouse/T99-pathb-lower-findings",
+   "task": "T99",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/T99-pathb-lower-findings",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  },
+  {
+   "key": "T99\tsofthouse/rescued-agent-a23f30596288e4322-20260820-230001",
+   "task": "T99",
+   "kind": "UNBACKED-BRANCH",
+   "subject": "softhouse/rescued-agent-a23f30596288e4322-20260820-230001",
+   "source": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+   "why": "pre-existing when this control was introduced (T527, 2026-09-04); no proof of landing survives in git"
+  }
+ ]
+}
