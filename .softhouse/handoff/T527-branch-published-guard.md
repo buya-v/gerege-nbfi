@@ -300,4 +300,20 @@ branch being visible.
 
 ## 8. Proof this branch is published
 
-Filled in at push time — see §8 of the committed copy on `origin`.
+The whole task is about branches that were never pushed, so this is the one claim that must not be
+taken on trust.
+
+```
+$ git push -u origin softhouse/T527-branch-published-guard
+To https://github.com/buya-v/gerege-nbfi
+ * [new branch]        softhouse/T527-branch-published-guard -> softhouse/T527-branch-published-guard
+branch 'softhouse/T527-branch-published-guard' set up to track 'origin/softhouse/T527-branch-published-guard'.
+
+$ git ls-remote --heads origin refs/heads/softhouse/T527-branch-published-guard
+48c96cd165efc1d3294d5776d09174dcbfb19858	refs/heads/softhouse/T527-branch-published-guard
+```
+
+`48c96cd1` is the commit carrying the guard, the wiring, the baseline and the transcripts. This
+handoff's own §8 update is a second commit on the same branch; re-run the `ls-remote` above to see
+its sha, and run `.softhouse/bin/check-branch-published.py` — T527 is not in the baseline and is not
+in the findings, because its branch is on origin.
