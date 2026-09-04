@@ -87,6 +87,15 @@ type Pin struct {
 	// sixth that becomes inadmissible — is one edit here and refuses or admits
 	// every affected vector with no code change.
 	InadmissibleProductIDs []int64 `json:"inadmissible_product_ids"`
+
+	// TenantParams is the tenant configuration this corpus is graded under.
+	//
+	// R2a: a vector that DECLARES tenant_params is checked against this, and
+	// refused on any mismatch. It lives on the pin (not hard-coded in Go) for
+	// the same reason production_rounding lives on PIN.json: when the ratified
+	// tenant changes, re-stamping the corpus is one edit here rather than a
+	// source edit. The content is FIXED by R2a to the `gerege` tenant.
+	TenantParams TenantParams `json:"tenant_params"`
 }
 
 // LoadPin reads the ledger pin.
@@ -114,6 +123,13 @@ func LoadPin(path string) (*Pin, error) {
 	}
 	if p.FineractCommit == "" {
 		return nil, fmt.Errorf("ledger pin %s: fineract_commit is empty", path)
+	}
+	if p.TenantParams.RoundingMode == "" || p.TenantParams.Currency == "" ||
+		p.TenantParams.Timezone == "" || p.TenantParams.Precision <= 0 ||
+		p.TenantParams.MinorUnits < 0 {
+		return nil, fmt.Errorf("ledger pin %s: tenant_params is incomplete: %s — the pin must state "+
+			"the tenant the corpus is graded under, so a vector's recorded tenant_params has something "+
+			"to be checked against", path, p.TenantParams)
 	}
 	return &p, nil
 }

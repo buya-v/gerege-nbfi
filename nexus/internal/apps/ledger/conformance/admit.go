@@ -93,6 +93,21 @@ func Admit(v *Vector, opts Options) []string {
 					"re-sending it), so a vector taken from it cannot be re-derived. G-10 option (c)", p)
 			}
 		}
+		// --- tenant_params: the R2a declaration ---------------------------
+		//
+		// A vector that RECORDS tenant_params is checked against the pin and
+		// REFUSED on any mismatch, naming both sides. That is the whole point of
+		// R2a: a vector captured under the wrong tenant must never grade
+		// silently. A vector that leaves the field ABSENT is UNRECORDED and is
+		// handled in grade.go (graded, flagged, never a silent pass) — it is NOT
+		// refused here, so the existing corpus keeps grading.
+		if v.TenantParams != nil && *v.TenantParams != opts.Pin.TenantParams {
+			add("tenant_params %s differ from the tenant_params this tree is graded under (%s). A "+
+				"vector captured under a different tenant is not comparable and must not grade: the "+
+				"recorded params name the tenant the capture was taken under, and the pin names the "+
+				"tenant the corpus is graded under",
+				v.TenantParams, opts.Pin.TenantParams)
+		}
 	}
 
 	// --- the note, and the glAccountType instability record ---------------
