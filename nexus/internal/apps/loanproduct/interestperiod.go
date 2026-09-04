@@ -260,7 +260,7 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 // leaves the cell unrefreshed in between — RepaymentPeriod.copyWithoutPaidAmounts
 // zeroes each copied segment's balanceCorrectionAmount, which is a summand of
 // the expression below, and does NOT re-run this function
-// [VERIFIED: RepaymentPeriod.java:173-197]. So the value read between two sweeps
+// [VERIFIED: RepaymentPeriod.java:173-198]. So the value read between two sweeps
 // is, by construction, not the value this expression would produce if evaluated
 // at that moment. Turning the cell into an on-demand derivation would change the
 // numbers at every such point, which is a parity break, not a repair.

@@ -13,7 +13,7 @@ import "testing"
 // ProgressiveEMICalculator.java:1254-1256, :1647, :1654, :1667] and deliberately
 // leaves the cell unrefreshed in between — RepaymentPeriod.copyWithoutPaidAmounts
 // zeroes a summand of the roll-forward and does not re-run the sweep [VERIFIED:
-// RepaymentPeriod.java:173-197]. So between sweeps the stored value is NOT what
+// RepaymentPeriod.java:173-198]. So between sweeps the stored value is NOT what
 // re-evaluating the expression would produce, and that difference is observable
 // money.
 //
@@ -74,7 +74,7 @@ func TestOutstandingLoanBalanceIsASweptSnapshot(t *testing.T) {
 		t.Fatalf("the cell is a SWEPT SNAPSHOT, not an on-demand derivation: reading it after a "+
 			"summand changed but before a sweep gave %d minor units, want the unchanged %d. "+
 			"A port that derives this cell on read diverges from the oracle everywhere the "+
-			"oracle leaves it stale (RepaymentPeriod.java:173-197).",
+			"oracle leaves it stale (RepaymentPeriod.java:173-198).",
 			got, wantAfterFirstSweep)
 	}
 
