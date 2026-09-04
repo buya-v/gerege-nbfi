@@ -441,16 +441,57 @@ func (p *RepaymentPeriod) IsFirstRepaymentPeriod() bool { return p.previous == n
 //
 //  1. BOUNDARY. The oracle filters with isInPeriod(transactionDate, from, due,
 //     isFirstRepaymentPeriod() && interestPeriod.isFirstInterestPeriod()), and
-//     that fourth argument selects the boundary rule: inclusive on both ends
-//     only for the first segment of the first repayment period, and
-//     from-EXCLUSIVE / due-inclusive everywhere else
-//     [VERIFIED: LoanRepaymentScheduleProcessingWrapper.java:251-254]. This
-//     function is unconditionally inclusive on both ends, so it accepts a
-//     transaction dated exactly on a later segment's from-date, which the
-//     oracle assigns to the PRECEDING segment.
+//     that fourth argument selects the boundary rule —
+//     isFirstPeriod ? DateUtils.isDateInRangeInclusive
+//     : DateUtils.isDateInRangeFromExclusiveToInclusive
+//     [VERIFIED: LoanRepaymentScheduleProcessingWrapper.java:251-254] — whose
+//     from-exclusive branch is isAfter(target, from) && !isAfter(target, due)
+//     [VERIFIED: DateUtils.java:415-417]. So the oracle's window is [from, due]
+//     for the FIRST segment of the FIRST repayment period and (from, due] —
+//     FROM-EXCLUSIVE, due-inclusive — for every other segment. This function is
+//     unconditionally inclusive on both ends.
 //  2. WHICH MATCH. The oracle terminates with .reduce((one, two) -> two),
 //     which returns the LAST match, not the first. The loop below returns the
 //     first.
+//
+// WORKED EXAMPLE — THE INPUT THAT ACTUALLY DIVERGES. Take a NON-first repayment
+// period (previous != nil) carrying the contiguous segments [F, D0] and
+// [D0, D1], and let transactionDate == F, the period's own FromDate:
+//
+//   - Oracle: no segment here is the first segment of the first repayment
+//     period, so every segment is from-exclusive. Segment 1 needs F after F —
+//     false. Segment 2 needs F after D0 — false. Nothing matches and
+//     findInterestPeriod returns Optional.empty().
+//   - This port: !F.Before(F) && !F.After(D0) is true, so it returns segment 1.
+//
+// Empty versus a segment: that is the divergence, and it is the case a vector
+// must capture. The control that proves it is about the BOUNDARY and not about
+// the date is the same transactionDate on the FIRST repayment period, where
+// segment 1 IS first-of-first, the inclusive branch applies, and both sides
+// return segment 1.
+//
+// THE INPUT THAT DOES *NOT* DIVERGE — DO NOT BUILD A VECTOR ON IT. An earlier
+// revision of this block named "a transaction dated exactly on a later
+// segment's from-date" as the divergent case. It is not: there the two agree.
+// Segments inside a repayment period are contiguous by construction —
+// insertInterestPeriod truncates the predecessor to newDueDate and inserts the
+// successor with FromDate == that same newDueDate
+// [VERIFIED: ProgressiveLoanInterestScheduleModel.java:280-296] — so a later
+// segment's from-date IS the preceding segment's due-date. With
+// transactionDate == D0 in the same non-first period the oracle matches [F, D0]
+// (D0 is after F and not after D0) and does NOT match [D0, D1] (D0 is not after
+// D0), so its last-match reduction yields [F, D0]; the port's first match is
+// [F, D0] too. Identical answers. A vector built on that input COMES BACK GREEN
+// and would be filed as parity while the real defect stayed live — which is why
+// the worked example matters more here than the two facts above it do.
+//
+// Axis 2 is LATENT for the same reason and cannot be pinned by that input
+// either. Under contiguity two segments can never match at once: a match on
+// segment i needs transactionDate <= due_i, while a match on any later segment
+// j needs transactionDate > from_j == due_(j-1) >= due_i. First-versus-last is
+// therefore only observable on a segment list with overlapping or duplicated
+// boundaries; pin it with its own case, not as a by-product of the boundary
+// case.
 //
 // Both helpers this needs already exist and are graded: isInPeriod and
 // isDateInRangeFromExclusiveToInclusive in dates.go, and IsFirstInterestPeriod
@@ -460,7 +501,9 @@ func (p *RepaymentPeriod) IsFirstRepaymentPeriod() bool { return p.previous == n
 // against the oracle before the numbers move. It is latent rather than live:
 // this function has no caller anywhere in the module at the time of writing
 // (grep FindInterestPeriod). Recorded in
-// .softhouse/handoff/T530-t529-conditions.md as substantive finding 1.
+// .softhouse/handoff/T530-t529-conditions.md as substantive finding 1; the
+// worked example above was corrected by T534 after T531 rated the original one
+// MAJOR, and the vector spec that must capture it is T533.
 func (p *RepaymentPeriod) FindInterestPeriod(transactionDate time.Time) (*InterestPeriod, bool) {
 	for _, ip := range p.InterestPeriods {
 		if !transactionDate.Before(ip.FromDate) && !transactionDate.After(ip.DueDate) {
