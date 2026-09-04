@@ -8158,7 +8158,7 @@
    "description": "T509 filed seven follow-ups (FU-T509-1..7). None were T509 to do -- all but two live in nexus/, which it was forbidden to touch. They are recorded here so they survive the handoff.\n\nFU-T509-1 (MONEY, HIGHEST VALUE). internal/apps/investor/postgres.go:108 and :199-211 -- five *_outstanding_derived columns written at INSERT and decoded back into authoritative fields. This is T501 exact shape in a package nobody has examined. [VERIFIED by T509: ExternalAssetOwnerTransferDetails.java:49.] Needs T501 treatment: derive from the posting stream, never store.\n\nFU-T509-2. internal/apps/workingcapital/postgres.go:379 -- decide whether a written m_wc_loan_balance is lawful under DEC-2 I-3 or is the m_trial_balance shape section 7 refuses to port. T503 raised it and correctly declined to close it inside a readability task.\n\nFU-T509-3. internal/apps/workingcapital/postgres.go:168 -- inline the spliced wcProductDetailColumns into the write path literal, exactly as T503 did for the other four sites. One OPAQUE-SQL, one-line fix, removes the last unreadable mutation in the tree.\n\nFU-T509-4. internal/apps/loan/charge.go -- AmountOutstanding x11. Same question as the loanproduct four: schedule intermediate, or stored balance? It HAS an oracle column (LoanCharge.java:108), which the loanproduct cells do not, so the answer may legitimately differ. Do not assume it inherits their verdict.\n\nFU-T509-5. internal/apps/loanschedule/emi.go:1720,:1726 -- the twin of the four argued loanproduct sites. WHATEVER VERDICT THOSE GET, THIS MUST GET THE SAME ONE, IN WRITING. The entire point of T509 item 2 is that identical constructs cannot keep receiving different answers because they are spelled differently.\n\nFU-T509-6 (THE REAL FIX FOR THE OVER-MATCHING ARM). The go/types reachability discriminator. T514 constraint is NOT OPTIONAL: it MUST FAIL CLOSED on unresolved value flow. An analysis answering \"not persisted\" on an edge it cannot resolve reintroduces the fail-open one layer up -- and unlike a waiver, which is a visible document a human must amend, a heuristic failure produces NO ARTEFACT AT ALL. Until this exists, the four loanproduct sites stay RED.\n\nFU-T509-7 (guard, small). CANNOT-CATCH item 10 residual: a value literal assigned to a variable and then stored by address, and append of a composite literal into a slice. Needs the same go/types work as FU-T509-6 and should ride with it.\n\nSPLIT THIS BEFORE DISPATCH. It is a backlog record, not a single runnable task -- FU-1 alone is a full coder task with its own reviewer. Plan FU-1 first (highest money value), then FU-3 (one line), then FU-2/FU-4/FU-5 as a linked verdict-consistency task, then FU-6/FU-7 together."
   },
   {
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "sonnet",
    "contract_independent": true,
@@ -8173,10 +8173,11 @@
    ],
    "dependencies": [],
    "attempts": 1,
-   "note": "dispatched by cloud fire cloud-20260904-1200 into an isolated worktree on softhouse/T526-t519-residuals",
+   "note": "landed 4d7c1bc0 on softhouse/T526-t519-residuals, BRANCH VERIFIED PRESENT ON ORIGIN by `git ls-remote` (the failure this whole fire is about). DRIVER-VERIFIED BY RE-DERIVATION, not by reading the report: opened /home/user/fineract @ 426a23544 and read RepaymentPeriod.java myself. :389-403 IS getOutstandingLoanBalance() and its body matches the Go comment term-for-term (balanceCorrection + capitalizedIncome + disbursement + paidPrincipal - duePrincipal, negativeToZero = 'floored at zero'); :405-407 IS addPaidPrincipalAmount; and the OLD :377-389 held getUnrecognizedInterest/getCreditedAmounts — so the drift was real and the correction is right. Scope clean at the merge-base form: 3 files, all inside files_hint, zero float, savings untouched. Awaiting independent review T529.",
    "description": "T519 found these while reviewing T516 and correctly attributed them AWAY from T516 -- each is present verbatim at merge-base 14cf6c1f or on main, so T516 did not introduce any of them. They are real and small.\n\n  1. TWO STALE [VERIFIED:] CITATIONS. repaymentperiod.go:342 cites :377-389 and :354 cites :391-393. The actual ranges are :389-403 and :405-407. A [VERIFIED:] tag whose line range is wrong is worse than no tag: the honesty rule exists so a reader can CHECK a claim, and a citation that does not resolve trains readers to stop checking. Re-verify against the pinned checkout /Users/buv/fineract @ 426a23544 and correct both. Confirm the SUBSTANCE still holds at the corrected lines -- if the cited code says something different there, that is a finding, not a typo.\n\n  2. ONE LOOSE DOC CLAIM, inherited from T511 and untouched by T516. doc.go describes savings/summary.go:53 as a \"genuine real balance write\". T519 measured it as a VALUE-RECEIVER PURE FOLD, which is a materially different thing: it mutates a copy, not stored state. The sentence is doing rhetorical work in an argument about what counts as a balance write, so an imprecise example weakens the argument it is offered to support. Restate it accurately. NOTE the file it describes is owned by the savings work (T515/T522) -- do NOT edit savings; only fix the DESCRIPTION in loanproduct/doc.go.\n\n  3. FOUR gofmt -l HITS module-wide, all identical on main, so pre-existing. Fix them only if they are inside nexus/internal/apps/loanproduct/; anything outside that directory belongs to whichever task owns it -- report those rather than reaching into another worker's package.\n\nDo not re-open T516's argument; it is APPROVED and merged. This is cleanup of things found beside it.",
    "dispatched_at": "2026-09-04T12:35:00Z",
-   "dispatched_by_fire": "cloud-20260904-1200"
+   "dispatched_by_fire": "cloud-20260904-1200",
+   "tip": "4d7c1bc0"
   },
   {
    "id": "T527",
@@ -8223,14 +8224,14 @@
   },
   {
    "id": "T529",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
    "role": "reviewer",
    "contract_independent": true,
-   "branch": "",
-   "attempts": 0,
+   "branch": "softhouse/T529-review-t526",
+   "attempts": 1,
    "dependencies": [
     "T526"
    ],
@@ -8239,7 +8240,10 @@
     ".softhouse/reviews/t529-review-t526/REVIEW.md"
    ],
    "title": "INDEPENDENT review of T526 — the two corrected [VERIFIED:] citations and the restated doc claim",
-   "description": "INDEPENDENT review of T526 (T519's residuals in nexus/internal/apps/loanproduct/).\nSmall, but it is a review of CITATION HONESTY, which is the mechanism the whole program leans on.\n\n  1. OPEN THE PINNED CHECKOUT YOURSELF at /home/user/fineract @ 426a23544 (detached; the driver\n     checked it out this fire) and read the corrected line ranges. Confirm BOTH that the new ranges\n     resolve AND that the code at those lines says what the Go comment claims. T526 was told a\n     citation whose range is wrong is worse than none; a citation CORRECTED to a range that still\n     does not support the claim is worse again.\n  2. THE doc.go RESTATEMENT. T519 measured savings/summary.go:53 as a VALUE-RECEIVER PURE FOLD, not\n     a \"genuine real balance write\". Verify that measurement independently from the source on main\n     (savings/summary.go IS on main), then judge whether T526's replacement sentence is accurate AND\n     still supports the argument it sits inside. Note the guard currently REFUSES that exact line as\n     [I3-FIELD-WRITE] — so \"pure fold\" and \"the guard flags it\" are both true, and a restatement\n     that hides the tension is a finding.\n  3. SCOPE. T526 was forbidden to edit nexus/internal/apps/savings/ (it belongs to the unpushed\n     T515 stack) and forbidden to fix gofmt hits outside loanproduct/. Verify by\n     `git diff --stat main..softhouse/T526-t519-residuals` that it obeyed both.\n  4. Confirm it did NOT re-open T516's argument, which is APPROVED and merged."
+   "description": "INDEPENDENT review of T526 (T519's residuals in nexus/internal/apps/loanproduct/).\nSmall, but it is a review of CITATION HONESTY, which is the mechanism the whole program leans on.\n\n  1. OPEN THE PINNED CHECKOUT YOURSELF at /home/user/fineract @ 426a23544 (detached; the driver\n     checked it out this fire) and read the corrected line ranges. Confirm BOTH that the new ranges\n     resolve AND that the code at those lines says what the Go comment claims. T526 was told a\n     citation whose range is wrong is worse than none; a citation CORRECTED to a range that still\n     does not support the claim is worse again.\n  2. THE doc.go RESTATEMENT. T519 measured savings/summary.go:53 as a VALUE-RECEIVER PURE FOLD, not\n     a \"genuine real balance write\". Verify that measurement independently from the source on main\n     (savings/summary.go IS on main), then judge whether T526's replacement sentence is accurate AND\n     still supports the argument it sits inside. Note the guard currently REFUSES that exact line as\n     [I3-FIELD-WRITE] — so \"pure fold\" and \"the guard flags it\" are both true, and a restatement\n     that hides the tension is a finding.\n  3. SCOPE. T526 was forbidden to edit nexus/internal/apps/savings/ (it belongs to the unpushed\n     T515 stack) and forbidden to fix gofmt hits outside loanproduct/. Verify by\n     `git diff --stat main..softhouse/T526-t519-residuals` that it obeyed both.\n  4. Confirm it did NOT re-open T516's argument, which is APPROVED and merged.",
+   "dispatched_at": "2026-09-04T12:40:53Z",
+   "dispatched_by_fire": "cloud-20260904-1200",
+   "note": "dispatched by cloud fire cloud-20260904-1200 into an isolated worktree"
   }
  ],
  "cross_corroboration": {
