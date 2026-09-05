@@ -473,25 +473,78 @@ func (p *RepaymentPeriod) IsFirstRepaymentPeriod() bool { return p.previous == n
 // THE INPUT THAT DOES *NOT* DIVERGE — DO NOT BUILD A VECTOR ON IT. An earlier
 // revision of this block named "a transaction dated exactly on a later
 // segment's from-date" as the divergent case. It is not: there the two agree.
-// Segments inside a repayment period are contiguous by construction —
-// insertInterestPeriod truncates the predecessor to newDueDate and inserts the
-// successor with FromDate == that same newDueDate
-// [VERIFIED: ProgressiveLoanInterestScheduleModel.java:280-296] — so a later
-// segment's from-date IS the preceding segment's due-date. With
-// transactionDate == D0 in the same non-first period the oracle matches [F, D0]
-// (D0 is after F and not after D0) and does NOT match [D0, D1] (D0 is not after
-// D0), so its last-match reduction yields [F, D0]; the port's first match is
-// [F, D0] too. Identical answers. A vector built on that input COMES BACK GREEN
-// and would be filed as parity while the real defect stayed live — which is why
-// the worked example matters more here than the two facts above it do.
+// On the INSERTION path a later segment's from-date IS the preceding segment's
+// due-date — insertInterestPeriod truncates the predecessor to newDueDate and
+// inserts the successor at previousIndex+1 with FromDate == that same
+// newDueDate [VERIFIED: ProgressiveLoanInterestScheduleModel.java:280-296],
+// and calculateNewDueDate clamps newDueDate into [previous.from, previous.due]
+// [VERIFIED: ProgressiveLoanInterestScheduleModel.java:439-442], so the split
+// can neither escape nor invert the parent range. With transactionDate == D0 in
+// the same non-first period the oracle matches [F, D0] (D0 is after F and not
+// after D0) and does NOT match [D0, D1] (D0 is not after D0), so its last-match
+// reduction yields [F, D0]; the port's first match is [F, D0] too. Identical
+// answers. A vector built on that input COMES BACK GREEN and would be filed as
+// parity while the real defect stayed live — which is why the worked example
+// matters more here than the two facts above it do.
 //
-// Axis 2 is LATENT for the same reason and cannot be pinned by that input
-// either. Under contiguity two segments can never match at once: a match on
-// segment i needs transactionDate <= due_i, while a match on any later segment
-// j needs transactionDate > from_j == due_(j-1) >= due_i. First-versus-last is
-// therefore only observable on a segment list with overlapping or duplicated
-// boundaries; pin it with its own case, not as a by-product of the boundary
-// case.
+// CONTIGUITY HOLDS ON THE INSERTION PATH; IT IS NOT AN INVARIANT OF THE LIST.
+// Do not port it as one. Both date fields carry a public Lombok @Setter
+// [VERIFIED: InterestPeriod.java:47-52], getInterestPeriods() hands out the
+// live ArrayList [VERIFIED: RepaymentPeriod.java:54-56], nothing validates or
+// re-sorts it, and Gson rebuilds the whole list out of
+// m_loan_progressive_model.json_model with no ordering check whatsoever
+// [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:95-100;
+// ProgressiveLoanInterestScheduleModelParserServiceGsonImpl.java:66, :87] —
+// a list written by a different code version is restored unchecked, and
+// getSavedModel then re-processes transactions onto it
+// [VERIFIED: InterestScheduleModelRepositoryWrapperImpl.java:110-128]. Strict
+// contiguity is in fact BROKEN at ProgressiveEMICalculator.java:1791-1794,
+// which shrinks an INTERIOR segment's dueDate to targetDate and — unlike :665,
+// which clears the whole tail at :677-678 — truncates nothing. A port that
+// treats DueDate == next.FromDate as an invariant (binary search over the
+// segments, an assertion, or deriving one boundary from its neighbour) is
+// wrong on that path, and that path is inside interest recalculation.
+//
+// THE DIRECTION OF THAT BREAK IS A GAP, NOT AN OVERLAP, and that is why the
+// conclusion below survives its premise. findInterestPeriod only ever returns a
+// segment whose window already contains targetDate, so targetDate <= due_i
+// [VERIFIED: RepaymentPeriod.java:442-447]; setDueDate(targetDate) therefore
+// only SHRINKS due_i while from_(i+1) keeps the old value, leaving
+// from_(i+1) >= due_i. An overlap would need due_i to GROW past from_(i+1),
+// which would require targetDate > due_i — exactly what the filter forbids.
+//
+// Axis 2 is LATENT, and this weaker property is what carries it: no reachable
+// path leaves two segments i < j with from_j < due_i. Every date mutation
+// outside insertInterestPeriod touches only the FIRST segment's fromDate
+// [ProgressiveEMICalculator.java:857], only the LAST segment's dueDate
+// [:838, :859, :1066, :1153, :2036], or a segment whose successors are cleared
+// in the same block [:665 with :677-678, :687 with :689]; every deletion
+// [:654, :678, :689, :692, AdvancedPaymentScheduleTransactionProcessor.java:3592]
+// only drops elements, which cannot create a pair; both copy constructors
+// preserve dates and order [VERIFIED: RepaymentPeriod.java:153-171, :173-198];
+// and insertInterestPeriod splits in place under the clamp above. Two segments
+// therefore never match at once: a match on i needs transactionDate <= due_i,
+// while a match on a later j needs transactionDate > from_j >= due_i. The one
+// corner where even that weaker property bends is insertInterestPeriod's
+// indexOf at ProgressiveLoanInterestScheduleModel.java:294, which is a VALUE
+// lookup (@EqualsAndHashCode excludes only repaymentPeriod, and only
+// repaymentPeriod — InterestPeriod.java:41) and so can place the successor after
+// an earlier value-equal duplicate; that bend requires the intervening segment
+// to be inverted, whose match window is empty, so it still yields at most one
+// match. The site-by-site derivation is in
+// .softhouse/handoff/T539-t538-conditions.md.
+//
+// First-versus-last is therefore observable ONLY on (i) two segments i < j in
+// STRICT overlap, from_j < due_i, or (ii) two segments carrying IDENTICAL
+// non-empty [from, due] ranges — case (ii) being the from_j == from_i <
+// due_i == due_j instance of case (i). A SHARED boundary (from_j == due_i) does
+// NOT produce a second match: that IS contiguity, it is verbatim the retired
+// example above, and it comes back green. Neither do zero-length segments (the
+// from-exclusive window (d, d] is empty, and the one inclusive window [d, d] is
+// the first segment of the first repayment period, which no later segment can
+// also match because from_j >= d), nor gaps, nor inverted segments (due < from,
+// empty window). Pin axis 2 with its own case built on from_j < due_i, not as a
+// by-product of the boundary case.
 //
 // Both helpers this needs already exist and are graded: isInPeriod and
 // isDateInRangeFromExclusiveToInclusive in dates.go, and IsFirstInterestPeriod

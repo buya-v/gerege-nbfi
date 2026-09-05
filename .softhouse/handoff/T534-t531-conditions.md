@@ -80,18 +80,40 @@ MAJOR rating is correct; I reproduced the agreement rather than accepting it.
 
 ### One thing I derived beyond the brief — axis 2 is latent, and cannot be pinned by the boundary case
 
-Under the contiguity invariant **two segments can never match the oracle at once**: a match on
-segment *i* requires `t <= due_i`, while a match on any later segment *j* requires
-`t > from_j == due_(j-1) >= due_i`. Contradiction. (The first-of-first inclusive segment does not
-escape it either: a match there needs `t <= due_0`, and any later match needs `t > due_0`.)
+> **CORRECTED BY T539 (2026-09-05), per T538 review conditions 1 and 2.** The paragraph below
+> originally stated contiguity as an *invariant* and named overlapping-or-repeated **boundary
+> dates** as the shape that exposes axis 2. Both were wrong. Contiguity holds on the
+> INSERTION path only — `fromDate`/`dueDate` carry public `@Setter`s
+> (`InterestPeriod.java:47-52`), the list is handed out live (`RepaymentPeriod.java:54-56`),
+> `ProgressiveEMICalculator.java:1791-1794` shrinks an interior `dueDate` with no truncation, and
+> Gson rebuilds the list from `m_loan_progressive_model.json_model` with no ordering check
+> (`InterestScheduleModelRepositoryWrapperImpl.java:95-100`;
+> `ProgressiveLoanInterestScheduleModelParserServiceGsonImpl.java:66, :87`). And a boundary date
+> that repeats across two adjacent segments IS contiguity — the retired green case, not a
+> divergent one. The corrected text follows; the conclusion is unchanged and still holds.
+
+The weaker property that actually holds is that **no reachable path leaves two segments `i < j`
+with `from_j < due_i`** — every mutation outside `insertInterestPeriod` touches only the first
+segment's `fromDate`, only the last segment's `dueDate`, or a segment whose successors are cleared
+in the same block; `:1791-1794` only *shrinks* a `dueDate` (its segment was selected by
+`findInterestPeriod`, so `targetDate <= due_i`), which opens a **gap**, never an overlap; deletions
+only drop elements; and both copy constructors preserve dates and order. Given that,
+**two segments can never match the oracle at once**: a match on segment *i* requires `t <= due_i`,
+while a match on any later segment *j* requires `t > from_j >= due_i`. Contradiction. (The
+first-of-first inclusive segment does not escape it either: a match there needs `t <= due_0`, and
+any later match needs `t > from_j >= due_0`.)
 
 So `.reduce((one, two) -> two)` is **indistinguishable from first-match on any segment list the
-model actually builds**, and first-versus-last is only observable on a list with overlapping or
-duplicated boundaries. Both facts T531 told me to keep are kept and both are true of the oracle's
-code — but a reader must not expect axis 2 to show up in the boundary vector. This is recorded in
-the comment because it is the second way to build a green vector and misread it as parity: the
-first was the wrong date, this would be the wrong axis. **T533 case (c) already asks for it as its
-own case, which is the right shape.**
+model actually builds**, and first-versus-last is observable ONLY on (i) two segments `i < j` in
+**strict overlap**, `from_j < due_i`, or (ii) two segments carrying **identical non-empty
+`[from, due]` ranges** — case (ii) being the `from_j == from_i < due_i == due_j` instance of
+case (i). A **shared boundary** (`from_j == due_i`) does **not** produce a second match: that is
+contiguity, it is the retired example, and it comes back green. Neither do zero-length segments,
+gaps, or inverted segments. Both facts T531 told me to keep are kept and both are true of the
+oracle's code — but a reader must not expect axis 2 to show up in the boundary vector. This is
+recorded in the comment because it is the second way to build a green vector and misread it as
+parity: the first was the wrong date, this would be the wrong axis. **T533 case (c) already asks
+for it as its own case, which is the right shape.**
 
 ---
 
@@ -185,10 +207,16 @@ corrected by the driver and now names the right input. Specifically it carries:
 
 That is the correct spec. **I did not edit `tasks.json`** — the orchestrator owns it.
 
-One note for whoever executes T533, from the derivation above: case (c) needs a segment list with
-**overlapping or duplicated boundaries**, because a contiguous list can never produce two
-simultaneous oracle matches. Constructing (c) out of an ordinary contiguous schedule will produce
-a single-match input and another green-and-meaningless vector.
+One note for whoever executes T533, from the derivation above — **corrected by T539 per T538
+review condition 1; the original wording named overlapping-or-repeated boundary dates, and a
+boundary date repeated across two adjacent segments IS contiguity, i.e. the retired green
+case**: case (c) needs a segment list
+carrying either (i) two segments `i < j` in **strict overlap**, `from_j < due_i`, or (ii) two
+segments with **identical non-empty `[from, due]` ranges**. Nothing else works, because no other
+shape can produce two simultaneous oracle matches — a **shared** boundary (`from_j == due_i`),
+a zero-length segment, a gap and an inverted segment each yield at most one match. Constructing
+(c) out of an ordinary contiguous schedule will produce a single-match input and another
+green-and-meaningless vector.
 
 ---
 

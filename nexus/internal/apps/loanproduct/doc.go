@@ -11,11 +11,17 @@
 // deliberately thin where the generator is already authoritative — it declares
 // the enums the generator consumes, and nothing here recomputes an EMI.
 //
-// The reference oracle is Apache Fineract at /Users/buv/fineract, pinned at
-// commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Every behavioural claim
-// carries a file:line citation to that tree; claims that do not carry an
-// UNVERIFIED marker. Oracle Database is a prohibited product in this program
-// and appears nowhere in this stack; PostgreSQL is the only permitted database.
+// The reference oracle is Apache Fineract, pinned at commit
+// 426a23544e8426a38ae43ae404670a0a7e85b9eb. The COMMIT is the identity of the
+// oracle; the checkout path is not, and differs per environment — currently
+// /home/user/fineract on the cloud fire and /Users/buv/fineract on the local
+// Mac. Resolve it from your own environment and confirm
+// `git -C <checkout> rev-parse HEAD` prints that sha before trusting any line
+// number below; a citation that resolves on one machine only is a broken
+// citation. Every behavioural claim carries a file:line citation to that tree;
+// claims that do not carry an UNVERIFIED marker. Oracle Database is a
+// prohibited product in this program and appears nowhere in this stack;
+// PostgreSQL is the only permitted database.
 //
 // # Citation-audit status — read this before trusting a [VERIFIED:] range
 //
@@ -26,9 +32,14 @@
 //     was re-derived mechanically against the pinned commit by T530 and
 //     re-derived again, row by row, by the independent review T531.
 //   - interestperiod.go — UNSWEPT. Its [VERIFIED: InterestPeriod.java:a-b]
-//     ranges have NOT been audited. T530 measured 23 of 28 failing to resolve,
-//     10 of them citing past the end of a 237-line file — the strongest
-//     available evidence that the block was never derived against this commit.
+//     ranges have NOT been audited. T530 measured 23 of 28 failing to resolve.
+//     Eleven of the 28 cite at least one line that does not exist in a
+//     237-line file, and the two counts are different numbers: TEN lie WHOLLY
+//     past the end (:252-254, :256-259, :299-301, :303-305, :307-309, :311-313,
+//     :315-317, :319-321, :323-325, :327-329) and ONE more, :237-250, starts on
+//     the file's last line and OVERRUNS it. Either count is the strongest
+//     available evidence that the block was never derived against this commit;
+//     quote whichever one you mean.
 //     The sweep is task T532, which owns that file; nothing here has covered
 //     it. Treat those ranges as unverified until T532 lands, and do not apply
 //     an offset: on repaymentperiod.go the drift changed sign and was
@@ -38,10 +49,15 @@
 //
 // The unswept verdict is about the CODE FILES, not about this comment: the
 // InterestPeriod.java ranges cited in the arguments below — :43-73, :45, :65,
-// :66, :68 and :178 — were each re-read directly against the pinned commit by
-// T534 and all six resolve. That is a spot check of the six ranges those
-// arguments stand on, and it is not a sweep of interestperiod.go; do not cite
-// it as one.
+// :66, :68, :151, :168-188 and :178 — were each re-read directly against the
+// pinned commit, the first six by T534 and the remaining two (:151, load-
+// bearing for evidence item 2, and :168-188, load-bearing for item 3) by T538
+// and again by T539, and all eight resolve. Those eight are every
+// InterestPeriod.java range this file cites: four written out in full
+// (:43-73, :151, :168-188, :178) and four written bare as (:45), (:65), (:66)
+// and (:68) inside RETIRED 1, so re-measuring needs both spellings. It is still
+// a spot check of the eight ranges these arguments stand on, and it is NOT a
+// sweep of interestperiod.go; do not cite it as one.
 //
 // # One trap this port is built around
 //
