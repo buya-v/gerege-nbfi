@@ -213,3 +213,18 @@ I edited **one bullet** of `doc.go`'s citation-audit banner: the `interestperiod
 1. **Could not reproduce "missed five".** For this file the mechanical-vs-grep gap is **2**. I looked at every line of `interestperiod.go` matching `InterestPeriod\.java:` with a regex that also accepts comma-continuation lists and `:NNN` continuation atoms; I found no citation whose atoms spill onto a following line. The "five" is a statement about the file T530 swept, not this one.
 2. **Did not sweep the other-file citations in `interestperiod.go`** — `RepaymentPeriod.java:389-403`, `:405-407`, `:173-198`, `:192-194`; `ProgressiveEMICalculator.java:907, :922, :946, :952, :1124, :1129, :421, :1254-1256, :1647, :1654, :1667`; `AdvancedPaymentScheduleTransactionProcessor.java:929, :967, :2912`; `ProgressiveLoanScheduleGenerator.java:132`; `LoanSchedulePlan.java:65, :77`; `ProgressiveLoanInterestScheduleModel.java:257, :290`; `InterestScheduleModelRepositoryWrapperImpl.java:95, :110-128`. **These remain UNAUDITED and I say so in the file's own audit banner.** Half-auditing a second file is the precise defect this task exists to repair, and `RepaymentPeriod.java` spans are T547's. I checked only the two that sit in this file's own prose (`DateUtils`, `MathUtil`) because one of them, `MathUtil.java:175-178`, was load-bearing for `ratNegativeToZero` — and it was wrong. **That is a live signal that the other-file spans in this file are also suspect; they should be given a task.**
 3. **No golden-vector / conformance run against a live oracle instance** beyond the checked-in suites above. The diff is comment-only and proven byte-identical, so parity cannot have moved; no cutover, activation or DEC change is implied by this task.
+
+## Push confirmation
+
+Branch pushed on the first attempt (no retries needed).
+
+```
+$ git push -u origin softhouse/T532-interestperiod-citations
+ * [new branch]        softhouse/T532-interestperiod-citations -> softhouse/T532-interestperiod-citations
+branch 'softhouse/T532-interestperiod-citations' set up to track 'origin/softhouse/T532-interestperiod-citations'.
+
+$ git ls-remote --heads origin softhouse/T532-interestperiod-citations
+1441724e2283a2c5b37c2ad2db5e1a1113abcad1	refs/heads/softhouse/T532-interestperiod-citations
+```
+
+`1441724e2283a2c5b37c2ad2db5e1a1113abcad1` is the sweep commit and matches local `HEAD` at the time of push. **The branch is on the remote — this task is not one of the five lost to an unpushed branch.** This handoff-append commit follows it.
