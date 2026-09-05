@@ -31,20 +31,24 @@
 //   - repaymentperiod.go — SWEPT. Every [VERIFIED: RepaymentPeriod.java:a-b]
 //     was re-derived mechanically against the pinned commit by T530 and
 //     re-derived again, row by row, by the independent review T531.
-//   - interestperiod.go — UNSWEPT. Its [VERIFIED: InterestPeriod.java:a-b]
-//     ranges have NOT been audited. T530 measured 23 of 28 failing to resolve.
-//     Eleven of the 28 cite at least one line that does not exist in a
-//     237-line file, and the two counts are different numbers: TEN lie WHOLLY
-//     past the end (:252-254, :256-259, :299-301, :303-305, :307-309, :311-313,
-//     :315-317, :319-321, :323-325, :327-329) and ONE more, :237-250, starts on
-//     the file's last line and OVERRUNS it. Either count is the strongest
-//     available evidence that the block was never derived against this commit;
-//     quote whichever one you mean.
-//     The sweep is task T532, which owns that file; nothing here has covered
-//     it. Treat those ranges as unverified until T532 lands, and do not apply
-//     an offset: on repaymentperiod.go the drift changed sign and was
-//     non-monotonic, so an offset theory makes an unswept remainder merely look
-//     accounted for.
+//   - interestperiod.go — SWEPT by T532. All 28 [VERIFIED:
+//     InterestPeriod.java:a-b] ranges were re-derived individually by
+//     brace-counting the Java class body against the pinned commit. T532
+//     measured 22 of 28 failing to resolve, NOT the 23 T530 estimated while
+//     sweeping a different file: the sixth surviving citation is the bare
+//     :151 on the "downstream reach" line, which carries no VERIFIED token, so
+//     a grep-based census misses it AND, if it then counts it as unresolved,
+//     overstates the failure count by one. The EOF split T530 reported is
+//     confirmed exactly — TEN wholly past the end of a 237-line file
+//     (:252-254, :256-259, :299-301, :303-305, :307-309, :311-313, :315-317,
+//     :319-321, :323-325, :327-329) and ONE more, :237-250, starting on the
+//     file's last line and OVERRUNNING it, so eleven cite a line that does not
+//     exist. Do not apply an offset here either: the drift changed sign
+//     (-94 to +69) and was non-monotonic, and two wrong ranges (:229-231,
+//     :233-235) resolved to REAL BUT WRONG members, which an offset theory
+//     hides completely. The sweep found zero DIVERGENCES: at every corrected
+//     span the Java supports the Go sentence, and no range was repointed to
+//     make a mismatch disappear.
 //   - Every other file in the package — UNSWEPT, and never claimed otherwise.
 //
 // The unswept verdict is about the CODE FILES, not about this comment: the
