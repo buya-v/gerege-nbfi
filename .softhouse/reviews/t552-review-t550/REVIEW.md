@@ -469,3 +469,21 @@ evidence/t552-plant.sh   <branch> <mode>   # modes: unenumerated mine-i mine-j m
 evidence/t552-floor.py   <ref> <cwd>       # floor re-derivation, VETO 2 applied, window applied
 evidence/t552-sweep.py   <ref> <cwd>       # hourly false-RED sweep, both classifiers
 ```
+
+---
+
+## PROOF THIS BRANCH REACHED ORIGIN
+
+```
+$ git push -u origin softhouse/T552-review-t550
+To https://github.com/buya-v/gerege-nbfi
+ * [new branch]        softhouse/T552-review-t550 -> softhouse/T552-review-t550
+branch 'softhouse/T552-review-t550' set up to track 'origin/softhouse/T552-review-t550'.
+
+$ git ls-remote --heads origin softhouse/T552-review-t550
+957327d03f60a1b64082f67f2ef013ab71760b75	refs/heads/softhouse/T552-review-t550
+```
+
+The sha above is the review commit. This proof is a second commit on the same branch, pushed after
+it, so `origin` is one commit ahead of the sha shown by construction — re-run `git ls-remote` for
+the current tip.
