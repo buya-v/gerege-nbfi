@@ -1,0 +1,76 @@
+# ledger-invariants.baseline — THE KNOWN, ARGUED FINDING SET OF nexus/
+#
+# WHAT THIS FILE IS. One `CLASS<TAB>path` row per (class, file) pair that
+# `ledgerguard --root nexus` reports today. It is read by
+# `.softhouse/guards/drive-red-ledger-invariants.sh`, whose CONTROL used to be
+# "the unmodified tree must exit 0" and cannot be any more: the tree is RED by a
+# recorded decision (T502 / T505 / T514 / T516 — the four `loanproduct` schedule-intermediate
+# sites stay refused until a go/types reachability discriminator exists).
+#
+# WHAT IT IS NOT. It is NOT an exemption, a waiver or a suppression. The guard's exit
+# code is untouched by it: `check-ledger-invariants.sh` still refuses, the bar is still
+# red, and nothing in this file is consulted when a finding is decided. Its only reader
+# is the drive-red CONTROL, which asserts the set is EXACTLY this — no more, no fewer.
+#
+# BOTH DIRECTIONS FAIL, and the second one is the point:
+#   * a NEW (class, file) pair appears  -> a violation entered a file that had none;
+#   * a LISTED pair DISAPPEARS          -> a known violation was silenced, and silencing
+#                                          one must be an explicit edit to this file,
+#                                          reviewed like any other diff.
+# The second direction is the one that catches a rename that turns the bar green while
+# changing nothing — the move T502 was sent to make and refused to make.
+#
+# GRANULARITY, AND ITS RESIDUAL, STATED. Rows carry NO LINE NUMBERS, because line
+# numbers drift on every unrelated edit to nexus/ and a control that fails on drift is a
+# control that gets deleted. The cost is real and is not hidden: a SECOND finding of an
+# already-listed class in an already-listed file does not move this set. That case is
+# still caught by the guard itself, which prints every finding with its position and
+# exits non-zero; this file is a no-silent-CHANGE check, not the guard.
+#
+# HOW TO REGENERATE (and read the diff before you commit it):
+#   ledgerguard --root nexus | grep -E '^  \[' \
+#     | sed -E 's/^  \[([A-Z0-9-]+)\] ([^:]+):.*/\1\t\2/' | sort -u
+#
+# Measured by T509 at 42 findings across the 14 pairs below.
+#
+# --- the four loanproduct schedule intermediates: a KNOWN, ARGUED, TEST-PINNED red ---
+#     Not ledger balances on the two legs that survive (T516): LEG 1 parity — applying
+#     I-3's remedy changes the money, because the oracle refreshes outstandingLoanBalance
+#     only at explicit sweeps and reads it stale in between (executable, not argued); and
+#     LEG 2 reachability — the value reaches no journal entry, GL posting or column any
+#     aggregate reads as an account balance, its persistence being a closed loop written by
+#     the projection and reloaded as the same projection's starting state. They stay
+#     refused because the only mechanism that could distinguish them soundly is LEG 2's
+#     go/types reachability discriminator, which does not exist yet, and the
+#     persistence-surface heuristic proposed instead was MEASURED being defeated by one
+#     `git mv` (T505 MAJOR-1).
+I3-COMPOSITE-BALANCE	internal/apps/loanproduct/interestperiod.go
+I3-COMPOSITE-BALANCE	internal/apps/loanproduct/repaymentperiod.go
+I3-FIELD-WRITE	internal/apps/loanproduct/interestperiod.go
+I3-FIELD-WRITE	internal/apps/loanproduct/repaymentperiod.go
+#
+# --- found by T509's widening; each needs an owner, none is cleared by this file ---
+#     investor/postgres.go   m_external_asset_owner_transfer_details, five *_outstanding_derived
+#                            columns [ExternalAssetOwnerTransferDetails.java:49] written at
+#                            INSERT and decoded back into fields.
+#     loan/charge.go         AmountOutstanding, the port of m_loan_charge.amount_outstanding_derived
+#                            [LoanCharge.java:108].
+#     loanschedule/emi.go    the roll-forward that is the twin of the loanproduct sites and
+#                            shipped GREEN for two months because it is spelled outstandingMinor.
+#     exemption_test.go      a test FIXTURE assigning OutstandingPrincipalMinor. CANNOT-CATCH
+#                            item 8: tests are inspected, not exempted.
+#     workingcapital         m_wc_loan_balance, a stored balance TABLE whose thirteen columns
+#                            never say "balance"; plus one INSERT with a spliced column list
+#                            routed through InsertReturningInt64 (T506 F-6's scenario, live).
+I3-FIELD-WRITE	internal/apps/investor/postgres.go
+I3-FIELD-WRITE	internal/apps/loan/charge.go
+I3-FIELD-WRITE	internal/apps/loanschedule/conformance/exemption_test.go
+I3-FIELD-WRITE	internal/apps/loanschedule/emi.go
+I3-SQL-BALANCE	internal/apps/investor/postgres.go
+I3-SQL-BALANCE-TABLE	internal/apps/workingcapital/postgres.go
+OPAQUE-SQL	internal/apps/workingcapital/postgres.go
+#
+# --- the savings sites T501 was sent at and T510/T511 are still working ---
+I3-FIELD-WRITE	internal/apps/savings/postgres.go
+I3-FIELD-WRITE	internal/apps/savings/summary.go
+I3-SQL-BALANCE	internal/apps/savings/postgres.go

@@ -157,6 +157,7 @@ var (
 	reInsertCols = regexp.MustCompile(`(^|[^a-z0-9_])insert +into +([a-z_][a-z0-9_.$]*) *\(([^)]*)\)`)
 	reSetClause  = regexp.MustCompile(`(^|[^a-z0-9_])set +(.*)$`)
 	reSetTarget  = regexp.MustCompile(`([a-z_][a-z0-9_.$]*) *=`)
+	reIdent      = regexp.MustCompile(`[a-z_][a-z0-9_.$]*`)
 )
 
 // balanceNameRe is the balance-name matcher, for BOTH a Go identifier and a SQL column.
@@ -164,6 +165,60 @@ var (
 // `account_balance_derived` and `balanceMinor` are all a balance, and every one of them has
 // appeared in Fineract under one of those spellings.
 var balanceNameRe = regexp.MustCompile(`(?i)balance`)
+
+// balanceSynonymRe is T509's answer to the measured UNDER-match, and it is the single most
+// consequential line in this file, so the argument is written out rather than assumed.
+//
+// THE DEFECT IT CLOSES. `ledgerguard` refused four writes in `internal/apps/loanproduct`
+// spelled `outstandingLoanBalance` while shipping the IDENTICAL roll-forward GREEN in
+// `internal/apps/loanschedule/emi.go:1720,:1726`, spelled `outstandingMinor` — the same
+// oracle method, cited in the Go file's own comment
+// [VERIFIED: emi.go:1688-1690 cites ProgressiveEMICalculator.java:1253-1255 ->
+// InterestPeriod.updateOutstandingLoanBalance, InterestPeriod.java:166-186], writing a field
+// whose own declaration comment at emi.go:62 reads "outstandingMinor is the balance carried
+// INTO this segment". Two ports of one Fineract method, opposite verdicts, decided by the
+// SPELLING of the identifier. Found by T502, confirmed in full by T505 (MAJOR-3).
+//
+// WHY `outstanding` AND NOT SOMETHING WIDER. It is not a guess at English: it is the word
+// Fineract itself uses for the stored, derived balances this guard exists to keep out of the
+// Go tree. Every one of these is a real `@Column` on a real table in the pinned oracle:
+//
+//	m_loan_transaction.outstanding_loan_balance_derived  [VERIFIED: LoanTransaction.java:127]
+//	m_loan.principal_outstanding_derived                 [VERIFIED: LoanSummary.java:62-63]
+//	m_loan_charge.amount_outstanding_derived             [VERIFIED: LoanCharge.java:108]
+//
+// A guard whose stated target is "a stored, written balance" and which cannot see the word
+// Fineract writes those columns with is not measuring its target.
+//
+// THE RESIDUAL, STATED. This is a NAME test and remains one; it is wider, not sound.
+// `outstanding` can appear on a non-monetary field (`outstandingRequests`) and would be
+// refused — fail-CLOSED, and the fix is a bare accumulator or a non-balance name, never an
+// exemption. And the general defect is untouched: a stored balance called `Position` or `Net`
+// is still invisible (CANNOT-CATCH item 2). This closes one MEASURED under-match; it does not
+// close the class.
+var balanceSynonymRe = regexp.MustCompile(`(?i)outstanding`)
+
+// sqlKeywordNotATableRe is item 11: SQL keywords that can stand where a table name is expected
+// and must never be REPORTED as one. `INSERT ... ON CONFLICT (k) DO UPDATE SET c = ...` makes
+// the token after `update` the literal keyword `set`, and this guard used to print
+//
+//	an UPDATE assigns the balance column "account_balance_derived" on table "set"
+//
+// — a nonexistent table. The verdict happened to be right, which is exactly why it survived:
+// a check reading the WRONG STRING still returns an answer, and the answer is unrelated to the
+// property. That is T503's B-2 shape one layer down, and it matters here because T509 adds
+// table-KEYED reasoning (I3-SQL-BALANCE-TABLE below), which would have consulted "set" for
+// every upsert in the tree.
+var sqlKeywordNotATableRe = regexp.MustCompile(`^(set|where|from|into|values|returning|using|join|only|table|select|conflict|do|nothing)$`)
+
+// reInsertInto is the table-only INSERT matcher. reInsertCols requires a parenthesised column
+// list; an `INSERT INTO t VALUES (...)` or an `INSERT INTO t SELECT ...` has none, and an
+// upsert's table must still be resolvable in both shapes.
+var reInsertInto = regexp.MustCompile(`(^|[^a-z0-9_])insert +into +([a-z_][a-z0-9_.$]*)`)
+
+// sqlParamNameRe names the parameter of a repository-local wrapper that CARRIES SQL. It is
+// how the wrapper discovery in discoverSQLWrappers decides which argument to read.
+var sqlParamNameRe = regexp.MustCompile(`(?i)^(sql|query|stmt|statement|ddl|dml|q)$`)
 
 // availableNameRe carves out I-6's lawful target. CLAUDE.md: holds "alter `available` only,
 // never posted `balance`".
@@ -219,9 +274,57 @@ type census struct {
 	PkgVars       int
 	ScanErrors    []string
 	Findings      []finding
+
+	// T509 additions. Every one of these is a population this guard now inspects and did not
+	// before; each is COUNTED so that a later regression shows up as a number going to zero
+	// rather than as silence (P-35 applies to a new surface exactly as to an old one).
+	CompositeLits int       // struct/composite literals seen
+	CompositeKeys int       // keyed elements inside them — the denominator of I3-COMPOSITE-BALANCE
+	Wrappers      []wrapper // repository-local functions that CARRY SQL to the driver
+	WrapperCalls  int       // calls to them
+	BalanceReads  []string  // SELECTs naming a balance column: named, counted, NOT refused
+}
+
+// wrapper is a function declared IN THIS TREE that forwards a SQL string to the database.
+//
+// WHY THIS TYPE EXISTS (T509 item 6, found by T506 as F-6). `mutatingExecRe` names the DRIVER
+// methods. It does not name `postgres.InsertReturningInt64`
+// [nexus/internal/platform/postgres/insert.go:12], which takes `sql string`, forwards it to
+// `QueryRows` -> `db.Query`, and executes `INSERT ... RETURNING id` at 20+ call sites across
+// branch / savings / origination / collateral / parties / investor / workingcapital. Two
+// consequences, and the second is the serious one:
+//
+//	(i) `db.Query` IS A MUTATING CALL when the statement mutates. `readExecRe`'s premise —
+//	    "an opaque SELECT cannot violate I-3 or I-4" — is sound about SELECTs and unsound
+//	    about the method: Postgres executes `INSERT ... RETURNING` through the same call.
+//	(ii) `savings/postgres.go:210` is one of this run's live I3-SQL-BALANCE findings and it is
+//	    caught BY ACCIDENT: its SQL happens to be a literal, which the BasicLit walk reads on
+//	    its own. Nothing recognised the CALL as mutating. Had its author spliced a column
+//	    const in — the shape `workingcapital` used and T503 was sent to remove — the finding
+//	    would have vanished with NO `OPAQUE-SQL` to replace it, and the bar would have gone
+//	    green while the balance column was still written on every transaction.
+//
+// Wrappers are DISCOVERED from the tree, not listed. A list is a document that goes stale the
+// day someone adds a second wrapper; discovery is recomputed on every run.
+type wrapper struct {
+	Name     string // the function's own name; calls are matched on the selector's last segment
+	ArgIndex int    // position of the SQL argument in a call
+	Param    string // the parameter's identifier, so a pass-through inside the wrapper is not
+	// mistaken for an opaque call site
+	Why string // what made it a wrapper, printed in the census
 }
 
 func (c *census) add(f finding) { c.Findings = append(c.Findings, f) }
+
+// wrapper looks a callee name up in the set discovered from this tree.
+func (c *census) wrapper(name string) (wrapper, bool) {
+	for _, w := range c.Wrappers {
+		if w.Name == name {
+			return w, true
+		}
+	}
+	return wrapper{}, false
+}
 
 // ---------------------------------------------------------------------------------------------
 // SQL text analysis. Operates on a string the PARSER already isolated as a literal.
@@ -231,7 +334,52 @@ func normalizeSQL(s string) string {
 	return strings.ToLower(strings.Join(strings.Fields(s), " "))
 }
 
-func isBalanceName(s string) bool { return balanceNameRe.MatchString(s) }
+// isBalanceName is the one predicate every balance decision in this file goes through — Go
+// identifier, SQL column and (since T509) SQL table alike. It is `balance` OR one of the
+// measured synonyms; see balanceSynonymRe for why the second arm exists and what it costs.
+func isBalanceName(s string) bool {
+	return balanceNameRe.MatchString(s) || balanceSynonymRe.MatchString(s)
+}
+
+// stmtTable resolves the TABLE a write statement targets, and it is the item-11 repair.
+//
+// It exists because `reUpdate` alone is wrong on a Postgres upsert: in
+// `INSERT INTO t (...) VALUES (...) ON CONFLICT (k) DO UPDATE SET c = excluded.c`
+// the token following `update` is the keyword `set`, so the old extractor reported
+// `on table "set"`. The upsert arm is therefore resolved from the INSERT target, which is the
+// row actually being mutated, and any keyword standing where a table name was expected is
+// REFUSED AS A NAME rather than passed on (`ok=false`), so no caller can key on it.
+//
+// Returns (table, kind, ok). kind is one of "upsert", "update", "insert", "delete",
+// "truncate" — the shape that decided the answer, printed in findings so a reader can check
+// the parse instead of trusting it.
+func stmtTable(low string) (string, string, bool) {
+	accept := func(name, kind string) (string, string, bool) {
+		if name == "" || sqlKeywordNotATableRe.MatchString(name) {
+			return "", kind, false
+		}
+		return name, kind, true
+	}
+	// An upsert is an INSERT whose conflict arm mutates. The row is the INSERT's row.
+	if upsertRe.MatchString(low) {
+		if m := reInsertInto.FindStringSubmatch(low); m != nil {
+			return accept(m[2], "upsert")
+		}
+	}
+	if m := reUpdate.FindStringSubmatch(low); m != nil {
+		return accept(m[3], "update")
+	}
+	if m := reInsertInto.FindStringSubmatch(low); m != nil {
+		return accept(m[2], "insert")
+	}
+	if m := reDeleteFrom.FindStringSubmatch(low); m != nil {
+		return accept(m[3], "delete")
+	}
+	if m := reTruncate.FindStringSubmatch(low); m != nil {
+		return accept(m[3], "truncate")
+	}
+	return "", "", false
+}
 
 func setColumns(low string) []string {
 	m := reSetClause.FindStringSubmatch(low)
@@ -307,17 +455,58 @@ func (c *census) analyseSQL(raw, pos, where string) {
 
 	confirmed := secondKeywordRe.MatchString(low)
 
-	// I-3, persistence half: an UPDATE that assigns a balance column, on ANY table.
-	if m := reUpdate.FindStringSubmatch(low); m != nil && confirmed {
+	table, kind, tableOK := stmtTable(low)
+	writes := mutating || reInsertInto.MatchString(low)
+
+	// I-3, T509's TABLE arm. A write to a table whose NAME is a balance is a write to a stored
+	// balance whatever its columns are called.
+	//
+	// THE MEASURED CASE. `nexus/internal/apps/workingcapital/postgres.go:379` upserts
+	// `m_wc_loan_balance` — a stored, per-loan balance row — and this guard shipped it GREEN
+	// because `balanceNameRe` was applied to `splitCols(m[3])` (the COLUMN list) and to
+	// `setColumns(low)`, and NONE of the thirteen columns carries the string `balance`
+	// (`principal`, `principal_paid`, `principal_adjustment`, `fee`, `fee_paid`, `penalty`,
+	// `penalty_paid`, …). The TABLE NAME carries it. Found by T503 (B-2), mechanism
+	// demonstrated by T506 (F-7) with a probe: adding a column literally named
+	// `closing_balance` to that same statement made the guard fire instantly, while the
+	// thirteen real columns never could. A check that looks at the wrong string still returns
+	// an answer.
+	//
+	// READS ARE NOT REFUSED HERE — see the balance-read census below. Only a statement that
+	// WRITES the row (insert / update / upsert / delete / truncate) reaches this arm.
+	if writes && tableOK && isBalanceName(table) {
+		c.add(finding{
+			Class: "I3-SQL-BALANCE-TABLE",
+			Pos:   pos,
+			Text:  short(raw),
+			Why: "a " + kind + " writes table " + strconv.Quote(table) + ", whose NAME is a balance" +
+				where + ". CLAUDE.md non-negotiable: \"Balances are derived, never written.\" " +
+				"A per-account row in a table called `..._balance` is a stored balance however its " +
+				"columns are spelled — this is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 " +
+				"refuses to port. Derive it by summation over the postings, or record the exemption " +
+				"in DEC-2 (a `user` gate) rather than renaming the table.",
+		})
+	}
+
+	// I-3, persistence half: an UPDATE (or an upsert's DO UPDATE) that assigns a balance
+	// column, on ANY table. The table name comes from stmtTable, not from reUpdate's third
+	// group — item 11: on an upsert that group is the keyword `set`.
+	if (kind == "update" || kind == "upsert") && confirmed {
+		named := strconv.Quote(table)
+		if !tableOK {
+			named = "an UNRESOLVED table (this guard could not parse a table name out of the " +
+				"statement, and says so rather than printing the keyword it found there)"
+		}
 		for _, col := range setColumns(low) {
 			if isBalanceName(col) {
 				c.add(finding{
 					Class: "I3-SQL-BALANCE",
 					Pos:   pos,
 					Text:  short(raw),
-					Why: "an UPDATE assigns the balance column " + strconv.Quote(col) + " on table " +
-						strconv.Quote(m[3]) + where + ". CLAUDE.md non-negotiable: \"Balances are " +
-						"derived, never written.\" Derive it by summation over the postings.",
+					Why: "an " + strings.ToUpper(kind) + " assigns the balance column " +
+						strconv.Quote(col) + " on table " + named + where + ". CLAUDE.md " +
+						"non-negotiable: \"Balances are derived, never written.\" Derive it by " +
+						"summation over the postings.",
 				})
 			}
 		}
@@ -340,6 +529,36 @@ func (c *census) analyseSQL(raw, pos, where string) {
 			}
 		}
 	}
+	// THE BALANCE-READ CENSUS (T509 item 8). NAMED, COUNTED, AND DELIBERATELY NOT REFUSED.
+	//
+	// T510 measured that I3-SQL-BALANCE fires only on a WRITE, never on a SELECT of a balance
+	// column, and filed it as a blind spot. It is a real gap in coverage and it is now VISIBLE,
+	// but it is not converted into a refusal, and the reason is a boundary this guard must not
+	// cross on its own: DEC-2 §4.4 I-3's gradeable text is "No WRITE PATH to any balance column
+	// exists in the Go tree." A SELECT is not a write path. Raising a read to a refusal is a
+	// change to a ratified DEC-n, which CLAUDE.md routes as a `user` gate — not something a
+	// guard patch may smuggle in.
+	//
+	// WHY IT IS STILL WORTH PRINTING, AND WHY THIS IS NOT AN AMNESTY. T501's ratified reasoning
+	// is that "a decoded balance is a number this port did not derive, arriving through the
+	// SELECT instead of the INSERT, and landing in a field callers then treat as authoritative."
+	// That is where a real defect entered this tree. So every read of a balance-named column is
+	// enumerated with its position on every run, pass or fail. Nothing that was refused before
+	// is refused less; this only adds sight. The direction is stated so nobody quotes the census
+	// as coverage: a listed site has been SEEN, not cleared.
+	if !writes && strings.Contains(low, "select") {
+		seg := low
+		if i := strings.Index(seg, " from "); i > 0 {
+			seg = seg[:i]
+		}
+		for _, id := range reIdent.FindAllString(seg, -1) {
+			if isBalanceName(id) && !sqlKeywordNotATableRe.MatchString(id) {
+				c.BalanceReads = append(c.BalanceReads, pos+"  "+id+"  "+short(raw))
+				break
+			}
+		}
+	}
+
 	// A DELETE/TRUNCATE against a non-protected table is not this guard's business; it is
 	// counted as DML and left alone. Say nothing you cannot justify.
 	_ = reDeleteFrom
@@ -429,6 +648,36 @@ func isPureStringLiteral(e ast.Expr) bool {
 	return !opaque && len(lits) > 0
 }
 
+// readableVerbIsSelect reports whether the part of `e` this guard CAN read is a SELECT and
+// carries no mutating verb anywhere in it.
+//
+// WHERE THIS IS USED AND WHY IT IS NOT A WEAKENING. It gates the wrapper arm only (T509 item
+// 6). Before T509, a call to `postgres.QueryRows` or `postgres.InsertReturningInt64` was not
+// inspected at all: the guard reached the database through `readExecRe`, which decides a call
+// is read-only FROM THE METHOD NAME. Reading the statement's own leading verb out of the
+// literal halves is STRICTLY STRONGER EVIDENCE than trusting a method name — `Query` executes
+// `INSERT ... RETURNING` perfectly well, which is precisely how `InsertReturningInt64` writes
+// rows — so a wrapper call whose readable text is a bare SELECT is held to a higher standard
+// here than the driver call it forwards to, not a lower one.
+//
+// A call that fails this test is REFUSED as OPAQUE-SQL. That includes the case that matters:
+// `INSERT INTO m_wc_loan (..., ` + wcProductDetailColumns + `) VALUES ...` at
+// nexus/internal/apps/workingcapital/postgres.go:168 — an INSERT with a spliced, unreadable
+// column list, routed through the wrapper, invisible to this guard until now.
+func readableVerbIsSelect(e ast.Expr) bool {
+	var lits []*ast.BasicLit
+	opaque := false
+	text := normalizeSQL(concatLiterals(e, &lits, &opaque))
+	if len(lits) == 0 || text == "" {
+		return false
+	}
+	if !strings.HasPrefix(text, "select") {
+		return false
+	}
+	return !mutatingVerbRe.MatchString(text) && !upsertRe.MatchString(text) &&
+		!reInsertInto.MatchString(text)
+}
+
 // calleeChain collects every selector name from a call's function expression, outermost last,
 // plus every identifier and string literal reachable in the receiver chain. This is what makes
 // `db.Model(&JournalEntry{}).Delete(ctx)` decidable without a type checker.
@@ -487,7 +736,26 @@ func sqlArgOf(call *ast.CallExpr) (ast.Expr, bool) {
 		}
 		return call.Args[1], true
 	}
-	if sel, ok := first.(*ast.SelectorExpr); ok && sel.Sel.Name == "Background" {
+	// T509 item 7, from T503's B-1 — AND ITS DIRECTION STATED CORRECTLY, which is why this
+	// comment is longer than the code.
+	//
+	// A repository that captures its context as a field and calls `db.Exec(r.ctx, <literal>, …)`
+	// — an ordinary shape in this tree — used to be classed OPAQUE-SQL even though its SQL is a
+	// plain literal, because only a bare `*ast.Ident` containing "ctx" or a selector named
+	// `Background` was skipped. Widening the skip lets the classifier READ those statements.
+	//
+	// T503's handoff called this "fail-CLOSED in the right direction". IT IS NOT, and T506's F-5
+	// is right: it is refusal-REDUCING. OPAQUE-SQL is a refusal-to-certify class, not a
+	// detection class, so widening what counts as readable can only ever REMOVE refusals. The
+	// justification is not "fail-closed" — it is "it removes a MEASURED FALSE POSITIVE over
+	// statements the classifier was already reading, and every statement it makes readable is
+	// then put through the full I-3/I-4 analysis rather than waved past." That is true and it is
+	// sufficient. Recording it as fail-closed would have been the sentence a later reviewer
+	// waved it through on, so it is recorded as what it is. Both polarities are pinned in the
+	// selftest — case (h2) proves a literal behind a field context is READ, and case (h) proves
+	// genuinely assembled SQL is still REFUSED.
+	if sel, ok := first.(*ast.SelectorExpr); ok &&
+		(sel.Sel.Name == "Background" || strings.Contains(strings.ToLower(sel.Sel.Name), "ctx")) {
 		if len(call.Args) < 2 {
 			return nil, false
 		}
@@ -498,13 +766,106 @@ func sqlArgOf(call *ast.CallExpr) (ast.Expr, bool) {
 
 // ---------------------------------------------------------------------------------------------
 
-func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
-	f, err := parser.ParseFile(fset, path, src, parser.ParseComments)
-	if err != nil {
-		c.ScanErrors = append(c.ScanErrors, fmt.Sprintf(
-			"%s: could not be parsed (%v), so it has NOT been checked for I-3 or I-4", rel, err))
-		return
+// parsedFile is one Go file already turned into an AST. The walk parses EVERY file before
+// ANY file is analysed, because wrapper discovery (see discoverSQLWrappers) is a whole-tree
+// question: `postgres.InsertReturningInt64` is declared in one package and called from seven
+// others, and a file-at-a-time walk can only ever see one of those two facts.
+type parsedFile struct {
+	path string
+	rel  string
+	file *ast.File
+}
+
+// discoverSQLWrappers finds every function in the tree that forwards a SQL string to the
+// database, transitively, to a fixpoint.
+//
+// THE RULE, and it is deliberately narrow so that it names things rather than guessing:
+// a function is a wrapper when it has a `string` parameter whose NAME is one of sql / query /
+// stmt / statement / ddl / dml / q, AND its body calls either a driver method this guard
+// already names (Exec / ExecContext / Query / QueryRow / …) or a wrapper already discovered.
+// The fixpoint is what reaches `InsertReturningInt64` -> `QueryRows` -> `db.Query`.
+//
+// DIRECTION. This arm can only ADD call sites the guard inspects; it removes none. A call to a
+// wrapper whose SQL argument is not a readable literal becomes OPAQUE-SQL, exactly as a call to
+// `Exec` would — so the wrapper stops being a way around the check rather than becoming one.
+//
+// WHAT IT STILL CANNOT SEE, said here and repeated in CANNOT-CATCH: matching is by the callee's
+// last selector segment, so two functions of the same name in different packages are one name
+// to this guard; and a wrapper that takes its SQL under some other parameter name, or builds it
+// internally from a struct field, is not discovered.
+func discoverSQLWrappers(files []parsedFile) []wrapper {
+	known := map[string]wrapper{}
+	for {
+		added := false
+		for _, pf := range files {
+			for _, d := range pf.file.Decls {
+				fd, ok := d.(*ast.FuncDecl)
+				if !ok || fd.Body == nil || fd.Type.Params == nil {
+					continue
+				}
+				if _, seen := known[fd.Name.Name]; seen {
+					continue
+				}
+				idx, param := -1, ""
+				n := 0
+				for _, fld := range fd.Type.Params.List {
+					isString := false
+					if id, ok := fld.Type.(*ast.Ident); ok && id.Name == "string" {
+						isString = true
+					}
+					if len(fld.Names) == 0 {
+						n++
+						continue
+					}
+					for _, nm := range fld.Names {
+						if isString && idx < 0 && sqlParamNameRe.MatchString(nm.Name) {
+							idx, param = n, nm.Name
+						}
+						n++
+					}
+				}
+				if idx < 0 {
+					continue
+				}
+				why := ""
+				ast.Inspect(fd.Body, func(x ast.Node) bool {
+					if why != "" {
+						return false
+					}
+					call, ok := x.(*ast.CallExpr)
+					if !ok {
+						return true
+					}
+					callee := calleeName(call.Fun)
+					if mutatingExecRe.MatchString(callee) || readExecRe.MatchString(callee) {
+						why = "takes " + param + " string and calls the driver method " + callee + "()"
+					} else if _, ok := known[callee]; ok {
+						why = "takes " + param + " string and calls the wrapper " + callee + "()"
+					}
+					return true
+				})
+				if why == "" {
+					continue
+				}
+				known[fd.Name.Name] = wrapper{Name: fd.Name.Name, ArgIndex: idx, Param: param, Why: why}
+				added = true
+			}
+		}
+		if !added {
+			break
+		}
 	}
+	out := make([]wrapper, 0, len(known))
+	for _, w := range known {
+		out = append(out, w)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
+	return out
+}
+
+func (c *census) scanFile(fset *token.FileSet, pf parsedFile) {
+	path, rel, f := pf.path, pf.rel, pf.file
+	_ = path
 	pos := func(p token.Pos) string {
 		q := fset.Position(p)
 		return fmt.Sprintf("%s:%d:%d", rel, q.Line, q.Column)
@@ -539,13 +900,124 @@ func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
 		}
 	}
 
+	// STRING CONSTANTS DECLARED IN THIS FILE, so that `const sql = "SELECT …"` followed by
+	// `QueryRows(ctx, db, sql, …)` is READ rather than refused as unreadable. The guard already
+	// analysed that literal — it walks every BasicLit — it simply could not connect the two,
+	// and refusing there says "I cannot read this" about a statement printed in full three
+	// lines above. Measured on nexus/: two sites, both plain SELECTs
+	// (ledger/journalentry_postgres.go:99, ledger/closure.go:73).
+	//
+	// DIRECTION, STATED (same family as the sqlArgOf widening, same reasoning): this is
+	// refusal-REDUCING, not fail-closed. It is justified because it removes a MEASURED false
+	// refusal over text the classifier had already read in full, and every statement it makes
+	// readable is then put through the whole I-3/I-4 analysis. CONST ONLY — never `var` — since
+	// a const cannot be reassigned between its declaration and the call, and a var can. Scope is
+	// this FILE; a const declared in a sibling file of the same package does not resolve, and
+	// that residual is fail-CLOSED (it refuses).
+	strConsts := map[string]ast.Expr{}
+	ast.Inspect(f, func(n ast.Node) bool {
+		gd, ok := n.(*ast.GenDecl)
+		if !ok || gd.Tok != token.CONST {
+			return true
+		}
+		for _, spec := range gd.Specs {
+			vs, ok := spec.(*ast.ValueSpec)
+			if !ok || len(vs.Names) != 1 || len(vs.Values) != 1 {
+				continue
+			}
+			if isPureStringLiteral(vs.Values[0]) || readableVerbIsSelect(vs.Values[0]) {
+				strConsts[vs.Names[0].Name] = vs.Values[0]
+			}
+		}
+		return true
+	})
+	resolveConst := func(e ast.Expr) ast.Expr {
+		if id, ok := e.(*ast.Ident); ok {
+			if v, ok := strConsts[id.Name]; ok {
+				return v
+			}
+		}
+		return e
+	}
+
 	// Every construct below is attributed to its enclosing top-level declaration, so that I-6
 	// can ask "is this write inside a hold?".
 	consumed := map[*ast.BasicLit]bool{}
 
 	var enclosing string
+	var enclosingSQLParam string
 	inspect := func(n ast.Node) bool {
 		switch t := n.(type) {
+
+		case *ast.UnaryExpr:
+			// I3-COMPOSITE-BALANCE (T509 item 3). `&T{Balance: v}` ALLOCATES an object that
+			// outlives the expression and initialises a balance-named field in it. That is the
+			// same act as `p := &T{}; p.Balance = v`, which this guard already refuses — and
+			// until now the two forms got opposite verdicts.
+			//
+			// THE MEASURED HOLE. `writeTarget` is applied only to *ast.AssignStmt and
+			// *ast.IncDecStmt, so an *ast.KeyValueExpr inside a composite literal was invisible.
+			// T502 found six such writes to the two fields this guard refuses IN THE SAME
+			// PACKAGE — one of them four lines from a refused site — and T505 confirmed the
+			// count exactly (interestperiod.go:281,282,306,307; repaymentperiod.go:96,97 on
+			// main). The guard's objection was to the STATEMENT FORM, not to the act. Worse,
+			// CANNOT-CATCH item 8 told a tripped author "the fix is a constructor, not an
+			// exemption" — advice that pointed straight at this hole. Item 8 is corrected below.
+			//
+			// WHY `&` AND NOT EVERY COMPOSITE LITERAL, WHICH IS THE WHOLE DESIGN. The line is
+			// writeTarget's own doctrine, applied unchanged: a bare identifier is not a target
+			// because a local accumulator IS the derivation; a field, a dereference and an index
+			// ARE, because each stores into something that outlives the expression. `&T{...}`
+			// allocates exactly such a thing. A plain `T{Balance: Derive(legs)}` returned from a
+			// presenter is a VALUE IN FLIGHT — the shape selftest case (k) requires to stay
+			// green, and refusing it would refuse the only way to render a derived balance.
+			//
+			// THE RESIDUAL, STATED, because this is a name test wearing a shape test's coat:
+			// `v := T{Balance: x}; store.p = &v` and `store.rows = append(store.rows,
+			// T{Balance: x})` are stores this arm does not reach. It closes the MEASURED hole
+			// and the advice that recommended it; it does not close the class. Following a
+			// value into a store needs go/types — see CANNOT-CATCH item 10.
+			if t.Op != token.AND {
+				return true
+			}
+			cl, ok := t.X.(*ast.CompositeLit)
+			if !ok {
+				return true
+			}
+			for _, elt := range cl.Elts {
+				kv, ok := elt.(*ast.KeyValueExpr)
+				if !ok {
+					continue
+				}
+				key, ok := kv.Key.(*ast.Ident)
+				if !ok || !isBalanceName(key.Name) {
+					continue
+				}
+				c.add(finding{
+					Class: "I3-COMPOSITE-BALANCE",
+					Pos:   pos(kv.Pos()),
+					Text:  "&" + types.ExprString(cl.Type) + "{" + key.Name + ": " + short(types.ExprString(kv.Value)) + "}",
+					Why: "a balance-named field is written by a COMPOSITE LITERAL that is then " +
+						"ALLOCATED (`&T{...}`)" + inFunc(enclosing) + ". This is the same act as " +
+						"`p := &T{}; p." + key.Name + " = ...`, which this guard refuses as " +
+						"I3-FIELD-WRITE — it was invisible only because writeTarget is applied to " +
+						"assignments and not to composite-literal keys. CLAUDE.md non-negotiable: " +
+						"\"Balances are derived, never written.\" Derive by summation over the " +
+						"postings. NOTE: moving the write into a constructor does NOT clear this, " +
+						"and CANNOT-CATCH item 8 no longer recommends it.",
+				})
+			}
+
+		case *ast.CompositeLit:
+			// COUNTED, so the new class's denominator is visible and P-35 applies to it too:
+			// a run reporting zero composite literals over a real Go tree has not inspected
+			// them, and the gate in report() says so.
+			c.CompositeLits++
+			for _, elt := range t.Elts {
+				if _, ok := elt.(*ast.KeyValueExpr); ok {
+					c.CompositeKeys++
+				}
+			}
 
 		case *ast.AssignStmt:
 			if t.Tok == token.DEFINE {
@@ -600,6 +1072,13 @@ func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
 			if mutatingExecRe.MatchString(name) {
 				c.MutatingExec++
 				arg, have := sqlArgOf(t)
+				if have {
+					// Same const resolution as the wrapper arm below, for the same reason and
+					// with the same stated direction. `const s = "INSERT …"; db.Exec(ctx, s)`
+					// is a statement this guard has already read in full; refusing it says "I
+					// cannot read this" about text printed three lines above the call.
+					arg = resolveConst(arg)
+				}
 				readable := have && isPureStringLiteral(arg)
 				if name == "SendBatch" || name == "CopyFrom" {
 					readable = false
@@ -615,6 +1094,42 @@ func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
 							"acc_gl_journal_entry (I-4) or a write to a balance column (I-3). An " +
 							"unreadable statement is refused rather than assumed clean: build the SQL as " +
 							"a string literal, or state the exemption in DEC-2 and amend this guard.",
+					})
+				}
+			}
+
+			// T509 item 6 — the repository's OWN mutating wrappers, discovered from the tree.
+			if w, ok := c.wrapper(name); ok {
+				c.ExecFamily++
+				c.WrapperCalls++
+				var arg ast.Expr
+				if w.ArgIndex < len(t.Args) {
+					arg = resolveConst(t.Args[w.ArgIndex])
+				}
+				readable := arg != nil && (isPureStringLiteral(arg) || readableVerbIsSelect(arg))
+				// PASS-THROUGH IS NOT OPACITY. Inside the wrapper itself the SQL argument IS
+				// the wrapper's own `sql` parameter — `QueryRows(ctx, db, sql, ...)` in
+				// InsertReturningInt64. Refusing there would refuse every wrapper for being a
+				// wrapper, and would say nothing about any caller. The CALL SITES are what
+				// carry the statement, and they are checked.
+				if !readable && arg != nil && enclosingSQLParam != "" {
+					if id, ok := arg.(*ast.Ident); ok && id.Name == enclosingSQLParam {
+						readable = true
+					}
+				}
+				if !readable {
+					c.add(finding{
+						Class: "OPAQUE-SQL",
+						Pos:   pos(t.Pos()),
+						Text:  types.ExprString(t.Fun) + "(...) [wrapper: " + w.Why + "]",
+						Why: "a call to " + strconv.Quote(w.Name) + ", a function IN THIS TREE that " +
+							"forwards a SQL string to the database (" + w.Why + "), whose SQL this " +
+							"guard CANNOT READ. `mutatingExecRe` names the DRIVER methods only, so " +
+							"routing a statement through a local wrapper used to make it invisible: " +
+							"no OPAQUE-SQL, because the call name is unrecognised, and no literal to " +
+							"read. A statement the guard cannot read cannot be certified free of an " +
+							"UPDATE/DELETE against acc_gl_journal_entry (I-4) or a write to a balance " +
+							"column (I-3). Build the SQL as a string literal at the call site.",
 					})
 				}
 			}
@@ -644,6 +1159,10 @@ func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
 		}
 		c.Funcs++
 		enclosing = fd.Name.Name
+		enclosingSQLParam = ""
+		if w, ok := c.wrapper(fd.Name.Name); ok {
+			enclosingSQLParam = w.Param
+		}
 		if holdFuncRe.MatchString(enclosing) {
 			c.HoldFuncs++
 			c.HoldFuncNames = append(c.HoldFuncNames, pos(fd.Pos())+"  "+enclosing)
@@ -652,6 +1171,7 @@ func (c *census) scanFile(fset *token.FileSet, path, rel string, src []byte) {
 	}
 	// Pass 2: everything outside a function body (package-level var initialisers, consts).
 	enclosing = ""
+	enclosingSQLParam = ""
 	for _, d := range f.Decls {
 		if _, ok := d.(*ast.FuncDecl); ok {
 			continue
@@ -722,6 +1242,7 @@ func walk(root string) (*census, error) {
 	c := &census{Root: root}
 	pkgs := map[string]bool{}
 	fset := token.NewFileSet()
+	var files []parsedFile
 	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -746,11 +1267,24 @@ func walk(root string) (*census, error) {
 		}
 		c.Files++
 		pkgs[filepath.ToSlash(filepath.Dir(rel))] = true
-		c.scanFile(fset, path, rel, src)
+		af, perr := parser.ParseFile(fset, path, src, parser.ParseComments)
+		if perr != nil {
+			c.ScanErrors = append(c.ScanErrors, fmt.Sprintf(
+				"%s: could not be parsed (%v), so it has NOT been checked for I-3 or I-4", rel, perr))
+			return nil
+		}
+		files = append(files, parsedFile{path: path, rel: rel, file: af})
 		return nil
 	})
 	if err != nil {
 		return c, fmt.Errorf("walking %s: %w", root, err)
+	}
+	// WHOLE-TREE PASS FIRST. Wrapper discovery must see every declaration before any call is
+	// judged, or a call to a wrapper declared later in the walk order would be classified
+	// against an incomplete set — a walk-order-dependent verdict, which is not a verdict.
+	c.Wrappers = discoverSQLWrappers(files)
+	for _, pf := range files {
+		c.scanFile(fset, pf)
 	}
 	for p := range pkgs {
 		c.PackageDirs = append(c.PackageDirs, p)
@@ -768,6 +1302,10 @@ const cannotCatch = `CANNOT-CATCH — the honest limits of this guard, printed o
   2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
      Position that IS a stored balance is not detected: the surface is the NAME, because
      without a type checker there is nothing else to key on. Renaming a balance defeats it.
+     T509 WIDENED THE NAME, IT DID NOT FIX THE CLASS: "outstanding" now counts as a balance
+     word alongside "balance", which closes the MEASURED case (two ports of one Fineract
+     method, "outstandingLoanBalance" refused and "outstandingMinor" passed). Every other
+     spelling is still invisible, and this item is why.
   3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
      and the schema is Fineract's, which HAS such objects.
@@ -780,18 +1318,67 @@ const cannotCatch = `CANNOT-CATCH — the honest limits of this guard, printed o
      covers the package-level case). A struct-field cache inside a service object with a
      non-balance name is not.
   6. NON-GO CALLERS. Anything that reaches the database without going through this module.
-  7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+  7. THREE MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
      test fires on English prose: on nexus/ at the commit this guard was written, all three
      DML-classified literals are message text, not SQL — which is why every one is PRINTED
      with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
      count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
      nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
-     as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
-     additionally requires a protected table, a balance column, or a balance write — so both
-     are noise in a count, never a false rejection.
+     as a hold-named function. (iii) IT ALSO FIRES ON "...Holder", a third shape this list
+     used to omit: nexus/internal/apps/loanproduct/repaymentperiod.go:486
+     SetReAgedEarlyRepaymentHolder [T502 B-3, confirmed exactly by T505 §6 and T514]. None of
+     the three can produce a FINDING on its own — a finding additionally requires a protected
+     table, a balance column, or a balance write — so all are noise in a count, never a false
+     rejection. The point of this list is completeness, so an incomplete list was itself the
+     defect.
   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
      FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
-     fixture ever trips it, the fix is a constructor, not an exemption.`
+     fixture ever trips it, the correct answers are a bare accumulator, a non-balance name for
+     a non-balance quantity, or an argued DEC-2 exemption. ⚠ THIS ITEM USED TO SAY "the fix is
+     a constructor, not an exemption" AND THAT WAS ADVICE FOR EVADING THIS GUARD: a composite
+     literal's keys were invisible to writeTarget, so moving the write into a constructor
+     silenced the finding while storing the identical value (T502 B-2; T505 §6 confirmed six
+     such writes in the same package, one four lines from a refused site). T509 closed the
+     allocated form — see class I3-COMPOSITE-BALANCE — and deleted the advice. The residual is
+     item 10.
+  9. THE BALANCE-READ CENSUS IS SIGHT, NOT ENFORCEMENT. Every SELECT naming a balance column
+     is printed with its position and NONE is refused. DEC-2 §4.4 I-3's gradeable text is "No
+     WRITE PATH to any balance column exists in the Go tree"; a read is not a write path, and
+     raising it to a refusal is an amendment to a ratified DEC-n, which CLAUDE.md routes as a
+     "user" gate. It is printed because T501's defect entered exactly there — a stored balance
+     decoded on the way IN and then treated as authoritative. A site on that list has been
+     SEEN, never cleared.
+ 10. THE STORE THAT A COMPOSITE LITERAL REACHES. I3-COMPOSITE-BALANCE fires on the ALLOCATED
+     form "&T{Balance: v}", because allocation produces something that outlives the
+     expression — writeTarget's own doctrine. It does NOT fire on "v := T{Balance: x}"
+     followed by a store of "&v", nor on "append(store.rows, T{Balance: x})". Following a
+     value into a store requires go/types, and there is a hard design constraint on that work
+     recorded by T514 and repeated here because it is the trap: SUCH AN ANALYSIS MUST FAIL
+     CLOSED ON UNRESOLVED VALUE FLOW. An analysis that answers "not persisted" on an edge it
+     cannot resolve reintroduces the same fail-open one layer up, and — unlike a waiver, which
+     is a visible document a human must amend — a heuristic's failure produces NO ARTEFACT AT
+     ALL.
+ 11. WRAPPER DISCOVERY IS BY NAME AND BY PARAMETER NAME. A function is recognised as carrying
+     SQL when it has a string parameter called sql/query/stmt/statement/ddl/dml/q and its body
+     reaches a driver method or another discovered wrapper. Two functions of the same name in
+     different packages are ONE NAME to this guard (it has no type checker), and a wrapper
+     that names its parameter something else, or assembles the statement from a struct field
+     rather than taking it as an argument, is not discovered at all.
+ 12. THE FOUR loanproduct SITES ARE A KNOWN, ARGUED, TEST-PINNED RED — NOT A GUARD DEFECT AND
+     NOT AN ACCIDENT. interestperiod.go and repaymentperiod.go write schedule intermediates
+     that are not ledger balances on the two legs that survive (T516): LEG 1 parity — applying
+     I-3's remedy to the cell changes the money, because the oracle refreshes
+     outstandingLoanBalance only at explicit sweeps and reads it stale in between, and this is
+     executable, not argued (TestOutstandingLoanBalanceIsASweptSnapshot); and LEG 2
+     reachability — the value reaches no journal entry, no GL posting and no column any
+     aggregate reads as an account balance, its persistence being a closed loop written by the
+     projection and reloaded as the same projection's starting state. The posting-stream test
+     is RETIRED (T516), not merely demoted. They stay REFUSED because the only mechanism that
+     could distinguish them soundly — LEG 2's go/types reachability discriminator — does not
+     exist yet, and the persistence-surface heuristic that was proposed instead was MEASURED
+     being defeated by a single git mv of an unrelated real savings balance write into a
+     subdirectory (T505 MAJOR-1). A known red is an acceptable state; a green bar bought with
+     a defeatable predicate is not.`
 
 func report(c *census) int {
 	fmt.Printf("CENSUS ledger-invariants — inspected %d Go files / %d packages / %d funcs "+
@@ -801,8 +1388,14 @@ func report(c *census) int {
 		c.StringLits, c.StringGroups, c.Calls, c.Root)
 	fmt.Printf("CENSUS ledger-invariants SQL surface — %d SQL-shaped literals, of which %d carry a DML "+
 		"verb (UPPER BOUND: English prose containing \"update\" satisfies it) and %d name an actual "+
-		"table; %d exec-family calls (%d mutating). Findings: %d\n",
-		c.SQLShaped, c.SQLDML, c.SQLDMLTabled, c.ExecFamily, c.MutatingExec, len(c.Findings))
+		"table; %d exec-family calls (%d mutating driver calls, %d calls to %d tree-local SQL "+
+		"wrappers). Findings: %d\n",
+		c.SQLShaped, c.SQLDML, c.SQLDMLTabled, c.ExecFamily, c.MutatingExec, c.WrapperCalls,
+		len(c.Wrappers), len(c.Findings))
+	fmt.Printf("CENSUS ledger-invariants composite surface — %d composite literals carrying %d keyed "+
+		"elements (the denominator of I3-COMPOSITE-BALANCE); %d SELECT(s) naming a balance column "+
+		"(NAMED, NOT REFUSED — see the balance-read note below)\n",
+		c.CompositeLits, c.CompositeKeys, len(c.BalanceReads))
 	for _, p := range c.PackageDirs {
 		fmt.Printf("CENSUS   covered: %s\n", p)
 	}
@@ -814,6 +1407,15 @@ func report(c *census) int {
 	}
 	for _, s := range c.HoldFuncNames {
 		fmt.Printf("CENSUS   hold-named func: %s\n", s)
+	}
+	for _, w := range c.Wrappers {
+		fmt.Printf("CENSUS   tree-local SQL wrapper: %s (arg %d) — %s\n", w.Name, w.ArgIndex, w.Why)
+	}
+	// NAMED, NOT REFUSED, AND THE POLARITY SAID OUT LOUD ON THE LINE ITSELF so that no reader
+	// can quote the count as coverage. DEC-2 §4.4 I-3 grades a WRITE path; a read is not one,
+	// and raising it to a refusal is a DEC-n amendment, i.e. a `user` gate — not a guard patch.
+	for _, s := range c.BalanceReads {
+		fmt.Printf("CENSUS   balance column READ (seen, NOT refused — I-3 grades writes): %s\n", s)
 	}
 
 	rc := 0
@@ -830,6 +1432,10 @@ func report(c *census) int {
 		{c.Funcs, "function declarations"},
 		{c.Assigns, "assignment or inc-dec statements"},
 		{c.StringLits, "string literals"},
+		// T509: the composite-literal surface is a population this guard now asserts an
+		// absence over, so P-35 binds it exactly as it binds the others. A tree with no
+		// composite literals at all has not been walked.
+		{c.CompositeLits, "composite literals"},
 	} {
 		if g.n == 0 {
 			fmt.Printf("REFUSED — INSPECTED ZERO %s under %s.\n", g.label, c.Root)
@@ -933,6 +1539,10 @@ func Describe(r Row) string {
 	s = s + " row"
 	return fmt.Sprintf("%s %d", s, r.AccountID)
 }
+
+// A composite literal, so the P-35 gate T509 added over that population is satisfied by
+// the ballast and every RED case still fails for the reason under test.
+func Sample() Row { return Row{AccountID: 1, AmountMinor: 100} }
 `
 
 func writeGo(t *testing_T, dir, pkg, name, body string) {
@@ -966,6 +1576,14 @@ func scratch(t *testing_T, withBallast bool) string {
 // exit code AND — for a RED case — that the EXPECTED CLASS is what fired. An exit code alone
 // would let a case "pass" because the P-35 gate tripped instead of the detector.
 func runCase(t *testing_T, label, dir string, wantRC int, wantClass string) {
+	runCaseText(t, label, dir, wantRC, wantClass, nil, nil)
+}
+
+// runCaseText is runCase plus assertions on the TEXT of the transcript. A class firing is not
+// always the whole claim: item 11's repair is that the finding must NAME THE REAL TABLE and
+// must never print the keyword `set` as one, and only a text assertion can pin that. `want`
+// substrings must all appear; `reject` substrings must all be absent.
+func runCaseText(t *testing_T, label, dir string, wantRC int, wantClass string, want, reject []string) {
 	fmt.Printf("--- %s ---\n", label)
 	out, rc := captureCheck(dir)
 	fmt.Printf("  -> exit %d\n", rc)
@@ -977,6 +1595,21 @@ func runCase(t *testing_T, label, dir string, wantRC int, wantClass string) {
 	if wantClass != "" && !strings.Contains(out, "["+wantClass+"]") {
 		t.fail(label + ": exited " + strconv.Itoa(rc) + " but class " + wantClass + " never fired")
 		fmt.Println(indent(out))
+		return
+	}
+	for _, w := range want {
+		if !strings.Contains(out, w) {
+			t.fail(label + ": the transcript never said " + strconv.Quote(w))
+			fmt.Println(indent(out))
+			return
+		}
+	}
+	for _, r := range reject {
+		if strings.Contains(out, r) {
+			t.fail(label + ": the transcript said " + strconv.Quote(r) + ", which it must not")
+			fmt.Println(indent(out))
+			return
+		}
 	}
 }
 
@@ -1198,15 +1831,51 @@ func ThresholdFor(n int64) int64 { return n }
 		os.RemoveAll(d)
 	}
 
-	// (n) P-50 / P-56: GREEN ON THE TREE IT WILL ACTUALLY RUN AGAINST. This is not a synthetic
-	//     fixture; it is nexus/, the population the wired guard would grade.
+	// (n) THE NEGATIVE CONTROL — a COMMITTED FIXTURE, not the real tree. T509 item 12.
+	//
+	//     This case used to assert "nexus/ must exit 0", and that assertion is not the guard's
+	//     to make. When nexus/ acquired findings the guard was SUPPOSED to report, case (n)
+	//     failed and the head printed "the guard FAILED ITS OWN SELFTEST … it can no longer be
+	//     shown to refuse the defect it exists to refuse" — while all fourteen planted-defect
+	//     cases had driven it RED correctly. A negative control must be a FIXED artefact the
+	//     guard's authors own; case (n) was a moving target any commit could flip, it conflated
+	//     "the instrument is untrustworthy" with "the tree has known findings", and it did so in
+	//     the alarming direction. It was also unpassable by design going forward: the four
+	//     loanproduct sites stay RED on a recorded decision (T502/T505/T514), so it could never
+	//     have gone green again — P-45's shape, a check that cannot pass is a check that gets
+	//     ignored.
+	//
+	//     A MISSING FIXTURE IS A FAILURE, NEVER A SKIP: the GREEN half of P-50 would otherwise
+	//     silently stop running, which is the same defect one level up.
 	if repoRoot != "" {
-		real := filepath.Join(repoRoot, "nexus")
-		if st, err := os.Stat(real); err == nil && st.IsDir() {
-			runCase(t, "(n) the REAL Go tree at "+real+" — must PASS", real, 0, "")
+		fixture := filepath.Join(repoRoot, ".softhouse", "guards", "ledgerguard", "testdata", "cleantree")
+		if st, err := os.Stat(fixture); err == nil && st.IsDir() {
+			// THE FIXTURE'S OWN CONTENTS ARE CHECKED BEFORE IT IS TRUSTED, which is P-35 applied
+			// to the negative control itself. "The fixture passed" is worth nothing if the
+			// fixture has been reduced to one trivial file: the guard would still walk a
+			// non-empty tree, still clear every P-35 gate on the ballast-sized population, and
+			// still report GREEN — having demonstrated nothing. Each member below carries a
+			// construct some class refuses in its incorrect form, so losing one silently
+			// removes a whole over-match check.
+			//
+			// This list is also what makes main.go the honest REACHED-BY witness for those three
+			// files under .softhouse/conformance.sh's guards-dir registration: it names them
+			// because it genuinely requires them, not to satisfy a grep.
+			for _, member := range []string{
+				filepath.Join("ledger", "derive.go"),   // the derived-balance forms: bare accumulators
+				filepath.Join("store", "store.go"),     // the lawful SQL forms, and the wrapper GREEN case
+				filepath.Join("present", "present.go"), // the by-value composite literal that must not be refused
+			} {
+				if _, err := os.Stat(filepath.Join(fixture, member)); err != nil {
+					t.fail("(n) the clean fixture is INCOMPLETE: " + member + " is missing (" +
+						err.Error() + "). A negative control that lost a member proves less than " +
+						"it claims and must never pass quietly.")
+				}
+			}
+			runCase(t, "(n) the COMMITTED CLEAN FIXTURE at "+fixture+" — must PASS", fixture, 0, "")
 		} else {
-			t.fail("(n) the real Go tree was not found at " + real + "; the GREEN half was NOT run")
-			fmt.Println("--- (n) the REAL Go tree — NOT FOUND ---")
+			t.fail("(n) the clean fixture was not found at " + fixture + "; the GREEN half was NOT run")
+			fmt.Println("--- (n) the clean fixture — NOT FOUND ---")
 			fmt.Println("  -> exit 1")
 		}
 	}
@@ -1216,6 +1885,194 @@ func ThresholdFor(n int64) int64 { return n }
 		writeGo(t, d, "broken", "broken.go", "package broken\n\nfunc {{{\n")
 		runCase(t, "(o) an unparseable Go file — refused, never skipped", d, 1, "")
 		os.RemoveAll(d)
+	}
+
+	// ---------------------------------------------------------------------------------------
+	// T509 — one case per blind spot closed. Every one of these passed BEFORE the repair.
+	// ---------------------------------------------------------------------------------------
+
+	// (p) THE TABLE NAME IS THE BALANCE. T503's B-2: m_wc_loan_balance has thirteen columns and
+	//     not one of them contains "balance"; the TABLE does, and balanceNameRe was applied to
+	//     the column list only.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "wc", "wc.go", `package wc
+
+const upsertSQL = "INSERT INTO m_wc_loan_balance (wc_loan_id, principal, principal_paid, fee, penalty) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (wc_loan_id) DO UPDATE SET principal = excluded.principal"
+`)
+		runCaseText(t, "(p) a write to a table whose NAME is a balance — I-3", d, 1,
+			"I3-SQL-BALANCE-TABLE",
+			[]string{`"m_wc_loan_balance"`}, nil)
+		os.RemoveAll(d)
+	}
+
+	// (q) THE UPSERT TABLE EXTRACTOR (item 11). The finding must name the real table. It used
+	//     to print `on table "set"` — the keyword standing where the table name was expected —
+	//     and the reject list is the whole point of this case.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "sav", "sav.go", `package sav
+
+const upsertSummary = "INSERT INTO m_savings_account_summary (savings_account_id, account_balance_derived) VALUES ($1,$2) ON CONFLICT (savings_account_id) DO UPDATE SET account_balance_derived = excluded.account_balance_derived"
+`)
+		runCaseText(t, "(q) an upsert's balance column — the table must be NAMED, never \"set\"", d, 1,
+			"I3-SQL-BALANCE",
+			[]string{`"account_balance_derived"`, `"m_savings_account_summary"`},
+			[]string{`on table "set"`})
+		os.RemoveAll(d)
+	}
+
+	// (r) THE COMPOSITE-LITERAL FORM of a refused write. T502's B-2 / T505 §6: six of these sat
+	//     unflagged in the same package as four refused assignments, one four lines away — and
+	//     CANNOT-CATCH item 8 recommended exactly this move as "the fix".
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "ctor", "ctor.go", `package ctor
+
+type Segment struct {
+	OutstandingLoanBalance int64
+	Rounding               int
+}
+
+func NewSegment(openingMinor int64) *Segment {
+	return &Segment{OutstandingLoanBalance: openingMinor, Rounding: 4}
+}
+`)
+		runCase(t, "(r) a balance written by an ALLOCATED composite literal — I-3", d, 1, "I3-COMPOSITE-BALANCE")
+		os.RemoveAll(d)
+	}
+
+	// (s) THE SYNONYM. Two ports of one Fineract method got opposite verdicts because one field
+	//     was spelled outstandingLoanBalance and the other outstandingMinor (T502 B-1, T505
+	//     MAJOR-3). This is the second spelling.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "emi", "emi.go", `package emi
+
+type seg struct{ outstandingMinor, disbursedMinor int64 }
+
+func rollForward(s *seg, prev seg, dueMinor int64) {
+	s.outstandingMinor = prev.outstandingMinor + prev.disbursedMinor - dueMinor
+}
+`)
+		runCase(t, "(s) a balance spelled \"outstanding\" rather than \"balance\" — I-3", d, 1, "I3-FIELD-WRITE")
+		os.RemoveAll(d)
+	}
+
+	// (t) THE MUTATING WRAPPER (T506 F-6). The exec-family regex names driver methods; this
+	//     statement never reaches one under a name the regex knows, and its column list is
+	//     spliced in, so before the repair there was NO finding of any class here — not an
+	//     OPAQUE-SQL, not an I-3. The bar would have been green with the balance column written.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "repo", "repo.go", `package repo
+
+type DB interface {
+	Query(ctx any, sql string, args ...any) error
+}
+
+func QueryRows(ctx any, db DB, sql string, args []any) error { return db.Query(ctx, sql, args...) }
+
+func InsertReturningInt64(ctx any, db DB, sql string, args ...any) (int64, error) {
+	return 0, QueryRows(ctx, db, sql, args)
+}
+
+const cols = "savings_account_id, account_balance_derived"
+
+func Save(ctx any, db DB, id, balanceMinor int64) (int64, error) {
+	return InsertReturningInt64(ctx, db, "INSERT INTO m_savings_account_summary ("+cols+") VALUES ($1,$2) RETURNING id", id, balanceMinor)
+}
+`)
+		runCase(t, "(t) a spliced INSERT routed through a tree-local wrapper — OPAQUE-SQL", d, 1, "OPAQUE-SQL")
+		os.RemoveAll(d)
+	}
+
+	// (u) THE SAME WRAPPER, GREEN. P-50: a class that only ever fires has proved the guard
+	//     noisy. An identical call whose statement is fully readable must PASS — and the
+	//     wrapper's own pass-through of its `sql` parameter must not be refused either.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "repo", "repo.go", `package repo
+
+type DB interface {
+	Query(ctx any, sql string, args ...any) error
+}
+
+func QueryRows(ctx any, db DB, sql string, args []any) error { return db.Query(ctx, sql, args...) }
+
+func InsertReturningInt64(ctx any, db DB, sql string, args ...any) (int64, error) {
+	return 0, QueryRows(ctx, db, sql, args)
+}
+
+func Save(ctx any, db DB, id, amountMinor int64) (int64, error) {
+	return InsertReturningInt64(ctx, db, "INSERT INTO m_loan_transaction (loan_id, amount) VALUES ($1,$2) RETURNING id", id, amountMinor)
+}
+`)
+		runCase(t, "(u) the SAME wrapper with a readable statement — must PASS", d, 0, "")
+		os.RemoveAll(d)
+	}
+
+	// (v) THE DIRECTION OF THE sqlArgOf WIDENING (item 7 / T506 F-5), pinned in BOTH polarities.
+	//     A repository that carries its context as a FIELD and passes a plain literal must be
+	//     READ (green here); genuinely assembled SQL is still REFUSED (case (h) above).
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "fieldctx", "fieldctx.go", `package fieldctx
+
+type Conn struct{}
+
+func (c Conn) Exec(ctx any, sql string, args ...any) error { return nil }
+
+type repo struct {
+	ctx any
+	db  Conn
+}
+
+func (r repo) Append(id int64) error {
+	return r.db.Exec(r.ctx, "INSERT INTO acc_gl_journal_entry (account_id) VALUES ($1)", id)
+}
+`)
+		runCase(t, "(v) a literal behind a FIELD context — readable, must PASS", d, 0, "")
+		os.RemoveAll(d)
+	}
+
+	// (w) READING A BALANCE COLUMN IS NOT WRITING ONE, and the census must SAY SO rather than
+	//     leaving the reader to infer it from silence (item 8). Green, with the site named.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "read", "read.go", `package read
+
+const q = "SELECT id, outstanding_loan_balance_derived FROM m_loan_transaction WHERE loan_id = $1"
+`)
+		runCaseText(t, "(w) a SELECT of a balance column — named in the census, NOT refused", d, 0, "",
+			[]string{"balance column READ (seen, NOT refused"}, nil)
+		os.RemoveAll(d)
+	}
+
+	// (x) THE COLUMN ITEM 4 NAMES. m_loan_transaction.outstanding_loan_balance_derived
+	//     [VERIFIED: LoanTransaction.java:127] is a real stored balance column that T502's
+	//     downstream check missed; its conclusion survived by luck rather than by the check it
+	//     performed (T505 MINOR-2, confirmed by T514). This case proves the guard would refuse
+	//     a Go write to it, so the coverage is DEMONSTRATED rather than assumed.
+	if d := scratch(t, true); d != "" {
+		writeGo(t, d, "lb", "lb.go", `package lb
+
+const upd = "UPDATE m_loan_transaction SET outstanding_loan_balance_derived = $1 WHERE id = $2"
+`)
+		runCaseText(t, "(x) a write to m_loan_transaction.outstanding_loan_balance_derived — I-3", d, 1,
+			"I3-SQL-BALANCE",
+			[]string{`"m_loan_transaction"`}, nil)
+		os.RemoveAll(d)
+	}
+
+	// THE REAL TREE — REPORTED AS AN OBSERVATION, ASSERTED AS NOTHING. This is what replaced
+	// case (n)'s assertion. It still walks nexus/ on every selftest run, so a walk that stops
+	// reaching it is visible, but its finding count is a FACT ABOUT THE TREE and never a
+	// verdict on the instrument.
+	if repoRoot != "" {
+		real := filepath.Join(repoRoot, "nexus")
+		if st, err := os.Stat(real); err == nil && st.IsDir() {
+			out, rc := captureCheck(real)
+			n := strings.Count(out, "\n  [")
+			fmt.Printf("OBSERVATION the real Go tree at %s: exit %d, %d finding(s). "+
+				"THIS IS NOT A SELFTEST ASSERTION — a finding here is a fact about the TREE, "+
+				"never a verdict on the guard.\n", real, rc, n)
+		} else {
+			fmt.Printf("OBSERVATION the real Go tree was not found at %s; nothing observed. "+
+				"Not a failure: the negative control is the committed fixture in case (n).\n", real)
+		}
 	}
 
 	fmt.Println()

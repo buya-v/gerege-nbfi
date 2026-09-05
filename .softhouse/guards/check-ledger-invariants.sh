@@ -42,7 +42,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 GUARD_SRC="$SCRIPT_DIR/ledgerguard"
 NEXUS_DIR="$REPO_ROOT/nexus"
+FIXTURE_DIR="$GUARD_SRC/testdata/cleantree"
 EXIT_UNUSABLE=2
+
+# THE POPULATION THIS HEAD GRADES, and the pathspec the SECOND program derives its floor from.
+# Both are variables for exactly one reason: HEAD PROOF 5 has to point the REAL guard at a tree
+# it can pass. It used to point it at nexus/ and assert exit 0 — the same defect as the guard's
+# old selftest case (n), one level up. When nexus/ acquired the findings it is SUPPOSED to have,
+# PROOF 5 failed and the prover concluded "this head does not refuse a stub, so a green run
+# through it is worthless" — about a head that was working perfectly. A positive control must be
+# a FIXED artefact; nexus/ is a moving target and, for the four argued loanproduct sites, one
+# that can never be green again.
+CENSUS_ROOT="$NEXUS_DIR"
+CENSUS_FLOOR_SPEC='nexus'
 
 say()  { printf '%s\n' "$*"; }
 warn() { printf '%s\n' "$*" >&2; }
@@ -92,7 +104,7 @@ guard_run() {           # $1 = mode: "census" | "selftest"
       if [ "$1" = "selftest" ]; then
         "$BIN" --selftest --repo "$REPO_ROOT" 2>&1
       else
-        "$BIN" --root "$NEXUS_DIR" 2>&1
+        "$BIN" --root "$CENSUS_ROOT" 2>&1
       fi
       ;;
     stub-zero)   # a guard that SPEAKS but inspected nothing — T194's exact defect
@@ -120,7 +132,7 @@ guard_run() {           # $1 = mode: "census" | "selftest"
 # derive_floor: THE SECOND PROGRAM. `git ls-files` reads the INDEX; the guard reads the
 # FILESYSTEM with filepath.WalkDir. Same population, two independent measurements.
 derive_floor() {
-  git -C "$REPO_ROOT" ls-files -z -- 'nexus' 2>/dev/null \
+  git -C "$REPO_ROOT" ls-files -z -- "$CENSUS_FLOOR_SPEC" 2>/dev/null \
     | LC_ALL=C tr '\0' '\n' \
     | LC_ALL=C grep -ac '\.go$' || true
 }
@@ -255,11 +267,44 @@ prove_head() {
   if [ "$rc" -eq 0 ]; then say "  FAIL the head accepted a selftest that never drove RED"; fails=1; fi
 
   GUARD_CMD_MODE="real"
-  say "--- HEAD PROOF 5: the REAL guard must still pass through the same head (GREEN) ---"
   build_guard
+
+  # PROOF 5 — THE POSITIVE CONTROL, ON A TREE THE GUARD CAN ACTUALLY PASS.
+  # The REAL guard, the REAL head, a REAL derived floor over a REAL git-tracked population —
+  # only the population is the committed fixture instead of nexus/, for the reason recorded at
+  # the top of this file. Everything the proof is FOR (a census figure that is read, a floor
+  # derived by a second program, a selftest with both polarities) is exercised unchanged.
+  say "--- HEAD PROOF 5: the REAL guard on the committed CLEAN FIXTURE must pass the head ---"
+  if [ ! -d "$FIXTURE_DIR" ]; then
+    say "  FAIL the clean fixture is MISSING at $FIXTURE_DIR — the positive control did NOT run"
+    fails=1
+  else
+    CENSUS_ROOT="$FIXTURE_DIR"
+    CENSUS_FLOOR_SPEC='.softhouse/guards/ledgerguard/testdata/cleantree'
+    check_census >/dev/null 2>&1; rc=$?
+    say "  -> head exit $rc"
+    if [ "$rc" -ne 0 ]; then
+      say "  FAIL the head refused the real guard on a tree that is clean"
+      fails=1
+    fi
+  fi
+
+  # PROOF 6 — THE REAL TREE, ASSERTED IN THE DIRECTION THAT IS ACTUALLY TRUE OF IT.
+  # nexus/ carries a known, argued finding set (see .softhouse/guards/ledger-invariants.baseline),
+  # so the head MUST refuse it. Asserting the opposite is what made the old PROOF 5 declare a
+  # working head worthless. This keeps the real population inside the proof — a head that had
+  # stopped reaching nexus/ at all would pass PROOF 5 and fail here.
+  say "--- HEAD PROOF 6: the REAL nexus/ tree carries known findings, so the head must REFUSE it ---"
+  CENSUS_ROOT="$NEXUS_DIR"
+  CENSUS_FLOOR_SPEC='nexus'
   check_census >/dev/null 2>&1; rc=$?
   say "  -> head exit $rc"
-  if [ "$rc" -ne 0 ]; then say "  FAIL the head refused the real guard"; fails=1; fi
+  if [ "$rc" -eq 0 ]; then
+    say "  FAIL the head PASSED nexus/. Either every baseline finding was repaired — in which"
+    say "       case update .softhouse/guards/ledger-invariants.baseline and this proof in the"
+    say "       same commit — or the head stopped reading the guard's verdict."
+    fails=1
+  fi
 
   say ""
   if [ "$fails" -ne 0 ]; then
@@ -267,8 +312,9 @@ prove_head() {
     return 1
   fi
   say "HEAD PROOF: PASS — the head refuses a 0-file census, a missing census, a 0-case selftest"
-  say "HEAD PROOF:   and a never-RED selftest, and accepts the real guard. It is falsifiable in"
-  say "HEAD PROOF:   both directions, which is what makes its green verdict mean anything."
+  say "HEAD PROOF:   and a never-RED selftest; it ACCEPTS the real guard on a clean tree and"
+  say "HEAD PROOF:   REFUSES it on the real tree, which carries a known finding set. Falsifiable"
+  say "HEAD PROOF:   in both directions, which is what makes its verdict mean anything."
   return 0
 }
 
