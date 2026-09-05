@@ -4,7 +4,7 @@
   "pid": 0,
   "fire": "cloud-20260905-1200",
   "started_at": "2026-09-05T12:20:00Z",
-  "heartbeat": "2026-09-05T12:20:00Z",
+  "heartbeat": "2026-09-05T12:35:00Z",
   "heartbeat_note": "CORROBORATION ONLY. Authoritative liveness is the newest commit on origin/main (STEP 0).",
   "took_over_from": {
     "holder": "cloud-routine",
@@ -21,7 +21,9 @@
   "dispatched": [
     "T536",
     "T539",
+    "T493",
     "T537",
-    "T540"
+    "T540",
+    "T541"
   ]
 }
