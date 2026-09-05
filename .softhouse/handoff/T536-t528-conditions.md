@@ -431,3 +431,23 @@ deposit-insurance language. Nothing here goes near Go, the schema, or a vector.
    argument; the notes are quoted there and re-readable in `tasks.json`. If any of the
    seven is a genuine landing I have mis-scored, it becomes a false finding in a report
    that is already red, which is noise on top of a refusal rather than a silenced claim.
+
+---
+
+## 11. Branch proof — this handoff's own subject matter, applied to itself
+
+This program has lost five completed tasks to unpushed branches, and this task exists
+because of a guard built to catch exactly that. So the claim is not made in prose:
+
+```
+$ git push -u origin softhouse/T536-t528-conditions
+ * [new branch]        softhouse/T536-t528-conditions -> softhouse/T536-t528-conditions
+
+$ git ls-remote --heads origin softhouse/T536-t528-conditions
+6a37b7b273e02df25cc8f777501c81acd99b3552	refs/heads/softhouse/T536-t528-conditions
+```
+
+`6a37b7b2` is the commit carrying the work; this final commit appends the proof block, so
+the tip moves past it. The `ls-remote` above is the claim and it is re-runnable — which is
+the same standard `check-branch-published.py` holds every other task to, and the reason
+`landed <sha> on <branch>` in a note is not, and was never, evidence.
