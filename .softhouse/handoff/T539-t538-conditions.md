@@ -509,3 +509,35 @@ func main() {
   correctly labelled UNSWEPT.
 - **`money.go:133`'s broken citation is left broken** and filed as §9.1 rather than fixed, per the
   standing rule against re-pointing citations.
+
+---
+
+## 12. Branch proof
+
+```
+$ git push -u origin softhouse/T539-t538-conditions
+ * [new branch]        softhouse/T539-t538-conditions -> softhouse/T539-t538-conditions
+   (succeeded on attempt 1; no retry needed)
+
+$ git ls-remote --heads origin softhouse/T539-t538-conditions
+e25e3f05fe9d7380e88e150769403f6fd5e9585b	refs/heads/softhouse/T539-t538-conditions
+```
+
+Pasted verbatim from the run immediately after pushing commit `e25e3f05`. This note is itself a
+further commit on the branch, so the live tip is one commit ahead of the sha above — a commit
+cannot contain its own hash. Re-run
+`git ls-remote --heads origin softhouse/T539-t538-conditions` at any time for the authoritative tip;
+the sha reported in T539's report message is the one to grade.
+
+Files in this branch (`git diff --name-status a19ea967..HEAD`):
+
+```
+M  .softhouse/handoff/T534-t531-conditions.md
+A  .softhouse/handoff/T539-t538-conditions.md
+M  nexus/internal/apps/loanproduct/doc.go
+M  nexus/internal/apps/loanproduct/repaymentperiod.go
+```
+
+Four files. `nexus/internal/apps/savings/`, `.softhouse/conformance.sh`,
+`.softhouse/guards/ledgerguard/`, `.softhouse/tasks.json`, `.softhouse/LOCK`,
+`.softhouse/RESUME.md` and `.softhouse/program.json` are all untouched.
