@@ -1,30 +1,27 @@
 {
   "holder": "cloud-routine",
   "host": "claude-code-remote-sandbox",
-  "pid": 7981,
-  "fire": "cloud-20260904-1200",
-  "started_at": "2026-09-04T12:35:00Z",
-  "heartbeat": "2026-09-04T13:38:22Z",
+  "pid": 0,
+  "fire": "cloud-20260905-1200",
+  "started_at": "2026-09-05T12:20:00Z",
+  "heartbeat": "2026-09-05T12:20:00Z",
   "heartbeat_note": "CORROBORATION ONLY. Authoritative liveness is the newest commit on origin/main (STEP 0).",
   "took_over_from": {
-    "holder": "local-launchd",
-    "host": "Buyanmunkhs-Mac-mini",
-    "fire": "20260903-170002",
-    "their_started_at": "2026-09-03T09:01:19Z",
-    "arm": "ARM 3 (CEILING) — started_at was 27.5 h old, over the 24 h ceiling.",
-    "corroborating": "ARM 5 also matched: origin/main tip 2026-09-03T11:09:38Z was 25.3 h old at 2026-09-04T12:28:57Z. Both stale arms agreed; no arm said HELD."
+    "holder": "cloud-routine",
+    "host": "claude-code-remote-sandbox",
+    "fire": "cloud-20260904-1200",
+    "their_started_at": "2026-09-04T12:35:00Z",
+    "arm": "ARM 5 (BOTH SIGNALS STALE) - origin/main tip 2026-09-04T13:38:22Z was 22.55 h old and started_at was 23.60 h old at 2026-09-05T12:11:40Z; both over 6 h.",
+    "arms_that_did_not_match": "Arm 3 (CEILING) did NOT fire - started_at was 23.60 h, under the 24 h bound, so this takeover rests on arm 5 alone and not on the ceiling. Arm 4 did NOT read HELD - the tip was 22.55 h old, not under 6 h. Arm 2 not judged: the recorded pid names another sandbox, and a pid on another host is never judged. No arm read HELD.",
+    "why_it_was_never_released": "The previous cloud fire ended without deleting its own LOCK - an exit-protocol miss, not a live holder."
   },
-  "oracle": "UNREACHABLE by design from the cloud sandbox — vector/conformance work parked, analysis continues",
+  "oracle": "UNREACHABLE by design from the cloud sandbox - vector/conformance work parked, analysis continues",
   "postgres": "not reachable from this sandbox",
+  "fineract_checkout": "/home/user/fineract pinned to 426a23544 (commit of record); InterestPeriod.java measured 237 lines there, matching T532's brief",
   "dispatched": [
-    "T526",
-    "T527",
-    "T528",
-    "T529",
-    "T530",
-    "T531",
-    "T534",
     "T536",
-    "T538"
+    "T539",
+    "T537",
+    "T540"
   ]
 }
