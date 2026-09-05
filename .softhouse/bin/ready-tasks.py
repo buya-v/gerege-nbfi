@@ -221,11 +221,26 @@ def set_repo(path):
     root = os.path.join(repo, ".softhouse")
 
 
+class UnreadableRecord(Exception):
+    """T536 / T528 F-7. `tasks.json` unparseable. The checker already answers 3 and the
+    gate already prints `>>> THE CHECK COULD NOT LOOK`, and then THIS file crashed in its
+    own `load()` and exited 1 with a traceback -- non-zero and loud, so never a false
+    pass, but the exit-code table T527 added documents 5 and a caller keying on `== 5`
+    misread it. An archive under `runs/` was already handled correctly; the CURRENT record
+    was not."""
+
+
 def load():
     cur = {}
-    with open(os.path.join(root, "tasks.json")) as fh:
-        for t in json.load(fh)["tasks"]:
-            cur[t["id"]] = t
+    p = os.path.join(root, "tasks.json")
+    try:
+        with open(p) as fh:
+            doc = json.load(fh)
+        tasks = doc["tasks"]
+    except (ValueError, OSError, KeyError, TypeError) as e:
+        raise UnreadableRecord("%s: %s" % (p, e))
+    for t in tasks:
+        cur[t["id"]] = t
     arch = {}
     for path in sorted(glob.glob(os.path.join(root, "runs", "*.json"))):
         with open(path) as fh:
@@ -2189,6 +2204,12 @@ def reconcile(fire, rescue_map, named_corpses, dry_run=False):
     return 0
 
 
+# T536/T528-F-5. The checker's own verdict line. `branch_published_gate()` requires this
+# string in the checker's stdout before it believes an exit code of 0. It is the
+# checker's `render()` banner, verbatim.
+CLEAN_VERDICT = "check-branch-published: CLEAN"
+
+
 def branch_published_gate(out=sys.stdout):
     """T527 -- STEP 0. RUN `check-branch-published.py` AND PRINT IT ABOVE EVERYTHING ELSE.
 
@@ -2214,6 +2235,20 @@ def branch_published_gate(out=sys.stdout):
     printed as one. `P-45`'s recorded cost is a guard that goes green when it could not
     look, and a wrapper that swallows its exit code reproduces exactly that one layer out.
 
+    T536/T528-F-5 -- AND EXIT 0 IS NOT AN ANSWER EITHER, ON ITS OWN. T527 covered the
+    checker being DELETED and not the checker being REPLACED. Overwriting
+    `check-branch-published.py` with
+
+        import sys
+        sys.exit(0)
+
+    made THIS function report a pass over a record whose branch was never pushed: a
+    two-line de-facto disable, in a program whose recorded failure mode is a red guard
+    being "fixed" instead of the red thing. So a pass now requires the checker's own
+    verdict line, `check-branch-published: CLEAN`, in its stdout. A stub that prints
+    nothing cannot forge that, and neither can a truncated or crashed run that happened
+    to exit 0.
+
     Returns True when the check answered CLEAN, False otherwise.
     """
     tool = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -2235,13 +2270,25 @@ def branch_published_gate(out=sys.stdout):
         p("NOT CLEAN -- could not run the checker: %s" % e)
         p("This is not a pass; see the fail-closed note in this function.")
         return False
-    if res.returncode == 0:
+    if res.returncode == 0 and CLEAN_VERDICT in res.stdout:
         # Print the whole thing anyway. A CLEAN verdict carries the counts that make it
         # inspectable -- how many claims were backed, how many were WAIVED and by which
         # exemption -- and a bare "CLEAN" is the kind of claim this program has learned
         # not to take on trust.
         out.write(res.stdout)
         return True
+    if res.returncode == 0:
+        # Exit 0 with no verdict line. See the docstring: this is the silent-stub arm.
+        out.write(res.stdout)
+        if res.stderr.strip():
+            out.write(res.stderr)
+        p()
+        p(">>> check-branch-published.py exited 0 but never printed its verdict line")
+        p(">>> %r. An exit code is not an answer; a checker that" % CLEAN_VERDICT)
+        p(">>> did not say what it checked has not checked anything. NOT a pass.")
+        p(">>> (This is the arm that catches the tool being REPLACED rather than")
+        p(">>> deleted -- T528 F-5.)")
+        return False
     out.write(res.stdout)
     if res.stderr.strip():
         out.write(res.stderr)
@@ -2610,7 +2657,23 @@ def cli(argv):
         print("usage error: --corpse and %s are only meaningful with --reconcile"
               % NO_LOCK_FLAG, file=sys.stderr)
         return 64
-    return main()
+    try:
+        return main()
+    except UnreadableRecord as e:
+        # T536 / T528 F-7. Exit 5, the code the table documents, not 1 with a traceback.
+        # Same verdict as the checker's own UNREADABLE TASK RECORD arm: a record this
+        # tool cannot parse is a record whose claims it cannot check, and that is never
+        # a pass.
+        print(file=sys.stderr)
+        print("=" * 78, file=sys.stderr)
+        print("ready-tasks.py: UNREADABLE TASK RECORD -- NOT a pass. Exit 5.",
+              file=sys.stderr)
+        print("=" * 78, file=sys.stderr)
+        print("%s" % e, file=sys.stderr)
+        print("Nothing below was computed. The ready list, the blocked list and the",
+              file=sys.stderr)
+        print("branch-published verdict are all absent, not clean.", file=sys.stderr)
+        return 5
 
 
 if __name__ == "__main__":
