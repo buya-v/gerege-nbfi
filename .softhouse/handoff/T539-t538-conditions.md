@@ -1,7 +1,7 @@
 # T539 — applying T538's five conditions on T534
 
 Branch `softhouse/T539-t538-conditions`, cut from `main` at `a19ea967`.
-Scope: comments and documentation only. No executable byte moved (proof in §6).
+Scope: comments and documentation only. No executable byte moved (proof in §7).
 
 ---
 
