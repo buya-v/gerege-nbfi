@@ -1,0 +1,19 @@
+T550 — NO-REGRESSION BATTERY, re-driven against the T550 guard
+==============================================================
+ref=6aa31e5e (the merge base T541 used).  Shipped defaults: --streak 6,
+--silence-hours 18, --earned-silence-hours 36, --min-subst-lines 8,
+--lookback-days 14.
+
+Every figure below is the figure T493 published and T541 re-derived.
+
+case          now                    AXIS1  AXIS2     AXIS3     exit    verdict
+RED-1         2026-08-27T06:00:00Z   23 RED 95.2h RED 95.2h RED 1       VERDICT: RED
+RED-2         2026-09-01T00:00:00Z   13 RED 57.2h RED 57.3h RED 1       VERDICT: RED
+RED-3         2026-09-05T12:17:56Z   0 ok   49.1h RED 49.2h RED 1       VERDICT: RED
+GREEN-B       2026-09-04T13:40:00Z   0 ok   0.0h ok   0.1h ok   0       VERDICT: GREEN
+GREEN-C       2026-09-03T11:30:00Z   0 ok   0.3h ok   0.4h ok   0       VERDICT: GREEN
+GREEN-mine    2026-08-28T23:59:00Z   0 ok   4.6h ok   4.7h ok   0       VERDICT: GREEN
+GREEN-cloud   2026-09-05T12:17:56Z   0 ok   0.0h ok   22.7h ok  0       VERDICT: GREEN
+ANY-trap      2026-09-05T12:17:56Z   0 ok   0.0h ok   22.7h ok  0       VERDICT: GREEN
+MAX-26        2026-08-27T14:59:00Z   26 RED 104.1h RED 104.2h RED 1       VERDICT: RED
+RED-4-T541    2026-09-02T23:59:00Z   7 RED  35.4h RED 35.4h ok  1       VERDICT: RED

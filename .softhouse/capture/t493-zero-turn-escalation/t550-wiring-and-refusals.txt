@@ -1,0 +1,41 @@
+T550 — WIRING, REFUSALS AND THE --now AS-OF FILTER, RE-DRIVEN
+============================================================
+
+1. THE CALL SITE STILL FIRES THROUGH THE CALLER (T541 §7, re-driven)
+   The block is now a function _nofs_check() defined at fire-program.sh:1679-1752
+   and called twice: once in the --probe branch (T541 MINOR-6) and once at
+   the fire's original position (line 1782). Extracted verbatim and executed
+   under the caller's own shell and flags (zsh, 'set -uo pipefail', no -e).
+
+$ zsh harness.zsh <repo> block-def.zsh fire
+13:35:40Z harness: BEFORE the T550 block
+13:35:49Z no-op-fire-streak[local](fire): **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**
+13:35:50Z   |   VERDICT: RED — this producer is not advancing the migration
+13:35:59Z no-op-fire-streak[cloud](fire): GREEN — that producer is advancing
+13:35:59Z harness: AFTER the T550 block — the fire CONTINUED (rc of block = 0)
+
+2. EVERY EXIT CODE, against stub guards returning each code
+
+   guard exit             call-site behaviour / fire continues?
+   0                      no-op-fire-streak[local](fire): GREEN — that producer is advancing | continues=1
+   1                      no-op-fire-streak[local](fire): **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION** | continues=1
+   2                      no-op-fire-streak[local](fire): REFUSE (exit 2) — NO VERDICT WAS REACHED. This is NOT a pass. | continues=1
+   3                      no-op-fire-streak[local](fire): UNEXPECTED exit 3 — treat as no verdict, not as a pass | continues=1
+   141                    no-op-fire-streak[local](fire): UNEXPECTED exit 141 — treat as no verdict, not as a pass | continues=1
+   present, mode 644      no-op-fire-streak: guard NOT PRESENT or not executable at /tmp/claude-0/-home-user/ad0e3a7b-eb8c-5284-86b2-c6880990f4e8/scratchpad/stub/.softhouse/guards/no-op-fire-streak.sh — no streak verdict this fire | continues=1
+   absent                 no-op-fire-streak: guard NOT PRESENT or not executable at /tmp/claude-0/-home-user/ad0e3a7b-eb8c-5284-86b2-c6880990f4e8/scratchpad/stub/.softhouse/guards/no-op-fire-streak.sh — no streak verdict this fire | continues=1
+
+   REFUSE (2) and every unexpected code are reported as NO VERDICT, never a pass,
+   and the fire continues in every branch — an outage alarm that stops the next
+   fire would deepen the outage it reports.
+
+3. THE GUARD IS COMMITTED 100755 (the silent-skip trap)
+$ git ls-tree HEAD .softhouse/guards/no-op-fire-streak.sh
+100755 blob c57ed377b6b5af0076ea72d33e6976ac59d2c00e	.softhouse/guards/no-op-fire-streak.sh
+
+4. T541 MINOR-6 — --probe NOW REACHES THE GUARD
+$ zsh harness.zsh <repo> block-def.zsh probe
+13:36:09Z no-op-fire-streak[local](probe): **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**
+13:36:09Z   |   VERDICT: RED — this producer is not advancing the migration
+13:36:18Z no-op-fire-streak[cloud](probe): GREEN — that producer is advancing
+13:36:18Z harness: AFTER the T550 block — the fire CONTINUED (rc of block = 0)

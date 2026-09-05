@@ -1,0 +1,26 @@
+T550 — THE MATERIALITY FLOOR (VETO 3) IS MEASURED, NOT CHOSEN
+============================================================
+
+Script: t550-materiality-floor.py  (usage: python3 t550-materiality-floor.py <ref>)
+It reconstructs fires from .softhouse/LOCK diff direction exactly as the guard
+does, computes each fire window's best EARNED promotion, and reports
+  (a) the LONGEST RUN of fires that were cleared only by a THIN promotion, and
+  (b) the MINIMUM, over cleared fires, of the substantive added surface lines
+      carried by that fire's best promotion.
+
+$ python3 t550-materiality-floor.py origin/main       [at ab925f2a]
+local: fires=88 longest run of CLEARED-BUT-THIN(<=2 subst lines) fires = 0 None
+   min over cleared fires of (max substantive lines in its promotions) = 12; cleared fires=36
+cloud: fires=4 longest run of CLEARED-BUT-THIN(<=2 subst lines) fires = 0 None
+   min over cleared fires of (max substantive lines in its promotions) = 27; cleared fires=4
+
+READING: the thinnest promotion that has EVER cleared a fire in this
+repository carries 12 substantive added surface lines (local) and 27
+(cloud). The shipped floor is 8 — below every observed value, with a 1.5x
+margin, and the longest cleared-but-thin run in the whole history is ZERO.
+The floor therefore costs nothing measured. It is what stops T550 attacks
+G and H, whose payload is NOVEL on every beat and so invisible to VETO 2.
+
+The floor is a SIZE, not a shape: it names no path, no wording and no
+attack already seen, which is the difference between this and extending a
+blocklist (T527's mistake, which T528 broke).
