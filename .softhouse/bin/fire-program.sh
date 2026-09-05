@@ -1686,6 +1686,61 @@ fi
 # and exits instead of running a second orchestrator over the same state.
 git pull --ff-only --quiet || log "WARN: git pull --ff-only failed; continuing on local state"
 
+# ------------------------------------------------- T493: no-op fire streak ---
+# WHY THIS IS HERE AND NOT IN THE DRIVER. `classify_driver_turns()` (below, and
+# it is precise) already names a zero-turn fire and even separates it from a
+# quota rejection. It writes that finding into the RESUME.md banner AND NOTHING
+# READS IT. Three outages proved the consequence: 2026-08-24/26 and 2026-08-30/31
+# ran fires that took the lock, reconciled, released and advanced nothing, and
+# the third — the local fire silent from 2026-09-03T11:09:38Z — was found only
+# because a human read `git log` by hand two days later. Detection was never the
+# defect. ESCALATION was.
+#
+# WHAT THIS BLOCK HONESTLY COVERS, AND WHAT IT CANNOT.
+#   COVERS  — the NO-OP STREAK mode (fires run, advance nothing). This wrapper is
+#             alive when that happens, so it can see its own predecessors' commits
+#             and escalate. That is 2 of the 3 recorded occurrences.
+#   COVERS  — a CLOUD-side outage, from the local side. This is the real cross-fire
+#             direction available here.
+#   CANNOT  — the TOTAL SILENCE mode, where this wrapper does not run at all. A
+#             fire that cannot run cannot report that it could not run (P-45
+#             applied to the scheduler). Only the CLOUD fire can catch that, and
+#             wiring the cloud Routine is NOT in this task's scope — it is filed
+#             as T542 (owner: user/Buyan) with the exact prompt text to paste.
+#             Do not read this block as covering the live 2026-09-03 outage.
+#
+# It NEVER blocks the fire: an outage alarm that stops the next fire from running
+# would deepen the outage it is reporting.
+NOFS_GUARD="$REPO/.softhouse/guards/no-op-fire-streak.sh"
+if [[ -x "$NOFS_GUARD" ]]; then
+  for _nofs_producer in local cloud; do
+    _nofs_out="$("$NOFS_GUARD" --producer "$_nofs_producer" --ref origin/main 2>&1)"
+    _nofs_rc=$?
+    case $_nofs_rc in
+      0) log "no-op-fire-streak[$_nofs_producer]: GREEN — that producer is advancing" ;;
+      1) log "no-op-fire-streak[$_nofs_producer]: **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**"
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done
+         # Escalate off the log as well: a line in a log nobody opens is the same
+         # failure this guard exists to fix. osascript is macOS-native and this
+         # wrapper is already macOS-only in six places, so it is available here —
+         # but it is UNDRIVEN by T493 (that task ran on Linux and could not reach
+         # this host). Treat the notification as unproven until a fire on the Mac
+         # shows it firing.
+         if command -v osascript >/dev/null 2>&1; then
+           osascript -e 'display notification "A softhouse producer has stopped advancing the migration. See the fire log." with title "gerege-nbfi: NO-OP FIRE STREAK"' >/dev/null 2>&1 \
+             || log "no-op-fire-streak: osascript notification FAILED (non-fatal)"
+         fi ;;
+      2) log "no-op-fire-streak[$_nofs_producer]: REFUSE (exit 2) — NO VERDICT WAS REACHED. This is NOT a pass."
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done ;;
+      *) log "no-op-fire-streak[$_nofs_producer]: UNEXPECTED exit $_nofs_rc — treat as no verdict, not as a pass"
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done ;;
+    esac
+  done
+else
+  log "no-op-fire-streak: guard NOT PRESENT or not executable at $NOFS_GUARD — no streak verdict this fire"
+fi
+# ---------------------------------------------------------------------------
+
 # T202 — SIGKILL is untrappable, so a hard-killed fire STRANDS its lock, and on
 # this host that is the NORMAL outcome rather than the exotic one. Two measured
 # facts combine (both under zsh 5.9, see .softhouse/reviews/t202-probe/):

@@ -1,0 +1,60 @@
+ref=origin/main   non-merge commits analysed: 2524
+footprint truth: REAL=2231  BOOK=293
+
+NAIVE SUBJECT-KEYWORD CLASSIFIER, graded against the footprint truth
+  agree                                     : 2341  (92.7%)
+  FALSE NEGATIVE (BOOK commit, subject reads REAL): 37  (1.47%)
+      -> the guard believes work happened. THE OUTAGE IS MISSED. This is the
+         reviewer's 'bookkeeping fire whose subject looks real' attack, and it
+         occurs naturally in this history without anyone planting it.
+  FALSE POSITIVE (REAL commit, subject reads BOOK): 146  (5.78%)
+      -> the guard cries RED on a productive fire. This is the reviewer's
+         'real fire whose subject looks like bookkeeping' attack.
+
+FOOTPRINT CLASSIFIER (the one shipped in no-op-fire-streak.sh)
+  FALSE NEGATIVE : 0 / 2524   FALSE POSITIVE : 0 / 2524
+  ...BY CONSTRUCTION, AND THAT IS A CAVEAT, NOT A BOAST. The footprint IS the
+  ground truth here, so this row is definitionally 0 and proves nothing on its
+  own. What it does establish is INDEPENDENCE: the subject line is never an
+  input, so neither reword attack can move a commit across the line. The
+  footprint classifier is graded against EXTERNAL truth in windows.md instead:
+  the recorded outage windows, where it must report 0 real, and the recorded
+  productive windows, where it must report many.
+
+WORKED EXAMPLES — real commits that defeat the word list (first 8 of each):
+
+  FALSE NEGATIVES — bookkeeping, but the subject reads as real work:
+    409328e1 2026-09-02T13:02  files=['.softhouse/RESUME.md']
+             subject: softhouse: RESUME headline said three analysts were in flight after they had landed
+    8f3715a6 2026-09-02T13:02  files=['.softhouse/RESUME.md']
+             subject: softhouse: wave 1 landed scope-clean; wave 2 reviewers live; merge pre-graded honestly
+    9f341a2b 2026-08-29T16:45  files=['.softhouse/RESUME.md']
+             subject: softhouse iter5: record the exit-protocol attestation and attribute its one advisory
+    7a23f445 2026-08-29T01:38  files=['.softhouse/RESUME.md']
+             subject: softhouse: RESUME.md rewritten to current truth mid-iteration, not at exit
+    7400d9f2 2026-08-29T01:04  files=['.softhouse/LOCK']
+             subject: softhouse: iter4 dispatch VERIFIED -- ten agent worktrees confirmed present by name
+    f3bf5563 2026-08-28T20:40  files=['.softhouse/LOCK']
+             subject: softhouse: MATCH THE WRONG-IMPL PIN BY NAME, NEVER BY LINE -- it moved 546 lines
+    22070115 2026-08-28T20:11  files=['.softhouse/RESUME.md']
+             subject: softhouse: iter3 manifest -- T360 result, the second merge hazard, T387 dispatched
+    62ac422a 2026-08-28T20:04  files=['.softhouse/RESUME.md']
+             subject: softhouse: iter3 roster -- T388 done, T389 dispatched and awaiting
+
+  FALSE POSITIVES — real work, but the subject reads as bookkeeping:
+    a19ea967 2026-09-05T12:14  3 file(s), e.g. ['.softhouse/LOCK', '.softhouse/RESUME.md', '.softhouse/tasks.json']
+             subject: softhouse: fire cloud-20260905-1200 takes the lock under ARM 5 and publishes its dispatch record
+    3dedcdec 2026-09-03T18:28  2 file(s), e.g. ['.softhouse/RESUME.md', '.softhouse/program.json']
+             subject: softhouse: close fire 20260903-170002 — zero live workers, program state and manifest
+    982b4016 2026-09-02T13:44  3 file(s), e.g. ['.softhouse/LOCK', '.softhouse/RESUME.md', '.softhouse/program.json']
+             subject: softhouse: close cloud fire cloud-20260902-2000 — program.json, RESUME manifest, lock released
+    ffe24c01 2026-08-29T22:47  1 file(s), e.g. ['.softhouse/tasks.json']
+             subject: softhouse: wrapper reconciled state after fire 20260829-080002 (exit-protocol enforcement)
+    09209899 2026-08-29T20:42  2 file(s), e.g. ['.softhouse/reviews/t479-review-t477/REVIEW.md', '.softhouse/reviews/t479-review-t477/evidence/91-final-bar.txt']
+             subject: T479: the final bar at the review tip (probe presence 1 then 'down' -- oracle outage, NOT a pass
+    a6bf50a3 2026-08-29T19:35  3 file(s), e.g. ['.softhouse/capture/t477-t473-repair/evidence/90-FINAL-BAR.txt', '.softhouse/capture/t477-t473-repair/evidence/91-FINAL-BAR-full-transcript.log', '.softhouse/handoff/T477-handoff.md']
+             subject: T477: record the final bar at the branch tip (EXIT 0, probe presence 1 then up, PASS 46/7884, 0 
+    2c9ca37f 2026-08-29T17:57  1 file(s), e.g. ['.softhouse/tasks.json']
+             subject: softhouse iter6: T466 done (SKIPWT+ASSUME+SMUDGE closed, --no-filters, whole-tree recompute, loc
+    6ca0ea03 2026-08-29T17:26  33 file(s), e.g. ['.softhouse/bin/fire-program.sh', '.softhouse/bin/ready-tasks.py', '.softhouse/capture/t279-lock-partition/audit-this-fire.py']
+             subject: T465: the dead-path frontier no longer moves with the fire-lock cycle

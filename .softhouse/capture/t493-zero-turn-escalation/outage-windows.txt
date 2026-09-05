@@ -1,0 +1,91 @@
+T493 — INDEPENDENT RE-DERIVATION OF ALL THREE OUTAGE WINDOWS
+generated 2026-09-05T12:34:38Z; ref origin/main @ c2127db3
+Every number below was re-measured by T493 from git. None was taken from the brief;
+where my measurement DISAGREES with the brief, the disagreement is called out.
+
+### THE CLONE THIS WAS MEASURED IN — stated before any 'not found' claim
+$ git rev-parse --is-shallow-repository -> false
+$ git rev-list --count origin/main       -> 2975
+$ git log origin/main --format=%cI | tail -1 -> 2026-08-17T18:52:14+08:00
+History is COMPLETE back to the root commit, so nothing below is an answer about
+a shallow prefix. (origin/main advanced during T493 as sibling workers pushed;
+the sha above is the tip these numbers were taken at.)
+
+### PRODUCER IDENTITY — a machine fact, not a word in a subject
+$ git log origin/main --format=%cI | grep -oE '(\+[0-9:]+|Z)$' | sort | uniq -c
+      150 +00:00
+     2825 +08:00
+  +08:00 = the local launchd fire on Buyan's Mac (Asia/Ulaanbaatar, no DST)
+  +00:00 = the cloud catch-up Routine trig_01J7a66YFD7mzSLiKiFsj5XV
+
+### COMMITS PER DAY, Asia/Ulaanbaatar
+       33 2026-08-17
+      150 2026-08-18
+      248 2026-08-19
+      234 2026-08-20
+      367 2026-08-21
+      372 2026-08-22
+      133 2026-08-23
+       18 2026-08-24
+       18 2026-08-25
+       18 2026-08-26
+       98 2026-08-27
+      566 2026-08-28
+      513 2026-08-29
+       18 2026-08-30
+       18 2026-08-31
+       34 2026-09-01
+       55 2026-09-02
+       49 2026-09-03
+       30 2026-09-04
+        3 2026-09-05
+  The 18-commit days are the tell: 6 fires x 3 bookkeeping commits (lock take,
+  wrapper reconcile, lock release) and nothing else.
+  DISAGREEMENT WITH THE BRIEF #1: 2026-08-24 is ALSO an 18/0 day. The brief names
+  outage #1 as 08-25/26; measured, it is 08-24/25/26.
+  DISAGREEMENT WITH THE BRIEF #2: the brief's '18 fires' is 18 COMMITS per day,
+  i.e. 6 fires per day. Fire counts are given by the guard's AXIS 1 below.
+
+  ref=origin/main  non-merge commits=2525  real=2232  bookkeeping=293
+  
+  === ALL PRODUCERS: gaps between consecutive REAL commits > 12h ===
+     104.2h  2026-08-23 06:50Z 2b6cbe59  ->  2026-08-27 15:03Z 39d21561
+      59.8h  2026-08-29 14:47Z ffe24c01  ->  2026-09-01 02:33Z b1d9fbd5
+      24.0h  2026-09-01 12:37Z 858ac399  ->  2026-09-02 12:38Z 0aed916d
+      19.5h  2026-09-02 13:45Z 358fe0c1  ->  2026-09-03 09:12Z 14cf6c1f
+      25.4h  2026-09-03 11:09Z 5d7ef306  ->  2026-09-04 12:35Z 4394e141
+      22.6h  2026-09-04 13:38Z c42cb236  ->  2026-09-05 12:14Z a19ea967
+    NOTE: the 19-25h entries here are the CLOUD fire's once-daily cadence, which is
+    healthy. This is why a guard must watch ONE PRODUCER, not the ref as a whole.
+  
+  === LOCAL PRODUCER ONLY (+08:00, Buyan's Mac): gaps between consecutive REAL commits > 12h ===
+      12.8h  2026-08-17 11:56Z e4885af0  ->  2026-08-18 00:42Z 19c81217
+     104.2h  2026-08-23 06:50Z 2b6cbe59  ->  2026-08-27 15:03Z 39d21561
+      59.8h  2026-08-29 14:47Z ffe24c01  ->  2026-09-01 02:33Z b1d9fbd5
+      44.6h  2026-09-01 12:37Z 858ac399  ->  2026-09-03 09:12Z 14cf6c1f
+  
+  last LOCAL real commit : 2026-09-03 11:09:38Z 5d7ef306   -> silence 49.1h
+  last ANY   real commit : 2026-09-05 12:30:33Z c2127db3   -> silence -0.2h
+  
+  THE DECISIVE PAIR: while the LOCAL producer has been silent for ~49h, the ALL-
+  PRODUCERS silence is ~0h, because the cloud fire is committing. A watcher aimed
+  at the ref rather than at a producer reports GREEN throughout the live outage.
+
+### DISAGREEMENT WITH THE BRIEF #3 — the live outage's boundary commit
+The brief names 10baca08 @ 2026-09-03T10:33Z as the last local-fire commit.
+Measured, 12 local commits follow it; the last is 5d7ef306:
+  5d7ef306 2026-09-03T19:09:38+08:00 softhouse: T516 stack MERGED on T519's APPROVED — and T519 corrected the driver's own brief
+  be8f593d 2026-09-03T19:08:14+08:00 Merge softhouse/T519-review-t516 — the independent review that upheld T516's escalation
+  6f29dd39 2026-09-03T19:08:13+08:00 Merge softhouse/T516-t514-conditions (T502 -> T511 -> T516)
+  d355d422 2026-09-03T19:07:18+08:00 T519: independent review of T516 — APPROVED, two MINOR wording findings
+  a4b5ebac 2026-09-03T19:05:38+08:00 softhouse: T509 CLEARS THE CRITICAL PATH (10 findings -> 42); T517 REJECTS T512 for false-accusing its own author
+  f78ed058 2026-09-03T19:01:36+08:00 softhouse: T515 done + T522 filed — zero savings sites, verified by running the guard, not by reading the report
+  a6f88805 2026-09-03T18:55:04+08:00 softhouse: T508 done + T520/T521 — THE RATIFIED TENANT DOES NOT EXIST, so no parity vector can be captured
+  a609190e 2026-09-03T18:51:37+08:00 softhouse: T516 done + T519 filed — and the base-drift trap avoided one hour after T512 filed it
+  709e51c3 2026-09-03T18:49:51+08:00 T516: retire the posting-stream test — it is refuted by the function it annotated
+  dcdc3339 2026-09-03T18:49:50+08:00 softhouse: T512 done + T517/T518 filed — dispatch record pushed before the reviewer spawns
+  fc35f4eb 2026-09-03T18:05:23+08:00 T511: apply T505's conditions — withdraw the guard patch, restate on posting-stream ground
+  0b5e8b81 2026-09-03T17:33:43+08:00 T502: loanproduct I-3 — (b) schedule intermediates, argued not renamed
+  So the live local silence at dispatch (2026-09-05T12:18Z) is 49.1h, not ~50h,
+  and it runs from 5d7ef306. The brief's shape is right; its anchor was off by 12
+  commits and ~36 minutes. Both figures are in the same outage.
