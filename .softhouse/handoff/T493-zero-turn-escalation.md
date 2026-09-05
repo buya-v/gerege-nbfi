@@ -385,3 +385,19 @@ only arithmetic is elapsed-hours (`float`, non-monetary) and commit counts (`int
 ## 9. PUSH PROOF
 
 `git ls-remote` output is appended below in a final commit, per the brief.
+
+```
+$ git push -u origin softhouse/T493-zero-turn-escalation
+ * [new branch]  softhouse/T493-zero-turn-escalation -> softhouse/T493-zero-turn-escalation
+   (succeeded on attempt 1 of 4)
+
+$ git ls-remote --heads origin softhouse/T493-zero-turn-escalation
+8343a6b6ad99f8c971d61b9121bfc429614bf6a4	refs/heads/softhouse/T493-zero-turn-escalation
+```
+
+Confirmed: commit `8343a6b6` is on `origin`. This program has lost five completed tasks to
+unpushed branches; the line above is the proof this one is not the sixth.
+
+Note the sha in `ls-remote` is the *work* commit. This appended proof is a second commit on
+the same branch, pushed after it — so `origin` is one commit ahead of the sha shown, by
+construction. Re-run `git ls-remote` to see the tip.
