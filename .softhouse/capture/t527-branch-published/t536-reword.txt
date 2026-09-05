@@ -1,0 +1,10 @@
+as written:
+  31 finding(s); T509 branch claim present: True
+
+with '(merge base 10baca08)' -> '(merge-base commit 10baca08)' (one word):
+  31 finding(s); T509 branch claim present: True
+
+substitutions actually applied: 1
+IDENTICAL: the reword silences nothing. `merge-base commit X` is a base citation
+whether or not the word `commit` is in it, and T536 makes LANDING earned rather than
+assumed, so a paraphrase has nothing to fall through to.

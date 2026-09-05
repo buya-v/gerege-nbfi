@@ -1157,7 +1157,25 @@ def _write_tasks(repo, tasks):
         json.dump({"run_id": "selftest", "tasks": tasks}, fh, indent=1)
 
 
-def _fixture(base):
+def _fixture(base, _tries=12):
+    """T536. Build `_fixture_once` until none of the four short shas it hands back is
+    ALL DIGITS.
+
+    A hex short sha is all-digit about 2.3% of the time, and the tool vetoes an all-digit
+    token on purpose (`20260829` is this program's own fire-id and date format). A GREEN
+    selftest case whose proving sha lands all-digit therefore fails for a reason that has
+    nothing to do with what it is testing -- a flaky control, which is worse than none
+    because the next reader learns to re-run it. Retrying the fixture removes the
+    coin-flip without weakening any case: the RED cases are unaffected either way."""
+    for i in range(_tries):
+        d = os.path.join(base, "fx%d" % i) if i else base
+        repo, f = _fixture_once(d)
+        if not any(f[k].isdigit() for k in ("pushed", "merged", "local", "main")):
+            return repo, f
+    return repo, f
+
+
+def _fixture_once(base):
     """A bare `origin` plus a work repo, with:
        - main pushed
        - `softhouse/TP-pushed` pushed and still present on origin
@@ -1167,6 +1185,7 @@ def _fixture(base):
     """
     origin = os.path.join(base, "origin.git")
     repo = os.path.join(base, "work")
+    os.makedirs(base, exist_ok=True)
     _sh(base, "git", "init", "--quiet", "--bare", "-b", "main", origin)
     os.makedirs(repo)
     _sh(repo, "git", "init", "--quiet", "-b", "main")
@@ -1392,6 +1411,32 @@ def selftest(keep=False):
         case("A5b-GREEN-" + nm, 0, ["CLEAN", "merged-and-pruned, PROVED"],
              lambda f, _n=note: [T(id="TN", branch="softhouse/TN-never-pushed",
                                    note=_n % f["main"])])
+
+    # 5b-ii. T536's OWN residual, driven rather than assumed. The two rules T528's
+    #     sizing did not contain are the two places this classifier can now be wrong, so
+    #     each gets a RED and a GREEN:
+    #       * `APPROVED` is in the `@` verb list (it is what recovers T387 on the real
+    #         record). It must not carry ANOTHER task's commit -- V2's leading arm has to
+    #         do that work, and this is the case that proves it does.
+    #       * `_veto_gap` refuses to step over an intervening sha, which is what recovers
+    #         T477's own tip from "on top of T466 11afb281, tip a6bf50a3". The GREEN below
+    #         is that exact shape; the RED is the same words with nothing in the gap.
+    case("A5b-ii-APPROVED-carrying-another-task", 2,
+         ["UNBACKED-BRANCH", "softhouse/TN-never-pushed"],
+         lambda f: [T(id="TN", branch="softhouse/TN-never-pushed",
+                      note="APPROVED T400's work @ %s; mine is on the branch"
+                           % f["main"])])
+    case("A5b-ii-GREEN-APPROVED-own-work", 0, ["CLEAN", "merged-and-pruned, PROVED"],
+         lambda f: [T(id="TN", branch="softhouse/TN-never-pushed",
+                      note="APPROVED WITH CONDITIONS @ %s. VERDICT ACCEPT." % f["main"])])
+    case("A5b-ii-base-word-adjacent-still-vetoes", 2,
+         ["UNBACKED-BRANCH", "softhouse/TN-never-pushed"],
+         lambda f: [T(id="TN", branch="softhouse/TN-never-pushed",
+                      note="based on %s" % f["main"])])
+    case("A5b-ii-GREEN-base-sha-then-own-tip", 0,
+         ["CLEAN", "merged-and-pruned, PROVED"],
+         lambda f: [T(id="TN", branch="softhouse/TN-never-pushed",
+                      note="based on %s, tip %s" % (f["pushed"], f["main"]))])
 
     # 5c. T536 / T528 F-2. THE PROOF IS SCOPED TO THE BRANCH, NOT THE TASK. A task that
     #     names two branches and landed one waived BOTH, so on `main` T476's landing sha
