@@ -1298,3 +1298,53 @@ shape work continue.
 `FINERACT_HIKARI_JDBC_URL=jdbc:postgresql://db:5432/fineract_tenants`, PostgreSQL **18.3**, and
 **zero** prohibited-engine references (`mysql|mariadb|ojdbc|oracle.jdbc|1521`) in the app
 environment. `actuator/health` returns HTTP 200 `{"status":"UP"}`.
+
+---
+
+## RESTORED — 2026-09-05, task OH-1 (branch `ops/OH1-restore-gerege-tenant`): the `gerege` tenant is back
+
+Reverses the 2026-09-03 CORRECTION above. The `gerege` tenant database `fineract_gerege` was
+re-created and migrated to the pinned commit's Liquibase state, and its four ratified parameters
+are all live and read by the running app.
+
+### Tenant facts of record
+
+| Fact | Value |
+|---|---|
+| identifier | `gerege` (tenants id 2) |
+| timezone_id | `Asia/Ulaanbaatar` (+08) |
+| rounding mode | `HALF_UP` — `java.math.RoundingMode` ordinal **4** (`c_configuration.rounding-mode` = 4) |
+| currency | `MNT` — ISO 4217 numeric 496, **2** minor units (`m_currency.decimal_places` = 2) |
+| schema name | `fineract_gerege` |
+| PostgreSQL | 18.3 (Debian 18.3-1.pgdg13+1, aarch64) |
+| Fineract commit | `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
+
+### The two tenants are demonstrably different — discrimination proof (live)
+
+The pinned midpoint tie, driven through the RUNNING oracle on 2026-09-05:
+
+```
+1,162,502.50 x 0.018 = 20,925.045
+  gerege  (HALF_UP)   -> period-1 interestOriginalDue = 20925.05
+  default (HALF_EVEN) -> period-1 interestOriginalDue = 20925.04
+```
+
+`POST /loans?command=calculateLoanSchedule` (persists nothing), half-cent product
+(`.softhouse/capture/pathb/t22-audit/req/pmode2-halfcent.json`), principal `1162502.5`,
+21.6% p.a., 12 monthly periods, `interestCalculationPeriodType` = 1, currency MNT. Both HTTP 200.
+
+- `gerege` answered **20925.05** (HALF_UP).
+- `default` answered **20925.04** (HALF_EVEN; its rounding-mode remains 6 and timezone Asia/Kolkata).
+
+### What was written, and why it is minimal
+
+- `fineract_gerege`: MNT and USD were added to `m_organisation_currency` (MNT — the ratified
+  currency — was absent), one client (id 1) and one loan product (id 1) were created: the fixtures
+  the tie requires. No other tenant data was touched.
+- `fineract_default`: ONE loan product (id 1) was created so the HALF_EVEN arm of the tie could be
+  driven under `default` without re-pointing anything at it. Its rounding mode (6), timezone
+  (`Asia/Kolkata`) and schema were not modified, dropped or re-migrated; the only change is that one
+  additive fixture row.
+
+A later capture must state the tenant: **`gerege` is the HALF_UP arm (20925.05); `default` remains
+the HALF_EVEN negative control (20925.04).**
