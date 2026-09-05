@@ -418,3 +418,21 @@ non-negotiables grepped (`first_name`/`last_name`, Stripe/Plaid/Lithic/Persona,
 **Runtime.** The guard now makes two passes over the history instead of one (the second is
 `git log -p -U0` capped by `awk` at 200 added lines per commit, ~4.3M raw lines down to ~300k). End
 to end it is ~9 s on 2,546 commits, against ~3 s before. The call site runs it twice per fire.
+
+---
+
+## 7. PUSH PROOF
+
+This program has lost five completed tasks to unpushed branches, so the proof is in the record.
+
+```
+$ git push -u origin softhouse/T550-t541-conditions
+To https://github.com/buya-v/gerege-nbfi
+ * [new branch]        softhouse/T550-t541-conditions -> softhouse/T550-t541-conditions
+branch 'softhouse/T550-t541-conditions' set up to track 'origin/softhouse/T550-t541-conditions'.
+
+$ git ls-remote --heads origin softhouse/T550-t541-conditions
+ea899f9a83993e971bef1dfe4a80643a9f931ab3	refs/heads/softhouse/T550-t541-conditions
+```
+
+`ea899f9a` is the work commit. **The branch reached origin.**
