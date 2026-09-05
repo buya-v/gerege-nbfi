@@ -671,3 +671,20 @@ scoping caveats in MINOR-1 and MINOR-2.
 
 **The guard escalates. It is wired, the wiring runs, REFUSE is never a pass, and it would have
 caught two of the three recorded outages within hours. Accept, with the five conditions above.**
+
+---
+
+## 14. PUSH PROOF
+
+Review committed as `a3148e12645abc211699e9ccecb42568a892e3ec` and pushed to origin.
+
+```
+$ git push -u origin softhouse/T541-review-t493
+To https://github.com/buya-v/gerege-nbfi
+ * [new branch]        softhouse/T541-review-t493 -> softhouse/T541-review-t493
+
+$ git ls-remote --heads origin softhouse/T541-review-t493
+a3148e12645abc211699e9ccecb42568a892e3ec	refs/heads/softhouse/T541-review-t493
+```
+
+The branch reached origin.
