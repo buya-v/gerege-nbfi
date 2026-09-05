@@ -382,3 +382,20 @@ sole product is trustworthy citations, which is why they are conditions rather t
 **The substance of T532 is sound and I recommend it merge once the record is corrected**: the
 sweep is real, the corrections are right, the sixth-survivor and 22-of-28 corrections of the
 brief are sustained, and the zero-divergence claim holds under independent re-derivation.
+
+---
+
+## Push confirmation
+
+```
+$ git push -u origin softhouse/T548-review-t532
+ * [new branch]        softhouse/T548-review-t532 -> softhouse/T548-review-t532
+branch 'softhouse/T548-review-t532' set up to track 'origin/softhouse/T548-review-t532'.
+(PUSH OK on attempt 1 — no retries needed)
+
+$ git ls-remote --heads origin softhouse/T548-review-t532
+b6204db71003fe2577349b48e894138b1fefb620	refs/heads/softhouse/T548-review-t532
+```
+
+`b6204db71003fe2577349b48e894138b1fefb620` is the review commit. **The branch is confirmed on
+the remote.**
