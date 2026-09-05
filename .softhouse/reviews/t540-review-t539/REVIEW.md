@@ -524,3 +524,22 @@ not touched; and the T542 follow-up was filed with the right line number rather 
 **VERDICT: ACCEPT WITH CONDITIONS.** Conditions are MINOR-B and MINOR-C on the next owner of the
 `repaymentperiod.go` comment, and MINOR-D on the driver before T533 unparks. **Axis 2 stays LATENT;
 it does not return to scope for T533.**
+
+---
+
+## 14. Branch proof
+
+Review commit `4e64ec3a8387a78d5a722c86c286a18a3ae55e91` on `softhouse/T540-review-t539`, pushed to
+origin on the first attempt. Confirmed present on the remote:
+
+```
+$ git push -u origin softhouse/T540-review-t539
+ * [new branch]        softhouse/T540-review-t539 -> softhouse/T540-review-t539
+
+$ git ls-remote --heads origin softhouse/T540-review-t539
+4e64ec3a8387a78d5a722c86c286a18a3ae55e91	refs/heads/softhouse/T540-review-t539
+```
+
+The `ls-remote` sha matches the local commit, so the review is on origin and not only in a
+worktree. This appendix is itself a second commit on the same branch; the tip after it is the
+sha reported in the run summary.
