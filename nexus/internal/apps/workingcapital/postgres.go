@@ -85,8 +85,12 @@ func nullInt(v int) any {
 }
 
 // wcProductDetailColumns is the single source of truth for the embedded
-// WorkingCapitalLoanProductRelatedDetails columns on m_wc_loan, shared by the
-// insert and select statements so they cannot drift.
+// WorkingCapitalLoanProductRelatedDetails columns on m_wc_loan. It serves the
+// SELECT (read path) below; the INSERT spells the same seventeen columns out
+// literally so the statement stays a single string literal a reader — and the
+// I-3/I-4 guard — can read whole. The two must move together: a column added
+// here without being added to the INSERT's column list will fail against the
+// placeholder count in Insert. [T503/T525]
 const wcProductDetailColumns = `currency_code, principal_amount, period_payment_rate,
 repayment_every, repayment_frequency_enum, amortization_type, npv_day_count,
 discount, discount_proposed, discount_approved,
@@ -171,7 +175,12 @@ func (r *PostgresWorkingCapitalLoanRepository) Insert(ctx context.Context, l Wor
  submittedon_date, rejectedon_date, approvedon_date, closedon_date,
  expected_maturedon_date, maturedon_date,
  principal_amount_proposed, approved_principal, total_payment_volume,
- is_charged_off, is_fraud, `+wcProductDetailColumns+`)
+ is_charged_off, is_fraud,
+ currency_code, principal_amount, period_payment_rate,
+ repayment_every, repayment_frequency_enum, amortization_type, npv_day_count,
+ discount, discount_proposed, discount_approved,
+ delinquency_bucket_classification_id, breach_id, near_breach_id,
+ delinquency_grace_days, delinquency_start_type, breach_grace_days, breach_start_type)
 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,
  $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36)
 RETURNING id`, args...)
@@ -339,81 +348,35 @@ func (r *PostgresWorkingCapitalLoanRepository) UpdateStatus(ctx context.Context,
 	return nil
 }
 
-// WorkingCapitalLoanBalanceRepository is the persistence surface for
-// m_wc_loan_balance.
+// WorkingCapitalLoanBalanceRepository is the READ-ONLY persistence surface for
+// m_wc_loan_balance. The Go module has no write path to this table: the row is
+// Fineract's, written by its disbursement, balance-updater, charge, breach and
+// amortization services during the strangler window. This port only ever reads
+// it as an inbound read model and derives every outstanding/due figure from the
+// raw totals it carries (see WorkingCapitalLoanBalance). [R1; T525]
 type WorkingCapitalLoanBalanceRepository interface {
-	Upsert(ctx context.Context, loanID int64, b WorkingCapitalLoanBalance) error
 	FindByLoanID(ctx context.Context, loanID int64) (*WorkingCapitalLoanBalance, error)
 }
 
-// PostgresWorkingCapitalLoanBalanceRepository persists one balance row per loan.
+// PostgresWorkingCapitalLoanBalanceRepository reads the one balance row per loan.
 type PostgresWorkingCapitalLoanBalanceRepository struct {
 	db postgres.DB
 }
 
-// NewPostgresWorkingCapitalLoanBalanceRepository constructs the balance store.
+// NewPostgresWorkingCapitalLoanBalanceRepository constructs the balance read
+// model.
 func NewPostgresWorkingCapitalLoanBalanceRepository(db postgres.DB) *PostgresWorkingCapitalLoanBalanceRepository {
 	return &PostgresWorkingCapitalLoanBalanceRepository{db: db}
 }
 
-// wcBalanceColumns is the READ path's column list. The write path below spells
-// the same thirteen columns out literally instead of splicing this const in, so
-// that its statement is statically readable; the two must move together, and a
-// column added here without being added there will fail against the placeholder
-// count in Upsert. [T503]
+// wcBalanceColumns is the READ path's column list for m_wc_loan_balance. The
+// table has no write path in this port, so there is no INSERT/UPDATE statement
+// to keep this list in step with; it names the thirteen raw charged/paid totals
+// the read model decodes. [T525]
 const wcBalanceColumns = `principal, principal_paid, principal_adjustment, fee,
 fee_paid, penalty, penalty_paid, realized_income_from_discount_fee,
 overpayment_amount, total_disbursement, total_discount_fee,
 total_discount_fee_adjustment, breach_pastdue_amount`
-
-// Upsert writes (or replaces) the balance for one loan.
-//
-// THE STATEMENT IS SPELLED OUT RATHER THAN ASSEMBLED FROM wcBalanceColumns.
-// [T503] Splicing the column const in made this a statement the I-3/I-4 guard
-// could not read, so it was refused as OPAQUE-SQL — it could not certify that a
-// mutating Exec was not an UPDATE against acc_gl_journal_entry or a write to a
-// balance column. Thirteen column names repeated once is the price of a
-// statement a reader and a guard can both check; the const still serves the
-// read path below, where an opaque SELECT cannot violate either invariant.
-func (r *PostgresWorkingCapitalLoanBalanceRepository) Upsert(ctx context.Context, loanID int64, b WorkingCapitalLoanBalance) error {
-	if _, err := r.db.Exec(ctx, `INSERT INTO m_wc_loan_balance
-(wc_loan_id, principal, principal_paid, principal_adjustment, fee,
-fee_paid, penalty, penalty_paid, realized_income_from_discount_fee,
-overpayment_amount, total_disbursement, total_discount_fee,
-total_discount_fee_adjustment, breach_pastdue_amount)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
-ON CONFLICT (wc_loan_id) DO UPDATE SET
- principal = EXCLUDED.principal,
- principal_paid = EXCLUDED.principal_paid,
- principal_adjustment = EXCLUDED.principal_adjustment,
- fee = EXCLUDED.fee,
- fee_paid = EXCLUDED.fee_paid,
- penalty = EXCLUDED.penalty,
- penalty_paid = EXCLUDED.penalty_paid,
- realized_income_from_discount_fee = EXCLUDED.realized_income_from_discount_fee,
- overpayment_amount = EXCLUDED.overpayment_amount,
- total_disbursement = EXCLUDED.total_disbursement,
- total_discount_fee = EXCLUDED.total_discount_fee,
- total_discount_fee_adjustment = EXCLUDED.total_discount_fee_adjustment,
- breach_pastdue_amount = EXCLUDED.breach_pastdue_amount`,
-		loanID,
-		money(b.Principal),
-		money(b.PrincipalPaid),
-		money(b.PrincipalAdjustment),
-		money(b.Fee),
-		money(b.FeePaid),
-		money(b.Penalty),
-		money(b.PenaltyPaid),
-		money(b.RealizedIncomeFromDiscountFee),
-		money(b.OverpaymentAmount),
-		money(b.TotalDisbursement),
-		money(b.TotalDiscountFee),
-		money(b.TotalDiscountFeeAdjustment),
-		money(b.BreachPastDueAmount)); err != nil {
-		return fmt.Errorf("workingcapital: upsert balance: %w", err)
-	}
-	return nil
-}
 
 // FindByLoanID resolves the balance for one loan, or (nil, nil) on a miss.
 func (r *PostgresWorkingCapitalLoanBalanceRepository) FindByLoanID(ctx context.Context, loanID int64) (*WorkingCapitalLoanBalance, error) {
