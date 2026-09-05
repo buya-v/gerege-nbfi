@@ -401,3 +401,26 @@ unpushed branches; the line above is the proof this one is not the sixth.
 Note the sha in `ls-remote` is the *work* commit. This appended proof is a second commit on
 the same branch, pushed after it — so `origin` is one commit ahead of the sha shown, by
 construction. Re-run `git ls-remote` to see the tip.
+
+---
+
+## CORRECTION APPENDED BY THE DRIVER, fire `cloud-20260905-1200`
+
+**Section 4.3's bolded claim that no verdict is sensitive to the `tasks.json` adjudication is FALSE
+as stated, and it must not be read as written.**
+
+T541 falsified it by driving, not by arguing. The claim holds **at the six instants T493 measured** —
+T541 reproduced those — but **one day later the cloud producer flips GREEN→RED (0.0 h → 22.7 h)**
+under T545's alternative, because a cloud dispatch record touches `LOCK` + `tasks.json` and nothing
+else. So the adjudication **does** change verdicts.
+
+The correct statement is: *verdict-neutral at the instants measured, not verdict-neutral in general.*
+
+This correction is appended by the driver rather than by a worker because
+`.softhouse/handoff/T493-zero-turn-escalation.md` was outside T550's declared scope; T550 said so and
+declined to reach outside it, which was right. **The cost of leaving the claim standing was already
+paid once:** the driver copied it into T545's brief, so T545's adjudicator was being told the choice
+could not matter. That brief is corrected too.
+
+T550's repair answers the substance by construction — `tasks.json` is not on the migration surface,
+so it can no longer promote a commit to REAL on its own.
