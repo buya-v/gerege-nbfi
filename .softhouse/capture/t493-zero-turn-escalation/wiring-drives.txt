@@ -1,0 +1,56 @@
+T493 — THE WIRING, DRIVEN (not merely parsed)
+generated 2026-09-05T12:36:57Z
+
+### 0. The whole modified wrapper parses under the shell it actually runs on
+$ zsh --version -> zsh 5.9 (x86_64-ubuntu-linux-gnu)
+$ zsh -n .softhouse/bin/fire-program.sh
+   rc=0 — OK (3542 lines)
+zsh was NOT present in the T493 sandbox; it was installed specifically so this check
+could be RUN rather than asserted. Parsing is all that can be proven off-host: the
+wrapper is macOS-only in six further places (/usr/bin/stat -f, $HOME/Library/Logs,
+the launchd plist), so it cannot be executed end-to-end here.
+
+### 1. The escalation block (fire-program.sh lines 1689..1742), extracted VERBATIM and
+###    executed against the real repo. The harness supplies only $REPO and log(),
+###    exactly as the wrapper does.
+
+[drive] no-op-fire-streak[local]: **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**
+[drive]   | no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+[drive]   |   history      : 2525 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+[drive]   |   bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+[drive]   |   now          : 2026-09-05T12:37:00Z
+[drive]   |   window       : last 14 day(s), from 2026-08-22T12:37:00Z
+[drive]   |   in window    : 1159 real, 200 bookkeeping, 64 fire(s) graded
+[drive]   | 
+[drive]   |   AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+[drive]   |   AXIS 2 silence      : 49.5h since last REAL commit 5d7ef306 at 2026-09-03T11:09Z (threshold 18h) -> RED
+[drive]   | 
+[drive]   |   VERDICT: RED — this producer is not advancing the migration
+[drive]   | 
+[drive]   |   ESCALATE. This is the third-occurrence defect T493 was filed for: the two
+[drive]   |   earlier outages (2026-08-24/26 and 2026-08-30/31) were both reconstructed by
+[drive]   |   hand, after the fact, because nothing read the finding the fire already made.
+[drive] no-op-fire-streak[cloud]: GREEN — that producer is advancing
+[drive] block completed; fire continues (exit status of block: 0)
+
+  -> local RED (the live 49h outage), cloud GREEN, and the block RETURNS so the fire
+     continues. An outage alarm that stopped the next fire from running would deepen
+     the very outage it reports.
+
+### 2. The REFUSE branch, driven through the same wiring (shallow clone, fetch off)
+[drive] no-op-fire-streak[local]: REFUSE (exit 2) — NO VERDICT WAS REACHED. This is NOT a pass.
+[drive]   | no-op-fire-streak: REFUSE — history is SHALLOW and --no-fetch was given; a --since window over a shallow clone answers for the shallow part only
+[drive]   | no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.
+[drive] no-op-fire-streak[cloud]: REFUSE (exit 2) — NO VERDICT WAS REACHED. This is NOT a pass.
+[drive]   | no-op-fire-streak: REFUSE — history is SHALLOW and --no-fetch was given; a --since window over a shallow clone answers for the shallow part only
+[drive]   | no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.
+[drive] block completed; fire CONTINUES (block did not abort)
+
+  -> exit 2 is logged as REFUSE and explicitly NOT as a pass, on BOTH producers.
+
+### 3. WHAT THIS WIRING DOES NOT COVER
+fire-program.sh is the LOCAL wrapper, executed by launchd on Buyan's Mac. It cannot
+catch the TOTAL SILENCE mode, because a fire that cannot run cannot report that it
+could not run. It would NOT have caught the live 2026-09-03 outage. The direction
+that would — cloud watches local — is Routine trig_01J7a66YFD7mzSLiKiFsj5XV and is
+filed as T542 (owner: user). See the handoff, section 6.2.
