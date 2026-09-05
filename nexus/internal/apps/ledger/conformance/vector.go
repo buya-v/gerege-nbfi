@@ -248,6 +248,37 @@ type Currency struct {
 	MinorUnitDigits int    `json:"minor_unit_digits"`
 }
 
+// TenantParams is the tenant configuration a vector was captured under.
+//
+// R2a: a vector must be able to DECLARE the conditions it was captured under.
+// Between 2026-09-01 and 2026-09-03 the reference oracle's tenant changed from
+// `gerege` (HALF_UP, ordinal 4, Asia/Ulaanbaatar) to `default` (HALF_EVEN,
+// ordinal 6, Asia/Kolkata), and none of the 67 vectors could detect it because
+// none recorded the tenant it was captured under. These six fields are that
+// record, and the content is FIXED: it names the tenant, its rounding mode and
+// ordinal, its money precision and currency, and its timezone.
+//
+// A vector with this field ABSENT is UNRECORDED: it is still graded, but the
+// harness FLAGS it rather than passing it silently. A vector with this field
+// PRESENT is checked against the store pin's tenant_params and REFUSED on any
+// mismatch (admit.go), so a vector captured under the wrong tenant can never
+// grade silently.
+type TenantParams struct {
+	RoundingMode    string `json:"rounding_mode"`
+	RoundingOrdinal int    `json:"rounding_ordinal"`
+	Precision       int    `json:"precision"`
+	Currency        string `json:"currency"`
+	MinorUnits      int    `json:"minor_units"`
+	Timezone        string `json:"timezone"`
+}
+
+// String renders the six tenant fields in a stable, one-line shape for refusal
+// and census messages that must name both sides.
+func (tp TenantParams) String() string {
+	return fmt.Sprintf("{rounding_mode %s, rounding_ordinal %d, precision %d, currency %s, minor_units %d, timezone %s}",
+		tp.RoundingMode, tp.RoundingOrdinal, tp.Precision, tp.Currency, tp.MinorUnits, tp.Timezone)
+}
+
 // Account is one GL account as the oracle's own capture recorded it.
 //
 // IT IS DATA, NOT AN EXPECTATION. DEC-2 §4.5: "the chart of accounts is DATA,
@@ -1083,6 +1114,13 @@ type Vector struct {
 	Provenance           Provenance  `json:"provenance"`
 	Oracle               OracleStamp `json:"oracle"`
 	Request              Request     `json:"request"`
+
+	// TenantParams is the tenant configuration the vector was captured under,
+	// see the TenantParams type. It is a POINTER so that "recorded" and
+	// "unrecorded" are distinguishable: a nil pointer means the vector did not
+	// declare its tenant (UNRECORDED, graded but flagged), while a non-nil
+	// pointer is checked against the store pin and refused on any mismatch.
+	TenantParams *TenantParams `json:"tenant_params"`
 
 	// OracleAccepted is populated on a DIVERGENCE vector and MUST be zero on
 	// every other class -- admit.go refuses it in both directions, so the field

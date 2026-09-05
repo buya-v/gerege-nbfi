@@ -403,6 +403,13 @@ type Result struct {
 	GradedCells int
 	MoneyCells  int
 
+	// TenantParamsUnrecorded reports that this vector left tenant_params ABSENT
+	// (R2a): it graded without declaring the tenant it was captured under, and
+	// is therefore FLAGGED in the output rather than passed silently. The field
+	// is on the per-vector result so the flag names its vector, not just the
+	// census figure.
+	TenantParamsUnrecorded bool
+
 	// Invariants are the property invariants asserted on THIS vector.
 	Invariants []InvariantResult
 }
