@@ -124,12 +124,20 @@ func LoadPin(path string) (*Pin, error) {
 	if p.FineractCommit == "" {
 		return nil, fmt.Errorf("ledger pin %s: fineract_commit is empty", path)
 	}
-	if p.TenantParams.RoundingMode == "" || p.TenantParams.Currency == "" ||
+	// An ABSENT pin declaration is UNRECORDED, not fatal — the same rule this
+	// mechanism applies to a vector. Nobody has yet established what the existing
+	// corpus was captured under, and inventing a value here would make the
+	// mismatch check compare the tree's own expectation against itself. A pin
+	// that declares NOTHING disables the cross-check and says so; a pin that
+	// declares SOMETHING must declare it completely.
+	declared := p.TenantParams.RoundingMode != "" || p.TenantParams.Currency != "" ||
+		p.TenantParams.Timezone != "" || p.TenantParams.Precision > 0
+	if declared && (p.TenantParams.RoundingMode == "" || p.TenantParams.Currency == "" ||
 		p.TenantParams.Timezone == "" || p.TenantParams.Precision <= 0 ||
-		p.TenantParams.MinorUnits < 0 {
-		return nil, fmt.Errorf("ledger pin %s: tenant_params is incomplete: %s — the pin must state "+
-			"the tenant the corpus is graded under, so a vector's recorded tenant_params has something "+
-			"to be checked against", path, p.TenantParams)
+		p.TenantParams.MinorUnits < 0) {
+		return nil, fmt.Errorf("ledger pin %s: tenant_params is PARTIAL: %s — declare every field "+
+			"or none. A partial declaration cannot be checked against and hides which half is "+
+			"unknown", path, p.TenantParams)
 	}
 	return &p, nil
 }
