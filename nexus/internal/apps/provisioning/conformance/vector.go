@@ -17,9 +17,14 @@ const SchemaV1 = "gerege.provisioning.vector/v1"
 // anything about, and it is the directory name that context's vectors live in.
 const ProvisioningContext = "provisioning"
 
-// SeamProvisioningCategoryRead is the one capture seam this schema grades: the
+// SeamProvisioningCategoryRead is one capture seam this schema grades: the
 // m_provision_category aggregate as returned by GET /v1/provisioningcategory.
 const SeamProvisioningCategoryRead = "provisioning-category-read"
+
+// SeamProvisioningEntryReserve is the second capture seam this schema grades:
+// the reserve amount (and aggregation) observed on
+// GET /v1/provisioningentries/{id}/entries.
+const SeamProvisioningEntryReserve = "provisioning-entry-reserve"
 
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
@@ -90,20 +95,54 @@ type TenantParams struct {
 	Timezone        string `json:"timezone"`
 }
 
-// Request is the category lookup key the implementation is graded on: the
-// primary key of the m_provision_category aggregate to return.
+// Request is the input the implementation is graded on. It is the union of the
+// two seams: the category read (category_id) and the entry reserve (inputs, a
+// list of per-loan reserve rows). A category vector sets exactly category_id; a
+// reserve vector sets exactly inputs.
 type Request struct {
-	CategoryID int64 `json:"category_id"`
+	CategoryID int64             `json:"category_id"`
+	Inputs     []ReserveInputRow `json:"inputs"`
 }
 
-// Expect is what the oracle produced for the request: the category aggregate's
-// id, name and description. id and name are the aggregate's NOT NULL members and
-// description is its nullable member; for a category the oracle returned, all
-// three are present.
+// ReserveInputRow is one per-loan provisioning row the entry-reserve seam is
+// graded on: the two money inputs (outstanding balance in minor units, reserve
+// percentage in micro-per-cent) plus the identity fields that decide which
+// aggregated reserve entry the oracle writes. Monetary values are integer
+// STRINGS in minor units; Percentage is the integer micro-per-cent Percent
+// (50.000000 % -> 50_000_000), never money.
+type ReserveInputRow struct {
+	OfficeID         int64  `json:"office_id"`
+	CurrencyCode     string `json:"currency_code"`
+	ProductID        int64  `json:"product_id"`
+	CategoryID       int64  `json:"category_id"`
+	OverdueInDays    int64  `json:"overdue_in_days"`
+	Percentage       int64  `json:"percentage"`
+	BalanceMinor     string `json:"balance_minor"`
+	LiabilityAccount int64  `json:"liability_account"`
+	ExpenseAccount   int64  `json:"expense_account"`
+	CriteriaID       int64  `json:"criteria_id"`
+}
+
+// Expect is what the oracle produced for the request. For the category seam it
+// is the category aggregate's id, name and description; id and name are the
+// aggregate's NOT NULL members and description is its nullable member. For the
+// entry-reserve seam it is one aggregated reserve entry, with the reserved
+// amount as an integer STRING in minor units plus the identity that pins which
+// band the amount belongs to.
 type Expect struct {
 	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+
+	ReservedAmountMinor string `json:"reserved_amount_minor"`
+	OfficeID            int64  `json:"office_id"`
+	CurrencyCode        string `json:"currency_code"`
+	ProductID           int64  `json:"product_id"`
+	CategoryID          int64  `json:"category_id"`
+	OverdueInDays       int64  `json:"overdue_in_days"`
+	LiabilityAccount    int64  `json:"liability_account"`
+	ExpenseAccount      int64  `json:"expense_account"`
+	CriteriaID          int64  `json:"criteria_id"`
 }
 
 // Vector is one provisioning golden vector.

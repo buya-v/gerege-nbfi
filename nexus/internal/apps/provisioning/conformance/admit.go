@@ -36,8 +36,12 @@ func Admit(v *Vector, opts Options) []string {
 	if v.Class != ClassParity {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
-	if v.Oracle.Seam != SeamProvisioningCategoryRead {
-		problems = append(problems, fmt.Sprintf("oracle.seam %q: this harness grades only seam %q", v.Oracle.Seam, SeamProvisioningCategoryRead))
+	switch v.Oracle.Seam {
+	case SeamProvisioningCategoryRead, SeamProvisioningEntryReserve:
+	default:
+		problems = append(problems, fmt.Sprintf(
+			"oracle.seam %q: this harness grades only seams %q and %q",
+			v.Oracle.Seam, SeamProvisioningCategoryRead, SeamProvisioningEntryReserve))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -109,8 +113,22 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, err.Error())
 	}
 
-	if v.Request.CategoryID <= 0 {
-		problems = append(problems, fmt.Sprintf("request.category_id %d is not a positive category id", v.Request.CategoryID))
+	switch v.Oracle.Seam {
+	case SeamProvisioningCategoryRead:
+		if v.Request.CategoryID <= 0 {
+			problems = append(problems, fmt.Sprintf("request.category_id %d is not a positive category id", v.Request.CategoryID))
+		}
+	case SeamProvisioningEntryReserve:
+		problems = append(problems, validateReserveInputs(v.Request.Inputs)...)
+		if !isIntegerMinorString(v.Expect.ReservedAmountMinor) {
+			problems = append(problems, fmt.Sprintf("expect.reserved_amount_minor %q is not a non-negative integer minor-unit amount", v.Expect.ReservedAmountMinor))
+		}
+		if v.Expect.CategoryID <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.category_id %d is not positive", v.Expect.CategoryID))
+		}
+		if v.Expect.OverdueInDays < 0 {
+			problems = append(problems, fmt.Sprintf("expect.overdue_in_days %d is negative", v.Expect.OverdueInDays))
+		}
 	}
 
 	problems = append(problems, checkGradedAgainst(v)...)
@@ -171,4 +189,63 @@ func checkGradedAgainst(v *Vector) []string {
 // exists in the capture.
 func bytesContain(raw []byte, needle string) bool {
 	return strings.Contains(string(raw), needle)
+}
+
+// validateReserveInputs default-deny-checks the reserve-seam request rows: at
+// least one row, a non-empty currency, positive identity keys, a positive
+// percentage, and a balance_minor that is a non-negative integer STRING of minor
+// units (money is integer minor units, never a float).
+func validateReserveInputs(rows []ReserveInputRow) []string {
+	if len(rows) == 0 {
+		return []string{"request.inputs is empty: a reserve vector must carry at least one per-loan reserve row"}
+	}
+	var problems []string
+	for i, r := range rows {
+		at := fmt.Sprintf("request.inputs[%d]", i)
+		if r.OfficeID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.office_id %d is not positive", at, r.OfficeID))
+		}
+		if r.CurrencyCode == "" {
+			problems = append(problems, fmt.Sprintf("%s.currency_code is empty", at))
+		}
+		if r.ProductID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.product_id %d is not positive", at, r.ProductID))
+		}
+		if r.CategoryID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.category_id %d is not positive", at, r.CategoryID))
+		}
+		if r.OverdueInDays < 0 {
+			problems = append(problems, fmt.Sprintf("%s.overdue_in_days %d is negative", at, r.OverdueInDays))
+		}
+		if r.Percentage <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.percentage %d is not positive", at, r.Percentage))
+		}
+		if r.LiabilityAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.liability_account %d is not positive", at, r.LiabilityAccount))
+		}
+		if r.ExpenseAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.expense_account %d is not positive", at, r.ExpenseAccount))
+		}
+		if r.CriteriaID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.criteria_id %d is not positive", at, r.CriteriaID))
+		}
+		if !isIntegerMinorString(r.BalanceMinor) {
+			problems = append(problems, fmt.Sprintf("%s.balance_minor %q is not a non-negative integer minor-unit amount", at, r.BalanceMinor))
+		}
+	}
+	return problems
+}
+
+// isIntegerMinorString reports whether s is a non-negative integer (money in
+// minor units must be an integer, never a float).
+func isIntegerMinorString(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
 }

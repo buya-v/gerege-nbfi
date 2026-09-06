@@ -1,0 +1,61 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-08-LOSS-RESERVE",
+ "title": "LOSS reserve amount (100%, 92 days overdue)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from capture ENT-04 (GET /v1/provisioningentries/{id}/entries, tenant gerege, business date pinned 2026-09-01). expect.reserved_amount_minor=\"10661853\" is the LOSS row's \"amountreserved\":106618.530000 scaled to integer minor units; expect.category_id=4 and expect.overdue_in_days=92 are that same row's \"categoryId\" and \"overdueInDays\". request.inputs[0].balance_minor=\"10661853\" is m_loan.total_outstanding_derived for the 92-days-overdue loan (loan 4, read-only SQL verification); request.inputs[0].percentage=100000000 is the LOSS band's 100.00% from capture CRI-02 (provisioningPercentage 100.00 -> 100000000 micro-per-cent). No value was computed by this promotion.",
+ "oracle": {
+  "seam": "provisioning-entry-reserve",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect fields are transcribed from the committed capture ENT-04; capture_case_id names the categoryName of the observed entry row.",
+  "capture_ref": ".softhouse/capture/provisioning/out/ENT-04-entry-loan-products-raw.json",
+  "capture_sha256": "96d596c24df85684c8d8fb1d204adddd9423f3ab101aedcaa890dd757b447ddb",
+  "capture_case_id": "LOSS",
+  "citation": "ENT-04 row {\"historyId\":1,\"officeId\":1,\"currencyCode\":\"MNT\",\"productId\":2,\"categoryId\":4,\"categoryName\":\"LOSS\",\"overdueInDays\":92,\"amountreserved\":106618.530000,\"liablityAccount\":2,\"expenseAccount\":4,\"criteriaId\":1}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "inputs": [
+   {
+    "office_id": 1,
+    "currency_code": "MNT",
+    "product_id": 2,
+    "category_id": 4,
+    "overdue_in_days": 92,
+    "percentage": 100000000,
+    "balance_minor": "10661853",
+    "liability_account": 2,
+    "expense_account": 4,
+    "criteria_id": 1
+   }
+  ]
+ },
+ "expect": {
+  "reserved_amount_minor": "10661853",
+  "office_id": 1,
+  "currency_code": "MNT",
+  "product_id": 2,
+  "category_id": 4,
+  "overdue_in_days": 92,
+  "liability_account": 2,
+  "expense_account": 4,
+  "criteria_id": 1
+ },
+ "capabilities_required": [
+  "reserve-amount"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}

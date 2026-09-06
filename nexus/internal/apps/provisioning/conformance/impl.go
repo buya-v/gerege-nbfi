@@ -3,6 +3,7 @@ package conformance
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"sync"
 
 	"github.com/gerege/nexus/internal/apps/provisioning"
@@ -112,11 +113,65 @@ func NewGoEvaluator() ProvisioningEvaluator {
 }
 
 func (g goEvaluator) Evaluate(req Request) (Expect, error) {
+	if len(req.Inputs) > 0 {
+		return evaluateReserveEntries(req)
+	}
 	c, ok := g.categories[req.CategoryID]
 	if !ok {
 		return Expect{}, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
 	}
 	return Expect{ID: c.ID, Name: c.Name, Description: c.Description}, nil
+}
+
+// evaluateReserveEntries ports the oracle's reserve generation for the
+// entry-reserve seam: it feeds the per-loan reserve rows through the port's
+// GenerateReserveEntries (which computes each PercentageOf and sums rows that
+// share a partial hash key) and returns the single aggregated entry. A reserve
+// vector grades ONE observed entry, so the rows must collapse to exactly one
+// distinct entry.
+func evaluateReserveEntries(req Request) (Expect, error) {
+	inputs := make([]provisioning.ReserveInput, 0, len(req.Inputs))
+	for i, row := range req.Inputs {
+		bal, err := strconv.ParseInt(row.BalanceMinor, 10, 64)
+		if err != nil {
+			return Expect{}, fmt.Errorf(
+				"provisioning: request.inputs[%d].balance_minor %q is not an integer minor-unit amount: %w",
+				i, row.BalanceMinor, err)
+		}
+		inputs = append(inputs, provisioning.ReserveInput{
+			OfficeID:         row.OfficeID,
+			CurrencyCode:     row.CurrencyCode,
+			ProductID:        row.ProductID,
+			CategoryID:       row.CategoryID,
+			OverdueInDays:    row.OverdueInDays,
+			Percentage:       provisioning.Percent(row.Percentage),
+			Balance:          provisioning.MinorUnits(bal),
+			LiabilityAccount: row.LiabilityAccount,
+			ExpenseAccount:   row.ExpenseAccount,
+			CriteriaID:       row.CriteriaID,
+		})
+	}
+	entries, err := provisioning.GenerateReserveEntries(inputs)
+	if err != nil {
+		return Expect{}, err
+	}
+	if len(entries) != 1 {
+		return Expect{}, fmt.Errorf(
+			"provisioning: request.inputs produced %d distinct reserve entries, want exactly 1 (a reserve vector grades one observed entry)",
+			len(entries))
+	}
+	e := entries[0]
+	return Expect{
+		ReservedAmountMinor: strconv.FormatInt(int64(e.ReservedAmount), 10),
+		OfficeID:            e.OfficeID,
+		CurrencyCode:        e.CurrencyCode,
+		ProductID:           e.ProductID,
+		CategoryID:          e.CategoryID,
+		OverdueInDays:       e.OverdueInDays,
+		LiabilityAccount:    e.LiabilityAccount,
+		ExpenseAccount:      e.ExpenseAccount,
+		CriteriaID:          e.CriteriaID,
+	}, nil
 }
 
 // wrongCategoryEvaluator is a DELIBERATELY WRONG implementation: it returns a

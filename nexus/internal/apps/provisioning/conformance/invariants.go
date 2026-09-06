@@ -28,8 +28,15 @@ type InvariantResult struct {
 }
 
 // AssertInvariants runs every gradeable provisioning invariant against the
-// result an implementation returned.
+// result an implementation returned. The entry-reserve seam asserts a different
+// set than the category-read seam, so the seam decides the set.
 func AssertInvariants(v *Vector, got Expect) []InvariantResult {
+	if v != nil && v.Oracle.Seam == SeamProvisioningEntryReserve {
+		return []InvariantResult{
+			assertReserveCategoryIDPositive(got),
+			assertReservedAmountInteger(got),
+		}
+	}
 	return []InvariantResult{
 		assertCategoryIDPositive(got),
 		assertCategoryNameNonEmpty(got),
@@ -63,5 +70,35 @@ func assertCategoryNameNonEmpty(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("category name %q is non-empty", got.Name)
+	return r
+}
+
+// assertReserveCategoryIDPositive: the reserve entry's category id is the
+// m_provision_category primary key of the band, a positive integer.
+func assertReserveCategoryIDPositive(got Expect) InvariantResult {
+	r := InvariantResult{Name: "reserve_category_id_positive", Assertions: 1}
+	if got.CategoryID <= 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("reserve category id %d is not positive", got.CategoryID)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("reserve category id %d is positive", got.CategoryID)
+	return r
+}
+
+// assertReservedAmountInteger: the reserved amount is money in integer minor
+// units, so it must be a non-negative integer. The comparator already decodes it
+// into an integer; a violation here means the implementation produced a value it
+// could not have produced under the port's contract.
+func assertReservedAmountInteger(got Expect) InvariantResult {
+	r := InvariantResult{Name: "reserved_amount_non_negative", Assertions: 1}
+	if !isIntegerMinorString(got.ReservedAmountMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("reserved amount %q is not a non-negative integer minor-unit amount", got.ReservedAmountMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("reserved amount %q is a non-negative integer minor-unit amount", got.ReservedAmountMinor)
 	return r
 }

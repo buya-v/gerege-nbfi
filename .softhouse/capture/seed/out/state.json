@@ -7,12 +7,16 @@
   "clients": {
     "SEED-C11": 5,
     "SEED-C12": 6,
-    "SEED-C13": 7
+    "SEED-C13": 7,
+    "SEED-C14": 8,
+    "SEED-C15": 9
   },
   "loanProduct": 2,
   "loans": {
     "SEED-L01": 1,
     "SEED-L02": 2,
-    "SEED-L03": 3
+    "SEED-L03": 3,
+    "SEED-L04": 4,
+    "SEED-L05": 5
   }
 }

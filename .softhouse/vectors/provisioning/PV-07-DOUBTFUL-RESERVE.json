@@ -1,0 +1,73 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-07-DOUBTFUL-RESERVE",
+ "title": "DOUBTFUL reserve amount (50%, 62 days overdue, two loans aggregated)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from capture ENT-04 (GET /v1/provisioningentries/{id}/entries, tenant gerege, business date pinned 2026-09-01). expect.reserved_amount_minor=\"7423432\" is the DOUBTFUL row's \"amountreserved\":74234.320000 scaled to integer minor units; expect.category_id=3 and expect.overdue_in_days=62 are that same row's \"categoryId\" and \"overdueInDays\". Two loans are 62 days overdue and collapse into this one aggregated entry: request.inputs[0].balance_minor=\"10661853\" is loan 1 (m_loan.total_outstanding_derived) and request.inputs[1].balance_minor=\"4185009\" is loan 5 (the rounding-sensitive 41850.09 principal); request.inputs[].percentage=50000000 is the DOUBTFUL band's 50.00% from capture CRI-02 (provisioningPercentage 50.00 -> 50000000 micro-per-cent). No value was computed by this promotion.",
+ "oracle": {
+  "seam": "provisioning-entry-reserve",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect fields are transcribed from the committed capture ENT-04; capture_case_id names the categoryName of the observed entry row.",
+  "capture_ref": ".softhouse/capture/provisioning/out/ENT-04-entry-loan-products-raw.json",
+  "capture_sha256": "96d596c24df85684c8d8fb1d204adddd9423f3ab101aedcaa890dd757b447ddb",
+  "capture_case_id": "DOUBTFUL",
+  "citation": "ENT-04 row {\"historyId\":1,\"officeId\":1,\"currencyCode\":\"MNT\",\"productId\":2,\"categoryId\":3,\"categoryName\":\"DOUBTFUL\",\"overdueInDays\":62,\"amountreserved\":74234.320000,\"liablityAccount\":2,\"expenseAccount\":4,\"criteriaId\":1}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "inputs": [
+   {
+    "office_id": 1,
+    "currency_code": "MNT",
+    "product_id": 2,
+    "category_id": 3,
+    "overdue_in_days": 62,
+    "percentage": 50000000,
+    "balance_minor": "10661853",
+    "liability_account": 2,
+    "expense_account": 4,
+    "criteria_id": 1
+   },
+   {
+    "office_id": 1,
+    "currency_code": "MNT",
+    "product_id": 2,
+    "category_id": 3,
+    "overdue_in_days": 62,
+    "percentage": 50000000,
+    "balance_minor": "4185009",
+    "liability_account": 2,
+    "expense_account": 4,
+    "criteria_id": 1
+   }
+  ]
+ },
+ "expect": {
+  "reserved_amount_minor": "7423432",
+  "office_id": 1,
+  "currency_code": "MNT",
+  "product_id": 2,
+  "category_id": 3,
+  "overdue_in_days": 62,
+  "liability_account": 2,
+  "expense_account": 4,
+  "criteria_id": 1
+ },
+ "capabilities_required": [
+  "reserve-amount"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}
