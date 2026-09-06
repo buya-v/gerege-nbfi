@@ -286,3 +286,18 @@
 .softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh | .softhouse/capture/t286-rvpa-retry/red/drive_red_t286.py
 .softhouse/reviews/t291-review-t286/probe/reproduce-in-t286s-own-sweep.sh | .softhouse/capture/t286-rvpa-retry/red/fixtures
 .softhouse/reviews/t47-probe/t178-redprobe.py | .softhouse/reviews/t47-probe/t47_edit_N.py
+
+# --- ADDED when origin/main merged, and the reason is a DECISION, not drift ---
+#     Four softhouse instruments quote `.softhouse/LOCK`. That file was DELETED on this
+#     side when the softhouse program was stopped, and the merge conflict (deleted in
+#     HEAD, modified in origin/main) was resolved by KEEPING IT DELETED: a coordination
+#     lock for a producer that no longer runs is not a file to restore.
+#     These four rows are therefore the guard working exactly as intended — a tracked
+#     instrument's quoted path is a claim about this tree, and these four claims are now
+#     false. They are pinned rather than repaired because the repair would be to restart
+#     the producer. If softhouse is ever restarted, LOCK returns and these rows must be
+#     REMOVED in the same commit that restarts it.
+.softhouse/capture/t493-zero-turn-escalation/t550-materiality-floor.py | .softhouse/LOCK
+.softhouse/guards/no-op-fire-streak.sh | .softhouse/LOCK
+.softhouse/reviews/t552-review-t550/evidence/t552-floor.py | .softhouse/LOCK
+.softhouse/reviews/t552-review-t550/evidence/t552-sweep.py | .softhouse/LOCK

@@ -3449,9 +3449,18 @@ guard_guards_dir_registration() {
   # ROW 2 — drive-red-ledger-invariants.sh. NOT a guard: it is the P-22 RED DRIVE for
   # ledgerguard, planting one violation per class into a scratch copy of nexus/. Calling it from
   # run_guards would mean every graded run drives its own money guard red on purpose.
+    # ROW 3 — no-op-fire-streak.sh [T493, T550]. The same shape as ROW 1: a CROSS-FIRE watchdog
+    # that decides whether a named PRODUCER has stopped advancing the migration. That is a question
+    # about a SEQUENCE of fires, not about the one tree this harness grades, so run_guards does not
+    # call it and must not. Its caller is the fire driver [VERIFIED .softhouse/bin/fire-program.sh
+    # :1718 `NOFS_GUARD=`]. It arrived on main with the origin merge and read invoked-by-nothing
+    # for that reason alone. STATED RATHER THAN LEFT TO ROT: the local launchd producer it watches
+    # is STOPPED, so this row declares where the checker is REACHED FROM, not that the reaching
+    # currently happens.
   local DECLARED
   DECLARED="repo-state-attest.sh|CALLER|.softhouse/bin/fire-program.sh|repo-state-attest.sh
-drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard"
+drive-red-ledger-invariants.sh|SUBJECT|.softhouse/guards/ledgerguard/main.go|ledgerguard
+no-op-fire-streak.sh|CALLER|.softhouse/bin/fire-program.sh|no-op-fire-streak.sh"
 
   local total=0 invoked=0 decl_ok=0 selfdecl=0 unwired=0 bad=0
   # SYMLINK MEMBERS GET THEIR OWN COUNTER RATHER THAN JOINING `unwired`. [T375 pass 2.] They are
