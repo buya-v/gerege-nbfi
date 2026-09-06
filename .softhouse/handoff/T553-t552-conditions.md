@@ -73,6 +73,7 @@ shipped guard; AFTER = this branch.
 | `atk-mine-knum` (new) | 7 **counter** lines + 1 novel | GREEN exit 0 | GREEN exit 0 — RESIDUAL, priced below |
 | `atk-mine-min` (new) | 8 **one-character** novel lines/fire | GREEN exit 0 | GREEN exit 0 — the residual's floor price |
 | `atk-mine-rot` (new) | `mine-k`'s payload into a **new file every fire** | **GREEN exit 0** | **RED exit 1** (streak 7) |
+| `atk-repeat` (new) | the same 8 lines every fire, no novel line | RED exit 1 | RED exit 1 (VETO 2a) |
 | `atk-unenumerated` | 12 novel prose lines to a never-committed path | RED exit 1 | RED exit 1 |
 | `atk-t541` | T541's valueless `docs/` line | RED exit 1 | RED exit 1 |
 | `atk-legit` | 12 novel capture rows/fire | GREEN exit 0 | **GREEN exit 0** |
@@ -119,6 +120,21 @@ $ ... --ref atk-mine-k   --min-subst-lines 2    ->  AXIS 1: 7 -> RED            
 The first fire of each attack still promotes (its lines are genuinely new); fires 2..8 carry one novel
 line each and are vetoed, which is why the streak is 7 rather than 8. Seven ≥ the threshold of 6, so
 the streak trips. `atk-mine-k40`'s streak is 7 for the same reason.
+
+### T550's original property is preserved, not merely claimed
+
+`atk-repeat` — the same eight lines every fire, no novel line at all — is RED on both guards, and the
+new guard names the right veto rather than falling through to the floor:
+
+```
+$ ... --ref atk-repeat --explain 6f9e3d64
+reason    VETO 2 REPEAT PAYLOAD — normalised payload 1918124713eabb98 already used at c792c527
+          by this producer
+payload   8 substantive added surface line(s), 0 of them novel for this producer
+```
+
+So all four classifier outcomes — NO ANCHOR, VETO 1, VETO 2a, VETO 2b/VETO 3 — are driven, not just
+the one the review named.
 
 ### The residual — MEASURED, not characterised
 
@@ -243,10 +259,17 @@ fixed 6-line header **plus** 12 novel rows per fire — the shape a novelty rule
 false-RED on) are both **GREEN exit 0**, and the boilerplate case explains as
 `12 NOVEL of 18 substantive added line(s), floor 8` — the header is discounted, the work is counted.
 
+**5. The live margin, from the shipped `--json` on this fire's own history** — the most recent earned
+cloud promotion on `origin/main` reports
+`"last_earned_substantive_lines": 138, "last_earned_novel_lines": 125` against
+`"min_novel_substantive_lines": 8`. Real work sits ~15x above the floor even after novelty is
+discounted; the padder sits exactly on it.
+
 **How many legitimate fires, and where from.** 89 local + 5 cloud recorded fires in this repository's
-own history (`origin/main`, 2,587 non-merge commits, 2026-08-17 → 2026-09-06), of which 36 local + 4
-cloud ever cleared; every one of them re-graded under the new rule, plus 964 hourly instants, plus 24
-driven battery rows, plus the 2 synthetic productive branches. No oracle was needed for any of it.
+own history (`origin/main`, 2,587 non-merge commits when I started, 2,600 when I finished — another
+worker in this fire pushed; 2026-08-17 → 2026-09-06), of which 36 local + 5 cloud ever cleared; every
+one of them re-graded under the new rule, plus 1,930 hourly instants, plus 24 driven battery rows,
+plus the 2 synthetic productive branches. No oracle was needed for any of it.
 
 ## Timing
 

@@ -72,6 +72,15 @@ for i in 1 2 3 4 5 6 7 8; do
         printf '%s%s\n' "$L" "${LET[$((j-1))]}" >> .softhouse/capture/t553-i/beat.txt
       done
       git add .softhouse/capture/t553-i/beat.txt ;;
+    repeat)
+      # T550's VETO 2a must still work: the SAME eight lines every fire, no novel
+      # line at all. Fire 1 promotes; every later fire must be vetoed as a REPEAT
+      # PAYLOAD, not merely as thin.
+      mkdir -p .softhouse/capture/t553-repeat
+      for j in a b c d e f g h; do
+        printf 'stable line %s\n' "$j" >> .softhouse/capture/t553-repeat/beat.txt
+      done
+      git add .softhouse/capture/t553-repeat/beat.txt ;;
     mine-rot)
       # mine-k with a NEW FILE every fire, to check that the novelty ledger is
       # keyed on CONTENT and not on path — rotating the path must not refresh a

@@ -106,7 +106,7 @@
 #                  whole recorded history the thinnest promotion that ever
 #                  cleared a fire carries 12 NOVEL substantive added surface
 #                  lines (local, 89 fires, 36 cleared) and 27 (cloud, 5 fires,
-#                  4 cleared) — the same two numbers T550 measured over the raw
+#                  5 cleared) — the same two numbers T550 measured over the raw
 #                  multiset, i.e. counting novelty instead of lines costs the
 #                  real corpus nothing. A floor of 8 keeps a 1.5x margin under
 #                  the observed minimum. Raising it tightens; lowering it
