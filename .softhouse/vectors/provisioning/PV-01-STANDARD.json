@@ -1,0 +1,42 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-01-STANDARD",
+ "title": "STANDARD category aggregate read (id 1)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from capture CAT-00 (GET /v1/provisioningcategory, tenant gerege). request.category_id=1 came from the capture row with \"id\":1; expect.id=1, expect.name=\"STANDARD\" and expect.description=\"Punctual Payment without any dues\" are that same row's \"id\", \"categoryName\" and \"categoryDescription\" fields. No value was computed by this promotion.",
+ "oracle": {
+  "seam": "provisioning-category-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All three expect fields are transcribed from the committed capture CAT-00; capture_case_id names the categoryName value of the observed row.",
+  "capture_ref": ".softhouse/capture/provisioning/out/CAT-00-categories-raw.json",
+  "capture_sha256": "b7c62862064d9b02e5506fb20b4d88e1449de20a62e54593fbdfcb6764eaf787",
+  "capture_case_id": "STANDARD",
+  "citation": "CAT-00 row {\"id\":1,\"categoryName\":\"STANDARD\",\"categoryDescription\":\"Punctual Payment without any dues\"}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "category_id": 1
+ },
+ "expect": {
+  "id": 1,
+  "name": "STANDARD",
+  "description": "Punctual Payment without any dues"
+ },
+ "capabilities_required": [
+  "category-aggregate"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}

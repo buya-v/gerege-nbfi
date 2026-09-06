@@ -12,6 +12,7 @@ import (
 
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
+	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 )
 
 // FINDING A2-19 F3 — A REFUSED VECTOR'S KILLS USED TO BACK A CAPABILITY.
@@ -744,6 +745,14 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 		// machinery and no `corroborated_by` concept here; injecting into one
 		// would inflate `count` above what the loanschedule report can credit.
 		if chargesconf.DeclaresChargesSchema(raw) {
+			return nil
+		}
+		// OH-3: a PROVISIONING-schema vector is likewise not this schema's
+		// vector, for the same reason. The provisioning schema carries its own
+		// grading machinery and no `corroborated_by` concept here; injecting
+		// into one would inflate `count` above what the loanschedule report can
+		// credit.
+		if provisioningconf.DeclaresProvisioningSchema(raw) {
 			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))

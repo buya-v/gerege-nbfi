@@ -8,6 +8,7 @@ import (
 
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
+	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 )
 
 // THE DEFECT THESE GUARDS EXIST FOR (T110, from T104's F-T104-3 against T90).
@@ -500,7 +501,15 @@ func TestStoreFileCensus(t *testing.T) {
 		if cerr != nil {
 			t.Fatalf("the charges half of the committed store could not be enumerated: %v", cerr)
 		}
-		if err := StoreFileCensus(pristine, vectors, nil, append(ledgerPaths, chargesPaths...)...); err != nil {
+		// OH-3: the committed store now also carries a FOURTH SCHEMA's vectors,
+		// whose loader lives in nexus/internal/apps/provisioning/conformance. The
+		// same hand-over contract as ledger and charges: derived, not listed, and
+		// asserted non-empty so a deflated hand-over cannot read as a pass.
+		provisioningPaths, perr := provisioningconf.ProvisioningFilePaths(pristine)
+		if perr != nil {
+			t.Fatalf("the provisioning half of the committed store could not be enumerated: %v", perr)
+		}
+		if err := StoreFileCensus(pristine, vectors, nil, append(append(ledgerPaths, chargesPaths...), provisioningPaths...)...); err != nil {
 			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
 		}
 		// ANTI-VACUITY ON THE HAND-OVER ITSELF. If LedgerFilePaths ever returned
@@ -518,8 +527,14 @@ func TestStoreFileCensus(t *testing.T) {
 				"corpus has been deleted, or the schema probe has stopped recognising it; both make the " +
 				"census call above pass for the wrong reason")
 		}
+		if len(provisioningPaths) == 0 {
+			t.Fatal("ProvisioningFilePaths found NO provisioning vector in the committed store. Either " +
+				"the provisioning corpus has been deleted, or the schema probe has stopped recognising it; " +
+				"both make the census call above pass for the wrong reason")
+		}
 		t.Logf("the census accounts for every .json under %s across %d loaded vectors, %d handed to "+
-			"the ledger schema and %d handed to the charges schema", pristine, len(vectors), len(ledgerPaths), len(chargesPaths))
+			"the ledger schema, %d handed to the charges schema and %d handed to the provisioning schema",
+			pristine, len(vectors), len(ledgerPaths), len(chargesPaths), len(provisioningPaths))
 	})
 
 	// A refusal, its required words, and the fixture that produces it.

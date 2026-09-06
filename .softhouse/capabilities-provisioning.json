@@ -1,0 +1,21 @@
+{
+ "schema": "gerege.provisioning.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "category-aggregate",
+   "description": "Read the m_provision_category aggregate (id, categoryName, categoryDescription) by its primary key, as returned by GET /v1/provisioningcategory.",
+   "in_graded_domain": true,
+   "evidence": "Capture CAT-00 under tenant gerege: the running oracle returned the four category rows (1 STANDARD, 2 SUB-STANDARD, 3 DOUBTFUL, 4 LOSS), each with a non-empty categoryDescription."
+  }
+ ],
+ "seams": [
+  {
+   "name": "provisioning-category-read",
+   "description": "GET /v1/provisioningcategory on the running Fineract server (Path B), tenant gerege: the m_provision_category aggregate rows.",
+   "status": {
+    "category-aggregate": "exercised"
+   }
+  }
+ ],
+ "note": "Provisioning parity-store capability registry. Each capabilities_required name on a vector must map, on the provisioning-category-read seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Exactly one capability is graded: the category aggregate read. The reserve-amount arithmetic (PercentageOf/GenerateReserveEntries), the age-band match (Matches/ReserveRate) and the overlap invariant (Overlaps/ValidateRange) are NOT in the graded domain because the gerege tenant holds zero provisioning criteria, zero loan-product mappings, zero loans and zero provisioning entries: the running oracle produced no reserve amount, matched band or overlap refusal to transcribe, and creating one would write to the tenant (forbidden)."
+}
