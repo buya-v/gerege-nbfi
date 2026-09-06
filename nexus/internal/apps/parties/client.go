@@ -10,42 +10,42 @@ import (
 // their zero value ("" or 0) and marshalled to NULL at the persistence
 // boundary, mirroring the nullable JPA columns.
 type Client struct {
-	ID                   int64
-	AccountNumber        string
-	OfficeID             int64
-	TransferToOfficeID   int64
-	ImageID              int64
-	Status               ClientStatus
-	SubStatusID          int64
-	ActivationDate       time.Time
-	OfficeJoiningDate    time.Time
-	Firstname            string
-	Middlename           string
-	Lastname             string
-	Fullname             string
-	DisplayName          string
-	MobileNo             string
-	EmailAddress         string
-	IsStaff              bool
-	ExternalID           string
-	DateOfBirth          time.Time
-	GenderID             int64
-	StaffID              int64
-	ClosureReasonID      int64
-	ClosureDate          time.Time
-	RejectionReasonID    int64
-	RejectionDate        time.Time
-	WithdrawalReasonID   int64
-	WithdrawalDate       time.Time
-	ReactivateDate       time.Time
-	SubmittedOnDate      time.Time
-	SavingsProductID     int64
-	SavingsAccountID     int64
-	ClientTypeID         int64
+	ID                     int64
+	AccountNumber          string
+	OfficeID               int64
+	TransferToOfficeID     int64
+	ImageID                int64
+	Status                 ClientStatus
+	SubStatusID            int64
+	ActivationDate         time.Time
+	OfficeJoiningDate      time.Time
+	Firstname              string
+	Middlename             string
+	Lastname               string
+	Fullname               string
+	DisplayName            string
+	MobileNo               string
+	EmailAddress           string
+	IsStaff                bool
+	ExternalID             string
+	DateOfBirth            time.Time
+	GenderID               int64
+	StaffID                int64
+	ClosureReasonID        int64
+	ClosureDate            time.Time
+	RejectionReasonID      int64
+	RejectionDate          time.Time
+	WithdrawalReasonID     int64
+	WithdrawalDate         time.Time
+	ReactivateDate         time.Time
+	SubmittedOnDate        time.Time
+	SavingsProductID       int64
+	SavingsAccountID       int64
+	ClientTypeID           int64
 	ClientClassificationID int64
-	LegalForm            LegalForm
-	ReopenedDate         time.Time
-	ProposedTransferDate time.Time
+	LegalForm              LegalForm
+	ReopenedDate           time.Time
+	ProposedTransferDate   time.Time
 }
 
 // NewClient constructs a client from its identity fields, deriving the
@@ -53,13 +53,13 @@ type Client struct {
 // [VERIFIED: Client.java:187-198].
 func NewClient(officeID int64, firstname, middlename, lastname, fullname string, legalForm LegalForm) Client {
 	c := Client{
-		OfficeID:  officeID,
-		Firstname: firstname,
+		OfficeID:   officeID,
+		Firstname:  firstname,
 		Middlename: middlename,
-		Lastname:  lastname,
-		Fullname:  fullname,
-		LegalForm: legalForm,
-		Status:    ClientPending,
+		Lastname:   lastname,
+		Fullname:   fullname,
+		LegalForm:  legalForm,
+		Status:     ClientPending,
 	}
 	c.DeriveDisplayName()
 	return c

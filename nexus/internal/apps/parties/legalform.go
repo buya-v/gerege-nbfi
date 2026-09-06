@@ -13,7 +13,7 @@ import "fmt"
 type LegalForm int32
 
 const (
-	LegalFormUnset LegalForm = 0
+	LegalFormUnset  LegalForm = 0
 	LegalFormPerson LegalForm = 1
 	LegalFormEntity LegalForm = 2
 )

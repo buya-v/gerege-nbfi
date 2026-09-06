@@ -86,11 +86,11 @@ func init() {
 // GroupLevel is m_group_level — the catalogue entry naming a hierarchy level
 // (Center, Group, ...) and its capabilities [VERIFIED: GroupLevel.java:14-81].
 type GroupLevel struct {
-	ID           int64
-	ParentID     int64
-	SuperParent  bool
-	LevelName    string
-	Recursable   bool
+	ID             int64
+	ParentID       int64
+	SuperParent    bool
+	LevelName      string
+	Recursable     bool
 	CanHaveClients bool
 }
 
@@ -112,26 +112,28 @@ func (l GroupLevel) IsGroup() bool { return strings.EqualFold(l.LevelName, "Grou
 
 // IsIdentifiedByParentID ports GroupLevel.isIdentifiedByParentId
 // [VERIFIED: GroupLevel.java:69-71].
-func (l GroupLevel) IsIdentifiedByParentID(parentLevelID int64) bool { return l.ParentID == parentLevelID }
+func (l GroupLevel) IsIdentifiedByParentID(parentLevelID int64) bool {
+	return l.ParentID == parentLevelID
+}
 
 // Group is the Go port of Fineract's Group aggregate [VERIFIED: Group.java:57-112],
 // the m_group row. It covers a center and its child groups uniformly: a group
 // whose GroupLevel.IsCenter() is true is a center.
 type Group struct {
-	ID               int64
-	ExternalID       string
-	Status           GroupingTypeStatus
-	ActivationDate   time.Time
-	OfficeID         int64
-	StaffID          int64
-	ParentID         int64
-	Level            GroupLevel
-	Name             string
-	Hierarchy        string
-	ClosureReasonID  int64
-	ClosureDate      time.Time
-	SubmittedOnDate  time.Time
-	AccountNumber    string
+	ID              int64
+	ExternalID      string
+	Status          GroupingTypeStatus
+	ActivationDate  time.Time
+	OfficeID        int64
+	StaffID         int64
+	ParentID        int64
+	Level           GroupLevel
+	Name            string
+	Hierarchy       string
+	ClosureReasonID int64
+	ClosureDate     time.Time
+	SubmittedOnDate time.Time
+	AccountNumber   string
 }
 
 // NewGroup ports Group.newGroup: a group defaults to PENDING unless active is
@@ -139,12 +141,12 @@ type Group struct {
 // [VERIFIED: Group.java:121-134].
 func NewGroup(officeID int64, parentID int64, level GroupLevel, name, externalID string, active bool, activationDate time.Time) Group {
 	g := Group{
-		OfficeID:    officeID,
-		ParentID:    parentID,
-		Level:       level,
-		Name:        strings.TrimSpace(name),
-		ExternalID:  strings.TrimSpace(externalID),
-		Status:      GroupingPending,
+		OfficeID:   officeID,
+		ParentID:   parentID,
+		Level:      level,
+		Name:       strings.TrimSpace(name),
+		ExternalID: strings.TrimSpace(externalID),
+		Status:     GroupingPending,
 	}
 	if active {
 		g.Status = GroupingActive
@@ -153,10 +155,10 @@ func NewGroup(officeID int64, parentID int64, level GroupLevel, name, externalID
 	return g
 }
 
-func (g *Group) IsActive() bool  { return g.Status.IsActive() }
-func (g *Group) IsPending() bool { return g.Status.IsPending() }
-func (g *Group) IsClosed() bool  { return g.Status.IsClosed() }
-func (g *Group) IsNotActive() bool { return !g.Status.IsActive() }
+func (g *Group) IsActive() bool     { return g.Status.IsActive() }
+func (g *Group) IsPending() bool    { return g.Status.IsPending() }
+func (g *Group) IsClosed() bool     { return g.Status.IsClosed() }
+func (g *Group) IsNotActive() bool  { return !g.Status.IsActive() }
 func (g *Group) IsNotPending() bool { return !g.Status.IsPending() }
 
 // IsCenter reports whether this group's level is a center.
