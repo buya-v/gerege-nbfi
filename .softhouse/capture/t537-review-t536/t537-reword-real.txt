@@ -1,0 +1,20 @@
+git cat-file -t 23966a65 -> commit
+git merge-base --is-ancestor 23966a65 origin/main -> exit 0 (0 = it IS on main)
+
+BEFORE     findings=19  pruned-proved-waivers=68    T509 branch is: A FINDING
+
+T509's note, first line, as recorded:
+  landed 857dd4d8 on softhouse/T509-ledgerguard-blindspot (merge base 10baca08). THE CRITICAL PATH IS CLEARED.
+
+T509's note, REWORDED by T537 into a base citation that denies landing:
+  origin/main tip 23966a65 at dispatch; my work is still on the branch and has NOT been merged.
+
+AFTER      findings=17  pruned-proved-waivers=69    T509 branch is: WAIVED
+
+findings REMOVED by the rewording: 2
+   -('UNBACKED-BRANCH', 'T509', 'softhouse/T509-ledgerguard-blindspot')
+   -('UNBACKED-COMMIT', 'T509', '857dd4d8')
+waivers GAINED by the rewording: 1
+   +('T509', 'softhouse/T509-ledgerguard-blindspot')
+
+tasks.json restored: True
