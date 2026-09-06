@@ -1747,7 +1747,9 @@ if [[ -x "$NOFS_GUARD" ]]; then
     esac
   done
 else
-  log "no-op-fire-streak: guard NOT PRESENT or not executable at $NOFS_GUARD — no streak verdict this fire"
+  # T552 MINOR-7: `$_nofs_when` is threaded through every other branch, so this
+  # one used to say "this fire" even when it ran as `_nofs_check probe`.
+  log "no-op-fire-streak($_nofs_when): guard NOT PRESENT or not executable at $NOFS_GUARD — NO VERDICT (not a pass)"
 fi
 }
 
