@@ -1,0 +1,122 @@
+package savings
+
+import "testing"
+
+// T522 independent enumeration. The expectation table is transcribed DIRECTLY
+// from the Java enum's constructor arguments at
+// SavingsAccountTransactionType.java:35-54 (pinned checkout 426a23544), not
+// from the Go source under review.
+type javaRow struct {
+	t      SavingsAccountTransactionType
+	stored int32
+	entry  string // "CREDIT" | "DEBIT" | "" (null third arg)
+}
+
+func javaTable() []javaRow {
+	return []javaRow{
+		{TxnInvalid, 0, ""},
+		{TxnDeposit, 1, "CREDIT"},
+		{TxnWithdrawal, 2, "DEBIT"},
+		{TxnInterestPosting, 3, "CREDIT"},
+		{TxnWithdrawalFee, 4, "DEBIT"},
+		{TxnAnnualFee, 5, "DEBIT"},
+		{TxnWaiveCharges, 6, ""},
+		{TxnPayCharge, 7, "DEBIT"},
+		{TxnDividendPayout, 8, "CREDIT"},
+		{TxnAccrual, 10, ""},
+		{TxnInitiateTransfer, 12, ""},
+		{TxnApproveTransfer, 13, ""},
+		{TxnWithdrawTransfer, 14, ""},
+		{TxnRejectTransfer, 15, ""},
+		{TxnWrittenOff, 16, ""},
+		{TxnOverdraftInterest, 17, "DEBIT"},
+		{TxnWithholdTax, 18, "DEBIT"},
+		{TxnEscheat, 19, "DEBIT"},
+		{TxnAmountHold, 20, "DEBIT"},
+		{TxnAmountRelease, 21, "CREDIT"},
+	}
+}
+
+func TestT522EveryTypeAgreesWithTheJavaEnum(t *testing.T) {
+	rows := javaTable()
+	if len(rows) != 20 {
+		t.Fatalf("java enum has 20 constants, table has %d", len(rows))
+	}
+	for _, r := range rows {
+		if got := r.t.StoredValue(); got != r.stored {
+			t.Errorf("%v.StoredValue() = %d, java = %d", r.t, got, r.stored)
+		}
+		wantCreditEntry := r.entry == "CREDIT"
+		wantDebitEntry := r.entry == "DEBIT"
+		if got := r.t.IsCreditEntryType(); got != wantCreditEntry {
+			t.Errorf("%v.IsCreditEntryType() = %v, java = %v", r.t, got, wantCreditEntry)
+		}
+		if got := r.t.IsDebitEntryType(); got != wantDebitEntry {
+			t.Errorf("%v.IsDebitEntryType() = %v, java = %v", r.t, got, wantDebitEntry)
+		}
+		// java isCredit()/isDebit(), :180-188, re-implemented here from the Java
+		wantCredit := wantCreditEntry && r.stored != 21
+		wantDebit := wantDebitEntry && r.stored != 20 && r.stored != 19
+		if got := r.t.IsCredit(); got != wantCredit {
+			t.Errorf("%v.IsCredit() = %v, java isCredit() = %v", r.t, got, wantCredit)
+		}
+		if got := r.t.IsDebit(); got != wantDebit {
+			t.Errorf("%v.IsDebit() = %v, java isDebit() = %v", r.t, got, wantDebit)
+		}
+	}
+}
+
+// Does deleting the hand-rolled list leave behaviour uncovered? Compare the
+// T510 form (skip HOLD/RELEASE, then classify by RAW entry type) against the
+// T515 form (Fineract's folded isCredit/isDebit) on every type.
+func TestT522OldListVsNewDerivationDiffSet(t *testing.T) {
+	const amt MinorUnits = 100_00
+	var diffs []string
+	for _, r := range javaTable() {
+		var old MinorUnits
+		switch {
+		case r.stored == 20 || r.stored == 21: // the deleted list
+			old = 0
+		case r.entry == "DEBIT":
+			old = -amt
+		case r.entry == "CREDIT":
+			old = amt
+		}
+		got := SavingsAccountTransaction{Type: r.t, Amount: amt}.Effect()
+		if got != old {
+			diffs = append(diffs, r.t.String())
+			t.Logf("DIFF %v: T510 form = %d, T515 shipped = %d", r.t, old, got)
+		}
+	}
+	if len(diffs) != 1 || diffs[0] != "ESCHEAT" {
+		t.Errorf("difference set = %v, expected exactly [ESCHEAT]", diffs)
+	}
+}
+
+// The HoldNetRunningBalancesOf branch arms, per type, against
+// recalculateDailyBalances [SavingsAccount.java:896-920] re-implemented here
+// from the Java: credit-or-release ADDS, debit-or-hold SUBTRACTS, anything else
+// leaves the chain where it was but still STATES a running balance.
+func TestT522HoldNetBranchPerType(t *testing.T) {
+	const amt MinorUnits = 100_00
+	for _, r := range javaTable() {
+		wantCreditEntry := r.entry == "CREDIT"
+		wantDebitEntry := r.entry == "DEBIT"
+		javaIsCredit := wantCreditEntry && r.stored != 21
+		javaIsDebit := wantDebitEntry && r.stored != 20 && r.stored != 19
+		var want MinorUnits
+		switch {
+		case javaIsCredit || r.stored == 21: // || isAmountRelease()  [:902]
+			want = amt
+		case javaIsDebit || r.stored == 20: // || isAmountOnHold()    [:912]
+			want = -amt
+		}
+		got := HoldNetRunningBalancesOf(0, []SavingsAccountTransaction{{Type: r.t, Amount: amt}})
+		if len(got) != 1 || !got[0].Valid {
+			t.Fatalf("%v: got %+v, want one VALID row (Fineract calls setRunningBalance on every non-void row)", r.t, got)
+		}
+		if got[0].Value != want {
+			t.Errorf("%v: hold-net chain = %d, java recalculateDailyBalances = %d", r.t, got[0].Value, want)
+		}
+	}
+}
