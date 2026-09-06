@@ -245,7 +245,8 @@ checkout). Counting novelty instead of lines costs the real corpus **nothing**: 
 cleared carries at least 12 NOVEL lines in its best promotion, so the floor of 8 keeps its 1.5x margin.
 
 **3. T493/T550's whole published battery, re-driven through BOTH guards** (`t553-battery.sh`), 12 rows
-+ 12 live spot instants on `origin/main`: **24 of 24 AGREE**, every exit code identical.
++ 12 live spot instants on `origin/main`: **24 of 24 AGREE, 0 DIFFER** — every exit code identical.
+The full table is in `t553-negative-control.txt` §4.
 (Full record, with the MINOR-1 correction placed in-place above T550's own table and every other MINOR
 answered case by case: `t553-minor-corrections.txt`.)
 This also settles two of T552's MINORs by driving them:
