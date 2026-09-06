@@ -1676,7 +1676,100 @@ if (( _ST_OPEN != 0 || _ST_SHUT != 0 || _ST_RC != 0 )); then
 fi
 log "lockselftest: tally VERIFIED by the wiring — $_ST_ROWS executed + $_ST_SKIP skipped = $_ST_CENSUS declared in $FIRE_SELF, FAIL_OPEN=0 FAIL_SHUT=0, rc=0. The floor is the census, so it rises with the corpus and cannot be satisfied by an empty one."
 
+# ------------------------------------------------- T493: no-op fire streak ---
+# WHY THIS IS HERE AND NOT IN THE DRIVER. `classify_driver_turns()` (below, and
+# it is precise) already names a zero-turn fire and even separates it from a
+# quota rejection. It writes that finding into the RESUME.md banner AND NOTHING
+# READS IT. Three outages proved the consequence: 2026-08-24/26 and 2026-08-30/31
+# ran fires that took the lock, reconciled, released and advanced nothing, and
+# the third — the local fire silent from 2026-09-03T11:09:38Z — was found only
+# because a human read `git log` by hand two days later. Detection was never the
+# defect. ESCALATION was.
+#
+# WHAT THIS BLOCK HONESTLY COVERS, AND WHAT IT CANNOT.
+#   COVERS  — the NO-OP STREAK mode (fires run, advance nothing). This wrapper is
+#             alive when that happens, so it can see its own predecessors' commits
+#             and escalate. That is 2 of the 3 recorded occurrences.
+#   COVERS  — a CLOUD-side outage, from the local side. This is the real cross-fire
+#             direction available here.
+#   CANNOT  — the TOTAL SILENCE mode, where this wrapper does not run at all. A
+#             fire that cannot run cannot report that it could not run (P-45
+#             applied to the scheduler). Only the CLOUD fire can catch that, and
+#             wiring the cloud Routine is NOT in this task's scope — it is filed
+#             as T543 (owner: user/Buyan) with the exact prompt text to paste.
+#             T541 MINOR-3: this said T542 until T550 corrected it. T542 is an
+#             unrelated money.go citation task; the driver renumbered T493's
+#             proposed ids because T542 was already taken that fire, and the old
+#             number sent a reader to the wrong task.
+#             Do not read this block as covering the live 2026-09-03 outage.
+#   CANNOT  — an outage whose fires die in PREFLIGHT. T541 MINOR-7: 15 `exit N`
+#             paths precede this point (`awk 'NR<1714 && /^[[:space:]]*exit
+#             [0-9]/' $0 | wc -l`), the lock-reader self-test FATAL at ~1670
+#             among them. A fire that consistently dies before here never runs
+#             this block, and a fire that consistently dies before here is itself
+#             an outage. That is the same circularity named above for total
+#             silence, one notch narrower, and it is why --probe now runs the
+#             check too (below): a probe reaches a health verdict without taking
+#             the lock. It does not affect outages #1 and #2 — their lock
+#             take/release commits prove those fires reached this line.
+#
+# It NEVER blocks the fire: an outage alarm that stops the next fire from running
+# would deepen the outage it is reporting.
+NOFS_GUARD="$REPO/.softhouse/guards/no-op-fire-streak.sh"
+# Defined as a function ONLY so --probe can reach it as well (T541 MINOR-6).
+# `[[ -x ]]` is deliberate and load-bearing: T541 checked that the guard is
+# committed 100755, because a 644 blob would make this block log "not
+# executable" forever and the guard would be decorative.
+_nofs_check() {
+  local _nofs_when="${1:-fire}"
+if [[ -x "$NOFS_GUARD" ]]; then
+  for _nofs_producer in local cloud; do
+    _nofs_out="$("$NOFS_GUARD" --producer "$_nofs_producer" --ref origin/main 2>&1)"
+    _nofs_rc=$?
+    case $_nofs_rc in
+      0) log "no-op-fire-streak[$_nofs_producer]($_nofs_when): GREEN — that producer is advancing" ;;
+      1) log "no-op-fire-streak[$_nofs_producer]($_nofs_when): **RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**"
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done
+         # Escalate off the log as well: a line in a log nobody opens is the same
+         # failure this guard exists to fix. osascript is macOS-native and this
+         # wrapper is already macOS-only in six places, so it is available here —
+         # but it is UNDRIVEN by T493 (that task ran on Linux and could not reach
+         # this host). Treat the notification as unproven until a fire on the Mac
+         # shows it firing.
+         if command -v osascript >/dev/null 2>&1; then
+           osascript -e 'display notification "A softhouse producer has stopped advancing the migration. See the fire log." with title "gerege-nbfi: NO-OP FIRE STREAK"' >/dev/null 2>&1 \
+             || log "no-op-fire-streak: osascript notification FAILED (non-fatal)"
+         fi ;;
+      2) log "no-op-fire-streak[$_nofs_producer]($_nofs_when): REFUSE (exit 2) — NO VERDICT WAS REACHED. This is NOT a pass."
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done ;;
+      *) log "no-op-fire-streak[$_nofs_producer]($_nofs_when): UNEXPECTED exit $_nofs_rc — treat as no verdict, not as a pass"
+         print -r -- "$_nofs_out" | while IFS= read -r _l; do log "  | $_l"; done ;;
+    esac
+  done
+else
+  log "no-op-fire-streak: guard NOT PRESENT or not executable at $NOFS_GUARD — no streak verdict this fire"
+fi
+}
+
 if (( PROBE_ONLY )); then
+  # T541 MINOR-6. The touch-nothing health check is the natural place to ask "is
+  # the OTHER producer alive?", and the guard touches nothing in this repo (it
+  # reads git metadata; the only write it can make is unshallowing its own
+  # clone). Before T550 the probe exited at this line and the guard block began
+  # eight lines later, so an operator probing the fire got no streak verdict at
+  # all. The probe reads the LOCAL origin/main without pulling first — stated
+  # here because a probe verdict can therefore be staler than a fire's.
+  #
+  # `_nofs_check` is DEFINED IMMEDIATELY ABOVE this branch, not at the fire's
+  # call site further down, precisely because zsh needs the definition to have
+  # executed before the call — and the probe branch runs first. The existence
+  # test is still explicit: a missing function must not abort the probe and must
+  # not read as a pass.
+  if typeset -f _nofs_check >/dev/null 2>&1; then
+    _nofs_check probe
+  else
+    log "no-op-fire-streak: probe reached before the check was defined — NO VERDICT (not a pass)"
+  fi
   log "probe only — exiting without taking the lock or invoking the driver"
   exit 0
 fi
@@ -1685,6 +1778,9 @@ fi
 # The lock lives in the repo and is pushed, so the daily CLOUD fire sees it too
 # and exits instead of running a second orchestrator over the same state.
 git pull --ff-only --quiet || log "WARN: git pull --ff-only failed; continuing on local state"
+
+_nofs_check fire
+# ---------------------------------------------------------------------------
 
 # T202 — SIGKILL is untrappable, so a hard-killed fire STRANDS its lock, and on
 # this host that is the NORMAL outcome rather than the exotic one. Two measured

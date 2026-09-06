@@ -1,0 +1,38 @@
+T493 — SHALLOW-CLONE REFUSAL, DRIVEN
+generated 2026-09-05T12:33:12Z
+NOTE: each section below uses its OWN FRESH shallow clone. An earlier draft of
+this transcript was WRONG because section 3's recovery test had unshallowed the
+very clone section 1 then measured, so section 1's numbers contradicted its
+caption. Re-driven with sh_a / sh_b / sh_c so no section can disturb another.
+
+### 1. THE SILENT FAILURE THE REFUSAL PREVENTS (plain git; the guard is not involved)
+$ git clone --depth=60 --branch main <repo> sh_a
+  is-shallow: true   oldest visible: 2026-08-30T20:02:39+08:00
+  shallow  --since=2026-08-29 -> 168 commits
+  shallow  --since=2026-08-22 -> 168 commits
+  shallow  --since=2026-08-15 -> 168 commits
+  -> ALL THREE WINDOWS RETURN THE SAME NUMBER, with NO error and NO warning.
+     Outage #1 (2026-08-24/26) lies entirely before this clone's oldest commit,
+     so a --since guard over it would have reported ALL CLEAR on a real outage.
+  is-shallow: false  oldest visible: 2026-08-17T18:52:14+08:00
+  FULL     --since=2026-08-29 -> 243 commits
+  FULL     --since=2026-08-22 -> 1645 commits
+  FULL     --since=2026-08-15 -> 2975 commits
+  -> the same three windows DIFFER, as they must.
+
+### 2. THE GUARD REFUSES RATHER THAN UNDER-REPORTING (fresh depth=5, fetch disabled)
+  is-shallow: true
+$ no-op-fire-streak.sh --producer local --no-fetch
+no-op-fire-streak: REFUSE — history is SHALLOW and --no-fetch was given; a --since window over a shallow clone answers for the shallow part only
+no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.
+EXIT=2   <-- 2 = REFUSE, NOT 0.
+
+### 3. RECOVERY PATH: fetch allowed -> the guard unshallows itself, then answers (fresh depth=60)
+  is-shallow before: true
+no-op-fire-streak: history is SHALLOW — attempting 'git fetch --unshallow' before measuring
+  history      : 2524 non-merge commits, oldest 2026-08-17T18:52:14+08:00; unshallowed by this guard via 'git fetch --unshallow'
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 49.1h since last REAL commit 5d7ef306 at 2026-09-03T11:09Z (threshold 18h) -> RED
+  VERDICT: RED — this producer is not advancing the migration
+  is-shallow after : false
+  -> reaches the SAME RED verdict the full clone reaches. Refusal is a floor, not a ceiling.

@@ -1,0 +1,140 @@
+T493 — RED/GREEN drives of .softhouse/guards/no-op-fire-streak.sh
+generated 2026-09-05T12:31:29Z on ref origin/main @ c2127db3
+All --now values are AS-OF replays: commits after --now are excluded, so a
+historical drive cannot see the future. (That filter was a bug fix during T493;
+without it the 08-27 replay graded 09-02 fires and reported NEGATIVE silence.)
+
+================================================================
+## RED-1 outage#1 2026-08-24/26
+$ .softhouse/guards/no-op-fire-streak.sh --producer local --now 2026-08-27T06:00:00+00:00
+no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+  history      : 1331 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-08-27T06:00:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-13T06:00:00Z   *** TRUNCATED: history begins inside the window ***
+  in window    : 1106 real, 162 bookkeeping, 50 fire(s) graded
+
+  AXIS 1 no-op streak : 23 consecutive no-op fire(s) (threshold 6) -> RED
+      no-op fire  818fca76  2026-08-23T09:00Z .. 12:00Z
+      no-op fire  e58c94a3  2026-08-23T12:00Z .. 15:00Z
+      no-op fire  404de91c  2026-08-23T15:00Z .. 00:00Z
+      no-op fire  0f4a3e44  2026-08-24T00:00Z .. 03:00Z
+      no-op fire  86a0fd2e  2026-08-24T03:00Z .. 06:00Z
+      no-op fire  8e21b499  2026-08-24T06:00Z .. 09:00Z
+      no-op fire  16238345  2026-08-24T09:00Z .. 12:00Z
+      no-op fire  a69560f8  2026-08-24T12:00Z .. 15:00Z
+      no-op fire  2d2da501  2026-08-24T15:00Z .. 00:00Z
+      no-op fire  12b06740  2026-08-25T00:00Z .. 03:00Z
+      no-op fire  b19ece83  2026-08-25T03:00Z .. 06:00Z
+      no-op fire  3d24e05a  2026-08-25T06:00Z .. 09:00Z
+      ... and 11 more
+  AXIS 2 silence      : 95.2h since last REAL commit 2b6cbe59 at 2026-08-23T06:50Z (threshold 18h) -> RED
+
+  VERDICT: RED — this producer is not advancing the migration
+
+  ESCALATE. This is the third-occurrence defect T493 was filed for: the two
+  earlier outages (2026-08-24/26 and 2026-08-30/31) were both reconstructed by
+  hand, after the fact, because nothing read the finding the fire already made.
+EXIT=1   (0=GREEN 1=RED 2=REFUSE)
+
+================================================================
+## RED-2 outage#2 2026-08-30/31
+$ .softhouse/guards/no-op-fire-streak.sh --producer local --now 2026-09-01T00:00:00+00:00
+no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+  history      : 2377 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-09-01T00:00:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-18T00:00:00Z
+  in window    : 2062 real, 236 bookkeeping, 71 fire(s) graded
+
+  AXIS 1 no-op streak : 13 consecutive no-op fire(s) (threshold 6) -> RED
+      no-op fire  0d80c79d  2026-08-29T15:01Z .. 00:01Z
+      no-op fire  cf184771  2026-08-30T00:01Z .. 03:01Z
+      no-op fire  615fb2b0  2026-08-30T03:01Z .. 06:01Z
+      no-op fire  2f0309a4  2026-08-30T06:01Z .. 09:01Z
+      no-op fire  981ac084  2026-08-30T09:01Z .. 12:01Z
+      no-op fire  a46d3b64  2026-08-30T12:01Z .. 15:01Z
+      no-op fire  c023a706  2026-08-30T15:01Z .. 00:01Z
+      no-op fire  106de95c  2026-08-31T00:01Z .. 03:01Z
+      no-op fire  8a8b20cd  2026-08-31T03:01Z .. 06:01Z
+      no-op fire  73b2700c  2026-08-31T06:01Z .. 09:01Z
+      no-op fire  52be0122  2026-08-31T09:01Z .. 12:01Z
+      no-op fire  86ddb0bc  2026-08-31T12:01Z .. 15:01Z
+      ... and 1 more
+  AXIS 2 silence      : 57.2h since last REAL commit ffe24c01 at 2026-08-29T14:47Z (threshold 18h) -> RED
+
+  VERDICT: RED — this producer is not advancing the migration
+
+  ESCALATE. This is the third-occurrence defect T493 was filed for: the two
+  earlier outages (2026-08-24/26 and 2026-08-30/31) were both reconstructed by
+  hand, after the fact, because nothing read the finding the fire already made.
+EXIT=1   (0=GREEN 1=RED 2=REFUSE)
+
+================================================================
+## RED-3 outage#3 LIVE (the 49h silence running as T493 executed)
+$ .softhouse/guards/no-op-fire-streak.sh --producer local --now 2026-09-05T12:18:00+00:00
+no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+  history      : 2524 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-09-05T12:18:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-22T12:18:00Z
+  in window    : 1165 real, 202 bookkeeping, 65 fire(s) graded
+
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 49.1h since last REAL commit 5d7ef306 at 2026-09-03T11:09Z (threshold 18h) -> RED
+
+  VERDICT: RED — this producer is not advancing the migration
+
+  ESCALATE. This is the third-occurrence defect T493 was filed for: the two
+  earlier outages (2026-08-24/26 and 2026-08-30/31) were both reconstructed by
+  hand, after the fact, because nothing read the finding the fire already made.
+EXIT=1   (0=GREEN 1=RED 2=REFUSE)
+
+================================================================
+## GREEN-A local healthy 08-28/29
+$ .softhouse/guards/no-op-fire-streak.sh --producer local --now 2026-08-29T12:00:00+00:00
+no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+  history      : 2310 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-08-29T12:00:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-15T12:00:00Z   *** TRUNCATED: history begins inside the window ***
+  in window    : 2049 real, 198 bookkeeping, 59 fire(s) graded
+
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 0.1h since last REAL commit fd868332 at 2026-08-29T11:53Z (threshold 18h) -> ok
+
+  VERDICT: GREEN — producer is advancing
+EXIT=0   (0=GREEN 1=RED 2=REFUSE)
+
+================================================================
+## GREEN-B cloud healthy 09-04 (the day the brief names)
+$ .softhouse/guards/no-op-fire-streak.sh --producer cloud --now 2026-09-04T13:40:00+00:00
+no-op-fire-streak — ref=origin/main producer=cloud (committer offset +00:00)
+  history      : 2522 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-09-04T13:40:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-21T13:40:00Z
+  in window    : 58 real, 4 bookkeeping, 2 fire(s) graded
+
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 0.0h since last REAL commit c42cb236 at 2026-09-04T13:38Z (threshold 18h) -> ok
+
+  VERDICT: GREEN — producer is advancing
+EXIT=0   (0=GREEN 1=RED 2=REFUSE)
+
+================================================================
+## GREEN-C local healthy just before it died
+$ .softhouse/guards/no-op-fire-streak.sh --producer local --now 2026-09-03T11:30:00+00:00
+no-op-fire-streak — ref=origin/main producer=local (committer offset +08:00)
+  history      : 2500 non-merge commits, oldest 2026-08-17T18:52:14+08:00; repository was already complete
+  bookkeeping  : paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+  now          : 2026-09-03T11:30:00Z  [--now override]
+  window       : last 14 day(s), from 2026-08-20T11:30:00Z
+  in window    : 1736 real, 236 bookkeeping, 72 fire(s) graded
+
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 0.3h since last REAL commit 5d7ef306 at 2026-09-03T11:09Z (threshold 18h) -> ok
+
+  VERDICT: GREEN — producer is advancing
+EXIT=0   (0=GREEN 1=RED 2=REFUSE)
+

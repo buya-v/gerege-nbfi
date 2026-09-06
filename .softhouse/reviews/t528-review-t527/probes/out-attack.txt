@@ -1,0 +1,69 @@
+case                         got  want verdict
+------------------------------------------------------------------------------------------
+A-merge-base-plain           2    2    ok
+      note: done and scope-checked (merge base 3701e209)
+      R5, the shipped control
+
+B-merge-base-COMMIT-worded   0    2    *** BREAK ***
+      note: done; merge-base commit c3a02744, scope clean
+      'merge-base commit X' -- the LANDING 'commit X' anchor fires, REFERENCE does not
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but c3a02744 is an ancestor of origin/main (c3a027447f18)
+
+C-branched-from-at           0    2    *** BREAK ***
+      note: branched from main @ 1f6014d5; work is on the branch
+      '@ X' LANDING anchor over an ordinary base citation
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but 1f6014d5 is an ancestor of origin/main (1f6014d5f48d)
+
+D-forked-at                  2    2    ok
+      note: forked at 6f29a3ee, 3 commits on top
+      '@' not present -- control for C
+
+E-base-branch-paren          0    2    *** BREAK ***
+      note: based on softhouse/TP-pushed (e384c746) -- stacked on top
+      branch-then-paren LANDING anchor over a BASE branch and its tip
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but e384c746 is an ancestor of origin/main (e384c7469482)
+
+F-rebased-onto               2    2    ok
+      note: rebased onto 753d2bc3 after the merge of T400
+      'onto X' -- no anchor at all, should be UNCLASSIFIED, branch still refused
+
+G-review-cites-another-task  0    2    *** BREAK ***
+      note: reviewed T400 which landed b4f4305a; my own work is on the branch
+      a REVIEW task citing ANOTHER task's landing commit
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but b4f4305a is an ancestor of origin/main (b4f4305ad867)
+
+H-diverges-at                0    2    *** BREAK ***
+      note: diverges from origin/main at commit e5ca8bc9
+      'at commit X' -- LANDING anchor on a divergence point
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but e5ca8bc9 is an ancestor of origin/main (e5ca8bc964fe)
+
+I-genuine-landing            0    0    ok
+      note: landed 08e1c1f4 on softhouse/TN-never-pushed
+      the legitimate exemption -- must still PASS
+
+J-cherry-picked-from         2    2    ok
+      note: cherry-picked from daed5096
+      no anchor
+
+K-stack-region-base          2    2    ok
+      note: stack 97088779 (T400 base) -> my work
+      the stack REGION anchor is LANDING; a base named inside it clears the branch
+
+L-supersedes                 0    2    *** BREAK ***
+      note: supersedes the work merged as 35b34f09 by T400
+      'merged as X' naming ANOTHER task's merge
+      | check-branch-published: CLEAN
+      | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+      | branch absent from origin, but 35b34f09 is an ancestor of origin/main (35b34f090375)
+
+6 break(s)

@@ -1,0 +1,203 @@
+T550 — PADDING ATTACKS, BEFORE AND AFTER
+========================================
+
+RIG: isolated clone $S/attack of the T550 worktree. Five branches, each
+planted off 5d7ef306 (the live outage anchor, 2026-09-03T11:09:38Z) with
+EIGHT consecutive no-op fires at +0800, three commits per fire:
+    .softhouse/LOCK take  ->  one padding payload  ->  .softhouse/LOCK release
+Planted by $S/plant.sh. Every run below is the REAL guard, at
+--producer local --now 2026-09-04T23:00:00Z.
+
+  BEFORE = the T493 guard, extracted verbatim: git show a6b11f1b:.softhouse/guards/no-op-fire-streak.sh
+  AFTER  = the T550 guard in this branch.
+
+  attack-t541    T541's EXACT attack: += '<!-- heartbeat N -->' to docs/softhouse-migration-pipeline.md
+  attack-mine-e  MINE: the same heartbeat aimed INSIDE the surface: += '// heartbeat N' to nexus/internal/apps/loanproduct/doc.go
+  attack-mine-f  MINE: rotating NEW files inside the surface, so no path ever repeats: .softhouse/capture/heartbeat/beat-N.txt
+  attack-mine-g  MINE: ONE NOVEL SUBSTANTIVE line per fire inside the surface (no template repeat)
+  attack-mine-h  MINE: FIVE NOVEL SUBSTANTIVE lines per fire inside the surface — the hardest padding I could write
+
+-------------------------------------------------------------------------
+$ ./guard-BEFORE.sh --producer local --ref attack-t541 --now 2026-09-04T23:00:00Z
+  in window    : 1375 real, 229 bookkeeping, 75 fire(s) graded
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 12.0h since last REAL commit 62bcac3a at 2026-09-04T11:02Z (threshold 18h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+-------------------------------------------------------------------------
+$ ./guard-AFTER.sh --producer local --ref attack-t541 --now 2026-09-04T23:00:00Z
+  in window    : 881 earned-real, 723 bookkeeping, 75 fire(s) graded
+  vetoed       : 8 null-payload, 54 repeat-payload, 59 thin-payload (<8 substantive lines) — anchored commits that did NOT promote
+  UNCLASSIFIED-PATH: 29 path(s) carried work in window but are not on the surface, so they never promote: .softhouse/tasks.json x304, .softhouse/program.json x38, .softhouse/patterns.md x23, .softhouse/gates.md x16, .softhouse/conformance.sh x11 ...
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 2 silence      : 12.0h since last commit carrying anything 62bcac3a at 2026-09-04T11:02Z (threshold 18h) -> ok
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+-------------------------------------------------------------------------
+$ ./guard-BEFORE.sh --producer local --ref attack-mine-e --now 2026-09-04T23:00:00Z
+  in window    : 1375 real, 229 bookkeeping, 75 fire(s) graded
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 12.0h since last REAL commit 20aca30c at 2026-09-04T11:02Z (threshold 18h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+-------------------------------------------------------------------------
+$ ./guard-AFTER.sh --producer local --ref attack-mine-e --now 2026-09-04T23:00:00Z
+  in window    : 881 earned-real, 723 bookkeeping, 75 fire(s) graded
+  vetoed       : 8 null-payload, 54 repeat-payload, 67 thin-payload (<8 substantive lines) — anchored commits that did NOT promote
+  UNCLASSIFIED-PATH: 28 path(s) carried work in window but are not on the surface, so they never promote: .softhouse/tasks.json x304, .softhouse/program.json x38, .softhouse/patterns.md x23, .softhouse/gates.md x16, .softhouse/conformance.sh x11 ...
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 2 silence      : 12.0h since last commit carrying anything 20aca30c at 2026-09-04T11:02Z (threshold 18h) -> ok
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+-------------------------------------------------------------------------
+$ ./guard-BEFORE.sh --producer local --ref attack-mine-f --now 2026-09-04T23:00:00Z
+  in window    : 1375 real, 229 bookkeeping, 75 fire(s) graded
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 12.0h since last REAL commit af17b025 at 2026-09-04T11:02Z (threshold 18h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+-------------------------------------------------------------------------
+$ ./guard-AFTER.sh --producer local --ref attack-mine-f --now 2026-09-04T23:00:00Z
+  in window    : 881 earned-real, 723 bookkeeping, 75 fire(s) graded
+  vetoed       : 8 null-payload, 54 repeat-payload, 67 thin-payload (<8 substantive lines) — anchored commits that did NOT promote
+  UNCLASSIFIED-PATH: 28 path(s) carried work in window but are not on the surface, so they never promote: .softhouse/tasks.json x304, .softhouse/program.json x38, .softhouse/patterns.md x23, .softhouse/gates.md x16, .softhouse/conformance.sh x11 ...
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 2 silence      : 12.0h since last commit carrying anything af17b025 at 2026-09-04T11:02Z (threshold 18h) -> ok
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+-------------------------------------------------------------------------
+$ ./guard-BEFORE.sh --producer local --ref attack-mine-g --now 2026-09-04T23:00:00Z
+  in window    : 1375 real, 229 bookkeeping, 75 fire(s) graded
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 12.0h since last REAL commit 888d1190 at 2026-09-04T11:02Z (threshold 18h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+-------------------------------------------------------------------------
+$ ./guard-AFTER.sh --producer local --ref attack-mine-g --now 2026-09-04T23:00:00Z
+  in window    : 881 earned-real, 723 bookkeeping, 75 fire(s) graded
+  vetoed       : 8 null-payload, 54 repeat-payload, 67 thin-payload (<8 substantive lines) — anchored commits that did NOT promote
+  UNCLASSIFIED-PATH: 28 path(s) carried work in window but are not on the surface, so they never promote: .softhouse/tasks.json x304, .softhouse/program.json x38, .softhouse/patterns.md x23, .softhouse/gates.md x16, .softhouse/conformance.sh x11 ...
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 2 silence      : 12.0h since last commit carrying anything 888d1190 at 2026-09-04T11:02Z (threshold 18h) -> ok
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+-------------------------------------------------------------------------
+$ ./guard-BEFORE.sh --producer local --ref attack-mine-h --now 2026-09-04T23:00:00Z
+  in window    : 1375 real, 229 bookkeeping, 75 fire(s) graded
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 2 silence      : 12.0h since last REAL commit 3aea5eec at 2026-09-04T11:02Z (threshold 18h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+-------------------------------------------------------------------------
+$ ./guard-AFTER.sh --producer local --ref attack-mine-h --now 2026-09-04T23:00:00Z
+  in window    : 881 earned-real, 723 bookkeeping, 75 fire(s) graded
+  vetoed       : 8 null-payload, 54 repeat-payload, 67 thin-payload (<8 substantive lines) — anchored commits that did NOT promote
+  UNCLASSIFIED-PATH: 28 path(s) carried work in window but are not on the surface, so they never promote: .softhouse/tasks.json x304, .softhouse/program.json x38, .softhouse/patterns.md x23, .softhouse/gates.md x16, .softhouse/conformance.sh x11 ...
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 2 silence      : 12.0h since last commit carrying anything 3aea5eec at 2026-09-04T11:02Z (threshold 18h) -> ok
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+=========================================================================
+PER-COMMIT AUDIT — which mechanism kills which attack (--explain)
+=========================================================================
+
+--- attack-t541, its last two padding commits, at the SHIPPED defaults
+   commit    62bcac3ac3aab149ed759951bedbdd2b24363576
+   committed 2026-09-04T11:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 0 added surface line(s); subject text NOT consulted)
+   reason    NO ANCHOR — no changed path is on the migration surface
+       off-surface  docs/softhouse-migration-pipeline.md
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+   commit    504486e510ff419872291e91b3b30384d68d3627
+   committed 2026-09-04T08:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 0 added surface line(s); subject text NOT consulted)
+   reason    NO ANCHOR — no changed path is on the migration surface
+       off-surface  docs/softhouse-migration-pipeline.md
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+
+--- attack-mine-e, its last two padding commits, at the SHIPPED defaults
+   commit    20aca30c145febe469eb342f210e86e0581a5580
+   committed 2026-09-04T11:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 2 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 1 substantive added surface line(s), floor is 8
+       SURFACE     nexus/internal/apps/loanproduct/doc.go
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+   commit    bf0e625dc59df83c60b55fd632ce02148c0348d3
+   committed 2026-09-04T08:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 2 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 1 substantive added surface line(s), floor is 8
+       SURFACE     nexus/internal/apps/loanproduct/doc.go
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+
+--- attack-mine-f, its last two padding commits, at the SHIPPED defaults
+   commit    af17b025d0c090cd7a214ac8a6788257fe96afe1
+   committed 2026-09-04T11:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 1 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 1 substantive added surface line(s), floor is 8
+       SURFACE     .softhouse/capture/heartbeat/beat-8.txt
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+   commit    d5893280238e2413967a453080e9906724213041
+   committed 2026-09-04T08:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 1 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 1 substantive added surface line(s), floor is 8
+       SURFACE     .softhouse/capture/heartbeat/beat-7.txt
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+
+--- attack-mine-h, its last two padding commits, at the SHIPPED defaults
+   commit    3aea5eecd9acafaaddfb07546d2f277bf577373f
+   committed 2026-09-04T11:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 5 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 5 substantive added surface line(s), floor is 8
+       SURFACE     .softhouse/capture/t550-residual/notes.md
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+   commit    86d98a2661fd06ee86f78d138c0dc4f0269ba859
+   committed 2026-09-04T08:02:00Z  offset +08:00  producer=local
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 5 added surface line(s); subject text NOT consulted)
+   reason    VETO 3 THIN PAYLOAD — 5 substantive added surface line(s), floor is 8
+       SURFACE     .softhouse/capture/t550-residual/notes.md
+       AXIS 2 carry rule (monotone, can only add RED): carries
+
+=========================================================================
+EACH VETO CLOSES ITS SHAPE INDEPENDENTLY
+=========================================================================
+
+VETO 2 in isolation — VETO 3 disabled with --min-subst-lines 1, so only the
+repeat-payload rule can act. The heartbeat attacks are still RED:
+
+$ guard --producer local --ref attack-mine-e --min-subst-lines 1 --now 2026-09-04T23:00:00Z
+     vetoed       : 8 null-payload, 63 repeat-payload, 0 thin-payload (<1 substantive lines) — anchored commits that did NOT promote
+     AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+     VERDICT: RED — this producer is not advancing the migration
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 2 added surface line(s); subject text NOT consulted)
+   reason    VETO 2 REPEAT PAYLOAD — normalised payload f54cf09c9d1f70a1 already promoted at 24bd36d5 for this producer inside the window
+
+$ guard --producer local --ref attack-mine-f --min-subst-lines 1 --now 2026-09-04T23:00:00Z
+     vetoed       : 8 null-payload, 63 repeat-payload, 0 thin-payload (<1 substantive lines) — anchored commits that did NOT promote
+     AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+     VERDICT: RED — this producer is not advancing the migration
+   verdict   BOOKKEEPING   (decided from 1 changed path(s) and 1 added surface line(s); subject text NOT consulted)
+   reason    VETO 2 REPEAT PAYLOAD — normalised payload 47c4e0db3d258ddd already promoted at b5990039 for this producer inside the window
+
+VETO 3 in isolation — the residual. attack-mine-h (5 NOVEL substantive lines
+per fire) is invisible to VETO 2 because nothing repeats. Below the shipped
+floor it wins; at the shipped floor it loses:
+
+$ guard --producer local --ref attack-mine-h --min-subst-lines 3 ...
+     AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+     VERDICT: GREEN — producer is advancing
+$ guard --producer local --ref attack-mine-h                          (floor 8, shipped)
+     AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+     VERDICT: RED — this producer is not advancing the migration

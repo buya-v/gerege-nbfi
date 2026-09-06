@@ -11,11 +11,57 @@
 // deliberately thin where the generator is already authoritative — it declares
 // the enums the generator consumes, and nothing here recomputes an EMI.
 //
-// The reference oracle is Apache Fineract at /Users/buv/fineract, pinned at
-// commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Every behavioural claim
-// carries a file:line citation to that tree; claims that do not carry an
-// UNVERIFIED marker. Oracle Database is a prohibited product in this program
-// and appears nowhere in this stack; PostgreSQL is the only permitted database.
+// The reference oracle is Apache Fineract, pinned at commit
+// 426a23544e8426a38ae43ae404670a0a7e85b9eb. The COMMIT is the identity of the
+// oracle; the checkout path is not, and differs per environment — currently
+// /home/user/fineract on the cloud fire and /Users/buv/fineract on the local
+// Mac. Resolve it from your own environment and confirm
+// `git -C <checkout> rev-parse HEAD` prints that sha before trusting any line
+// number below; a citation that resolves on one machine only is a broken
+// citation. Every behavioural claim carries a file:line citation to that tree;
+// claims that do not carry an UNVERIFIED marker. Oracle Database is a
+// prohibited product in this program and appears nowhere in this stack;
+// PostgreSQL is the only permitted database.
+//
+// # Citation-audit status — read this before trusting a [VERIFIED:] range
+//
+// A citation being present is not a citation being resolved, and the audit is
+// PARTIAL. Do not read the paragraph above as a warrant for the whole package.
+//
+//   - repaymentperiod.go — SWEPT. Every [VERIFIED: RepaymentPeriod.java:a-b]
+//     was re-derived mechanically against the pinned commit by T530 and
+//     re-derived again, row by row, by the independent review T531.
+//   - interestperiod.go — SWEPT by T532. All 28 [VERIFIED:
+//     InterestPeriod.java:a-b] ranges were re-derived individually by
+//     brace-counting the Java class body against the pinned commit. T532
+//     measured 22 of 28 failing to resolve, NOT the 23 T530 estimated while
+//     sweeping a different file: the sixth surviving citation is the bare
+//     :151 on the "downstream reach" line, which carries no VERIFIED token, so
+//     a grep-based census misses it AND, if it then counts it as unresolved,
+//     overstates the failure count by one. The EOF split T530 reported is
+//     confirmed exactly — TEN wholly past the end of a 237-line file
+//     (:252-254, :256-259, :299-301, :303-305, :307-309, :311-313, :315-317,
+//     :319-321, :323-325, :327-329) and ONE more, :237-250, starting on the
+//     file's last line and OVERRUNNING it, so eleven cite a line that does not
+//     exist. Do not apply an offset here either: the drift changed sign
+//     (-94 to +69) and was non-monotonic, and two wrong ranges (:229-231,
+//     :233-235) resolved to REAL BUT WRONG members, which an offset theory
+//     hides completely. The sweep found zero DIVERGENCES: at every corrected
+//     span the Java supports the Go sentence, and no range was repointed to
+//     make a mismatch disappear.
+//   - Every other file in the package — UNSWEPT, and never claimed otherwise.
+//
+// The unswept verdict is about the CODE FILES, not about this comment: the
+// InterestPeriod.java ranges cited in the arguments below — :43-73, :45, :65,
+// :66, :68, :151, :168-188 and :178 — were each re-read directly against the
+// pinned commit, the first six by T534 and the remaining two (:151, load-
+// bearing for evidence item 2, and :168-188, load-bearing for item 3) by T538
+// and again by T539, and all eight resolve. Those eight are every
+// InterestPeriod.java range this file cites: four written out in full
+// (:43-73, :151, :168-188, :178) and four written bare as (:45), (:65), (:66)
+// and (:68) inside RETIRED 1, so re-measuring needs both spellings. It is still
+// a spot check of the eight ranges these arguments stand on, and it is NOT a
+// sweep of interestperiod.go; do not cite it as one.
 //
 // # One trap this port is built around
 //
@@ -171,7 +217,7 @@
 //     sweeps at :1647, :1654, :1667], and the oracle deliberately leaves it
 //     unrefreshed elsewhere: RepaymentPeriod.copyWithoutPaidAmounts zeroes each
 //     copied segment's balanceCorrectionAmount and does NOT recompute the
-//     balance that summand feeds [VERIFIED: RepaymentPeriod.java:173-197].
+//     balance that summand feeds [VERIFIED: RepaymentPeriod.java:173-198].
 //     Replacing the cell with an on-demand derivation would therefore CHANGE
 //     THE NUMBERS at every such point.
 //     TestOutstandingLoanBalanceIsASweptSnapshot pins exactly this property, so
@@ -299,12 +345,41 @@
 // writes by their PACKAGE's persistence surface — a database import, an SQL
 // literal or a column struct tag somewhere in the same directory — was
 // proposed, built and measured, and it has been WITHDRAWN. Moving
-// nexus/internal/apps/savings/summary.go, which carries a genuine
-// `s.AccountBalance += effect`, into an internal/apps/savings/model/
-// subdirectory reclassifies that real balance write into a class that prints
-// and never refuses. One file move, zero code change, ordinary Go layering. A
-// guard that a file move disarms is not a guard: directory adjacency to a
-// string containing SQL is not reachability to a balance column.
+// nexus/internal/apps/savings/summary.go, whose Add method folds
+// `s.AccountBalance += effect` on a VALUE receiver and returns a new summary
+// [VERIFIED: savings/summary.go:52-55] — a pure fold over a copy, not itself a
+// write to stored state — into an internal/apps/savings/model/ subdirectory
+// reclassifies a write that IS reachable to a persisted column: the folded
+// AccountBalance field is what PostgresSummaryRepository.Upsert sends as
+// account_balance_derived [VERIFIED: savings/postgres.go:113,120,149]. That
+// reachability, not the value-receiver mutation itself, is why this one
+// belongs in the guard-flagged class while this package's four sites do not —
+// and a directory move would erase the distinction by disarming both alike. One
+// file move, zero code change, ordinary Go layering. A guard that a file move
+// disarms is not a guard: directory adjacency to a string containing SQL is
+// not reachability to a balance column.
+//
+// DO NOT restate that parenthesis as "the same shape as the four sites above."
+// A previous revision did, and it was FALSE FOR THREE OF THE FOUR. The savings
+// Add is `func (s SavingsAccountSummary) Add(...) SavingsAccountSummary` — a
+// value receiver mutating its own copy. This package's
+// UpdateOutstandingLoanBalance (two of the four writes) and
+// AddBalanceCorrectionAmount are `func (ip *InterestPeriod) ...` — POINTER
+// receivers mutating a live object that other holders of the pointer observe.
+// Only copyWithoutPaidAmounts, which writes into the fresh copy it has just
+// built, is shaped like the savings fold.
+//
+// The slip is worth this much space because it smuggles back the exact
+// conflation this section exists to refuse, inside the sentence written to fix
+// it: RECEIVER SEMANTICS ARE NOT THE CRITERION AND NEVER WERE. Value-versus-
+// pointer decides nothing about I-3 — if it did, the savings fold (a value
+// receiver) would be the safe one and these three (pointer receivers) the
+// violations, which is the reverse of the correct answer. What decides it is
+// REACHABILITY to a persisted balance column, which cuts the other way: the
+// savings fold is guard-flagged despite its value receiver because
+// account_balance_derived is one Upsert away, and these four are not despite
+// three of them mutating live state because no such column is downstream of
+// them at all. Argue the reachability; never the receiver.
 //
 // The correct repair is a go/types-based discriminator that follows the value
 // across the import graph to a persisted column — LEG 2, mechanised. Until that

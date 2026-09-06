@@ -1,0 +1,60 @@
+T550 — SHALLOW REFUSAL, THE --now AS-OF FILTER, AND EVERY REFUSAL PATH
+=====================================================================
+
+1. THE SHALLOW TRAP STILL REPRODUCES (a --depth=60 clone of this branch)
+   shallow=true commits=179 oldest visible=2026-08-31T11:01:08+08:00
+     --since=2026-08-29 -> 179 commits (rc=0)
+     --since=2026-08-22 -> 179 commits (rc=0)
+     --since=2026-08-15 -> 179 commits (rc=0)
+     --since=2026-07-01 -> 179 commits (rc=0)
+   Every window returns the same count with rc 0 and no error. That is the
+   failure this guard refuses rather than answers.
+
+2. THE GUARD ON THREE COPIES OF THAT CLONE
+   (a) shallow + --no-fetch
+       no-op-fire-streak: REFUSE — history is SHALLOW and --no-fetch was given; a --since window over a shallow clone answers for the shallow part only
+       no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.
+       rc=2
+   (b) shallow + origin set to file:///nonexistent/nope.git
+       no-op-fire-streak: history is SHALLOW — attempting 'git fetch --unshallow' before measuring
+       no-op-fire-streak: REFUSE — history is STILL SHALLOW after 'git fetch --unshallow'; refusing to answer for a window this clone cannot see
+       no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.
+       rc=2
+       still shallow afterwards: true — it did not fake a recovery
+   (c) shallow + reachable remote: unshallowed, then a verdict IDENTICAL to the full clone
+       179 -> 3002 commits; shallow after: false
+         self-churn   : AXIS 2 only — paths matching ^\.softhouse/(LOCK|RESUME\.md)$|^\.softhouse/(state|logs|runs)/
+         AXIS 1 no-op streak : 23 consecutive no-op fire(s) (threshold 6) -> RED
+         AXIS 2 silence      : 95.2h since last commit carrying anything 2b6cbe59 at 2026-08-23T06:50Z (threshold 18h) -> RED
+         AXIS 3 padded adv.  : 95.2h since last EARNED commit fa206e82 at 2026-08-23T06:45Z (threshold 36h) -> RED
+         VERDICT: RED — this producer is not advancing the migration
+       diff against the full clone at the same --now, ignoring the unshallow note:
+       NO DIFFERENCE.
+
+3. THE --now AS-OF FILTER IS LOAD-BEARING (T493 item 8, re-driven on the T550 guard)
+   Remove ONE line from a copy —  commits = [c for c in commits if c['dt'] <= now]
+       AXIS 1 no-op streak : 11 consecutive no-op fire(s) (threshold 6) -> RED
+       AXIS 2 silence      : -173.2h since last commit carrying anything 5d7ef306 at 2026-09-03T11:09Z (threshold 18h) -> ok
+       AXIS 3 padded adv.  : -173.1h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+       VERDICT: RED — this producer is not advancing the migration
+   ...NEGATIVE silence, AXIS 2 AND AXIS 3 reporting 'ok' on an outage.
+   Filter intact, same instant:
+       AXIS 1 no-op streak : 23 consecutive no-op fire(s) (threshold 6) -> RED
+       AXIS 2 silence      : 95.2h since last commit carrying anything 2b6cbe59 at 2026-08-23T06:50Z (threshold 18h) -> RED
+       AXIS 3 padded adv.  : 95.2h since last EARNED commit fa206e82 at 2026-08-23T06:45Z (threshold 36h) -> RED
+       VERDICT: RED — this producer is not advancing the migration
+
+4. EVERY REFUSAL PATH STILL EXITS 2, AND A CRASH NOW REFUSES TOO
+   --now before the root commit                 rc=2
+   unknown --producer                           rc=2
+   ref does not exist                           rc=2
+   --explain of a FUTURE commit                 rc=2
+   unknown argument                             rc=2
+   analyser crash (bad NOFS_SURFACE_RE)         rc=2  <- T550 added sys.excepthook. Before it, python's
+                                                        own exit 1 leaked and a caller read a CRASH as RED.
+
+5. T541 MINOR-4 — the --explain refusal no longer calls an as-of-filtered search 'the full history'
+   BEFORE (T493):
+     no-op-fire-streak: REFUSE — no commit matching '5d7ef306' in 6aa31e5e (looked in the full --no-merges history of 6aa31e5e, 1331 commits, oldest 2026-08-17T18:52:14+08:00); note merges are excluded by design
+   AFTER (T550):
+     no-op-fire-streak: REFUSE — no commit matching '5d7ef306' in 6aa31e5e as of --now 2026-08-27T06:00:00Z (looked in 1331 of 2524 --no-merges commits; 1193 later commit(s) were excluded by --now; oldest 2026-08-17T18:52:14+08:00); note merges are excluded by design. 'Not found' here is a statement about the search, not about the world.
