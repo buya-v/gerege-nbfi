@@ -68,30 +68,53 @@
 #     VETO 1       NULL PAYLOAD. The lines the commit ADDS to its surface paths
 #                  are all blank or bare markers (`//`, `#`, `<!--`, `*/`, `}`).
 #                  A change that adds no readable line advanced nothing.
-#     VETO 2       REPEAT PAYLOAD. The added surface payload, normalised (case
-#                  folded, whitespace collapsed, digit/hex runs → `#`), is one
-#                  this producer has ALREADY used to promote inside the lookback
-#                  window. `// heartbeat 1` and `// heartbeat 2` normalise to the
-#                  same payload; the second one does not promote. This is what
-#                  makes a per-fire heartbeat stop clearing after its first beat,
-#                  without naming a path or a wording.
-#     VETO 3       THIN PAYLOAD. A promotion carrying fewer than
-#                  NOFS_MIN_SUBST_LINES (default 8) substantive added surface
-#                  lines does not clear a fire. This is a MATERIALITY floor, not
-#                  a shape: it names no path and no wording, only a size, so it
-#                  is not a blocklist of paddings already seen. The number is
-#                  MEASURED, not chosen by taste — over the whole recorded
-#                  history the THINNEST promotion that ever cleared a fire
-#                  carries 12 substantive added surface lines (local producer,
-#                  88 fires, 36 of them cleared) and 27 (cloud, 4 fires, 4
-#                  cleared), and the longest run of cleared-but-thin fires is
-#                  ZERO at every floor up to 8. A floor of 8 therefore costs
-#                  nothing measured, keeps a 1.5x margin under the observed
-#                  minimum, and is what stops a heartbeat whose content is NOVEL
-#                  on every beat (T550 attacks G and H) — the shape VETO 2 alone
-#                  cannot see, because nothing repeats.
-#                  Raising it tightens; lowering it loosens. Re-measure with
-#                  .softhouse/capture/t493-zero-turn-escalation/t550-materiality-floor.txt
+#     VETO 2       REPEAT PAYLOAD, in two halves that answer different questions.
+#                  (a) WHOLE PAYLOAD — T550's rule, kept: the added surface
+#                  payload, normalised (case folded, whitespace collapsed,
+#                  digit/hex runs → `#`), is one this producer has already put on
+#                  the surface. `// heartbeat 1` and `// heartbeat 2` normalise
+#                  to the same payload, so a beat that varies only in its numbers
+#                  does not promote a second time.
+#                  (b) PER LINE — added by T553: every substantive added line is
+#                  normalised on its own (case folded, whitespace collapsed;
+#                  digits DELIBERATELY KEPT, see norm_line) and a line whose form
+#                  this producer has already put on the surface is SPENT. What
+#                  survives is the NOVEL RESIDUE. If the residue is empty the
+#                  commit does not promote.
+#     VETO 3       THIN PAYLOAD. A promotion whose NOVEL RESIDUE carries fewer
+#                  than NOFS_MIN_SUBST_LINES (default 8) lines does not clear a
+#                  fire. This is a MATERIALITY floor, not a shape: it names no
+#                  path and no wording, only a size, so it is not a blocklist of
+#                  paddings already seen.
+#
+#   *** THE COMPOSITION RULE — T553, closing T552 MAJOR-1. Read this before
+#   changing either veto. EACH VETO IS APPLIED TO THE RESIDUE THE PREVIOUS VETO
+#   LEAVES, NEVER TO THE RAW PAYLOAD: VETO 1 leaves the substantive lines, VETO 2
+#   leaves the novel ones, and VETO 3's floor is counted over THAT residue.
+#   Before T553 the two vetoes were individually sound and did not compose —
+#   VETO 2 hashed the WHOLE payload while VETO 3 counted a multiset that admitted
+#   verbatim duplicates, so payload VETO 2 would have rejected wholesale still
+#   counted toward the floor the moment ONE novel line was mixed in. T552 drove
+#   it: seven verbatim-repeated lines plus one novel line held an eight-fire
+#   no-op streak GREEN at exit 0, and the identical shape defeated a floor of 40.
+#   RAISING THE FLOOR IS NOT THE REPAIR AND NEVER WAS — the padder's cost scales
+#   in bytes of boilerplate, which cost nothing, not in novel content. Counting
+#   the floor over the novel residue makes boilerplate worth exactly zero. ***
+#
+#                  THE FLOOR IS MEASURED, not chosen by taste, and it was
+#                  RE-MEASURED under the novel-residue rule (T553): over the
+#                  whole recorded history the thinnest promotion that ever
+#                  cleared a fire carries 12 NOVEL substantive added surface
+#                  lines (local, 89 fires, 36 cleared) and 27 (cloud, 5 fires,
+#                  4 cleared) — the same two numbers T550 measured over the raw
+#                  multiset, i.e. counting novelty instead of lines costs the
+#                  real corpus nothing. A floor of 8 keeps a 1.5x margin under
+#                  the observed minimum. Raising it tightens; lowering it
+#                  loosens; a floor below 1 is REFUSED, because a floor of 0
+#                  would promote a payload with no novel line at all.
+#                  Re-measure with, in this directory,
+#                  t550-materiality-floor.py (raw multiset, T550's method) and
+#                  t553-sweep.py (novel residue + hourly false-RED replay)
 #                  before changing it.
 #
 #   WHAT THIS CLOSES AND WHAT IT DOES NOT — read this before trusting it.
@@ -101,12 +124,38 @@
 #   unsure. T541's attack — one valueless line per fire to any path outside the
 #   bookkeeping set — no longer promotes at all: docs/*.md is not on the surface.
 #   A heartbeat aimed INSIDE the surface promotes once and is vetoed thereafter.
-#   STILL OPEN, and stated rather than hidden: a producer that writes NOVEL,
-#   SUBSTANTIVE content into nexus/ or .softhouse/capture/ every fire, forever,
-#   still reads GREEN. At that point the attack costs what the work costs, which
-#   is where the boundary belongs; the composing guard for that case is
-#   .softhouse/bin/check-branch-published.py plus the independent reviewer, not
-#   this one. See --explain to audit any single verdict, including its vetoes.
+#   Padding is worth zero: only the novel residue is counted.
+#
+#   THE RESIDUAL, MEASURED RATHER THAN CHARACTERISED. T550 stated its residual as
+#   "the attack costs what the work costs"; T552 measured that claim FALSE at 16
+#   bytes per fire, so this one is stated as a number and DRIVEN (transcripts in
+#   .softhouse/handoff/T553-t552-conditions.md, rig t553-plant-attacks.sh):
+#     * The cheapest promotion this guard admits is exactly NOFS_MIN_SUBST_LINES
+#       lines that are new to this producer. Driven as `atk-mine-min`: 8 lines of
+#       ONE character each — 8 bytes of content, 16 bytes with newlines, per fire
+#       — holds an eight-fire no-op streak GREEN at exit 0.
+#     * The RATE needed is lower still. Driven as `atk-mine-j`: the same
+#       promotion on 2 of 8 fires is GREEN (AXIS 1 streak 2, AXIS 3 18.0 h). The
+#       binding constraint is one promotion per `--streak` fires AND per
+#       `--earned-silence-hours`, not one per fire.
+#     * What the fix removed is the ability to pay in BOILERPLATE: `atk-mine-k`
+#       (7 repeated + 1 novel) and `atk-mine-k40` (39 repeated + 1 novel) are now
+#       RED exit 1 at every floor, where before they were GREEN at every floor.
+#   So the honest statement of the boundary is: a producer that emits 8 lines of
+#   never-before-used text per promotion still reads GREEN, and that is CHEAP —
+#   it is not the cost of the work. The composing guard for content that is new
+#   but worthless is .softhouse/bin/check-branch-published.py plus the
+#   independent reviewer, not this one. See --explain to audit any single
+#   verdict, including which lines were novel.
+#
+#   THE NOVELTY LEDGER SPANS THE WHOLE RECORDED HISTORY, NOT THE LOOKBACK WINDOW
+#   (T552 MINOR-3). The window decides which FIRES are graded; it does not expire
+#   a line. A line this producer put on the surface a month ago is still spent
+#   today. That is the fail-closed direction, and it is what the shipped code
+#   always did for repeats — the comment that promised otherwise was the thing
+#   that was wrong, and it is gone. Cost of the strict reading, measured: ZERO
+#   verdict changes over 482 hourly replays of the whole recorded history for
+#   both producers (t553-sweep.py).
 #
 #   AXIS 2 DELIBERATELY KEEPS T493's OLD, FORGEABLE RULE, and that is safe
 #   because AXIS 2 is MONOTONE: it can only ADD red. It answers the weaker
@@ -128,9 +177,24 @@
 #   0  GREEN   — the producer is advancing; no axis tripped.
 #   1  RED     — a no-op streak, a silence breach, and/or an earned-advance
 #                breach. Escalate.
-#   2  REFUSE  — cannot answer (shallow history, bad ref, no such producer).
+#   2  REFUSE  — cannot answer (shallow history, bad ref, no such producer,
+#                unusable option value, no temp file, an analyser crash, or an
+#                analyser status that is not itself a verdict).
 #                REFUSE IS NOT GREEN. A caller that treats 2 as pass reintroduces
 #                exactly the defect this guard exists for.
+#
+#   FAIL-CLOSED HAS NO HALF (T552 MAJOR-2). Exit 1 means ONE thing — a verdict
+#   about the producer — so no failure of the guard itself may leak it. Before
+#   T553 the analyser's crash paths all refused with 2 while the SHELL PROLOGUE
+#   leaked 1: `--ref` with no value tripped `set -u` ($2: unbound variable) and an
+#   unwritable TMPDIR made mktemp fail, and the call site logs exit 1 as
+#   "**RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**" — a guard failure
+#   presenting as a migration outage. Every prologue path now refuses: each
+#   option is checked for its value before `$2` is read, both mktemp calls and
+#   the oldest-commit read refuse on failure, NOFS_PAYLOAD_CAP is validated
+#   before it can silently redefine the classifier inside awk, and any analyser
+#   status outside {0,1,2} is converted to REFUSE with the raw status printed.
+#   There is NO bypass flag and no env var that turns any of this off (P-45).
 #
 # USAGE
 #   .softhouse/guards/no-op-fire-streak.sh [--producer local|cloud|any]
@@ -201,34 +265,56 @@ PAYLOAD_CAP="${NOFS_PAYLOAD_CAP:-200}"
 # thinnest promotion that ever cleared a fire in the recorded history carries 12.
 MIN_SUBST_LINES="${NOFS_MIN_SUBST_LINES:-8}"
 
-usage() { sed -n '2,130p' "$0" | sed 's/^# \{0,1\}//'; }
+# Print the whole header block (every line from line 2 up to the last comment
+# line before `set -euo pipefail`), not a hard-coded line range that silently
+# truncates as the header grows.
+usage() { awk 'NR>1 && /^#/ {sub(/^# ?/,""); print; next} NR>1 && !/^#/ {exit}' "$0"; }
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --producer)       PRODUCER="$2"; shift 2 ;;
-    --ref)            REF="$2"; shift 2 ;;
-    --silence-hours)  SILENCE_HOURS="$2"; shift 2 ;;
-    --earned-silence-hours) EARNED_SILENCE_HOURS="$2"; shift 2 ;;
-    --streak)         STREAK="$2"; shift 2 ;;
-    --lookback-days)  LOOKBACK_DAYS="$2"; shift 2 ;;
-    --min-subst-lines) MIN_SUBST_LINES="$2"; shift 2 ;;
-    --now)            NOW="$2"; shift 2 ;;
-    --explain)        EXPLAIN="$2"; shift 2 ;;
-    --json)           JSON=1; shift ;;
-    --quiet)          QUIET=1; shift ;;
-    --no-fetch)       NO_FETCH=1; shift ;;
-    -h|--help)        usage; exit 0 ;;
-    *) echo "$PROG: unknown argument: $1" >&2; exit 2 ;;
-  esac
-done
-
+# say/refuse are defined BEFORE the option parser because the parser itself must
+# be able to REFUSE. T552 MAJOR-2: `--ref` with no value left `$2` unset, `set -u`
+# aborted the script with exit 1, and the call site logs exit 1 as
+# "**RED — THAT PRODUCER IS NOT ADVANCING THE MIGRATION**". A guard FAILURE
+# presenting as a FINDING is the exact defect the analyser's excepthook closed one
+# layer up; the shell prologue must not have the other half of it.
 say() { [ "$QUIET" = 1 ] || printf '%s\n' "$*"; }
 refuse() {
-  # REFUSE is deliberately loud and deliberately NOT exit 0.
+  # REFUSE is deliberately loud and deliberately NOT exit 0, and NOT exit 1.
   printf 'no-op-fire-streak: REFUSE — %s\n' "$*" >&2
   printf 'no-op-fire-streak: REFUSE IS NOT GREEN. No verdict was reached.\n' >&2
   exit 2
 }
+# Every option below takes a value. `need_val <flag> <argc>` refuses when the
+# value is missing, so no `$2` is ever read unset.
+need_val() { [ "$2" -ge 2 ] || refuse "$1 requires a value (none was given)"; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --producer)       need_val "$1" $#; PRODUCER="$2"; shift 2 ;;
+    --ref)            need_val "$1" $#; REF="$2"; shift 2 ;;
+    --silence-hours)  need_val "$1" $#; SILENCE_HOURS="$2"; shift 2 ;;
+    --earned-silence-hours) need_val "$1" $#; EARNED_SILENCE_HOURS="$2"; shift 2 ;;
+    --streak)         need_val "$1" $#; STREAK="$2"; shift 2 ;;
+    --lookback-days)  need_val "$1" $#; LOOKBACK_DAYS="$2"; shift 2 ;;
+    --min-subst-lines) need_val "$1" $#; MIN_SUBST_LINES="$2"; shift 2 ;;
+    --now)            need_val "$1" $#; NOW="$2"; shift 2 ;;
+    --explain)        need_val "$1" $#; EXPLAIN="$2"; shift 2 ;;
+    --json)           JSON=1; shift ;;
+    --quiet)          QUIET=1; shift ;;
+    --no-fetch)       NO_FETCH=1; shift ;;
+    -h|--help)        usage; exit 0 ;;
+    *) refuse "unknown argument: $1" ;;
+  esac
+done
+
+# T552 MINOR-5: NOFS_PAYLOAD_CAP reaches awk raw, and an empty or non-numeric
+# value silently redefines the classifier — `''` makes awk's `n < cap` a string
+# comparison that drops EVERY payload line (nothing can ever earn), `'abc'`
+# disables the cap. Both fail toward escalation rather than toward GREEN, but a
+# value the guard cannot classify must REFUSE, not be guessed at.
+case "$PAYLOAD_CAP" in
+  ''|*[!0-9]*) refuse "NOFS_PAYLOAD_CAP must be a positive integer; got '$PAYLOAD_CAP'" ;;
+esac
+[ "$PAYLOAD_CAP" -ge 1 ] || refuse "NOFS_PAYLOAD_CAP must be at least 1; got '$PAYLOAD_CAP'"
 
 case "$PRODUCER" in
   local) WANT_OFFSET="$LOCAL_OFFSET" ;;
@@ -291,7 +377,14 @@ git rev-parse --verify --quiet "$REF" >/dev/null || refuse "ref '$REF' does not 
 # PASS 1 — --numstat (not --name-only) because AXIS 1 needs the DIFF DIRECTION on
 # .softhouse/LOCK to tell a lock TAKE (inserts the lock body) from a lock RELEASE
 # (deletes it) without reading the words "take" or "release" from the subject.
-RAW="$(mktemp)"; PAY="$(mktemp)"; trap 'rm -f "$RAW" "$PAY"' EXIT
+# T552 MAJOR-2: an unwritable or full TMPDIR made `mktemp` fail and `set -e`
+# aborted with exit 1 — a migration-outage alarm raised by the guard's own
+# inability to run. Both temp files REFUSE instead, and the trap is armed before
+# either assignment so a refusal between them still cleans up.
+RAW=""; PAY=""
+trap 'rm -f -- "$RAW" "$PAY" 2>/dev/null || true' EXIT
+RAW="$(mktemp)" || refuse "could not create a temporary file for the history pass (mktemp failed; TMPDIR=${TMPDIR:-/tmp}). This is a GUARD FAILURE, not a finding about the producer."
+PAY="$(mktemp)" || refuse "could not create a temporary file for the payload pass (mktemp failed; TMPDIR=${TMPDIR:-/tmp}). This is a GUARD FAILURE, not a finding about the producer."
 git log "$REF" --no-merges --numstat --format='@@%H|%cI' > "$RAW" 2>/dev/null \
   || refuse "could not read history of '$REF'"
 [ -s "$RAW" ] || refuse "history of '$REF' is empty"
@@ -312,9 +405,17 @@ git log "$REF" --no-merges -p -U0 --no-color --format='@COMMIT@%H' 2>/dev/null \
 # NOTE: `git log --reverse | head -1` raises SIGPIPE under `set -o pipefail` and
 # would abort the guard with exit 141 — which a caller could easily mistake for a
 # verdict. Take the last line of the forward log instead; no pipe is closed early.
-OLDEST_ISO="$(git log "$REF" --format='%cI' | tail -1)"
+OLDEST_ISO="$(git log "$REF" --format='%cI' | tail -1)" \
+  || refuse "could not read the oldest commit date of '$REF' (git log failed). GUARD FAILURE, not a finding."
+[ -n "$OLDEST_ISO" ] || refuse "the oldest commit date of '$REF' came back empty. GUARD FAILURE, not a finding."
 
-NOFS_RAW="$RAW" NOFS_PAY="$PAY" \
+# The analyser's status is the guard's verdict, and ONLY 0/1/2 are verdicts.
+# `set -e` would otherwise abort here with whatever the interpreter returned —
+# 137 from an OOM kill, 139 from a segfault — and a caller pattern-matching on
+# "not 0" would read a dead analyser as a producer finding. Anything outside
+# {0,1,2} becomes REFUSE, with the raw status printed so nothing is hidden.
+ANALYSER_RC=0
+if NOFS_RAW="$RAW" NOFS_PAY="$PAY" \
 NOFS_A_REF="$REF" NOFS_A_PRODUCER="$PRODUCER" NOFS_A_OFFSET="$WANT_OFFSET" \
 NOFS_A_SILENCE="$SILENCE_HOURS" NOFS_A_EARNED_SILENCE="$EARNED_SILENCE_HOURS" \
 NOFS_A_STREAK="$STREAK" \
@@ -410,18 +511,63 @@ NULL_LINE = re.compile(r'^[\s{}()\[\];,.:*=_~`>|+-]*(//+|\#+|--+|<!--|-->|/\*+|\
 DIGIT_RUN = re.compile(r'[0-9a-f]{4,}|[0-9]+', re.I)
 WS_RUN    = re.compile(r'\s+')
 
+if min_subst < 1:
+    print("no-op-fire-streak: REFUSE — --min-subst-lines must be at least 1; "
+          f"got {min_subst}. A floor of 0 would let a payload with NO novel line "
+          "promote, which is the defect T553 closed. REFUSE IS NOT GREEN.",
+          file=sys.stderr)
+    sys.exit(2)
+
 def substantive(lines):
     return [l for l in lines if not NULL_LINE.match(l)]
 
-def payload_digest(lines):
-    """Normalised digest of the added surface payload: case folded, whitespace
-    collapsed, digit and hex runs replaced by '#'. `// heartbeat 1` and
-    `// heartbeat 2` collapse to the same digest, so the second beat of a
-    heartbeat does not promote. Content is never matched against a word list —
-    only against what this same producer has already used to promote."""
-    norm = '\n'.join(DIGIT_RUN.sub('#', WS_RUN.sub(' ', l.strip().lower()))
-                     for l in lines)
-    return hashlib.sha256(norm.encode('utf-8', 'replace')).hexdigest()[:16]
+# T550's normalisation, used for the WHOLE-PAYLOAD repeat test, is
+# `DIGIT_RUN.sub('#', norm_line(l))` — case folded, whitespace collapsed, digit
+# and hex runs replaced by '#'. `// heartbeat 1` and `// heartbeat 2` collapse to
+# the same form, so a payload that varies only in its numbers is the same
+# payload. Content is never matched against a word list — only against what this
+# same producer has already put on the surface. It is computed in line_forms().
+
+def norm_line(l):
+    """The PER-LINE normalisation: case folded and whitespace collapsed, and
+    DELIBERATELY NOT digit-collapsed.
+
+    T553 drove the digit-collapsed version first and it produced a FALSE RED on
+    the negative control: twelve rows of a captured numeric table differ only in
+    their numbers, so the digit-collapsed form maps all twelve to ONE line and a genuinely
+    productive 12-line capture reads as 1 novel line and fails the floor. A
+    captured vector table is the most ordinary shape on this migration surface,
+    so that normalisation cannot be the novelty test.
+
+    Keeping the digits costs nothing against a padder: the cheapest known padding
+    (T552's `atk-mine-i`, eight two-character lines) never needed a digit to
+    defeat the floor, so collapsing digits removes no attack while removing real
+    work. The whole-payload digit-collapsed test above still catches a payload
+    repeated with only its numbers changed."""
+    return WS_RUN.sub(' ', l.strip().lower())
+
+def line_key(nl):
+    # 8 bytes is ~2e-9 collision probability over the ~300k payload lines this
+    # repository carries, and a collision can only make a line look ALREADY SEEN
+    # — i.e. it fails toward escalation, never toward GREEN.
+    return hashlib.blake2b(nl.encode('utf-8', 'replace'), digest_size=8).digest()
+
+def line_forms(lines):
+    """Both normalised forms of every line, in ONE pass: the digit-preserving
+    per-line form (novelty) and the digit-collapsed shape (whole payload). The
+    shape is derived FROM the per-line form so `.lower()` and the whitespace
+    collapse are not paid twice — this is the whole of the cost difference the
+    novelty test adds on a 2,600-commit history."""
+    keys, shapes = [], []
+    for l in lines:
+        nl = norm_line(l)
+        keys.append(line_key(nl))
+        shapes.append(DIGIT_RUN.sub('#', nl))
+    return keys, shapes
+
+def digest_of(shapes):
+    """Whole-payload digest over T550's digit-collapsed normalisation."""
+    return hashlib.sha256('\n'.join(shapes).encode('utf-8', 'replace')).hexdigest()[:16]
 
 for c in commits:
     c['dt']      = datetime.datetime.fromisoformat(c['ts'])
@@ -430,21 +576,23 @@ for c in commits:
     c['carry']   = [f for f in c['files'] if not book_re.search(f)]
     c['carrying'] = bool(c['carry'])
     # THE PROMOTION. Subject text is never consulted. Default is BOOKKEEPING;
-    # REAL must be EARNED by a surface anchor surviving both vetoes.
+    # REAL must be EARNED by a surface anchor surviving all three vetoes.
     c['anchor']  = [f for f in c['files'] if surf_re.search(f)]
     c['offsurf'] = [f for f in c['carry'] if not surf_re.search(f)]
     c['subst']   = substantive(payload.get(c['sha'], []))
-    c['digest']  = payload_digest(c['subst']) if c['subst'] else None
+    c['novel']   = []
+    c['digest']  = None
     c['earned']  = False
     if not c['anchor']:
         c['why'] = 'NO ANCHOR — no changed path is on the migration surface'
     elif not c['subst']:
         c['why'] = 'VETO 1 NULL PAYLOAD — the surface paths gained no readable line'
-    elif len(c['subst']) < min_subst:
-        c['why'] = (f"VETO 3 THIN PAYLOAD — {len(c['subst'])} substantive added surface "
-                    f"line(s), floor is {min_subst}")
     else:
-        c['why'] = None          # decided in the window pass, which needs order
+        # VETO 2 and VETO 3 are BOTH decided in the ordered pass below, because
+        # novelty is a property of what came BEFORE this commit. Deciding VETO 3
+        # here — over the raw multiset, before VETO 2 has removed the repeats —
+        # is exactly the composition defect T552 drove (MAJOR-1).
+        c['why'] = None
 
 def mine(c):
     return (offset == '' or c['off'] == offset)
@@ -465,27 +613,67 @@ if not commits:
           f"in {ref} (history begins {oldest_s})", file=sys.stderr)
     sys.exit(2)
 
-# --- VETO 2, applied in time order, per producer -----------------------------
-# A digest promotes ONCE per producer per lookback window. The window is measured
-# from `now` so that a replay grades the same way a live run would.
+# --- VETO 2 then VETO 3, COMPOSED, applied in time order, per producer -------
+# THE COMPOSITION RULE (T553, closing T552 MAJOR-1):
+#   each veto is applied to the RESIDUE the previous veto leaves, never to the
+#   raw payload — VETO 1 leaves the SUBSTANTIVE lines, VETO 2 leaves the NOVEL
+#   ones, and VETO 3's materiality floor is counted over that novel residue.
+#
+# Before T553, VETO 2 hashed the WHOLE payload and VETO 3 counted the WHOLE
+# substantive multiset, so a payload VETO 2 would have rejected wholesale still
+# counted toward VETO 3's floor as soon as one novel line was mixed in: seven
+# verbatim-repeated lines + one novel line cleared a floor of 8 and defeated the
+# digest at the same time, and the same shape defeated a floor of 40. Counting
+# the floor over the novel residue makes the padding worthless, because padding
+# is by construction not novel — and it does it WITHOUT naming a path, a wording
+# or a list of shapes already seen (B-11 / P-104).
+#
+# A line is NOVEL for this producer if its normalised form has not appeared in
+# this producer's own substantive surface payload EARLIER in this history, and
+# has not already been counted inside this same commit. Novelty is recorded for
+# every anchored commit that carried substantive payload, whether or not that
+# commit promoted: a line this producer has already put on the surface is spent,
+# and re-mixing it later must not buy a second promotion.
 window_start = now - datetime.timedelta(days=lookback)
-seen = {}                       # (offset, digest) -> first promoting sha
+seen_payload = {}               # (offset, payload digest) -> sha that first used it
+seen_lines   = {}               # (offset, line_key)       -> sha that first used it
 for c in commits:               # oldest -> newest
     if c['why'] is not None:
         continue
-    key = (c['off'], c['digest'])
-    first = seen.get(key)
-    if first is None:
-        seen[key] = c['sha']
-        c['earned'] = True
-    elif c['dt'] < window_start:
-        # Outside the graded window the repeat rule is not applied: a digest that
-        # first appeared months ago must not silently veto today's work. The
-        # window is what the vetoes answer for, and it says so.
-        c['earned'] = True
-    else:
+    keys, shapes = line_forms(c['subst'])
+    c['digest'] = digest_of(shapes)
+    novel, here = [], set()
+    for l, k in zip(c['subst'], keys):
+        if (c['off'], k) in seen_lines or k in here:
+            continue            # already spent by this producer, or by this commit
+        here.add(k)
+        novel.append(l)
+    first_payload = seen_payload.get((c['off'], c['digest']))
+    # Spend the payload and every line in it, promoted or not: content this
+    # producer has already put on the surface must not buy a second promotion by
+    # being re-mixed later.
+    seen_payload.setdefault((c['off'], c['digest']), c['sha'])
+    for k in keys:
+        seen_lines.setdefault((c['off'], k), c['sha'])
+    c['novel'] = novel
+    if first_payload is not None:
+        # VETO 2a — T550's rule, kept verbatim in effect: the WHOLE payload,
+        # digit-collapsed, is one this producer has already put on the surface.
         c['why'] = (f'VETO 2 REPEAT PAYLOAD — normalised payload {c["digest"]} already '
-                    f'promoted at {first[:8]} for this producer inside the window')
+                    f'used at {first_payload[:8]} by this producer')
+    elif not novel:
+        # VETO 2b — nothing in it is new, line by line.
+        first = seen_lines.get((c['off'], keys[0]), '?' * 8)
+        c['why'] = (f'VETO 2 REPEAT LINES — all {len(c["subst"])} substantive added '
+                    f'surface line(s) were already on this producer\'s surface '
+                    f'(the first of them at {first[:8]}); nothing here is new')
+    elif len(novel) < min_subst:
+        # VETO 3 — the floor, counted over the residue VETO 2 leaves.
+        c['why'] = (f'VETO 3 THIN PAYLOAD — {len(novel)} NOVEL substantive added surface '
+                    f'line(s) of {len(c["subst"])} (the other {len(c["subst"]) - len(novel)} '
+                    f'were already on this producer\'s surface), floor is {min_subst}')
+    else:
+        c['earned'] = True
 
 # --- --explain: audit one verdict ------------------------------------------
 if explain:
@@ -511,9 +699,13 @@ if explain:
     if not c['earned']:
         print(f"reason    {c['why']}")
     else:
-        print(f"reason    ANCHOR on the migration surface + payload {c['digest']} "
-              f"({len(c['subst'])} substantive added line(s), floor {min_subst}), "
-              f"all three vetoes survived")
+        print(f"reason    ANCHOR on the migration surface + novel payload {c['digest']} "
+              f"({len(c['novel'])} NOVEL of {len(c['subst'])} substantive added line(s), "
+              f"floor {min_subst}), all three vetoes survived")
+    if c['subst']:
+        print(f"payload   {len(c['subst'])} substantive added surface line(s), "
+              f"{len(c['novel'])} of them novel for this producer "
+              f"(VETO 3 counts the NOVEL residue, not the raw multiset)")
     for f in c['files']:
         if surf_re.search(f):
             tag = 'SURFACE   '
@@ -642,7 +834,10 @@ if as_json:
         'surface_re': surf_re.pattern, 'bookkeeping_re': book_re.pattern,
         'in_window_earned_real': real_in_win, 'in_window_bookkeeping': book_in_win,
         'in_window_veto1_null_payload': veto1, 'in_window_veto2_repeat_payload': veto2,
-        'in_window_veto3_thin_payload': veto3, 'min_substantive_lines': min_subst,
+        'in_window_veto3_thin_payload': veto3, 'min_novel_substantive_lines': min_subst,
+        'veto3_counts': 'novel residue (lines surviving VETO 2), not the raw multiset',
+        'last_earned_novel_lines': len(last_real['novel']) if last_real else None,
+        'last_earned_substantive_lines': len(last_real['subst']) if last_real else None,
         'in_window_unclassified_paths': len(offsurf),
         'fires_graded': len(graded), 'noop_streak': streak, 'streak_threshold': streak_n,
         'axis1_noop_streak_red': axis1_red,
@@ -672,7 +867,8 @@ else:
     out(f"  in window    : {real_in_win} earned-real, {book_in_win} bookkeeping, "
         f"{len(graded)} fire(s) graded")
     out(f"  vetoed       : {veto1} null-payload, {veto2} repeat-payload, "
-        f"{veto3} thin-payload (<{min_subst} substantive lines) "
+        f"{veto3} thin-payload (<{min_subst} NOVEL substantive lines; the floor is "
+        f"counted over the novel residue, never the raw multiset) "
         f"— anchored commits that did NOT promote")
     if offsurf:
         top = ', '.join(f"{p} x{n}" for p, n in offsurf.most_common(5))
@@ -710,3 +906,12 @@ else:
 
 sys.exit(1 if red else 0)
 PY
+then
+  ANALYSER_RC=0
+else
+  ANALYSER_RC=$?
+fi
+case "$ANALYSER_RC" in
+  0|1|2) exit "$ANALYSER_RC" ;;
+  *) refuse "the analyser exited $ANALYSER_RC — neither GREEN (0), RED (1) nor REFUSE (2). No verdict was reached; this is a GUARD FAILURE, not a finding about the producer." ;;
+esac
