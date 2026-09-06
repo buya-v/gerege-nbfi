@@ -31,24 +31,39 @@
 //   - repaymentperiod.go — SWEPT. Every [VERIFIED: RepaymentPeriod.java:a-b]
 //     was re-derived mechanically against the pinned commit by T530 and
 //     re-derived again, row by row, by the independent review T531.
-//   - interestperiod.go — SWEPT by T532. All 28 [VERIFIED:
+//   - interestperiod.go — SWEPT by T532, and its RECORD CORRECTED by T551
+//     after independent review T548. All 28 [VERIFIED:
 //     InterestPeriod.java:a-b] ranges were re-derived individually by
 //     brace-counting the Java class body against the pinned commit. T532
 //     measured 22 of 28 failing to resolve, NOT the 23 T530 estimated while
-//     sweeping a different file: the sixth surviving citation is the bare
-//     :151 on the "downstream reach" line, which carries no VERIFIED token, so
-//     a grep-based census misses it AND, if it then counts it as unresolved,
-//     overstates the failure count by one. The EOF split T530 reported is
+//     sweeping a different file. TWO of the six survivors carry no VERIFIED
+//     token, not one: the bare :65-66 on the json_model line and the bare :151
+//     on the "downstream reach" line. A grep-based census therefore sees 26 of
+//     the 28 refs and reports 22 of 26. HOW 23 AROSE IS CONJECTURE and is
+//     recorded as such — no census produces it: booking both untokened items
+//     as unresolved gives 24 of 28, booking neither gives 22, and 23 needs
+//     exactly one of the two booked, which is not a census anyone would
+//     deliberately run. The EOF split T530 reported is
 //     confirmed exactly — TEN wholly past the end of a 237-line file
 //     (:252-254, :256-259, :299-301, :303-305, :307-309, :311-313, :315-317,
 //     :319-321, :323-325, :327-329) and ONE more, :237-250, starting on the
 //     file's last line and OVERRUNNING it, so eleven cite a line that does not
-//     exist. Do not apply an offset here either: the drift changed sign
-//     (-94 to +69) and was non-monotonic, and two wrong ranges (:229-231,
-//     :233-235) resolved to REAL BUT WRONG members, which an offset theory
-//     hides completely. The sweep found zero DIVERGENCES: at every corrected
-//     span the Java supports the Go sentence, and no range was repointed to
-//     make a mismatch disappear.
+//     exist. Do not apply an offset here either — but NOT for the reason first
+//     recorded here. "The drift changed sign (-94 to +69)" WAS FALSE and is
+//     retracted: every InterestPeriod.java delta is <= 0, spanning 0 to -94,
+//     and the only positive (+13) was a MathUtil.java citation, i.e. a
+//     different file mixed into the same table. What defeats an offset is
+//     SPREAD and non-monotonicity — the magnitudes run 0, -3, -52, -55, -58,
+//     -59, -63, -69, -94 out of file order — so T530's refutation of T526's
+//     "12-14 line offset" stands unaffected. NINE of the 22 wrong ranges, not
+//     two, resolved to REAL BUT WRONG members wholly inside the file; an
+//     offset theory hides all nine and a line-existence check sees none of
+//     them, and the sweep built to find that class under-counted it 4.5x. The
+//     22 partition exactly: 22 = 10 past EOF + 1 overrun + 9 real-but-wrong-
+//     member + 2 in-file-with-wrong-extent, and interestperiod.go's banner
+//     lists every member of every class. The sweep found zero DIVERGENCES: at
+//     every corrected span the Java supports the Go sentence, and no range was
+//     repointed to make a mismatch disappear.
 //   - Every other file in the package — UNSWEPT, and never claimed otherwise.
 //
 // The unswept verdict is about the CODE FILES, not about this comment: the

@@ -6,7 +6,8 @@ import (
 )
 
 // CITATION AUDIT — T532, swept 2026-09-05 against pinned Fineract
-// 426a23544e8426a38ae43ae404670a0a7e85b9eb.
+// 426a23544e8426a38ae43ae404670a0a7e85b9eb; RECORD CORRECTED by T551 on
+// 2026-09-06 after independent review T548, against the same commit.
 //
 // InterestPeriod.java is 237 lines at that commit. Every [VERIFIED:
 // InterestPeriod.java:a-b] span in this file was re-derived INDIVIDUALLY, by
@@ -15,25 +16,98 @@ import (
 // mechanically; 22 named the wrong lines and were repointed; 6 already resolved
 // exactly and were left untouched.
 //
-// THERE IS NO OFFSET, and no future sweep should look for one. The error is
-// non-monotonic and CHANGES SIGN across the file: -94 for the accessor block,
-// +69 for Length/LengthTillPeriodDueDate, +55 for isFirstInterestPeriod, -59 and
-// -58 for the two getCalculatedDueInterest overloads, -69 for
-// updateOutstandingLoanBalance, +63 for getCreditedAmounts, -52 for the five
-// add* mutators, and 0 for copy(). A single citation past the end of the file is
-// sufficient evidence that its block was never derived against this commit; the
-// remedy is to read each range, never to shift a block.
+// THERE IS NO OFFSET, and no future sweep should look for one. THE REASON FIRST
+// RECORDED HERE WAS FALSE AND IS RETRACTED: this banner used to say the error
+// "CHANGES SIGN across the file" and quote a range of "-94 to +69". It does not
+// change sign. Re-derived as new_start - old_start over the pre-sweep file,
+// EVERY InterestPeriod.java delta is <= 0:
+//
+//	-94  the eight nullToZero accessors  :299 :303 :307 :311 :315 :319 :323 :327
+//	                                  ->  :205 :209 :213 :217 :221 :225 :229 :233
+//	-69  getLength                       :229 -> :160
+//	-69  getLengthTillPeriodDueDate      :233 -> :164
+//	-69  updateOutstandingLoanBalance    :237 -> :168
+//	-63  getCreditedAmounts              :256 -> :193
+//	-59  getCalculatedDueInterest()      :193 -> :134
+//	-58  getCalculatedDueInterest(m,len) :203 -> :145
+//	-55  isFirstInterestPeriod           :252 -> :197
+//	-52  the five add* mutators     :165 :169 :173 :177 :181 -> :113 :117 :121 :125 :129
+//	 -3  the field block                 :48  -> :45
+//	  0  withEmptyAmounts                :94  -> :94  (start held; only the end moved, 109 -> 106)
+//
+// Min -94, max 0, NO POSITIVE VALUE ANYWHERE. The single +13 the old wording
+// folded into this table (:175 -> :188) is a MathUtil.java citation — A DIFFERENT
+// FILE — and is not evidence about drift inside InterestPeriod.java. Mixing two
+// files' deltas into one table is how the false claim was manufactured.
+//
+// THE CONCLUSION SURVIVES THE PREMISE, and this is the part to keep. No single
+// offset explains this file, because the magnitudes range over 0, -3, -52, -55,
+// -58, -59, -63, -69 and -94 and are non-monotonic in file order. An offset is
+// defeated by SPREAD and non-monotonicity, not by a sign change. T530's
+// refutation of T526's "12-14 line offset" therefore still stands, unaffected.
+// A single citation past the end of the file remains sufficient evidence that its
+// block was never derived against this commit; the remedy is to read each range,
+// never to shift a block.
+//
+// THE 22 WRONG CITATIONS PARTITION EXACTLY. A closed partition is far stronger
+// evidence than a list, because a list can silently omit a class and a closing
+// sum cannot (T548 derived this; T551 re-derived it independently at 426a23544):
+//
+//	22 = 10 (wholly past EOF) + 1 (overrun) + 9 (real but WRONG MEMBER) + 2 (in file, wrong extent)
+//
+//	10 past EOF  :252-254 :256-259 :299-301 :303-305 :307-309 :311-313 :315-317
+//	             :319-321 :323-325 :327-329        — all beyond line 237
+//	 1 overrun   :237-250                          — :237 is the class's closing
+//	                                                 brace; 238-250 do not exist
+//	 9 wrong     :229-231  getRateFactor()
+//	   member    :233-235  getRateFactorTillPeriodDueDate()
+//	             :193-201  getCreditedAmounts 193-195 + isFirstInterestPeriod
+//	                       197-199 + getCurrency() signature 201
+//	             :203-219  getCurrency() close 203 + getCreditedPrincipal 205-207
+//	                       + getCreditedInterest 209-211 + getDisbursementAmount
+//	                       213-215 + getBalanceCorrectionAmount 217-219
+//	             :165-167  tail of getLengthTillPeriodDueDate
+//	             :169-171  head of updateOutstandingLoanBalance
+//	             :173-175  body of updateOutstandingLoanBalance
+//	             :177-179  body/close of updateOutstandingLoanBalance
+//	             :181-183  else-branch of updateOutstandingLoanBalance
+//	 2 extent    :48-60    a TRUNCATED field block (the block is :45-73)
+//	             :94-109   both withEmptyAmounts overloads PLUS the head of
+//	                       compareTo at :108-109
+//
+// THE WRONG-MEMBER CLASS IS THE DANGEROUS ONE, AND THE SWEEP BUILT TO FIND IT
+// UNDER-COUNTED IT 4.5x. T532 reported TWO (:229-231, :233-235); there are NINE.
+// The two reported are the two that happen to span a COMPLETE method — a
+// narrowing T532 never states. All nine land wholly inside the 237-line file on a
+// real member that is not the one the Go sentence above them describes, so a
+// line-existence check passes on every one of them and an offset theory hides all
+// nine. All nine were nevertheless corrected correctly and no number moved; what
+// was wrong is the COUNT, checked in wearing a verified badge. Count this class
+// by "does the span resolve to the member named above it", never by "is the span
+// a whole method".
 //
 // NO RANGE WAS REPOINTED TO MAKE A MISMATCH DISAPPEAR. At every corrected span
 // the Java supports the Go sentence above it, so this sweep records zero
-// DIVERGENCE blocks. Three oracle asymmetries were checked and found benign with
-// receipts; they are noted at their sites below rather than silently smoothed
-// over. Citations to files OTHER than InterestPeriod.java were NOT swept here —
-// only the two that sit in this file's own prose (DateUtils, MathUtil) were
-// checked, and the RepaymentPeriod / ProgressiveEMICalculator /
-// AdvancedPaymentScheduleTransactionProcessor / LoanSchedulePlan spans below
-// remain UNAUDITED. Half-auditing a second file is the defect this task exists
-// to repair, so they were left alone and filed instead.
+// DIVERGENCE blocks. Three oracle asymmetries were checked and found benign;
+// two of the three receipts were REWRITTEN by T551 because the mechanism they
+// named was wrong (see UpdateOutstandingLoanBalance and AddBalanceCorrectionAmount
+// below) — they are noted at their sites rather than silently smoothed over.
+//
+// Citations to files OTHER than InterestPeriod.java were NOT swept here. FOUR
+// non-InterestPeriod files have had cited spans read directly: DateUtils and
+// MathUtil (T532; MathUtil's four spans re-read by T551), Money.java (T532 added
+// :236-238; T551 re-read it and added :40-53, :106-108, :126-128, :240-247,
+// :253-259, :324-326, :442-448) and MoneyHelper.java (T551, :35 and :91-93). The
+// old wording — "only the two that sit in this file's own prose (DateUtils,
+// MathUtil)" — undercounted what had been checked. EVERY OTHER cited file
+// remains UNAUDITED, and there are SEVEN of them, not the four the old
+// enumeration named: RepaymentPeriod (unaudited except the single span :190-194
+// that T551 read for the balance-correction receipt), ProgressiveEMICalculator,
+// AdvancedPaymentScheduleTransactionProcessor (except :2845, likewise),
+// LoanSchedulePlan, ProgressiveLoanScheduleGenerator,
+// ProgressiveLoanInterestScheduleModel and
+// InterestScheduleModelRepositoryWrapperImpl. Half-auditing a second file is the
+// defect this task exists to repair, so they were left alone and filed instead.
 
 // daysBetween returns the calendar-day difference between two dates using the
 // same LocalDate epoch-day arithmetic DateUtils.getDifferenceInDays uses
@@ -190,7 +264,9 @@ func (ip *InterestPeriod) RateFactorTillPeriodDueDateValue() *big.Rat {
 //
 // The previous span here, :229-231, resolved to a real method — but to
 // getRateFactor(), not getLength(). A citation that lands on the wrong member is
-// harder to catch than one past EOF, because it still resolves.
+// harder to catch than one past EOF, because it still resolves. This is one of
+// NINE such citations in the pre-sweep file, not one of two: the banner above
+// lists all nine and shows the 22 partitioning as 10 + 1 + 9 + 2.
 func (ip *InterestPeriod) Length() int64 {
 	return daysBetween(ip.FromDate, ip.DueDate)
 }
@@ -281,10 +357,26 @@ func ratNegativeToZero(x *big.Rat) *big.Rat {
 //
 // ORACLE ASYMMETRY, CHECKED AND BENIGN: the first branch floors with the
 // two-argument MathUtil.negativeToZero(Money, mc) at :173-178, the second with
-// the one-argument MathUtil.negativeToZero(Money) at :183-186. The MathContext
-// only ever reaches the ZERO that is substituted for a negative value, never the
-// value that is kept, so both branches are the same predicate-and-floor and
-// negToZero below serves both.
+// the one-argument MathUtil.negativeToZero(Money) at :183-186. Both call-site
+// spans are correct as cited.
+//
+// THE MECHANISM AS FIRST WRITTEN HERE WAS WRONG AND IS RETRACTED (T551, review
+// T548). It said the MathContext "only ever reaches the ZERO that is substituted
+// for a negative value, never the value that is kept." It also reaches the
+// PREDICATE. The two-argument form is
+// `value == null || isGreaterThanZero(value, mc) ? value : Money.zero(value.getCurrencyData(), mc)`
+// [VERIFIED: MathUtil.java:356-358], and isGreaterThanZero(Money, MathContext)
+// [VERIFIED: MathUtil.java:368-370] delegates to Money.isGreaterThanZero(mc)
+// [VERIFIED: Money.java:446-448]; the one-argument form instead uses the value's
+// OWN mc [VERIFIED: MathUtil.java:351-353 -> Money.java:442-444].
+//
+// The conclusion holds anyway, on the mechanism rather than on the retracted
+// wording: the predicate is isGreaterThan(Money.zero(getCurrencyData(), mc))
+// [VERIFIED: Money.java:446-448], and Money.zero(CurrencyData, mc) constructs
+// BigDecimal.ZERO [VERIFIED: Money.java:126-128], whose amount after the
+// constructor's setScale is zero under EVERY rounding mode and every precision
+// [VERIFIED: Money.java:40-53]. Both overloads therefore compare against the same
+// zero and floor at the same zero, so negToZero below serves both branches.
 //
 // THE TWO ASSIGNMENTS BELOW ARE NOT LEDGER-BALANCE WRITES, and they are the
 // reason the I-3 source guard refuses this package. The sites are left RED
@@ -370,12 +462,65 @@ func (ip *InterestPeriod) CreditedAmounts() Money {
 // ORACLE ASYMMETRY, CHECKED AND BENIGN: this is the ONE add* method whose Java
 // body calls the two-argument MathUtil.plus(Money, Money) [VERIFIED:
 // MathUtil.java:388-390]; its four siblings all pass getMc() to the
-// three-argument overload [VERIFIED: MathUtil.java:392-394]. The two agree here
-// rather than by luck: the two-argument form delegates to Money.plus(that),
-// which itself calls plus(that, getMc()) on the RECEIVER's own MathContext
-// [VERIFIED: Money.java:236-238], and the receiver is
-// this.getBalanceCorrectionAmount(), built with getMc() at :217-219. So no
-// MathContext is lost, and the exact minor-unit addition below matches all five.
+// three-argument overload [VERIFIED: MathUtil.java:392-394].
+//
+// THE FIRST RECEIPT WRITTEN HERE WAS UNSOUND AND IS RETRACTED (T551, review
+// T548). It argued that the receiver "is this.getBalanceCorrectionAmount(),
+// built with getMc() at :217-219." IT IS NOT BUILT WITH getMc(). That accessor
+// is MathUtil.nullToZero(balanceCorrectionAmount, getCurrency(), getMc())
+// [VERIFIED: InterestPeriod.java:217-219], which is
+// nullToDefault(value, Money.zero(currency, mc)) [VERIFIED: MathUtil.java:338-340]
+// over a bare `return value == null ? def : value` [VERIFIED:
+// MathUtil.java:342-344]. getMc() reaches ONLY the substituted zero. When the
+// field is non-null the accessor hands back the STORED Money, carrying whatever
+// MathContext it was constructed with — and non-null is exactly what the guarded
+// oracle call site reaches: RepaymentPeriod.copyWithoutPaidAmounts copies the
+// interest period, then calls this method only inside
+// `if (!interestPeriodCopy.getBalanceCorrectionAmount().isZero())`
+// [VERIFIED: RepaymentPeriod.java:190-194]. The one step the old receipt leaned
+// on is the one step that does not hold, and a money claim must never rest on an
+// argument shown to be wrong — so it is replaced, not patched.
+//
+// THE SOUND RECEIPT. It needs no assumption about which MathContext the receiver
+// carries, because on this path the MathContext's PRECISION never participates
+// at all. Following the two-argument form to the bottom:
+//
+//	MathUtil.plus(Money, Money)  -> first.plus(second)          [VERIFIED: MathUtil.java:388-390]
+//	Money.plus(Money)            -> plus(that, getMc())         [VERIFIED: Money.java:236-238]
+//	Money.plus(Money, mc)        -> plus(that.getAmount(), mc)  [VERIFIED: Money.java:240-247]
+//	Money.plus(BigDecimal, mc)   -> this.amount.add(amountToAdd), with NO MathContext
+//	                                argument, then Money.of(currency, sum, mc)
+//	                                                            [VERIFIED: Money.java:253-259]
+//	Money.of(CurrencyData, BigDecimal, mc) -> new Money(...)    [VERIFIED: Money.java:106-108]
+//	private Money(currency, amount, mc) -> amount.setScale(currency.getDecimalPlaces(),
+//	                                getMc().getRoundingMode())  [VERIFIED: Money.java:40-53]
+//
+// The addition is EXACT BigDecimal arithmetic. The mc reaches one place only —
+// the rounding mode of that single setScale — and there it cannot bite: every
+// Money's amount was itself set to currency scale by that same constructor line,
+// so the sum of two amounts at that scale is already at that scale and the
+// setScale is a no-op. No rounding occurs, so a difference in rounding mode could
+// not move the number even if one existed, and a difference in precision could
+// not reach the arithmetic at all. That is why the two-argument and three-
+// argument forms agree here, and why the exact minor-unit addition below matches
+// all five siblings. (The no-op step assumes both operands carry the same
+// CurrencyData decimalPlaces; Money.isSameCurrency compares only the currency
+// CODE [VERIFIED: Money.java:324-326], and a single schedule model carries a
+// single currency, so they do on every path in this package.)
+//
+// SECONDARY, AND DELIBERATELY HEDGED — do not promote it to load-bearing. In
+// production every MathContext in this object graph is one memoised per-tenant
+// instance: mathContextCache.computeIfAbsent(tenantId, k -> new
+// MathContext(PRECISION, getRoundingMode())) with PRECISION a compile-time 19
+// [VERIFIED: MoneyHelper.java:35, :91-93], so at the ratified tenant setting
+// (19, HALF_UP) the receiver's mc and getMc() are the SAME OBJECT. That is a
+// configuration fact, NOT a structural guarantee: fineract-progressive-loan does
+// construct a MathContext that is not the cached one — `new
+// MathContext(MoneyHelper.getMathContext().getPrecision(), RoundingMode.DOWN)`
+// [VERIFIED: AdvancedPaymentScheduleTransactionProcessor.java:2845]. Whether a
+// Money carrying that context can reach this receiver was NOT established
+// [UNVERIFIED]. The structural argument above does not depend on the answer.
+//
 // This asymmetry is recorded, not smoothed over: it is a real difference in the
 // oracle's source that a reader of this port would otherwise have to rediscover.
 //
