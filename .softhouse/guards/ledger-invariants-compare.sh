@@ -39,10 +39,15 @@ NEXUS_DIR="$REPO_ROOT/nexus"
 GUARD_SRC="$SCRIPT_DIR/ledgerguard"
 BASELINE="$REPO_ROOT/.softhouse/guards/ledger-invariants.baseline"
 
-# TEST HOOK ONLY. `LEDGER_INVARIANTS_BASELINE` lets a test point this comparison at a COPY of
-# the baseline (T3's "silenced" direction) without editing the committed baseline. It is never
-# set by the publication path; when unset, the committed baseline is the only baseline consulted.
-[ -n "${LEDGER_INVARIANTS_BASELINE:-}" ] && BASELINE="$LEDGER_INVARIANTS_BASELINE"
+# NO ENVIRONMENT OVERRIDE. An earlier revision honoured `LEDGER_INVARIANTS_BASELINE` here, with a
+# comment asserting it "is never set by the publication path". That was an ASSERTION WITH NOTHING
+# ENFORCING IT, and it was a working bypass: neither bar-attest.sh nor conformance.sh sanitises the
+# environment before invoking this script, so an inherited variable silently redirected the
+# publication decision at a forged baseline. MEASURED: plant a balance write in a file with no
+# baseline row, regenerate a baseline that includes it, export the variable -> this script exits 0
+# and a brand-new I-3 violation publishes clean. A test that needs a different baseline passes
+# `--baseline <path>` BELOW: an argument cannot be inherited from an ambient environment, and the
+# publication path passes none. [T506 F-6 class: a fail-open instrument reached by inherited state.]
 
 case "${1:-}" in
   --baseline)
