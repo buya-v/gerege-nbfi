@@ -23,8 +23,12 @@
 #      probe line is not `down` -- it is "no verdict is available" (P-84).
 #   2. every probe line reads `up`                -- an oracle outage is not a pass.
 #   3. a `VERDICT: PASS` line is present.
-#   4. the bar's exit status is 0.
-# All four, or no attestation is written. A partial pass is not an attestation of anything.
+#   4. the bar's exit status is 0 -- OR, under DEC-2 §4.4.2, the exit is 2 AND the refusal is
+#      the RECORDED DECISION: the ledger finding set matched its pinned baseline EXACTLY (re-run
+#      here, never read from the banner), and the transcript says the exit was that recorded
+#      decision. Any other non-zero exit is refused.
+# All four (with the one named exception), or no attestation is written. A partial pass is not
+# an attestation of anything.
 #
 # ENGINE (P-33/P-53): bash, git, POSIX grep/sed. Declared, not assumed.
 # =============================================================================================
@@ -130,12 +134,48 @@ if ! LC_ALL=C grep -aq 'VERDICT: PASS' "$LOG"; then
   exit 1
 fi
 
-# 4. EXIT STATUS.
-if [ "$BARRC" -ne 0 ]; then
-  say "REFUSED -- the bar exited $BARRC. A probe line and a verdict do not outrank a non-zero exit."
-  cp "$LOG" "$GATE_DIR/last-refused-bar.log" 2>/dev/null
-  exit 1
-fi
+# 4. EXIT STATUS -- with the ONE exception DEC-2 §4.4.2 ratifies.
+#    Exit 0 is a green attestation, exactly as before. Exit 2 is attestable ONLY as the
+#    RECORDED DECISION: the graded tree's ledger finding set must match its pinned baseline
+#    EXACTLY (the comparison is RE-RUN here against the graded tree -- a banner in the
+#    transcript is not evidence), AND the transcript must say the exit was that recorded
+#    decision and not some other post-grading refusal. Any other non-zero exit is refused.
+case "$BARRC" in
+  0) ATTEST_MODE="green" ;;
+  2)
+    CMP_LOG="$D/compare.log"
+    ( cd "$WT" || exit 9; bash .softhouse/guards/ledger-invariants-compare.sh ) >"$CMP_LOG" 2>&1
+    CMPRC=$?
+    if [ "$CMPRC" -eq 9 ]; then
+      die "ABORT(3) -- could not enter the scratch worktree to re-run the §4.4.2 comparison."
+    fi
+    say "§4.4.2 comparison exit: $CMPRC"
+    RECORDED_EXIT=0
+    if LC_ALL=C grep -aq '§4.4.2-RECORDED-DECISION-EXIT' "$LOG"; then
+      RECORDED_EXIT=1
+    fi
+    if [ "$CMPRC" -eq 0 ] && [ "$RECORDED_EXIT" -eq 1 ]; then
+      ATTEST_MODE="recorded"
+    else
+      say "REFUSED -- the bar exited 2, but this is not the recorded-decision state:"
+      if [ "$CMPRC" -ne 0 ]; then
+        say "  the ledger finding set did NOT match the pinned baseline (comparison exit $CMPRC):"
+        LC_ALL=C sed -n '1,20p' "$CMP_LOG"
+      fi
+      if [ "$RECORDED_EXIT" -ne 1 ]; then
+        say "  the transcript does not record a §4.4.2 recorded-decision exit, so the non-zero exit"
+        say "  was caused by something else and must not be attested."
+      fi
+      cp "$LOG" "$GATE_DIR/last-refused-bar.log" 2>/dev/null
+      exit 1
+    fi
+    ;;
+  *)
+    say "REFUSED -- the bar exited $BARRC. A probe line and a verdict do not outrank a non-zero exit."
+    cp "$LOG" "$GATE_DIR/last-refused-bar.log" 2>/dev/null
+    exit 1
+    ;;
+esac
 
 # ---- GRADER IDENTITY ON THE ROW.  [T465 / C-T461-2] -----------------------------------------
 # The CHEAP rows the push gate writes have carried `gate=`/`headblob=` since T453; the FULL rows
@@ -178,15 +218,23 @@ if [ "$ATTESTER_BLOB" != '<not-in-HEAD>' ] && [ "$ATTESTER_SHA" != "$ATTESTER_BL
 fi
 
 VERDICT="$(LC_ALL=C grep -a 'VERDICT: PASS' "$LOG" | LC_ALL=C sed -n '1p' | LC_ALL=C tr '\t' ' ')"
+case "$ATTEST_MODE" in
+  recorded) EXIT_TAG="exit2-DEC-2-4.4.2-recorded" ;;
+  *)        EXIT_TAG="exit0" ;;
+esac
 printf 'FULL\t%s\t%s\t%s\t%s\n' "$TREE" "$COMMIT" "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
-  "exit0 probe=${PROBE_N}xup bar=$BAR_SHA gate=$ATTESTER_SHA headblob=$ATTESTER_BLOB ${VERDICT}" >>"$ATTEST" \
+  "$EXIT_TAG probe=${PROBE_N}xup bar=$BAR_SHA gate=$ATTESTER_SHA headblob=$ATTESTER_BLOB ${VERDICT}" >>"$ATTEST" \
   || die "ABORT(3) -- could not append the attestation. An attestation that was not recorded is not an attestation."
 
 cp "$LOG" "$GATE_DIR/attested-${TREE}.log" 2>/dev/null
 
 say ""
 say "ATTESTED FULL -- tree $TREE"
-say "  exit 0, probe PRESENT x$PROBE_N all reading \`up\`, $VERDICT"
+if [ "$ATTEST_MODE" = "recorded" ]; then
+  say "  exit 2 BY RECORDED DECISION (DEC-2 §4.4.2): ledger findings == baseline, probe PRESENT x$PROBE_N all reading \`up\`, $VERDICT"
+else
+  say "  exit 0, probe PRESENT x$PROBE_N all reading \`up\`, $VERDICT"
+fi
 say "  ledger:     $ATTEST"
 say "  transcript: ${GATE_DIR}/attested-${TREE}.log"
 exit 0

@@ -399,6 +399,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 STORE_ROOT="$REPO_ROOT/.softhouse/vectors"
 NEXUS_DIR="$REPO_ROOT/nexus"
+# DEC-2 §4.4.2 — a recorded refusal, not a green. Set by run_guards when the ledger
+# guard refuses on a finding set that is EXACTLY the pinned baseline, and read by
+# main_grade after grading has completed to make the bar end EXIT 2 while still
+# having printed the probe line and the binary's VERDICT. It is a GLOBAL on purpose:
+# run_guards sets it, main_grade reads it, and both run in the same shell.
+LEDGER_RECORDED_RED=0
 # NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
 # named by .softhouse/vectors/PIN.json ("contract_file") and its bytes are checked
 # against PIN.json ("contract_sha256") by Go — admit.go VerifyContractDigest. A
@@ -6024,7 +6030,25 @@ run_guards() {
   timed_guard guard_gofmt                         || failed=1
   timed_guard guard_no_float_in_capture_requests  || failed=1
   timed_guard guard_no_narrow_catch_in_capture_rigs || failed=1
-  timed_guard guard_ledger_invariants             || failed=1
+  timed_guard guard_ledger_invariants             || {
+    # DEC-2 §4.4.2. The guard REFUSES this tree on a known, argued finding set, and that refusal
+    # is NOT automatically "no verdict". When the finding set is EXACTLY the pinned baseline the
+    # refusal is a RECORDED DECISION: the run must continue to the probe and to vector grading,
+    # and end EXIT 2 only AFTER a full grading — never before the probe prints. Consult the SAME
+    # both-directions comparison drive-red-ledger-invariants.sh runs (CONTROL B). A deviation in
+    # EITHER direction keeps today's behaviour exactly: `failed=1`, EXIT 2 before the probe, no
+    # verdict. That path must not change.
+    local cmp_out cmp_rc
+    cmp_out="$(bash "$REPO_ROOT/.softhouse/guards/ledger-invariants-compare.sh" 2>&1)"
+    cmp_rc=$?
+    if [ "$cmp_rc" -eq 0 ]; then
+      LEDGER_RECORDED_RED=1
+      say "conformance: RED BY RECORDED DECISION (DEC-2 §4.4.2) — findings == baseline"
+    else
+      printf '%s\n' "$cmp_out" >&2
+      failed=1
+    fi
+  }
   timed_guard guard_no_fail_open_instruments      || failed=1
   timed_guard guard_no_host_state_in_lint_corpus  || failed=1
   timed_guard guard_pnumber_citations             || failed=1   # T282, wired HARD by T331
@@ -6551,6 +6575,17 @@ main_grade() {
     say "conformance:   ledger half is not graded at all, so there is nothing for a wrong ledger"
     say "conformance:   implementation to fail. Nothing is claimed about the six."
   elif ! gate_wrong_ledger_impls_die "$CONF_BIN" "$probe"; then
+    return "$EXIT_UNUSABLE"
+  fi
+
+  # DEC-2 §4.4.2. If run_guards recorded a ledger refusal on an EXACT baseline match, the run
+  # has by now COMPLETED: the probe printed, the binary graded and passed, and both post-grading
+  # gates passed. The bar still ends RED — but only after a full grading, which is the whole
+  # distinction this section draws. The marker on the next line is what bar-attest reads to know
+  # the exit was the recorded decision and not some other post-grading refusal; it is NOT the
+  # ledger evidence — bar-attest re-runs the comparison for that.
+  if [ "$LEDGER_RECORDED_RED" = "1" ]; then
+    say "conformance: §4.4.2-RECORDED-DECISION-EXIT — ledger findings == baseline; the graded run completed and the bar is refused by that recorded decision"
     return "$EXIT_UNUSABLE"
   fi
   return "$rc"
