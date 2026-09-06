@@ -72,6 +72,16 @@ for i in 1 2 3 4 5 6 7 8; do
         printf '%s%s\n' "$L" "${LET[$((j-1))]}" >> .softhouse/capture/t553-i/beat.txt
       done
       git add .softhouse/capture/t553-i/beat.txt ;;
+    mine-rot)
+      # mine-k with a NEW FILE every fire, to check that the novelty ledger is
+      # keyed on CONTENT and not on path — rotating the path must not refresh a
+      # line's novelty. Expected: same verdict as mine-k.
+      mkdir -p .softhouse/capture/t553-rot
+      for j in a b c d e f g; do
+        printf 'stable line %s\n' "$j" >> ".softhouse/capture/t553-rot/beat-$i.txt"
+      done
+      printf 'novel %s\n' "$L" >> ".softhouse/capture/t553-rot/beat-$i.txt"
+      git add ".softhouse/capture/t553-rot/beat-$i.txt" ;;
     mine-knum)
       # mine-k with a COUNTER instead of a constant pad block. Digits are
       # preserved by the per-line novelty test (they must be: a captured numeric

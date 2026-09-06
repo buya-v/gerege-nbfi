@@ -72,6 +72,7 @@ shipped guard; AFTER = this branch.
 | `atk-mine-j` | the `mine-i` promotion on 2 of 8 fires | GREEN exit 0 (streak 2, 18.0 h) | **GREEN exit 0 — RESIDUAL** |
 | `atk-mine-knum` (new) | 7 **counter** lines + 1 novel | GREEN exit 0 | GREEN exit 0 — RESIDUAL, priced below |
 | `atk-mine-min` (new) | 8 **one-character** novel lines/fire | GREEN exit 0 | GREEN exit 0 — the residual's floor price |
+| `atk-mine-rot` (new) | `mine-k`'s payload into a **new file every fire** | **GREEN exit 0** | **RED exit 1** (streak 7) |
 | `atk-unenumerated` | 12 novel prose lines to a never-committed path | RED exit 1 | RED exit 1 |
 | `atk-t541` | T541's valueless `docs/` line | RED exit 1 | RED exit 1 |
 | `atk-legit` | 12 novel capture rows/fire | GREEN exit 0 | **GREEN exit 0** |
@@ -134,6 +135,10 @@ bytes per fire. Here is mine, with numbers, all driven:
   1 novel line, GREEN exit 0. It is **not cheaper** than `mine-i` — a counter makes all 8 lines novel,
   so it pays the same 8-novel-line price — but it is honest to record that after this fix, padding with
   a counter is not free padding, it is novelty.
+* **Rotating the PATH does not refresh novelty.** `atk-mine-rot` writes `mine-k`'s payload into a new
+  file every fire (T541's and T550's `mine-f` shape crossed with `k`): **GREEN exit 0 before, RED exit 1
+  after**. The ledger is keyed on line content per producer, not on path, so a padder cannot buy
+  novelty with `mkdir`.
 * **`atk-mine-j` prices the RATE**: the promotion on only **2 of 8 fires** is GREEN (AXIS 1 streak 2,
   AXIS 3 18.0 h). The binding constraint is one promotion per `--streak` fires **and** per
   `--earned-silence-hours`, i.e. under shipped defaults and a 3 h cadence roughly one promotion per
@@ -196,25 +201,26 @@ Four independent controls; **no false RED in any of them.**
 re-implementation of both classifiers so a mistake in the guard cannot hide inside its own control):
 
 ```
-local: 482 hourly instants replayed
-   RED(new) but GREEN(old): 0
-   GREEN(new) but RED(old): 0
-cloud: 482 hourly instants replayed
-   RED(new) but GREEN(old): 0
-   GREEN(new) but RED(old): 0
+run 1 — origin/main at 2,587 non-merge commits
+  local: 482 hourly instants replayed   RED(new)/GREEN(old): 0    GREEN(new)/RED(old): 0
+  cloud: 482 hourly instants replayed   RED(new)/GREEN(old): 0    GREEN(new)/RED(old): 0
+run 2 — origin/main at 2,600 (another worker in this fire pushed mid-task; re-run for that reason)
+  local: 483 hourly instants replayed   RED(new)/GREEN(old): 0    GREEN(new)/RED(old): 0
+  cloud: 483 hourly instants replayed   RED(new)/GREEN(old): 0    GREEN(new)/RED(old): 0
 ```
 
-**964 replayed instants, zero verdict changes.** T552's requirement — "there are NO FALSE REDS today
-and your change must not introduce any — re-run that replay" — is met with a stronger statement: the
-new classifier does not change a single hourly verdict over the whole history.
+**1,930 replayed instants across two states of the history, zero verdict changes.** T552's requirement
+— "there are NO FALSE REDS today and your change must not introduce any — re-run that replay" — is met
+with a stronger statement: the new classifier does not change a single hourly verdict, in either
+direction, over the whole recorded history.
 
 **2. The materiality floor, re-derived under the novel-residue rule** (same script):
 
 ```
 local  ALL FIRES    NEW rule: cleared=36/89  min-over-cleared-fires(max NOVEL lines)=12
        GRADED (14d) NEW rule: cleared=11/60  min = 104   smallest ten=[104,134,141,147,151,160,177,186,199,200]
-cloud  ALL FIRES    NEW rule: cleared=4/5    min = 27
-       GRADED (14d) NEW rule: cleared=1/2    min = 173
+cloud  ALL FIRES    NEW rule: cleared=5/5    min = 27
+       GRADED (14d) NEW rule: cleared=2/2    min = 155
 ```
 
 **12 and 27 — the same two numbers T550 measured over the raw multiset and T552 re-derived**
@@ -224,6 +230,8 @@ cleared carries at least 12 NOVEL lines in its best promotion, so the floor of 8
 
 **3. T493/T550's whole published battery, re-driven through BOTH guards** (`t553-battery.sh`), 12 rows
 + 12 live spot instants on `origin/main`: **24 of 24 AGREE**, every exit code identical.
+(Full record, with the MINOR-1 correction placed in-place above T550's own table and every other MINOR
+answered case by case: `t553-minor-corrections.txt`.)
 This also settles two of T552's MINORs by driving them:
 `GREEN-B` as **cloud** = exit 0 and as **local** = exit 1 (MINOR-1: the row is a cloud row and the
 table had no producer column), and `GREEN-A` (`local`, `2026-08-29T12:00Z`) = exit 0 on both guards

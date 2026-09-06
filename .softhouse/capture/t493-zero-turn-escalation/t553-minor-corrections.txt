@@ -1,0 +1,92 @@
+T553 — CORRECTIONS TO THE T550 RECORD (T552's MINORs), each DRIVEN
+==================================================================
+
+MINOR-1 — GREEN-B is a CLOUD row, and t550-no-regression.txt has no producer
+          column. CONFIRMED by driving, on BOTH guards, ref 6aa31e5e:
+
+  $ no-op-fire-streak.sh --producer local --ref 6aa31e5e --now 2026-09-04T13:40:00Z --no-fetch
+      AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+      AXIS 2 silence      : 26.5h since last commit carrying anything 5d7ef306
+                            at 2026-09-03T11:09Z (threshold 18h) -> RED
+      AXIS 3 padded adv.  : 26.5h since last EARNED commit d355d422 -> ok
+      exit=1        (identical on the T550 guard and on the T553 guard)
+
+  $ ... --producer cloud --ref 6aa31e5e --now 2026-09-04T13:40:00Z
+      exit=0        (the figures printed in t550-no-regression.txt are the CLOUD
+                     figures; only the label was missing)
+
+  An in-place correction now stands ABOVE the table in t550-no-regression.txt, so
+  a reader meets it before the row rather than after it.
+
+MINOR-2 — T493's GREEN-A is absent from T550's re-drive. Driven here:
+
+  GREEN-A  --producer local  --ref 6aa31e5e  --now 2026-08-29T12:00:00Z
+           old_exit=0   new_exit=0   AGREE          (see t553-negative-control.txt)
+
+MINOR-3 — the VETO 2 comment promised a window property the code does not
+          implement. RESOLVED IN THE FAIL-CLOSED DIRECTION: the code's behaviour
+          (a repeat is a repeat, whatever the age of its first occurrence) is
+          kept, because loosening it would let a padder recycle payload on a
+          window boundary, and the comment that promised otherwise is gone. The
+          novelty ledger now spans the whole recorded history by design and the
+          header says so. Cost of the strict reading, measured: ZERO verdict
+          changes over 483 hourly replays per producer (t553-sweep.py).
+
+MINOR-4 — t550-wiring-and-refusals.txt §3 cites blob c57ed377… as proof the guard
+          ships 100755. The blob it names is superseded (T552 measured 24092917…
+          on T550's tip, and this branch changes the file again), so the CITATION
+          is stale though the PROPERTY holds. Re-checked on this branch:
+
+  $ git ls-tree softhouse/T553-t552-conditions .softhouse/guards/no-op-fire-streak.sh
+      100755 blob <see t553-negative-control.txt>   .softhouse/guards/no-op-fire-streak.sh
+
+          T550's transcript is not edited here: rewriting another task's recorded
+          evidence is worse than annotating it. This note is the annotation.
+
+MINOR-5 — NOFS_PAYLOAD_CAP is unvalidated. HALF-CONFIRMED, and the half that does
+          not reproduce is recorded because "not found" is a statement about the
+          search:
+            NOFS_PAYLOAD_CAP=abc   shipped guard: exit 0 with the cap SILENTLY
+                                   DISABLED (743 earned-real in window vs 703 at
+                                   the default) — real, now REFUSED (exit 2).
+            NOFS_PAYLOAD_CAP=0     shipped guard: exit 1 — RED. awk's `n < 0`
+                                   drops every payload line, so nothing can earn
+                                   and AXIS 3 fires. A guard misconfiguration
+                                   presenting as a migration outage; T552 did not
+                                   list this one. Now REFUSED.
+            NOFS_PAYLOAD_CAP=''    shipped guard: exit 0, 703 earned-real — i.e.
+                                   IDENTICAL to the default. T552's claim that
+                                   the empty string makes awk string-compare and
+                                   drop every line does NOT reproduce, because
+                                   `${NOFS_PAYLOAD_CAP:-200}` substitutes the
+                                   default for an empty value as well as an unset
+                                   one, so the empty string never reaches awk.
+          Also found by the same sweep: `--min-subst-lines 0` on the shipped
+          guard is exit 0 with VETO 3 switched off — the dangerous direction.
+          Now REFUSED.
+
+MINOR-6 — cost is linear in total history, not in the graded window. Unchanged by
+          T553 and recorded as a follow-up in the handoff: the novelty ledger, like
+          the digest map before it, is seeded from all prior history by design, so
+          a `--since` bound needs an explicit seeding pass. Measured cost today:
+          10.9 s -> 11.4 s per run on 2,587 non-merge commits.
+
+MINOR-7 — the guard-missing branch did not name the caller. FIXED in
+          fire-program.sh and driven under bash with a `print -r --` shim
+          (zsh is not installed in this sandbox; stated, not hidden):
+
+  === guard absent, called as 'probe'
+      no-op-fire-streak(probe): guard NOT PRESENT or not executable at … — NO VERDICT (not a pass)
+  === guard absent, called as 'fire'
+      no-op-fire-streak(fire):  guard NOT PRESENT or not executable at … — NO VERDICT (not a pass)
+
+  All seven wiring branches re-driven (exit 0/1/2/3/141, mode 644, absent): every
+  branch reaches the log, none is silent, the fire continues in all seven.
+  Transcript: t553-wiring.sh.
+
+NOT DONE, and out of scope for this task's files_hint:
+  T552 §10 — .softhouse/handoff/T493-zero-turn-escalation.md still carries the
+  false bolded claim "No verdict is sensitive to it" at ~line 178 with the
+  correction appended at ~line 407. It needs a one-line in-place marker at §4.3.
+  That file is not in T553's permitted paths; it is recorded in the handoff's
+  backlog instead of being reached for.
