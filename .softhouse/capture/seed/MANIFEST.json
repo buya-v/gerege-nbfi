@@ -1,0 +1,83 @@
+{
+  "pinnedBusinessDate": {
+    "type": "BUSINESS_DATE",
+    "date": "01 September 2026",
+    "iso": "2026-09-01",
+    "caseFiles": [
+      "businessdate-raw.json",
+      "businessdate-get-raw.json"
+    ]
+  },
+  "glAccounts": {
+    "asset": {
+      "id": 1,
+      "glCode": "SEED-10001",
+      "caseFile": "gl-SEED-10001-raw.json"
+    },
+    "liability": {
+      "id": 2,
+      "glCode": "SEED-20001",
+      "caseFile": "gl-SEED-20001-raw.json"
+    },
+    "income": {
+      "id": 3,
+      "glCode": "SEED-40001",
+      "caseFile": "gl-SEED-40001-raw.json"
+    },
+    "expense": {
+      "id": 4,
+      "glCode": "SEED-50001",
+      "caseFile": "gl-SEED-50001-raw.json"
+    }
+  },
+  "provisioningCriteria": {
+    "id": 1,
+    "name": "SEED-Probe-Criteria",
+    "caseFile": "provisioningcriteria-raw.json"
+  },
+  "loanProduct": {
+    "id": 2,
+    "name": "SEED-Probe-Loan",
+    "caseFile": "loanproduct-raw.json"
+  },
+  "clients": {
+    "SEED-C11": {
+      "id": 5,
+      "caseFile": "client-SEED-C11-raw.json"
+    },
+    "SEED-C12": {
+      "id": 6,
+      "caseFile": "client-SEED-C12-raw.json"
+    },
+    "SEED-C13": {
+      "id": 7,
+      "caseFile": "client-SEED-C13-raw.json"
+    }
+  },
+  "loans": {
+    "SEED-L01": {
+      "id": 1,
+      "caseFiles": [
+        "loan-SEED-L01-submit-raw.json",
+        "loan-SEED-L01-approve-raw.json",
+        "loan-SEED-L01-disburse-raw.json"
+      ]
+    },
+    "SEED-L02": {
+      "id": 2,
+      "caseFiles": [
+        "loan-SEED-L02-submit-raw.json",
+        "loan-SEED-L02-approve-raw.json",
+        "loan-SEED-L02-disburse-raw.json"
+      ]
+    },
+    "SEED-L03": {
+      "id": 3,
+      "caseFiles": [
+        "loan-SEED-L03-submit-raw.json",
+        "loan-SEED-L03-approve-raw.json",
+        "loan-SEED-L03-disburse-raw.json"
+      ]
+    }
+  }
+}

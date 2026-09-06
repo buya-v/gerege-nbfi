@@ -1,0 +1,10 @@
+{
+  "criteriaName": "SEED-Probe-Criteria",
+  "loanProducts": [{"id": 2}],
+  "definitions": [
+    {"categoryId":1,"minAge":0,"maxAge":29,"provisioningPercentage":1.0,"liabilityAccount":2,"expenseAccount":4},
+    {"categoryId":2,"minAge":30,"maxAge":59,"provisioningPercentage":25.0,"liabilityAccount":2,"expenseAccount":4},
+    {"categoryId":3,"minAge":60,"maxAge":89,"provisioningPercentage":50.0,"liabilityAccount":2,"expenseAccount":4},
+    {"categoryId":4,"minAge":90,"maxAge":36500,"provisioningPercentage":100.0,"liabilityAccount":2,"expenseAccount":4}
+  ]
+}
