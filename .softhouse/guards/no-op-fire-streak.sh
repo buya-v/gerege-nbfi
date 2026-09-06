@@ -200,7 +200,9 @@
 #   .softhouse/guards/no-op-fire-streak.sh [--producer local|cloud|any]
 #        [--ref REF] [--silence-hours H] [--earned-silence-hours H] [--streak N]
 #        [--lookback-days D] [--min-subst-lines N] [--now ISO8601] [--explain SHA]
-#        [--json] [--quiet]
+#        [--json] [--quiet] [--no-fetch]
+#   Every option that takes a value REFUSES (exit 2) if the value is missing;
+#   there is no flag that disables a veto, an axis or the refusal itself.
 
 set -euo pipefail
 
