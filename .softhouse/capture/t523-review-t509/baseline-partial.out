@@ -1,0 +1,5 @@
+REF   unmodified                                         CONTROL-B=PASS  findings=34
+P1    ONE of emi.go's two findings renamed away          CONTROL-B=PASS  findings=33
+P2    charge.go findings mass-renamed (pair kept)        CONTROL-B=PASS  findings=34
+P3    fresh balance write in an already-listed file      CONTROL-B=PASS  findings=35
+P4    UPDATE of a balance column into a listed file      CONTROL-B=PASS  findings=35

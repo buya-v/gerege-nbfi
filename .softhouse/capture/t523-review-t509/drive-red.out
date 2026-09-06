@@ -1,0 +1,91 @@
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /home/user/gerege-nbfi/.softhouse/toolchain
+    /home/user/gerege-nbfi/.claude/worktrees/agent-a825f2baca4417ca0/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /home/user/gerege-nbfi/.claude/worktrees/agent-a825f2baca4417ca0/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /usr/local/go/bin/go
+go-env.sh:   go version go1.24.7 linux/amd64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+==== DRIVE RED: every violation class, planted in a scratch copy of the REAL nexus/ tree ====
+
+--- PLANT 1: a balance field WRITTEN rather than derived (I-3)
+    planted at: internal/apps/ledger/planted_balance.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-FIELD-WRITE] internal/apps/ledger/planted_balance.go:10:2
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1940 funcs (15 hold-named) / 2183 assignment or inc-dec statements / 1207 write targets / 10756 string literals in 9446 concatenation groups / 12357 calls under /tmp/tmp.hhaTyoO0iz/tree.1 (recursive, whole Go tree)
+--- PLANT 2: an UPDATE against acc_gl_journal_entry (I-4)
+    planted at: internal/apps/ledger/planted_update.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I4-DML] internal/apps/ledger/planted_update.go:4:25
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10757 string literals in 9447 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.2 (recursive, whole Go tree)
+--- PLANT 3: a DELETE against acc_gl_journal_entry (I-4)
+    planted at: internal/apps/ledger/planted_delete.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I4-DML] internal/apps/ledger/planted_delete.go:4:25
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10757 string literals in 9447 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.3 (recursive, whole Go tree)
+--- PLANT 4: a hold mutating the POSTED balance rather than available (I-6)
+    planted at: internal/apps/ledger/planted_hold.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I6-HOLD-BALANCE] internal/apps/ledger/planted_hold.go:10:2
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1940 funcs (16 hold-named) / 2183 assignment or inc-dec statements / 1207 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.4 (recursive, whole Go tree)
+--- PLANT 5: a balance column populated at INSERT — the m_trial_balance shape (I-3)
+    planted at: internal/apps/ledger/planted_trialbalance.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-SQL-BALANCE] internal/apps/ledger/planted_trialbalance.go:5:25
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10757 string literals in 9447 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.5 (recursive, whole Go tree)
+--- PLANT 6: an ORM delete of a JournalEntry, with no SQL text anywhere (I-4)
+    planted at: internal/apps/ledger/planted_orm.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I4-BUILDER] internal/apps/ledger/planted_orm.go:12:9
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1942 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10756 string literals in 9446 concatenation groups / 12358 calls under /tmp/tmp.hhaTyoO0iz/tree.6 (recursive, whole Go tree)
+--- PLANT 7: SQL the guard cannot read, in a mutating driver call (blind spot -> refusal)
+    planted at: internal/apps/ledger/planted_dynamic.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [OPAQUE-SQL] internal/apps/ledger/planted_dynamic.go:11:42
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1942 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10761 string literals in 9449 concatenation groups / 12358 calls under /tmp/tmp.hhaTyoO0iz/tree.7 (recursive, whole Go tree)
+--- PLANT 8: a package-level balance store (I-3)
+    planted at: internal/apps/ledger/planted_cache.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-PKG-STATE] internal/apps/ledger/planted_cache.go:4:5
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.8 (recursive, whole Go tree)
+--- PLANT 9: a stored balance TABLE whose columns never say 'balance' (I-3)
+    planted at: internal/apps/ledger/planted_balance_table.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-SQL-BALANCE-TABLE] internal/apps/ledger/planted_balance_table.go:6:32
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10757 string literals in 9447 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.9 (recursive, whole Go tree)
+--- PLANT 10: a balance written by an ALLOCATED composite literal (I-3)
+    planted at: internal/apps/ledger/planted_composite.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-COMPOSITE-BALANCE] internal/apps/ledger/planted_composite.go:13:25
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1940 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.10 (recursive, whole Go tree)
+--- PLANT 11: a balance spelled 'outstanding' rather than 'balance' (I-3)
+    planted at: internal/apps/ledger/planted_outstanding.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [I3-FIELD-WRITE] internal/apps/ledger/planted_outstanding.go:10:2
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1940 funcs (15 hold-named) / 2183 assignment or inc-dec statements / 1207 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.11 (recursive, whole Go tree)
+--- PLANT 12: an INSERT with a spliced column list, routed through a tree-local wrapper
+    planted at: internal/apps/ledger/planted_wrapper.go (inside a scratch copy of nexus/, never in the repository)
+    -> exit 1
+    FIRED [OPAQUE-SQL] internal/apps/ledger/planted_wrapper.go:23:9
+    CENSUS ledger-invariants — inspected 246 Go files / 26 packages / 1942 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10759 string literals in 9448 concatenation groups / 12359 calls under /tmp/tmp.hhaTyoO0iz/tree.12 (recursive, whole Go tree)
+
+--- CONTROL A: the committed CLEAN FIXTURE must come out GREEN
+    -> exit 0
+    CENSUS ledger-invariants — inspected 3 Go files / 3 packages / 15 funcs (1 hold-named) / 7 assignment or inc-dec statements / 0 write targets / 7 string literals in 7 concatenation groups / 11 calls under /home/user/gerege-nbfi/.claude/worktrees/agent-a825f2baca4417ca0/.softhouse/guards/ledgerguard/testdata/cleantree (recursive, whole Go tree)
+
+--- CONTROL B: the real nexus/ tree must match its PINNED BASELINE exactly (both directions)
+    -> exit 1 (a non-zero exit here is EXPECTED: the tree has a known finding set)
+    CENSUS ledger-invariants — inspected 245 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /tmp/tmp.hhaTyoO0iz/tree.control (recursive, whole Go tree)
+    baseline MATCHED exactly: 9 (class, file) pair(s), none added, none silenced
+
+DRIVE-RED: PASS — twelve violation classes each planted in a scratch copy of the real
+DRIVE-RED:   nexus/ tree, each refused with the expected class AT ITS OWN PLANTED PATH;
+DRIVE-RED:   the committed clean fixture passed; and the real tree matched its pinned
+DRIVE-RED:   baseline exactly, with no pair added and none silenced. The guard separates
+DRIVE-RED:   the defect from its absence over the REAL population, not only over synthetic
+DRIVE-RED:   fixtures. NOTE: the tree is RED and that is a recorded decision, not neglect —
+DRIVE-RED:   read .softhouse/guards/ledger-invariants.baseline before quoting this as clean.

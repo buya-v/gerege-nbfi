@@ -1,0 +1,11 @@
+CONTROL  unmutated fixture copy            exit=0
+MUT m1-alloc-composite         exit=1    [I3-COMPOSITE-BALANCE] present/present.go:51:30 
+MUT m2-field-write             exit=1    [I3-FIELD-WRITE] present/present.go:51:2 
+MUT m3-update-journal          exit=1    [I4-DML] store/store.go:80:21 
+MUT m4-pkg-state               exit=1    [I3-PKG-STATE] ledger/derive.go:77:5 
+MUT m5-sql-balance-insert      exit=1    [I3-SQL-BALANCE-TABLE] store/store.go:80:19   [I3-SQL-BALANCE] store/store.go:80:19 
+MUT m6-spliced-sql             exit=1    [OPAQUE-SQL] store/store.go:81:9 
+MUT m7-hold-posted-balance     exit=1    [I3-FIELD-WRITE] ledger/derive.go:80:2   [I6-HOLD-BALANCE] ledger/derive.go:80:2 
+MUT m8-outstanding-field       exit=1    [I3-FIELD-WRITE] ledger/derive.go:80:2 
+MUT m9-opaque-arg              exit=1    [OPAQUE-SQL] store/store.go:81:9 
+MUT m10-GUTTED-members         exit=1  

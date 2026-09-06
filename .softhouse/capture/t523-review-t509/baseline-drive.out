@@ -1,0 +1,7 @@
+REF   unmodified tree vs committed baseline    CONTROL-B=PASS  findings=34
+D1    new pair in an unlisted file             CONTROL-B=FAIL  findings=35
+        + I3-FIELD-WRITE	internal/apps/ledger/t523_newpair.go
+D2    a baseline pair silenced by a rename     CONTROL-B=PASS  findings=34
+B1    extra finding in an ALREADY-LISTED file  CONTROL-B=PASS  findings=35
+B2    same tree vs a REGENERATED baseline      CONTROL-B=PASS  findings=35
+      regenerated baseline row count: 9 (committed: 9)

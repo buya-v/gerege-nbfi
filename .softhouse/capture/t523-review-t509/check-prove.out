@@ -1,0 +1,29 @@
+--- HEAD PROOF 1: a guard that SPEAKS a census but inspected 0 files (T194's exact defect) ---
+  -> head exit 1
+--- HEAD PROOF 2: a guard that passes and prints NO census line at all ---
+  -> head exit 1
+--- HEAD PROOF 3: a selftest that exits 0 having demonstrated nothing ---
+  -> head exit 1
+--- HEAD PROOF 4: a selftest that only ever drove GREEN, never RED ---
+  -> head exit 1
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /home/user/gerege-nbfi/.softhouse/toolchain
+    /home/user/gerege-nbfi/.claude/worktrees/agent-a825f2baca4417ca0/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /home/user/gerege-nbfi/.claude/worktrees/agent-a825f2baca4417ca0/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /usr/local/go/bin/go
+go-env.sh:   go version go1.24.7 linux/amd64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+--- HEAD PROOF 5: the REAL guard on the committed CLEAN FIXTURE must pass the head ---
+  -> head exit 0
+--- HEAD PROOF 6: the REAL nexus/ tree carries known findings, so the head must REFUSE it ---
+  -> head exit 1
+
+HEAD PROOF: PASS — the head refuses a 0-file census, a missing census, a 0-case selftest
+HEAD PROOF:   and a never-RED selftest; it ACCEPTS the real guard on a clean tree and
+HEAD PROOF:   REFUSES it on the real tree, which carries a known finding set. Falsifiable
+HEAD PROOF:   in both directions, which is what makes its verdict mean anything.
