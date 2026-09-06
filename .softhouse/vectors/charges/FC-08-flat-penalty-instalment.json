@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-08-flat-penalty-instalment",
+ "title": "Flat PENALTY per instalment: 1,200.00 MNT on each of 12 instalments.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO recurring penalty (is_penalty true, calculation_type 1 FLAT, charge_time_enum 8 INSTALMENT_FEE). Each of the 12 periods carries penaltyChargesDue 1200.00; totalPenaltyChargesCharged is 14400.00. The penalty flag does not change flat arithmetic.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-08. fee_minor 120000 is the exact major->minor scaling of the observed per-instalment penalty 1200.00.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-08-penalty-instalment-raw.json",
+  "capture_sha256": "a08d24d7042263e47453e3122221c15af64fd18bb180ee6b97a184abff2b0b73",
+  "capture_case_id": "FC-08-penalty-instalment",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 PENALTY flat per instalment",
+  "currency_code": "MNT",
+  "amount_minor": "120000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 8,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": true,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "120000"
+ },
+ "capabilities_required": [
+  "flat-fee",
+  "penalty-charge"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

@@ -60,10 +60,44 @@ const (
 	ExpectFee ExpectKind = "fee"
 )
 
+// ProvenanceKindOracleCapture is the only admissible provenance.kind for a
+// parity vector: its expected values were transcribed from an oracle capture,
+// never computed by the promotion.
+const ProvenanceKindOracleCapture = "oracle-capture"
+
 // OracleStamp records where and against what the expectation was captured.
 type OracleStamp struct {
 	Seam           string `json:"seam"`
 	FineractCommit string `json:"fineract_commit"`
+}
+
+// Provenance is where a parity vector's expected values came from: a committed
+// oracle capture artefact, named by repo-relative path and content hash, and the
+// case id within it that was transcribed. A parity vector is a TRANSCRIPTION,
+// never a computation, so provenance is mandatory: capture_ref and
+// capture_sha256 must resolve to a real committed file whose bytes hash to the
+// cited value, and capture_case_id must name the observation within it.
+type Provenance struct {
+	Kind          string `json:"kind"`
+	Note          string `json:"note"`
+	CaptureRef    string `json:"capture_ref"`
+	CaptureSHA256 string `json:"capture_sha256"`
+	CaptureCaseID string `json:"capture_case_id"`
+	Citation      string `json:"citation"`
+}
+
+// TenantParams is the tenant context a capture was taken under. The oracle's fee
+// arithmetic reads this context (rounding mode, precision and currency scale), so
+// a capture taken under a different tenant cannot be replayed meaningfully. The
+// charges captures were taken under the gerege tenant: HALF_UP (ordinal 4),
+// precision 19, currency MNT, 2 minor units, Asia/Ulaanbaatar.
+type TenantParams struct {
+	RoundingMode    string `json:"rounding_mode"`
+	RoundingOrdinal int    `json:"rounding_ordinal"`
+	Precision       int    `json:"precision"`
+	Currency        string `json:"currency"`
+	MinorUnits      int    `json:"minor_units"`
+	Timezone        string `json:"timezone"`
 }
 
 // ChargeRequest is the charge definition and base amount the implementation is
@@ -97,15 +131,17 @@ type ChargeExpect struct {
 
 // Vector is one charges golden vector.
 type Vector struct {
-	Schema  string        `json:"schema"`
-	CaseID  string        `json:"case_id"`
-	Title   string        `json:"title"`
-	Class   VectorClass   `json:"class"`
-	Context string        `json:"context"`
-	Note    string        `json:"_note"`
-	Oracle  OracleStamp   `json:"oracle"`
-	Request ChargeRequest `json:"request"`
-	Expect  ChargeExpect  `json:"expect"`
+	Schema       string        `json:"schema"`
+	CaseID       string        `json:"case_id"`
+	Title        string        `json:"title"`
+	Class        VectorClass   `json:"class"`
+	Context      string        `json:"context"`
+	Note         string        `json:"_note"`
+	Oracle       OracleStamp   `json:"oracle"`
+	Provenance   Provenance    `json:"provenance"`
+	TenantParams *TenantParams `json:"tenant_params"`
+	Request      ChargeRequest `json:"request"`
+	Expect       ChargeExpect  `json:"expect"`
 	// CapabilitiesRequired states what this vector exercises, for the
 	// capability registry's default-deny check.
 	CapabilitiesRequired []string `json:"capabilities_required"`
@@ -178,6 +214,40 @@ func FileDeclaresChargesSchema(absPath string) bool {
 		return false
 	}
 	return DeclaresChargesSchema(raw)
+}
+
+// ChargesFilePaths walks the store root and returns the store-relative paths of
+// every file that declares the charges schema, sorted. It is the charges
+// analogue of the ledger package's LedgerFilePaths: the loanschedule loader's
+// store census must be told which files belong to THIS schema so it does not
+// refuse them as "unloaded". The paths are DERIVED, not listed, so a charges
+// vector added or removed later needs no edit in the caller.
+func ChargesFilePaths(storeRoot string) ([]string, error) {
+	entries, err := os.ReadDir(storeRoot)
+	if err != nil {
+		return nil, err
+	}
+	var out []string
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		dir := filepath.Join(storeRoot, e.Name())
+		files, ferr := os.ReadDir(dir)
+		if ferr != nil {
+			return nil, ferr
+		}
+		for _, f := range files {
+			if f.IsDir() || !strings.HasSuffix(f.Name(), ".json") {
+				continue
+			}
+			if FileDeclaresChargesSchema(filepath.Join(dir, f.Name())) {
+				out = append(out, filepath.ToSlash(filepath.Join(e.Name(), f.Name())))
+			}
+		}
+	}
+	sort.Strings(out)
+	return out, nil
 }
 
 // LoadVector reads and strictly decodes one charges vector file: a raw float

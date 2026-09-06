@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "T46-CH-02-defvsreq-flat-disb",
+ "title": "The REQUEST governs, not the persisted definition: a flat charge whose m_charge.amount is 15,000.00 is charged 7,777.77 when the request supplies that amount.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "Closes the 'definition vs request' blindness: T40's 21 captures set the request amount EQUAL to the definition, so no capture distinguished them. Here they disagree and the observed feeChargesDue on the disbursement row is 7777.77 (totalFeeChargesCharged 7777.77), i.e. the REQUEST amount governs. The persisted m_charge.amount (15,000.00) is ignored.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T46 capture T46-CH-02. fee_minor 777777 is the exact major->minor scaling of the observed 7777.77. The m_charge definition (id 1, 15,000.00) is load-bearing for charge_time_enum and charge_calculation_enum only, not for the money value.",
+  "capture_ref": ".softhouse/capture/charges/out/t46/T46-CH-02-defvsreq-flat-disb-raw.json",
+  "capture_sha256": "aa2797687a4a3acfac3c9431aa3754acf65a329b5e45aabcfbfa01ea86a54235",
+  "capture_case_id": "T46-CH-02-defvsreq-flat-disb",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 flat fee at disbursement",
+  "currency_code": "MNT",
+  "amount_minor": "777777",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "777777"
+ },
+ "capabilities_required": [
+  "flat-fee",
+  "request-governs"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

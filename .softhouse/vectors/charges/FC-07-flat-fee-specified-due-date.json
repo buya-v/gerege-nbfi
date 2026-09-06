@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-07-flat-fee-specified-due-date",
+ "title": "Flat fee on a specified due date: 9,000.00 MNT charged once on period 3's due date.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO flat fee at charge_time_enum 2 (SPECIFIED_DUE_DATE). The fee (feeChargesDue 9000.00 in period 3, totalFeeChargesCharged 9000.00) is the flat amount; no arithmetic is performed.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-07. fee_minor 900000 is the exact major->minor scaling of the observed 9000.00.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-07-fee-on-p3-duedate-raw.json",
+  "capture_sha256": "dffaf0001a4f3b31d6e3ed6b418332e978daf07b384d86b9644b4779c099ed9e",
+  "capture_case_id": "FC-07-fee-on-p3-duedate",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 flat fee on specified due date",
+  "currency_code": "MNT",
+  "amount_minor": "900000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 2,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "900000"
+ },
+ "capabilities_required": [
+  "flat-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

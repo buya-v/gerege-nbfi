@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-02-flat-instalment",
+ "title": "Flat fee per instalment: 2,500.00 MNT on each of 12 instalments.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO recurring flat fee (calculation_type 1, charge_time_enum 8 INSTALMENT_FEE). Each of the 12 periods carries feeChargesDue 2500.00 and totalFeeChargesCharged is 30000.00. Transcribes one period's flat amount; the fee is the flat amount with no arithmetic.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-02. fee_minor 250000 is the exact major->minor scaling of the observed per-instalment fee 2500.00.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-02-flat-instalment-raw.json",
+  "capture_sha256": "eb121bcb048d978127c9919e3a65551364fe1d3d73fe635a4d5099ea9b7b8bbe",
+  "capture_case_id": "FC-02-flat-instalment",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 flat fee per instalment",
+  "currency_code": "MNT",
+  "amount_minor": "250000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 8,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "250000"
+ },
+ "capabilities_required": [
+  "flat-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

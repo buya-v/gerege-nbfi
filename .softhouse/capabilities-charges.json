@@ -1,0 +1,42 @@
+{
+ "schema": "gerege.charges.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "flat-fee",
+   "description": "A FLAT charge's fee/penalty is its flat amount, carried in full, with no percentage arithmetic.",
+   "in_graded_domain": true,
+   "evidence": "T40/T46 captures FC-01, FC-02, FC-06, FC-07, FC-08, T46-CH-02, T46-CH-07: feeChargesDue/penaltyChargesDue equal the requested flat amount."
+  },
+  {
+   "name": "percent-fee",
+   "description": "A PERCENT_OF_AMOUNT / PERCENT_OF_DISBURSEMENT charge's fee is PercentageOf(base, percentage) rounded HALF_UP to the currency's minor units, then capped.",
+   "in_graded_domain": true,
+   "evidence": "T40/T46 captures FC-03, FC-09, T46-CH-06: feeChargesDue equals the exact product (14814.00, 6000.00) and the HALF_UP-rounding case (460.56)."
+  },
+  {
+   "name": "penalty-charge",
+   "description": "A charge with is_penalty true is carried and its fee computed identically to a fee; the flag alone does not change arithmetic.",
+   "in_graded_domain": true,
+   "evidence": "T40/T46 captures FC-06, FC-08, T46-CH-07: penaltyChargesDue is non-zero and equals the flat amount."
+  },
+  {
+   "name": "request-governs",
+   "description": "The request supplies the money value (flat amount or percentage); the persisted m_charge.amount is ignored for money.",
+   "in_graded_domain": true,
+   "evidence": "T46 captures T46-CH-02, T46-CH-06, T46-CH-07: request and definition disagree and the OBSERVED value is always the request's."
+  }
+ ],
+ "seams": [
+  {
+   "name": "charge-evaluate",
+   "description": "POST /loans?command=calculateLoanSchedule (Path B): the running Fineract server's charge arithmetic, observed via its response rows.",
+   "status": {
+    "flat-fee": "exercised",
+    "percent-fee": "exercised",
+    "penalty-charge": "exercised",
+    "request-governs": "exercised"
+   }
+  }
+ ],
+ "note": "Charges parity-store capability registry. Each capabilities_required name on a vector must map, on the charge-evaluate seam, to status exercised, and the capability must be in the graded domain, else the vector is inadmissible (default-deny). The four graded capabilities are exactly the dimensions the T40/T46 captures observed: the flat fee amount, the percentage-of-amount fee (and its HALF_UP rounding), the penalty flag carrying the same arithmetic, and the request governing the money value over the persisted definition. Interest-based fees (percent-of-interest, percent-of-amount-plus-interest) are exercised by Fineract but NOT in the graded domain: the Go charges slice cannot compute them without the loan's interest, so no fee vector may require them."
+}

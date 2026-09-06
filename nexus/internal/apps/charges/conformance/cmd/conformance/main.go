@@ -21,11 +21,11 @@ import (
 func main() {
 	var (
 		root      = flag.String("root", "", "checkout to grade (the directory that contains nexus/). No working-directory fallback.")
-		store     = flag.String("store", "", "vector store root (default <root>/.softhouse/vectors/charges)")
-		ctxFilter = flag.String("context", "", "grade only this context directory of the vector store")
+		store     = flag.String("store", "", "vector store root (default <root>/.softhouse/vectors)")
+		ctxFilter = flag.String("context", "charges", "grade only this context directory of the vector store")
 		pinPath   = flag.String("pin", "", "store pin JSON (default <root>/.softhouse/PIN-charges.json)")
 		regPath   = flag.String("registry", "", "capability registry JSON (default <root>/.softhouse/capabilities-charges.json)")
-		implName  = flag.String("impl", "", "registered implementation to grade (default: the only one, if exactly one is registered)")
+		implName  = flag.String("impl", "", "registered implementation to grade (default: the only CORRECT one, if exactly one is registered)")
 		listImpls = flag.Bool("list-implementations", false, "print the registered implementations and exit")
 	)
 	flag.Parse()
@@ -38,7 +38,7 @@ func main() {
 
 	storeRoot := *store
 	if storeRoot == "" {
-		storeRoot = filepath.Join(repoRoot, ".softhouse", "vectors", "charges")
+		storeRoot = filepath.Join(repoRoot, ".softhouse", "vectors")
 	}
 	if *pinPath == "" {
 		*pinPath = filepath.Join(repoRoot, ".softhouse", "PIN-charges.json")
@@ -89,14 +89,15 @@ func main() {
 		opts.Implementation = impl
 		opts.ImplementationName = *implName
 	default:
-		names := conformance.RegisteredNames()
+		names := conformance.CorrectImplementationNames()
 		if len(names) == 1 {
 			impl, _ := conformance.Lookup(names[0])
 			opts.Implementation = impl
 			opts.ImplementationName = names[0]
 		}
-		// Zero registered implementations leaves Implementation nil on purpose:
-		// Run reports it as a fatal reason and the exit code is 2.
+		// Zero CORRECT registered implementations leaves Implementation nil on
+		// purpose: Run reports it as a fatal reason and the exit code is 2. A
+		// deliberately-wrong implementation must never become the default.
 	}
 
 	summary, err := conformance.Run(context.Background(), opts)

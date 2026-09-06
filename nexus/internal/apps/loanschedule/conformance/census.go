@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
@@ -89,6 +90,7 @@ var storeRootNonVectorFiles = []string{
 	"PIN.json", "capabilities.json",
 	"PIN-ledger.json", "capabilities-ledger.json",
 	"oracle-derived-columns.json",
+	"PIN-charges.json", "capabilities-charges.json",
 }
 
 // caseIDRune reports whether r may appear in a case_id.
@@ -228,6 +230,9 @@ func knownStoreContextDirs() map[string]bool {
 	for _, c := range ledgerconf.SchemaContexts() {
 		known[c] = true
 	}
+	for _, c := range chargesconf.SchemaContexts() {
+		known[c] = true
+	}
 	return known
 }
 
@@ -320,7 +325,7 @@ func StoreFileCensus(storeRoot string, loaded []*Vector, accountedErrs []LoadErr
 
 	claimed := make(map[string]string, len(loaded)+len(accountedErrs)+len(alsoClaimed))
 	for _, rel := range alsoClaimed {
-		claimed[filepath.ToSlash(rel)] = "loaded by the ledger schema's own loader"
+		claimed[filepath.ToSlash(rel)] = "loaded by another schema's own loader"
 	}
 	for _, v := range loaded {
 		claimed[filepath.ToSlash(v.Path)] = "loaded as vector " + v.CaseID

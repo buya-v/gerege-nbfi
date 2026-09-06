@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-03-pctamount-disbursement",
+ "title": "Percentage-of-amount fee at disbursement: 1.2345% of 1,200,000.00 = 14,814.00 MNT.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO percentage-of-amount fee (calculation_type 2 PERCENT_OF_AMOUNT, charge_time_enum 1 DISBURSEMENT). The base amount is the disbursed principal 1,200,000.00; the observed feeChargesDue on the disbursement row is 14814.000000 (value 14814.00). The exact product 1,200,000.00 x 1.2345% carries no fraction, so the transcription to 1,481,400 minor units is exact.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-03. fee_minor 1481400 is the exact major->minor scaling of the observed 14814.000000 (value 14814.00); base_amount_minor 120000000 is the exact scaling of the disbursed principal 1,200,000.00; percentage 1234500 is 1.2345% in micro-per-cent.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-03-pctamount-disbursement-raw.json",
+  "capture_sha256": "04c3c58545ca0c457619918352798219f651d6ae64ce993d557706f1942c2100",
+  "capture_case_id": "FC-03-pctamount-disbursement",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 percent of amount at disbursement",
+  "currency_code": "MNT",
+  "amount_minor": "0",
+  "percentage": 1234500,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 2,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": "120000000"
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "1481400"
+ },
+ "capabilities_required": [
+  "percent-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

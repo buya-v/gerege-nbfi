@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-01-flat-disbursement",
+ "title": "Flat fee at disbursement: 15,000.00 MNT charged in full on the disbursement row.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "Closes the corpus's blindness to a NON-ZERO fee: the loanschedule corpus carries only 0.00 fees/penalties, so a Go port that mishandled charges would still pass it. This vector transcribes the observed flat fee (feeChargesDue 15000 on the disbursement row, totalFeeChargesCharged 15000.00) of a FLAT charge (calculation_type 1, charge_time_enum 1). A flat charge's fee is its flat amount; no arithmetic is performed, so no base amount is required.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-01. The expect cell fee_minor 1500000 is the exact major->minor scaling of the observed 15000.00 (feeChargesDue 15000 on the disbursement row; totalFeeChargesCharged 15000.00).",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json",
+  "capture_sha256": "18bc7b0e30ed14d615989c25cbe394220f38a531c17408c5ed9f68a6921700be",
+  "capture_case_id": "FC-01-flat-disbursement",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 flat fee at disbursement",
+  "currency_code": "MNT",
+  "amount_minor": "1500000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "1500000"
+ },
+ "capabilities_required": [
+  "flat-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

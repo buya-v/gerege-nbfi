@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "T46-CH-06-defvsreq-pctamount-disb",
+ "title": "The REQUEST governs for a percentage: a percentage-of-amount charge whose m_charge.amount is 1.2345% is charged 0.5% of 1,200,000.00 = 6,000.00 when the request supplies 0.5.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "Closes the 'definition vs request' blindness for a percentage-of-amount charge. The persisted percentage (1.2345%) is ignored; the observed feeChargesDue on the disbursement row is 6000.000 (value 6000.00), i.e. 0.5% of the disbursed principal 1,200,000.00.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T46 capture T46-CH-06. fee_minor 600000 is the exact major->minor scaling of the observed 6000.000 (value 6000.00); base_amount_minor 120000000 is the exact scaling of the disbursed principal 1,200,000.00; percentage 500000 is 0.5% in micro-per-cent.",
+  "capture_ref": ".softhouse/capture/charges/out/t46/T46-CH-06-defvsreq-pctamount-disb-raw.json",
+  "capture_sha256": "f2c0d2e17b052fbdbba10438cd6df776d44ad04466d796807daea4e62e19b645",
+  "capture_case_id": "T46-CH-06-defvsreq-pctamount-disb",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 percent of amount at disbursement",
+  "currency_code": "MNT",
+  "amount_minor": "0",
+  "percentage": 500000,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 2,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": "120000000"
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "600000"
+ },
+ "capabilities_required": [
+  "percent-fee",
+  "request-governs"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

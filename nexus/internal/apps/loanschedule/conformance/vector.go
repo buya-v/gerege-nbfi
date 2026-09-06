@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 )
@@ -931,6 +932,9 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// ledgerClaimed: files the SECOND schema's loader owns. Collected here only
 	// so the file census can be told; nothing in this function grades them.
 	var ledgerClaimed []string
+	// chargesClaimed: files the THIRD schema's loader owns. Same contract as
+	// ledgerClaimed — collected only so the census can be told.
+	var chargesClaimed []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
@@ -970,6 +974,16 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 			// end it.
 			if ledgerconf.FileDeclaresLedgerSchema(abs) {
 				ledgerClaimed = append(ledgerClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// THE CHARGES ROUTE (OH-2b). A file whose top-level `schema` is the
+			// charges schema belongs to the THIRD schema, graded by its own
+			// standalone harness in nexus/internal/apps/charges/conformance. As
+			// with ledger, the probe is the weakest possible test — one field,
+			// non-strictly — and the file is still accounted for via
+			// `chargesClaimed`.
+			if chargesconf.FileDeclaresChargesSchema(abs) {
+				chargesClaimed = append(chargesClaimed, filepath.ToSlash(rel))
 				continue
 			}
 			v, err := LoadVector(abs, rel)
@@ -1036,7 +1050,7 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// the shell float guard and to this loader. It is taken over `all` and over
 	// the WHOLE tree, filter or no filter — for the same reason the duplicate
 	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
-	if err := StoreFileCensus(storeRoot, all, loadErrs, ledgerClaimed...); err != nil {
+	if err := StoreFileCensus(storeRoot, all, loadErrs, append(ledgerClaimed, chargesClaimed...)...); err != nil {
 		refusals = append(refusals, err)
 	}
 	if len(refusals) > 0 {

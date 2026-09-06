@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-09-pctamount-instalment-p2",
+ "title": "Percentage-of-amount fee per instalment, period 2: 0.5% of the 92,111.05 principal due = 460.56 MNT (HALF_UP round up from 460.55525).",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO percentage-of-amount fee at charge_time_enum 8 INSTALMENT_FEE. The base amount is the period-2 principal due 92,111.05 (principalOriginalDue in the raw capture); the observed feeChargesDue is 460.56. The exact product 460.55525 rounds HALF_UP to 460.56, so this observation exercises the rounding branch (a truncating port would answer 460.55).",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-09 period 2. fee_minor 46056 is the exact major->minor scaling of the observed 460.56; base_amount_minor 9211105 is the exact scaling of the period-2 principal due 92,111.05; percentage 500000 is 0.5% in micro-per-cent.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-09-pctamount-instalment-raw.json",
+  "capture_sha256": "090fce5d47b04d796610f8edffffa26a393155b4a125a2032932a3bd6502e0dd",
+  "capture_case_id": "FC-09-pctamount-instalment-p2",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 percent of amount per instalment",
+  "currency_code": "MNT",
+  "amount_minor": "0",
+  "percentage": 500000,
+  "applies_to": 1,
+  "time_type": 8,
+  "calculation_type": 2,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": "9211105"
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "46056"
+ },
+ "capabilities_required": [
+  "percent-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}
