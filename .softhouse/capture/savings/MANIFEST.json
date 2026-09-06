@@ -1,0 +1,47 @@
+{
+  "context": "savings",
+  "note": "savings products/accounts/deposits/interest posting. Discriminating seam is savings daily-balance interest: 1000 MNT @ 0.1825%/yr over 365-day year gives 0.005 MNT/day (half minor unit).",
+  "roundingSurface": {
+    "seam": "savings daily-balance interest accrual + posting (rounded to 2dp)",
+    "discriminatingInput": {
+      "balance": "1000.00",
+      "ratePerAnnumPct": "0.1825",
+      "interestCalculationDaysInYearType": 365,
+      "days": 1
+    },
+    "rawDailyInterest": "0.005",
+    "HALF_UP": "0.01",
+    "HALF_EVEN": "0.00",
+    "observedPosted": 0.01,
+    "interestTransactionId": 5,
+    "verdict": "HALF_UP"
+  },
+  "objects": {
+    "products": [
+      {
+        "id": 1,
+        "name": "SEED-Savings-Product",
+        "posting": "monthly"
+      },
+      {
+        "id": 3,
+        "name": "SEED-Savings-Product-Daily",
+        "posting": "daily"
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "clientId": 5,
+        "productId": 1,
+        "note": "monthly posting; deposit 1000, interest postings 0.15 (30d exact) + 0.16 (31d = 0.155 -> HALF_UP)"
+      },
+      {
+        "id": 2,
+        "clientId": 6,
+        "productId": 3,
+        "note": "daily posting; deposit 1000, single-day interest 0.005 -> 0.01 (HALF_UP)"
+      }
+    ]
+  }
+}
