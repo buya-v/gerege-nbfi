@@ -1,0 +1,28 @@
+T537 fail-closed matrix -- T536 tree at /tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt
+
+  FC0-control-clean-fixture                      PASS  (exit 0, saw "check-branch-published: CLEAN")
+  FC1-origin-unreachable                         PASS  (exit 5, saw "CANNOT ESTABLISH ORIGIN")
+  FC2-git-hangs-(checker-direct)                 PASS  (exit 3, saw "CANNOT ESTABLISH ORIGIN")
+  FC3-ls-remote-garbage-(checker-direct)         PASS  (exit 3, saw "ORIGIN LISTED NO BRANCHES")
+  FC4-ls-remote-partial-(checker-direct)         PASS  (exit 2, saw "UNBACKED-BRANCH")
+  FC5-archive-unparseable                        PASS  (exit 5, saw "UNREADABLE TASK RECORD")
+  FC6-archive-has-no-tasks-list                  PASS  (exit 5, saw "TASK RECORD HAS NO tasks LIST")
+  FC7-malformed-baseline                         PASS  (exit 5, saw "NOT a pass")
+  FC8-checker-raises-mid-run                     PASS  (exit 5, saw "NOT a pass")
+  FC9-checker-deleted                            PASS  (exit 5, saw "checker is not on disk")
+  FC10-silent-stub-over-a-dirty-record           PASS  (exit 5, saw "never printed its verdict line")
+  FC11-BANNER-stub-over-a-dirty-record           ***BREAK*** (exit 0 -- a 3-line stub printing the
+                                                 documented banner bought a PASS over a record whose
+                                                 branch was never pushed)
+      ==============================================================================
+      STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)
+      ==============================================================================
+      check-branch-published: CLEAN
+      
+      IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (0)
+      
+      READY (0)
+  FC12-current-tasks.json-unparseable            PASS  (exit 5, saw "UNREADABLE TASK RECORD")
+
+cells not behaving as required: 1
+fixtures: /tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/failclosed
