@@ -52,6 +52,14 @@
     "SEED-C13": {
       "id": 7,
       "caseFile": "client-SEED-C13-raw.json"
+    },
+    "SEED-C14": {
+      "id": 8,
+      "caseFile": "client-SEED-C14-raw.json"
+    },
+    "SEED-C15": {
+      "id": 9,
+      "caseFile": "client-SEED-C15-raw.json"
     }
   },
   "loans": {
@@ -77,6 +85,22 @@
         "loan-SEED-L03-submit-raw.json",
         "loan-SEED-L03-approve-raw.json",
         "loan-SEED-L03-disburse-raw.json"
+      ]
+    },
+    "SEED-L04": {
+      "id": 4,
+      "caseFiles": [
+        "loan-SEED-L04-submit-raw.json",
+        "loan-SEED-L04-approve-raw.json",
+        "loan-SEED-L04-disburse-raw.json"
+      ]
+    },
+    "SEED-L05": {
+      "id": 5,
+      "caseFiles": [
+        "loan-SEED-L05-submit-raw.json",
+        "loan-SEED-L05-approve-raw.json",
+        "loan-SEED-L05-disburse-raw.json"
       ]
     }
   }

@@ -6,6 +6,12 @@
    "description": "Read the m_provision_category aggregate (id, categoryName, categoryDescription) by its primary key, as returned by GET /v1/provisioningcategory.",
    "in_graded_domain": true,
    "evidence": "Capture CAT-00 under tenant gerege: the running oracle returned the four category rows (1 STANDARD, 2 SUB-STANDARD, 3 DOUBTFUL, 4 LOSS), each with a non-empty categoryDescription."
+  },
+  {
+   "name": "reserve-amount",
+   "description": "Read the aggregated reserve amount (amountreserved) and its band identity (categoryId, overdueInDays) from GET /v1/provisioningentries/{id}/entries, as produced by POST /provisioningentries.",
+   "in_graded_domain": true,
+   "evidence": "Capture ENT-04 under tenant gerege: the running oracle returned four aggregated entries (STANDARD 1066.19, SUB-STANDARD 26654.63, DOUBTFUL 74234.32, LOSS 106618.53), each with categoryId and overdueInDays."
   }
  ],
  "seams": [
@@ -15,7 +21,14 @@
    "status": {
     "category-aggregate": "exercised"
    }
+  },
+  {
+   "name": "provisioning-entry-reserve",
+   "description": "POST /provisioningentries then GET /v1/provisioningentries/{id}/entries on the running Fineract server, tenant gerege: the aggregated reserve amount and band identity per entry.",
+   "status": {
+    "reserve-amount": "exercised"
+   }
   }
  ],
- "note": "Provisioning parity-store capability registry. Each capabilities_required name on a vector must map, on the provisioning-category-read seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Exactly one capability is graded: the category aggregate read. The reserve-amount arithmetic (PercentageOf/GenerateReserveEntries), the age-band match (Matches/ReserveRate) and the overlap invariant (Overlaps/ValidateRange) are NOT in the graded domain because the gerege tenant holds zero provisioning criteria, zero loan-product mappings, zero loans and zero provisioning entries: the running oracle produced no reserve amount, matched band or overlap refusal to transcribe, and creating one would write to the tenant (forbidden)."
+ "note": "Provisioning parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the category aggregate read (provisioning-category-read seam) and the aggregated reserve amount (provisioning-entry-reserve seam). The age-band match (Matches/ReserveRate) and the overlap invariant (Overlaps/ValidateRange) are NOT in the graded domain: the running oracle produced no matched-band refusal or overlap refusal to transcribe, and producing one would write a deliberately-broken criteria to the tenant (forbidden)."
 }

@@ -110,8 +110,15 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		return r
 	}
 
-	diffs := compareExpect(v.Expect, got)
-	r.GradedCells = 3 // id, name, description are always compared
+	var diffs []string
+	switch v.Oracle.Seam {
+	case SeamProvisioningEntryReserve:
+		diffs = compareReserveExpect(v.Expect, got)
+		r.GradedCells = 3 // reserved_amount_minor, category_id, overdue_in_days
+	default:
+		diffs = compareExpect(v.Expect, got)
+		r.GradedCells = 3 // id, name, description
+	}
 	r.Diffs = diffs
 
 	invs := AssertInvariants(v, got)
@@ -142,6 +149,24 @@ func compareExpect(want Expect, got Expect) []string {
 	}
 	if want.Description != got.Description {
 		diffs = append(diffs, fmt.Sprintf("description: want %q, got %q", want.Description, got.Description))
+	}
+	return diffs
+}
+
+// compareReserveExpect compares an expected aggregated reserve entry against the
+// evaluated one. reserved_amount_minor is the reserve-amount money cell;
+// category_id and overdue_in_days are the identity cells that pin which band the
+// amount belongs to.
+func compareReserveExpect(want Expect, got Expect) []string {
+	var diffs []string
+	if want.ReservedAmountMinor != got.ReservedAmountMinor {
+		diffs = append(diffs, fmt.Sprintf("reserved_amount_minor: want %q, got %q", want.ReservedAmountMinor, got.ReservedAmountMinor))
+	}
+	if want.CategoryID != got.CategoryID {
+		diffs = append(diffs, fmt.Sprintf("category_id: want %d, got %d", want.CategoryID, got.CategoryID))
+	}
+	if want.OverdueInDays != got.OverdueInDays {
+		diffs = append(diffs, fmt.Sprintf("overdue_in_days: want %d, got %d", want.OverdueInDays, got.OverdueInDays))
 	}
 	return diffs
 }

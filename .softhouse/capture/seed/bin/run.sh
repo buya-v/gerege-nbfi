@@ -13,6 +13,8 @@ BIN="$(cd "$(dirname "$0")" && pwd)"
 "$BIN/step03-provisioningcriteria.sh"
 "$BIN/step04-clients.sh"
 "$BIN/step06-loans.sh"
+"$BIN/step07-loss-loan.sh"
+"$BIN/step08-rounding-loan.sh"
 
 echo "=== run.sh complete ==="
 cat "$BIN/../out/state.json"
