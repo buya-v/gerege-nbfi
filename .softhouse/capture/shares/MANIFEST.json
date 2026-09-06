@@ -1,0 +1,64 @@
+{
+  "context": "shares",
+  "note": "share products, share accounts (purchase/approve/activate), and share-product dividend. Purchase total = requestedShares * unitPrice is integer*integer minor units => NO rounding surface. Discriminating seam is the dividend dividendAmount field rounded to 2 minor units at create: 0.005 MNT -> HALF_UP 0.01 / HALF_EVEN 0.00.",
+  "roundingSurface": {
+    "seam": "share-product dividend dividendAmount (money, rounded to 2dp at create)",
+    "discriminatingInput": {
+      "dividendAmount": "0.005",
+      "dividendPeriodStartDate": "2026-09-01",
+      "dividendPeriodEndDate": "2026-09-30"
+    },
+    "rawAmount": "0.005",
+    "HALF_UP": "0.01",
+    "HALF_EVEN": "0.00",
+    "observedReadBackAmount": 0.01,
+    "dividendId": 3,
+    "verdict": "HALF_UP"
+  },
+  "objects": {
+    "products": [
+      {
+        "id": 3,
+        "name": "SEED-Share-Product",
+        "shortName": "SSP",
+        "unitPrice": 100,
+        "totalShares": 1000
+      }
+    ],
+    "accounts": [
+      {
+        "id": 3,
+        "externalId": "SEED-SHARE-ACCT",
+        "clientId": 6,
+        "savingsAccountId": 2,
+        "requestedShares": 100,
+        "note": "purchase total 100*100 = 10000.00 exact (no rounding seam)"
+      }
+    ],
+    "dividends": [
+      {
+        "id": 3,
+        "productData": {
+          "id": 3,
+          "name": "SEED-Share-Product"
+        },
+        "amount": 0.01,
+        "status": {
+          "id": 100,
+          "code": "shareAccountDividendStatusType.initiated",
+          "value": "Dividend Initiated"
+        },
+        "dividendPeriodStartDate": [
+          2026,
+          9,
+          1
+        ],
+        "dividendPeriodEndDate": [
+          2026,
+          9,
+          30
+        ]
+      }
+    ]
+  }
+}
