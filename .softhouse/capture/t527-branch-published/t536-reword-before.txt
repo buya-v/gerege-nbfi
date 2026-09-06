@@ -1,0 +1,4 @@
+T527 SHIPPED TOOL, as written : 21 finding(s); UNBACKED-BRANCH T509 present: True
+T527 SHIPPED TOOL, one word   : 20 finding(s); UNBACKED-BRANCH T509 present: False
+substitutions applied: 1
+silenced by the reword: [('UNBACKED-BRANCH', 'T509', 'softhouse/T509-ledgerguard-blindspot')]
