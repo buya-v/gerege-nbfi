@@ -1,0 +1,1 @@
+{"tellerId":1,"tellerName":"SMOKE-Teller","officeId":1,"officeName":"Head Office","cashiers":[{"id":1,"tellerId":1,"staffId":1,"description":"smoke cashier","startDate":"2026-09-01","endDate":"2026-09-30","isFullDay":true,"startTime":" ","endTime":" ","tellerName":"SMOKE-Teller","staffName":"Probe, SMOKE"}]}

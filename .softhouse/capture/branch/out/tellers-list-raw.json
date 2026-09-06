@@ -1,0 +1,1 @@
+[{"id":2,"officeId":1,"debitAccountId":0,"creditAccountId":0,"name":"SEED-Teller-01","description":"SEED teller","startDate":"2026-09-01","endDate":"2026-09-30","status":"ACTIVE","officeName":"Head Office"},{"id":1,"officeId":1,"debitAccountId":0,"creditAccountId":0,"name":"SMOKE-Teller","description":"smoke","startDate":"2026-09-01","status":"ACTIVE","officeName":"Head Office"}]
