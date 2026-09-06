@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/gerege/nexus/internal/apps/charges"
-	loanscheduleconf "github.com/gerege/nexus/internal/apps/loanschedule/conformance"
 )
 
 // Outcome is the verdict of grading one vector.
@@ -185,7 +184,7 @@ type Summary struct {
 	VectorsLoaded       int
 	FatalReasons        []string
 	LoadErrors          []LoadError
-	NoFloatCensus       loanscheduleconf.FloatingPointCensus
+	NoFloatCensus       FloatingPointCensus
 }
 
 // ExitCode maps the run to a process exit code.
@@ -281,7 +280,7 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	s := &Summary{SelfTestMode: opts.SelfTestMode}
 
 	// The no-float census runs FIRST and on EVERY run, with or without vectors.
-	census, err := loanscheduleconf.ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, GuardedGoTreeRel))
+	census, err := ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, GuardedGoTreeRel))
 	if err != nil {
 		s.FatalReasons = append(s.FatalReasons, fmt.Sprintf("no-float census: %v", err))
 	} else {

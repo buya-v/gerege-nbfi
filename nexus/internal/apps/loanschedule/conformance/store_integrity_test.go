@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
@@ -491,7 +492,15 @@ func TestStoreFileCensus(t *testing.T) {
 		if lerr != nil {
 			t.Fatalf("the ledger half of the committed store could not be enumerated: %v", lerr)
 		}
-		if err := StoreFileCensus(pristine, vectors, nil, ledgerPaths...); err != nil {
+		// OH-2b: the committed store now also carries a THIRD SCHEMA's vectors,
+		// whose loader lives in nexus/internal/apps/charges/conformance. The same
+		// hand-over contract as ledger: derived, not listed, and asserted
+		// non-empty so a deflated hand-over cannot read as a pass.
+		chargesPaths, cerr := chargesconf.ChargesFilePaths(pristine)
+		if cerr != nil {
+			t.Fatalf("the charges half of the committed store could not be enumerated: %v", cerr)
+		}
+		if err := StoreFileCensus(pristine, vectors, nil, append(ledgerPaths, chargesPaths...)...); err != nil {
 			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
 		}
 		// ANTI-VACUITY ON THE HAND-OVER ITSELF. If LedgerFilePaths ever returned
@@ -504,8 +513,13 @@ func TestStoreFileCensus(t *testing.T) {
 				"corpus has been deleted, or the schema probe has stopped recognising it; both make the " +
 				"census call above pass for the wrong reason")
 		}
-		t.Logf("the census accounts for every .json under %s across %d loaded vectors and %d handed to "+
-			"the ledger schema", pristine, len(vectors), len(ledgerPaths))
+		if len(chargesPaths) == 0 {
+			t.Fatal("ChargesFilePaths found NO charges vector in the committed store. Either the charges " +
+				"corpus has been deleted, or the schema probe has stopped recognising it; both make the " +
+				"census call above pass for the wrong reason")
+		}
+		t.Logf("the census accounts for every .json under %s across %d loaded vectors, %d handed to "+
+			"the ledger schema and %d handed to the charges schema", pristine, len(vectors), len(ledgerPaths), len(chargesPaths))
 	})
 
 	// A refusal, its required words, and the fixture that produces it.

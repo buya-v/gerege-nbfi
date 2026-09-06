@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "FC-06-flat-penalty-specified-due-date",
+ "title": "Flat PENALTY on a specified due date: 7,500.00 MNT charged once on period 3's due date.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO penalty (is_penalty true, calculation_type 1 FLAT, charge_time_enum 2). Closes the corpus's blindness to a non-zero PENALTY. penaltyChargesDue is 7500.00 in period 3 and totalPenaltyChargesCharged is 7500.00; the penalty flag alone does not change flat arithmetic.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the T40 capture FC-06. fee_minor 750000 is the exact major->minor scaling of the observed penalty 7500.00.",
+  "capture_ref": ".softhouse/capture/charges/out/fc/FC-06-penalty-inside-p3-raw.json",
+  "capture_sha256": "000f9f6bc6b73382d44a01dcfa7815a2e7743d8dddd9d28205cf871cd30c745b",
+  "capture_case_id": "FC-06-penalty-inside-p3",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T40 PENALTY flat on specified due date",
+  "currency_code": "MNT",
+  "amount_minor": "750000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 2,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": true,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "750000"
+ },
+ "capabilities_required": [
+  "flat-fee",
+  "penalty-charge"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

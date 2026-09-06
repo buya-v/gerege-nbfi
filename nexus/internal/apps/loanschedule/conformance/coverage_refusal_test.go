@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
@@ -736,6 +737,13 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 		// loanschedule report can credit and the test would fail for a reason
 		// unrelated to what it measures.
 		if ledgerconf.DeclaresLedgerSchema(raw) {
+			return nil
+		}
+		// OH-2b: a CHARGES-schema vector is likewise not this schema's vector,
+		// for the same reason. The charges schema carries its own grading
+		// machinery and no `corroborated_by` concept here; injecting into one
+		// would inflate `count` above what the loanschedule report can credit.
+		if chargesconf.DeclaresChargesSchema(raw) {
 			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))

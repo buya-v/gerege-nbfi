@@ -52,6 +52,21 @@ func percentFeeProbe() *Vector {
 		Context: ChargesContext,
 		Note:    "probe: meaningless numbers, not an observation",
 		Oracle:  OracleStamp{Seam: SeamChargeEvaluate, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: meaningless numbers, not an observation",
+			CaptureRef:    ".softhouse/capture/charges/out/fc/FC-00-probe.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "probe-percent-fee",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
 		Request: ChargeRequest{
 			Name:            "probe",
 			CurrencyCode:    "MNT",

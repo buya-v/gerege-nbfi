@@ -27,12 +27,14 @@ const PinFileName = "PIN-charges.json"
 const PinSchemaV1 = "gerege.charges.pin/v1"
 
 // Pin is the charges corpus's store-level comparability pin. It pins the
-// Fineract commit a vector's oracle observation was taken from; there is no
-// contract digest because the charges slice freezes no contract file.
+// Fineract commit a vector's oracle observation was taken from and the tenant
+// context the capture was taken under; there is no contract digest because the
+// charges slice freezes no contract file.
 type Pin struct {
-	Schema         string `json:"schema"`
-	Note           string `json:"_note"`
-	FineractCommit string `json:"fineract_commit"`
+	Schema         string       `json:"schema"`
+	Note           string       `json:"_note"`
+	FineractCommit string       `json:"fineract_commit"`
+	TenantParams   TenantParams `json:"tenant_params"`
 }
 
 // LoadPin reads the charges pin.
@@ -56,6 +58,9 @@ func LoadPin(path string) (*Pin, error) {
 	}
 	if p.FineractCommit == "" {
 		return nil, fmt.Errorf("charges pin %s: fineract_commit is empty", path)
+	}
+	if p.TenantParams == (TenantParams{}) {
+		return nil, fmt.Errorf("charges pin %s: tenant_params is empty", path)
 	}
 	return &p, nil
 }

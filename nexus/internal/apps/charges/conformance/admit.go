@@ -1,7 +1,11 @@
 package conformance
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
 
 	"github.com/gerege/nexus/internal/apps/charges"
@@ -41,6 +45,58 @@ func Admit(v *Vector, opts Options) []string {
 	} else if opts.Pin != nil && v.Oracle.FineractCommit != opts.Pin.FineractCommit {
 		problems = append(problems, fmt.Sprintf(
 			"oracle.fineract_commit %q does not match the pinned commit %q", v.Oracle.FineractCommit, opts.Pin.FineractCommit))
+	}
+
+	// Provenance: a parity vector is a transcription of a committed capture. The
+	// kind is the only admissible one, and the capture must resolve to a real
+	// committed file whose content hash matches the cited value.
+	if v.Provenance.Kind != ProvenanceKindOracleCapture {
+		problems = append(problems, fmt.Sprintf(
+			"provenance.kind %q: only %q vectors may be graded by this harness",
+			v.Provenance.Kind, ProvenanceKindOracleCapture))
+	}
+	if v.Provenance.CaptureRef == "" {
+		problems = append(problems, "provenance.capture_ref is empty: a parity vector must cite the committed capture artefact it was transcribed from")
+	} else if opts.RepoRoot != "" {
+		abs := filepath.Join(opts.RepoRoot, v.Provenance.CaptureRef)
+		info, err := os.Stat(abs)
+		switch {
+		case err != nil:
+			problems = append(problems, fmt.Sprintf(
+				"provenance.capture_ref %q does not resolve to a file in this repository: %v",
+				v.Provenance.CaptureRef, err))
+		case info.IsDir():
+			problems = append(problems, fmt.Sprintf(
+				"provenance.capture_ref %q is a directory, not a capture artefact", v.Provenance.CaptureRef))
+		case v.Provenance.CaptureSHA256 != "":
+			raw, rerr := os.ReadFile(abs)
+			if rerr != nil {
+				problems = append(problems, fmt.Sprintf(
+					"provenance.capture_ref %q unreadable: %v", v.Provenance.CaptureRef, rerr))
+			} else {
+				sum := sha256.Sum256(raw)
+				if got := hex.EncodeToString(sum[:]); got != v.Provenance.CaptureSHA256 {
+					problems = append(problems, fmt.Sprintf(
+						"provenance.capture_sha256 %s does not match the referenced capture (%s)",
+						v.Provenance.CaptureSHA256, got))
+				}
+			}
+		}
+	}
+	if v.Provenance.CaptureSHA256 == "" {
+		problems = append(problems, "provenance.capture_sha256 is empty: a parity vector must carry the content hash of its capture artefact")
+	}
+	if v.Provenance.CaptureCaseID == "" {
+		problems = append(problems, "provenance.capture_case_id is empty: a parity vector must identify the observation within its capture artefact")
+	}
+
+	// Tenant context: the oracle's fee arithmetic reads the tenant context, so a
+	// capture taken under a different tenant is not a parity observation.
+	if v.TenantParams == nil {
+		problems = append(problems, "tenant_params is missing: every parity vector must record the tenant context it was captured under")
+	} else if opts.Pin != nil && *v.TenantParams != opts.Pin.TenantParams {
+		problems = append(problems, fmt.Sprintf(
+			"tenant_params %+v does not match the pinned tenant %+v", *v.TenantParams, opts.Pin.TenantParams))
 	}
 
 	_, appliesToOK := charges.ChargeAppliesToFromStoredValue(v.Request.AppliesTo)
