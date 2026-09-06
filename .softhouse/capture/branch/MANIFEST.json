@@ -1,0 +1,64 @@
+{
+  "context": "branch",
+  "note": "tellers/cashiers/staff pre-existed (SMOKE probe + SEED rig); this context reuses them and adds allocate/settle with currencyCode so read-backs are non-empty.",
+  "roundingSurface": "none \u2014 allocate/settle are direct cash movements (integer minor-unit addition); txn_amount is numeric(19,6) and a 3dp probe stores exactly, so no HALF_UP/HALF_EVEN tie exists here.",
+  "objects": {
+    "staff": [
+      {
+        "id": 1,
+        "name": "SMOKE Probe",
+        "note": "stray probe, reused"
+      },
+      {
+        "id": 2,
+        "name": "SEED-Cashier Staff",
+        "note": "reused"
+      }
+    ],
+    "tellers": [
+      {
+        "id": 1,
+        "name": "SMOKE-Teller",
+        "note": "stray probe, reused"
+      },
+      {
+        "id": 2,
+        "name": "SEED-Teller-01",
+        "note": "reused"
+      }
+    ],
+    "cashiers": [
+      {
+        "id": 1,
+        "tellerId": 1,
+        "note": "reused"
+      },
+      {
+        "id": 2,
+        "tellerId": 2,
+        "note": "reused"
+      }
+    ],
+    "transactions": {
+      "allocate": {
+        "id": 7,
+        "amount": "100000.50",
+        "tellerId": 2,
+        "cashierId": 2
+      },
+      "settle": {
+        "id": 8,
+        "amount": "40000.25",
+        "tellerId": 2,
+        "cashierId": 2
+      },
+      "settle-3dp-probe": {
+        "id": 9,
+        "amount": "40000.245",
+        "tellerId": 2,
+        "cashierId": 2,
+        "note": "probe: 3dp amount stored exactly as 40000.245000 -> no input rounding"
+      }
+    }
+  }
+}
