@@ -170,3 +170,28 @@ as fresh landing claims. Nothing here is an assertion that any of it landed.
 
 > local fire 20260829-080002 iter6: DISPATCHED at 2026-08-29T10:39:20Z as the T466 repair pass under T473's three MAJORs. T466 held UNMERGED deliberately -- the driver does not merge a change that opens a new forgery route while closing three. Branched from softhouse-T466-skipwt-smudge. || local fire 20260829-080002 iter6: DONE on softhouse-T477-t473-repair (6 commits on top of T466 11afb281, tip a6bf50a3). M-2 RE-DERIVED AND FOUND WORSE THAN T473 COULD SHOW: T473 shim was GLOBAL so its bar died a
 
+
+---
+
+## POSTSCRIPT — the class-B defect caught the driver a THIRD time, at the exit gate
+
+After the fire had written its final `RESUME.md`, released its lock and pushed, the closing
+`ready-tasks.py` came back **exit 5, 2 claims**. Both were **T523's own stale note** — the text
+written when it was *parked*, which said *"this review's subject is T509 at commit `857dd4d8` on
+branch `softhouse/T509-ledgerguard-blindspot`"*. The task was `done` and merged; the sentence was
+history; the guard scored it as a fresh landing claim.
+
+That is three times in one fire, in the driver's own record:
+
+1. the first reconciliation pass (8 → 3, all three residuals refutations),
+2. the 13 post-T536 refusals (6 of 13 class B),
+3. this one — **a note nobody had reason to re-read, on a task whose status had already changed.**
+
+The third is the most instructive, because it is the one no amount of care at writing time would
+have caught: the sentence was *true and appropriate* when written, and became a false-positive
+purely because the task's status moved on around it. Any repair that depends on authors phrasing
+notes carefully is therefore already known to be insufficient — which is the argument for T556's
+condition 1 (**proof from structured evidence, never prose**) in its strongest form.
+
+Fixed by rewriting T523's note to record its outcome and pointing the stale subject reference here.
+`ready-tasks.py` then exits **0**, `check-branch-published: CLEAN`.
