@@ -1,0 +1,4 @@
+A-param-named-sql-reassigned               exit=0  
+B-param-named-raw-reassigned               exit=1    [OPAQUE-SQL] probe/probe.go:19:9 
+C-newlocal-named-sql                       exit=1    [OPAQUE-SQL] probe/probe.go:19:9 
+D-inline-splice-control                    exit=1    [OPAQUE-SQL] probe/probe.go:19:9 

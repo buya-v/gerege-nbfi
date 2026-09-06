@@ -1,0 +1,7 @@
+P1-select-prefix-splice                  exit=0  
+P2-select-semicolon-splice               exit=0  
+P3-select-comment-splice                 exit=0  
+P4-select-calls-function                 exit=0  
+P5-CONTROL-update-prefix                 exit=1    [OPAQUE-SQL] probe/probe.go:18:9 
+P6-CONTROL-insert-prefix                 exit=1    [OPAQUE-SQL] probe/probe.go:18:9 
+P7-CONTROL-bare-splice                   exit=1    [OPAQUE-SQL] probe/probe.go:18:9 

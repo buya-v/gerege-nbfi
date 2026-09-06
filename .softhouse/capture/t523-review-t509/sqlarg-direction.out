@@ -1,0 +1,8 @@
+S1-nonliteral-arg                  want=REFUSE  exit=1  as-expected   [I4-DML] probe/probe.go:10:30   [OPAQUE-SQL] probe/probe.go:12:53 
+S2-var-arg                         want=REFUSE  exit=1  as-expected   [OPAQUE-SQL] probe/probe.go:15:47 
+S3-too-few-args                    want=REFUSE  exit=1  as-expected   [OPAQUE-SQL] probe/probe.go:12:56 
+S4-field-holds-stmt                want=REFUSE  exit=1  as-expected   [OPAQUE-SQL] probe/probe.go:16:43 
+S5-ctxnamed-field-holds-sql        want=REFUSE  exit=1  as-expected   [OPAQUE-SQL] probe/probe.go:17:43 
+S6-wrapper-param-reassigned        want=REFUSE  exit=0  UNEXPECTED 
+S7-select-prefix-splice            want=REFUSE  exit=0  UNEXPECTED 
+S8-CONTROL-readable-literal        want=PASS    exit=0  as-expected 

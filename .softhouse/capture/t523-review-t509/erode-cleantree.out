@@ -1,0 +1,5 @@
+ERODE e1-drop-byvalue-composite          exit=0   inspected 3 Go files / 3 packages / 13 funcs
+ERODE e2-drop-outstanding-green          exit=0   inspected 3 Go files / 3 packages / 14 funcs
+ERODE e3-drop-balance-read-select        exit=0   inspected 3 Go files / 3 packages / 14 funcs
+ERODE e4-drop-journal-insert             exit=0   inspected 3 Go files / 3 packages / 13 funcs
+ERODE e5-drop-hold-green                 exit=0   inspected 3 Go files / 3 packages / 14 funcs

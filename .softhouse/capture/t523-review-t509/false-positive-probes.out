@@ -1,0 +1,7 @@
+FP FP1-readonly-decode                want=CLEAN  exit=1    [I3-FIELD-WRITE] 
+FP FP2-boolean-hasoutstanding         want=CLEAN  exit=1    [I3-FIELD-WRITE] 
+FP FP3-outstanding-request-count      want=CLEAN  exit=1    [I3-FIELD-WRITE] 
+FP FP4-zero-init-constructor          want=CLEAN  exit=1    [I3-COMPOSITE-BALANCE] 
+FP FP5-copy-constructor               want=CLEAN  exit=1    [I3-COMPOSITE-BALANCE] 
+FP FP6-strategy-enum                  want=CLEAN  exit=1    [I3-FIELD-WRITE] 
+   TP1-CONTROL-stored-balance         want=REFUSE exit=1    [I3-SQL-BALANCE] 
