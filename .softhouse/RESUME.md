@@ -1,99 +1,109 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `cloud-20260905-1200` (cloud, 20:00 Asia/Ulaanbaatar, oracle UNREACHABLE) — **IN FLIGHT. TWO LIVE WORKERS.**
+## FIRE `cloud-20260906-2000` (cloud, 20:00 Asia/Ulaanbaatar, reference oracle UNREACHABLE) — **IN FLIGHT. TWO LIVE WORKERS.**
 
 Written and pushed **BEFORE the first `git worktree add`**, per STEP 0's push-before-spawn obligation.
-If you are reading this on a fresh session, treat **T536** and **T539** as `needs_retry` with
+If you are reading this on a fresh session, treat **T523** and **T537** as `needs_retry` with
 unverified completeness and look for their branches on origin before assuming nothing was done.
 
-Lock taken from the previous **cloud** fire `cloud-20260904-1200` under **arm 5** — both signals
-stale: `origin/main`'s tip was 22.55 h old and `started_at` 23.60 h old. **Arm 3 did not fire**
-(23.60 h is under the 24 h ceiling), so this takeover rests on arm 5 alone. Arm 4 did not read HELD.
-The lock was never released because that fire ended without deleting it — an exit-protocol miss, not
-a live holder.
+Lock taken under **arm 0** — no `LOCK` file existed at fire start. The local fire `20260906-200001`
+took its lock at `eb3f6f6d`, ran a full iteration (OH-CORE merged) and **released it cleanly** at
+`5d82ce6d`, 20:04:41 +0800. No takeover, no contested signal, nothing stale. First uncontested lock
+acquisition in some days, and it is worth noting because the last three fires all had to reason about
+a lock somebody else abandoned.
 
 ---
 
-## THE HEADLINE IS UNCHANGED, AND THAT IS ITSELF THE NEWS
+## THE HEADLINE: THE RECORD IS BACKED BY origin FOR THE FIRST TIME IN FOUR FIRES
 
-Five completed money-core commits still exist on exactly one laptop, and `main` still says they are
-done. **Nothing has moved in the 24 h since the last fire measured it**, and the local Mac fire —
-the only one that can reach the reference oracle — **has not published since 2026-09-03**. Two days.
+`ready-tasks.py` now prints **`check-branch-published: CLEAN`** and the STEP 0 refusal is gone.
+It had exited **5** on every fire since 2026-09-02, at one point naming **21** unbacked claims, and
+every one of those fires read the refusal the same way: *five money-core commits are stranded on
+Buyan's laptop and only Buyan can push them.*
 
-Re-measured in this clone this fire, not inherited:
+**That reading was half wrong, and the wrong half was the load-bearing half.** Measured in this
+clone at `origin/main = 3644eab3`, not inherited from the manifest:
 
-```
-git rev-parse --verify -q <sha>^{commit}   # 857dd4d8 1abd3a11 84dc208e 5c4233fc 8ff5ff15 -> all ABSENT
-python3 .softhouse/bin/ready-tasks.py      # exit 5, STEP 0 REFUSE, 21 unbacked claims
-```
+| Task | Claimed sha | Reality on origin |
+|---|---|---|
+| **T509** — the critical path | `857dd4d8` **dead** | **PUBLISHED as `23966a65`**, ancestor of `origin/main` |
+| **T508** | `1abd3a11` **dead** | handoff tracked on `origin/main` |
+| **T515** | `84dc208e` **dead** | handoff tracked on `origin/main` |
+| **T510** | `5c4233fc` | **PUBLISHED**, ancestor of `origin/main`; handoff tracked |
+| **T512** | `8ff5ff15` **dead** | **NOTHING. GENUINELY UNRECOVERED.** |
 
-| Task | Recorded on main | Claimed commit | Reality on origin |
-|---|---|---|---|
-| **T509** | `done` — **THE CRITICAL PATH** | `857dd4d8` | **absent** |
-| **T508** | `done` | `1abd3a11` | **absent** |
-| **T515** | `done` | `84dc208e` | **absent** |
-| T510 | `needs_retry` | `5c4233fc` | **absent** |
-| T512 | `needs_conditions` | `8ff5ff15` | **absent** |
+**Four of the five were republished under new hashes.** The Mac re-created the work as fresh commits
+instead of pushing the original branches, so the shas and branch pointers died in the rewrite while
+the substance travelled. `git rev-parse` cannot tell that apart from work that never existed — the
+same blindness `check-branch-published.py` exists for, arriving from the opposite direction.
 
-**Only Buyan can fix this**, from the Mac: `git push origin --all`. Until then the bar stays RED
-(`conformance.sh` exits 2 with **no probe line** — a HARD guard failure, **not** an oracle outage),
-three independent reviews (T520/T522/T523) stay parked as `branch_unpushed`, and T509 — the guard
-repair on the critical path — cannot be reviewed by anyone.
+Substance verified rather than assumed, for T509: `balanceSynonymRe` is at
+`origin/main:.softhouse/guards/ledgerguard/main.go:199` and is wired into the predicate at `:341`.
 
-**T527's guard now makes this refuse loudly instead of passing silently.** `ready-tasks.py` exits 5
-at STEP 0 naming all 21 unbacked claims. That is the guard working as designed; it is not a new fault.
+**So the standing ask on Buyan — `git push origin --all` from the Mac — is CLOSED for four of five,
+and it was already closed two days ago; the manifest just kept saying otherwise.** Full measurement:
+`.softhouse/observations/2026-09-06-republished-under-new-hash.md`.
+
+### The one real loss
+
+**T512's deliverable does not exist** — `.softhouse/bin/scope-check.sh` and `scope-check-demo.sh`
+were never added on any ref (`git log --all --diff-filter=A -- '*scope-check*'` over all **3070**
+reachable commits: empty). Reclassified `needs_conditions` → **`needs_retry`**. A redo must
+re-derive the instrument from **P-41**, not from T512's description of it.
+
+**Still live because of it:** the two-dot `git diff main..<branch>` scope form that P-41 recorded as
+WRONG is *still prescribed* by `softhouse/SKILL.md` STEP 5, since its replacement never landed.
 
 ---
 
-## Dispatched this fire (both `executor: agent`, `isolation: worktree`, offline-safe)
+## Dispatched this fire (both `executor: agent`, `isolation: worktree`, `opus`, offline-safe)
 
-| Task | Branch | Model | What it must land |
-|---|---|---|---|
-| **T536** | `softhouse/T536-t528-conditions` | opus | T528's five conditions on T527's branch-published guard. **RE-DISPATCH** — the first attempt died with the previous fire's session having created nothing (every signal measured empty; the unstarted world, not an unpushed one). The point is F-1: `LANDING` is the DEFAULT anchor classification, so one reworded word launders a genuinely missing branch into the waivers. Invert the default if it can be done without losing the 66 legitimate waivers. |
-| **T539** | `softhouse/T539-t538-conditions` | opus | T538's five conditions on T534. Contiguity is **not** an invariant — restate it as insertion-path-only while keeping the conclusion, and *support* it with the 18-site enumeration re-derived rather than re-asserted. Fix the axis-2 sentence, which currently names a GREEN case. Comments only. |
+Both are INDEPENDENT reviews that had been unrunnable, and both became runnable **only because of
+this fire's reconciliation** — neither needs the reference oracle.
 
-Paired independent reviewers **T537** (reviews T536, pre-existing) and **T540** (reviews T539, filed
-this fire) dispatch after their subjects land.
+| Task | Branch | What it must land |
+|---|---|---|
+| **T523** | `softhouse/T523-review-t509` | **UNPARKED.** Independent review of T509 — the money non-negotiable guard that went 10 findings → 42, on the program critical path, and has never been reviewed. Parked as `branch_unpushed` for two fires on the belief the diff was unreadable; it is readable at **`23966a65`** on `origin/main`. Central risk is **false positives dressed as rigour**. Note a live discrepancy for it to settle: the driver recorded *Findings: 42* at the dead sha, and this fire's run of `check-ledger-invariants.sh` on current main shows a SQL-surface census line reading *Findings: 34*. |
+| **T537** | `softhouse/T537-review-t536` | **RE-DISPATCH** (attempt 2). Independent review of T536 — did the anchor repair close a CLASS or a longer list of phrasings? The previous attempt's worker was killed mid-flight by fire `20260906-200001` and produced nothing recoverable. The subject is readable: `softhouse/T536-t528-conditions` resolves on origin at `18c64389`. |
 
-**SCOPE GUARD, load-bearing again this fire:** no worker may touch `conformance.sh`,
-`.softhouse/guards/ledgerguard/`, or `nexus/internal/apps/savings/`. All three are edited by the five
-unpushed commits. A conflict against work that exists but cannot be read here is worse than the work
-not being done.
+**SCOPE GUARD:** neither worker may write outside its own `files_hint`
+(`.softhouse/reviews/t523-review-t509/`, `.softhouse/reviews/t537-review-t536/`, plus its handoff).
+Neither may edit `conformance.sh`, `nexus/**`, or the guards they are grading.
 
-**Fineract checkout pinned** to the commit of record `426a23544` this fire (it had drifted to
-`74099701`). `InterestPeriod.java` measures **237 lines** there, matching T532's brief — so the
-citation findings in this chain are graded against the right tree.
+## Filed this fire
+
+- **T554** — `check-branch-published.py` **cannot tell an assertion from a documented refutation**.
+  Hit by the driver while doing the reconciliation above: the first pass drove unbacked claims 8 → 3
+  and **all three residuals were sentences correctly recording that a sha is dead**. That makes one
+  of the two legitimate exit-5 repairs (*correct the note to say the work is UNRECOVERED*)
+  unperformable in the record the guard reads, leaving only laundering or draining the record.
+  Depends on T537. Explicitly **not** to be repaired with a negation word list — that is B-11/P-104
+  one level up.
 
 ## Parked / not run this fire
 
 | Task | Reason | Unparks when |
 |---|---|---|
 | T533 (FindInterestPeriod divergence vectors) | `oracle_unreachable` | next local fire |
-| T535 (Lombok value vs Go pointer equality) | `oracle_unreachable` for (b)/(c); (a) is source-only and runnable | next local fire, or a later cloud fire for (a) |
-| T532 (InterestPeriod citation sweep) | `serialised` — same `files_hint` as T539 | T539 merges |
-| T520 (review T508) | `branch_unpushed` | `softhouse/T508-…` resolves on origin |
-| T522 (review T515) | `branch_unpushed` | `softhouse/T515-…` resolves on origin |
-| T523 (review T509) | `branch_unpushed` | `softhouse/T509-…` resolves on origin |
+| T535 (Lombok value vs Go pointer equality) | `oracle_unreachable` for (b)/(c); (a) is source-only | next local fire, or a later cloud fire for (a) |
 | T521 (restore `gerege` tenant) | `oracle_unreachable` | next local fire |
+| T546 (skill files do not document exit 5) | `dependency` — needs T537 | T537 lands |
 
-`branch_unpushed` is deliberately **not** `oracle_unreachable`. Three of these are a publishing
-failure; misfiling a publishing failure as an outage is the exact reclassification error STEP 4 is
-written to prevent.
+Reference oracle probe this fire: `https://localhost:8443/fineract-provider/actuator/health` →
+**HTTP 000, unreachable**. Expected in the cloud sandbox; every vector-capture and conformance task
+parks under `oracle_unreachable` and nothing was synthesised.
 
 ## Gates
 
 **No `user` gate crossed.** Open **contract** gates: **0** — `ready-tasks.py` inspected every id in
-`program.json.gates_pending`. One RESERVED gate (**G-23**, the Nexus platform tree is not in this
-repository) still awaits Buyan and blocks the Tier-C map-first audit from being anything more than a
-source-side inventory.
+`program.json.gates_pending`. **G-23** (RESERVED — the Nexus platform tree is not in this repository)
+still awaits Buyan and still blocks the Tier-C map-first audit from being more than a source-side
+inventory.
 
-## Standing items for Buyan — no agent can clear these
+## Standing items for Buyan
 
-1. **`git push origin --all` from the Mac.** Five money-core commits, T509 the critical path, exist
-   on one machine. Unchanged for 24 h. Until then three independent reviews cannot run and the bar
-   cannot go green.
-2. **The local fire has not published since 2026-09-03** — two days, four missed 08:00/14:00 slots.
-   The cloud fire cannot substitute: it reaches no oracle, so no vector has been captured in that
-   window either. Check the Mac is awake and the launchd agent is loaded.
-3. Eighteen no-op fires over four days burned on `OAuth session expired`, and **nothing escalates a
-   zero-turn fire** (T493/T494 still `pending`). The detection exists; the consequence does not.
+1. **The `git push origin --all` ask is CLOSED for four of the five commits** — it was satisfied two
+   days ago and the manifest simply had not been re-measured. Nothing to do.
+2. **T512 is a genuine loss** and needs no decision — it is filed for redo.
+3. The local fire is publishing again (OH-SEED, OH-PROV, OH-CORE all merged 2026-09-05/06), so the
+   two-day publishing outage is over.
