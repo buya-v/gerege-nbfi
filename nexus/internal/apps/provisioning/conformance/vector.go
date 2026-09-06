@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
-	"sort"
-	"strings"
+
+	shared "github.com/gerege/nexus/internal/conformance"
 )
 
 // SchemaV1 is the only schema string this package accepts.
@@ -57,7 +56,7 @@ const (
 // ProvenanceKindOracleCapture is the only admissible provenance.kind for a
 // parity vector: its expected values were transcribed from an oracle capture,
 // never computed by the promotion.
-const ProvenanceKindOracleCapture = "oracle-capture"
+const ProvenanceKindOracleCapture = shared.ProvenanceKindOracleCapture
 
 // OracleStamp records where and against what the expectation was captured.
 type OracleStamp struct {
@@ -86,14 +85,7 @@ type Provenance struct {
 // replayed meaningfully. The provisioning captures were taken under the gerege
 // tenant: HALF_UP (ordinal 4), precision 19, currency MNT, 2 minor units,
 // Asia/Ulaanbaatar.
-type TenantParams struct {
-	RoundingMode    string `json:"rounding_mode"`
-	RoundingOrdinal int    `json:"rounding_ordinal"`
-	Precision       int    `json:"precision"`
-	Currency        string `json:"currency"`
-	MinorUnits      int    `json:"minor_units"`
-	Timezone        string `json:"timezone"`
-}
+type TenantParams = shared.TenantParams
 
 // Request is the input the implementation is graded on. It is the union of the
 // two seams: the category read (category_id) and the entry reserve (inputs, a
@@ -169,69 +161,27 @@ type Vector struct {
 }
 
 // LoadError is one file that could not be read as a provisioning vector.
-type LoadError struct {
-	Path string
-	Err  error
-}
+type LoadError = shared.LoadError
 
 // RejectFloatTokens walks a JSON document and returns an error if any number
 // token is not an integer.
 //
 // It runs BEFORE any typed decoding, so a float in a field the typed shape
-// ignores is still caught. The rule is shared with the loanschedule, ledger and
-// charges harnesses; the code is not imported from any of them because this
-// package is an independent schema and must not depend on the harnesses it sits
-// beside.
-func RejectFloatTokens(raw []byte) error {
-	dec := json.NewDecoder(bytes.NewReader(raw))
-	dec.UseNumber()
-	for {
-		tok, err := dec.Token()
-		if err != nil {
-			if err.Error() == "EOF" {
-				return nil
-			}
-			return fmt.Errorf("scanning for float tokens: %w", err)
-		}
-		n, ok := tok.(json.Number)
-		if !ok {
-			continue
-		}
-		s := n.String()
-		if strings.ContainsAny(s, ".eE") {
-			return fmt.Errorf(
-				"FLOAT TOKEN %q in provisioning vector JSON: every number in a vector file must be an integer, "+
-					"and every monetary value must be an integer STRING in minor units", s)
-		}
-	}
-}
-
-// schemaProbe is the minimal shape used to decide WHICH schema a file claims.
-type schemaProbe struct {
-	Schema string `json:"schema"`
-}
+// ignores is still caught. The rule is the shared no-float token rejection; only
+// the context label is local.
+func RejectFloatTokens(raw []byte) error { return shared.RejectFloatTokens(raw, "provisioning") }
 
 // DeclaresProvisioningSchema reports whether raw is a JSON object whose
 // top-level "schema" member is exactly SchemaV1. It decodes one field,
 // non-strictly, and answers yes/no: a malformed provisioning vector must reach
 // this loader and be reported here BY NAME, not fall back to another loader.
-func DeclaresProvisioningSchema(raw []byte) bool {
-	var p schemaProbe
-	if err := json.Unmarshal(raw, &p); err != nil {
-		return false
-	}
-	return p.Schema == SchemaV1
-}
+func DeclaresProvisioningSchema(raw []byte) bool { return shared.DeclaresSchema(raw, SchemaV1) }
 
 // FileDeclaresProvisioningSchema is DeclaresProvisioningSchema over a path. An
 // unreadable file is NOT a provisioning file: it stays with the caller, which
 // reports it.
 func FileDeclaresProvisioningSchema(absPath string) bool {
-	raw, err := os.ReadFile(absPath)
-	if err != nil {
-		return false
-	}
-	return DeclaresProvisioningSchema(raw)
+	return shared.FileDeclaresSchema(absPath, SchemaV1)
 }
 
 // ProvisioningFilePaths walks the store root and returns the store-relative
@@ -242,31 +192,7 @@ func FileDeclaresProvisioningSchema(absPath string) bool {
 // "unloaded". The paths are DERIVED, not listed, so a provisioning vector added
 // or removed later needs no edit in the caller.
 func ProvisioningFilePaths(storeRoot string) ([]string, error) {
-	entries, err := os.ReadDir(storeRoot)
-	if err != nil {
-		return nil, err
-	}
-	var out []string
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		dir := filepath.Join(storeRoot, e.Name())
-		files, ferr := os.ReadDir(dir)
-		if ferr != nil {
-			return nil, ferr
-		}
-		for _, f := range files {
-			if f.IsDir() || !strings.HasSuffix(f.Name(), ".json") {
-				continue
-			}
-			if FileDeclaresProvisioningSchema(filepath.Join(dir, f.Name())) {
-				out = append(out, filepath.ToSlash(filepath.Join(e.Name(), f.Name())))
-			}
-		}
-	}
-	sort.Strings(out)
-	return out, nil
+	return shared.SchemaFilePaths(storeRoot, SchemaV1)
 }
 
 // LoadVector reads and strictly decodes one provisioning vector file: a raw
@@ -293,6 +219,12 @@ func LoadVector(absPath, relPath string) (*Vector, error) {
 	return &v, nil
 }
 
+var provisioningID = shared.VectorIdentity[Vector]{
+	Context: func(v *Vector) string { return v.Context },
+	CaseID:  func(v *Vector) string { return v.CaseID },
+	Path:    func(v *Vector) string { return v.Path },
+}
+
 // LoadStore walks the store root and loads every provisioning-schema .json
 // under it.
 //
@@ -300,82 +232,12 @@ func LoadVector(absPath, relPath string) (*Vector, error) {
 // duplicate-case_id census is taken over the WHOLE provisioning population
 // before the filter: the filter narrows what is GRADED, never what is CHECKED.
 func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) {
-	entries, err := os.ReadDir(storeRoot)
-	if err != nil {
-		return nil, nil, fmt.Errorf("provisioning vector store %s: %w", storeRoot, err)
-	}
-	var all, graded []*Vector
-	var loadErrs []LoadError
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		ctx := e.Name()
-		selected := contextFilter == "" || ctx == contextFilter
-		dir := filepath.Join(storeRoot, ctx)
-		files, ferr := os.ReadDir(dir)
-		if ferr != nil {
-			return nil, nil, ferr
-		}
-		for _, f := range files {
-			if f.IsDir() || !strings.HasSuffix(f.Name(), ".json") {
-				continue
-			}
-			abs := filepath.Join(dir, f.Name())
-			if !FileDeclaresProvisioningSchema(abs) {
-				continue
-			}
-			rel := filepath.Join(ctx, f.Name())
-			v, verr := LoadVector(abs, rel)
-			if verr != nil {
-				loadErrs = append(loadErrs, LoadError{Path: rel, Err: verr})
-				continue
-			}
-			all = append(all, v)
-			if selected {
-				graded = append(graded, v)
-			}
-		}
-	}
-	sortVectors(all)
-	sortVectors(graded)
-	if derr := DuplicateCaseIDs(all); derr != nil {
-		return graded, loadErrs, derr
-	}
-	return graded, loadErrs, nil
+	return shared.LoadStore[Vector](storeRoot, contextFilter, SchemaV1, "provisioning", provisioningID, LoadVector)
 }
 
 // DuplicateCaseIDs refuses a provisioning population carrying one case_id twice.
 func DuplicateCaseIDs(vs []*Vector) error {
-	seen := map[string][]string{}
-	for _, v := range vs {
-		seen[v.CaseID] = append(seen[v.CaseID], v.Path)
-	}
-	var ids []string
-	for id, paths := range seen {
-		if len(paths) > 1 {
-			sort.Strings(paths)
-			ids = append(ids, fmt.Sprintf("%s (%s)", id, strings.Join(paths, ", ")))
-		}
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	sort.Strings(ids)
-	return fmt.Errorf(
-		"PROVISIONING STORE DEFECT: case_id declared more than once: %s. A case_id is how a vector is cited "+
-			"in a handoff, a gate and a review; two files answering to one id make every citation ambiguous",
-		strings.Join(ids, "; "))
+	return shared.DuplicateCaseIDs[Vector](vs, provisioningID, "provisioning")
 }
 
-func sortVectors(vs []*Vector) {
-	sort.Slice(vs, func(i, j int) bool {
-		if vs[i].Context != vs[j].Context {
-			return vs[i].Context < vs[j].Context
-		}
-		if vs[i].CaseID != vs[j].CaseID {
-			return vs[i].CaseID < vs[j].CaseID
-		}
-		return vs[i].Path < vs[j].Path
-	})
-}
+func sortVectors(vs []*Vector) { shared.SortVectors[Vector](vs, provisioningID) }

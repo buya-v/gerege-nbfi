@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/gerege/nexus/internal/apps/charges"
+	shared "github.com/gerege/nexus/internal/conformance"
 )
 
 // Outcome is the verdict of grading one vector.
@@ -169,46 +170,9 @@ type Options struct {
 	SelfTestMode       bool
 }
 
-// Summary is the aggregate outcome of a run. Every count is explicit so that a
-// zero is visible rather than assumed.
-type Summary struct {
-	SelfTestMode        bool
-	ParityPass          int
-	ParityFail          int
-	Refused             int
-	Inadmissible        int
-	Errored             int
-	InvariantViolations int
-	GradedCells         int
-	MoneyCells          int
-	VectorsLoaded       int
-	FatalReasons        []string
-	LoadErrors          []LoadError
-	NoFloatCensus       FloatingPointCensus
-}
-
-// ExitCode maps the run to a process exit code.
-//
-//	0  every graded vector passed and at least one PARITY vector was graded
-//	1  a mismatch or an invariant violation (an actionable finding)
-//	2  the harness or corpus is unusable — including ZERO vectors graded
-func (s *Summary) ExitCode() int {
-	if s.ParityFail > 0 || s.InvariantViolations > 0 {
-		return 1
-	}
-	if len(s.FatalReasons) > 0 || len(s.LoadErrors) > 0 ||
-		s.Refused > 0 || s.Inadmissible > 0 || s.Errored > 0 {
-		return 2
-	}
-	if !s.SelfTestMode && s.ParityPass == 0 {
-		// A run that graded no PARITY vector cannot support a parity claim. The
-		// empty-store refusal is recorded as a FatalReason above, but this line
-		// is the backstop: it is impossible to reach exit 0 without a parity
-		// pass.
-		return 2
-	}
-	return 0
-}
+// Summary is the aggregate outcome of a run. The type and its ExitCode live in
+// nexus/internal/conformance; charges re-uses them unchanged.
+type Summary = shared.Summary
 
 // vectorResult is one vector's grading outcome.
 type vectorResult struct {
@@ -277,7 +241,7 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 // fail-open this program has been bitten by.
 func Run(ctx context.Context, opts Options) (*Summary, error) {
 	_ = ctx
-	s := &Summary{SelfTestMode: opts.SelfTestMode}
+	s := &Summary{SelfTestMode: opts.SelfTestMode, ReportMoneyCells: true}
 
 	// The no-float census runs FIRST and on EVERY run, with or without vectors.
 	census, err := ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, GuardedGoTreeRel))
