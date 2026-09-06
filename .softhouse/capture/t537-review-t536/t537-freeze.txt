@@ -1,0 +1,73 @@
+==============================================================================
+T537 item 3 -- BASELINE FREEZE, driven
+==============================================================================
+module constant FROZEN_ABOVE = 'T527'
+
+--- A. synthetic incident, id T9001 (nothing in this repo has ever used it)
+A-T9001-above-the-line                       id=T9001     freeze=T527  (bl.json)  waived=False want=False  PASS
+      REFUSED T9001     1abd3a11                                 2026-09-04 incident commit
+      REFUSED T9001     softhouse/T9001-never-pushed             above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+
+--- B. anti-vacuity: a historical id must STILL be waivable
+B-T42-historical                             id=T42       freeze=T527  (bl.json)  waived=True  want=True   PASS
+      REFUSED T42       1abd3a11                                 2026-09-04 incident commit
+
+--- E. id-form gap: A2-999, an id nothing has ever used, but an A2-SHAPED one
+E-A2-999                                     id=A2-999    freeze=T527  (bl.json)  waived=True  want=False  *** FAIL
+      REFUSED A2-999    1abd3a11                                 2026-09-04 incident commit
+
+--- F. the boundary itself -- is T527 inclusive?
+F-T527-exactly                               id=T527      freeze=T527  (bl.json)  waived=True  want=False  *** FAIL
+      REFUSED T527      1abd3a11                                 2026-09-04 incident commit
+
+--- G. point --write-baseline at a FRESH file (no frozen_above in it)
+G-fresh-baseline-file                        id=T9002     freeze=T527  (module constant)  waived=False want=False  PASS
+      REFUSED T9002     1abd3a11                                 2026-09-04 incident commit
+      REFUSED T9002     softhouse/T9002-never-pushed             above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+
+==============================================================================
+--- C. ORDINARY REGENERATION must not move the line
+==============================================================================
+shipped frozen_above BEFORE: 'T527'  (314 waivers)
+after ONE --write-baseline over the REAL record:
+  frozen_above AFTER : 'T527'   (unchanged: True)
+  waivers written    : 10
+  findings REFUSED   : 9
+     KEEP T509      857dd4d8                                             2026-09-04 incident task
+     KEEP T509      softhouse/T509-ledgerguard-blindspot                 2026-09-04 incident task
+     KEEP T510      softhouse/T510-savings-fold-reversal                 2026-09-04 incident task
+     KEEP T512      8ff5ff15                                             2026-09-04 incident task
+     KEEP T512      softhouse/T512-scope-instrument                      2026-09-04 incident task
+     KEEP T520      softhouse/T508-journalentry-insert-schema            2026-09-04 incident task
+     KEEP T522      softhouse/T515-savings-classification-rework         2026-09-04 incident task
+     KEEP T523      857dd4d8                                             2026-09-04 incident task
+     KEEP T523      softhouse/T509-ledgerguard-blindspot                 2026-09-04 incident task
+  keys ADDED vs the shipped file: 10 ['T312\t060f00330', 'T312\tc1a3888a', 'T335\td09585f58', 'T353\tsofthouse/T353-t342-conditions', 'T357\tsofthouse/T357-a2-11-section1-red', 'T358\tsofthouse/T358-t323-conditions', 'T361\tsofthouse/T361-review-t353', 'T375\tsofthouse/rescued-agent-ac5a2db446e903ba0-20260828-140005']
+
+==============================================================================
+--- D. DELETING the baseline must not lift the line
+==============================================================================
+load_frozen_above(<missing file>) -> 'T527' from module constant
+regenerated-from-nothing: frozen_above='T527', 324 waivers, 9 refused
+findings this regeneration REFUSED to launder:
+   KEEP T509      857dd4d8                                             2026-09-04 incident task
+   KEEP T509      softhouse/T509-ledgerguard-blindspot                 2026-09-04 incident task
+   KEEP T510      softhouse/T510-savings-fold-reversal                 2026-09-04 incident task
+   KEEP T512      8ff5ff15                                             2026-09-04 incident task
+   KEEP T512      softhouse/T512-scope-instrument                      2026-09-04 incident task
+   KEEP T520      softhouse/T508-journalentry-insert-schema            2026-09-04 incident task
+   KEEP T522      softhouse/T515-savings-classification-rework         2026-09-04 incident task
+   KEEP T523      857dd4d8                                             2026-09-04 incident task
+   KEEP T523      softhouse/T509-ledgerguard-blindspot                 2026-09-04 incident task
+
+findings this regeneration DID waive that the shipped file does not carry:
+   NEW  T312  060f00330
+   NEW  T312  c1a3888a
+   NEW  T335  d09585f58
+   NEW  T353  softhouse/T353-t342-conditions
+   NEW  T357  softhouse/T357-a2-11-section1-red
+   NEW  T358  softhouse/T358-t323-conditions
+   NEW  T361  softhouse/T361-review-t353
+   NEW  T375  softhouse/rescued-agent-ac5a2db446e903ba0-20260828-140005
+   NEW  T476  softhouse/T467-t464-conditions
+   NEW  T477  softhouse/T466-skipwt-smudge
