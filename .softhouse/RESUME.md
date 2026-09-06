@@ -1,10 +1,11 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## FIRE `cloud-20260906-2000` (cloud, 20:00 Asia/Ulaanbaatar, reference oracle UNREACHABLE) — **IN FLIGHT. TWO LIVE WORKERS.**
+## FIRE `cloud-20260906-2000` (cloud, 20:00 Asia/Ulaanbaatar, reference oracle UNREACHABLE) — **IN FLIGHT. FOUR LIVE WORKERS.**
 
 Written and pushed **BEFORE the first `git worktree add`**, per STEP 0's push-before-spawn obligation.
-If you are reading this on a fresh session, treat **T523** and **T537** as `needs_retry` with
-unverified completeness and look for their branches on origin before assuming nothing was done.
+If you are reading this on a fresh session, treat **T523**, **T537**, **T551** and **T553** as
+`needs_retry` with unverified completeness and look for their branches on origin before assuming
+nothing was done.
 
 Lock taken under **arm 0** — no `LOCK` file existed at fire start. The local fire `20260906-200001`
 took its lock at `eb3f6f6d`, ran a full iteration (OH-CORE merged) and **released it cleanly** at
@@ -56,19 +57,33 @@ WRONG is *still prescribed* by `softhouse/SKILL.md` STEP 5, since its replacemen
 
 ---
 
-## Dispatched this fire (both `executor: agent`, `isolation: worktree`, `opus`, offline-safe)
+## Dispatched this fire — FOUR workers, all `executor: agent`, `isolation: worktree`, `opus`, offline-safe
 
-Both are INDEPENDENT reviews that had been unrunnable, and both became runnable **only because of
-this fire's reconciliation** — neither needs the reference oracle.
+**Batch 1** — two INDEPENDENT reviews that had been unrunnable, and that became runnable **only
+because of this fire's reconciliation**. Neither needs the reference oracle.
 
 | Task | Branch | What it must land |
 |---|---|---|
 | **T523** | `softhouse/T523-review-t509` | **UNPARKED.** Independent review of T509 — the money non-negotiable guard that went 10 findings → 42, on the program critical path, and has never been reviewed. Parked as `branch_unpushed` for two fires on the belief the diff was unreadable; it is readable at **`23966a65`** on `origin/main`. Central risk is **false positives dressed as rigour**. Note a live discrepancy for it to settle: the driver recorded *Findings: 42* at the dead sha, and this fire's run of `check-ledger-invariants.sh` on current main shows a SQL-surface census line reading *Findings: 34*. |
 | **T537** | `softhouse/T537-review-t536` | **RE-DISPATCH** (attempt 2). Independent review of T536 — did the anchor repair close a CLASS or a longer list of phrasings? The previous attempt's worker was killed mid-flight by fire `20260906-200001` and produced nothing recoverable. The subject is readable: `softhouse/T536-t528-conditions` resolves on origin at `18c64389`. |
 
-**SCOPE GUARD:** neither worker may write outside its own `files_hint`
-(`.softhouse/reviews/t523-review-t509/`, `.softhouse/reviews/t537-review-t536/`, plus its handoff).
-Neither may edit `conformance.sh`, `nexus/**`, or the guards they are grading.
+**Batch 2** — two condition-application tasks at the head of live review chains. Dispatch record
+pushed before this batch's first `git worktree add`, same as batch 1.
+
+| Task | Branch | What it must land |
+|---|---|---|
+| **T551** | `softhouse/T551-t548-conditions` | T548's three MAJORs on T532. **Every condition is a wrong statement currently checked into the tree wearing a `[VERIFIED]` badge** — chiefly a "the drift changes sign" claim in `loanproduct/doc.go` that rests on mixing a `MathUtil.java` delta into an `InterestPeriod.java` table. The CONCLUSION ("no constant offset exists") survives; the stated REASON is false. Graded against the pinned checkout. |
+| **T553** | `softhouse/T553-t552-conditions` | T552's two MAJORs on T550. **VETO 2 (whole-payload digest) and VETO 3 (line count over a duplicate-admitting multiset) DO NOT COMPOSE** — seven repeated lines plus one novel line holds an eight-fire no-op streak GREEN at exit 0. T552 already measured that raising the floor does nothing (`atk-mine-k40`), so a threshold change is a rejection. |
+
+**SCOPE GUARD, and it is load-bearing with four workers live:** each worker writes only inside its own
+`files_hint`, and the four sets are disjoint —
+`.softhouse/reviews/t523-review-t509/` · `.softhouse/reviews/t537-review-t536/` ·
+`nexus/internal/apps/loanproduct/` · `.softhouse/guards/no-op-fire-streak.sh` + `.softhouse/bin/fire-program.sh`.
+None may edit `conformance.sh`, `check-branch-published.py`, `ready-tasks.py`, or the guards another
+worker is grading.
+
+**Fineract pinned** to the commit of record `426a23544` this fire (it had drifted to `74099701`).
+`InterestPeriod.java` measures **237 lines** there, so the citation chain is graded against the right tree.
 
 ## Filed this fire
 
@@ -88,6 +103,8 @@ Neither may edit `conformance.sh`, `nexus/**`, or the guards they are grading.
 | T535 (Lombok value vs Go pointer equality) | `oracle_unreachable` for (b)/(c); (a) is source-only | next local fire, or a later cloud fire for (a) |
 | T521 (restore `gerege` tenant) | `oracle_unreachable` | next local fire |
 | T546 (skill files do not document exit 5) | `dependency` — needs T537 | T537 lands |
+| T547 (T540's three code-side MINORs) | `serialised` — same `files_hint` as T551 | T551 merges |
+| T554 (assertion vs refutation, filed this fire) | `dependency` — needs T537 | T537 lands |
 
 Reference oracle probe this fire: `https://localhost:8443/fineract-provider/actuator/health` →
 **HTTP 000, unreachable**. Expected in the cloud sandbox; every vector-capture and conformance task
