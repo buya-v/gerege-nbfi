@@ -8083,7 +8083,7 @@
       "requires_local_fire": true
     },
     {
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "contract_independent": true,
@@ -8099,14 +8099,14 @@
         "T515"
       ],
       "attempts": 0,
-      "note": "UNPARKED AND PARTIALLY DISPATCHED BY FIRE cloud-20260906-2000. The old park reason `branch_unpushed` was FALSE -- subject T515 at 84dc208e resolves and IS an ancestor of origin/main (see .softhouse/observations/2026-09-06-republished-under-new-hash.md). Dispatched as an EXPLICITLY PARTIAL review of its CONTRACT-INDEPENDENT slice: item 1 (re-derive the third arrow from SavingsAccountTransactionType.java:180-188 at the pinned 426a23544) and item 2 (the two gate deletions and the G-26 downgrade, graded as if each deletion were wrong) are source-derivation work needing no oracle, and they are the highest-stakes parts. RESIDUAL, PARKED `oracle_unreachable` and to be completed by the next local fire: item 3's escheat re-computation (0 -> 50000000) must be re-derived against the ORACLE, not read, and no vector may be synthesised here. The worker is instructed to name the residual explicitly rather than paper over it. NOTE the pinned checkout is at /home/user/fineract in this sandbox, NOT the /Users/buv/fineract path the description records.",
+      "note": "DONE (PARTIAL) and MERGED by fire cloud-20260906-2000. Verdict ACCEPT WITH CONDITIONS (PARTIAL) on items 1-2, which are CLEAN and were re-derived, not read. Item 3 remains [UNVERIFIED: oracle_unreachable] and NO VECTOR WAS SYNTHESISED -- the arithmetic is confirmed from source, the OBSERVATION is not and cannot be here. Conditions filed as T560. RESIDUAL FOR THE NEXT ORACLE-REACHING FIRE, verbatim from the review: confirm the instance is on tenant `gerege` (rounding-mode = 4, Asia/Ulaanbaatar -- restored 2026-09-05 by OH-1, which makes this cheap); re-take CAPTURE-A and CAPTURE-B there AND COMMIT THE RAW psql OUTPUT; take a NEW CAPTURE-C with a deposit/hold/RELEASE chain, which does not exist today and is exactly what F-1 needs; re-run the information_schema recount; run the conformance harness; and settle the PAY_CHARGE / null-chargePaidBy case.",
       "description": "INDEPENDENT review of T515 (branch softhouse/T515-savings-classification-rework, commit 84dc208e; stack T501 78a17873/2e1a09df -> T510 5c4233fc -> T515). Assume defects exist, especially in money math. ATTRIBUTE PER COMMIT — three other tasks sit below T515 in this stack and blaming it for their lines is the base-drift defect T512 was just filed to stop.\n\nT515 reworks T510 after T513 REJECTED it. It ports the third arrow of Fineract's credit/debit classification and DELETES TWO GATES. Deleting a gate is a serious act: grade it as if the deletion were wrong.\n\n  1. RE-DERIVE THE THIRD ARROW against the pinned checkout /Users/buv/fineract @ 426a23544: SavingsAccountTransactionType.java:180-188. isCredit() = isCreditEntryType() && !isAmountRelease(); isDebit() = isDebitEntryType() && !isAmountOnHold() && !isEscheat(). Confirm the Go port reproduces BOTH exclusions and that deleting the hand-rolled IsAmountHold()||IsAmountRelease() list from AccountBalanceOf and RunningBalancesOf leaves no behaviour uncovered. A maintenance-correct list replaced by a derivation is only an improvement if the derivation is complete.\n  2. THE GATE DELETIONS. G-25 and G-27 are DELETED and G-26 downgraded. Re-derive each premise. G-25 was refused on 'holds alter available only' — T513 showed the hold row's running_balance_derived and the account's account_balance_derived are two DIFFERENT QUANTITIES (posted vs hold-net), not contradictory answers. Verify that reading. If any deleted gate had a surviving RESERVED component, it must be restored: a gate deleted on a false premise is right, a gate deleted because it was inconvenient is a rejection.\n  3. ESCHEAT IS A LIVE MONEY BUG FIX: 0 -> 50000000. RE-COMPUTE it, do not read it. Confirm TestEscheatMovesNeitherBalance now pins the number the ORACLE gives and that its predecessor TestEscheatDebitsThePostedBalance pinned the wrong one.\n  4. CONFIRM THE REVERSAL REPAIR SURVIVED INTACT — T513 flagged it explicitly for preservation and verified it. Check Reversed/Reversal/ReleaseIDOfHoldAmount, IsVoid(), the rerooted Effect(), identity-based hold pairing, ErrOrphanRelease and the negative control are all still present and still discriminating. A rework that silently drops a verified repair is worse than the defect it fixes.\n  5. THE CAPTURES. T515 took two live captures (CAPTURE-A escheat via jobId 21; CAPTURE-B deposit/hold/withdrawal, account_balance_derived 750.00 against a 1000/600/350 running chain). Verify each is an OBSERVATION and not a construction, and that the parity tests actually grade against them. CRITICAL CAVEAT: the instance is tenant `default`, Asia/Kolkata, rounding-mode 6 = HALF_EVEN, NOT the ratified (19, HALF_UP)/Asia-Ulaanbaatar — see the 2026-09-03 correction in .softhouse/reference-oracle.md. T515 argues neither capture ENGAGES either setting (exact 2dp amounts, 0% interest, no midpoint, no date asserted). TEST THAT ARGUMENT; it is the load-bearing claim licensing the captures. Confirm nothing was promoted to .softhouse/vectors/.\n  6. SCOPE CREEP, SELF-DECLARED: T515 IMPLEMENTED HoldNetRunningBalancesOf where T513 said backlog was acceptable, arguing it had a capture to grade it against and that without it the G-25 deletion leaves an unchecked claim. It offers it as severable. Decide: keep or sever. Judge on whether it is graded by a real capture, not on whether it is nice to have.\n  7. LIVE-ORACLE STATE HAZARD to verify and, if real, make loud: T515 reports account 3 is now escheat-eligible, so the next run of jobId 21 will add a type-19 ESCHEAT row to CAPTURE-B's underlying data. Confirm the recorded evidence survives that drift, i.e. that the capture is pinned in-repo and not re-read from the DB.\n\nBAR: check-ledger-invariants.sh must report ZERO savings sites (the driver measured Findings: 8, zero savings, at 84dc208e — reproduce it). build/vet/test/gofmt green. Integer minor units. Holds alter available only. Savings ships DISABLED (NBFI licence; deposit-taking prohibited by Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4) and NO string may describe savings as insured, protected or guaranteed — grep for that.\n\nVerdict: APPROVED / MICRO-FIX (<=10 lines, mechanical) / REJECTED with specifics. If you find nothing, state what you checked. Write to .softhouse/reviews/t522-review-t515/REVIEW.md and COMMIT it.",
       "blocked_reason": "branch_unpushed",
       "requires_local_fire": true,
       "landed_commit": null
     },
     {
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "contract_independent": true,
@@ -8409,7 +8409,7 @@
     },
     {
       "id": "T536",
-      "status": "done",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -8433,7 +8433,7 @@
     },
     {
       "id": "T537",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -8722,7 +8722,7 @@
     },
     {
       "id": "T551",
-      "status": "in_progress",
+      "status": "merged",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -8905,6 +8905,24 @@
       "title": "INDEPENDENT review of T553 — does residue-chaining close the CLASS, or is it the fourth round of a longer list?",
       "description": "INDEPENDENT review of T553 (merged; `git diff main...softhouse/T553-t552-conditions`). Assume defects exist. Do NOT read its handoff as evidence -- re-derive. Its rig is at .softhouse/capture/t493-zero-turn-escalation/t553-plant-attacks.sh.\n\n  1. THE CENTRAL QUESTION, and it is the same question this program has now asked four times about four different guards: did residue-chaining close a CLASS or produce a longer list? INVENT A NEW ATTACK T553 HAS NOT SEEN and try to hold an eight-fire no-op streak GREEN. The declared residual (8 novel lines, ~8 bytes each, on 2 of 8 fires) is your starting point, not your finish -- ask whether anything makes it CHEAPER still, and whether the novelty key can be gamed by content that is novel-but-worthless in a way no byte count can see.\n  2. RE-DRIVE EVERY BEFORE/AFTER YOURSELF. The dispatching driver already independently confirmed mine-k (old exit 0 / streak 0 / GREEN -> new exit 1 / streak 7 / RED), legit and legit-boiler GREEN->GREEN, unenumerated RED->RED, and mine-i/mine-j GREEN->GREEN. REPRODUCE THESE RATHER THAN CITING THEM -- and note that the driver's first attempt read exit 1 for BOTH guards because it graded origin/main instead of the planted branch, so pass --ref explicitly.\n  3. THE FALSE-RED IS THE MOST INSTRUCTIVE THING IN THE BRANCH. T553 reports its FIRST implementation digit-collapsed per-line novelty, mapping twelve rows of a captured numeric table to one line, and false-REDing genuine work. Verify the SHIPPED design does not do it, and hunt for the same shape elsewhere: what other legitimate payload could the novelty key collapse? A guard that false-REDs gets disabled as surely as one that fails open.\n  4. THE NO-REGRESSION EVIDENCE IS LARGE AND MUST BE SPOT-CHECKED, NOT ACCEPTED: 1,930 hourly replay instants over two states of origin/main with ZERO verdict changes; the floor re-deriving to 12 local / 27 cloud identical to T550's raw-multiset numbers; a 24-row battery through both guards at 24 AGREE / 0 DIFFER. Re-run a sample. A no-regression claim that cannot be reproduced is the first finding, and 'zero changes over 1,930 instants' is also the signature of a replay that is not actually exercising the new code -- check that it is.\n  5. FAIL-CLOSED AND NO BYPASS. Re-run the 21-case prologue sweep; every rc=1 leak must be rc=2, including the two T553 found itself (NOFS_PAYLOAD_CAP=0 leaking RED, --min-subst-lines 0 leaking GREEN WITH THE FLOOR OFF). Confirm no flag or env var disables a veto, an axis, or the refusal. Confirm NOFS_PAYLOAD_CAP='' really does substitute the default rather than reaching awk, as T553 claims against T552's MINOR-5.\n  6. COST. T553 reports 10.9s -> 11.4s (+4%). Time it. A guard that makes the fire slow gets disabled as surely as one that fails.\n  7. THE zsh GAP. fire-program.sh could not be `zsh -n`'d in the cloud sandbox and the change was driven under a bash shim across seven wiring branches. Say whether the shim is a faithful stand-in or whether this genuinely needs a local fire, and whether the one-line change is safe under zsh's word-splitting rules.\n\nVerdict: APPROVED / ACCEPT WITH CONDITIONS / REJECT, findings MINOR/MAJOR/CRITICAL, each with the command run and its output. If you find nothing in a section, state what you checked so silence is distinguishable from not looking.",
       "note": "Filed by fire cloud-20260906-2000 as T553's paired independent reviewer."
+    },
+    {
+      "id": "T560",
+      "status": "pending",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "attempts": 0,
+      "branch": null,
+      "dependencies": [],
+      "files_hint": [
+        "nexus/internal/apps/savings/",
+        ".softhouse/handoff/T560-t522-conditions.md"
+      ],
+      "title": "T522's F-1 (MAJOR): the arm that GIVES HELD FUNDS BACK is graded by nothing — delete it and the whole savings suite stays green",
+      "description": "Apply T522's conditions on T515 (review at .softhouse/reviews/t522-review-t515/REVIEW.md).\n\nF-1 IS A GRADING HOLE ON A MONEY NON-NEGOTIABLE ('holds affect available only, never posted balance'), and it is the whole urgency of this task. Deleting `|| t.Type.IsAmountRelease()` from HoldNetRunningBalancesOf (nexus/internal/apps/savings/summary.go:517) LEAVES THE ENTIRE SAVINGS SUITE GREEN. No capture holds an AMOUNT_RELEASE row and no test passes one through the function, while the HOLD arm dies instantly under the same mutation -- so the asymmetry is not an accident of coverage, it is the shape of the corpus. T515 shipped this as self-declared scope creep on the ground it 'had a capture to grade it against'; that is TWO-THIRDS TRUE, and the ungraded third is the arm that gives held funds back.\n\n*** THE CODE IS CORRECT. DO NOT 'FIX' IT. *** T522's per-type probe agrees with the Java on all 20 constants. What is missing is the GRADING. Keep the function; make the third arm fail when it is removed.\n\nSPLIT THE WORK BY WHAT NEEDS THE ORACLE, and do not blur the halves:\n  RUNNABLE NOW, no oracle: reproduce the mutation first (delete the clause, run the suite, watch it stay green -- a repair whose failing case you never saw is not graded), then add grading that fails closed on it. T522's committed enumeration probe (.softhouse/capture/t522-review-t515/zz_t522_enum_test.go.txt) transcribes its expectations from the Java enum's constructor arguments (SavingsAccountTransactionType.java:35-54) and isCredit()/isDebit() (:180-188) -- NEVER from the Go under test -- and that is the shape to follow. Re-run the mutation after; it must go RED.\n  NEEDS THE ORACLE, park `oracle_unreachable` and leave for a local fire: a real CAPTURE-C with a deposit/hold/RELEASE chain does not exist in the corpus today, and it is what closes this properly. *** NEVER SYNTHESISE A GOLDEN VECTOR YOU DID NOT OBSERVE FROM THE REFERENCE ORACLE. *** A source-derived property test is a legitimate deliverable and is NOT a vector; do not promote anything to .softhouse/vectors/ without an observed capture.\n\nMINORS F-2..F-6, all runnable now: summary.go contradicts itself five lines apart on the updateReleaseId caller count (:305 'three' is RIGHT; :310 and balance_test.go:479 counted the DECLARATION); twelve vs thirteen calculators across T515's own two files; the claim 'no `gerege` tenant exists' is FROZEN INTO PERMANENT GO SOURCE and went stale when OH-1 restored the tenant on 2026-09-05 -- a fact about a live environment does not belong hard-coded in a source comment, so remove it rather than merely updating it; and the 'AccountBalanceOf EQUALS account_balance_derived' claim is broader than two captures support (PAY_CHARGE with null chargePaidBy) -- ATTRIBUTED TO THE STACK, NOT T515, so narrow the claim, do not blame T515 for it.\n\nF-6 IS ALSO A STANDING PROCESS DEFECT WORTH NAMING IN YOUR HANDOFF: no raw capture transcript exists anywhere in the repo for this slice, which is why item 3 of T522 could not be closed even in principle. Any capture this task or a later fire takes must COMMIT THE RAW psql OUTPUT.\n\nSCOPE: nexus/internal/apps/savings/ and your handoff. Savings ships DISABLED (NBFI licence, Law on Non-Banking Financial Activities Art. 12.1.3/12.1.4) -- porting and grading are in scope, ENABLING is a user gate; and never describe member savings as insured, protected or guaranteed.",
+      "note": "Filed by fire cloud-20260906-2000 from T522's MAJOR F-1."
     }
   ],
   "cross_corroboration": {
