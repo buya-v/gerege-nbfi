@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
-	"sort"
-	"strings"
+
+	shared "github.com/gerege/nexus/internal/conformance"
 )
 
 // SchemaV1 is the only schema string this package accepts.
@@ -63,7 +62,7 @@ const (
 // ProvenanceKindOracleCapture is the only admissible provenance.kind for a
 // parity vector: its expected values were transcribed from an oracle capture,
 // never computed by the promotion.
-const ProvenanceKindOracleCapture = "oracle-capture"
+const ProvenanceKindOracleCapture = shared.ProvenanceKindOracleCapture
 
 // OracleStamp records where and against what the expectation was captured.
 type OracleStamp struct {
@@ -91,14 +90,7 @@ type Provenance struct {
 // a capture taken under a different tenant cannot be replayed meaningfully. The
 // charges captures were taken under the gerege tenant: HALF_UP (ordinal 4),
 // precision 19, currency MNT, 2 minor units, Asia/Ulaanbaatar.
-type TenantParams struct {
-	RoundingMode    string `json:"rounding_mode"`
-	RoundingOrdinal int    `json:"rounding_ordinal"`
-	Precision       int    `json:"precision"`
-	Currency        string `json:"currency"`
-	MinorUnits      int    `json:"minor_units"`
-	Timezone        string `json:"timezone"`
-}
+type TenantParams = shared.TenantParams
 
 // ChargeRequest is the charge definition and base amount the implementation is
 // graded on, in the stored/observable form the oracle works from.
@@ -153,101 +145,26 @@ type Vector struct {
 }
 
 // LoadError is one file that could not be read as a charges vector.
-type LoadError struct {
-	Path string
-	Err  error
-}
+type LoadError = shared.LoadError
 
 // RejectFloatTokens walks a JSON document and returns an error if any number
-// token is not an integer.
-//
-// It runs BEFORE any typed decoding, so a float in a field the typed shape
-// ignores is still caught. The rule is shared with the loanschedule and ledger
-// harnesses; the code is not imported from either because this package is an
-// independent schema and must not depend on the harnesses it sits beside.
-func RejectFloatTokens(raw []byte) error {
-	dec := json.NewDecoder(bytes.NewReader(raw))
-	dec.UseNumber()
-	for {
-		tok, err := dec.Token()
-		if err != nil {
-			if err.Error() == "EOF" {
-				return nil
-			}
-			return fmt.Errorf("scanning for float tokens: %w", err)
-		}
-		n, ok := tok.(json.Number)
-		if !ok {
-			continue
-		}
-		s := n.String()
-		if strings.ContainsAny(s, ".eE") {
-			return fmt.Errorf(
-				"FLOAT TOKEN %q in charges vector JSON: every number in a vector file must be an integer, "+
-					"and every monetary value must be an integer STRING in minor units", s)
-		}
-	}
-}
-
-// schemaProbe is the minimal shape used to decide WHICH schema a file claims.
-type schemaProbe struct {
-	Schema string `json:"schema"`
-}
+// token is not an integer. It runs BEFORE any typed decoding, so a float in a
+// field the typed shape ignores is still caught.
+func RejectFloatTokens(raw []byte) error { return shared.RejectFloatTokens(raw, "charges") }
 
 // DeclaresChargesSchema reports whether raw is a JSON object whose top-level
-// "schema" member is exactly SchemaV1. It decodes one field, non-strictly, and
-// answers yes/no: a malformed charges vector must reach this loader and be
-// reported here BY NAME, not fall back to another loader.
-func DeclaresChargesSchema(raw []byte) bool {
-	var p schemaProbe
-	if err := json.Unmarshal(raw, &p); err != nil {
-		return false
-	}
-	return p.Schema == SchemaV1
-}
+// "schema" member is exactly SchemaV1.
+func DeclaresChargesSchema(raw []byte) bool { return shared.DeclaresSchema(raw, SchemaV1) }
 
-// FileDeclaresChargesSchema is DeclaresChargesSchema over a path. An unreadable
-// file is NOT a charges file: it stays with the caller, which reports it.
+// FileDeclaresChargesSchema is DeclaresChargesSchema over a path.
 func FileDeclaresChargesSchema(absPath string) bool {
-	raw, err := os.ReadFile(absPath)
-	if err != nil {
-		return false
-	}
-	return DeclaresChargesSchema(raw)
+	return shared.FileDeclaresSchema(absPath, SchemaV1)
 }
 
 // ChargesFilePaths walks the store root and returns the store-relative paths of
-// every file that declares the charges schema, sorted. It is the charges
-// analogue of the ledger package's LedgerFilePaths: the loanschedule loader's
-// store census must be told which files belong to THIS schema so it does not
-// refuse them as "unloaded". The paths are DERIVED, not listed, so a charges
-// vector added or removed later needs no edit in the caller.
+// every file that declares the charges schema, sorted.
 func ChargesFilePaths(storeRoot string) ([]string, error) {
-	entries, err := os.ReadDir(storeRoot)
-	if err != nil {
-		return nil, err
-	}
-	var out []string
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		dir := filepath.Join(storeRoot, e.Name())
-		files, ferr := os.ReadDir(dir)
-		if ferr != nil {
-			return nil, ferr
-		}
-		for _, f := range files {
-			if f.IsDir() || !strings.HasSuffix(f.Name(), ".json") {
-				continue
-			}
-			if FileDeclaresChargesSchema(filepath.Join(dir, f.Name())) {
-				out = append(out, filepath.ToSlash(filepath.Join(e.Name(), f.Name())))
-			}
-		}
-	}
-	sort.Strings(out)
-	return out, nil
+	return shared.SchemaFilePaths(storeRoot, SchemaV1)
 }
 
 // LoadVector reads and strictly decodes one charges vector file: a raw float
@@ -274,88 +191,24 @@ func LoadVector(absPath, relPath string) (*Vector, error) {
 	return &v, nil
 }
 
+var chargesID = shared.VectorIdentity[Vector]{
+	Context: func(v *Vector) string { return v.Context },
+	CaseID:  func(v *Vector) string { return v.CaseID },
+	Path:    func(v *Vector) string { return v.Path },
+}
+
 // LoadStore walks the store root and loads every charges-schema .json under it.
 //
 // contextFilter, when non-empty, selects a single context directory. The
 // duplicate-case_id census is taken over the WHOLE charges population before the
 // filter: the filter narrows what is GRADED, never what is CHECKED.
 func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) {
-	entries, err := os.ReadDir(storeRoot)
-	if err != nil {
-		return nil, nil, fmt.Errorf("charges vector store %s: %w", storeRoot, err)
-	}
-	var all, graded []*Vector
-	var loadErrs []LoadError
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		ctx := e.Name()
-		selected := contextFilter == "" || ctx == contextFilter
-		dir := filepath.Join(storeRoot, ctx)
-		files, ferr := os.ReadDir(dir)
-		if ferr != nil {
-			return nil, nil, ferr
-		}
-		for _, f := range files {
-			if f.IsDir() || !strings.HasSuffix(f.Name(), ".json") {
-				continue
-			}
-			abs := filepath.Join(dir, f.Name())
-			if !FileDeclaresChargesSchema(abs) {
-				continue
-			}
-			rel := filepath.Join(ctx, f.Name())
-			v, verr := LoadVector(abs, rel)
-			if verr != nil {
-				loadErrs = append(loadErrs, LoadError{Path: rel, Err: verr})
-				continue
-			}
-			all = append(all, v)
-			if selected {
-				graded = append(graded, v)
-			}
-		}
-	}
-	sortVectors(all)
-	sortVectors(graded)
-	if derr := DuplicateCaseIDs(all); derr != nil {
-		return graded, loadErrs, derr
-	}
-	return graded, loadErrs, nil
+	return shared.LoadStore[Vector](storeRoot, contextFilter, SchemaV1, "charges", chargesID, LoadVector)
 }
 
 // DuplicateCaseIDs refuses a charges population carrying one case_id twice.
 func DuplicateCaseIDs(vs []*Vector) error {
-	seen := map[string][]string{}
-	for _, v := range vs {
-		seen[v.CaseID] = append(seen[v.CaseID], v.Path)
-	}
-	var ids []string
-	for id, paths := range seen {
-		if len(paths) > 1 {
-			sort.Strings(paths)
-			ids = append(ids, fmt.Sprintf("%s (%s)", id, strings.Join(paths, ", ")))
-		}
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	sort.Strings(ids)
-	return fmt.Errorf(
-		"CHARGES STORE DEFECT: case_id declared more than once: %s. A case_id is how a vector is cited "+
-			"in a handoff, a gate and a review; two files answering to one id make every citation ambiguous",
-		strings.Join(ids, "; "))
+	return shared.DuplicateCaseIDs[Vector](vs, chargesID, "charges")
 }
 
-func sortVectors(vs []*Vector) {
-	sort.Slice(vs, func(i, j int) bool {
-		if vs[i].Context != vs[j].Context {
-			return vs[i].Context < vs[j].Context
-		}
-		if vs[i].CaseID != vs[j].CaseID {
-			return vs[i].CaseID < vs[j].CaseID
-		}
-		return vs[i].Path < vs[j].Path
-	})
-}
+func sortVectors(vs []*Vector) { shared.SortVectors[Vector](vs, chargesID) }
