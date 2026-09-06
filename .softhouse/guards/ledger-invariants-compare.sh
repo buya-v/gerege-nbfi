@@ -39,6 +39,11 @@ NEXUS_DIR="$REPO_ROOT/nexus"
 GUARD_SRC="$SCRIPT_DIR/ledgerguard"
 BASELINE="$REPO_ROOT/.softhouse/guards/ledger-invariants.baseline"
 
+# TEST HOOK ONLY. `LEDGER_INVARIANTS_BASELINE` lets a test point this comparison at a COPY of
+# the baseline (T3's "silenced" direction) without editing the committed baseline. It is never
+# set by the publication path; when unset, the committed baseline is the only baseline consulted.
+[ -n "${LEDGER_INVARIANTS_BASELINE:-}" ] && BASELINE="$LEDGER_INVARIANTS_BASELINE"
+
 case "${1:-}" in
   --baseline)
     [ -n "${2:-}" ] || { printf 'ledger-compare: --baseline requires a path\n' >&2; exit 2; }
