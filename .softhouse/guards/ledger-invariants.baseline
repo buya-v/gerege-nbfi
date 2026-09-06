@@ -31,7 +31,10 @@
 #   ledgerguard --root nexus | grep -E '^  \[' \
 #     | sed -E 's/^  \[([A-Z0-9-]+)\] ([^:]+):.*/\1\t\2/' | sort -u
 #
-# Measured by T509 at 42 findings across the 14 pairs below.
+# Measured by T509 at 42 findings across 14 pairs. RE-MEASURED after the savings and
+# working-capital repairs landed: 34 findings across the 9 pairs below. The five rows
+# those repairs cleared were REMOVED IN THE SAME COMMIT that carries them, which is the
+# only admissible way for a row to leave this file (see the REPAIRED block at the end).
 #
 # --- the four loanproduct schedule intermediates: a KNOWN, ARGUED, TEST-PINNED red ---
 #     Not ledger balances on the two legs that survive (T516): LEG 1 parity — applying
@@ -59,18 +62,36 @@ I3-FIELD-WRITE	internal/apps/loanproduct/repaymentperiod.go
 #                            shipped GREEN for two months because it is spelled outstandingMinor.
 #     exemption_test.go      a test FIXTURE assigning OutstandingPrincipalMinor. CANNOT-CATCH
 #                            item 8: tests are inspected, not exempted.
-#     workingcapital         m_wc_loan_balance, a stored balance TABLE whose thirteen columns
-#                            never say "balance"; plus one INSERT with a spliced column list
-#                            routed through InsertReturningInt64 (T506 F-6's scenario, live).
 I3-FIELD-WRITE	internal/apps/investor/postgres.go
 I3-FIELD-WRITE	internal/apps/loan/charge.go
 I3-FIELD-WRITE	internal/apps/loanschedule/conformance/exemption_test.go
 I3-FIELD-WRITE	internal/apps/loanschedule/emi.go
 I3-SQL-BALANCE	internal/apps/investor/postgres.go
-I3-SQL-BALANCE-TABLE	internal/apps/workingcapital/postgres.go
-OPAQUE-SQL	internal/apps/workingcapital/postgres.go
 #
-# --- the savings sites T501 was sent at and T510/T511 are still working ---
-I3-FIELD-WRITE	internal/apps/savings/postgres.go
-I3-FIELD-WRITE	internal/apps/savings/summary.go
-I3-SQL-BALANCE	internal/apps/savings/postgres.go
+# --- REPAIRED, and therefore removed. Five rows, verified BEFORE removal ---
+#     A row may leave this file only when the write path it names is GONE, never when the
+#     guard merely stops seeing it. The guard cannot tell those apart — its detection
+#     surface is the NAME — so each removal below was checked by hand against the tree:
+#
+#     savings/postgres.go     I3-FIELD-WRITE, I3-SQL-BALANCE   removed
+#     savings/summary.go      I3-FIELD-WRITE                   removed
+#       No INSERT or UPDATE in postgres.go reaches a balance-named column. The balance is
+#       now produced by a value-returning fold over the transaction list,
+#       `AccountBalanceOf(txns []SavingsAccountTransaction) MinorUnits` [summary.go:228],
+#       with `RunningBalancesOf` [:421] and `HoldNetRunningBalancesOf` [:504] beside it.
+#       Nothing persists their result. Landed by 78a17873 (T501), 5c4233fc (T510, the fold
+#       learns about reversals) and 84dc208e / 738282a6 (T515, the reviewed rework).
+#       6701d9d5 states the six cleared findings; 93cc16c9 reverted the FIRST T501 attempt,
+#       which is why the repair is credited to the merged softhouse branch and not to it.
+#
+#     workingcapital/postgres.go  I3-SQL-BALANCE-TABLE, OPAQUE-SQL   removed
+#       m_wc_loan_balance keeps no write path: 2723b086 makes it a READ MODEL. The
+#       thirteen columns that never said "balance" are now computed per call on value
+#       receivers — TotalOutstanding, PrincipalOutstanding, FeeOutstanding,
+#       PenaltyOutstanding [workingcapital/balance.go:45-70]. ApplyDisbursement [:37] takes
+#       a pointer receiver, but mutates an in-memory projection that no INSERT reads; it is
+#       the projection-intermediate case, not an authoritative stored balance.
+#       The OPAQUE-SQL row went with it: the spliced column list routed through
+#       InsertReturningInt64 that T506 F-6 flagged is no longer built.
+#
+#     The nine rows above this block are UNCHANGED and remain refused.

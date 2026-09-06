@@ -1349,6 +1349,62 @@ package covered by default. A future change that re-narrows either root to a nam
 silently un-grades this context's I-3 and I-4, and would do so while still printing a
 healthy-looking file count.
 
+### 4.4.2 PUBLICATION UNDER A RECORDED REFUSAL — ratified, revision 9
+
+**The problem.** §4.4.1 carries the one fact this section turns on: `guard_ledger_invariants`
+is the ONLY mechanism that can enforce I-3 and I-4, because a vector is a snapshot of oracle
+output and a snapshot cannot observe the ABSENCE of a write. The guard REFUSES the Go tree
+today. A subset of its findings cannot be cleared by any repair, because clearing them
+requires deciding whether a written value is an AUTHORITATIVE BALANCE OVER A POSTING STREAM
+or a PROJECTION INTERMEDIATE — and that distinction is not derivable from the Go tree. The
+go/types reachability discriminator that would decide it was commissioned, investigated, and
+reported NOT CONSTRUCTIBLE: its terminal condition would have to be "reaches persistence as
+an authoritative balance", and the only mechanically available form of that is a SQL literal
+naming a balance column or table. There are no struct tags to trace.
+
+Unamended, the consequence is that `main` cannot publish, and what is held behind the red bar
+includes the commits that REDUCE the finding set. The contract as written blocks the repairs
+on the strength of the defects they fix.
+
+**The amendment.** Publication is permitted while the guard's finding set is EXACTLY the set
+recorded in `.softhouse/guards/ledger-invariants.baseline`, and is REFUSED on any deviation in
+either direction:
+
+  * a `(class, file)` pair NOT in the baseline appears — a violation entered a file that had
+    none. **BLOCKED.**
+  * a `(class, file)` pair IN the baseline disappears — a known violation was silenced.
+    **BLOCKED** until the baseline is edited, which is a reviewed diff like any other.
+
+**What this is NOT.** It is not an exemption, a waiver, or a suppression. The guard's exit code
+is untouched; `check-ledger-invariants.sh` still refuses and the bar is still red. Nothing in
+the baseline is consulted when a FINDING is decided — only when PUBLICATION is decided.
+
+The second direction is the one that earns this. It catches the move `T502` was sent to make
+and refused to make: renaming a field so the guard stops seeing it, turning the bar green while
+changing nothing. Under this section that rename BLOCKS publication, because a baseline row
+vanished. **This is a ratchet, not a relaxation.**
+
+**Obligations this creates.**
+
+1. Every baseline row carries the argument for why it stands, or a pointer to the task that
+   made it. A row nobody can justify is a row to repair, not to keep.
+2. This section is RETIRED, and the baseline deleted, the moment a sound discriminator exists.
+   It is scaffolding around a formalisation gap, not a permanent relaxation.
+3. The baseline is not editable by the agent whose work changed the finding set. Updating it is
+   a separate reviewed step.
+4. A row may leave the baseline only when the write path it names is GONE — verified against the
+   tree by hand, because the guard's detection surface is the NAME and it cannot itself tell a
+   repair from a rename. The verification is recorded in the baseline beside the removal.
+
+**First application, recorded.** Obligation 4 was exercised when this section landed. Five rows
+left the baseline in the same commit: three savings rows and two working-capital rows, cleared by
+`78a17873` / `5c4233fc` / `84dc208e` / `738282a6` and by `2723b086`. Each was checked against the
+tree before removal — no INSERT or UPDATE reaches a balance-named column in either file, and the
+values are now produced by value-returning folds and per-call computations that nothing persists.
+The measured set went from 42 findings across 14 pairs to **34 across 9**. The baseline records
+the per-row argument.
+
+
 ### 4.5 The chart of accounts is DATA, not code — G-9, CLOSED, not re-decidable here
 
 **G-9 is CLOSED** (`.softhouse/gates.md` § G-9, local fire `20260821-054355`, `chosen_by:
