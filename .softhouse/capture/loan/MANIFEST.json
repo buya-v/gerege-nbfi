@@ -1,0 +1,57 @@
+{
+  "context": "loan",
+  "note": "repayment on SEED-L03, waiveinterest on SEED-L01, plus a discriminating loan SEED-L06 (principal 100050.50) whose period-1 interest ties HALF_UP vs HALF_EVEN.",
+  "roundingSurface": {
+    "seam": "loan interest schedule generation (1% of declining principal, rounded to 2dp)",
+    "discriminatingInput": {
+      "externalId": "SEED-L06",
+      "principal": "100050.50",
+      "ratePerPeriod": 12,
+      "rateFrequencyType": 3,
+      "daysInYear": 360,
+      "daysInMonth": 30
+    },
+    "rawInterest": "1000.505",
+    "HALF_UP": "1000.51",
+    "HALF_EVEN": "1000.50"
+  },
+  "objects": {
+    "seededLoans": [
+      {
+        "id": 1,
+        "note": "read back only"
+      },
+      {
+        "id": 2,
+        "note": "read back only"
+      },
+      {
+        "id": 3,
+        "note": "read back only"
+      },
+      {
+        "id": 4,
+        "note": "read back only"
+      },
+      {
+        "id": 5,
+        "note": "read back only"
+      }
+    ],
+    "discriminatingLoan": {
+      "id": "6",
+      "externalId": "SEED-L06",
+      "principal": "100050.50"
+    },
+    "repayment": {
+      "loanId": 3,
+      "transactionId": 12,
+      "amount": "8884.88"
+    },
+    "waiver": {
+      "loanId": 1,
+      "transactionId": 13,
+      "amount": "1000.00"
+    }
+  }
+}
