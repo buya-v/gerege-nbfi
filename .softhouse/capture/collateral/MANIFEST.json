@@ -1,0 +1,41 @@
+{
+  "context": "collateral",
+  "roundingSurface": {
+    "seam": "none exposed via API",
+    "note": "collateral-management stores basePrice and pctToBase but no API read-back computes basePrice*pctToBase/100*quantity. The loan-collateral link in this build is the legacy m_loan_collateral model keyed by a LoanCollateral code value; POST stores only type_cv_id (value/description null, no quantity). No division or rounding occurs through the API."
+  },
+  "objects": {
+    "collateralProduct": {
+      "id": "2",
+      "name": "SEED-Collateral-Product",
+      "basePrice": 100000,
+      "pctToBase": 50,
+      "unitType": 1,
+      "currency": "MNT"
+    },
+    "loanCollateralCodeValue": {
+      "id": "24",
+      "code": "LoanCollateral",
+      "name": "SEED Collateral Type"
+    },
+    "clientCollateral": {
+      "id": "2",
+      "clientId": 5,
+      "collateralId": "2",
+      "quantity": 1.5
+    },
+    "loanCollateralLink": {
+      "id": "2",
+      "loanId": 7,
+      "collateralTypeCodeValueId": "24"
+    },
+    "pendingLoanForLink": {
+      "id": 7,
+      "externalId": "SEED-L07",
+      "state": "submitted and pending approval"
+    }
+  },
+  "readBackQuirks": {
+    "clientCollateral": "GET /clients/5/collaterals returns [] even though m_client_collateral_management has the row (verified via SQL); the write path and read path appear to target different models in this build."
+  }
+}
