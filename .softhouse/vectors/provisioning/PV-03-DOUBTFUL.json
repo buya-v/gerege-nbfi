@@ -1,0 +1,42 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-03-DOUBTFUL",
+ "title": "DOUBTFUL category aggregate read (id 3)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from capture CAT-00 (GET /v1/provisioningcategory, tenant gerege). request.category_id=3 came from the capture row with \"id\":3; expect.id=3, expect.name=\"DOUBTFUL\" and expect.description=\"Principal and/or Interest overdue by x days and less than y\" are that same row's \"id\", \"categoryName\" and \"categoryDescription\" fields. No value was computed by this promotion.",
+ "oracle": {
+  "seam": "provisioning-category-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All three expect fields are transcribed from the committed capture CAT-00; capture_case_id names the categoryName value of the observed row.",
+  "capture_ref": ".softhouse/capture/provisioning/out/CAT-00-categories-raw.json",
+  "capture_sha256": "b7c62862064d9b02e5506fb20b4d88e1449de20a62e54593fbdfcb6764eaf787",
+  "capture_case_id": "DOUBTFUL",
+  "citation": "CAT-00 row {\"id\":3,\"categoryName\":\"DOUBTFUL\",\"categoryDescription\":\"Principal and/or Interest overdue by x days and less than y\"}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "category_id": 3
+ },
+ "expect": {
+  "id": 3,
+  "name": "DOUBTFUL",
+  "description": "Principal and/or Interest overdue by x days and less than y"
+ },
+ "capabilities_required": [
+  "category-aggregate"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}

@@ -10,6 +10,7 @@ import (
 
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
+	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 )
 
 // THE STORE FILE CENSUS — the two enumerators of the vector store must agree,
@@ -91,6 +92,7 @@ var storeRootNonVectorFiles = []string{
 	"PIN-ledger.json", "capabilities-ledger.json",
 	"oracle-derived-columns.json",
 	"PIN-charges.json", "capabilities-charges.json",
+	"PIN-provisioning.json", "capabilities-provisioning.json",
 }
 
 // caseIDRune reports whether r may appear in a case_id.
@@ -231,6 +233,9 @@ func knownStoreContextDirs() map[string]bool {
 		known[c] = true
 	}
 	for _, c := range chargesconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range provisioningconf.SchemaContexts() {
 		known[c] = true
 	}
 	return known

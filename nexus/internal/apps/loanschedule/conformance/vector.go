@@ -13,6 +13,7 @@ import (
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 )
 
 // VectorSchemaV1 is the only schema string this harness accepts. A vector
@@ -935,6 +936,10 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// chargesClaimed: files the THIRD schema's loader owns. Same contract as
 	// ledgerClaimed — collected only so the census can be told.
 	var chargesClaimed []string
+	// provisioningClaimed: files the FOURTH schema's loader owns. Same contract
+	// as ledgerClaimed and chargesClaimed — collected only so the census can be
+	// told, never graded here.
+	var provisioningClaimed []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
@@ -984,6 +989,17 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 			// `chargesClaimed`.
 			if chargesconf.FileDeclaresChargesSchema(abs) {
 				chargesClaimed = append(chargesClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// THE PROVISIONING ROUTE (OH-3). A file whose top-level `schema` is
+			// the provisioning schema belongs to the FOURTH schema, graded by its
+			// own standalone harness in
+			// nexus/internal/apps/provisioning/conformance. As with ledger and
+			// charges, the probe is the weakest possible test — one field,
+			// non-strictly — and the file is still accounted for via
+			// `provisioningClaimed`.
+			if provisioningconf.FileDeclaresProvisioningSchema(abs) {
+				provisioningClaimed = append(provisioningClaimed, filepath.ToSlash(rel))
 				continue
 			}
 			v, err := LoadVector(abs, rel)
@@ -1050,7 +1066,7 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// the shell float guard and to this loader. It is taken over `all` and over
 	// the WHOLE tree, filter or no filter — for the same reason the duplicate
 	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
-	if err := StoreFileCensus(storeRoot, all, loadErrs, append(ledgerClaimed, chargesClaimed...)...); err != nil {
+	if err := StoreFileCensus(storeRoot, all, loadErrs, append(append(ledgerClaimed, chargesClaimed...), provisioningClaimed...)...); err != nil {
 		refusals = append(refusals, err)
 	}
 	if len(refusals) > 0 {

@@ -1,0 +1,13 @@
+{
+ "schema": "gerege.provisioning.pin/v1",
+ "_note": "Provisioning parity-store pin. Pins the Fineract commit the provisioning captures were observed from, and the tenant context under which they were captured. The provisioning captures (CAT-00, CRI-00, CRI-01, ENT-00, ENT-01) were taken on the running Fineract server under tenant gerege: HALF_UP (c_configuration.rounding-mode ordinal 4), MathContext precision 19, currency MNT with 2 minor units, timezone Asia/Ulaanbaatar. There is no frozen-contract digest because the provisioning slice freezes no contract file.",
+ "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ }
+}
