@@ -1,0 +1,58 @@
+{
+  "context": "loanproduct",
+  "note": "Loan-product CONFIGURATION read-back (GET /loanproducts, /loanproducts/template, /loanproducts/{id}). The loanproduct package owns the stored-value <-> enum tables (amortization/interest/interest-calc-period/frequency/day-count) and the LoanProductRelatedDetail value object; the schedule/EMI arithmetic that consumes those values is already owned and graded by loanschedule under DEC-1, so this context grades the CONFIGURATION, not the money the schedule projects from it. The one non-obvious discriminator is the day-count trap: DaysInYearType and DaysInMonthType store the literal day count, not the ordinal (DaysInYear360=360, DaysInYear364=364, DaysInYear365=365, DaysInMonth30=30), so a naive iota port is silently wrong on every non-trivial day-count convention.",
+  "roundingSurface": {
+    "seam": "none — the loan-product CONFIGURATION carries values verbatim",
+    "note": "principal, interestRatePerPeriod and annualInterestRate are carried numeric(19,6) columns with NO decode or rounding in the loanproduct package (the annual-nominal-rate derivation is deferred to loanschedule under DEC-1). No HALF_UP/HALF_EVEN tie exists on this surface. The discriminator this context pins is not a rounding tie but the stored-value != ordinal day-count trap (DaysInYear360 stores 360, DaysInMonth30 stores 30)."
+  },
+  "objects": {
+    "products": [
+      {
+        "id": 1,
+        "name": "T22 mode probe halfcent",
+        "shortName": "TM2",
+        "principal": "1162502.5",
+        "principalMinor": "116250250",
+        "numberOfRepayments": 12,
+        "repaymentEvery": 1,
+        "repaymentFrequencyStored": 2,
+        "interestRatePerPeriod": "21.6",
+        "interestRateFrequencyStored": 3,
+        "annualInterestRate": "21.6",
+        "amortizationStored": 1,
+        "interestMethodStored": 0,
+        "interestCalcPeriodStored": 1,
+        "daysInMonthStored": 1,
+        "daysInYearStored": 1,
+        "loanScheduleType": "PROGRESSIVE"
+      },
+      {
+        "id": 2,
+        "name": "SEED-Probe-Loan",
+        "shortName": "SEED",
+        "principal": "100000.0",
+        "principalMinor": "10000000",
+        "numberOfRepayments": 12,
+        "repaymentEvery": 1,
+        "repaymentFrequencyStored": 2,
+        "interestRatePerPeriod": "12.0",
+        "interestRateFrequencyStored": 3,
+        "annualInterestRate": "12.0",
+        "amortizationStored": 1,
+        "interestMethodStored": 0,
+        "interestCalcPeriodStored": 1,
+        "daysInMonthStored": 1,
+        "daysInYearStored": 1,
+        "loanScheduleType": "CUMULATIVE"
+      }
+    ],
+    "vocabularySources": {
+      "amortizationMethod": "loanproducts-template-raw.json amortizationTypeOptions (id 0 equal.principal, id 1 equal.installments)",
+      "interestMethod": "loanproducts-template-raw.json interestTypeOptions (id 0 declining.balance, id 1 flat)",
+      "interestCalcPeriod": "loanproducts-template-raw.json interestCalculationPeriodTypeOptions (id 0 daily, id 1 same.as.repayment.period)",
+      "periodFrequency": "loanproducts-template-raw.json repaymentFrequencyTypeOptions / interestRateFrequencyTypeOptions; the DTO prepends 'repaymentFrequency.' / 'interestRateFrequency.' to the enum's own getCode() (PeriodFrequencyType.java:26-31)",
+      "daysInMonth": "loanproducts-template-raw.json daysInMonthTypeOptions (id 1 actual, id 30 days360 — stored value is the literal day count, NOT the ordinal)",
+      "daysInYear": "loanproducts-template-raw.json daysInYearTypeOptions (id 1 actual, id 360 days360, id 364 days364, id 365 days365 — stored value is the literal day count, NOT the ordinal)"
+    }
+  }
+}

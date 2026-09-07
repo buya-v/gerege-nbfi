@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loanproduct.vector/v1",
+ "case_id": "LP-calc-daily",
+ "title": "interest calculation period DAILY stored value 0",
+ "class": "parity",
+ "context": "loanproduct",
+ "_note": "Parity vector transcribed from loanproducts-template-raw.json interestCalculationPeriodTypeOptions id 0 (code interestCalculationPeriodType.daily), tenant gerege.",
+ "oracle": {
+  "seam": "loanproduct-config",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/loanproduct/out/loanproducts-template-raw.json; the capture_case_id names the enum code as it appears in the option list.",
+  "capture_ref": ".softhouse/capture/loanproduct/out/loanproducts-template-raw.json",
+  "capture_sha256": "6168b177ec87a259015aa5a2cd8eb93a838de571765a0a3d16a66a6683c523fe",
+  "capture_case_id": "interestCalculationPeriodType.daily",
+  "citation": "loanproducts-template-raw.json interestCalculationPeriodTypeOptions id 0 -> code interestCalculationPeriodType.daily"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "interest-calc-period",
+  "stored": 0
+ },
+ "expect": {
+  "stored": 0,
+  "code": "interestCalculationPeriodType.daily",
+  "name": "DAILY"
+ },
+ "capabilities_required": [
+  "interest-calc-period"
+ ],
+ "graded_against": [
+  "loanproduct-go"
+ ]
+}

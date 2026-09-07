@@ -1,0 +1,13 @@
+{
+ "schema": "gerege.loanproduct.pin/v1",
+ "_note": "Loanproduct parity-store pin. Pins the Fineract commit the loanproduct captures were observed from, and the tenant context under which they were captured. The captures (loanproducts-list-raw.json, loanproducts-template-raw.json, loanproduct-1-raw.json, loanproduct-2-raw.json) were taken on the running Fineract server under tenant gerege: HALF_UP (c_configuration.rounding-mode ordinal 4), MathContext precision 19, currency MNT with 2 minor units, timezone Asia/Ulaanbaatar. The tenant_params record is uniform with the money contexts even though this context grades no money — the only graded cells are the enum stored value, i18n code and enum name.",
+ "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ }
+}

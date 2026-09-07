@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loanproduct.vector/v1",
+ "case_id": "LP-diy-days360",
+ "title": "days-in-year DAYS_360 stored value 360 (day count, not ordinal)",
+ "class": "parity",
+ "context": "loanproduct",
+ "_note": "Parity vector transcribed from loanproducts-template-raw.json daysInYearTypeOptions id 360 (code DaysInYearType.days360), tenant gerege. DISCRIMINATOR: the stored value is the literal 360-day count, NOT the enum ordinal \u2014 a naive iota port (ordinal 2) decodes this wrong or not at all.",
+ "oracle": {
+  "seam": "loanproduct-config",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/loanproduct/out/loanproducts-template-raw.json; the capture_case_id names the enum code as it appears in the option list.",
+  "capture_ref": ".softhouse/capture/loanproduct/out/loanproducts-template-raw.json",
+  "capture_sha256": "6168b177ec87a259015aa5a2cd8eb93a838de571765a0a3d16a66a6683c523fe",
+  "capture_case_id": "DaysInYearType.days360",
+  "citation": "loanproducts-template-raw.json daysInYearTypeOptions id 360 -> code DaysInYearType.days360"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "days-in-year",
+  "stored": 360
+ },
+ "expect": {
+  "stored": 360,
+  "code": "DaysInYearType.days360",
+  "name": "DAYS_360"
+ },
+ "capabilities_required": [
+  "days-in-year"
+ ],
+ "graded_against": [
+  "loanproduct-go"
+ ]
+}

@@ -1,0 +1,56 @@
+{
+ "schema": "gerege.loanproduct.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "amortization-method",
+   "description": "Decode the m_product_loan.amortization_method_enum stored value (0 equal.principal, 1 equal.installments) to its i18n code and enum name.",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json amortizationTypeOptions under tenant gerege: the running oracle returned [{id:0, code:amortizationType.equal.principal}, {id:1, code:amortizationType.equal.installments}], and both products use id 1."
+  },
+  {
+   "name": "interest-method",
+   "description": "Decode the m_product_loan.interest_method_enum stored value (0 declining.balance, 1 flat) to its i18n code and enum name.",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json interestTypeOptions under tenant gerege: the running oracle returned [{id:1, code:interestType.flat}, {id:0, code:interestType.declining.balance}], and both products use id 0."
+  },
+  {
+   "name": "interest-calc-period",
+   "description": "Decode the m_product_loan.interest_calculated_in_period_enum stored value (0 daily, 1 same.as.repayment.period) to its i18n code and enum name.",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json interestCalculationPeriodTypeOptions under tenant gerege: the running oracle returned [{id:0, code:interestCalculationPeriodType.daily}, {id:1, code:interestCalculationPeriodType.same.as.repayment.period}], and both products use id 1."
+  },
+  {
+   "name": "period-frequency",
+   "description": "Decode the PeriodFrequencyType stored value (0 days, 1 weeks, 2 months, 3 years, 4 whole_term) to its i18n code and enum name. The DTO prepends 'repaymentFrequency.' / 'interestRateFrequency.' to the enum's own getCode().",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json repaymentFrequencyTypeOptions / interestRateFrequencyTypeOptions under tenant gerege: both products use repayment frequency id 2 (months) and interest frequency id 3 (years); the template also exposes whole_term id 4."
+  },
+  {
+   "name": "days-in-month",
+   "description": "Decode the m_product_loan.days_in_month_enum stored value (1 actual, 30 days360) to its i18n code and enum name. The stored value is the LITERAL DAY COUNT, not the ordinal.",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json daysInMonthTypeOptions under tenant gerege: the running oracle returned [{id:1, code:DaysInMonthType.actual}, {id:30, code:DaysInMonthType.days360}], and both products use id 1."
+  },
+  {
+   "name": "days-in-year",
+   "description": "Decode the m_product_loan.days_in_year_enum stored value (1 actual, 360 days360, 364 days364, 365 days365) to its i18n code and enum name. The stored value is the LITERAL DAY COUNT, not the ordinal.",
+   "in_graded_domain": true,
+   "evidence": "Capture loanproducts-template-raw.json daysInYearTypeOptions under tenant gerege: the running oracle returned [{id:1, code:DaysInYearType.actual}, {id:360, code:DaysInYearType.days360}, {id:364, code:DaysInYearType.days364}, {id:365, code:DaysInYearType.days365}], and both products use id 1."
+  }
+ ],
+ "seams": [
+  {
+   "name": "loanproduct-config",
+   "description": "The loan-product configuration read-back seam: GET /loanproducts/template enum option lists and GET /loanproducts/{id} product configuration, tenant gerege.",
+   "status": {
+    "amortization-method": "exercised",
+    "interest-method": "exercised",
+    "interest-calc-period": "exercised",
+    "period-frequency": "exercised",
+    "days-in-month": "exercised",
+    "days-in-year": "exercised"
+   }
+  }
+ ],
+ "note": "Loanproduct parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Six capabilities are graded, one per enum vocabulary, all observed from the same loanproduct-config seam. No money, minor-unit, or rounding surface exists in this context; the graded cells are the enum stored value, i18n code and enum name."
+}
