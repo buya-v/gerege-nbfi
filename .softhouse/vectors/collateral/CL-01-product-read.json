@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-01-product-read",
+ "title": "collateral product aggregate read (id 2)",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture collateral-product-readback-raw.json (GET product read-back, tenant gerege). request.product_id=2 came from the capture row with \"id\":2; expect.id=2, expect.name=\"SEED-Collateral-Product\", expect.quality=\"Good\", expect.unit_type=\"1\", expect.currency=\"MNT\" are that same row's \"id\", \"name\", \"quality\", \"unitType\" and \"currency\" fields. expect.base_price=\"10000000000\" is the scale-5 integer of the capture's \"basePrice\":100000.00000 (100000.00000 x 10^5); expect.pct_to_base=\"5000000\" is the scale-5 integer of the capture's \"pctToBase\":50.00000 (50.00000 x 10^5). Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "collateral-product-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All seven expect fields are transcribed from the committed capture collateral-product-readback-raw.json; capture_case_id names the product name value of the observed row.",
+  "capture_ref": ".softhouse/capture/collateral/out/collateral-product-readback-raw.json",
+  "capture_sha256": "812f55f434cbfa740e7f0f4aadbfadcfb4c5e5af6e3e07622023dd326ee541a0",
+  "capture_case_id": "SEED-Collateral-Product",
+  "citation": "collateral-product-readback-raw.json row {\"quality\":\"Good\",\"basePrice\":100000.00000,\"unitType\":\"1\",\"pctToBase\":50.00000,\"currency\":\"MNT\",\"name\":\"SEED-Collateral-Product\",\"id\":2}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "product_id": 2
+ },
+ "expect": {
+  "id": 2,
+  "name": "SEED-Collateral-Product",
+  "quality": "Good",
+  "unit_type": "1",
+  "currency": "MNT",
+  "base_price": "10000000000",
+  "pct_to_base": "5000000"
+ },
+ "capabilities_required": [
+  "product-aggregate-read"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}
