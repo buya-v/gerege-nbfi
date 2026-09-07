@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L03-repayment-allocation",
+ "title": "SEED-L03 repayment four-bucket allocation (transaction 12)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the SEED-L03 repayment allocation. request.outstanding.interest=100000 and request.outstanding.principal=788488 are the first instalment's due amounts (1000.00 and 7884.88) transcribed from loan-3-schedule-raw.json periods[1]; request.outstanding.penalty=0 and request.outstanding.fee=0 are that instalment's empty buckets. request.amount_minor=888488 is the repayment amount 8884.88. expect.allocation.interest=100000 and expect.allocation.principal=788488 are transaction 12's interestPortion 1000.00 and principalPortion 7884.88; expect.leftover_minor=0 is the fully-consumed payment. All money is integer minor units; nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-repayment-allocation",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect.allocation and expect.leftover_minor are transcribed from transaction 12 of the committed capture loan-3-transactions-after-raw.json; the instalment due amounts are transcribed from loan-3-schedule-raw.json periods[1]; capture_case_id names the externalLoanId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-3-transactions-after-raw.json",
+  "capture_sha256": "054b73bb9f2cc2e513d76a181aecae96226a2aaa1adde89390176abda45f5f46",
+  "capture_case_id": "SEED-L03",
+  "citation": "loan-3-transactions-after-raw.json {\"id\":12,\"type\":{\"code\":\"loanTransactionType.repayment\"},\"amount\":8884.880000,\"principalPortion\":7884.880000,\"interestPortion\":1000.000000}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "repayment": {
+   "outstanding": {
+    "penalty": "0",
+    "fee": "0",
+    "interest": "100000",
+    "principal": "788488"
+   },
+   "amount_minor": "888488"
+  }
+ },
+ "expect": {
+  "allocation": {
+   "penalty": "0",
+   "fee": "0",
+   "interest": "100000",
+   "principal": "788488"
+  },
+  "leftover_minor": "0"
+ },
+ "capabilities_required": [
+  "repayment-allocation"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}

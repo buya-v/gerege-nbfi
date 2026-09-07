@@ -1,0 +1,45 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L06-schedule-interest-period-1",
+ "title": "SEED-L06 period-1 schedule interest (HALF_UP vs HALF_EVEN discriminator)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the discriminating cell of the loan capture: the period-1 single-period interest of SEED-L06. request.principal_minor=10005050 is the capture's \"principal\":100050.500000 in minor units; request.rate_per_annum_pct=12 is the capture's \"annualInterestRate\":12.000000; request.days_in_year=360 and request.days_in_month=30 are the MANIFEST's roundingSurface.discriminatingInput day conventions (the loan product's 360/30 interest-day basis that makes the raw interest 1000.505). expect.interest_minor=100051 is the capture's periods[1].interestOriginalDue=1000.510000 in minor units, the HALF_UP posting where HALF_EVEN would have posted 1000.50. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-schedule-interest",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect.interest_minor is transcribed from periods[1].interestOriginalDue of the committed capture loan-L06-schedule-raw.json; the request day conventions are the MANIFEST's discriminatingInput; capture_case_id names the externalId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-L06-schedule-raw.json",
+  "capture_sha256": "b64596033dacf3b74249633e07df6cc5a22368061b2ae899a078504317519281",
+  "capture_case_id": "SEED-L06",
+  "citation": "loan-L06-schedule-raw.json {\"principal\":100050.500000,\"annualInterestRate\":12.000000, repaymentSchedule.periods[1].interestOriginalDue:1000.510000}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "schedule": {
+   "principal_minor": "10005050",
+   "rate_per_annum_pct": 12,
+   "days_in_year": 360,
+   "days_in_month": 30
+  }
+ },
+ "expect": {
+  "interest_minor": "100051"
+ },
+ "capabilities_required": [
+  "schedule-interest-rounding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
