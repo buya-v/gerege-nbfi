@@ -314,3 +314,11 @@
 #        meant to. Pinned as a KNOWN SYNTHETIC FIXTURE PATH, not as a rot to repair.
 .softhouse/capture/t493-zero-turn-escalation/t553-sweep.py | .softhouse/LOCK
 .softhouse/capture/t537-review-t536/t537-failclosed.sh | .softhouse/runs/20260101.tasks.json
+
+# --- ADDED by guard_program_stopped itself. One row, and it is the guard's own subject ---
+#     `.softhouse/conformance.sh` now quotes `.softhouse/LOCK` because guard_program_stopped's
+#     ARM 2 refuses when a STOPPED program is holding a lock. The path is dead for exactly the
+#     reason the guard exists: softhouse is stopped and no fire holds a lock.
+#     Same removal condition as the other LOCK rows above — if softhouse is ever restarted and
+#     LOCK returns, this row comes out in the same commit that restarts it.
+.softhouse/conformance.sh | .softhouse/LOCK
