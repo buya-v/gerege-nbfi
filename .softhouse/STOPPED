@@ -1,0 +1,29 @@
+# THE SOFTHOUSE PROGRAM IS STOPPED BY A USER DECISION.
+#
+# stopped_on: 2026-09-06
+# decided_by: the repository owner, stated in the driver session as
+#             "it is better to stop softhouse when it finished a current tasks and all
+#              tasks should be delivered to openhands", and reaffirmed as
+#             "keep in mind that you will use openhands to complete tasks not softhouse".
+#
+# WHAT THIS FILE DOES
+#   `.softhouse/bin/fire-program.sh` reads it as its FIRST action, before preflight and
+#   before the lock, and exits non-zero without doing anything. Any fire — local launchd
+#   or cloud routine — that starts from a checkout of this repository stops here.
+#
+# WHY IT LIVES IN THE REPO RATHER THAN ON A HOST
+#   The local launchd job was unloaded on 2026-09-06 and its plist renamed. That was not
+#   enough: the machine was powered off accidentally, login RELOADED the plist, a fire ran
+#   as 20260906-200001, and it committed to main. A host-local stop does not survive a
+#   reboot and does not reach a fire running somewhere else. This file travels with the
+#   repository, so it reaches every producer that clones or pulls it.
+#
+# WHAT IT DOES NOT DO
+#   It does not cancel a SCHEDULE. A cloud routine will still wake, pull, read this, and
+#   refuse — burning its own time each tick. Removing the schedule is a separate action
+#   that only the account owner can take.
+#
+# HOW TO RESTART THE PROGRAM
+#   Delete this file in a commit that says why. Nothing else is disabled: no guard, no
+#   instrument, no history has been removed, and `guard_program_stopped` (which refuses
+#   the bar when this file coexists with a held LOCK) stops applying the moment it is gone.

@@ -970,6 +970,74 @@ guard_no_float_in_harness() {
 #
 # Positively phrased, like its neighbours: it reports how many files it inspected,
 # and zero is an ERROR.
+# guard_program_stopped: THE PROGRAM-STOPPED SENTINEL IS ENFORCED, NOT MERELY WRITTEN.
+#
+# `.softhouse/STOPPED` records that the softhouse program is stopped by a user decision, and
+# `.softhouse/bin/fire-program.sh` refuses on it before taking the lock. That is layer one and
+# it works ONLY WHILE THE CODE HONOURS IT. This guard is layer two: it does not trust the
+# sentinel, it OBSERVES the tree, so a stop that has been quietly bypassed is a named refusal
+# rather than something a reader has to notice.
+#
+# WHY IT EXISTS, MEASURED not argued. On 2026-09-06 the launchd job was unloaded and its plist
+# renamed. The machine was then powered off by accident; login RELOADED the job, fire
+# 20260906-200001 ran and committed to main against a standing decision. A cloud routine did the
+# same from another host on the same day. Neither was visible until the DEAD-PATH FRONTIER went
+# red an hour later over four rows quoting `.softhouse/LOCK` — a real signal, but an indirect and
+# slow one. This guard makes the same fact immediate and says what it means.
+#
+# TWO ARMS, and both are about the same question: is the stop REAL?
+#   ARM 1  the sentinel is present but fire-program.sh no longer checks it -> the stop has been
+#          bypassed in code. REFUSE.
+#   ARM 2  the sentinel is present and a LOCK is held -> a stopped program is running. REFUSE.
+#
+# WITH NO SENTINEL THIS GUARD IS SILENT. It enforces a decision that has been made; it does not
+# make one. Delete `.softhouse/STOPPED` in a reviewed commit and the guard stops applying, which
+# is the whole restart procedure.
+guard_program_stopped() {
+  local sentinel="$REPO_ROOT/.softhouse/STOPPED"
+  local fire="$REPO_ROOT/.softhouse/bin/fire-program.sh"
+  local lock="$REPO_ROOT/.softhouse/LOCK"
+
+  if [ ! -e "$sentinel" ]; then
+    say "conformance:   program-stopped: PASS — no .softhouse/STOPPED sentinel; nothing to enforce."
+    return 0
+  fi
+
+  local bad=0
+
+  if [ ! -f "$fire" ]; then
+    warn "program-stopped: REFUSED — the sentinel is present but $fire is missing, so nothing"
+    warn "program-stopped:   enforces it at the only place a fire begins."
+    bad=1
+  elif ! LC_ALL=C grep -qE '^[[:space:]]*if[[:space:]]+\[[[:space:]]+-e[[:space:]]+"\$REPO/\.softhouse/STOPPED"[[:space:]]+\]' "$fire"; then
+    # MATCH THE EXECUTABLE TEST, NOT THE WORD. A first draft of this arm grepped for the
+    # string `softhouse/STOPPED` anywhere in the file and was MEASURED PASSING while the
+    # check itself had been repointed at a different path — because the COMMENT explaining
+    # the check still contained the word. A guard that a comment can satisfy is a guard that
+    # proves nothing. The pattern below matches the `if [ -e "$REPO/.softhouse/STOPPED" ]`
+    # line itself, so the arm reads the code and not the prose about it.
+    warn "program-stopped: REFUSED — .softhouse/STOPPED is present but fire-program.sh NO LONGER"
+    warn "program-stopped:   READS IT. The stop has been bypassed in code: a fire would run."
+    warn "program-stopped:   Restore the check, or delete the sentinel in a commit that says why."
+    bad=1
+  fi
+
+  if [ -e "$lock" ]; then
+    warn "program-stopped: REFUSED — the program is STOPPED and yet .softhouse/LOCK is held."
+    warn "program-stopped:   A stopped program does not hold a lock. Either a fire started against"
+    warn "program-stopped:   the decision, or a dead lock outlived one. Read the lock's holder and"
+    warn "program-stopped:   fire_id before removing it — it may belong to a LIVE run."
+    bad=1
+  fi
+
+  if [ "$bad" -ne 0 ]; then
+    return 1
+  fi
+
+  say "conformance:   program-stopped: PASS — sentinel present, fire-program.sh enforces it, no lock held."
+  return 0
+}
+
 guard_gofmt() {
   local unformatted seen
   seen="$(find "$NEXUS_DIR" -name '*.go' -type f | LC_ALL=C grep -ac '' || true)"
@@ -4832,6 +4900,7 @@ GUARD_COST_BUDGETS="guard_graded_root_is_this_tree|60
 guard_harness_text_is_committed|300
 guard_no_float_in_vectors|60
 guard_no_float_in_harness|60
+guard_program_stopped|60
 guard_gofmt|60
 guard_no_float_in_capture_requests|60
 guard_no_narrow_catch_in_capture_rigs|60
@@ -6036,6 +6105,7 @@ run_guards() {
   timed_guard guard_harness_text_is_committed     || failed=1
   timed_guard guard_no_float_in_vectors           || failed=1
   timed_guard guard_no_float_in_harness           || failed=1
+  timed_guard guard_program_stopped               || failed=1   # the stop is enforced, not merely written
   timed_guard guard_gofmt                         || failed=1
   timed_guard guard_no_float_in_capture_requests  || failed=1
   timed_guard guard_no_narrow_catch_in_capture_rigs || failed=1

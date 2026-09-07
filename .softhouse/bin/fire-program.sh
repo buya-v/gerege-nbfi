@@ -17,6 +17,30 @@
 set -uo pipefail
 
 REPO="${GEREGE_NBFI_REPO:-/Users/buv/gerege-nbfi}"
+
+# ============ THE PROGRAM-STOPPED SENTINEL — READ BEFORE ANYTHING ELSE =====================
+# `.softhouse/STOPPED` means the softhouse program is stopped by a USER DECISION, and every
+# fire refuses here: before preflight, before the driver, and above all BEFORE THE LOCK. A
+# fire that took the lock and then refused would leave `.softhouse/LOCK` behind and put the
+# dead-path frontier into the state it spent 2026-09-06 being repaired out of.
+#
+# THIS CHECK EXISTS BECAUSE A HOST-LOCAL STOP WAS NOT ENOUGH. The launchd job was unloaded
+# and its plist renamed; the machine was then powered off by accident and login RELOADED the
+# job, a fire ran as 20260906-200001, and it committed to main against a standing decision.
+# A sentinel in the REPOSITORY reaches every producer that clones or pulls it — including a
+# cloud routine on another host, which is the one a local `launchctl` can never touch.
+#
+# FAIL-CLOSED, DELIBERATELY. The test is existence, not content: an unreadable or malformed
+# STOPPED file still stops the fire. There is no override flag and no environment escape,
+# because a stop that can be argued away by a caller is not a stop. To restart the program,
+# DELETE THE FILE IN A COMMIT THAT SAYS WHY — a visible diff, reviewable like any other.
+if [ -e "$REPO/.softhouse/STOPPED" ]; then
+  printf 'fire-program: REFUSED — .softhouse/STOPPED is present. The softhouse program is\n' >&2
+  printf 'fire-program:   stopped by a user decision and every fire refuses before the lock.\n' >&2
+  printf 'fire-program:   Nothing was locked, nothing was committed, nothing was dispatched.\n' >&2
+  printf 'fire-program:   Read %s/.softhouse/STOPPED for the decision and how to reverse it.\n' "$REPO" >&2
+  exit 3
+fi
 FINERACT_SRC="${FINERACT_SRC:-/Users/buv/fineract}"
 LOG_DIR="${LOG_DIR:-$HOME/Library/Logs/gerege-nbfi}"
 
