@@ -21,6 +21,14 @@ const SavingsContext = "savings"
 // account, whose one-day raw interest 0.005 ties HALF_UP against HALF_EVEN.
 const SeamSavingsDailyInterest = "savings-daily-interest"
 
+// SeamSavingsAccountStatus is the account-status capture seam this schema
+// grades: the m_savings_account.status_enum stored value Fineract wrote back in
+// the acknowledgement of a lifecycle command on the discriminating savings
+// account. The oracle observed exactly two values here — 200 after the approve
+// step and 300 after the activate step — and only those two steps are
+// transcriptable.
+const SeamSavingsAccountStatus = "savings-account-status"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{SavingsContext} }
@@ -86,16 +94,29 @@ type DailyInterestRequest struct {
 	Days                 int64  `json:"days"`
 }
 
+// AccountStatusRequest is the savings-account-status seam's input: the account
+// lifecycle step whose command acknowledgement the oracle captured on the
+// discriminating savings account. Only the two steps the oracle was observed
+// executing are admissible — "approve" and "activate" — because a parity vector
+// transcribes an observed status and never extrapolates to an unobserved step.
+type AccountStatusRequest struct {
+	Step string `json:"step"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one sub-request.
 type Request struct {
 	DailyInterest *DailyInterestRequest `json:"daily_interest,omitempty"`
+	AccountStatus *AccountStatusRequest `json:"account_status,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the daily-interest
-// seam it is the single-period interest, an integer STRING in minor units.
+// seam it is the single-period interest, an integer STRING in minor units; for
+// the account-status seam it is the m_savings_account.status_enum stored value
+// (an integer ordinal, NOT money).
 type Expect struct {
 	InterestMinor string `json:"interest_minor,omitempty"`
+	StatusID      int32  `json:"status_id,omitempty"`
 }
 
 // Vector is one savings golden vector.

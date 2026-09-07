@@ -81,6 +81,40 @@ func dailyInterestProbe() *Vector {
 	}
 }
 
+// accountStatusProbe builds a valid account-status-seam vector for the
+// observed lifecycle step: the status stored value the oracle's command
+// acknowledgement wrote back (approve -> 200, activate -> 300).
+func accountStatusProbe(step string, statusID int32) *Vector {
+	ref := ".softhouse/capture/savings/out/savings-daily-" + step + "-raw.json"
+	sum := "f3144125d99583776564d32522532fc6f1fb42e3a5241953488b96405972eb81"
+	caseID := "savingsAccountStatusType.approved"
+	if step == "activate" {
+		sum = "43ff3b0fd2508177170e0f19eba857fe9be640895e972ad78daf469548709b95"
+		caseID = "savingsAccountStatusType.active"
+	}
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-account-status-" + step,
+		Title:   "probe account status after " + step,
+		Class:   ClassParity,
+		Context: SavingsContext,
+		Note:    "probe: transcribed from savings-daily-" + step + "-raw.json changes.status.id, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamSavingsAccountStatus, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: status stored value of the " + step + " ack",
+			CaptureRef:    ref,
+			CaptureSHA256: sum,
+			CaptureCaseID: caseID,
+		},
+		TenantParams:         probeTenant(),
+		Request:              Request{AccountStatus: &AccountStatusRequest{Step: step}},
+		Expect:               Expect{StatusID: statusID},
+		CapabilitiesRequired: []string{"account-status-stored-value"},
+		GradedAgainst:        []string{"savings-go"},
+	}
+}
+
 func TestEmptyStoreRefuses(t *testing.T) {
 	store := t.TempDir()
 	s, err := Run(context.Background(), Options{
@@ -156,6 +190,69 @@ func TestDailyInterestSeamGrading(t *testing.T) {
 	}
 	if len(red.Diffs) == 0 {
 		t.Fatal("wrong impl produced no diffs")
+	}
+}
+
+func TestAccountStatusSeamGrading(t *testing.T) {
+	cases := []struct {
+		step string
+		id   int32
+	}{
+		{"approve", 200},
+		{"activate", 300},
+	}
+	for _, c := range cases {
+		v := accountStatusProbe(c.step, c.id)
+		if p := Admit(v, Options{}); len(p) > 0 {
+			t.Fatalf("%s probe should be admissible: %v", c.step, p)
+		}
+		correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+		if correct.Outcome != OutcomePass {
+			t.Fatalf("%s correct impl outcome = %s, want PASS; diffs=%v", c.step, correct.Outcome, correct.Diffs)
+		}
+		// The status cell is a graded enum ordinal, never a money cell.
+		if correct.GradedCells != 1 || correct.MoneyCells != 0 {
+			t.Fatalf("%s graded cells = %d, money = %d; want 1/0", c.step, correct.GradedCells, correct.MoneyCells)
+		}
+
+		wrongImpl, ok := Lookup("savings-wrong-iota-status-ordinal")
+		if !ok {
+			t.Fatal("iota-status wrong implementation not registered")
+		}
+		if _, bad := IsRegisteredWrong("savings-wrong-iota-status-ordinal"); !bad {
+			t.Fatal("iota-status wrong implementation not marked wrong")
+		}
+		red := gradeOne(v, Options{Implementation: wrongImpl})
+		if red.Outcome != OutcomeFail {
+			t.Fatalf("%s wrong impl outcome = %s, want FAIL; diffs=%v", c.step, red.Outcome, red.Diffs)
+		}
+		if len(red.Diffs) == 0 {
+			t.Fatalf("%s wrong impl produced no diffs", c.step)
+		}
+	}
+}
+
+func TestAccountStatusAdmissionDefaultDeny(t *testing.T) {
+	base := accountStatusProbe("approve", 200)
+
+	badStep := *base
+	badStep.Request.AccountStatus = &AccountStatusRequest{Step: "submit"}
+	if p := Admit(&badStep, Options{}); len(p) == 0 {
+		t.Fatal("unobserved lifecycle step admitted")
+	}
+
+	badExpect := *base
+	badExpect.Expect.StatusID = 0
+	if p := Admit(&badExpect, Options{}); len(p) == 0 {
+		t.Fatal("non-positive status_id admitted")
+	}
+
+	twoSubRequests := *base
+	twoSubRequests.Request.DailyInterest = &DailyInterestRequest{
+		BalanceMinor: "100000", RatePerAnnumMicroPct: 182500, DaysInYear: 365, Days: 1,
+	}
+	if p := Admit(&twoSubRequests, Options{}); len(p) == 0 {
+		t.Fatal("account-status vector carrying daily_interest too admitted")
 	}
 }
 

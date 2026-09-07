@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamSavingsDailyInterest:
+	case SeamSavingsDailyInterest, SeamSavingsAccountStatus:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the %q seam",
-			v.Oracle.Seam, SeamSavingsDailyInterest))
+			"oracle.seam %q: this harness grades only the %q and %q seams",
+			v.Oracle.Seam, SeamSavingsDailyInterest, SeamSavingsAccountStatus))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -122,13 +122,18 @@ func Admit(v *Vector, opts Options) []string {
 }
 
 // admitRequest enforces that a vector sets exactly the request sub-shape its
-// seam names, and that every money string is a non-negative integer.
+// seam names (no other sub-request), and that every money string is a
+// non-negative integer.
 func admitRequest(v *Vector) []string {
 	var problems []string
 	switch v.Oracle.Seam {
 	case SeamSavingsDailyInterest:
 		if v.Request.DailyInterest == nil {
 			problems = append(problems, "daily-interest seam must set exactly request.daily_interest")
+			return problems
+		}
+		if v.Request.AccountStatus != nil {
+			problems = append(problems, "daily-interest seam must not set request.account_status")
 			return problems
 		}
 		d := v.Request.DailyInterest
@@ -144,18 +149,39 @@ func admitRequest(v *Vector) []string {
 		if d.Days <= 0 {
 			problems = append(problems, fmt.Sprintf("request.days %d is not positive", d.Days))
 		}
+	case SeamSavingsAccountStatus:
+		if v.Request.AccountStatus == nil {
+			problems = append(problems, "account-status seam must set exactly request.account_status")
+			return problems
+		}
+		if v.Request.DailyInterest != nil {
+			problems = append(problems, "account-status seam must not set request.daily_interest")
+			return problems
+		}
+		switch v.Request.AccountStatus.Step {
+		case "approve", "activate":
+		default:
+			problems = append(problems, fmt.Sprintf(
+				"request.account_status.step %q is not an observed lifecycle step (approve, activate)",
+				v.Request.AccountStatus.Step))
+		}
 	}
 	return problems
 }
 
 // admitExpect enforces that the expected cells a seam needs are present and are
-// non-negative integer minor amounts.
+// well-formed: money as non-negative integer minor amounts, status as a positive
+// stored-value ordinal.
 func admitExpect(v *Vector) []string {
 	var problems []string
 	switch v.Oracle.Seam {
 	case SeamSavingsDailyInterest:
 		if !isIntegerMinorString(v.Expect.InterestMinor) {
 			problems = append(problems, fmt.Sprintf("expect.interest_minor %q is not a non-negative integer minor amount", v.Expect.InterestMinor))
+		}
+	case SeamSavingsAccountStatus:
+		if v.Expect.StatusID <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.status_id %d is not a positive status stored value", v.Expect.StatusID))
 		}
 	}
 	return problems

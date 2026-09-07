@@ -7,15 +7,19 @@ import (
 	"strconv"
 	"sync"
 
+	savingspkg "github.com/gerege/nexus/internal/apps/savings"
 	shared "github.com/gerege/nexus/internal/conformance"
 )
 
 // SavingsEvaluator is what a savings implementation must be able to do for this
-// harness to grade it. The graded surface is the one capture seam:
+// harness to grade it. The graded surface is the two capture seams:
 //
 //   - seam savings-daily-interest: the single-period daily-balance interest of
 //     the discriminating savings account, the one cell the MANIFEST records as
 //     its rounding surface (HALF_UP vs HALF_EVEN).
+//   - seam savings-account-status: the m_savings_account.status_enum stored
+//     value Fineract wrote back after a lifecycle command (approve -> 200,
+//     activate -> 300), the enum-ordinal cell a port can silently corrupt.
 type SavingsEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -102,8 +106,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 	switch {
 	case req.DailyInterest != nil:
 		return goDailyInterest(*req.DailyInterest, roundHalfUp)
+	case req.AccountStatus != nil:
+		return goAccountStatus(*req.AccountStatus)
 	default:
-		return Expect{}, fmt.Errorf("savings: request must set daily_interest")
+		return Expect{}, fmt.Errorf("savings: request must set exactly one seam sub-request")
 	}
 }
 
@@ -114,6 +120,31 @@ func goDailyInterest(r DailyInterestRequest, round func(numerator, denominator *
 	}
 	interest := dailyInterestMinor(balance, r.RatePerAnnumMicroPct, r.Days, r.DaysInYear, round)
 	return Expect{InterestMinor: strconv.FormatInt(interest, 10)}, nil
+}
+
+// goAccountStatus returns the m_savings_account.status_enum stored value of the
+// savings package enum reached by an observed lifecycle step. The values are NOT
+// the Go declaration ordinals: the savings enum is the explicit stored-value
+// table of accountstatus.go (APPROVED is 200, ACTIVE is 300, ...), and the
+// vector's expected cell is the stored value the oracle's command
+// acknowledgement wrote back. Only the two steps the oracle was observed
+// executing are answered.
+func goAccountStatus(r AccountStatusRequest) (Expect, error) {
+	st, ok := savingsStatusForStep(r.Step)
+	if !ok {
+		return Expect{}, fmt.Errorf("savings: lifecycle step %q is not an observed step (approve, activate)", r.Step)
+	}
+	return Expect{StatusID: st.StoredValue()}, nil
+}
+
+func savingsStatusForStep(step string) (savingspkg.SavingsAccountStatusType, bool) {
+	switch step {
+	case "approve":
+		return savingspkg.StatusApproved, true
+	case "activate":
+		return savingspkg.StatusActive, true
+	}
+	return savingspkg.StatusInvalid, false
 }
 
 // dailyInterestMinor ports the single-period daily-balance interest of the
@@ -185,10 +216,32 @@ func (w wrongEvaluator) Evaluate(req Request) (Expect, error) {
 	return w.goEvaluator.Evaluate(req)
 }
 
+// statusWrongEvaluator is a DELIBERATELY WRONG implementation: it encodes the
+// account status enum as the Go DECLARATION ordinal (iota) instead of the
+// Fineract stored value, so APPROVED reads 2 and ACTIVE reads 3 rather than 200
+// and 300. A port that makes this mistake silently writes corrupt status_enum
+// values; the two account-status vectors go red against it.
+type statusWrongEvaluator struct{ goEvaluator }
+
+func (w statusWrongEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.AccountStatus != nil {
+		st, ok := savingsStatusForStep(req.AccountStatus.Step)
+		if !ok {
+			return Expect{}, fmt.Errorf("savings: lifecycle step %q is not an observed step (approve, activate)", req.AccountStatus.Step)
+		}
+		return Expect{StatusID: int32(st)}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
 func init() {
 	Register("savings-go", NewGoEvaluator())
 	RegisterWrong("savings-wrong-half-even-daily-interest",
 		"rounds the discriminating daily-interest cell with HALF_EVEN instead of HALF_UP, "+
 			"so the pinned 0.01 observation reads 0.00 and the vector goes red",
 		wrongEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-iota-status-ordinal",
+		"encodes the account status enum as the Go declaration ordinal (iota) instead of the "+
+			"Fineract stored value, so APPROVED reads 2 and ACTIVE reads 3 rather than 200 and 300",
+		statusWrongEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }
