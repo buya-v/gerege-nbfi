@@ -122,3 +122,71 @@ persistence layer that writes these cells to a balance column, the site becomes 
 **Verdict:** C
 **Argument:** `InterestPeriod.copy` is the Go port of the two-argument `InterestPeriod.copy(repaymentPeriod, interestPeriod)` (InterestPeriod.java:86-92), which allocates a new segment and passes the source's current cells straight into the constructor — including `interestPeriod.getBalanceCorrectionAmount()` (Java :89). In the oracle this factory is called from `RepaymentPeriod.copy` (:153-171) and so, transitively, from `ProgressiveLoanInterestScheduleModel.deepCopy` (:141-145), which the recalculation uses to run the EMI re-adjustment on a SIBLING model it then sweeps (ProgressiveEMICalculator.java:1275-1280). The Go copy (interestperiod.go:604-622) is reached the same way: from `RepaymentPeriod.copy` (repaymentperiod.go:646) via `ScheduleModel.DeepCopy`/`CopyWithoutPaidAmounts` (schedulemodel.go:463-491). The value written is the source's own cell — a duplication of state the projection already holds, into a fresh object the same projection will sweep and read. This is the canonical C shape: a deep copy is not the act "derive a balance, then store it"; there is no summation whose output is being captured, and no derive-computation exists that could substitute for a copy (a copy's semantics IS to preserve the source's value). The port reads the copied cell back as the sibling model's starting state for that model's own later sweeps — the projection reloading its own state. Reach: no journal entry, GL posting, or account-balance column; the cells' only oracle persistence is the json_model closed loop, and Go owns none. C — PROJECTION INTERMEDIATE.
 
+### internal/apps/loanproduct/interestperiod.go:615 — I3-COMPOSITE-BALANCE
+**Expression:** `&InterestPeriod{..., outstandingLoanBalance: ip.OutstandingLoanBalance(), ...}` (in `InterestPeriod.copy`)
+**Verdict:** C
+**Argument:** The outstanding-balance sibling of the same deep-copy literal, porting `interestPeriod.getOutstandingLoanBalance()` straight into the new segment's constructor exactly as the oracle's two-argument `InterestPeriod.copy` does (InterestPeriod.java:86-92, getter at :90). This is the value that most tempts an A reading — it is, at runtime, whatever the source's sweep last wrote — so the classification turns on what the write IS, not what the value was. It is a state duplication performed by the projection on its own model so the projection can run a sibling computation and then read its own starting state back; the write is not a derivation being persisted. The copy target is a fresh object with no external holder, and no I-3 remedy applies to a copy (there is no summation to perform; the number must equal the source's). The reach that governs A-vs-C — does the duplicated value reach a journal entry, GL posting, or account-balance column? — is the doc.go LEG-2 trace, and here it terminates in the projection's own arithmetic and DTOs with only the oracle's json_model closed loop behind it. This site is not one of the four refused writes: it does not set the refresh value on a live cell; it duplicates the projection's current state so that a re-run of the same projection can start from it. C — PROJECTION INTERMEDIATE.
+
+### internal/apps/loanproduct/interestperiod.go:641 — I3-COMPOSITE-BALANCE
+**Expression:** `&InterestPeriod{..., balanceCorrectionAmount: zero, ...}` (in `withEmptyInterestPeriod`)
+**Verdict:** C
+**Argument:** `withEmptyInterestPeriod` is the Go port of `InterestPeriod.withEmptyAmounts` (InterestPeriod.java:94-106), the oracle factory that allocates an empty segment with every money cell at `repaymentPeriod.getZero()` — balanceCorrectionAmount included (Java :98). The Go helper is called from `ScheduleModel.insertInterestPeriod` (schedulemodel.go:281), the port of `ProgressiveLoanInterestScheduleModel.insertInterestPeriod` (Java :313-331), which splits the segment that contains a balance-change or pause boundary and inserts a fresh empty segment between the split halves. The inserted segment's zero is transient: the next explicit sweep (`UpdateOutstandingLoanBalance`) computes the segment's real opening balance before any period arithmetic reads it, and no other code path can observe the fresh segment in between. The value expression is a zero, not a summation; the object is new and unobserved; reach is the projection's own arithmetic with the closed-loop persistence. C — PROJECTION INTERMEDIATE.
+
+### internal/apps/loanproduct/interestperiod.go:642 — I3-COMPOSITE-BALANCE
+**Expression:** `&InterestPeriod{..., outstandingLoanBalance: zero, ...}` (in `withEmptyInterestPeriod`)
+**Verdict:** C
+**Argument:** The outstanding-balance sibling of the same `withEmptyInterestPeriod` literal, porting the oracle's `withEmptyAmounts` allocation of `outstandingLoanBalance` = `zero` (InterestPeriod.java:94-106; Java :99). Same argument as :641: the fresh inserted segment is swept into its real balance before any arithmetic reads it; the zero is the construction-time starting state of the projection's own model, overwritten by the projection's own next sweep; and the value expression is a zero, not a derived store. The guard's NOTE on the composite class — "moving the write into a constructor does NOT clear this" — is a statement about what the GUARD can see (its writeTarget logic keys on assignment, so the literal keys were invisible until T509 widened to composite keys), not a claim about the underlying act: at these six sites there is no derivation whose storage I-3 refuses, which is exactly why the human record can grade them where the four live-mutation writes must stay UNDECIDABLE. C — PROJECTION INTERMEDIATE.
+
+## SUMMARY — all 12 sites decided
+
+**Verdict counts**
+
+| Verdict | Count | Sites |
+|---|---|---|
+| A — REAL VIOLATION | 0 | — |
+| B — INPUT, NOT A BALANCE | 0 | — |
+| C — PROJECTION INTERMEDIATE | 6 | loanproduct/repaymentperiod.go:96, 97; loanproduct/interestperiod.go:614, 615, 641, 642 (I3-COMPOSITE-BALANCE) |
+| D — PORTED SHAPE | 0 | — |
+| UNDECIDABLE | 6 | loanproduct/interestperiod.go:430, 441, 549; loanproduct/repaymentperiod.go:688 (I3-FIELD-WRITE); loanschedule/emi.go:1720, 1726 (I3-FIELD-WRITE) |
+
+All 12 target sites are decided. The finding count still reads **28** when the guard re-runs
+(`cd .softhouse/guards/ledgerguard && go run . --root ../../../nexus` → 28 findings,
+byte-identical to the pre-adjudication census: 19 I3-FIELD-WRITE + 9 I3-COMPOSITE-BALANCE
+across the tree, of which these 12 rows are the loanproduct/loanschedule subset). `nexus/` and
+`.softhouse/guards/` were not modified. The verdicts add, delete, and modify no guard rows and
+no type, field, or citation.
+
+**Sites blocked on the discriminator — six.** The four loanproduct I3-FIELD-WRITE rows that
+the baseline's two-legs argument already refuses (interestperiod.go:430,:441,:549,
+repaymentperiod.go:688) plus loanschedule/emi.go:1720,:1726. The emi.go two are genuinely the
+twin of the loanproduct four, not a separate shape: the same oracle method
+(`InterestPeriod.updateOutstandingLoanBalance`, InterestPeriod.java:166-186), the same
+roll-forward expression in the generator domain, the same swept-snapshot cell refreshed only
+at explicit sweeps with the same never-assigned first-segment seed, and the same DTO-only
+reach. The spelling (`outstandingMinor` vs `outstandingLoanBalance`) is the only thing that
+made the twin invisible to a name-based guard, exactly as the baseline note says; finding that
+was the point of testing it. All six stay UNDECIDABLE because the only mechanism that could
+move them — LEG 2's go/types reachability discriminator, failing closed on unresolved value
+flow — was commissioned, investigated, and reported NOT CONSTRUCTIBLE, and because LEG 1's
+executable parity test rules out the derive-on-read repair either way. The evidence that would
+settle each is stated per-site: a type-checked forward reachability analysis proving the cell
+values do or do not reach a persisted balance column, journal entry, or GL posting.
+
+**Sites not blocked — the six composite-literal rows.** repaymentperiod.go:96,:97,
+interestperiod.go:614,:615,:641,:642. These were the unexamined six: they write the two cells
+at construction and deep-copy time, storing either a currency zero (the definitional starting
+state of a fresh empty segment) or the source's own cell (state duplication into a sibling
+object the same projection will sweep and read). None stores the output of a derivation, so
+the classification does not depend on the unmechanized reachability claim, and all six are C —
+PROJECTION INTERMEDIATE. They are the projection writing its own starting state; the reach
+terminates in the projection's own arithmetic and DTOs, and the only persistence the cells have
+anywhere (the oracle's m_loan_progressive_model.json_model) is a closed loop written by the
+projection and reloaded as the same projection's starting state.
+
+**Real violations.** None of the 12 is a REAL VIOLATION — no site writes a balance at a
+persistence boundary. The investor rows part 1 graded A were already repaired (branch merge
+2026-09-05 removed them; 38 → 28). The only way any of these 12 becomes A is a future change
+that hands a loanproduct/loanschedule model to a persistence layer writing the cells to a
+balance column; the C caveat above records that condition. Nothing in this set needs the
+same-day repair part 1's ten needed.
+
