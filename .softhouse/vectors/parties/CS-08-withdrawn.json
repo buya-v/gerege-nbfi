@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "CS-08-withdrawn",
+ "title": "client status WITHDRAWN ordinal",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/parties/out/client-status-source.txt (pinned ClientStatus.java:28-35, commit 426a23544e8426a38ae43ae404670a0a7e85b9eb). request.name=WITHDRAWN and expect.ordinal=800 are transcribed from the source declaration WITHDRAWN(800, ...). This ordinal is NOT observable on the running oracle (only ACTIVE=300 is written by the seed data), so the pinned Java source is the only truth; a wrong ordinal silently corrupts m_client.status_enum.",
+ "oracle": {
+  "seam": "client-status-ordinal",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/client-status-source.txt; capture_case_id names the source declaration WITHDRAWN(800, ...).",
+  "capture_ref": ".softhouse/capture/parties/out/client-status-source.txt",
+  "capture_sha256": "0ee9cdc5e038111173b64ad4583afb8040b10307393366cd33f3f3a70cee1a05",
+  "capture_case_id": "WITHDRAWN(800",
+  "citation": "ClientStatus.java:35 WITHDRAWN(800, ...)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "client-status",
+  "name": "WITHDRAWN"
+ },
+ "expect": {
+  "ordinal": 800
+ },
+ "capabilities_required": [
+  "client-status"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

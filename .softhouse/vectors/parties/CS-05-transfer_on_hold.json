@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "CS-05-transfer_on_hold",
+ "title": "client status TRANSFER_ON_HOLD ordinal",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/parties/out/client-status-source.txt (pinned ClientStatus.java:28-35, commit 426a23544e8426a38ae43ae404670a0a7e85b9eb). request.name=TRANSFER_ON_HOLD and expect.ordinal=304 are transcribed from the source declaration TRANSFER_ON_HOLD(304, ...). This ordinal is NOT observable on the running oracle (only ACTIVE=300 is written by the seed data), so the pinned Java source is the only truth; a wrong ordinal silently corrupts m_client.status_enum.",
+ "oracle": {
+  "seam": "client-status-ordinal",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/client-status-source.txt; capture_case_id names the source declaration TRANSFER_ON_HOLD(304, ...).",
+  "capture_ref": ".softhouse/capture/parties/out/client-status-source.txt",
+  "capture_sha256": "0ee9cdc5e038111173b64ad4583afb8040b10307393366cd33f3f3a70cee1a05",
+  "capture_case_id": "TRANSFER_ON_HOLD(304",
+  "citation": "ClientStatus.java:32 TRANSFER_ON_HOLD(304, ...)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "client-status",
+  "name": "TRANSFER_ON_HOLD"
+ },
+ "expect": {
+  "ordinal": 304
+ },
+ "capabilities_required": [
+  "client-status"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

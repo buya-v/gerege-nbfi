@@ -1,0 +1,47 @@
+{
+ "schema": "gerege.parties.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "client-status",
+   "description": "Map a ClientStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED/REJECTED/WITHDRAWN) to the integer ordinal Fineract persists in m_client.status_enum.",
+   "in_graded_domain": true,
+   "evidence": "Capture m-client-readback-raw.json (m_client.status_enum read-back) and client-status-source.txt (ClientStatus.java:24-36) under tenant gerege. The running oracle stores status_enum=300 for every seeded client; the remaining seven ordinals are declared only in ClientStatus.java."
+  },
+  {
+   "name": "legal-form",
+   "description": "Map a LegalForm enum NAME (PERSON/ENTITY) to the integer ordinal Fineract persists in m_client.legal_form_enum.",
+   "in_graded_domain": true,
+   "evidence": "Capture clients-template-raw.json under tenant gerege: the running oracle returned clientLegalFormOptions [{id:1, code:legalFormType.person}, {id:2, code:legalFormType.entity}], corroborated by legal-form-source.txt (LegalForm.java:27-31)."
+  },
+  {
+   "name": "grouping-status",
+   "description": "Map a GroupingTypeStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED) to the integer ordinal Fineract persists in m_group.status_enum.",
+   "in_graded_domain": true,
+   "evidence": "Capture grouping-status-source.txt (GroupingTypeStatus.java:23-32). The grouping-status ordinal is NOT observable on the running oracle: m_group is empty (m-group-readback-raw.json) and GET /groups/template exposes no status options, so the pinned Java source is the only truth."
+  }
+ ],
+ "seams": [
+  {
+   "name": "client-status-ordinal",
+   "description": "The ClientStatus ordinal seam: m_client.status_enum read-back for ACTIVE, and ClientStatus.java for the seven ordinals the seed data never writes.",
+   "status": {
+    "client-status": "exercised"
+   }
+  },
+  {
+   "name": "legal-form-ordinal",
+   "description": "The LegalForm ordinal seam: GET /clients/template clientLegalFormOptions on the running Fineract server, tenant gerege.",
+   "status": {
+    "legal-form": "exercised"
+   }
+  },
+  {
+   "name": "grouping-status-ordinal",
+   "description": "The GroupingTypeStatus ordinal seam: the pinned GroupingTypeStatus.java source (Java-source-only; not observable via API or SQL).",
+   "status": {
+    "grouping-status": "exercised"
+   }
+  }
+ ],
+ "note": "Parties parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded, one per enum vocabulary: client-status (client-status-ordinal seam), legal-form (legal-form-ordinal seam), grouping-status (grouping-status-ordinal seam). No money, minor-unit, or rounding surface exists in this context; the only graded integer is the enum ordinal."
+}
