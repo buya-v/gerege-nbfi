@@ -20,6 +20,12 @@ const WorkingCapitalContext = "workingcapital"
 // the m_wc_loan list as returned by GET /working-capital-loans.
 const SeamWorkingCapitalLoansList = "working-capital-loans-list"
 
+// SeamWorkingCapitalLoansDetail is the capture seam that reads one
+// working-capital loan by id (GET /working-capital-loans/{loanId}): the read-back
+// that serialises the m_wc_loan_balance row — its thirteen stored columns plus
+// the derived outstanding/due figures — as the response's "balance" block.
+const SeamWorkingCapitalLoansDetail = "working-capital-loans-detail"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim.
 func SchemaContexts() []string { return []string{WorkingCapitalContext} }
@@ -81,11 +87,46 @@ type LoanExpect struct {
 	Status     string `json:"status"`
 }
 
+// BalanceExpect is the read-back of one m_wc_loan_balance row: the subset of
+// the response's "balance" block whose cells the port's derive-don't-store rule
+// can reproduce. Every money cell is an integer STRING in minor units,
+// transcribed from the committed capture — never computed here.
+//
+// The thirteen stored columns (principal, principalPaid, principalAdjustment,
+// fee, feePaid, penalty, penaltyPaid, realizedIncomeFromDiscountFee,
+// overpaymentAmount, totalDisbursement, totalDiscountFee,
+// totalDiscountFeeAdjustment, breachPastDueAmount) are the authority; the
+// outstanding/due figures (principalOutstanding, totalExpectedRepayment,
+// totalRepayment, totalOutstanding, unrealizedIncomeFromDiscountFee) are DERIVED
+// from them by the port's balance getters.
+type BalanceExpect struct {
+	Principal                       string `json:"principal"`                           // stored: balance.principal
+	PrincipalPaid                   string `json:"principal_paid"`                      // stored: balance.principalPaid
+	TotalDisbursement               string `json:"total_disbursement"`                  // stored: balance.totalDisbursement
+	TotalDiscountFee                string `json:"total_discount_fee"`                  // stored: balance.totalDiscountFee
+	PrincipalOutstanding            string `json:"principal_outstanding"`               // derived: balance.principalOutstanding
+	TotalExpectedRepayment          string `json:"total_expected_repayment"`            // derived: balance.totalExpectedRepayment
+	TotalRepayment                  string `json:"total_repayment"`                     // derived: balance.totalRepayment
+	TotalOutstanding                string `json:"total_outstanding"`                   // derived: balance.totalOutstanding
+	UnrealizedIncomeFromDiscountFee string `json:"unrealized_income_from_discount_fee"` // derived
+}
+
+// DetailExpect is the working-capital-loans-detail seam's expected cells: the
+// row identity, its status (loan-status code) and the balance read-back above.
+type DetailExpect struct {
+	ID      string        `json:"id"`
+	Status  string        `json:"status"`
+	Balance BalanceExpect `json:"balance"`
+}
+
 // Expect is what the oracle produced for the request. For a list request it is
-// the full list plus the totalElements count the oracle returned.
+// the full list plus the totalElements count the oracle returned; for a detail
+// request it is the one loan's balance read-back. A vector sets exactly one of
+// the two shapes, named by its seam.
 type Expect struct {
-	Loans         []LoanExpect `json:"loans"`
-	TotalElements int64        `json:"total_elements"`
+	Loans         []LoanExpect  `json:"loans"`
+	TotalElements int64         `json:"total_elements"`
+	Detail        *DetailExpect `json:"detail,omitempty"`
 }
 
 // Vector is one working-capital golden vector.

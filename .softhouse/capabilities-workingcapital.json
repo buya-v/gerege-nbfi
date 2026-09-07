@@ -6,6 +6,12 @@
    "description": "Read the m_wc_loan list as returned by GET /working-capital-loans. The pinned capture holds one seeded loan (id 1, external id SEED-WC-L01, status active), so the read is exercised and its row is transcribed into a parity vector.",
    "in_graded_domain": true,
    "evidence": "Capture loans-list-raw.json under tenant gerege: the running oracle returned {\"content\":[{... id 1, externalId SEED-WC-L01, status loanStatusType.active ...}],\"totalElements\":1} for the seeded working-capital loan. The list seam grades id, external_id and status (no money cell), and one parity vector is promoted from it."
+  },
+  {
+   "name": "wc-loan-balance-read",
+   "description": "Read one working-capital loan by id (GET /working-capital-loans/{loanId}) and serialise its m_wc_loan_balance row as the response balance block: the thirteen stored columns plus the derived outstanding/due figures. The pinned capture holds one seeded loan (id 1, external id SEED-WC-L01, status active, principal 1000.51, nothing repaid), so the balance read-back after the seeded disbursement is exercised and transcribed into a parity vector.",
+   "in_graded_domain": true,
+   "evidence": "Capture wc-loan-detail-raw.json under tenant gerege: the running oracle returned the balance block {\"id\":1,\"principal\":1000.51,\"principalPaid\":0.0,\"principalAdjustment\":0.0,\"principalOutstanding\":1000.51,\"fee\":0.0,\"feePaid\":0.0,\"feeOutstanding\":0.0,\"penalty\":0.0,\"penaltyPaid\":0.0,\"penaltyOutstanding\":0.0,\"realizedIncomeFromDiscountFee\":0.0,\"unrealizedIncomeFromDiscountFee\":0.0,\"overpaymentAmount\":0.0,\"totalExpectedRepayment\":1000.51,\"totalRepayment\":0.0,\"totalOutstanding\":1000.51,\"totalDisbursement\":0.0,\"totalDiscountFee\":0.0,\"totalDiscountFeeAdjustment\":0.0,\"breachPastDueAmount\":0.0} on loan externalId SEED-WC-L01. The detail seam grades id, status and nine balance money cells (four stored, five derived), and one parity vector is promoted from it."
   }
  ],
  "seams": [
@@ -15,7 +21,14 @@
    "status": {
     "wc-loan-list-read": "exercised"
    }
+  },
+  {
+   "name": "working-capital-loans-detail",
+   "description": "GET /working-capital-loans/{loanId} on the running Fineract server, tenant gerege: the per-loan balance read-back (one seeded loan in the pinned capture).",
+   "status": {
+    "wc-loan-balance-read": "exercised"
+   }
   }
  ],
- "note": "Working-capital parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is declared: the working-capital loan list read, which is exercised and returns the single seeded loan. The breach-schedule and delinquency-range-schedule seams are NOT declared as exercised because no breach/delinquency range is configured on the seed and no write path has been captured to observe them; declaring them would be a fabricated observation."
+ "note": "Working-capital parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are declared: the working-capital loan list read and the per-loan balance read, each exercised and transcribed into a parity vector. The breach-schedule and delinquency-range-schedule seams are NOT declared as exercised because no breach/delinquency range is configured on the seed and no write path has been captured to observe them; declaring them would be a fabricated observation."
 }
