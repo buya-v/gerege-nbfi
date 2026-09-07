@@ -148,3 +148,28 @@ I3-FIELD-WRITE	internal/apps/savings/conformance/conformance_test.go
 #
 #     RE-ADD CONDITION: if any statement in investor/postgres.go ever names one of those six
 #     columns again, these rows come back in the same commit that reintroduces it.
+
+# --- ADDED with the workingcapital balance seam. Two rows, harness evaluator ---
+#     workingcapital/conformance/impl.go:127  &DetailExpect{Balance: BalanceExpect{...}}
+#     workingcapital/conformance/impl.go:184  d.Balance.TotalOutstanding = ...
+#
+#     These are the CONFORMANCE EVALUATOR, not the port. Grading a balance read-back
+#     requires computing a balance to compare against the observed one, so the evaluator
+#     necessarily names balance fields. Same class as the loan/savings conformance_test.go
+#     rows above and CANNOT-CATCH item 8 — instruments are INSPECTED, not exempted.
+#
+#     CHECKED before recording: impl.go contains no database/sql or platform/postgres
+#     import and no INSERT/UPDATE statement; DetailExpect and BalanceExpect have no reader
+#     outside workingcapital/conformance. The value is compared and discarded. Nothing
+#     derived here reaches a persistence boundary.
+#
+#     Distinguish this from investor/postgres.go, whose two rows LEFT this file today: that
+#     was the PORT's own persistence layer writing and reading back a stored balance. This
+#     is a test instrument with no persistence at all — the same distinction that made
+#     loan/charge.go's eleven sites benign and investor's ten sites real.
+#
+#     REMOVAL CONDITION: if the workingcapital conformance package ever gains a persistence
+#     import or a reader outside itself, these rows stop being justified and the findings
+#     become real.
+I3-COMPOSITE-BALANCE	internal/apps/workingcapital/conformance/impl.go
+I3-FIELD-WRITE	internal/apps/workingcapital/conformance/impl.go
