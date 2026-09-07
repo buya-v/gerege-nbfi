@@ -1,0 +1,13 @@
+[{"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"APPLY_CHARGE_TO_OVERDUE_LOANS","step_order":1}, 
+ {"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"LOAN_DELINQUENCY_CLASSIFICATION","step_order":2}, 
+ {"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"CHECK_LOAN_REPAYMENT_DUE","step_order":3}, 
+ {"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"CHECK_LOAN_REPAYMENT_OVERDUE","step_order":4}, 
+ {"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"UPDATE_LOAN_ARREARS_AGING","step_order":5}, 
+ {"job_name":"LOAN_CLOSE_OF_BUSINESS","step_name":"ADD_PERIODIC_ACCRUAL_ENTRIES","step_order":6}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"DUMMY_BUSINESS_STEP","step_order":1}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_DELINQUENCY_RANGE_SCHEDULE","step_order":2}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_LOAN_DELINQUENCY_CLASSIFICATION","step_order":3}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_BREACH_SCHEDULE","step_order":4}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_NEAR_BREACH_EVALUATION","step_order":5}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_DISCOUNT_FEE_AMORTIZATION","step_order":6}, 
+ {"job_name":"WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS","step_name":"WC_CHARGE_ACCRUAL","step_order":7}]

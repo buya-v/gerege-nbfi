@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "GS-05-transfer_on_hold",
+ "title": "grouping status TRANSFER_ON_HOLD ordinal",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/parties/out/grouping-status-source.txt (pinned GroupingTypeStatus.java:26-31, commit 426a23544e8426a38ae43ae404670a0a7e85b9eb). request.name=TRANSFER_ON_HOLD and expect.ordinal=304 are transcribed from the source declaration TRANSFER_ON_HOLD(304, ...). The grouping-status ordinal is NOT observable on the running oracle: m_group is empty and GET /groups/template exposes no status options, so the pinned Java source is the only truth; a wrong ordinal silently corrupts m_group.status_enum.",
+ "oracle": {
+  "seam": "grouping-status-ordinal",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/grouping-status-source.txt; capture_case_id names the source declaration TRANSFER_ON_HOLD(304, ...).",
+  "capture_ref": ".softhouse/capture/parties/out/grouping-status-source.txt",
+  "capture_sha256": "7a9e78dd84be0301b19406f0c159084f765f74eb29257202904008301b4235be",
+  "capture_case_id": "TRANSFER_ON_HOLD(304",
+  "citation": "GroupingTypeStatus.java:30 TRANSFER_ON_HOLD(304, ...)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "grouping-status",
+  "name": "TRANSFER_ON_HOLD"
+ },
+ "expect": {
+  "ordinal": 304
+ },
+ "capabilities_required": [
+  "grouping-status"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

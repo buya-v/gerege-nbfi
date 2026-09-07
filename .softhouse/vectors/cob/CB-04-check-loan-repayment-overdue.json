@@ -1,0 +1,40 @@
+{
+ "schema": "gerege.cob.vector/v1",
+ "case_id": "CB-04-check-loan-repayment-overdue",
+ "title": "check_loan_repayment_overdue business-step order",
+ "class": "parity",
+ "context": "cob",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/cob/out/jobs-LOAN_CLOSE_OF_BUSINESS-steps-raw.json (GET /jobs/LOAN_CLOSE_OF_BUSINESS/steps, tenant gerege). request.step_name=\"CHECK_LOAN_REPAYMENT_OVERDUE\" came from the capture businessSteps entry with \"stepName\":\"CHECK_LOAN_REPAYMENT_OVERDUE\"; expect.step_order=4 is that same entry's \"order\":4 field. The step order is the ordinal the oracle stores in m_batch_business_steps.step_order and corroborated by m-batch-business-steps-readback-raw.json; a wrong order silently reorders the COB pipeline with no crash.",
+ "oracle": {
+  "seam": "cob-business-step-order",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Both fields are transcribed from the committed capture .softhouse/capture/cob/out/jobs-LOAN_CLOSE_OF_BUSINESS-steps-raw.json; capture_case_id names the stepName value of the observed businessSteps entry.",
+  "capture_ref": ".softhouse/capture/cob/out/jobs-LOAN_CLOSE_OF_BUSINESS-steps-raw.json",
+  "capture_sha256": "3ee2a9f85c63b936f3bfdcdcae0087c035455fb697623a4f29416a3f02ad3d8b",
+  "capture_case_id": "CHECK_LOAN_REPAYMENT_OVERDUE",
+  "citation": ".softhouse/capture/cob/out/jobs-LOAN_CLOSE_OF_BUSINESS-steps-raw.json entry {\"stepName\":\"CHECK_LOAN_REPAYMENT_OVERDUE\",\"order\":4}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "step_name": "CHECK_LOAN_REPAYMENT_OVERDUE"
+ },
+ "expect": {
+  "step_order": 4
+ },
+ "capabilities_required": [
+  "business-step-order"
+ ],
+ "graded_against": [
+  "cob-go"
+ ]
+}

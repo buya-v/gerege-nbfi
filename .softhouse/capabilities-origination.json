@@ -1,0 +1,21 @@
+{
+ "schema": "gerege.origination.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "loan-originator-status",
+   "description": "Map a LoanOriginatorStatus enum NAME (ACTIVE/PENDING/INACTIVE) to the STRING value the oracle stores/returns, as returned by GET /loan-originators/template statusOptions and declared in LoanOriginatorStatus.java.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-originators-template-raw.json under tenant gerege: the running oracle returned statusOptions [\"ACTIVE\",\"INACTIVE\",\"PENDING\"], corroborated by loan-originator-status-source.txt (LoanOriginatorStatus.java ACTIVE(\"ACTIVE\"), PENDING(\"PENDING\"), INACTIVE(\"INACTIVE\"))."
+  }
+ ],
+ "seams": [
+  {
+   "name": "origination-loan-originator-status",
+   "description": "GET /loan-originators/template statusOptions on the running Fineract server, tenant gerege: the LoanOriginatorStatus string vocabulary.",
+   "status": {
+    "loan-originator-status": "exercised"
+   }
+  }
+ ],
+ "note": "Origination parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the LoanOriginatorStatus name-to-stored-string mapping (origination-loan-originator-status seam). No money, minor-unit, or rounding surface exists in this context; the only graded cell is the stored status string."
+}

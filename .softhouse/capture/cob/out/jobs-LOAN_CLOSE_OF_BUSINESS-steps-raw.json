@@ -1,0 +1,1 @@
+{"jobName":"LOAN_CLOSE_OF_BUSINESS","businessSteps":[{"stepName":"APPLY_CHARGE_TO_OVERDUE_LOANS","order":1},{"stepName":"LOAN_DELINQUENCY_CLASSIFICATION","order":2},{"stepName":"CHECK_LOAN_REPAYMENT_DUE","order":3},{"stepName":"CHECK_LOAN_REPAYMENT_OVERDUE","order":4},{"stepName":"UPDATE_LOAN_ARREARS_AGING","order":5},{"stepName":"ADD_PERIODIC_ACCRUAL_ENTRIES","order":6}]}

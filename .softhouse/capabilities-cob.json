@@ -1,0 +1,21 @@
+{
+ "schema": "gerege.cob.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "business-step-order",
+   "description": "Map a LOAN_CLOSE_OF_BUSINESS business-step name to its step_order (1..6), as stored in m_batch_business_steps and rendered by the business-step configuration API.",
+   "in_graded_domain": true,
+   "evidence": "Capture jobs-LOAN_CLOSE_OF_BUSINESS-steps-raw.json under tenant gerege: the running oracle returned the ordered businessSteps list (APPLY_CHARGE_TO_OVERDUE_LOANS=1 ... ADD_PERIODIC_ACCRUAL_ENTRIES=6), corroborated by m-batch-business-steps-readback-raw.json."
+  }
+ ],
+ "seams": [
+  {
+   "name": "cob-business-step-order",
+   "description": "GET the LOAN_CLOSE_OF_BUSINESS business-step configuration on the running Fineract server, tenant gerege: the m_batch_business_steps step_name/step_order list.",
+   "status": {
+    "business-step-order": "exercised"
+   }
+  }
+ ],
+ "note": "COB parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the business-step order read (cob-business-step-order seam). No money, minor-unit, or rounding surface exists in this context; the only graded integer is the step_order."
+}

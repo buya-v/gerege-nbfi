@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "CS-03-active",
+ "title": "client status ACTIVE ordinal",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/parties/out/m-client-readback-raw.json (m_client.status_enum read-back, tenant gerege). request.name=ACTIVE and expect.ordinal=300 are transcribed from the capture row id=1 status_enum=300; this is the value the oracle actually STORES, corroborated by ClientStatus.java:30 ACTIVE(300, ...). A wrong ordinal silently corrupts every m_client.status_enum written.",
+ "oracle": {
+  "seam": "client-status-ordinal",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/m-client-readback-raw.json; capture_case_id names the status_enum field value of the observed m_client row.",
+  "capture_ref": ".softhouse/capture/parties/out/m-client-readback-raw.json",
+  "capture_sha256": "d4d2877ffbcbbbca2d8d4cdb88b655a15fd98e0486a2933bf8df7fb01a68b2b4",
+  "capture_case_id": "\"status_enum\":300",
+  "citation": "m-client-readback-raw.json row id=1 status_enum=300; cross-ref ClientStatus.java:30 ACTIVE(300, \"clientStatusType.active\")"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "client-status",
+  "name": "ACTIVE"
+ },
+ "expect": {
+  "ordinal": 300
+ },
+ "capabilities_required": [
+  "client-status"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

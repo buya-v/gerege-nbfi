@@ -1,0 +1,13 @@
+{
+ "schema": "gerege.origination.pin/v1",
+ "_note": "Origination parity-store pin. Pins the Fineract commit the origination captures were observed from, and the tenant context under which they were captured. The origination capture (loan-originators-template-raw.json) was taken on the running Fineract server under tenant gerege: HALF_UP (c_configuration.rounding-mode ordinal 4), MathContext precision 19, currency MNT with 2 minor units, timezone Asia/Ulaanbaatar. The tenant_params record is uniform with the money contexts even though this context grades no money — the only graded cell is the LoanOriginatorStatus stored string.",
+ "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ }
+}

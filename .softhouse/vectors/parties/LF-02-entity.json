@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "LF-02-entity",
+ "title": "legal form ENTITY ordinal",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/parties/out/clients-template-raw.json (GET /clients/template, tenant gerege). request.name=ENTITY and expect.ordinal=2 are transcribed from the clientLegalFormOptions entry id=2 code=legalFormType.entity; this is the value the oracle actually RETURNS, corroborated by LegalForm.java:30 ENTITY(2, ...). A wrong ordinal silently corrupts m_client.legal_form_enum.",
+ "oracle": {
+  "seam": "legal-form-ordinal",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/clients-template-raw.json; capture_case_id names the code value of the observed clientLegalFormOptions entry.",
+  "capture_ref": ".softhouse/capture/parties/out/clients-template-raw.json",
+  "capture_sha256": "9baf39c809179c3298d87a41237273329cc642d18b30c7304cf4713c6b3639ce",
+  "capture_case_id": "\"legalFormType.entity\"",
+  "citation": "clients-template-raw.json clientLegalFormOptions entry id=2 code=legalFormType.entity; cross-ref LegalForm.java:30 ENTITY(2, ...)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "legal-form",
+  "name": "ENTITY"
+ },
+ "expect": {
+  "ordinal": 2
+ },
+ "capabilities_required": [
+  "legal-form"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}
