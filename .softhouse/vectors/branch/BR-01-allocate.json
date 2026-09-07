@@ -1,0 +1,39 @@
+{
+ "schema": "gerege.branch.vector/v1",
+ "case_id": "BR-01-allocate",
+ "title": "allocate 100000.50 MNT to cashier 2, stored with no rounding surface",
+ "class": "parity",
+ "context": "branch",
+ "_note": "allocate (no rounding surface). request.txn_amount \"100000.50\" is req/allocate.json's txnAmount, the exact decimal text the oracle received. expect.txn_type_id 101 and expect.txn_type_value \"Allocate Cash\" are summary-cashier2-final-raw.json txn id 7's txnType. expect.txn_amount_minor \"10000050\" is that same row's txnAmount 100000.500000 transcribed to integer minor units (2dp). The amount is a direct cash movement: the oracle stored it exactly, no HALF_UP/HALF_EVEN tie exists.",
+ "oracle": {
+  "seam": "cashier-txn-amount",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/branch/out/summary-cashier2-final-raw.json (txn id 7) and .softhouse/capture/branch/req/allocate.json (txnAmount)",
+  "capture_ref": ".softhouse/capture/branch/out/summary-cashier2-final-raw.json",
+  "capture_sha256": "e39a6a49caa07a4ac4f769558ca0a569cd7b4b504650f715bc046fc8ea2d52df",
+  "capture_case_id": "7"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "txn_type": 101,
+  "txn_amount": "100000.50",
+  "currency_code": "MNT"
+ },
+ "expect": {
+  "txn_type_id": 101,
+  "txn_type_value": "Allocate Cash",
+  "txn_amount_minor": "10000050"
+ },
+ "capabilities_required": ["cashier-txn-amount"],
+ "graded_against": ["branch-go"]
+}
