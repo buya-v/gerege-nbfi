@@ -1,0 +1,42 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-02-approve-status-200",
+ "title": "approving the submitted savings account (id 2) writes status stored value 200 (APPROVED)",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from capture savings-daily-approve-raw.json (approve command acknowledgement, tenant gerege). request.account_status.step=\"approve\" is the lifecycle command the oracle executed on the submitted account (savingsId 2); expect.status_id=200 is changes.status.id of the acknowledgement, the m_savings_account.status_enum stored value Fineract wrote for the approved state. That stored value is NOT the enum's Go declaration ordinal (APPROVED is 200, not 2), so a port that encodes the status enum as an iota silently corrupts status_enum and this vector goes red. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "savings-account-status",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected status_id cell is transcribed from the committed capture savings-daily-approve-raw.json; capture_case_id names the status code value in the acknowledgement.",
+  "capture_ref": ".softhouse/capture/savings/out/savings-daily-approve-raw.json",
+  "capture_sha256": "f3144125d99583776564d32522532fc6f1fb42e3a5241953488b96405972eb81",
+  "capture_case_id": "savingsAccountStatusType.approved",
+  "citation": "savings-daily-approve-raw.json acknowledgement for savingsId 2: changes.status {\"id\":200,\"code\":\"savingsAccountStatusType.approved\",\"approved\":true,\"active\":false}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "account_status": {
+   "step": "approve"
+  }
+ },
+ "expect": {
+  "status_id": 200
+ },
+ "capabilities_required": [
+  "account-status-stored-value"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}

@@ -9,8 +9,9 @@
 // interest-period enum vocabulary, but the daily-balance interest ACCRUAL is not
 // yet ported into the savings package (summary.go records the postings verbatim
 // and the accrual engine is a separate future port). The running reference
-// oracle, however, exposes exactly one rounding surface through its savings
-// interest posting:
+// oracle exposes exactly one rounding surface through its savings interest
+// posting, and two account-status stored values through its lifecycle command
+// acknowledgements:
 //
 //   - seam "savings-daily-interest": the single-period daily-balance interest of
 //     the discriminating savings account SEED-Savings-Product-Daily. 1000 MNT
@@ -20,6 +21,16 @@
 //     transaction id 5, amount 0.010000). This harness ports ONLY that single
 //     cell — balance x rate x days / (100 x days_in_year) — never the whole
 //     accrual/compounding/posting engine.
+//   - seam "savings-account-status": the m_savings_account.status_enum stored
+//     value the oracle's lifecycle command acknowledgements wrote back on the
+//     same account. The oracle executed two lifecycle steps and each ack carries
+//     the resulting status id: approve wrote 200 (code
+//     savingsAccountStatusType.approved, capture savings-daily-approve-raw.json)
+//     and activate wrote 300 (code savingsAccountStatusType.active, capture
+//     savings-daily-activate-raw.json). The status enum is NOT the Go
+//     declaration ordinal — ACTIVE is 300, not 2 — so each ack pins one
+//     stored-value ordinal a port can silently corrupt. Only the two observed
+//     steps are graded; no unobserved transition is extrapolated.
 //
 // # What this harness cannot grade
 //

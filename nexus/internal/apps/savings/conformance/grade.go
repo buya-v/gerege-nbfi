@@ -64,6 +64,16 @@ func (s *cellSink) cmpMoney(name, want, got string) {
 	}
 }
 
+// cmpStatusID compares an enum stored-value cell. It is a graded cell but NOT a
+// money cell: m_savings_account.status_enum is an integer ordinal, and a wrong
+// ordinal is silent data corruption rather than a wrong amount.
+func (s *cellSink) cmpStatusID(name string, want, got int32) {
+	s.graded++
+	if want != got {
+		s.diffs = append(s.diffs, fmt.Sprintf("%s: want %d, got %d", name, want, got))
+	}
+}
+
 // gradeOne admits, checks capabilities, evaluates and compares one vector.
 func gradeOne(v *Vector, opts Options) vectorResult {
 	r := vectorResult{CaseID: v.CaseID}
@@ -93,6 +103,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	switch v.Oracle.Seam {
 	case SeamSavingsDailyInterest:
 		s.cmpMoney("interest", v.Expect.InterestMinor, got.InterestMinor)
+	case SeamSavingsAccountStatus:
+		s.cmpStatusID("status_id", v.Expect.StatusID, got.StatusID)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money
