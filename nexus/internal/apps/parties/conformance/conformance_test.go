@@ -77,11 +77,11 @@ func clientStatusProbe() *Vector {
 			CaptureCaseID: `"status_enum":300`,
 			Citation:      "ClientStatus.java:28-35 — ACTIVE(300, \"clientStatusType.active\")",
 		},
-		TenantParams:        probeTenant(),
-		Request:             Request{Vocabulary: string(VocabularyClientStatus), Name: "ACTIVE"},
-		Expect:              Expect{Ordinal: 300},
+		TenantParams:         probeTenant(),
+		Request:              Request{Vocabulary: string(VocabularyClientStatus), Name: "ACTIVE"},
+		Expect:               Expect{Ordinal: 300},
 		CapabilitiesRequired: []string{"client-status"},
-		GradedAgainst:       []string{"parties-go"},
+		GradedAgainst:        []string{"parties-go"},
 	}
 }
 
@@ -102,11 +102,11 @@ func legalFormProbe() *Vector {
 			CaptureCaseID: "legalFormType.person",
 			Citation:      "LegalForm.java:29-30 — PERSON(1, \"legalFormType.person\", \"Person\")",
 		},
-		TenantParams:        probeTenant(),
-		Request:             Request{Vocabulary: string(VocabularyLegalForm), Name: "PERSON"},
-		Expect:              Expect{Ordinal: 1},
+		TenantParams:         probeTenant(),
+		Request:              Request{Vocabulary: string(VocabularyLegalForm), Name: "PERSON"},
+		Expect:               Expect{Ordinal: 1},
 		CapabilitiesRequired: []string{"legal-form"},
-		GradedAgainst:       []string{"parties-go"},
+		GradedAgainst:        []string{"parties-go"},
 	}
 }
 
@@ -127,11 +127,11 @@ func groupingStatusProbe() *Vector {
 			CaptureCaseID: "ACTIVE",
 			Citation:      "GroupingTypeStatus.java:26-31 — ACTIVE(300, \"groupingStatusType.active\")",
 		},
-		TenantParams:        probeTenant(),
-		Request:             Request{Vocabulary: string(VocabularyGroupingStatus), Name: "ACTIVE"},
-		Expect:              Expect{Ordinal: 300},
+		TenantParams:         probeTenant(),
+		Request:              Request{Vocabulary: string(VocabularyGroupingStatus), Name: "ACTIVE"},
+		Expect:               Expect{Ordinal: 300},
 		CapabilitiesRequired: []string{"grouping-status"},
-		GradedAgainst:       []string{"parties-go"},
+		GradedAgainst:        []string{"parties-go"},
 	}
 }
 
