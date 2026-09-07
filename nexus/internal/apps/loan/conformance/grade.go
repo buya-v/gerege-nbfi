@@ -64,6 +64,22 @@ func (s *cellSink) cmpMoney(name, want, got string) {
 	}
 }
 
+// cmpText compares a non-money structural cell (a status code or enum label).
+func (s *cellSink) cmpText(name, want, got string) {
+	s.graded++
+	if want != got {
+		s.diffs = append(s.diffs, fmt.Sprintf("%s: want %q, got %q", name, want, got))
+	}
+}
+
+// cmpStoredValue compares a persisted enum ordinal, transcribed as an integer.
+func (s *cellSink) cmpStoredValue(name string, want, got int32) {
+	s.graded++
+	if want != got {
+		s.diffs = append(s.diffs, fmt.Sprintf("%s: want %d, got %d", name, want, got))
+	}
+}
+
 // diffAllocation compares the four-bucket allocation and the leftover.
 func diffAllocation(s *cellSink, want AllocationMoney, wantLeftover string, got AllocationMoney, gotLeftover string) {
 	s.cmpMoney("allocation.penalty", want.Penalty, got.Penalty)
@@ -106,6 +122,11 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpMoney("interest", v.Expect.InterestMinor, got.InterestMinor)
 	case SeamLoanDisbursement:
 		s.cmpMoney("net_disbursal", v.Expect.NetDisbursalMinor, got.NetDisbursalMinor)
+	case SeamLoanSummaryOutstanding:
+		s.cmpMoney("summary_total", v.Expect.SummaryTotalMinor, got.SummaryTotalMinor)
+	case SeamLoanStatus:
+		s.cmpText("status_code", v.Expect.StatusCode, got.StatusCode)
+		s.cmpStoredValue("status_stored_value", v.Expect.StatusStoredValue, got.StatusStoredValue)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

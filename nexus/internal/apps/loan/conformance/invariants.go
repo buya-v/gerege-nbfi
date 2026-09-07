@@ -33,6 +33,10 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertAllocationNonNegative(got)}
 	case SeamLoanScheduleInterest:
 		return []InvariantResult{assertInterestNonNegative(got)}
+	case SeamLoanSummaryOutstanding:
+		return []InvariantResult{assertSummaryTotalNonNegative(got)}
+	case SeamLoanStatus:
+		return []InvariantResult{assertStatusIdentity(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -78,6 +82,43 @@ func assertInterestNonNegative(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("interest %q is a non-negative integer minor amount", got.InterestMinor)
+	return r
+}
+
+// assertSummaryTotalNonNegative: the derived total outstanding is a
+// non-negative integer minor-unit amount.
+func assertSummaryTotalNonNegative(got Expect) InvariantResult {
+	r := InvariantResult{Name: "summary_total_non_negative", Assertions: 1}
+	if !isIntegerMinorString(got.SummaryTotalMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("summary total %q is not a non-negative integer minor amount", got.SummaryTotalMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("summary total %q is a non-negative integer minor amount", got.SummaryTotalMinor)
+	return r
+}
+
+// assertStatusIdentity: a decoded loan status must round-trip to the stored
+// value it was decoded from and carry a non-empty i18n code. A status that
+// re-encodes to a different m_loan.loan_status_id (an iota-collapsed enum)
+// breaks persistence identity and is never a transcription of the oracle's
+// read-back.
+func assertStatusIdentity(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "status_identity", Assertions: 2}
+	if got.StatusStoredValue != v.Request.Status.StoredValue {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("decoded status round-trips to %d, not the requested stored value %d",
+			got.StatusStoredValue, v.Request.Status.StoredValue)
+		return r
+	}
+	if got.StatusCode == "" {
+		r.Status = InvariantViolated
+		r.Detail = "status_code is empty"
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("status %d round-trips and reads back as %q", got.StatusStoredValue, got.StatusCode)
 	return r
 }
 

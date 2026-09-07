@@ -12,7 +12,7 @@ import (
 )
 
 // LoanEvaluator is what a loan implementation must be able to do for this
-// harness to grade it. The graded surface is the three capture seams:
+// harness to grade it. The graded surface is the capture seams:
 //
 //   - seam loan-repayment-allocation: the four-bucket greedy allocation of a
 //     repayment across a single instalment's outstanding buckets, graded by
@@ -21,7 +21,11 @@ import (
 //     discriminating loan, the one cell the MANIFEST records as its rounding
 //     surface (HALF_UP vs HALF_EVEN);
 //   - seam loan-disbursement: the net disbursal amount, graded by
-//     loan.NetDisbursalAmount.
+//     loan.NetDisbursalAmount;
+//   - seam loan-summary-outstanding: the summary total outstanding, DERIVED by
+//     loan.LoanSummary.TotalOutstanding from the four outstanding buckets;
+//   - seam loan-status: the persisted loan-status ordinal decoded by
+//     loan.LoanStatusFromStoredValue and its code/round-trip stored value.
 type LoanEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -126,8 +130,12 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goSchedule(*req.Schedule, roundHalfUp)
 	case req.Disburse != nil:
 		return goDisburse(*req.Disburse)
+	case req.Summary != nil:
+		return goSummary(*req.Summary)
+	case req.Status != nil:
+		return goStatus(*req.Status)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status")
 	}
 }
 
@@ -187,6 +195,51 @@ func goDisburse(d DisburseRequest) (Expect, error) {
 	return Expect{NetDisbursalMinor: strconv.FormatInt(int64(net), 10)}, nil
 }
 
+// goSummary derives the summary's total outstanding from the four outstanding
+// buckets a capture's "summary" block read back, via
+// loan.LoanSummary.TotalOutstanding. The buckets are the authority and the
+// total is DERIVED from them (the derive-don't-store ruling: Fineract persists
+// total_outstanding_derived, the port keeps the decomposition and derives the
+// total).
+func goSummary(s SummaryRequest) (Expect, error) {
+	principal, err := parseMinorText(s.PrincipalOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(s.InterestOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(s.FeeOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	penalty, err := parseMinorText(s.PenaltyOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	total := loan.LoanSummary{
+		PrincipalOutstanding:      principal,
+		InterestOutstanding:       interest,
+		FeeChargesOutstanding:     fee,
+		PenaltyChargesOutstanding: penalty,
+	}.TotalOutstanding()
+	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
+// goStatus decodes a persisted m_loan.loan_status_id value and exposes the
+// read-back the capture serialised: the enum's i18n code and the stored value
+// the decoded status round-trips to (which must equal the request's stored
+// value — that round trip is what pins the ordinal, not the Go enum's
+// position).
+func goStatus(s StatusRequest) (Expect, error) {
+	st, ok := loan.LoanStatusFromStoredValue(s.StoredValue)
+	if !ok {
+		return Expect{}, fmt.Errorf("loan-status: stored value %d is not a legal loan status", s.StoredValue)
+	}
+	return Expect{StatusCode: st.Code(), StatusStoredValue: st.StoredValue()}, nil
+}
+
 // scheduleInterestMinor ports the single-period interest of the MANIFEST's
 // discriminating loan: interest = round(principal * ratePct * daysInMonth,
 // 100 * daysInYear), the HALF_UP instance of
@@ -242,10 +295,67 @@ func (w wrongEvaluator) Evaluate(req Request) (Expect, error) {
 	return w.goEvaluator.Evaluate(req)
 }
 
+// wrongSummaryEvaluator is a DELIBERATELY WRONG implementation of the summary
+// seam: it derives total_outstanding from the PRINCIPAL and FEE buckets only,
+// treating the interest and penalty outstanding buckets as already recovered
+// income. While those buckets are empty the error is invisible, but on the
+// pinned SEED-L03 post-repayment read-back the interest bucket holds 5618.53,
+// so the derived total comes out 5618.53 short and the vector goes red.
+type wrongSummaryEvaluator struct{ goEvaluator }
+
+func (w wrongSummaryEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Summary != nil {
+		return wrongSummary(*req.Summary)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+func wrongSummary(s SummaryRequest) (Expect, error) {
+	principal, err := parseMinorText(s.PrincipalOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(s.FeeOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	total := principal + fee
+	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
+// wrongStatusEvaluator is a DELIBERATELY WRONG implementation of the status
+// seam: it decodes the stored value through the real table but then RE-ENCODES
+// the resulting enum as its contiguous Go ordinal when it is persisted, exactly
+// the iota collapse loan/status.go warns about (ACTIVE is stored 300, but the
+// enum's ordinal is 3). The round-trip stored_value cell of every status vector
+// therefore goes red (300 vs 3).
+type wrongStatusEvaluator struct{ goEvaluator }
+
+func (w wrongStatusEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Status != nil {
+		st, ok := loan.LoanStatusFromStoredValue(req.Status.StoredValue)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-status: stored value %d is not a legal loan status", req.Status.StoredValue)
+		}
+		return Expect{StatusCode: st.Code(), StatusStoredValue: int32(st)}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
 func init() {
 	Register("loan-go", NewGoEvaluator())
 	RegisterWrong("loan-wrong-half-even-schedule-interest",
 		"rounds the discriminating schedule-interest cell with HALF_EVEN instead of HALF_UP, "+
 			"so the pinned 1000.51 observation reads 1000.50 and the vector goes red",
 		wrongEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-summary-interest-not-outstanding",
+		"derives total_outstanding from the principal and fee buckets only, treating the interest "+
+			"and penalty outstanding buckets as recovered, so the pinned SEED-L03 total (97733.65) "+
+			"reads 5618.53 short and the vector goes red",
+		wrongSummaryEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-status-iota-ordinal",
+		"re-encodes a decoded loan status as its contiguous Go enum ordinal instead of its "+
+			"non-contiguous stored value (ACTIVE 3, not 300), so the round-trip stored_value "+
+			"cell of every status vector goes red",
+		wrongStatusEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

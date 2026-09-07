@@ -1,6 +1,6 @@
 {
  "schema": "gerege.loan.capabilities/v1",
- "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), and the net disbursal amount (loan-disbursement seam). The SEED-L01 interest waiver is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it.",
+ "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Five capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), and the persisted loan-status ordinal read-back (loan-status seam). The SEED-L01 interest waiver is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it.",
  "capabilities": [
   {
    "name": "repayment-allocation",
@@ -19,6 +19,18 @@
    "description": "The net disbursal amount of the SEED-L06 disbursal: approved principal minus charges due at disbursement, as written back in the loan detail read.",
    "in_graded_domain": true,
    "evidence": "Capture loan-L06-detail-raw.json under tenant gerege: netDisbursalAmount 100050.50 with feeChargesAtDisbursementCharged 0.0 (no charges due at disbursement)."
+  },
+  {
+   "name": "summary-total-outstanding",
+   "description": "The loan summary's total outstanding, DERIVED from the four outstanding buckets (principal, interest, fee, penalty) of a loan detail read-back. Fineract persists total_outstanding_derived; the port's LoanSummary keeps the bucket decomposition and derives the total (derive-don't-store).",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-3-detail-after-raw.json under tenant gerege: the SEED-L03 post-repayment summary read back principalOutstanding 92115.12, interestOutstanding 5618.53, fee/penaltyChargesOutstanding 0, and totalOutstanding 97733.65 (the sum of the four buckets)."
+  },
+  {
+   "name": "loan-status-encoding",
+   "description": "The persisted loan-status ordinal (m_loan.loan_status_id) decoded into the enum's i18n code, and the ordinal the decoded enum round-trips back to on re-persist. Fineract's status table is NON-contiguous (APPROVED 200, ACTIVE 300, closed 6xx), so a port encoding the enum as an iota collapses states.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-L06-approve-raw.json under tenant gerege: the SEED-L06 approval returned changes.status id 200 code loanStatusType.approved; capture loan-1-detail-raw.json read back status id 300 code loanStatusType.active on SEED-L01."
   },
   {
    "name": "interest-waiver",
@@ -47,6 +59,20 @@
    "description": "The SEED-L06 loan detail read-back on the running Fineract server, tenant gerege: the net disbursal amount.",
    "status": {
     "disbursement-net": "exercised"
+   }
+  },
+  {
+   "name": "loan-summary-outstanding",
+   "description": "The SEED-L03 loan detail read-back on the running Fineract server, tenant gerege: the post-repayment summary block (four outstanding buckets and the derived total outstanding).",
+   "status": {
+    "summary-total-outstanding": "exercised"
+   }
+  },
+  {
+   "name": "loan-status",
+   "description": "The loan-status read-backs on the running Fineract server, tenant gerege: the SEED-L06 approval command's changes.status block (approved, id 200) and the SEED-L01 loan detail read-back's status block (active, id 300).",
+   "status": {
+    "loan-status-encoding": "exercised"
    }
   }
  ]

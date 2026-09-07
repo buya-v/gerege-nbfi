@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L01-status-active",
+ "title": "SEED-L01 active loan-status ordinal read-back",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the active loan-status read-back of the SEED-L01 loan detail. request.status.stored_value=300 is the capture status block's \"id\":300, the persisted m_loan.loan_status_id; expect.status_code=\"loanStatusType.active\" is that block's \"code\"; expect.status_stored_value=300 is the stored value the decoded enum must round-trip to — Fineract stores ACTIVE as 300, not as the contiguous iota ordinal 3. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-status",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.status.stored_value and expect.status_code/status_stored_value are transcribed from the status block of the committed capture loan-1-detail-raw.json; capture_case_id names the externalId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-1-detail-raw.json",
+  "capture_sha256": "fd410c402f1fbd824f14681acb83b86663c79d0e9ff027b9a644b015212f35e9",
+  "capture_case_id": "SEED-L01",
+  "citation": "loan-1-detail-raw.json {\"externalId\":\"SEED-L01\",\"status\":{\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\"}}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "status": {
+   "stored_value": 300
+  }
+ },
+ "expect": {
+  "status_code": "loanStatusType.active",
+  "status_stored_value": 300
+ },
+ "capabilities_required": [
+  "loan-status-encoding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}

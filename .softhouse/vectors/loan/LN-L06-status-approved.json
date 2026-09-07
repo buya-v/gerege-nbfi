@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L06-status-approved",
+ "title": "SEED-L06 approved loan-status ordinal read-back",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the approved loan-status read-back returned on the SEED-L06 approval command. request.status.stored_value=200 is the capture changes.status block's \"id\":200, the persisted m_loan.loan_status_id; expect.status_code=\"loanStatusType.approved\" is that block's \"code\"; expect.status_stored_value=200 is the stored value the decoded enum must round-trip to — Fineract stores APPROVED as 200, not as the contiguous iota ordinal 2. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-status",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.status.stored_value and expect.status_code/status_stored_value are transcribed from the changes.status block of the committed capture loan-L06-approve-raw.json; capture_case_id names the resourceExternalId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-L06-approve-raw.json",
+  "capture_sha256": "51feed08c991fd57e3c7bbfa49c7f31bc531e6188839e2c54a022811655b4411",
+  "capture_case_id": "SEED-L06",
+  "citation": "loan-L06-approve-raw.json {\"resourceExternalId\":\"SEED-L06\",\"changes\":{\"status\":{\"id\":200,\"code\":\"loanStatusType.approved\",\"value\":\"Approved\"}}}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "status": {
+   "stored_value": 200
+  }
+ },
+ "expect": {
+  "status_code": "loanStatusType.approved",
+  "status_stored_value": 200
+ },
+ "capabilities_required": [
+  "loan-status-encoding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
