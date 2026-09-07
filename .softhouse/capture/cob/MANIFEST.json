@@ -1,0 +1,20 @@
+{
+  "context": "cob",
+  "note": "Close-of-Business loan business-step ORDER. The ordinal is step_order, the name is step_name, and the value the oracle stores is the ordered business-step list for job LOAN_CLOSE_OF_BUSINESS. A wrong step_order silently reorders the COB pipeline (charges before delinquency, accrual before arrears aging) with no crash.",
+  "roundingSurface": {
+    "seam": "none — this context carries no money",
+    "note": "No minor-unit, rounding or currency surface exists. The only graded integer is the business-step order (1..6), observed from GET /jobs/LOAN_CLOSE_OF_BUSINESS/steps and corroborated by the read-only m_batch_business_steps read-back."
+  },
+  "objects": {
+    "job": "LOAN_CLOSE_OF_BUSINESS",
+    "orderedSteps": [
+      { "stepName": "APPLY_CHARGE_TO_OVERDUE_LOANS", "order": 1 },
+      { "stepName": "LOAN_DELINQUENCY_CLASSIFICATION", "order": 2 },
+      { "stepName": "CHECK_LOAN_REPAYMENT_DUE", "order": 3 },
+      { "stepName": "CHECK_LOAN_REPAYMENT_OVERDUE", "order": 4 },
+      { "stepName": "UPDATE_LOAN_ARREARS_AGING", "order": 5 },
+      { "stepName": "ADD_PERIODIC_ACCRUAL_ENTRIES", "order": 6 }
+    ],
+    "outOfScope": "WORKING_CAPITAL_LOAN_CLOSE_OF_BUSINESS (7 working-capital steps) is out of scope for the Tier A money core; its steps are captured for the record only."
+  }
+}

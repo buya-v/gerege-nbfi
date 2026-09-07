@@ -1,0 +1,17 @@
+{
+  "context": "origination",
+  "note": "LoanOriginator status vocabulary. LoanOriginatorStatus is a STRING enum — it has no ordinal: the value the oracle stores/returns is the enum name string itself (ACTIVE/PENDING/INACTIVE), observed from GET /loan-originators/template statusOptions. A wrong mapping (e.g. PENDING stored as ACTIVE) silently corrupts every originator written.",
+  "roundingSurface": {
+    "seam": "none — this context carries no money",
+    "note": "No minor-unit, rounding or currency surface exists. There is no ordinal to pin; each vector pins enum NAME <-> STORED STRING."
+  },
+  "objects": {
+    "vocabulary": "loan_originator_status",
+    "storedValues": [
+      { "name": "ACTIVE", "stored": "ACTIVE" },
+      { "name": "PENDING", "stored": "PENDING" },
+      { "name": "INACTIVE", "stored": "INACTIVE" }
+    ],
+    "outOfScope": "originatorTypeOptions and channelTypeOptions are code-value driven (m_code_value), not this enum vocabulary; they are captured for the record only."
+  }
+}

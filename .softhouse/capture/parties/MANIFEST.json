@@ -1,0 +1,24 @@
+{
+  "context": "parties",
+  "note": "Client status, legal-form and group status vocabularies. Fineract persists each enum as an ORDINAL (status_enum / legal_form_enum) — a wrong ordinal is silent data corruption, not a crash. The ordinal is declared in the pinned Java source (cited file:line per vector) and corroborated where the running oracle has data: GET /clients/template clientLegalFormOptions (id 1/2), GET /clients/1 (status.id 300, legalForm.id 1), and the read-only m_client read-back (status_enum 300, legal_form_enum 1). m_group is empty, so grouping status ordinals are Java-source-only.",
+  "roundingSurface": {
+    "seam": "none — this context carries no money",
+    "note": "No minor-unit, rounding or currency surface exists. The only graded integer is the enum ordinal (status_enum / legal_form_enum)."
+  },
+  "objects": {
+    "vocabularies": {
+      "client_status": {
+        "source": "fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/ClientStatus.java:28-35",
+        "observed": "m_client.status_enum = 300 for all 9 seeded clients (read-only read-back); GET /clients/1 status.id = 300 code clientStatusType.active"
+      },
+      "legal_form": {
+        "source": "fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/LegalForm.java:29-30",
+        "observed": "GET /clients/template clientLegalFormOptions id 1 (legalFormType.person) and id 2 (legalFormType.entity); GET /clients/1 legalForm.id = 1"
+      },
+      "grouping_status": {
+        "source": "fineract-core/src/main/java/org/apache/fineract/portfolio/group/domain/GroupingTypeStatus.java:26-31",
+        "observed": "NOT observable via API (GET /groups/template exposes no status options) and NOT observable via SQL (m_group is empty). Java-source-only."
+      }
+    }
+  }
+}

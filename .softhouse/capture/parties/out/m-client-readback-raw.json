@@ -1,0 +1,9 @@
+[{"id":1,"external_id":null,"status_enum":300,"legal_form_enum":1}, 
+ {"id":2,"external_id":"SEED-C01","status_enum":300,"legal_form_enum":1}, 
+ {"id":3,"external_id":"SEED-C02","status_enum":300,"legal_form_enum":1}, 
+ {"id":4,"external_id":"SEED-C03","status_enum":300,"legal_form_enum":1}, 
+ {"id":5,"external_id":"SEED-C11","status_enum":300,"legal_form_enum":1}, 
+ {"id":6,"external_id":"SEED-C12","status_enum":300,"legal_form_enum":1}, 
+ {"id":7,"external_id":"SEED-C13","status_enum":300,"legal_form_enum":1}, 
+ {"id":8,"external_id":"SEED-C14","status_enum":300,"legal_form_enum":1}, 
+ {"id":9,"external_id":"SEED-C15","status_enum":300,"legal_form_enum":1}]

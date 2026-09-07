@@ -1,0 +1,8 @@
+// pinned-reference source capture (commit 426a23544e8426a38ae43ae404670a0a7e85b9eb)
+// source: fineract-loan-origination/src/main/java/org/apache/fineract/portfolio/loanorigination/domain/LoanOriginatorStatus.java lines 23-28
+
+public enum LoanOriginatorStatus {
+
+    ACTIVE("ACTIVE"), PENDING("PENDING"), INACTIVE("INACTIVE");
+
+    private final String value;
