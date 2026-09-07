@@ -61,3 +61,42 @@ _in progress; each site appended as it is decided_
 
 **loan/charge.go block complete: 11/11 D.**
 
+## internal/apps/investor/postgres.go — I3-SQL-BALANCE (5 sites) + I3-FIELD-WRITE (5 sites)
+
+Single finding in two halves: `Insert` (postgres.go:108-120) writes a loan-outstanding
+snapshot into five Fineract `*_outstanding_derived` columns of
+`m_external_asset_owner_transfer_details`; `loadDetails` (postgres.go:187-215) SELECTs those
+same columns back into the aggregate's balance fields on every `FindByID`/`FindByLoanID`.
+Both halves are graded A below. The verdicts are decidable by direct inspection — the write
+and the read-back are both in this file — and no go/types reachability analysis is needed:
+I-3 refuses the write path's existence, not only its reachable consequences.
+
+**Repair shape (for later):** keep the adopted Fineract schema but omit the five
+`*_outstanding_derived` columns from the details INSERT and drop their decode from the read,
+exactly as the repaired savings store did (savings/postgres.go:20-40 keeps `account_balance_derived`
+/ `running_balance_derived` as columns-with-defaults and neither INSERTs nor SELECTs them).
+
+### internal/apps/investor/postgres.go:108 — I3-SQL-BALANCE (column principal_outstanding_derived)
+**Expression:** `INSERT INTO m_external_asset_owner_transfer_details (…, principal_outstanding_derived, …) VALUES ($1,…,$2,…)` with `$2 = t.Details.PrincipalOutstanding.FormatDecimal(MNTMinorDigits)` (postgres.go:109,115)
+**Verdict:** A
+**Argument:** The port's own persistence layer writes a derived loan-outstanding balance into a stored `*_derived` column. This is exactly the m_trial_balance shape DEC-2 §4.4 I-3 and §7 refuse — "a written, stored sum wearing a balance's name" — and the shape the repaired savings store grades by: "no INSERT here names a balance column" (savings/postgres.go:20-40). D does not apply: unlike loan/charge.go, whose slice owns no persistence at all (the whole basis of every charge.go D verdict), this write is inside the postgres boundary, i.e. the port has adopted Fineract's WRITE PATH to `principal_outstanding_derived` (ExternalAssetOwnerTransferDetails.java:49), and adopting the schema is not adopting the write paths. The value originates as the loan's current outstanding (`loan.getSummary().getTotalPrincipalOutstanding()`, LoanAccountOwnerTransferServiceImpl.java:170) — a derived balance Fineract itself maintains, which this program must derive rather than store.
+
+### internal/apps/investor/postgres.go:108 — I3-SQL-BALANCE (column interest_outstanding_derived)
+**Expression:** `INSERT INTO m_external_asset_owner_transfer_details (…, interest_outstanding_derived, …) VALUES ($1,…,$3,…)` with `$3 = t.Details.InterestOutstanding.FormatDecimal(MNTMinorDigits)` (postgres.go:109,116)
+**Verdict:** A
+**Argument:** Same write path as the principal column, for the interest leg of the snapshot. In Fineract the stored value is a computed amount — `calculateOutstandingInterest(loan)` via the outstanding-interest-strategy (LoanAccountOwnerTransferServiceImpl.java:172-173) — i.e. a derived balance persisted into `interest_outstanding_derived` (ExternalAssetOwnerTransferDetails.java:52). The Go port reproduces Fineract's write path at its own persistence boundary, which DEC-2 I-3 forbids ("no write path to any balance column"); the repaired savings store's rule is "no INSERT here names a balance column" (savings/postgres.go:20-40). Because this ported column would be read back as authoritative state (postgres.go:199-215), the benign D reading does not hold here the way it did for charge.go's in-memory-only fields.
+
+### internal/apps/investor/postgres.go:108 — I3-SQL-BALANCE (column fee_charges_outstanding_derived)
+**Expression:** `INSERT INTO m_external_asset_owner_transfer_details (…, fee_charges_outstanding_derived, …) VALUES ($1,…,$4,…)` with `$4 = t.Details.FeeChargesOutstanding.FormatDecimal(MNTMinorDigits)` (postgres.go:110,117)
+**Verdict:** A
+**Argument:** The fee leg of the derived outstanding decomposition is stored at the port's persistence boundary into `fee_charges_outstanding_derived`, a column Fineract fills from the loan summary's derived fee outstanding (LoanAccountOwnerTransferServiceImpl.java:174; column at ExternalAssetOwnerTransferDetails.java:55). The programme rule is provenance-based and location-free with respect to which side of the loop you are on: DEC-2 §4.4 I-3 refuses every write path to a balance column, and the savings repair statement it cites — "no INSERT here names a balance column … no UPDATE here assigns one" (savings/postgres.go:26-35) — is the standard this INSERT fails. Not a charge.go-style D: here the value does reach a real DB column, and loadDetails (postgres.go:187-215) will hand it back as the transfer's authoritative state.
+
+### internal/apps/investor/postgres.go:108 — I3-SQL-BALANCE (column penalty_charges_outstanding_derived)
+**Expression:** `INSERT INTO m_external_asset_owner_transfer_details (…, penalty_charges_outstanding_derived, …) VALUES ($1,…,$5,…)` with `$5 = t.Details.PenaltyChargesOutstanding.FormatDecimal(MNTMinorDigits)` (postgres.go:110,118)
+**Verdict:** A
+**Argument:** Penalty-leg of the same snapshot write into `penalty_charges_outstanding_derived`, populated in Fineract from the loan summary's derived penalty outstanding (LoanAccountOwnerTransferServiceImpl.java:175; column at ExternalAssetOwnerTransferDetails.java:58). The Go port writes it at its own SQL boundary — the last remaining `*_derived` balance-column writer in the tree after the savings repair removed the others. This is the m_trial_balance shape the incident (2026-09-03 publishing outage) names "the serious ones … a stored balance is still a written balance," and adopting Fineract's schema for the details table does not licence adopting its write path. Verdict A; repair is to omit the column from the INSERT and derive on read if a snapshot is ever needed.
+
+### internal/apps/investor/postgres.go:108 — I3-SQL-BALANCE (column total_outstanding_derived)
+**Expression:** `INSERT INTO m_external_asset_owner_transfer_details (…, total_outstanding_derived, …) VALUES ($1,…,$6,…)` with `$6 = t.Details.TotalOutstanding.FormatDecimal(MNTMinorDigits)` (postgres.go:111,118)
+**Verdict:** A
+**Argument:** This column is the strongest proof of the violation, because it is a stored SUM: Fineract derives `totalOutstanding` from the four buckets (`updateTotalOutstanding`, ExternalAssetOwnerTransferDetails.java:84-85) and only then persists it, and the Go model itself asserts the same rule — investor/doc.go:13-14 "total outstanding is DERIVED from the four component buckets, never stored independently", with DeriveTotalOutstanding (transfer.go:51) and NormalizedTotalOutstanding (transfer.go:55-59) existing precisely because the stored total can diverge. Yet postgres.go stores the derived sum in `total_outstanding_derived` anyway — the DEC-2 §7 refusal verbatim ("a written, stored sum"). The column is NOT NULL with Fineract's own default semantics, so a conforming INSERT may simply omit it (savings/postgres.go:22-29 shows the same for `account_balance_derived`).
