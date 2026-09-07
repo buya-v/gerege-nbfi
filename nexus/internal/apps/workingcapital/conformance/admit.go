@@ -34,10 +34,12 @@ func Admit(v *Vector, opts Options) []string {
 	if v.Class != ClassParity {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
-	if v.Oracle.Seam != SeamWorkingCapitalLoansList {
+	switch v.Oracle.Seam {
+	case SeamWorkingCapitalLoansList, SeamWorkingCapitalLoansDetail:
+	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the %q seam",
-			v.Oracle.Seam, SeamWorkingCapitalLoansList))
+			"oracle.seam %q: this harness grades only the %q and %q seams",
+			v.Oracle.Seam, SeamWorkingCapitalLoansList, SeamWorkingCapitalLoansDetail))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -105,6 +107,7 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, err.Error())
 	}
 
+	problems = append(problems, admitRequest(v)...)
 	problems = append(problems, admitExpect(v)...)
 	problems = append(problems, checkGradedAgainst(v)...)
 
@@ -112,24 +115,90 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// admitExpect enforces that a list expectation is structurally sane: the loan
-// list length must agree with the recorded total and every loan id/external_id
-// must be non-empty.
+// admitRequest enforces the request/expect shape its seam names. A list request
+// selects the whole table (loan_id 0) and expects the list; a detail request
+// selects one loan (positive loan_id) and expects its balance read-back.
+func admitRequest(v *Vector) []string {
+	switch v.Oracle.Seam {
+	case SeamWorkingCapitalLoansList:
+		if v.Request.LoanID != 0 {
+			return []string{fmt.Sprintf(
+				"list seam must request the whole table (loan_id 0), got loan_id %d", v.Request.LoanID)}
+		}
+	case SeamWorkingCapitalLoansDetail:
+		if v.Request.LoanID <= 0 {
+			return []string{fmt.Sprintf(
+				"detail seam must request one loan by positive loan_id, got loan_id %d", v.Request.LoanID)}
+		}
+	}
+	return nil
+}
+
+// admitExpect enforces that the expected cells a seam needs are present and
+// sane: a list expectation's length agrees with its total and every loan
+// id/external_id is non-empty; a detail expectation carries a balance read-back
+// whose money cells are non-negative integer minor amounts.
 func admitExpect(v *Vector) []string {
 	var problems []string
-	if int64(len(v.Expect.Loans)) != v.Expect.TotalElements {
-		problems = append(problems, fmt.Sprintf(
-			"expect.total_elements %d does not match the loan list length %d", v.Expect.TotalElements, len(v.Expect.Loans)))
-	}
-	for i, l := range v.Expect.Loans {
-		if l.ID == "" {
-			problems = append(problems, fmt.Sprintf("expect.loans[%d].id is empty", i))
+	switch v.Oracle.Seam {
+	case SeamWorkingCapitalLoansList:
+		if int64(len(v.Expect.Loans)) != v.Expect.TotalElements {
+			problems = append(problems, fmt.Sprintf(
+				"expect.total_elements %d does not match the loan list length %d", v.Expect.TotalElements, len(v.Expect.Loans)))
 		}
-		if l.ExternalID == "" {
-			problems = append(problems, fmt.Sprintf("expect.loans[%d].external_id is empty", i))
+		for i, l := range v.Expect.Loans {
+			if l.ID == "" {
+				problems = append(problems, fmt.Sprintf("expect.loans[%d].id is empty", i))
+			}
+			if l.ExternalID == "" {
+				problems = append(problems, fmt.Sprintf("expect.loans[%d].external_id is empty", i))
+			}
+		}
+	case SeamWorkingCapitalLoansDetail:
+		if v.Expect.Detail == nil {
+			return append(problems, "expect.detail is missing for the detail seam")
+		}
+		if len(v.Expect.Loans) != 0 {
+			problems = append(problems, "detail seam must not set expect.loans")
+		}
+		if v.Expect.Detail.ID == "" {
+			problems = append(problems, "expect.detail.id is empty")
+		}
+		if v.Expect.Detail.Status == "" {
+			problems = append(problems, "expect.detail.status is empty")
+		}
+		b := v.Expect.Detail.Balance
+		for name, val := range map[string]string{
+			"principal":                           b.Principal,
+			"principal_paid":                      b.PrincipalPaid,
+			"total_disbursement":                  b.TotalDisbursement,
+			"total_discount_fee":                  b.TotalDiscountFee,
+			"principal_outstanding":               b.PrincipalOutstanding,
+			"total_expected_repayment":            b.TotalExpectedRepayment,
+			"total_repayment":                     b.TotalRepayment,
+			"total_outstanding":                   b.TotalOutstanding,
+			"unrealized_income_from_discount_fee": b.UnrealizedIncomeFromDiscountFee,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf("expect.detail.balance.%s %q is not a non-negative integer minor amount", name, val))
+			}
 		}
 	}
 	return problems
+}
+
+// isIntegerMinorString reports whether s is a non-negative integer (money in
+// integer form must never be a float).
+func isIntegerMinorString(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 // validateTenantParams is the tenant context check.

@@ -30,6 +30,25 @@ const SeamLoanScheduleInterest = "loan-schedule-interest"
 // amount of the SEED-L06 disbursal.
 const SeamLoanDisbursement = "loan-disbursement"
 
+// SeamLoanStatus is the capture seam this schema grades: the persisted
+// loan-status ordinal as the oracle's read-back serialises it. Fineract stores
+// loan status in m_loan.loan_status_id with a NON-contiguous value table — the
+// active band sits at 300 with transfer sub-states at 303/304 and the closed
+// band carries three 6xx values — so a port that encodes the enum as an iota
+// silently collapses states. Each vector decodes one observed stored value and
+// pins the status_code the read-back emitted for it (plus the round-trip stored
+// value), transcribed from a capture whose status.id/code pair is the
+// observation.
+const SeamLoanStatus = "loan-status"
+
+// SeamLoanSummaryOutstanding is the capture seam this schema grades: the loan
+// summary's total outstanding, DERIVED from the four outstanding buckets the
+// oracle read back. Fineract persists total_outstanding_derived; the port's
+// LoanSummary keeps the bucket decomposition and derives the total
+// (derive-don't-store). A port that stores the total and reads it back, or sums
+// the wrong buckets, returns a total that disagrees with the observed read-back.
+const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -113,23 +132,53 @@ type DisburseRequest struct {
 	ChargesDueAtDisbursementMinor string `json:"charges_due_at_disbursement_minor"`
 }
 
+// SummaryRequest is the loan-summary-outstanding seam's input: the four
+// outstanding buckets of a loan summary read-back, each an integer STRING in
+// minor units, transcribed from the capture's "summary" block.
+type SummaryRequest struct {
+	PrincipalOutstanding string `json:"principal_outstanding_minor"`
+	InterestOutstanding  string `json:"interest_outstanding_minor"`
+	FeeOutstanding       string `json:"fee_outstanding_minor"`
+	PenaltyOutstanding   string `json:"penalty_outstanding_minor"`
+}
+
+// StatusRequest is the loan-status seam's input: the persisted
+// m_loan.loan_status_id value (Fineract's status.id) whose read-back the vector
+// pins.
+type StatusRequest struct {
+	StoredValue int32 `json:"stored_value"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
-// three seams; a vector sets exactly one of the three sub-requests.
+// seams; a vector sets exactly one of the sub-requests.
 type Request struct {
 	Repayment *RepaymentRequest `json:"repayment,omitempty"`
 	Schedule  *ScheduleRequest  `json:"schedule,omitempty"`
 	Disburse  *DisburseRequest  `json:"disburse,omitempty"`
+	Summary   *SummaryRequest   `json:"summary,omitempty"`
+	Status    *StatusRequest    `json:"status,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
 // is the allocated buckets and the leftover; for the schedule seam the
-// single-period interest; for the disbursement seam the net disbursal amount.
-// Every money field is an integer STRING in minor units.
+// single-period interest; for the disbursement seam the net disbursal amount;
+// for the summary seam the derived total outstanding; for the status seam the
+// status_code the read-back emitted plus the round-trip stored value. Every
+// money field is an integer STRING in minor units.
 type Expect struct {
 	Allocation        *AllocationMoney `json:"allocation,omitempty"`
 	LeftoverMinor     string           `json:"leftover_minor,omitempty"`
 	InterestMinor     string           `json:"interest_minor,omitempty"`
 	NetDisbursalMinor string           `json:"net_disbursal_minor,omitempty"`
+	// SummaryTotalMinor is total_outstanding, derived from the four request
+	// buckets, in integer minor-unit STRING form.
+	SummaryTotalMinor string `json:"summary_total_minor,omitempty"`
+	// StatusCode is the capture's status.code for the request's stored value.
+	StatusCode string `json:"status_code,omitempty"`
+	// StatusStoredValue is the stored value the decoded status round-trips back
+	// to: m_loan.loan_status_id of the enum the port derived from the request's
+	// stored value. It must equal request.status.stored_value.
+	StatusStoredValue int32 `json:"status_stored_value,omitempty"`
 }
 
 // Vector is one loan golden vector.

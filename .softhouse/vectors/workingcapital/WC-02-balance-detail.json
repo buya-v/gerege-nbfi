@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-02-balance-detail",
+ "title": "working-capital balance read-back after the seeded disbursement",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture wc-loan-detail-raw.json (GET /working-capital-loans/1, tenant gerege), the read-back that serialises the seeded loan's m_wc_loan_balance row. The detail seam grades the row id, its loan-status code, and nine balance money cells. STORED cells: balance.principal=1000.51 -> \"100051\", balance.principalPaid=0.0 -> \"0\", balance.totalDisbursement=0.0 -> \"0\" (Fineract does NOT move this column on the disbursement write path), balance.totalDiscountFee=0.0 -> \"0\". DERIVED cells (the port's balance getters, never stored): balance.principalOutstanding=1000.51 -> \"100051\", balance.totalExpectedRepayment=1000.51 -> \"100051\", balance.totalRepayment=0.0 -> \"0\", balance.totalOutstanding=1000.51 -> \"100051\", balance.unrealizedIncomeFromDiscountFee=0.0 -> \"0\". Structural: expect.detail.id=\"1\" is the balance block's \"id\", expect.detail.status=\"loanStatusType.active\" is the response \"status\":{\"code\":...} field. All money cells are transcribed as integer minor units; no cell is computed here.",
+ "oracle": {
+  "seam": "working-capital-loans-detail",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture wc-loan-detail-raw.json; capture_case_id names the seeded loan whose balance block is read back.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/wc-loan-detail-raw.json",
+  "capture_sha256": "33ee14f87682497189494a5685f8479ea54262b2ff498db06634882e6ab0efb9",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "wc-loan-detail-raw.json balance block {\"id\":1,\"principal\":1000.51,\"principalPaid\":0.0,\"principalOutstanding\":1000.51,\"realizedIncomeFromDiscountFee\":0.0,\"unrealizedIncomeFromDiscountFee\":0.0,\"overpaymentAmount\":0.0,\"totalExpectedRepayment\":1000.51,\"totalRepayment\":0.0,\"totalOutstanding\":1000.51,\"totalDisbursement\":0.0,\"totalDiscountFee\":0.0,\"totalDiscountFeeAdjustment\":0.0,\"breachPastDueAmount\":0.0} with status {\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\"} on loan externalId SEED-WC-L01"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 1
+ },
+ "expect": {
+  "detail": {
+   "id": "1",
+   "status": "loanStatusType.active",
+   "balance": {
+    "principal": "100051",
+    "principal_paid": "0",
+    "total_disbursement": "0",
+    "total_discount_fee": "0",
+    "principal_outstanding": "100051",
+    "total_expected_repayment": "100051",
+    "total_repayment": "0",
+    "total_outstanding": "100051",
+    "unrealized_income_from_discount_fee": "0"
+   }
+  }
+ },
+ "capabilities_required": [
+  "wc-loan-balance-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

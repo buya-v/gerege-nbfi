@@ -1,0 +1,45 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L03-summary-total-outstanding",
+ "title": "SEED-L03 post-repayment summary total outstanding (derive-don't-store)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the SEED-L03 post-repayment loan summary read-back. request.summary.principal_outstanding_minor=9211512 is the capture summary's \"principalOutstanding\":92115.120000 in minor units; request.summary.interest_outstanding_minor=561853 is \"interestOutstanding\":5618.530000; request.summary.fee_outstanding_minor=0 and request.summary.penalty_outstanding_minor=0 are the empty \"feeChargesOutstanding\":0.000000 and \"penaltyChargesOutstanding\":0.000000 buckets. expect.summary_total_minor=9773365 is the capture summary's \"totalOutstanding\":97733.650000 in minor units, the total Fineract derived from those four buckets (total_outstanding_derived). Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-summary-outstanding",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-3-detail-after-raw.json; capture_case_id names the externalId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-3-detail-after-raw.json",
+  "capture_sha256": "078346667bea4e80f8326f877ecde55997f206e2362f3e7100c97ad9bfbb2245",
+  "capture_case_id": "SEED-L03",
+  "citation": "loan-3-detail-after-raw.json {\"externalId\":\"SEED-L03\",\"summary\":{\"principalOutstanding\":92115.120000,\"interestOutstanding\":5618.530000,\"feeChargesOutstanding\":0.000000,\"penaltyChargesOutstanding\":0.000000,\"totalOutstanding\":97733.650000}}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "summary": {
+   "principal_outstanding_minor": "9211512",
+   "interest_outstanding_minor": "561853",
+   "fee_outstanding_minor": "0",
+   "penalty_outstanding_minor": "0"
+  }
+ },
+ "expect": {
+  "summary_total_minor": "9773365"
+ },
+ "capabilities_required": [
+  "summary-total-outstanding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}

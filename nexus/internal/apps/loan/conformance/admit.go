@@ -37,11 +37,13 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement:
+	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
+		SeamLoanSummaryOutstanding, SeamLoanStatus:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q and %q",
-			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement))
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q and %q",
+			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
+			SeamLoanSummaryOutstanding, SeamLoanStatus))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -121,13 +123,35 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
+// requestShapeCount is how many of the five request sub-shapes a vector sets.
+// Every seam requires exactly one.
+func requestShapeCount(v *Vector) int {
+	n := 0
+	if v.Request.Repayment != nil {
+		n++
+	}
+	if v.Request.Schedule != nil {
+		n++
+	}
+	if v.Request.Disburse != nil {
+		n++
+	}
+	if v.Request.Summary != nil {
+		n++
+	}
+	if v.Request.Status != nil {
+		n++
+	}
+	return n
+}
+
 // admitRequest enforces that a vector sets exactly the request sub-shape its
 // seam names, and that every money string is a non-negative integer.
 func admitRequest(v *Vector) []string {
 	var problems []string
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation:
-		if v.Request.Repayment == nil || v.Request.Schedule != nil || v.Request.Disburse != nil {
+		if v.Request.Repayment == nil || requestShapeCount(v) != 1 {
 			problems = append(problems, "repayment seam must set exactly request.repayment")
 			return problems
 		}
@@ -144,7 +168,7 @@ func admitRequest(v *Vector) []string {
 			}
 		}
 	case SeamLoanScheduleInterest:
-		if v.Request.Schedule == nil || v.Request.Repayment != nil || v.Request.Disburse != nil {
+		if v.Request.Schedule == nil || requestShapeCount(v) != 1 {
 			problems = append(problems, "schedule seam must set exactly request.schedule")
 			return problems
 		}
@@ -162,7 +186,7 @@ func admitRequest(v *Vector) []string {
 			problems = append(problems, fmt.Sprintf("request.days_in_month %d is not positive", s.DaysInMonth))
 		}
 	case SeamLoanDisbursement:
-		if v.Request.Disburse == nil || v.Request.Repayment != nil || v.Request.Schedule != nil {
+		if v.Request.Disburse == nil || requestShapeCount(v) != 1 {
 			problems = append(problems, "disbursement seam must set exactly request.disburse")
 			return problems
 		}
@@ -172,6 +196,30 @@ func admitRequest(v *Vector) []string {
 		}
 		if !isIntegerMinorString(d.ChargesDueAtDisbursementMinor) {
 			problems = append(problems, fmt.Sprintf("request.charges_due_at_disbursement_minor %q is not a non-negative integer minor amount", d.ChargesDueAtDisbursementMinor))
+		}
+	case SeamLoanSummaryOutstanding:
+		if v.Request.Summary == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "summary seam must set exactly request.summary")
+			return problems
+		}
+		s := v.Request.Summary
+		for name, val := range map[string]string{
+			"principal_outstanding_minor": s.PrincipalOutstanding,
+			"interest_outstanding_minor":  s.InterestOutstanding,
+			"fee_outstanding_minor":       s.FeeOutstanding,
+			"penalty_outstanding_minor":   s.PenaltyOutstanding,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf("request.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+	case SeamLoanStatus:
+		if v.Request.Status == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "status seam must set exactly request.status")
+			return problems
+		}
+		if v.Request.Status.StoredValue <= 0 {
+			problems = append(problems, fmt.Sprintf("request.status.stored_value %d is not a positive loan status ordinal", v.Request.Status.StoredValue))
 		}
 	}
 	return problems
@@ -206,6 +254,23 @@ func admitExpect(v *Vector) []string {
 	case SeamLoanDisbursement:
 		if !isIntegerMinorString(v.Expect.NetDisbursalMinor) {
 			problems = append(problems, fmt.Sprintf("expect.net_disbursal_minor %q is not a non-negative integer minor amount", v.Expect.NetDisbursalMinor))
+		}
+	case SeamLoanSummaryOutstanding:
+		if !isIntegerMinorString(v.Expect.SummaryTotalMinor) {
+			problems = append(problems, fmt.Sprintf("expect.summary_total_minor %q is not a non-negative integer minor amount", v.Expect.SummaryTotalMinor))
+		}
+	case SeamLoanStatus:
+		if v.Expect.StatusCode == "" {
+			problems = append(problems, "expect.status_code is empty for the status seam")
+		}
+		if v.Request.Status == nil {
+			// admitRequest already refused the missing request shape; stay nil-safe.
+			return problems
+		}
+		if v.Expect.StatusStoredValue != v.Request.Status.StoredValue {
+			problems = append(problems, fmt.Sprintf(
+				"expect.status_stored_value %d does not round-trip request.status.stored_value %d",
+				v.Expect.StatusStoredValue, v.Request.Status.StoredValue))
 		}
 	}
 	return problems
