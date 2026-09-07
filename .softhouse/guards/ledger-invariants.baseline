@@ -53,20 +53,15 @@ I3-FIELD-WRITE	internal/apps/loanproduct/interestperiod.go
 I3-FIELD-WRITE	internal/apps/loanproduct/repaymentperiod.go
 #
 # --- found by T509's widening; each needs an owner, none is cleared by this file ---
-#     investor/postgres.go   m_external_asset_owner_transfer_details, five *_outstanding_derived
-#                            columns [ExternalAssetOwnerTransferDetails.java:49] written at
-#                            INSERT and decoded back into fields.
 #     loan/charge.go         AmountOutstanding, the port of m_loan_charge.amount_outstanding_derived
 #                            [LoanCharge.java:108].
 #     loanschedule/emi.go    the roll-forward that is the twin of the loanproduct sites and
 #                            shipped GREEN for two months because it is spelled outstandingMinor.
 #     exemption_test.go      a test FIXTURE assigning OutstandingPrincipalMinor. CANNOT-CATCH
 #                            item 8: tests are inspected, not exempted.
-I3-FIELD-WRITE	internal/apps/investor/postgres.go
 I3-FIELD-WRITE	internal/apps/loan/charge.go
 I3-FIELD-WRITE	internal/apps/loanschedule/conformance/exemption_test.go
 I3-FIELD-WRITE	internal/apps/loanschedule/emi.go
-I3-SQL-BALANCE	internal/apps/investor/postgres.go
 #
 # --- REPAIRED, and therefore removed. Five rows, verified BEFORE removal ---
 #     A row may leave this file only when the write path it names is GONE, never when the
@@ -120,3 +115,36 @@ I3-SQL-BALANCE	internal/apps/investor/postgres.go
 I3-COMPOSITE-BALANCE	internal/apps/loan/conformance/conformance_test.go
 I3-COMPOSITE-BALANCE	internal/apps/savings/conformance/conformance_test.go
 I3-FIELD-WRITE	internal/apps/savings/conformance/conformance_test.go
+#
+# --- REPAIRED and removed: the two investor rows. Verified BEFORE removal ---
+#     These two rows covered TEN findings — five I3-SQL-BALANCE at the INSERT and five
+#     I3-FIELD-WRITE at the read-back — and they are the first rows in this file to leave it
+#     because the defect was FIXED rather than argued.
+#
+#     The guard refused when they vanished, which is the ratchet's second direction working:
+#     a repair and a rename are indistinguishable to a NAME-based detector, so the guard
+#     demands the removal be a visible diff. This is that diff.
+#
+#     WHAT WAS REPAIRED (investor/postgres.go, commits 8ad136b3 and e8dececf):
+#       Insert       stopped writing the loan-outstanding snapshot into the five
+#                    *_outstanding_derived columns of m_external_asset_owner_transfer_details
+#       loadDetails  stopped SELECTing them back into the aggregate's balance fields
+#     Either half alone fixes nothing: without the first a write path remains; without the
+#     second a decoded balance is still trusted.
+#
+#     CHECKED BY HAND before these rows were removed, because the guard cannot tell a repair
+#     from a rename:
+#       * no `*_outstanding_derived` reference remains anywhere in the file
+#       * the only lines matching "INSERT/SELECT ... balance" are the COMMENTS at :26 and :37
+#         asserting no such statement exists
+#       * ExternalAssetOwnerTransferDetails SURVIVES — 11 references, 8 [VERIFIED:] citations.
+#         A previous task in this programme made a finding vanish by deleting the ported type
+#         and its citation; this count fell because the write path is gone, not the evidence
+#       * FindByID and FindByLoanID still exist — the stored balance went, the API did not
+#       * INV-01-transfer-read still grades parity_pass=1
+#
+#     The port's own doc.go already stated the rule postgres.go was breaking: total outstanding
+#     "is DERIVED from the four component buckets, never stored independently".
+#
+#     RE-ADD CONDITION: if any statement in investor/postgres.go ever names one of those six
+#     columns again, these rows come back in the same commit that reintroduces it.
