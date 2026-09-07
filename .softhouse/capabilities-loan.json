@@ -1,0 +1,53 @@
+{
+ "schema": "gerege.loan.capabilities/v1",
+ "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), and the net disbursal amount (loan-disbursement seam). The SEED-L01 interest waiver is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it.",
+ "capabilities": [
+  {
+   "name": "repayment-allocation",
+   "description": "The four-bucket greedy allocation of a repayment across penalty/fee/interest/principal of one instalment, as written back in the SEED-L03 repayment transaction (transaction 12).",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-3-transactions-after-raw.json under tenant gerege: transaction 12 (REPAYMENT, amount 8884.88) wrote back principalPortion 7884.88 and interestPortion 1000.00; the first instalment's due amounts are transcribed from loan-3-schedule-raw.json periods[1]."
+  },
+  {
+   "name": "schedule-interest-rounding",
+   "description": "The single-period interest of the discriminating loan SEED-L06 (principal 100050.50 at 12%/yr, 360-day year / 30-day month), whose period-1 raw interest 1000.505 ties HALF_UP (1000.51) against HALF_EVEN (1000.50).",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-L06-schedule-raw.json under tenant gerege: periods[1].interestOriginalDue is 1000.510000, the HALF_UP rounding of the MANIFEST's raw interest 1000.505; the oracle posted 1000.51."
+  },
+  {
+   "name": "disbursement-net",
+   "description": "The net disbursal amount of the SEED-L06 disbursal: approved principal minus charges due at disbursement, as written back in the loan detail read.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-L06-detail-raw.json under tenant gerege: netDisbursalAmount 100050.50 with feeChargesAtDisbursementCharged 0.0 (no charges due at disbursement)."
+  },
+  {
+   "name": "interest-waiver",
+   "description": "The SEED-L01 interest waiver. The loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so promotion does not port new arithmetic for it.",
+   "in_graded_domain": false,
+   "evidence": "Capture loan-1-transactions-after-raw.json: the SEED-L01 waive-interest transaction exists, but no loan-slice arithmetic reproduces its interest amount."
+  }
+ ],
+ "seams": [
+  {
+   "name": "loan-repayment-allocation",
+   "description": "The SEED-L03 repayment transaction read-back on the running Fineract server, tenant gerege: the four-bucket greedy allocation of repayment 12.",
+   "status": {
+    "repayment-allocation": "exercised"
+   }
+  },
+  {
+   "name": "loan-schedule-interest",
+   "description": "The SEED-L06 schedule read-back on the running Fineract server, tenant gerege: the period-1 single-period interest, the discriminating rounding surface.",
+   "status": {
+    "schedule-interest-rounding": "exercised"
+   }
+  },
+  {
+   "name": "loan-disbursement",
+   "description": "The SEED-L06 loan detail read-back on the running Fineract server, tenant gerege: the net disbursal amount.",
+   "status": {
+    "disbursement-net": "exercised"
+   }
+  }
+ ]
+}

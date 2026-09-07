@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-L06-disbursement-net",
+ "title": "SEED-L06 net disbursal amount",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the SEED-L06 disbursement net amount. request.approved_principal_minor=10005050 is the capture's \"approvedPrincipal\":100050.5 in minor units; request.charges_due_at_disbursement_minor=0 is the capture's \"feeChargesAtDisbursementCharged\":0.0 (no charges due at disbursement). expect.net_disbursal_minor=10005050 is the capture's \"netDisbursalAmount\":100050.5 in minor units, equal to approved principal because no charges were due. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-disbursement",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect.net_disbursal_minor and the request fields are transcribed from the committed capture loan-L06-detail-raw.json; capture_case_id names the externalId of the observed loan.",
+  "capture_ref": ".softhouse/capture/loan/out/loan-L06-detail-raw.json",
+  "capture_sha256": "096f2d90a922f51e498e546323b67edf4c910c0573f4a6083141cf81d7ef6b30",
+  "capture_case_id": "SEED-L06",
+  "citation": "loan-L06-detail-raw.json {\"approvedPrincipal\":100050.5,\"feeChargesAtDisbursementCharged\":0.0,\"netDisbursalAmount\":100050.5}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "disburse": {
+   "approved_principal_minor": "10005050",
+   "charges_due_at_disbursement_minor": "0"
+  }
+ },
+ "expect": {
+  "net_disbursal_minor": "10005050"
+ },
+ "capabilities_required": [
+  "disbursement-net"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}

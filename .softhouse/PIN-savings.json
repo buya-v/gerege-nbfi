@@ -1,0 +1,13 @@
+{
+ "schema": "gerege.savings.pin/v1",
+ "_note": "Savings parity-store pin. Pins the Fineract commit the savings captures were observed from, and the tenant context under which they were captured. The savings captures (savings-account-daily-raw.json, the daily post-interest action, and the product read-backs) were taken on the running Fineract server under tenant gerege: HALF_UP (c_configuration.rounding-mode ordinal 4), MathContext precision 19, currency MNT with 2 minor units, timezone Asia/Ulaanbaatar. There is no frozen-contract digest because the savings slice freezes no contract file.",
+ "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ }
+}

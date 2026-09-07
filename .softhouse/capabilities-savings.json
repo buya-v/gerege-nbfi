@@ -1,0 +1,27 @@
+{
+ "schema": "gerege.savings.capabilities/v1",
+ "note": "Savings parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the single-period daily-balance interest rounding of the discriminating savings account (savings-daily-interest seam). The monthly-posting account (SEED-Savings-Product) is captured but NOT in the graded domain: its two interest postings' day counts are derived from the MANIFEST prose rather than single transcribed capture fields, and neither posting is a discriminating rounding surface.",
+ "capabilities": [
+  {
+   "name": "daily-balance-interest-rounding",
+   "description": "The single-period daily-balance interest of the discriminating savings account SEED-Savings-Product-Daily (balance 1000.00 MNT at 0.1825%/yr, 365-day year, 1 day), whose raw daily interest 0.005 ties HALF_UP (0.01) against HALF_EVEN (0.00).",
+   "in_graded_domain": true,
+   "evidence": "Capture savings-account-daily-raw.json under tenant gerege: transaction id 5 (interest posting) wrote back amount 0.010000, the HALF_UP rounding of the MANIFEST's raw daily interest 0.005; the oracle posted 0.01."
+  },
+  {
+   "name": "monthly-posting",
+   "description": "The monthly-posting account SEED-Savings-Product (product id 1) with interest postings 0.15 (30 days) and 0.16 (31 days). The day counts are derived from the MANIFEST prose, not single transcribed capture fields, and neither posting ties HALF_UP against HALF_EVEN.",
+   "in_graded_domain": false,
+   "evidence": "Capture savings-account-monthly-raw.json under tenant gerege: transactions id 2 (0.16) and id 3 (0.15), but no single field records the 30-day/31-day day counts, so promotion does not port them."
+  }
+ ],
+ "seams": [
+  {
+   "name": "savings-daily-interest",
+   "description": "The daily-posting account read-back on the running Fineract server, tenant gerege: the single-period daily-balance interest, the discriminating rounding surface.",
+   "status": {
+    "daily-balance-interest-rounding": "exercised"
+   }
+  }
+ ]
+}
