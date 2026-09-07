@@ -134,3 +134,61 @@ the INSERT and trusted just the same" (savings/postgres.go:34-37).
 **Argument:** This decode is the read-back of the stored SUM — the column whose very existence contradicts the model's own rule that "total outstanding is DERIVED from the four component buckets, never stored independently" (investor/doc.go:13-14) and for which DeriveTotalOutstanding (transfer.go:51) and NormalizedTotalOutstanding (transfer.go:55-59) exist precisely to detect stored-vs-derived divergence on read. loadDetails instead trusts the stored total as authoritative. The Go model's own NormalizedTotalOutstanding comment acknowledges the divergence risk this write+decode path creates. Combined with the write at postgres.go:118 (A), this is the derived-balance-reaches-and-returns-from-persistence loop DEC-2 I-3 and the savings repair (savings/postgres.go:34-37) refuse; the correct shape is to derive the total from the four buckets (or omit all five snapshot columns) and never persist or decode it.
 
 **investor/postgres.go block complete: 5/5 SQL-BALANCE A + 5/5 FIELD-WRITE A.**
+
+## SUMMARY — all 21 sites decided
+
+**Verdict counts**
+
+| Verdict | Count | Sites |
+|---|---|---|
+| A — REAL VIOLATION | 10 | investor/postgres.go:108 ×5 (I3-SQL-BALANCE: principal, interest, fee_charges, penalty_charges, total_outstanding_derived); investor/postgres.go:199, 202, 205, 208, 211 (I3-FIELD-WRITE) |
+| B — INPUT, NOT A BALANCE | 0 | — |
+| C — PROJECTION INTERMEDIATE | 0 | — |
+| D — PORTED SHAPE | 11 | loan/charge.go:126, 137, 152, 162, 172, 181, 201, 211, 229, 235, 249 |
+| UNDECIDABLE | 0 | — |
+
+All 21 target sites are decided; the finding count still reads **38** when the guard re-runs
+(`ledgerguard --root nexus` → 38 findings, byte-identical to the pre-adjudication census; the
+five I3-SQL-BALANCE and 24 I3-FIELD-WRITE lines are unchanged). `nexus/` and
+`.softhouse/guards/` were not modified.
+
+**Real violations — the list that matters**
+
+All ten investor/postgres.go sites, as ONE violation spanning two file regions:
+
+1. `Insert` (postgres.go:108-120) writes the loan-outstanding snapshot into the five Fineract
+   `*_outstanding_derived` columns of `m_external_asset_owner_transfer_details` — a write path
+   to balance columns at the port's own persistence boundary. DEC-2 §4.4 I-3 ("No write path to
+   any balance column exists in the Go tree") and §7 refuse this m_trial_balance shape; the
+   repaired savings store states the operative rule: "no INSERT here names a balance column"
+   (savings/postgres.go:26-35).
+2. `loadDetails` (postgres.go:187-215) SELECTs those columns back into the aggregate's balance
+   fields, making the stored snapshot authoritative for every `FindByID`/`FindByLoanID` caller.
+   The repaired savings store refuses exactly this: "no SELECT here reads one back into a field,
+   because a decoded balance is a number this port did not derive, arriving through the SELECT
+   instead of the INSERT and trusted just the same" (savings/postgres.go:34-37).
+
+Repair shape (schema-first, read-only here): keep the adopted Fineract schema — the columns keep
+Fineract's DDL defaults, as savings did for `account_balance_derived` / `running_balance_derived`
+— but omit the five `*_outstanding_derived` columns from the details INSERT and drop their decode
+from the read. If a transfer snapshot is ever genuinely needed for the sale/buy-back feature it
+must be derived on read, never stored; nothing in the current tree consumes the stored values
+(the investor package has no production caller today), which lowers the blast radius but not the
+classification — I-3 refuses the existence of the write path, and the guard cannot be satisfied
+while it stands. No evidence of an in-tree exemption for this table was found; it landed on main
+2026-09-01 in the same unreviewed range the savings repair (2026-09-03) was correcting.
+
+**Sites not decided, with what would settle them**
+
+None among the 21 target sites required a block. For the record, the four loanproduct baseline
+rows (I3-FIELD-WRITE + I3-COMPOSITE-BALANCE on interestperiod.go / repaymentperiod.go) were
+already blocked before this task and remain so: they need the go/types reachability
+discriminator the baseline names (LEG 2) — a mechanical proof that the schedule intermediates'
+values do or do not reach a journal entry, GL posting, or a column read as an account balance —
+before they can move off "refused." This adjudication adds no new undecidable site.
+
+**Note on the D-verdict boundary.** loan/charge.go grades D only because its slice owns no
+persistence at all (every charge.go argument states it); investor/postgres.go sits on the other
+side of that boundary — it IS the persistence — so Fineract storing the same columns
+(ExternalAssetOwnerTransferDetails.java:46-61) cannot move these sites to D. That is the
+consistent reading of the savings repair and DEC-2 I-3 across the whole 21-site set.
