@@ -10,9 +10,13 @@ import (
 
 	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
+	cobconf "github.com/gerege/nexus/internal/apps/cob/conformance"
 	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	investorconf "github.com/gerege/nexus/internal/apps/investor/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	originationconf "github.com/gerege/nexus/internal/apps/origination/conformance"
+	partiesconf "github.com/gerege/nexus/internal/apps/parties/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
@@ -256,6 +260,18 @@ func knownStoreContextDirs() map[string]bool {
 		known[c] = true
 	}
 	for _, c := range savingsconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range investorconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range cobconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range originationconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range partiesconf.SchemaContexts() {
 		known[c] = true
 	}
 	return known

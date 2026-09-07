@@ -12,10 +12,14 @@ import (
 
 	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
+	cobconf "github.com/gerege/nexus/internal/apps/cob/conformance"
 	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	investorconf "github.com/gerege/nexus/internal/apps/investor/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+	originationconf "github.com/gerege/nexus/internal/apps/origination/conformance"
+	partiesconf "github.com/gerege/nexus/internal/apps/parties/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
@@ -950,6 +954,10 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	var collateralClaimed []string
 	var loanClaimed []string
 	var savingsClaimed []string
+	var investorClaimed []string
+	var cobClaimed []string
+	var originationClaimed []string
+	var partiesClaimed []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
@@ -1052,6 +1060,22 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 				savingsClaimed = append(savingsClaimed, filepath.ToSlash(rel))
 				continue
 			}
+			if investorconf.FileDeclaresInvestorSchema(abs) {
+				investorClaimed = append(investorClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			if cobconf.FileDeclaresCOBSchema(abs) {
+				cobClaimed = append(cobClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			if originationconf.FileDeclaresOriginationSchema(abs) {
+				originationClaimed = append(originationClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			if partiesconf.FileDeclaresPartiesSchema(abs) {
+				partiesClaimed = append(partiesClaimed, filepath.ToSlash(rel))
+				continue
+			}
 			v, err := LoadVector(abs, rel)
 			if err != nil {
 				if selected {
@@ -1116,7 +1140,7 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// the shell float guard and to this loader. It is taken over `all` and over
 	// the WHOLE tree, filter or no filter — for the same reason the duplicate
 	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
-	if err := StoreFileCensus(storeRoot, all, loadErrs, append(append(append(append(append(append(append(ledgerClaimed, chargesClaimed...), provisioningClaimed...), branchClaimed...), sharesClaimed...), collateralClaimed...), loanClaimed...), savingsClaimed...)...); err != nil {
+	if err := StoreFileCensus(storeRoot, all, loadErrs, append(append(append(append(append(append(append(append(append(append(append(ledgerClaimed, chargesClaimed...), provisioningClaimed...), branchClaimed...), sharesClaimed...), collateralClaimed...), loanClaimed...), savingsClaimed...), investorClaimed...), cobClaimed...), originationClaimed...), partiesClaimed...)...); err != nil {
 		refusals = append(refusals, err)
 	}
 	if len(refusals) > 0 {

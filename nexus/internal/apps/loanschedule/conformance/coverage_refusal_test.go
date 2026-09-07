@@ -12,9 +12,13 @@ import (
 
 	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
+	cobconf "github.com/gerege/nexus/internal/apps/cob/conformance"
 	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	investorconf "github.com/gerege/nexus/internal/apps/investor/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	originationconf "github.com/gerege/nexus/internal/apps/origination/conformance"
+	partiesconf "github.com/gerege/nexus/internal/apps/parties/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
@@ -783,6 +787,18 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 		// OH-PROMOTE (savings): not this schema's vector, same reason as above —
 		// injecting into one would inflate `count` past what this report credits.
 		if savingsconf.DeclaresSavingsSchema(raw) {
+			return nil
+		}
+		if investorconf.DeclaresInvestorSchema(raw) {
+			return nil
+		}
+		if cobconf.DeclaresCOBSchema(raw) {
+			return nil
+		}
+		if originationconf.DeclaresOriginationSchema(raw) {
+			return nil
+		}
+		if partiesconf.DeclaresPartiesSchema(raw) {
 			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))
