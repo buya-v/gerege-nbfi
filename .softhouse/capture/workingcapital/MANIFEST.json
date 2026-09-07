@@ -1,0 +1,18 @@
+{
+  "context": "workingcapital",
+  "roundingSurface": {
+    "seam": "working-capital-loans-list",
+    "note": "no rounding surface"
+  },
+  "objects": {
+    "workingCapitalLoan": "none — m_wc_loan is EMPTY in the pinned capture; every loan read path returns an empty list or an empty page, so no loan row exists to transcribe"
+  },
+  "readBackQuirks": {
+    "loans": "GET /working-capital-loans returns {\"content\":[],\"totalElements\":0} because m_wc_loan is empty (loans-list-raw.json).",
+    "loanProducts": "GET /working-capital-loan-products returns [] because the product table is empty (loan-products-list-raw.json).",
+    "nearBreach": "GET /working-capital/near-breach returns [] because no loan exists to compute a breach against (near-breach-list-raw.json).",
+    "loansTemplate": "GET /working-capital-loans/template returns a static option list (period/delinquency/breach/minimum-payment type options) with loanData {}, no product/fund/bucket options, and no money cell (loans-template-raw.json).",
+    "loanProductsTemplate": "GET /working-capital-loan-products/template returns a static option list (payment types, currencies MNT/USD decimalPlaces 2, amortization EIR/FLAT, accounting mapping GLs) with no money cell (loan-products-template-raw.json).",
+    "unreachable": "The breach-schedule and delinquency-range-schedule seams (/working-capital-loans/{loanId}/breach-schedule and /delinquency-range-schedule) are unreachable: there is no working-capital loan id to query and no verified write path to create one. Declaring those seams exercised would be a fabricated observation."
+  }
+}

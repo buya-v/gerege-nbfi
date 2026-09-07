@@ -1,0 +1,48 @@
+{
+ "schema": "gerege.investor.vector/v1",
+ "case_id": "INV-01-transfer-read",
+ "title": "external asset owner transfer read (loan 6)",
+ "class": "parity",
+ "context": "investor",
+ "_note": "Parity vector transcribed from capture transfer-read-loan-6-raw.json (GET /external-asset-owners/transfers?loanId=6, tenant gerege). request.loan_id=6 came from the capture row with \"loan\":{\"loanId\":6}. expect.transfer_id=1 is that same row's \"transferId\" field; expect.owner_external_id=\"SEED-Inv-01\" is \"owner\":{\"externalId\":\"SEED-Inv-01\"}; expect.loan_external_id=\"SEED-L06\" is \"loan\":{\"externalId\":\"SEED-L06\"}; expect.transfer_external_id=\"SEED-Tr-01\" is \"transferExternalId\"; expect.purchase_price_ratio=\"97.25\" is \"purchasePriceRatio\" (a decimal STRING with no integer-minor-unit form); expect.status=\"PENDING\"; expect.settlement_date=\"2026-09-01\"; expect.effective_from=\"2026-09-01\"; expect.effective_to=\"9999-12-31\". Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "external-asset-owner-transfer-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All nine expect fields are transcribed from the committed capture transfer-read-loan-6-raw.json; capture_case_id names the transferExternalId value of the observed row.",
+  "capture_ref": ".softhouse/capture/investor/out/transfer-read-loan-6-raw.json",
+  "capture_sha256": "33c360bda77742b018a5bf35b278e28796f13a356ac948a99ffad1f2f90e4e8c",
+  "capture_case_id": "SEED-Tr-01",
+  "citation": "transfer-read-loan-6-raw.json row {\"transferId\":1,\"owner\":{\"externalId\":\"SEED-Inv-01\",\"id\":1},\"loan\":{\"loanId\":6,\"externalId\":\"SEED-L06\"},\"transferExternalId\":\"SEED-Tr-01\",\"purchasePriceRatio\":\"97.25\",\"settlementDate\":\"2026-09-01\",\"status\":\"PENDING\",\"effectiveFrom\":\"2026-09-01\",\"effectiveTo\":\"9999-12-31\"}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 6
+ },
+ "expect": {
+  "transfer_id": 1,
+  "owner_external_id": "SEED-Inv-01",
+  "loan_external_id": "SEED-L06",
+  "transfer_external_id": "SEED-Tr-01",
+  "purchase_price_ratio": "97.25",
+  "status": "PENDING",
+  "settlement_date": "2026-09-01",
+  "effective_from": "2026-09-01",
+  "effective_to": "9999-12-31"
+ },
+ "capabilities_required": [
+  "transfer-read"
+ ],
+ "graded_against": [
+  "investor-go"
+ ]
+}

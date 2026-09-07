@@ -1,0 +1,13 @@
+{
+ "schema": "gerege.workingcapital.pin/v1",
+ "_note": "Working-capital parity-store pin. Pins the Fineract commit the working-capital captures were observed from, and the tenant context under which they were captured. The working-capital captures (loan-products-list-raw.json, loans-list-raw.json, near-breach-list-raw.json) were taken on the running Fineract server under tenant gerege: HALF_UP (c_configuration.rounding-mode ordinal 4), MathContext precision 19, currency MNT with 2 minor units, timezone Asia/Ulaanbaatar. All three read paths returned EMPTY lists because m_wc_loan and the product table are empty in the pinned capture, so no loan row or schedule arithmetic is observable yet. There is no frozen-contract digest because the working-capital slice freezes no contract file.",
+ "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ }
+}

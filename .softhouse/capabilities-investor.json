@@ -1,0 +1,21 @@
+{
+ "schema": "gerege.investor.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "transfer-read",
+   "description": "Read the m_external_asset_owner_transfer row (transfer_id, owner.external_id, loan.loan_id, loan.external_id, transfer_external_id, purchase_price_ratio, settlement_date, status, effective_from, effective_to) by loan id, as returned by the external-asset-owner transfers read-back.",
+   "in_graded_domain": true,
+   "evidence": "Capture transfer-read-loan-6-raw.json under tenant gerege: the running oracle returned the single transfer row (transferId 1, owner.externalId SEED-Inv-01, loan.loanId 6, loan.externalId SEED-L06, transferExternalId SEED-Tr-01, purchasePriceRatio 97.25, settlementDate 2026-09-01, status PENDING, effectiveFrom 2026-09-01, effectiveTo 9999-12-31)."
+  }
+ ],
+ "seams": [
+  {
+   "name": "external-asset-owner-transfer-read",
+   "description": "GET /external-asset-owners/transfers?loanId=6 on the running Fineract server, tenant gerege: the m_external_asset_owner_transfer row.",
+   "status": {
+    "transfer-read": "exercised"
+   }
+  }
+ ],
+ "note": "Investor parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the external-asset-owner transfer read. purchase_price_ratio is stored and returned as a decimal STRING (97.25) with no integer-minor-unit representation and no division/rounding surface on the read path, so it is not a money cell and carries no rounding surface."
+}
