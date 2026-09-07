@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loanproduct.vector/v1",
+ "case_id": "LP-freq-whole-term",
+ "title": "period frequency WHOLE_TERM stored value 4",
+ "class": "parity",
+ "context": "loanproduct",
+ "_note": "Parity vector transcribed from loanproducts-template-raw.json interestRateFrequencyTypeOptions id 4 (code interestRateFrequency.periodFrequencyType.whole_term), tenant gerege. The port models the enum's own getCode() (periodFrequencyType.whole_term); the DTO prepends 'interestRateFrequency.'.",
+ "oracle": {
+  "seam": "loanproduct-config",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/loanproduct/out/loanproducts-template-raw.json; the capture_case_id names the enum code as it appears in the option list.",
+  "capture_ref": ".softhouse/capture/loanproduct/out/loanproducts-template-raw.json",
+  "capture_sha256": "6168b177ec87a259015aa5a2cd8eb93a838de571765a0a3d16a66a6683c523fe",
+  "capture_case_id": "periodFrequencyType.whole_term",
+  "citation": "loanproducts-template-raw.json interestRateFrequencyTypeOptions id 4 -> code interestRateFrequency.periodFrequencyType.whole_term; enum getCode() periodFrequencyType.whole_term (PeriodFrequencyType.java)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "period-frequency",
+  "stored": 4
+ },
+ "expect": {
+  "stored": 4,
+  "code": "periodFrequencyType.whole_term",
+  "name": "WHOLE_TERM"
+ },
+ "capabilities_required": [
+  "period-frequency"
+ ],
+ "graded_against": [
+  "loanproduct-go"
+ ]
+}
