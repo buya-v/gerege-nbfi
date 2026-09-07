@@ -1,8 +1,8 @@
 // Command conformance replays the golden-vector store through the Go
 // working-capital implementation and grades it against the recorded reference
 // oracle. With no vectors present it refuses (exit 2) rather than reporting a
-// pass over zero work — which is exactly what this context does today, because
-// the pinned capture's m_wc_loan table is empty.
+// pass over zero work. The current store holds one parity vector over the seeded
+// working-capital loan list read.
 //
 // Exit codes: 0 all graded vectors pass and at least one PARITY vector was
 // graded; 1 a mismatch or an invariant violation; 2 the harness, corpus, pin or

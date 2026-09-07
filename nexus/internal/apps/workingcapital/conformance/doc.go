@@ -9,20 +9,20 @@
 // working-capital loan product, the breach schedule and the delinquency-range
 // schedule). The running reference oracle exposes those read paths under
 // /working-capital-loans, /working-capital-loan-products and
-// /working-capital/near-breach. As of the pinned capture, m_wc_loan is EMPTY:
-// every one of those read paths returns an empty list, so there is no loan row
-// to transcribe and no breach/delinquency schedule arithmetic to observe. This
-// harness therefore ships with ZERO vectors and, like every parity harness on
-// this core, REFUSES (exit 2) rather than reporting a pass over zero work. A
-// vector is added the moment the seed grows a working-capital loan.
+// /working-capital/near-breach. The graded seam is the loan-list read
+// (GET /working-capital-loans): one seeded loan row (id 1, external id
+// SEED-WC-L01, status active) transcribed from loans-list-raw.json under tenant
+// gerege. The product-list and near-breach reads are captured but carry no
+// gradeable cell this harness transcribes, so they do not promote a vector.
 //
 // # Money representation
 //
-// No money cell is gradeable while m_wc_loan is empty. The slice's money cells
-// (principal/outstanding in integer minor units, and the HALF_UP rounding the
-// breach and delinquency schedule seams surface) are unreachable through the
-// read-back this context currently exposes. No floating-point type appears on
-// any money path here or in the package it grades.
+// The loan-list read grades id, external_id and status — no money cell. The
+// working-capital package's own money paths (WorkingCapitalLoanBalance and the
+// repayment allocation) operate on loan.MinorUnits as integer minor units and
+// only add or subtract; no division, percentage or apportionment appears, so
+// the slice has no rounding surface. No floating-point type appears on any
+// money path here or in the package it grades.
 //
 // # What it needs from a tenant
 //
