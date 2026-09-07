@@ -12,6 +12,38 @@ import (
 // here, and a postgres.DB (Querier + Executor) captured at construction carries
 // every statement. The import graph stays
 // investor -> internal/platform/postgres -> pgx/v5.
+//
+// # NO DERIVED BALANCE IS WRITTEN OR READ BACK BY ANY STATEMENT IN THIS FILE
+//
+// m_external_asset_owner_transfer_details is Fineract's one-to-one snapshot of
+// a loan's outstanding decomposition at the moment a transfer is priced. Its
+// only domain columns are six NOT NULL *_derived balances Fineract folds from
+// the loan summary (ExternalAssetOwnerTransferDetails.java:46-61), and the Go
+// model repeats the rule those names break: total outstanding "is DERIVED from
+// the four component buckets, never stored independently" (doc.go). DEC-2 §4.4
+// I-3 and §7 refuse the m_trial_balance shape — a written, stored sum wearing a
+// balance's name — and the repaired savings store states the rule this file
+// obeys verbatim: "no INSERT here names a balance column ... no SELECT here
+// reads one back into a field, because a decoded balance is a number this port
+// did not derive, arriving through the SELECT instead of the INSERT and trusted
+// just the same" (savings/postgres.go:33-37).
+//
+// Concretely:
+//   - there is NO write to m_external_asset_owner_transfer_details at all (see
+//     Insert). The adopted schema gives its *_derived columns no default
+//     (0007_add_external_asset_owner_transfer_details.xml), so no details
+//     INSERT that omits them stays valid; the write path is dropped, not
+//     trimmed.
+//   - there is NO SELECT in this file that reads a balance column back into a
+//     field. FindByID / FindByLoanID return the transfer with Details left zero
+//     (see FindByID); the read half of the old write+decode loop is gone with
+//     the write half.
+//
+// Do not "restore" either half: a stored balance is still a written balance,
+// and a decoded balance is still trusted without derivation. A caller that
+// needs the outstanding decomposition derives it from the loan's own balances
+// (total outstanding from the four buckets via DeriveTotalOutstanding,
+// transfer.go:51).
 
 // OwnerRepository is the persistence surface for m_external_asset_owner.
 type OwnerRepository interface {
@@ -95,7 +127,7 @@ func NewPostgresTransferRepository(db postgres.DB) *PostgresTransferRepository {
 // ExternalAssetOwnerTransferDetails.java:46-61). DEC-2 §4.4 I-3 and §7 refuse
 // the m_trial_balance shape — a written, stored sum wearing a balance's name —
 // and the repaired savings store states the rule this port now obeys: "no
-// INSERT here names a balance column" (savings/postgres.go:26-35). Adopting
+// INSERT here names a balance column" (savings/postgres.go:33). Adopting
 // Fineract's schema is not adopting its write paths.
 //
 // The adopted schema's create-table changelog makes every one of those columns
@@ -129,7 +161,18 @@ RETURNING id`,
 	return id, nil
 }
 
-// FindByID resolves one transfer (with its details) by id, or (nil, nil) on a miss.
+// FindByID resolves one transfer by id, or (nil, nil) on a miss.
+//
+// It does not rehydrate m_external_asset_owner_transfer_details into
+// ExternalAssetOwnerTransfer.Details. This port never writes that table (see
+// Insert), so there is no stored snapshot of its own to reload, and decoding
+// the *_derived columns the oracle wrote there would reintroduce — on the read
+// side — the derived balance the write path refuses: "a decoded balance is a
+// number this port did not derive, arriving through the SELECT instead of the
+// INSERT and trusted just the same" (savings/postgres.go:35-37). A caller that
+// needs the loan's outstanding decomposition must derive it from the loan's own
+// balances (DeriveTotalOutstanding folds the four buckets, transfer.go:51);
+// the returned transfer carries a zero Details.
 func (r *PostgresTransferRepository) FindByID(ctx context.Context, id int64) (*ExternalAssetOwnerTransfer, error) {
 	transfers, err := r.find(ctx, `WHERE id = $1`, id)
 	if err != nil {
@@ -139,13 +182,12 @@ func (r *PostgresTransferRepository) FindByID(ctx context.Context, id int64) (*E
 		return nil, nil
 	}
 	t := transfers[0]
-	if err := r.loadDetails(ctx, &t); err != nil {
-		return nil, err
-	}
 	return &t, nil
 }
 
-// FindByLoanID returns every transfer that ever touched a given loan, in id order.
+// FindByLoanID returns every transfer that ever touched a given loan, in id
+// order. As with FindByID, Details is left zero: this port neither writes nor
+// reads back the derived-balance details snapshot.
 func (r *PostgresTransferRepository) FindByLoanID(ctx context.Context, loanID int64) ([]ExternalAssetOwnerTransfer, error) {
 	return r.find(ctx, `WHERE loan_id = $1 ORDER BY id`, loanID)
 }
@@ -188,46 +230,6 @@ FROM m_external_asset_owner_transfer `+where, args,
 		return nil, fmt.Errorf("investor: find transfers: %w", err)
 	}
 	return out, nil
-}
-
-func (r *PostgresTransferRepository) loadDetails(ctx context.Context, t *ExternalAssetOwnerTransfer) error {
-	err := postgres.QueryRows(ctx, r.db, `SELECT principal_outstanding_derived::text,
-interest_outstanding_derived::text, fee_charges_outstanding_derived::text,
-penalty_charges_outstanding_derived::text, total_outstanding_derived::text,
-total_overpaid_derived::text
-FROM m_external_asset_owner_transfer_details WHERE asset_owner_transfer_id = $1`,
-		[]any{t.ID}, func(s postgres.RowScanner) error {
-			var principal, interest, fee, penalty, total, overpaid string
-			if err := s.Scan(&principal, &interest, &fee, &penalty, &total, &overpaid); err != nil {
-				return err
-			}
-			var d ExternalAssetOwnerTransferDetails
-			var err error
-			if d.PrincipalOutstanding, err = MinorUnitsFromDecimalText(principal, MNTMinorDigits); err != nil {
-				return err
-			}
-			if d.InterestOutstanding, err = MinorUnitsFromDecimalText(interest, MNTMinorDigits); err != nil {
-				return err
-			}
-			if d.FeeChargesOutstanding, err = MinorUnitsFromDecimalText(fee, MNTMinorDigits); err != nil {
-				return err
-			}
-			if d.PenaltyChargesOutstanding, err = MinorUnitsFromDecimalText(penalty, MNTMinorDigits); err != nil {
-				return err
-			}
-			if d.TotalOutstanding, err = MinorUnitsFromDecimalText(total, MNTMinorDigits); err != nil {
-				return err
-			}
-			if d.TotalOverpaid, err = MinorUnitsFromDecimalText(overpaid, MNTMinorDigits); err != nil {
-				return err
-			}
-			t.Details = d
-			return nil
-		})
-	if err != nil {
-		return fmt.Errorf("investor: load transfer details: %w", err)
-	}
-	return nil
 }
 
 // LoanProductAttributeRepository persists
