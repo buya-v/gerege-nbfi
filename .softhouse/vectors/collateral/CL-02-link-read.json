@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-02-link-read",
+ "title": "loan collateral link read (id 2)",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture loan-collateral-readback-raw.json (GET loan-collateral read-back, tenant gerege). request.link_id=2 came from the capture row with \"id\":2; expect.id=2 is that same row's \"id\" field and expect.type_id=24 is its \"type\":{\"id\":24} field (the LoanCollateral code value). The row's value and description are null in this build's legacy m_loan_collateral model and there is no quantity, so no value cell was shown by the oracle and none is recorded here.",
+ "oracle": {
+  "seam": "collateral-link-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Both expect fields are transcribed from the committed capture loan-collateral-readback-raw.json; capture_case_id names the LoanCollateral type name of the observed row.",
+  "capture_ref": ".softhouse/capture/collateral/out/loan-collateral-readback-raw.json",
+  "capture_sha256": "d974b632789119080aab869792b4e2a16b60b5df37bd4dba88ed2c25b8b45f4f",
+  "capture_case_id": "SEED Collateral Type",
+  "citation": "loan-collateral-readback-raw.json row {\"id\":2,\"type\":{\"id\":24,\"name\":\"SEED Collateral Type\"},\"currency\":{\"code\":\"MNT\",\"name\":\"Mongolian Tugrik\",\"decimalPlaces\":2,\"nameCode\":\"currency.MNT\",\"displayLabel\":\"Mongolian Tugrik [MNT]\"}}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "link_id": 2
+ },
+ "expect": {
+  "id": 2,
+  "type_id": 24
+ },
+ "capabilities_required": [
+  "collateral-type-link"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}

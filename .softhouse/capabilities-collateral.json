@@ -1,0 +1,34 @@
+{
+ "schema": "gerege.collateral.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "product-aggregate-read",
+   "description": "Read the m_collateral_management product row (id, name, quality, base_price, unit_type, pct_to_base, currency) by its primary key, as returned by the product read-back.",
+   "in_graded_domain": true,
+   "evidence": "Capture collateral-product-readback-raw.json under tenant gerege: the running oracle returned the single product row (id 2, name SEED-Collateral-Product, quality Good, basePrice 100000.00000, unitType 1, pctToBase 50.00000, currency MNT)."
+  },
+  {
+   "name": "collateral-type-link",
+   "description": "Read the m_loan_collateral row (id, type_cv_id) by its primary key, as returned by the loan-collateral read-back.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-collateral-readback-raw.json under tenant gerege: the running oracle returned the single link row (id 2, type.id 24), keyed by the LoanCollateral code value."
+  }
+ ],
+ "seams": [
+  {
+   "name": "collateral-product-read",
+   "description": "GET the collateral product read-back on the running Fineract server, tenant gerege: the m_collateral_management aggregate row.",
+   "status": {
+    "product-aggregate-read": "exercised"
+   }
+  },
+  {
+   "name": "collateral-link-read",
+   "description": "GET the loan-collateral read-back on the running Fineract server, tenant gerege: the m_loan_collateral aggregate row.",
+   "status": {
+    "collateral-type-link": "exercised"
+   }
+  }
+ ],
+ "note": "Collateral parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the product aggregate read (collateral-product-read seam) and the loan-collateral type_cv_id link read (collateral-link-read seam). The valuation arithmetic (ClientCollateral.Total / TotalCollateral, i.e. basePrice*pctToBase/100*quantity) is NOT in the graded domain: the running oracle exposed no API read-back that computes it, so no vector may require it."
+}

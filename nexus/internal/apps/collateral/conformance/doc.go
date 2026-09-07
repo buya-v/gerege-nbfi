@@ -1,0 +1,44 @@
+// Package conformance is the collateral context's golden-vector schema,
+// comparator and grade machinery. It follows the provisioning harness (the
+// third-generation harness) rather than the first-generation ledger/loanschedule
+// harnesses, and it is a separate schema on purpose rather than a widening of
+// any of them.
+//
+// # What this harness grades
+//
+// The collateral slice owns the four collateral aggregates and the pure
+// valuation arithmetic (ClientCollateral.Total, ClientCollateral.TotalCollateral)
+// that links a client's pledged collateral to a loan. Of those, the running
+// reference oracle exposes NO rounding surface through the API: the
+// m_collateral_management product row and the m_loan_collateral row are read
+// back verbatim, and NO API read-back computes basePrice*pctToBase/100*quantity.
+// The valuation arithmetic is therefore OUTSIDE this harness's graded domain —
+// a vector that required it would be INADMISSIBLE, never guessed.
+//
+// What IS observable and transcribed is the read of the two aggregates the
+// capture recorded:
+//
+//   - seam "collateral-product-read": the m_collateral_management row returned
+//     by the product read-back (id, name, quality, base_price, unit_type,
+//     pct_to_base, currency);
+//   - seam "collateral-link-read": the m_loan_collateral row returned by the
+//     loan-collateral read-back (id, type_cv_id). The classic loan-collateral
+//     row stores only a LoanCollateral code value; value and description are
+//     null and there is no quantity, which is exactly why the seam has no
+//     rounding surface.
+//
+// # Money representation
+//
+// Collateral money is scale-5 fixed-point (DECIMAL(19,5)/DECIMAL(20,5)), NOT
+// minor units: base_price and pct_to_base are transcribed as integer strings of
+// the scaled count, exactly as the port's ScaledInt represents them. No
+// floating-point type appears on any money path here or in the package it grades.
+//
+// # What it needs from a tenant
+//
+// The comparator runs against vectors under .softhouse/vectors/collateral/ and
+// does not touch a database. It needs a store pin (PIN-collateral.json) and a
+// capability registry (capabilities-collateral.json). With no vectors it
+// REFUSES (exit 2) rather than reporting a vacuous pass. It reuses the shared
+// no-float census, which scans the whole Go module.
+package conformance
