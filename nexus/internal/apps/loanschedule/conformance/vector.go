@@ -10,15 +10,15 @@ import (
 	"sort"
 	"strings"
 
+	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
+	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
+	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
-	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
-	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
-	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
-	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
 )
 
 // VectorSchemaV1 is the only schema string this harness accepts. A vector

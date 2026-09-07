@@ -6,14 +6,14 @@ import (
 	"strings"
 	"testing"
 
-	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
-	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
-	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
-	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
 )
 
 // THE DEFECT THESE GUARDS EXIST FOR (T110, from T104's F-T104-3 against T90).
