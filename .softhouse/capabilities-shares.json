@@ -1,0 +1,34 @@
+{
+ "schema": "gerege.shares.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "share-account",
+   "description": "Normalise a share-account aggregate readback into the port's vocabulary: map the account status and purchase status stored ids to their stored values, and transcribe the purchased price and purchased amount DECIMAL money into 2 minor units. The purchase total is requestedShares * unitPrice = 100 * 100 = 10000.00, an integer-times-integer minor-unit product with NO rounding surface.",
+   "in_graded_domain": true,
+   "evidence": "Capture share-account-detail-raw.json under tenant gerege: the running oracle stored account id 3 (status 300 Active, totalApprovedShares 100) with purchasedShares[0] numberOfShares 100, purchasedPrice 100.00, amount 10000.00, purchase status 300 Approved."
+  },
+  {
+   "name": "share-dividend",
+   "description": "Normalise a share-product dividend's dividendAmount field into integer minor units. The capture records the amount the oracle STORED (0.010000), which is the HALF_UP-rounded read-back of the 0.005 request; the rounding itself is a later slice and is NOT graded, so the port only normalises the stored read-back to one minor unit.",
+   "in_graded_domain": true,
+   "evidence": "Capture shares-product-dividends-raw.json under tenant gerege: the running oracle stored dividend id 3 with amount 0.010000, the HALF_UP read-back of the discriminating 0.005 dividendAmount request (HALF_UP 0.01 / HALF_EVEN 0.00, verdict HALF_UP)."
+  }
+ ],
+ "seams": [
+  {
+   "name": "share-account",
+   "description": "GET /accounts/share/{accountId} on the running Fineract server (Path B), tenant gerege, read back as the share-account aggregate (status, summary, purchasedShares).",
+   "status": {
+    "share-account": "exercised"
+   }
+  },
+  {
+   "name": "share-dividend",
+   "description": "GET /shareproduct/{productId}/dividend (and the share-account aggregate's dividends list) on the running Fineract server (Path B), tenant gerege, read back as the share-product dividend row.",
+   "status": {
+    "share-dividend": "exercised"
+   }
+  }
+ ],
+ "note": "Shares parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the share-account aggregate normalisation (share-account seam) and the share-product dividend amount normalisation (share-dividend seam). The dividend create command's HALF_UP rounding (0.005 -> 0.01) is NOT in the graded domain: the shares slice's command plumbing is not yet ported, and the port's exact-money parser (MinorUnitsFromDecimalText) refuses sub-minor-unit residue rather than reproducing the oracle's Money.setScale(2, HALF_UP). The dividend vector therefore transcribes the STORED read-back (0.010000 -> 1 minor unit), not the rounding."
+}

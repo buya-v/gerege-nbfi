@@ -1,0 +1,38 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-02-share-dividend",
+ "title": "share-product dividend amount 0.010000 MNT (HALF_UP read-back of 0.005), normalised to 1 minor unit",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-dividend seam. request.dividend_amount \"0.010000\" is shares-product-dividends-raw.json pageItems[0].amount, the exact decimal text the oracle STORED; expect.dividend_amount_minor \"1\" is that same value transcribed to integer minor units (2dp). This is the READ-BACK, not a computed rounding: the oracle received dividendAmount \"0.005\" and rounded it HALF_UP to 0.01 (the MANIFEST records HALF_UP 0.01 / HALF_EVEN 0.00, verdict HALF_UP). The port's exact-money parser refuses the 0.005 sub-minor-unit residue rather than reproducing that setScale(2, HALF_UP), so the rounding itself is a later slice and NOT graded here; this vector grades only the normalisation of the stored read-back.",
+ "oracle": {
+  "seam": "share-dividend",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/shares-product-dividends-raw.json (dividend id 3, pageItems[0].amount 0.010000). The HALF_UP verdict and the 0.005 discriminating input are recorded in .softhouse/capture/shares/MANIFEST.json roundingSurface.",
+  "capture_ref": ".softhouse/capture/shares/out/shares-product-dividends-raw.json",
+  "capture_sha256": "735bd3988b183f3d56c810baab5c469c6a5bd724d7c8a5f50dc87a061170759a",
+  "capture_case_id": "3"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "dividend",
+  "currency_code": "MNT",
+  "dividend_amount": "0.010000"
+ },
+ "expect": {
+  "kind": "dividend",
+  "dividend_amount_minor": "1"
+ },
+ "capabilities_required": ["share-dividend"],
+ "graded_against": ["shares-go"]
+}
