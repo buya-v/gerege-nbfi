@@ -63,15 +63,18 @@ FROM m_external_asset_owner WHERE external_id = $1`, []any{externalID},
 	return out, nil
 }
 
-// TransferRepository is the persistence surface for m_external_asset_owner_transfer
-// and its one-to-one details table.
+// TransferRepository is the persistence surface for
+// m_external_asset_owner_transfer. It has no details write path: the one-to-one
+// details row is the derived-balance snapshot this port refuses to persist
+// (see Insert).
 type TransferRepository interface {
 	Insert(ctx context.Context, t ExternalAssetOwnerTransfer) (int64, error)
 	FindByID(ctx context.Context, id int64) (*ExternalAssetOwnerTransfer, error)
 	FindByLoanID(ctx context.Context, loanID int64) ([]ExternalAssetOwnerTransfer, error)
 }
 
-// PostgresTransferRepository persists transfer + details rows.
+// PostgresTransferRepository persists transfer rows. The one-to-one details row
+// is deliberately not written (see Insert).
 type PostgresTransferRepository struct {
 	db postgres.DB
 }
@@ -81,8 +84,27 @@ func NewPostgresTransferRepository(db postgres.DB) *PostgresTransferRepository {
 	return &PostgresTransferRepository{db: db}
 }
 
-// Insert writes the transfer row and its details row, resolving the owner and
+// Insert writes the transfer row and returns its id, resolving the owner and
 // previous-owner ids through the supplied aggregates.
+//
+// There is deliberately NO write to m_external_asset_owner_transfer_details
+// here. That one-to-one table is Fineract's point-in-time snapshot of the
+// loan's outstanding decomposition, folded from the loan summary when a
+// transfer is priced (LoanAccountOwnerTransferServiceImpl.
+// createAssetOwnerTransferDetails; the six *_derived columns, NOT NULL, at
+// ExternalAssetOwnerTransferDetails.java:46-61). DEC-2 §4.4 I-3 and §7 refuse
+// the m_trial_balance shape — a written, stored sum wearing a balance's name —
+// and the repaired savings store states the rule this port now obeys: "no
+// INSERT here names a balance column" (savings/postgres.go:26-35). Adopting
+// Fineract's schema is not adopting its write paths.
+//
+// The adopted schema's create-table changelog makes every one of those columns
+// NOT NULL with no default (0007_add_external_asset_owner_transfer_details.xml),
+// so there is no details INSERT that omits them and remains valid: the write
+// path is dropped, not trimmed to a facts-only row. The snapshot a caller
+// attaches to ExternalAssetOwnerTransfer.Details is an in-memory aggregate —
+// total outstanding derived from the four buckets by DeriveTotalOutstanding
+// (transfer.go:51) — and is never persisted by this port.
 func (r *PostgresTransferRepository) Insert(ctx context.Context, t ExternalAssetOwnerTransfer) (int64, error) {
 	var ownerID *int64
 	if t.Owner != nil {
@@ -103,21 +125,6 @@ RETURNING id`,
 		t.LoanID, nullIfEmpty(t.ExternalLoanID), nullIfEmpty(t.ExternalGroupID))
 	if err != nil {
 		return 0, fmt.Errorf("investor: insert transfer: %w", err)
-	}
-
-	if _, err := r.db.Exec(ctx, `INSERT INTO m_external_asset_owner_transfer_details
-(asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived,
- fee_charges_outstanding_derived, penalty_charges_outstanding_derived,
- total_outstanding_derived, total_overpaid_derived)
-VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-		id,
-		t.Details.PrincipalOutstanding.FormatDecimal(MNTMinorDigits),
-		t.Details.InterestOutstanding.FormatDecimal(MNTMinorDigits),
-		t.Details.FeeChargesOutstanding.FormatDecimal(MNTMinorDigits),
-		t.Details.PenaltyChargesOutstanding.FormatDecimal(MNTMinorDigits),
-		t.Details.TotalOutstanding.FormatDecimal(MNTMinorDigits),
-		t.Details.TotalOverpaid.FormatDecimal(MNTMinorDigits)); err != nil {
-		return 0, fmt.Errorf("investor: insert transfer details: %w", err)
 	}
 	return id, nil
 }
