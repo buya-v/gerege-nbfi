@@ -5,14 +5,15 @@
     "note": "no rounding surface"
   },
   "objects": {
-    "workingCapitalLoan": "none — m_wc_loan is EMPTY in the pinned capture; every loan read path returns an empty list or an empty page, so no loan row exists to transcribe"
+    "workingCapitalProduct": "one seeded product (id 1, SEED-WC-Product) — captured in loan-products-list-raw.json",
+    "workingCapitalLoan": "one seeded loan (id 1, externalId SEED-WC-L01, status loanStatusType.active, principal 1000.51) — captured in loans-list-raw.json and wc-loan-detail-raw.json"
   },
   "readBackQuirks": {
-    "loans": "GET /working-capital-loans returns {\"content\":[],\"totalElements\":0} because m_wc_loan is empty (loans-list-raw.json).",
-    "loanProducts": "GET /working-capital-loan-products returns [] because the product table is empty (loan-products-list-raw.json).",
-    "nearBreach": "GET /working-capital/near-breach returns [] because no loan exists to compute a breach against (near-breach-list-raw.json).",
-    "loansTemplate": "GET /working-capital-loans/template returns a static option list (period/delinquency/breach/minimum-payment type options) with loanData {}, no product/fund/bucket options, and no money cell (loans-template-raw.json).",
-    "loanProductsTemplate": "GET /working-capital-loan-products/template returns a static option list (payment types, currencies MNT/USD decimalPlaces 2, amortization EIR/FLAT, accounting mapping GLs) with no money cell (loan-products-template-raw.json).",
-    "unreachable": "The breach-schedule and delinquency-range-schedule seams (/working-capital-loans/{loanId}/breach-schedule and /delinquency-range-schedule) are unreachable: there is no working-capital loan id to query and no verified write path to create one. Declaring those seams exercised would be a fabricated observation."
+    "loans": "GET /working-capital-loans returns {\"content\":[ one loan ],\"totalElements\":1} for the seeded loan (loans-list-raw.json).",
+    "loanDetail": "GET /working-capital-loans/1 returns the single loan with principal 1000.51, balance 1000.51 outstanding, and an EIR amortization read (periodPaymentAmount 0.03, numberOfRepayments 33351) — the EIR/amortization solver is not ported in the Go module, so no cell from it is graded (wc-loan-detail-raw.json).",
+    "loanProducts": "GET /working-capital-loan-products returns [ one product ] (loan-products-list-raw.json).",
+    "nearBreach": "GET /working-capital/near-breach returns [] because no breach/delinquency range is configured on the seed (near-breach-list-raw.json).",
+    "writePath": "The seed was written through POST /working-capital-loan-products (wc-product-create), POST /working-capital-loans (wc-loan-submit), and the approve/disburse commands on /working-capital-loans/1 (wc-loan-approve, wc-loan-disburse).",
+    "unreachable": "The breach-schedule and delinquency-range-schedule seams (/working-capital-loans/{loanId}/breach-schedule and /delinquency-range-schedule) are still unreachable: the seed configures no breach/delinquency range, so the schedule reads would be empty and declaring them exercised would be a fabricated observation."
   }
 }

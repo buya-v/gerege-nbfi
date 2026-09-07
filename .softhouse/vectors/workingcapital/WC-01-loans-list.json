@@ -1,0 +1,47 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-01-loans-list",
+ "title": "working-capital loan list read (seeded loan)",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture loans-list-raw.json (GET /working-capital-loans, tenant gerege). The pinned capture holds exactly one seeded working-capital loan: id 1, externalId SEED-WC-L01, status loanStatusType.active. expect.loans[0].id=\"1\" is the row's \"id\" field, external_id=\"SEED-WC-L01\" its \"externalId\" field, and status=\"loanStatusType.active\" its \"status\":{\"code\":...} field. expect.total_elements=1 is the page's \"totalElements\". No money cell is graded on this seam, so this vector records no rounding surface.",
+ "oracle": {
+  "seam": "working-capital-loans-list",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture loans-list-raw.json; capture_case_id names the seeded loan's externalId as observed in the list.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/loans-list-raw.json",
+  "capture_sha256": "2327a39aa6703f5df462c10abf6ab77d4788dfca7e3b446cbc0112c1b31dd68e",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "loans-list-raw.json content[0] row {\"id\":1,\"accountNo\":\"000000001\",\"externalId\":\"SEED-WC-L01\",\"status\":{\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\"}} with page \"totalElements\":1"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 0
+ },
+ "expect": {
+  "loans": [
+   {
+    "id": "1",
+    "external_id": "SEED-WC-L01",
+    "status": "loanStatusType.active"
+   }
+  ],
+  "total_elements": 1
+ },
+ "capabilities_required": [
+  "wc-loan-list-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

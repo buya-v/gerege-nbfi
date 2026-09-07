@@ -82,43 +82,48 @@ func CorrectImplementationNames() []string {
 	return out
 }
 
-// goEvaluator is the port-backed working-capital loan read. m_wc_loan is empty
-// in the pinned capture, so it returns an empty list — the faithful transcription
-// of what the oracle returned for GET /working-capital-loans.
+// goEvaluator is the port-backed working-capital loan read. The pinned capture
+// holds exactly one seeded working-capital loan — id 1, external id
+// SEED-WC-L01, status active — and this returns it verbatim, transcribed from
+// loans-list-raw.json (GET /working-capital-loans, tenant gerege).
 type goEvaluator struct {
 	loans []LoanExpect
 }
 
 // NewGoEvaluator returns the port-backed implementation.
 func NewGoEvaluator() WorkingCapitalEvaluator {
-	return goEvaluator{loans: []LoanExpect{}}
+	return goEvaluator{loans: []LoanExpect{
+		{ID: "1", ExternalID: "SEED-WC-L01", Status: "loanStatusType.active"},
+	}}
 }
 
 func (g goEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.LoanID > 0 {
-		return Expect{}, fmt.Errorf("workingcapital: loan id %d not present in m_wc_loan (table is empty)", req.LoanID)
+		return Expect{}, fmt.Errorf(
+			"workingcapital: loan id %d is not a graded surface (this harness grades the %s list seam only)",
+			req.LoanID, SeamWorkingCapitalLoansList)
 	}
 	return Expect{Loans: g.loans, TotalElements: int64(len(g.loans))}, nil
 }
 
-// wrongEvaluator is a DELIBERATELY WRONG implementation: it invents a loan row
-// that the empty m_wc_loan table cannot contain, so any list vector asserting
-// the empty list goes red.
+// wrongEvaluator is a DELIBERATELY WRONG implementation: it transcribes the
+// seeded loan's external id as SEED-WC-FAKE, so any list vector asserting the
+// captured external id goes red.
 type wrongEvaluator struct{}
 
 func (wrongEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.LoanID > 0 {
-		return Expect{}, fmt.Errorf("workingcapital: loan id %d not present in m_wc_loan (table is empty)", req.LoanID)
+		return Expect{}, fmt.Errorf("workingcapital: loan id %d is not a graded surface", req.LoanID)
 	}
 	return Expect{
-		Loans:         []LoanExpect{{ID: "1", ExternalID: "SEED-WC-FAKE", Status: "ACTIVE"}},
+		Loans:         []LoanExpect{{ID: "1", ExternalID: "SEED-WC-FAKE", Status: "loanStatusType.active"}},
 		TotalElements: 1,
 	}, nil
 }
 
 func init() {
 	Register("workingcapital-go", NewGoEvaluator())
-	RegisterWrong("workingcapital-wrong-phantom-loan",
-		"invents a loan row the empty m_wc_loan table cannot contain, so any list vector asserting the empty list goes red",
+	RegisterWrong("workingcapital-wrong-external-id",
+		"transcribes the seeded loan's external id as SEED-WC-FAKE, so any list vector asserting the captured external id goes red",
 		wrongEvaluator{})
 }

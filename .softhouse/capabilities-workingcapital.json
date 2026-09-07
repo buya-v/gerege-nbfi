@@ -3,19 +3,19 @@
  "capabilities": [
   {
    "name": "wc-loan-list-read",
-   "description": "Read the m_wc_loan list as returned by GET /working-capital-loans. In the pinned capture m_wc_loan is empty, so the only observable result is an empty list with totalElements 0.",
+   "description": "Read the m_wc_loan list as returned by GET /working-capital-loans. The pinned capture holds one seeded loan (id 1, external id SEED-WC-L01, status active), so the read is exercised and its row is transcribed into a parity vector.",
    "in_graded_domain": true,
-   "evidence": "Capture loans-list-raw.json under tenant gerege: the running oracle returned {\"content\":[],\"totalElements\":0} because m_wc_loan is empty. The read path is exercised but has no loan row to transcribe, so no vector is promoted from it yet."
+   "evidence": "Capture loans-list-raw.json under tenant gerege: the running oracle returned {\"content\":[{... id 1, externalId SEED-WC-L01, status loanStatusType.active ...}],\"totalElements\":1} for the seeded working-capital loan. The list seam grades id, external_id and status (no money cell), and one parity vector is promoted from it."
   }
  ],
  "seams": [
   {
    "name": "working-capital-loans-list",
-   "description": "GET /working-capital-loans on the running Fineract server, tenant gerege: the m_wc_loan list (empty in the pinned capture).",
+   "description": "GET /working-capital-loans on the running Fineract server, tenant gerege: the m_wc_loan list (one seeded loan in the pinned capture).",
    "status": {
     "wc-loan-list-read": "exercised"
    }
   }
  ],
- "note": "Working-capital parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is declared: the working-capital loan list read, which is exercised but returns an empty list because m_wc_loan is empty. The breach-schedule and delinquency-range-schedule seams are NOT declared as exercised because no working-capital loan exists to observe them; declaring them would be a fabricated observation."
+ "note": "Working-capital parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is declared: the working-capital loan list read, which is exercised and returns the single seeded loan. The breach-schedule and delinquency-range-schedule seams are NOT declared as exercised because no breach/delinquency range is configured on the seed and no write path has been captured to observe them; declaring them would be a fabricated observation."
 }

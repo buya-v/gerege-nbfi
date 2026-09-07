@@ -1,0 +1,12 @@
+{
+  "clientId": 5,
+  "productId": 1,
+  "externalId": "SEED-WC-L01",
+  "submittedOnDate": "01 September 2026",
+  "expectedDisbursementDate": "01 September 2026",
+  "principalAmount": 1000.51,
+  "totalPaymentVolume": 1000.51,
+  "periodPaymentRate": 1,
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

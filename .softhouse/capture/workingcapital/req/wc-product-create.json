@@ -1,0 +1,32 @@
+{
+  "name": "SEED-WC-Product",
+  "shortName": "WC01",
+  "description": "Working Capital Loan Product",
+  "periodPaymentRate": 1,
+  "repaymentFrequencyType": "DAYS",
+  "repaymentEvery": 30,
+  "currencyCode": "MNT",
+  "digitsAfterDecimal": 2,
+  "inMultiplesOf": 1,
+  "principal": 100,
+  "minPrincipal": 10,
+  "maxPrincipal": 100000,
+  "amortizationType": "EIR",
+  "npvDayCount": 360,
+  "dateFormat": "dd MMMM yyyy",
+  "locale": "en",
+  "accountingRule": "NONE",
+  "paymentAllocation": [
+    {
+      "transactionType": "DEFAULT",
+      "paymentAllocationOrder": [
+        {"order": 1, "paymentAllocationRule": "DUE_PENALTY"},
+        {"order": 2, "paymentAllocationRule": "DUE_FEE"},
+        {"order": 3, "paymentAllocationRule": "DUE_PRINCIPAL"},
+        {"order": 4, "paymentAllocationRule": "IN_ADVANCE_PENALTY"},
+        {"order": 5, "paymentAllocationRule": "IN_ADVANCE_FEE"},
+        {"order": 6, "paymentAllocationRule": "IN_ADVANCE_PRINCIPAL"}
+      ]
+    }
+  ]
+}

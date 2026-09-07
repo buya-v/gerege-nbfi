@@ -6,8 +6,9 @@ import "fmt"
 // gradeable invariants are structural properties of the loan list read-back,
 // asserted on an implementation's RESULT rather than re-derived here. They are
 // always asserted, so a pass means the list honours the contract of the table it
-// ports. While m_wc_loan is empty the one invariant that applies is the
-// total-elements agreement; every other invariant is N/A until a loan exists.
+// ports. With the single seeded loan the total-elements agreement is the one
+// invariant that applies; the money/schedule invariants stay N/A until the
+// breach and delinquency-range schedules are ported and captured.
 
 // InvariantStatus is the outcome of one invariant assertion.
 type InvariantStatus string
