@@ -17,11 +17,13 @@ import (
 	investorconf "github.com/gerege/nexus/internal/apps/investor/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	loanproductconf "github.com/gerege/nexus/internal/apps/loanproduct/conformance"
 	originationconf "github.com/gerege/nexus/internal/apps/origination/conformance"
 	partiesconf "github.com/gerege/nexus/internal/apps/parties/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	workingcapitalconf "github.com/gerege/nexus/internal/apps/workingcapital/conformance"
 )
 
 // FINDING A2-19 F3 — A REFUSED VECTOR'S KILLS USED TO BACK A CAPABILITY.
@@ -799,6 +801,12 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 			return nil
 		}
 		if partiesconf.DeclaresPartiesSchema(raw) {
+			return nil
+		}
+		if workingcapitalconf.DeclaresWorkingCapitalSchema(raw) {
+			return nil
+		}
+		if loanproductconf.DeclaresLoanProductSchema(raw) {
 			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))

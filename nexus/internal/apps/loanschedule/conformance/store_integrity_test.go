@@ -13,11 +13,13 @@ import (
 	investorconf "github.com/gerege/nexus/internal/apps/investor/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	loanproductconf "github.com/gerege/nexus/internal/apps/loanproduct/conformance"
 	originationconf "github.com/gerege/nexus/internal/apps/origination/conformance"
 	partiesconf "github.com/gerege/nexus/internal/apps/parties/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
 	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	workingcapitalconf "github.com/gerege/nexus/internal/apps/workingcapital/conformance"
 )
 
 // THE DEFECT THESE GUARDS EXIST FOR (T110, from T104's F-T104-3 against T90).
@@ -566,6 +568,20 @@ func TestStoreFileCensus(t *testing.T) {
 			t.Fatalf("origination hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
 		}
 		partiesPaths, partiesErr := partiesconf.PartiesFilePaths(pristine)
+		workingcapitalPaths, workingcapitalErr := workingcapitalconf.WorkingCapitalFilePaths(pristine)
+		if workingcapitalErr != nil {
+			t.Fatalf("the workingcapital half of the committed store could not be enumerated: %v", workingcapitalErr)
+		}
+		if len(workingcapitalPaths) == 0 {
+			t.Fatalf("workingcapital hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
+		loanproductPaths, loanproductErr := loanproductconf.LoanProductFilePaths(pristine)
+		if loanproductErr != nil {
+			t.Fatalf("the loanproduct half of the committed store could not be enumerated: %v", loanproductErr)
+		}
+		if len(loanproductPaths) == 0 {
+			t.Fatalf("loanproduct hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
 		if partiesErr != nil {
 			t.Fatalf("the parties half of the committed store could not be enumerated: %v", partiesErr)
 		}
@@ -581,7 +597,7 @@ func TestStoreFileCensus(t *testing.T) {
 		if perr != nil {
 			t.Fatalf("the provisioning half of the committed store could not be enumerated: %v", perr)
 		}
-		if err := StoreFileCensus(pristine, vectors, nil, append(append(append(append(append(append(append(append(append(append(append(ledgerPaths, chargesPaths...), provisioningPaths...), branchPaths...), sharesPaths...), collateralPaths...), loanPaths...), savingsPaths...), investorPaths...), cobPaths...), originationPaths...), partiesPaths...)...); err != nil {
+		if err := StoreFileCensus(pristine, vectors, nil, append(append(append(append(append(append(append(append(append(append(append(append(append(ledgerPaths, chargesPaths...), provisioningPaths...), branchPaths...), sharesPaths...), collateralPaths...), loanPaths...), savingsPaths...), investorPaths...), cobPaths...), originationPaths...), partiesPaths...), workingcapitalPaths...), loanproductPaths...)...); err != nil {
 			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
 		}
 		// ANTI-VACUITY ON THE HAND-OVER ITSELF. If LedgerFilePaths ever returned
