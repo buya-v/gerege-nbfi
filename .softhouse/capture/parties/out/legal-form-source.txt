@@ -1,7 +1,0 @@
-// pinned-reference source capture (commit 426a23544e8426a38ae43ae404670a0a7e85b9eb)
-// source: fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/LegalForm.java lines 27-31
-public enum LegalForm {
-
-    PERSON(1, "legalFormType.person", "Person"), //
-    ENTITY(2, "legalFormType.entity", "Entity"); //
-

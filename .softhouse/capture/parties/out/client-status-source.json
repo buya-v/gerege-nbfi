@@ -1,0 +1,25 @@
+{
+ "schema": "gerege.parties.source-capture/v1",
+ "_note": "A VERBATIM excerpt of the pinned reference source, recorded as JSON because a capture cited by a vector must be parseable \u2014 the wire-float guard reads every cited record and refuses one it cannot parse. The text below is unaltered; only the container changed.",
+ "source_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "source_file": "fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/ClientStatus.java",
+ "source_lines": "24-36",
+ "verbatim": [
+  "// pinned-reference source capture (commit 426a23544e8426a38ae43ae404670a0a7e85b9eb)",
+  "// source: fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/ClientStatus.java lines 24-36",
+  " * Enum representation of client status states.",
+  " */",
+  "public enum ClientStatus {",
+  "",
+  "    INVALID(0, \"clientStatusType.invalid\"), //",
+  "    PENDING(100, \"clientStatusType.pending\"), //",
+  "    ACTIVE(300, \"clientStatusType.active\"), //",
+  "    TRANSFER_IN_PROGRESS(303, \"clientStatusType.transfer.in.progress\"), //",
+  "    TRANSFER_ON_HOLD(304, \"clientStatusType.transfer.on.hold\"), //",
+  "    CLOSED(600, \"clientStatusType.closed\"), //",
+  "    REJECTED(700, \"clientStatusType.rejected\"), //",
+  "    WITHDRAWN(800, \"clientStatusType.withdraw\"); //",
+  "",
+  ""
+ ]
+}

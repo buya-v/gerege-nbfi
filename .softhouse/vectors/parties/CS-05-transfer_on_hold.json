@@ -11,9 +11,9 @@
  },
  "provenance": {
   "kind": "oracle-capture",
-  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/client-status-source.txt; capture_case_id names the source declaration TRANSFER_ON_HOLD(304, ...).",
-  "capture_ref": ".softhouse/capture/parties/out/client-status-source.txt",
-  "capture_sha256": "0ee9cdc5e038111173b64ad4583afb8040b10307393366cd33f3f3a70cee1a05",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/client-status-source.txt; capture_case_id names the source declaration TRANSFER_ON_HOLD(304, ...). The cited capture is the JSON container of the same verbatim source excerpt; the recorded text is unchanged.",
+  "capture_ref": ".softhouse/capture/parties/out/client-status-source.json",
+  "capture_sha256": "5afd369bf096081571ac8e91c2bb1e1398fb201a7d6588dd20bc5d967b4ec40b",
   "capture_case_id": "TRANSFER_ON_HOLD(304",
   "citation": "ClientStatus.java:32 TRANSFER_ON_HOLD(304, ...)"
  },

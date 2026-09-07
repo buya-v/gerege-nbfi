@@ -11,9 +11,9 @@
  },
  "provenance": {
   "kind": "oracle-capture",
-  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/grouping-status-source.txt; capture_case_id names the source declaration ACTIVE(300, ...).",
-  "capture_ref": ".softhouse/capture/parties/out/grouping-status-source.txt",
-  "capture_sha256": "7a9e78dd84be0301b19406f0c159084f765f74eb29257202904008301b4235be",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/grouping-status-source.txt; capture_case_id names the source declaration ACTIVE(300, ...). The cited capture is the JSON container of the same verbatim source excerpt; the recorded text is unchanged.",
+  "capture_ref": ".softhouse/capture/parties/out/grouping-status-source.json",
+  "capture_sha256": "2095733adc8d072c63e2ee925aba8248609e350610fdd4f05a73090c3ee1c1b8",
   "capture_case_id": "ACTIVE(300",
   "citation": "GroupingTypeStatus.java:28 ACTIVE(300, ...)"
  },

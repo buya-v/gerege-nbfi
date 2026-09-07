@@ -1,0 +1,17 @@
+{
+ "schema": "gerege.parties.source-capture/v1",
+ "_note": "A VERBATIM excerpt of the pinned reference source, recorded as JSON because a capture cited by a vector must be parseable \u2014 the wire-float guard reads every cited record and refuses one it cannot parse. The text below is unaltered; only the container changed.",
+ "source_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+ "source_file": "fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/LegalForm.java",
+ "source_lines": "27-31",
+ "verbatim": [
+  "// pinned-reference source capture (commit 426a23544e8426a38ae43ae404670a0a7e85b9eb)",
+  "// source: fineract-core/src/main/java/org/apache/fineract/portfolio/client/domain/LegalForm.java lines 27-31",
+  "public enum LegalForm {",
+  "",
+  "    PERSON(1, \"legalFormType.person\", \"Person\"), //",
+  "    ENTITY(2, \"legalFormType.entity\", \"Entity\"); //",
+  "",
+  ""
+ ]
+}
