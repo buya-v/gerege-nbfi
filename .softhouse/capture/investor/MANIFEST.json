@@ -1,0 +1,25 @@
+{
+  "context": "investor",
+  "roundingSurface": {
+    "seam": "external-asset-owner-transfer-read",
+    "note": "no rounding surface"
+  },
+  "objects": {
+    "externalAssetOwnerTransfer": {
+      "transferId": "1",
+      "ownerExternalId": "SEED-Inv-01",
+      "ownerId": "1",
+      "loanId": "6",
+      "loanExternalId": "SEED-L06",
+      "transferExternalId": "SEED-Tr-01",
+      "purchasePriceRatio": "97.25",
+      "settlementDate": "2026-09-01",
+      "status": "PENDING",
+      "effectiveFrom": "2026-09-01",
+      "effectiveTo": "9999-12-31"
+    }
+  },
+  "readBackQuirks": {
+    "transfers": "GET /external-asset-owners/transfers?loanId=6 returns the single transfer row above. GET /external-asset-owners/transfers WITHOUT the loanId query parameter returns HTTP 500 (Internal Server Error), not 400 — an oracle-refusal observation recorded as transfer-read-no-param-raw.json. The search endpoint POST /external-asset-owners/search returns the same row with a page size of 50 (transfer-search-raw.json)."
+  }
+}
