@@ -1,0 +1,45 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-01-daily-interest-rounding",
+ "title": "daily interest posting of the discriminating savings account (id 2)",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from capture savings-account-daily-raw.json (GET account read-back, tenant gerege). request.daily_interest.balance_minor=\"100000\" is the integer minor-unit form of the deposit the account holds (1000.00 MNT, transaction id 4 amount 1000.000000); request.daily_interest.rate_per_annum_micro_pct=182500 is the savings Percent (micro-per-cent) form of the account's nominalAnnualInterestRate 0.182500; request.daily_interest.days_in_year=365 is the product's 365-day year convention (product id 3); request.daily_interest.days=1 is the one-day accrual the MANIFEST records as the discriminating input. expect.interest_minor=\"1\" is the integer minor-unit form of the interest posting the oracle wrote back (transaction id 5 amount 0.010000, the HALF_UP rounding of the raw daily interest 0.005). Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "savings-daily-interest",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected interest cell is transcribed from the committed capture savings-account-daily-raw.json; capture_case_id names the savings product name value of the observed account.",
+  "capture_ref": ".softhouse/capture/savings/out/savings-account-daily-raw.json",
+  "capture_sha256": "15999be438f6d8db15d13b4eb351c6749260db7f6790cb42ce4b2af8843eddf8",
+  "capture_case_id": "SEED-Savings-Product-Daily",
+  "citation": "savings-account-daily-raw.json row {\"id\":2,\"accountNo\":\"000000002\",\"savingsProductName\":\"SEED-Savings-Product-Daily\",\"nominalAnnualInterestRate\":0.182500} and transaction id 5 (interestPosting) {\"amount\":0.010000,\"runningBalance\":1000.010000,\"date\":[2026,9,1]}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "daily_interest": {
+   "balance_minor": "100000",
+   "rate_per_annum_micro_pct": 182500,
+   "days_in_year": 365,
+   "days": 1
+  }
+ },
+ "expect": {
+  "interest_minor": "1"
+ },
+ "capabilities_required": [
+  "daily-balance-interest-rounding"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}
