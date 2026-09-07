@@ -11,6 +11,11 @@ import (
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
+	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 )
 
 // THE STORE FILE CENSUS — the two enumerators of the vector store must agree,
@@ -236,6 +241,21 @@ func knownStoreContextDirs() map[string]bool {
 		known[c] = true
 	}
 	for _, c := range provisioningconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range branchconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range sharesconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range collateralconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range loanconf.SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range savingsconf.SchemaContexts() {
 		known[c] = true
 	}
 	return known

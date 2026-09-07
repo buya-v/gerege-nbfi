@@ -14,6 +14,11 @@ import (
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
+	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 )
 
 // VectorSchemaV1 is the only schema string this harness accepts. A vector
@@ -940,6 +945,11 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// as ledgerClaimed and chargesClaimed — collected only so the census can be
 	// told, never graded here.
 	var provisioningClaimed []string
+	var branchClaimed []string
+	var sharesClaimed []string
+	var collateralClaimed []string
+	var loanClaimed []string
+	var savingsClaimed []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
@@ -1000,6 +1010,46 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 			// `provisioningClaimed`.
 			if provisioningconf.FileDeclaresProvisioningSchema(abs) {
 				provisioningClaimed = append(provisioningClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// OH-PROMOTE (branch): same hand-over contract as ledger, charges and
+			// provisioning — this file belongs to branch's own standalone harness,
+			// is claimed rather than graded here, and is still ACCOUNTED FOR so
+			// the store census cannot read it as unowned.
+			if branchconf.FileDeclaresBranchSchema(abs) {
+				branchClaimed = append(branchClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// OH-PROMOTE (shares): same hand-over contract as ledger, charges and
+			// provisioning — this file belongs to shares's own standalone harness,
+			// is claimed rather than graded here, and is still ACCOUNTED FOR so
+			// the store census cannot read it as unowned.
+			if sharesconf.FileDeclaresSharesSchema(abs) {
+				sharesClaimed = append(sharesClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// OH-PROMOTE (collateral): same hand-over contract as ledger, charges and
+			// provisioning — this file belongs to collateral's own standalone harness,
+			// is claimed rather than graded here, and is still ACCOUNTED FOR so
+			// the store census cannot read it as unowned.
+			if collateralconf.FileDeclaresCollateralSchema(abs) {
+				collateralClaimed = append(collateralClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// OH-PROMOTE (loan): same hand-over contract as ledger, charges and
+			// provisioning — this file belongs to loan's own standalone harness,
+			// is claimed rather than graded here, and is still ACCOUNTED FOR so
+			// the store census cannot read it as unowned.
+			if loanconf.FileDeclaresLoanSchema(abs) {
+				loanClaimed = append(loanClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			// OH-PROMOTE (savings): same hand-over contract as ledger, charges and
+			// provisioning — this file belongs to savings's own standalone harness,
+			// is claimed rather than graded here, and is still ACCOUNTED FOR so
+			// the store census cannot read it as unowned.
+			if savingsconf.FileDeclaresSavingsSchema(abs) {
+				savingsClaimed = append(savingsClaimed, filepath.ToSlash(rel))
 				continue
 			}
 			v, err := LoadVector(abs, rel)
@@ -1066,7 +1116,7 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// the shell float guard and to this loader. It is taken over `all` and over
 	// the WHOLE tree, filter or no filter — for the same reason the duplicate
 	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
-	if err := StoreFileCensus(storeRoot, all, loadErrs, append(append(ledgerClaimed, chargesClaimed...), provisioningClaimed...)...); err != nil {
+	if err := StoreFileCensus(storeRoot, all, loadErrs, append(append(append(append(append(append(append(ledgerClaimed, chargesClaimed...), provisioningClaimed...), branchClaimed...), sharesClaimed...), collateralClaimed...), loanClaimed...), savingsClaimed...)...); err != nil {
 		refusals = append(refusals, err)
 	}
 	if len(refusals) > 0 {

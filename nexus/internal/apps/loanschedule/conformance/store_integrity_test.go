@@ -9,6 +9,11 @@ import (
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
+	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 )
 
 // THE DEFECT THESE GUARDS EXIST FOR (T110, from T104's F-T104-3 against T90).
@@ -506,10 +511,45 @@ func TestStoreFileCensus(t *testing.T) {
 		// same hand-over contract as ledger and charges: derived, not listed, and
 		// asserted non-empty so a deflated hand-over cannot read as a pass.
 		provisioningPaths, perr := provisioningconf.ProvisioningFilePaths(pristine)
+		branchPaths, branchErr := branchconf.BranchFilePaths(pristine)
+		if branchErr != nil {
+			t.Fatalf("the branch half of the committed store could not be enumerated: %v", branchErr)
+		}
+		if len(branchPaths) == 0 {
+			t.Fatalf("branch hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
+		sharesPaths, sharesErr := sharesconf.SharesFilePaths(pristine)
+		if sharesErr != nil {
+			t.Fatalf("the shares half of the committed store could not be enumerated: %v", sharesErr)
+		}
+		if len(sharesPaths) == 0 {
+			t.Fatalf("shares hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
+		collateralPaths, collateralErr := collateralconf.CollateralFilePaths(pristine)
+		if collateralErr != nil {
+			t.Fatalf("the collateral half of the committed store could not be enumerated: %v", collateralErr)
+		}
+		if len(collateralPaths) == 0 {
+			t.Fatalf("collateral hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
+		loanPaths, loanErr := loanconf.LoanFilePaths(pristine)
+		if loanErr != nil {
+			t.Fatalf("the loan half of the committed store could not be enumerated: %v", loanErr)
+		}
+		if len(loanPaths) == 0 {
+			t.Fatalf("loan hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
+		savingsPaths, savingsErr := savingsconf.SavingsFilePaths(pristine)
+		if savingsErr != nil {
+			t.Fatalf("the savings half of the committed store could not be enumerated: %v", savingsErr)
+		}
+		if len(savingsPaths) == 0 {
+			t.Fatalf("savings hand-over enumerated ZERO files; a deflated hand-over must not read as a pass")
+		}
 		if perr != nil {
 			t.Fatalf("the provisioning half of the committed store could not be enumerated: %v", perr)
 		}
-		if err := StoreFileCensus(pristine, vectors, nil, append(append(ledgerPaths, chargesPaths...), provisioningPaths...)...); err != nil {
+		if err := StoreFileCensus(pristine, vectors, nil, append(append(append(append(append(append(append(ledgerPaths, chargesPaths...), provisioningPaths...), branchPaths...), sharesPaths...), collateralPaths...), loanPaths...), savingsPaths...)...); err != nil {
 			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
 		}
 		// ANTI-VACUITY ON THE HAND-OVER ITSELF. If LedgerFilePaths ever returned

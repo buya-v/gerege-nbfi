@@ -13,6 +13,11 @@ import (
 	chargesconf "github.com/gerege/nexus/internal/apps/charges/conformance"
 	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	provisioningconf "github.com/gerege/nexus/internal/apps/provisioning/conformance"
+	branchconf "github.com/gerege/nexus/internal/apps/branch/conformance"
+	sharesconf "github.com/gerege/nexus/internal/apps/shares/conformance"
+	collateralconf "github.com/gerege/nexus/internal/apps/collateral/conformance"
+	loanconf "github.com/gerege/nexus/internal/apps/loan/conformance"
+	savingsconf "github.com/gerege/nexus/internal/apps/savings/conformance"
 )
 
 // FINDING A2-19 F3 — A REFUSED VECTOR'S KILLS USED TO BACK A CAPABILITY.
@@ -753,6 +758,31 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 		// into one would inflate `count` above what the loanschedule report can
 		// credit.
 		if provisioningconf.DeclaresProvisioningSchema(raw) {
+			return nil
+		}
+		// OH-PROMOTE (branch): not this schema's vector, same reason as above —
+		// injecting into one would inflate `count` past what this report credits.
+		if branchconf.DeclaresBranchSchema(raw) {
+			return nil
+		}
+		// OH-PROMOTE (shares): not this schema's vector, same reason as above —
+		// injecting into one would inflate `count` past what this report credits.
+		if sharesconf.DeclaresSharesSchema(raw) {
+			return nil
+		}
+		// OH-PROMOTE (collateral): not this schema's vector, same reason as above —
+		// injecting into one would inflate `count` past what this report credits.
+		if collateralconf.DeclaresCollateralSchema(raw) {
+			return nil
+		}
+		// OH-PROMOTE (loan): not this schema's vector, same reason as above —
+		// injecting into one would inflate `count` past what this report credits.
+		if loanconf.DeclaresLoanSchema(raw) {
+			return nil
+		}
+		// OH-PROMOTE (savings): not this schema's vector, same reason as above —
+		// injecting into one would inflate `count` past what this report credits.
+		if savingsconf.DeclaresSavingsSchema(raw) {
 			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))
