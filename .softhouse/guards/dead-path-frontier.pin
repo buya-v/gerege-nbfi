@@ -301,3 +301,16 @@
 .softhouse/guards/no-op-fire-streak.sh | .softhouse/LOCK
 .softhouse/reviews/t552-review-t550/evidence/t552-floor.py | .softhouse/LOCK
 .softhouse/reviews/t552-review-t550/evidence/t552-sweep.py | .softhouse/LOCK
+
+# --- ADDED by the cloud fire cloud-20260906-2000's 33 commits. Two rows, both argued ---
+#     1. t553-sweep.py quotes `.softhouse/LOCK`. Same class as the four rows above: a
+#        softhouse instrument naming the fire lock, which is absent because softhouse is
+#        stopped by decision. Same removal condition applies — if softhouse is restarted
+#        and LOCK returns, this row comes out in the same commit that restarts it.
+#     2. t537-failclosed.sh quotes `.softhouse/runs/20260101.tasks.json`. This is NOT a
+#        claim about this tree. The script CONSTRUCTS that path inside a scratch temp dir
+#        (`$TMP/fc5/work/.softhouse/runs/...`, lines 130 and 136) to feed its fail-closed
+#        arms deliberately malformed input. It can never resolve in the repo and is not
+#        meant to. Pinned as a KNOWN SYNTHETIC FIXTURE PATH, not as a rot to repair.
+.softhouse/capture/t493-zero-turn-escalation/t553-sweep.py | .softhouse/LOCK
+.softhouse/capture/t537-review-t536/t537-failclosed.sh | .softhouse/runs/20260101.tasks.json
