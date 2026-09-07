@@ -49,3 +49,15 @@ _in progress; each site appended as it is decided_
 **Verdict:** D
 **Argument:** Full-deduction branch of UndoPaidOrPartiallyAmountBy: after zeroing paid, outstanding is restored to the full original amount rather than the recompute — deliberately matching the oracle, whose undoPaidOrPartiallyAmountBy writes `this.amountOutstanding = this.amount` in the same branch (LoanCharge.java:655-661, assignment at 659). That Fineract method mutates its own stored `amount_outstanding_derived` column (LoanCharge.java:108-109). In Go the write is purely in-memory in a persistence-free slice, and AmountOutstanding has no reader outside charge.go, so the site is a ported shape, not a violation.
 
+### internal/apps/loan/charge.go:235 — I3-FIELD-WRITE
+**Expression:** `c.AmountOutstanding = c.calculateAmountOutstanding()`
+**Verdict:** D
+**Argument:** Partial-deduction branch of UndoPaidOrPartiallyAmountBy: after reducing paid, outstanding is set to the derived recompute, porting the else-branch of LoanCharge.undoPaidOrPartiallyAmountBy which writes `this.amountOutstanding = calculateAmountOutstanding(incrementBy.getCurrency())` (LoanCharge.java:640-667, assignment at 666). The value written is derived from the charge's own buckets (amount − waived − paid, charge.go:68-70) and stored only on the in-memory field porting Fineract's `amount_outstanding_derived` column (LoanCharge.java:108-109). This slice has no persistence boundary, so the write cannot be an I-3 violation.
+
+### internal/apps/loan/charge.go:249 — I3-FIELD-WRITE
+**Expression:** `c.AmountOutstanding = 0`
+**Verdict:** D
+**Argument:** Over-waive clamp of UpdateWaivedAmount: when waived exceeds the original amount, waived is capped at the charge amount and outstanding is zeroed, porting the analogous clamp in LoanCharge.updateWaivedAmount which sets `this.amountOutstanding = BigDecimal.ZERO` (LoanCharge.java:606-626, assignment at 625). This is Fineract mutating its own stored `amount_outstanding_derived` column (LoanCharge.java:108-109), faithfully reproduced as an in-memory field update in a loan slice that owns no persistence. AmountOutstanding is never journaled, posted, or read as an account balance anywhere in the Go tree, so the site is a ported shape, not a violation.
+
+**loan/charge.go block complete: 11/11 D.**
+
