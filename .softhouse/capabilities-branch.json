@@ -1,0 +1,21 @@
+{
+ "schema": "gerege.branch.capabilities/v1",
+ "capabilities": [
+  {
+   "name": "cashier-txn-amount",
+   "description": "Normalise a cashier-transaction cash movement (allocate/settle) amount into integer minor units: map the txn-type stored id to its stored value and transcribe the DECIMAL(19,6) txn_amount to 2 minor units with no rounding surface.",
+   "in_graded_domain": true,
+   "evidence": "Capture summary-cashier2-final-raw.json under tenant gerege: the running oracle stored allocate txn id 7 (txnType 101 Allocate Cash, txnAmount 100000.500000) and settle txn id 8 (txnType 102 Settle Cash, txnAmount 40000.250000); both are direct cash movements with no rounding surface."
+  }
+ ],
+ "seams": [
+  {
+   "name": "cashier-txn-amount",
+   "description": "POST /cashiers/{cashierId}/allocate and POST /cashiers/{cashierId}/settle on the running Fineract server (Path B), tenant gerege, read back as the m_cashier_transactions rows.",
+   "status": {
+    "cashier-txn-amount": "exercised"
+   }
+  }
+ ],
+ "note": "Branch parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the cashier-transaction amount normalisation (cashier-txn-amount seam). The summary aggregation (sumCashAllocation/sumCashSettlement/netCash), the in/out double-entry posting, and the teller/cashier/staff aggregate reads are NOT in the graded domain: the branch slice's later command/aggregation plumbing is not yet ported, and the 3dp probe (40000.245) demonstrates the port's 2dp minor-unit model refuses sub-minor-unit residue rather than reproducing the oracle's DECIMAL(19,6) storage, so there is no rounding cell to transcribe."
+}
