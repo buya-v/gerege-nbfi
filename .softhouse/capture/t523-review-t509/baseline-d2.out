@@ -1,0 +1,5 @@
+D2a  emi.go balance field renamed out of the regex   CONTROL-B=FAIL  findings=32
+        - I3-FIELD-WRITE	internal/apps/loanschedule/emi.go
+D2b  investor/postgres.go renamed wholesale          CONTROL-B=FAIL  findings=24
+        - I3-FIELD-WRITE	internal/apps/investor/postgres.go
+        - I3-SQL-BALANCE	internal/apps/investor/postgres.go

@@ -2,6 +2,8 @@
  "generated_by": "T527 .softhouse/bin/check-branch-published.py --write-baseline",
  "generated_at_origin_main": "dd27570094febf4233c5209be0000c2f38f73bfd",
  "note": "Keys are exact <task-id>\\t<branch-or-commit> pairs, so this file can only forgive claims that already existed when it was written. Every entry is printed on every run under WAIVED (baseline). Removing an entry re-arms the check for that subject. A DIFF TO THIS FILE IS A CLAIM THAT WORK WAS LOST -- read it as one.",
+ "frozen_above": "T527",
+ "frozen_above_note": "T536/F-3. --write-baseline REFUSES to waive any finding whose task id sorts above this generation, or whose id it cannot date. The name lock-out below protects the incident that already happened; this line protects the ones that have not. Raising it is a claim that everything between the old and new line is HISTORY rather than LOST WORK -- read a diff to this field as that claim. Deleting this file does not lift the line: the tool falls back to FROZEN_ABOVE in check-branch-published.py. Added by T536 under T528 condition 3; the 314 waivers below are unchanged (highest task id present: T504).",
  "refuses_to_waive": {
   "tasks": [
    "T508",

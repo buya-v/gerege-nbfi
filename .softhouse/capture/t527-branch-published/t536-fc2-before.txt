@@ -1,0 +1,18 @@
+F2. archive that is unparseable JSON (root defeats chmod 000)
+   ready-tasks.py exit 5 ; checker said: ['reason: UNREADABLE TASK RECORD', 'STEP 0 VERDICT: NOT CLEAN -- check-branch-published.py did not say CLEAN.']
+
+F3. archive whose top level has no tasks list
+   ready-tasks.py exit 5 ; ['reason: TASK RECORD HAS NO tasks LIST', 'STEP 0 VERDICT: NOT CLEAN -- check-branch-published.py did not say CLEAN.']
+
+H2. checker raises INSIDE check() -- injected before the return
+   ready-tasks.py exit 5
+     Traceback (most recent call last):
+         raise RuntimeError("injected mid-run")
+     RuntimeError: injected mid-run
+     >>> check-branch-published.py exited 1, which this wrapper does not
+     >>> recognise. NOT a pass.
+     STEP 0 VERDICT: NOT CLEAN -- check-branch-published.py did not say CLEAN.
+
+I2. checker replaced by a stub that exits 0 silently
+   record is DIRTY (TN never pushed) but checker is a silent stub -> ready-tasks.py exit 0
+   gate printed: ['STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)']

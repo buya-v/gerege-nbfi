@@ -1,0 +1,114 @@
+==============================================================================
+T537 item 1 -- THIRD-PHRASING ATTACK on T536's LANDING classifier
+==============================================================================
+fixture: `softhouse/TN-never-pushed` is a branch NO origin has ever heard of.
+the sha in every note is origin/main's own tip -- an ancestor of origin/main
+by construction, and therefore able to satisfy the merged-and-pruned waiver
+the moment the classifier reads it as this task's LANDING.
+
+N1-merges-clean-into-main-at                   rc=0  waived=False  BREAK -- LAUNDERED
+    note: COMPLETE, merges clean into main@acd6c508
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and acd6c508 is an ancestor of origin/main (acd6c508ea8d)
+
+N2-origin-main-tip-at-dispatch                 rc=0  waived=False  BREAK -- LAUNDERED
+    note: origin/main tip acd6c508 at dispatch; my work is still on the branch
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and acd6c508 is an ancestor of origin/main (acd6c508ea8d)
+
+N3-rebased-on-main-at                          rc=0  waived=False  BREAK -- LAUNDERED
+    note: DONE, rebased on main @ 283f838b
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and 283f838b is an ancestor of origin/main (283f838b5411)
+
+N4-refutation-read-as-assertion                rc=0  waived=False  BREAK -- LAUNDERED
+    note: CORRECTION: the earlier note claiming this landed e7b39f07 is WITHDRAWN and FALSE -- nothing from this task ever reached origin
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and e7b39f07 is an ancestor of origin/main (e7b39f079619)
+
+N5-other-task-named-AFTER-without-a-preposition rc=0  waived=False  BREAK -- LAUNDERED
+    note: the merge commit 8e063b15 that T400 landed is already on main; mine is not
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and 8e063b15 is an ancestor of origin/main (8e063b15b4c3)
+
+N6-verified-against-main-at                    rc=0  waived=False  BREAK -- LAUNDERED
+    note: COMPLETE, verified against main @ 5556375a
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and 5556375a is an ancestor of origin/main (5556375a10b4)
+
+N7-tip-of-the-base-branch                      rc=0  waived=False  BREAK -- LAUNDERED
+    note: stacked work; base branch tip 5556375a, my commits sit above it
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and 5556375a is an ancestor of origin/main (5556375a10b4)
+
+N8-merged-at-negated                           rc=0  waived=False  BREAK -- LAUNDERED
+    note: NOT merged at 858149a8 -- this branch is UNRECOVERED and must be re-run
+    | WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 1
+    | TN        softhouse/TN-never-pushed
+    | branch absent from origin, but it is this task's own branch field and 858149a8 is an ancestor of origin/main (858149a88725)
+
+==============================================================================
+RESULT: 8 of 8 third phrasings LAUNDERED a genuinely missing branch.
+==============================================================================
+
+BREAK N1-merges-clean-into-main-at
+  note text : COMPLETE, merges clean into main@acd6c508
+  why this is not a landing claim: 'merges clean into main@X' says the branch WILL merge, i.e. it has NOT merged. X is main's tip, not the work.
+  idiom source: T374 note, verbatim shape: 'COMPLETE, 4 commits, merges clean into main@faf5746e'
+
+BREAK N2-origin-main-tip-at-dispatch
+  note text : origin/main tip acd6c508 at dispatch; my work is still on the branch
+  why this is not a landing claim: 'main tip X' is a citation of MAIN's tip. It is the one sha guaranteed to be an ancestor of main whether or not a line of the work landed -- exactly R5's argument in a phrasing R5 does not cover.
+  idiom source: T335 'main, head d09585f58' / T375 'main, head 2422adc96' idiom, with `tip` for `head` -- and `head` IS vetoed while `tip` is a promotion.
+
+BREAK N3-rebased-on-main-at
+  note text : DONE, rebased on main @ 283f838b
+  why this is not a landing claim: a rebase target is a base. BASE_WORDS carries `rebased?\s+onto` and `based?\s+on`; 'rebased on' matches NEITHER (no word boundary before 'based' inside 'rebased').
+  idiom source: T375 '17 commits over main' / rebase vocabulary used throughout the run notes
+
+BREAK N4-refutation-read-as-assertion
+  note text : CORRECTION: the earlier note claiming this landed e7b39f07 is WITHDRAWN and FALSE -- nothing from this task ever reached origin
+  why this is not a landing claim: this note DENIES that the work landed. The classifier has no notion of polarity, so the denial reads as the assertion.
+  idiom source: T503's own note: 'THE DRIVER'S EARLIER NOTE ON THIS TASK WAS WRONG AND IS WITHDRAWN.' -- this repo writes corrections in exactly this voice
+
+BREAK N5-other-task-named-AFTER-without-a-preposition
+  note text : the merge commit 8e063b15 that T400 landed is already on main; mine is not
+  why this is not a landing claim: the sha belongs to T400. V2's TRAILING arm only fires on an attribution preposition (by/for/from/belonging to/owned by); 'that T400 landed' is none of them, and the LEADING arm looks only to the left of the sha.
+  idiom source: T528's own case L shape ('supersedes the work merged as X by T400') with the preposition dropped -- the narrowing T536 chose on purpose
+
+BREAK N6-verified-against-main-at
+  note text : COMPLETE, verified against main @ 5556375a
+  why this is not a landing claim: a verification TARGET is a base citation.
+  idiom source: T509 'DRIVER-VERIFIED BY EXECUTION' + T374 'main@faf5746e'
+
+BREAK N7-tip-of-the-base-branch
+  note text : stacked work; base branch tip 5556375a, my commits sit above it
+  why this is not a landing claim: 'base branch tip X' names the BASE. `stacked?\s+on` is a veto word but 'stacked work;' is not, and `tip X` promotes.
+  idiom source: T515 'stack 78a17873/2e1a09df (T501) -> 5c4233fc (T510)' vocabulary
+
+BREAK N8-merged-at-negated
+  note text : NOT merged at 858149a8 -- this branch is UNRECOVERED and must be re-run
+  why this is not a landing claim: an explicit negation of a merge claim. Polarity again, from the other side of the same sentence.
+  idiom source: T536's own note on itself: 'branch ... NEVER REACHED origin ... Nothing to rescue.'
+
+HELD (0):
+
+==============================================================================
+ANTI-VACUITY CONTROLS -- same fixture, same absent branch. All must be rc=2,
+or the block above proves nothing about the notes.
+==============================================================================
+CTL-no-sha-at-all                              rc=2  RED as required
+    note: done and scope-checked; the branch was deleted, trust me
+CTL-T527s-own-R5-phrasing                      rc=2  RED as required
+    note: done and scope-checked (merge base 543c1038)
+CTL-T528s-own-F1-phrasing                      rc=2  RED as required
+    note: done; merge-base commit ca3a5f3d, scope clean
+
+controls failing: 0 (must be 0)

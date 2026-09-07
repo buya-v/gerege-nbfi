@@ -1,0 +1,59 @@
+CONTROL -- an uninjured clean fixture must PASS
+  CTL-clean-passes                   PASS  (exit 0, want 0)
+
+E. malformed tasks.json
+  E-malformed-tasks-json             PASS  (exit 5, want 5)
+
+F. unreadable archive (runs/*.tasks.json mode 000)
+  F-unreadable-archive               FAIL  (exit 0, want 5)
+      ==============================================================================
+      STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)
+      ==============================================================================
+      ==============================================================================
+      check-branch-published: CLEAN
+      ==============================================================================
+      origin: 2 branches, main=2f12b2be1568 | records checked: 1 terminal-or-awaiting-review tasks
+      backed: 1 branch(es) on origin, 0 pruned-but-proved-on-main, 0 commit(s) reachable from an origin ref
+      baseline freeze line: T527 (from module constant) -- a claim from a LATER generation cannot be baselined.
+        WROTE: `git fetch origin +refs/heads/*:refs/remotes/origin/*` -- additive, no --prune. This report brings the object store level with origin before it reads it; without that, every claim would look unbacked.
+      
+      WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 0
+      
+      WAIVED (baseline -- enumerated by exact subject in the committed baseline file, which cannot
+
+G. malformed baseline.json
+  G-malformed-baseline               PASS  (exit 5, want 5)
+
+H. checker raises mid-run (injected internal defect)
+  H-checker-raises                   FAIL  (exit 0, want 5)
+      ==============================================================================
+      STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)
+      ==============================================================================
+      ==============================================================================
+      check-branch-published: CLEAN
+      ==============================================================================
+      origin: 2 branches, main=2f12b2be1568 | records checked: 1 terminal-or-awaiting-review tasks
+      backed: 1 branch(es) on origin, 0 pruned-but-proved-on-main, 0 commit(s) reachable from an origin ref
+      baseline freeze line: T527 (from module constant) -- a claim from a LATER generation cannot be baselined.
+        WROTE: `git fetch origin +refs/heads/*:refs/remotes/origin/*` -- additive, no --prune. This report brings the object store level with origin before it reads it; without that, every claim would look unbacked.
+      
+      WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 0
+      
+      WAIVED (baseline -- enumerated by exact subject in the committed baseline file, which cannot
+
+I. checker stub exits 0 and prints NOTHING -- a silent green
+  I-empty-stub-exit-0                exit 5  (informational)
+
+J. git hangs -- PATH shim that sleeps past the timeout
+  J-git-hangs                        PASS  (exit 3, want 3)
+
+K. ls-remote exits 0 with garbage on stdout
+  K-ls-remote-garbage                PASS  (exit 3, want 3)
+
+L. ls-remote exits 0 with a PARTIAL ref set (main only)
+  L-partial-ls-remote                PASS  (exit 2, want 2)
+
+M. --json report must stay parseable and carry the verdict
+  M-json-stays-valid                 PASS  (exit 5, branch_published='NOT_CLEAN', stdout parses, report on stderr=2568 bytes)
+
+2 cell(s) failed. fixtures: /tmp/t528-fc-mlu0j0k2

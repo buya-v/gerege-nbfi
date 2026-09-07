@@ -1,0 +1,15 @@
+INCIDENT #3 -- a task id in no blocklist, no review and no baseline (T791)
+  1. fresh incident refused before any baseline        PASS exit 2 ['UNBACKED-BRANCH    T791      softhouse/T791-lost-critical-path', 'UNBACKED-COMMIT    T791      c0ffee11']
+     FREEZE LINE: T527 (from module constant). A finding whose task id sorts ABOVE this line,
+     KEEP   UNBACKED-COMMIT    T791      c0ffee11                                       above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+     KEEP   UNBACKED-BRANCH    T791      softhouse/T791-lost-critical-path              above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+  2. --write-baseline REFUSES to waive it              PASS waived=0 kept=2
+  3. re-run after the regeneration is STILL red        PASS exit 2
+  4. the baseline file contains no T791 key            PASS 0 key(s) total
+  5. deleting baseline.json does not lift the freeze line PASS waived=0, re-run exit 2
+     KEEP   UNBACKED-COMMIT    t508      1abd3a11                                       2026-09-04 incident task
+     KEEP   UNBACKED-BRANCH    t508      softhouse/T508-journalentry-insert-schema      2026-09-04 incident task
+  6. lowercase `t508` is KEPT, not WAIVED              PASS waived=0 kept=2
+  7. ANTI-VACUITY: a HISTORICAL id (T42) is still waivable PASS waived=1, re-run exit 0
+
+0 cell(s) failed.

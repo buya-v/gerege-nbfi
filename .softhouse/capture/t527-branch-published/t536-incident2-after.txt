@@ -1,0 +1,22 @@
+1. before any baseline           -> exit 2
+     UNBACKED-BRANCH    T540      softhouse/T540-critical-path
+     UNBACKED-COMMIT    T540      deadbe1f
+
+2. `--write-baseline` (what an agent staring at a red guard would reach for)
+   exit 0
+     wrote 0 waiver(s) to /tmp/t528-fc-t97jk295/inc2/work/.softhouse/capture/t527-branch-published/baseline.json
+     REFUSED TO WAIVE 2 finding(s):
+     KEEP   UNBACKED-COMMIT    T540      deadbe1f                                       above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+     KEEP   UNBACKED-BRANCH    T540      softhouse/T540-critical-path                   above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history
+
+3. re-run after the regeneration -> exit 2
+     ['check-branch-published: REFUSE -- 2 claim(s) origin has never heard of']
+
+   INCIDENT #2 IS NOW still refused
+
+4. does the lock-out list protect T540? entries now in the baseline:
+   refuses_to_waive = {'tasks': ['T508', 'T509', 'T510', 'T512', 'T515', 'T520', 'T522', 'T523'], 'commits': ['1abd3a11', '857dd4d8', '5c4233fc', '8ff5ff15', '84dc208e']}
+
+5. case sensitivity of the lock-out: a record spelling the id 't508'
+     WAIVED: []
+     KEPT  : ['KEEP   UNBACKED-COMMIT    t508      1abd3a11                                       2026-09-04 incident task', 'KEEP   UNBACKED-BRANCH    t508      softhouse/T508-journalentry-insert-schema      2026-09-04 incident task']

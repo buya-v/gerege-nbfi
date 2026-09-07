@@ -1,0 +1,51 @@
+case                         got  want verdict
+------------------------------------------------------------------------------------------
+A-merge-base-plain           2    2    ok
+      note: done and scope-checked (merge base aafe3eae)
+      R5, the shipped control
+
+B-merge-base-COMMIT-worded   2    2    ok
+      note: done; merge-base commit aafe3eae, scope clean
+      'merge-base commit X' -- the LANDING 'commit X' anchor fires, REFERENCE does not
+
+C-branched-from-at           2    2    ok
+      note: branched from main @ 49cff30a; work is on the branch
+      '@ X' LANDING anchor over an ordinary base citation
+
+D-forked-at                  2    2    ok
+      note: forked at b8af2e61, 3 commits on top
+      '@' not present -- control for C
+
+E-base-branch-paren          2    2    ok
+      note: based on softhouse/TP-pushed (a0ac2600) -- stacked on top
+      branch-then-paren LANDING anchor over a BASE branch and its tip
+
+F-rebased-onto               2    2    ok
+      note: rebased onto 172fe25a after the merge of T400
+      'onto X' -- no anchor at all, should be UNCLASSIFIED, branch still refused
+
+G-review-cites-another-task  2    2    ok
+      note: reviewed T400 which landed b01ab9e9; my own work is on the branch
+      a REVIEW task citing ANOTHER task's landing commit
+
+H-diverges-at                2    2    ok
+      note: diverges from origin/main at commit b01ab9e9
+      'at commit X' -- LANDING anchor on a divergence point
+
+I-genuine-landing            0    0    ok
+      note: landed 408631c1 on softhouse/TN-never-pushed
+      the legitimate exemption -- must still PASS
+
+J-cherry-picked-from         2    2    ok
+      note: cherry-picked from 408631c1
+      no anchor
+
+K-stack-region-base          2    2    ok
+      note: stack b4a4674c (T400 base) -> my work
+      the stack REGION anchor is LANDING; a base named inside it clears the branch
+
+L-supersedes                 2    2    ok
+      note: supersedes the work merged as b4a4674c by T400
+      'merged as X' naming ANOTHER task's merge
+
+0 break(s)

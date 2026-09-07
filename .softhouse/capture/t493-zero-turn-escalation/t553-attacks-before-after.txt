@@ -1,0 +1,165 @@
+# T553 — every attack driven BEFORE the fix and AFTER it
+# rig: t553-plant-attacks.sh (independent re-plant of T552's shapes; T552's own
+#      evidence/ worktree no longer exists on this machine)
+# all fires: 8 consecutive no-op fires off 5d7ef306, +0800, 3h apart, graded at --now 2026-09-04T23:00:00Z
+
+==================== BEFORE (guard = /tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/guard-before.sh) ====================
+$ no-op-fire-streak.sh --producer local --ref atk-unenumerated --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-t541 --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-i --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 45ee763c at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-j --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 2 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 18.0h since last EARNED commit f92818cf at 2026-09-04T05:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit d3ba8dee at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k40 --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 24181269 at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-knum --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit afdf855e at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-min --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 70f8827d at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-legit --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit d70304ea at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-legit-boiler --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 266254d2 at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+-- floor sweep: is the floor the lever? --
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 2
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit d3ba8dee at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 20
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k40 --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 40
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 24181269 at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+==================== AFTER (guard = /home/user/gerege-nbfi/.claude/worktrees/agent-a53e7d4a45062db06/.softhouse/guards/no-op-fire-streak.sh) ====================
+$ no-op-fire-streak.sh --producer local --ref atk-unenumerated --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-t541 --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-i --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 45ee763c at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-j --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 2 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 18.0h since last EARNED commit f92818cf at 2026-09-04T05:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 33.0h since last EARNED commit e9ef23fc at 2026-09-03T14:02Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k40 --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 33.0h since last EARNED commit 07118011 at 2026-09-03T14:02Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-knum --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit afdf855e at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-min --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 70f8827d at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-legit --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit d70304ea at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+$ no-op-fire-streak.sh --producer local --ref atk-legit-boiler --now 2026-09-04T23:00:00Z --no-fetch 
+  AXIS 1 no-op streak : 0 consecutive no-op fire(s) (threshold 6) -> ok
+  AXIS 3 padded adv.  : 12.0h since last EARNED commit 266254d2 at 2026-09-04T11:02Z (threshold 36h) -> ok
+  VERDICT: GREEN — producer is advancing
+  exit=0
+
+-- floor sweep: is the floor the lever? --
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 2
+  AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 33.0h since last EARNED commit e9ef23fc at 2026-09-03T14:02Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 20
+  AXIS 1 no-op streak : 8 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 35.9h since last EARNED commit d355d422 at 2026-09-03T11:07Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+
+$ no-op-fire-streak.sh --producer local --ref atk-mine-k40 --now 2026-09-04T23:00:00Z --no-fetch --min-subst-lines 40
+  AXIS 1 no-op streak : 7 consecutive no-op fire(s) (threshold 6) -> RED
+  AXIS 3 padded adv.  : 33.0h since last EARNED commit 07118011 at 2026-09-03T14:02Z (threshold 36h) -> ok
+  VERDICT: RED — this producer is not advancing the migration
+  exit=1
+

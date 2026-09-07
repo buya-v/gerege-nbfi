@@ -1,0 +1,135 @@
+T553 — NEGATIVE CONTROL: does the composed classifier ever call REAL WORK a no-op?
+==================================================================================
+Answer, over every control I could construct: NO. Not once.
+
+Scripts, all in this directory:
+  t553-sweep.py    hourly replay of BOTH classifiers over the whole history + the
+                   materiality floor re-derived over the NOVEL residue
+  t553-battery.sh  T493/T550's published battery + live spot instants, driven
+                   through BOTH guards, exit code compared row by row
+  t553-time.sh     wall-clock cost, before and after
+  t553-plant-attacks.sh  modes `legit` and `legit-boiler` — synthetic PRODUCTIVE fires
+
+
+1. HOURLY REPLAY OF THE WHOLE RECORDED HISTORY, BOTH CLASSIFIERS
+----------------------------------------------------------------
+OLD = T550 shipped (whole-payload digest; floor over the RAW substantive multiset)
+NEW = T553          (whole-payload digest + per-line novelty; floor over the NOVEL residue)
+
+run 1 — origin/main at 2,587 non-merge commits
+  local: 482 hourly instants replayed
+     RED(new) but GREEN(old): 0
+     GREEN(new) but RED(old): 0
+  cloud: 482 hourly instants replayed
+     RED(new) but GREEN(old): 0
+     GREEN(new) but RED(old): 0
+
+run 2 — origin/main at 2,600 (another worker in this fire pushed mid-task)
+  local: 483 hourly instants replayed
+     RED(new) but GREEN(old): 0
+     GREEN(new) but RED(old): 0
+  cloud: 483 hourly instants replayed
+     RED(new) but GREEN(old): 0
+     GREEN(new) but RED(old): 0
+
+1,930 replayed instants across two states of the history. The composed classifier
+does not change a single hourly verdict in either direction. T552's two known RED
+hours (2026-09-01T03Z..04Z, new-vs-T493) are unaffected: they were already RED
+under T550's classifier and remain RED under T553's.
+
+
+2. THE MATERIALITY FLOOR, RE-DERIVED OVER THE NOVEL RESIDUE
+-----------------------------------------------------------
+  local  ALL FIRES    NEW rule: cleared=36/89  min-over-cleared-fires(max NOVEL lines)=12
+                      smallest ten = [12, 35, 104, 106, 134, 134, 141, 147, 151, 153]
+         GRADED (14d) NEW rule: cleared=11/60  min=104
+                      smallest ten = [104, 134, 141, 147, 151, 160, 177, 186, 199, 200]
+  cloud  ALL FIRES    NEW rule: cleared=5/5    min=27   [27, 147, 155, 174, 176]
+         GRADED (14d) NEW rule: cleared=2/2    min=155
+
+Cross-check, T550's own script, unmodified, in this checkout:
+  $ python3 t550-materiality-floor.py origin/main <repo>
+    local: fires=89 longest run of CLEARED-BUT-THIN(<=2 subst lines) fires = 0 None
+       min over cleared fires of (max substantive lines in its promotions) = 12; cleared fires=36
+    cloud: fires=5 ... = 0 None
+       min over cleared fires of (max substantive lines in its promotions) = 27; cleared fires=4
+
+12 and 27 EITHER WAY. Counting novelty instead of counting lines costs the real
+corpus nothing: every fire that ever cleared carries at least 12 novel lines in
+its best promotion, so a floor of 8 keeps its 1.5x margin and produces no false
+RED. The floor was NOT changed by T553.
+
+Live margin from the shipped --json on this fire's own history (cloud):
+    "last_earned_substantive_lines": 138
+    "last_earned_novel_lines":       125
+    "min_novel_substantive_lines":     8
+Real work sits ~15x above the floor after novelty is discounted; a padder sits on it.
+
+
+3. SYNTHETIC PRODUCTIVE FIRES (a control history cannot supply)
+---------------------------------------------------------------
+  atk-legit         12 novel capture rows per fire                      GREEN exit 0
+  atk-legit-boiler  a fixed 6-line header PLUS 12 novel rows per fire   GREEN exit 0
+      $ ... --explain 266254d2
+      reason  ANCHOR on the migration surface + novel payload 367a1d42ca53c8ce
+              (12 NOVEL of 18 substantive added line(s), floor 8), all three vetoes survived
+      -- the repeated header is discounted, the work is counted.
+
+The FIRST implementation of this fix normalised digits away per line, and
+atk-legit went RED at "1 NOVEL substantive added surface line(s) of 12" — twelve
+rows of a numeric table differ only in their numbers. That false RED is why the
+per-line normalisation preserves digits. It was found by driving the control, not
+by reasoning about it.
+
+
+4. T493/T550's PUBLISHED BATTERY AND LIVE SPOT INSTANTS, BOTH GUARDS
+---------------------------------------------------------------------
+(each row is two real guard invocations: the shipped guard and this branch's)
+
+=== T493/T550 battery, ref 6aa31e5e, shipped defaults — old guard vs T553 guard
+RED-1          local  2026-08-27T06:00:00Z     old_exit=1 new_exit=1  AGREE
+RED-2          local  2026-09-01T00:00:00Z     old_exit=1 new_exit=1  AGREE
+RED-3          local  2026-09-05T12:17:56Z     old_exit=1 new_exit=1  AGREE
+GREEN-A        local  2026-08-29T12:00:00Z     old_exit=0 new_exit=0  AGREE
+GREEN-B        cloud  2026-09-04T13:40:00Z     old_exit=0 new_exit=0  AGREE
+GREEN-B-loc    local  2026-09-04T13:40:00Z     old_exit=1 new_exit=1  AGREE
+GREEN-C        local  2026-09-03T11:30:00Z     old_exit=0 new_exit=0  AGREE
+GREEN-mine     local  2026-08-28T23:59:00Z     old_exit=0 new_exit=0  AGREE
+GREEN-cloud    cloud  2026-09-05T12:17:56Z     old_exit=0 new_exit=0  AGREE
+ANY-trap       any    2026-09-05T12:17:56Z     old_exit=0 new_exit=0  AGREE
+MAX-26         local  2026-08-27T14:59:00Z     old_exit=1 new_exit=1  AGREE
+RED-4-T541     local  2026-09-02T23:59:00Z     old_exit=1 new_exit=1  AGREE
+
+=== live history, ref origin/main, hourly-ish spot instants
+live-2026-08-20 local  2026-08-20T12:00:00Z     old_exit=0 new_exit=0  AGREE
+live-2026-08-20 cloud  2026-08-20T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-08-24 local  2026-08-24T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-08-24 cloud  2026-08-24T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-08-28 local  2026-08-28T12:00:00Z     old_exit=0 new_exit=0  AGREE
+live-2026-08-28 cloud  2026-08-28T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-09-01 local  2026-09-01T12:00:00Z     old_exit=0 new_exit=0  AGREE
+live-2026-09-01 cloud  2026-09-01T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-09-03 local  2026-09-03T12:00:00Z     old_exit=0 new_exit=0  AGREE
+live-2026-09-03 cloud  2026-09-03T12:00:00Z     old_exit=1 new_exit=1  AGREE
+live-2026-09-05 local  2026-09-05T12:00:00Z     old_exit=0 new_exit=0  AGREE
+live-2026-09-05 cloud  2026-09-05T12:00:00Z     old_exit=1 new_exit=1  AGREE
+
+24 rows, 24 AGREE, 0 DIFFER. Every exit code identical between the shipped guard
+and this branch, on real history, at every published instant.
+
+Two of T552's MINORs are settled by these rows:
+  MINOR-1  GREEN-B is a CLOUD row. As cloud: exit 0. As local: exit 1
+           (AXIS 2 26.5h RED, AXIS 3 26.5h ok). Identical on both guards.
+           t550-no-regression.txt now carries that correction ABOVE its table.
+  MINOR-2  GREEN-A (local, 2026-08-29T12:00Z) was absent from T550's re-drive.
+           Driven here: exit 0 on both guards.
+
+
+5. COST
+--------
+Same host, same clone, --ref origin/main, --quiet, three runs each:
+  BEFORE (shipped guard) : 10.88 / 11.01 / 10.90 s
+  AFTER  (this branch)   : 11.32 / 11.37 / 11.62 s      (+0.45 s, ~+4%)
+An intermediate draft that normalised every line twice measured 11.78 / 11.97 /
+12.31 s; line_forms() computes both normalised forms in one pass, and that is the
+difference. The guard runs twice per fire, so the fire pays about +0.9 s.

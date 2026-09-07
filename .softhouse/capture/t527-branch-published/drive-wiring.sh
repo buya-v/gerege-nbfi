@@ -8,14 +8,23 @@
 # orchestrator actually executes at STEP 0/1 -- and reads ITS exit code, never the
 # checker's.
 #
-# Four cells, and the fourth is the one that makes the other three mean anything:
+# Five cells, and the last two are the ones that make the other three mean anything:
 #   A  the real repo               -> 5, REFUSE, the 2026-09-04 incident named
 #   B  origin unreachable          -> 5, CANNOT ESTABLISH ORIGIN (fail closed, distinct)
 #   C  a clean record              -> 0, CLEAN            <- the control that can PASS
 #   D  the checker deleted         -> 5, "not on disk"    <- the wiring's own fail-closed
+#   E  the checker REPLACED by a silent exit-0 stub, over a DIRTY record
+#                                  -> 5, "never printed its verdict line"
+#
+# E is T536, closing T528 F-5. D covered the checker being DELETED and not the checker
+# being REPLACED, and `import sys; sys.exit(0)` in place of the tool made this wiring
+# report a pass over a branch that was never pushed -- a two-line de-facto disable in a
+# program whose recorded failure mode is a red guard being "fixed" instead of the red
+# thing. The caller now requires the checker's own verdict line before it believes an
+# exit code of 0.
 #
 # Usage:  sh .softhouse/capture/t527-branch-published/drive-wiring.sh [<repo-root>]
-# Exit 0 iff all four cells behave as stated.
+# Exit 0 iff all five cells behave as stated.
 
 set -u
 REPO=${1:-$(cd "$(dirname "$0")/../../.." && pwd)}
@@ -104,6 +113,19 @@ cp -R "$TMP/c" "$TMP/d"
 rm -f "$TMP/d/work/.softhouse/bin/check-branch-published.py"
 python3 "$TMP/d/work/.softhouse/bin/ready-tasks.py" --repo "$TMP/d/work" > "$TMP/d.txt" 2>&1
 cell "D-missing-checker-is-not-a-pass" 5 $? "checker is not on disk" "$TMP/d.txt"
+say ""
+
+# ---- E. the checker REPLACED by a silent stub, over a DIRTY record -----------------
+# T536 / T528 F-5. The record here CLAIMS a branch that was never pushed, so the only
+# way this cell can go green is the stub being believed.
+say "E. the checker replaced by a silent exit-0 stub, over a record that is DIRTY"
+rm -rf "$TMP/e"
+cp -R "$TMP/c" "$TMP/e"
+printf 'import sys\nsys.exit(0)\n' > "$TMP/e/work/.softhouse/bin/check-branch-published.py"
+printf '{"run_id":"x","tasks":[{"id":"TN","status":"done","branch":"softhouse/TN-never-pushed"}]}' \
+  > "$TMP/e/work/.softhouse/tasks.json"
+python3 "$TMP/e/work/.softhouse/bin/ready-tasks.py" --repo "$TMP/e/work" > "$TMP/e.txt" 2>&1
+cell "E-silent-stub-is-not-a-pass" 5 $? "never printed its verdict line" "$TMP/e.txt"
 say ""
 
 say "$FAILED cell(s) failed. fixtures: $TMP"

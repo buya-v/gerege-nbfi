@@ -6,6 +6,16 @@ ref=6aa31e5e (the merge base T541 used).  Shipped defaults: --streak 6,
 
 Every figure below is the figure T493 published and T541 re-derived.
 
+*** T553 CORRECTION IN PLACE (T552 MINOR-1 and MINOR-2) — READ BEFORE THE TABLE ***
+  This table has NO PRODUCER COLUMN and every row below except GREEN-cloud and
+  ANY-trap was driven as --producer local. GREEN-B is NOT a local row: T493
+  defines it as --producer CLOUD. Read as local — this table's own convention —
+  GREEN-B is 0 ok / 26.5h AXIS 2 RED / 26.5h ok, exit 1, not the 0.0h/exit 0
+  printed below. The figures below are right FOR CLOUD; the label was missing.
+  T493's GREEN-A (--producer local, 2026-08-29T12:00:00Z) is absent from this
+  table entirely; it is exit 0 on the T550 guard and on the T553 guard.
+  Both were re-driven, with the producer named, in t553-negative-control.txt.
+
 case          now                    AXIS1  AXIS2     AXIS3     exit    verdict
 RED-1         2026-08-27T06:00:00Z   23 RED 95.2h RED 95.2h RED 1       VERDICT: RED
 RED-2         2026-09-01T00:00:00Z   13 RED 57.2h RED 57.3h RED 1       VERDICT: RED

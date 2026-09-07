@@ -1,0 +1,247 @@
+==============================================================================
+check-branch-published: REFUSE -- 19 claim(s) origin has never heard of
+==============================================================================
+origin: 62 branches, main=b09d2dcf89e7 | records checked: 475 terminal-or-awaiting-review tasks
+backed: 49 branch(es) on origin, 68 pruned-but-proved-on-main, 134 commit(s) reachable from an origin ref
+baseline freeze line: T527 (from baseline.json) -- a claim from a LATER generation cannot be baselined.
+  WROTE: `git fetch origin +refs/heads/*:refs/remotes/origin/*` -- additive, no --prune. This report brings the object store level with origin before it reads it; without that, every claim would look unbacked.
+
+UNBACKED CLAIMS -- the record asserts work that is not on origin:
+  UNBACKED-BRANCH    T353      softhouse/T353-t342-conditions
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T357      softhouse/T357-a2-11-section1-red
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T358      softhouse/T358-t323-conditions
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T361      softhouse/T361-review-t353
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T375      softhouse/rescued-agent-ac5a2db446e903ba0-20260828-140005
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main; this task's landing sha 2c1f5723 proves only the branch(es) it names in a branch field, not this one (T536/F-2)
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T476      softhouse/T467-t464-conditions
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main; this task's landing sha 36e01f25 proves only the branch(es) it names in a branch field, not this one (T536/F-2)
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T477      softhouse/T466-skipwt-smudge
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main; this task's landing sha a6bf50a3 proves only the branch(es) it names in a branch field, not this one (T536/F-2)
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T509      softhouse/T509-ledgerguard-blindspot
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T510      softhouse/T510-savings-fold-reversal
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T512      softhouse/T512-scope-instrument
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T520      softhouse/T508-journalentry-insert-schema
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T522      softhouse/T515-savings-classification-rework
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T523      softhouse/T509-ledgerguard-blindspot
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims for THIS BRANCH is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T312      060f00330
+      claimed at note: 'ommits) and T305 hiding 060f00330 (8), both diverged' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T312      c1a3888a
+      claimed at note: 'dow groups, T297 hiding c1a3888a (4 commits) and T30' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T335      d09585f58
+      claimed at note: '(s) ahead of main, head d09585f58. Uncommitted WIP l' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T509      857dd4d8
+      claimed at note: 'landed 857dd4d8 on softhouse/T509-ledgerguard-blinds' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T512      8ff5ff15
+      claimed at note: 'landed 8ff5ff15 on softhouse/T512-scope-instrument. ' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T523      857dd4d8
+      claimed at note: 'bject is T509 at commit 857dd4d8 on branch softhouse' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+
+WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 68
+  T145      softhouse/T145-analysis-float
+      branch absent from origin, but it is this task's own branch field and 08be3c56 is an ancestor of origin/main (b09d2dcf89e7)
+  T272      softhouse/T272-goenv-graft
+      branch absent from origin, but it is this task's own branch field and 16c59715 is an ancestor of origin/main (b09d2dcf89e7)
+  T277      softhouse/T277-shapelaw-salvage
+      branch absent from origin, but it is this task's own branch field and e8374743 is an ancestor of origin/main (b09d2dcf89e7)
+  T278      softhouse/T278-review-t277
+      branch absent from origin, but it is this task's own branch field and fa045d8c is an ancestor of origin/main (b09d2dcf89e7)
+  T279      softhouse/T279-lock-partition
+      branch absent from origin, but it is this task's own branch field and eac45bdc is an ancestor of origin/main (b09d2dcf89e7)
+  T282      softhouse/T282-pnumber-drift
+      branch absent from origin, but it is this task's own branch field and 35a92f30 is an ancestor of origin/main (b09d2dcf89e7)
+  T301      softhouse/T301-wrapper-self-modification
+      branch absent from origin, but it is this task's own branch field and 3e024dfa is an ancestor of origin/main (b09d2dcf89e7)
+  T306      softhouse/T306-admit-gate-adjudication
+      branch absent from origin, but it is this task's own branch field and 3da08fbb is an ancestor of origin/main (b09d2dcf89e7)
+  T307      softhouse/T307-grade-refusal-args
+      branch absent from origin, but it is this task's own branch field and ca745981 is an ancestor of origin/main (b09d2dcf89e7)
+  T321      softhouse/T321-variable-paths-and-resets
+      branch absent from origin, but it is this task's own branch field and 4246ce63 is an ancestor of origin/main (b09d2dcf89e7)
+  T322      softhouse/T322-admit-widening
+      branch absent from origin, but it is this task's own branch field and f39ed526 is an ancestor of origin/main (b09d2dcf89e7)
+  T324      softhouse/T324-worktree-prune-skipbit
+      branch absent from origin, but it is this task's own branch field and d36863ad is an ancestor of origin/main (b09d2dcf89e7)
+  T325      softhouse/T325-adopt-attestation
+      branch absent from origin, but it is this task's own branch field and e590b865 is an ancestor of origin/main (b09d2dcf89e7)
+  T326      softhouse/T326-frontier-host-state
+      branch absent from origin, but it is this task's own branch field and 6c3d0787 is an ancestor of origin/main (b09d2dcf89e7)
+  T328      softhouse/T328-date-rule-promotion
+      branch absent from origin, but it is this task's own branch field and 817d2b53 is an ancestor of origin/main (b09d2dcf89e7)
+  T330      softhouse/T330-reconcile-merged-work
+      branch absent from origin, but it is this task's own branch field and fc104776 is an ancestor of origin/main (b09d2dcf89e7)
+  T331      softhouse/T331-wire-pnumber-checker
+      branch absent from origin, but it is this task's own branch field and 57521fee is an ancestor of origin/main (b09d2dcf89e7)
+  T332      softhouse/T332-residual-twin-sweep
+      branch absent from origin, but it is this task's own branch field and 167b98fc is an ancestor of origin/main (b09d2dcf89e7)
+  T334      softhouse/T334-writer-guidance
+      branch absent from origin, but it is this task's own branch field and 1fdf1c49 is an ancestor of origin/main (b09d2dcf89e7)
+  T349      softhouse/T349-pretooluse-eval
+      branch absent from origin, but it is this task's own branch field and b973825e is an ancestor of origin/main (b09d2dcf89e7)
+  T360      softhouse/T360-divergence-class
+      branch absent from origin, but it is this task's own branch field and cc45c5af is an ancestor of origin/main (b09d2dcf89e7)
+  T362      softhouse/T362-review-t357
+      branch absent from origin, but it is this task's own branch field and 1f90ee76 is an ancestor of origin/main (b09d2dcf89e7)
+  T363      softhouse/T363-oracle-baseline
+      branch absent from origin, but it is this task's own branch field and 8313ab6d is an ancestor of origin/main (b09d2dcf89e7)
+  T364      softhouse/T364-review-t358
+      branch absent from origin, but it is this task's own branch field and 137f6e15 is an ancestor of origin/main (b09d2dcf89e7)
+  T365      softhouse/T365-t361-conditions
+      branch absent from origin, but it is this task's own branch field and 5aedfc4a is an ancestor of origin/main (b09d2dcf89e7)
+  T367      softhouse/T367-review-t363
+      branch absent from origin, but it is this task's own branch field and 8e979296 is an ancestor of origin/main (b09d2dcf89e7)
+  T368      softhouse/T368-review-t365
+      branch absent from origin, but it is this task's own branch field and 9cbbd54b is an ancestor of origin/main (b09d2dcf89e7)
+  T374      softhouse/T374-t362-conditions
+      branch absent from origin, but it is this task's own branch field and 01a7a05a is an ancestor of origin/main (b09d2dcf89e7)
+  T375      softhouse/T375-t364-conditions
+      branch absent from origin, but it is this task's own branch field and 2c1f5723 is an ancestor of origin/main (b09d2dcf89e7)
+  T377      softhouse/T377-t368-conditions
+      branch absent from origin, but it is this task's own branch field and 5c17f822 is an ancestor of origin/main (b09d2dcf89e7)
+  T379      softhouse/T379-review-t371
+      branch absent from origin, but it is this task's own branch field and 8cc0eed3 is an ancestor of origin/main (b09d2dcf89e7)
+  T380      softhouse/T380-review-t377
+      branch absent from origin, but it is this task's own branch field and db9ba603 is an ancestor of origin/main (b09d2dcf89e7)
+  T381      softhouse/T381-t379-conditions
+      branch absent from origin, but it is this task's own branch field and 9eedfe4d is an ancestor of origin/main (b09d2dcf89e7)
+  T382      softhouse/T382-review-t374
+      branch absent from origin, but it is this task's own branch field and 01a7a05a is an ancestor of origin/main (b09d2dcf89e7)
+  T383      softhouse/T383-t380-conditions
+      branch absent from origin, but it is this task's own branch field and 151ef180 is an ancestor of origin/main (b09d2dcf89e7)
+  T385      softhouse/T385-review-t383
+      branch absent from origin, but it is this task's own branch field and e6cd307f is an ancestor of origin/main (b09d2dcf89e7)
+  T386      softhouse/T386-review-t381
+      branch absent from origin, but it is this task's own branch field and 5497a85d is an ancestor of origin/main (b09d2dcf89e7)
+  T387      softhouse/T387-review-t360
+      branch absent from origin, but it is this task's own branch field and 026954a4 is an ancestor of origin/main (b09d2dcf89e7)
+  T388      softhouse/T388-accrual-capture
+      branch absent from origin, but it is this task's own branch field and 977e37af is an ancestor of origin/main (b09d2dcf89e7)
+  T389      softhouse/T389-review-t388
+      branch absent from origin, but it is this task's own branch field and a010f733 is an ancestor of origin/main (b09d2dcf89e7)
+  T391      softhouse/T391-accrual-promotion
+      branch absent from origin, but it is this task's own branch field and e0eb4fe2 is an ancestor of origin/main (b09d2dcf89e7)
+  T396      softhouse/T396-t389-conditions
+      branch absent from origin, but it is this task's own branch field and e96197a4 is an ancestor of origin/main (b09d2dcf89e7)
+  T401      softhouse/T401-zsh-census-gap
+      branch absent from origin, but it is this task's own branch field and 842607fc is an ancestor of origin/main (b09d2dcf89e7)
+  T402      softhouse/T402-t386-conditions
+      branch absent from origin, but it is this task's own branch field and eb005ba8 is an ancestor of origin/main (b09d2dcf89e7)
+  T445      softhouse/T445-case-route
+      branch absent from origin, but it is this task's own branch field and 236fc829 is an ancestor of origin/main (b09d2dcf89e7)
+  T451      softhouse/T451-t449-conditions
+      branch absent from origin, but it is this task's own branch field and de7c24b1 is an ancestor of origin/main (b09d2dcf89e7)
+  T452      softhouse/T452-t447-conditions
+      branch absent from origin, but it is this task's own branch field and dda1f031 is an ancestor of origin/main (b09d2dcf89e7)
+  T453      softhouse/T453-gate-state-set
+      branch absent from origin, but it is this task's own branch field and 141e3ae5 is an ancestor of origin/main (b09d2dcf89e7)
+  T454      softhouse/T454-longs-route
+      branch absent from origin, but it is this task's own branch field and 02fb1af4 is an ancestor of origin/main (b09d2dcf89e7)
+  T458      softhouse/T458-fixture-literal-pattern
+      branch absent from origin, but it is this task's own branch field and 0db7538b is an ancestor of origin/main (b09d2dcf89e7)
+  T462      softhouse/T462-wallclock-refusal
+      branch absent from origin, but it is this task's own branch field and 04956e8b is an ancestor of origin/main (b09d2dcf89e7)
+  T465      softhouse/T465-lock-frontier
+      branch absent from origin, but it is this task's own branch field and b9b37f9c is an ancestor of origin/main (b09d2dcf89e7)
+  T466      softhouse/T466-skipwt-smudge
+      branch absent from origin, but it is this task's own branch field and 11afb281 is an ancestor of origin/main (b09d2dcf89e7)
+  T467      softhouse/T467-t464-conditions
+      branch absent from origin, but it is this task's own branch field and 6a345e4a is an ancestor of origin/main (b09d2dcf89e7)
+  T468      softhouse/T468-review-t458
+      branch absent from origin, but it is this task's own branch field and 0db7538b is an ancestor of origin/main (b09d2dcf89e7)
+  T470      softhouse/T470-refusal-forecloses
+      branch absent from origin, but it is this task's own branch field and 28fdfee3 is an ancestor of origin/main (b09d2dcf89e7)
+  T472      softhouse/T472-review-t467
+      branch absent from origin, but it is this task's own branch field and 6a345e4a is an ancestor of origin/main (b09d2dcf89e7)
+  T476      softhouse/T476-t472-repair
+      branch absent from origin, but it is this task's own branch field and 36e01f25 is an ancestor of origin/main (b09d2dcf89e7)
+  T477      softhouse/T477-t473-repair
+      branch absent from origin, but it is this task's own branch field and a6bf50a3 is an ancestor of origin/main (b09d2dcf89e7)
+  T503      softhouse/T503-opaque-sql
+      branch absent from origin, but it is this task's own branch field and c482b07d is an ancestor of origin/main (b09d2dcf89e7)
+  T505      softhouse/T505-review-t502
+      branch absent from origin, but it is this task's own branch field and a18d054d is an ancestor of origin/main (b09d2dcf89e7)
+  T506      softhouse/T506-review-t503
+      branch absent from origin, but it is this task's own branch field and 535d2c73 is an ancestor of origin/main (b09d2dcf89e7)
+  T508      softhouse/T508-journalentry-insert-schema
+      branch absent from origin, but 1abd3a11 -- which the note binds to THIS branch -- is an ancestor of origin/main (b09d2dcf89e7)
+  T511      softhouse/T511-t505-conditions
+      branch absent from origin, but fc35f4eb -- which the note binds to THIS branch -- is an ancestor of origin/main (b09d2dcf89e7)
+  T513      softhouse/T513-review-t510
+      branch absent from origin, but it is this task's own branch field and e0b57187 is an ancestor of origin/main (b09d2dcf89e7)
+  T514      softhouse/T514-review-t511
+      branch absent from origin, but it is this task's own branch field and e1ddc707 is an ancestor of origin/main (b09d2dcf89e7)
+  T515      softhouse/T515-savings-classification-rework
+      branch absent from origin, but 84dc208e -- which the note binds to THIS branch -- is an ancestor of origin/main (b09d2dcf89e7)
+  T516      softhouse/T516-t514-conditions
+      branch absent from origin, but 709e51c3 -- which the note binds to THIS branch -- is an ancestor of origin/main (b09d2dcf89e7)
+
+WAIVED (baseline -- enumerated by exact subject in the committed baseline file, which cannot
+forgive a subject that did not exist when it was written): 314
+  A2-1      softhouse/A2-1-behaviour                             UNBACKED-BRANCH
+  A2-11     softhouse/A2-11-review-a2-7                          UNBACKED-BRANCH
+  A2-12     softhouse/A2-12-a2-8-microfix                        UNBACKED-BRANCH
+  A2-13     softhouse/A2-13-dec2-gl-contract                     UNBACKED-BRANCH
+  A2-14     softhouse/A2-14-review-dec2                          UNBACKED-BRANCH
+  A2-15     softhouse/A2-15-ledger-parity-vectors                UNBACKED-BRANCH
+  A2-16     softhouse/A2-16-dec2-rev2                            UNBACKED-BRANCH
+  A2-17     softhouse/A2-17-review-dec2-rev2                     UNBACKED-BRANCH
+  A2-18     softhouse/A2-18-ledger-invariant-guard               UNBACKED-BRANCH
+  A2-19     softhouse/A2-19-review-dec2-rev2-second              UNBACKED-BRANCH
+  A2-2      softhouse/A2-2-review-a2-1                           UNBACKED-BRANCH
+  A2-20     softhouse/A2-20-context-allowlist                    UNBACKED-BRANCH
+  ... 302 more. THE FULL LIST IS THE COMMITTED FILE, one line per waiver:
+      .softhouse/capture/t527-branch-published/baseline.json
+      Re-run with --full-baseline to print every entry here instead.
+
+UNCLASSIFIED HEX IN NOTES -- NOT CHECKED (964 occurrence(s), 204 distinct).
+These are hex tokens no claim anchor captured. Most are sha256 digests and tree
+hashes; some belong to the pinned Fineract checkout, a different repository. If a
+real commit claim is sitting in here, the phrasing needs an anchor in CLAIM_ANCHORS.
+  A2-1      20260821                                   (all-digit: indistinguishable from a fire id or a date)
+  T116      20260822                                   (all-digit: indistinguishable from a fire id or a date)
+  T116      73c3ea7b43dd75f04884072719a87fc8e1d255c1   (digest / foreign-repo context)
+  T153      b126725a                                   (no claim anchor matched)
+  T153      10858003                                   (all-digit: indistinguishable from a fire id or a date)
+  T153      39f56dc2                                   (digest / foreign-repo context)
+  T161      c56825ad                                   (no claim anchor matched)
+  T161      567e4cf0                                   (no claim anchor matched)
+  T165      a9dc03a754bd32556                          (digest / foreign-repo context)
+  T167      49dc8923                                   (no claim anchor matched)
+  T167      cabc2aeb                                   (no claim anchor matched)
+  T176      fecea4b2                                   (digest / foreign-repo context)
+  ... 192 more distinct; re-run with --json for the full list
+
+WHY THIS MATTERS: on 2026-09-04 five tasks -- T508, T509 (the program's
+recorded critical path), T510, T512, T515 -- were recorded terminal on main
+with notes naming commits that exist on one laptop and nowhere else. The tree
+was clean; what was wrong was what the tree ASSERTED about work not in it.
+REPAIR is one of two things, and neither is editing this tool: push the branch
+to origin, or correct the note to say the work is UNRECOVERED.

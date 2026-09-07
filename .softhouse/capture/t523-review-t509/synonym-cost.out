@@ -1,0 +1,116 @@
+shipped guard findings:            34
+same guard, synonym disabled:      10
+attributable to (?i)outstanding:   24
+
+--- findings that exist ONLY because of (?i)outstanding ---
+[I3-FIELD-WRITE] internal/apps/investor/postgres.go:199:7
+[I3-FIELD-WRITE] internal/apps/investor/postgres.go:202:7
+[I3-FIELD-WRITE] internal/apps/investor/postgres.go:205:7
+[I3-FIELD-WRITE] internal/apps/investor/postgres.go:208:7
+[I3-FIELD-WRITE] internal/apps/investor/postgres.go:211:7
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:126:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:137:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:152:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:162:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:172:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:181:2
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:201:3
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:211:3
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:229:3
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:235:3
+[I3-FIELD-WRITE] internal/apps/loan/charge.go:249:3
+[I3-FIELD-WRITE] internal/apps/loanschedule/conformance/exemption_test.go:1446:2
+[I3-FIELD-WRITE] internal/apps/loanschedule/emi.go:1720:5
+[I3-FIELD-WRITE] internal/apps/loanschedule/emi.go:1726:4
+[I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+[I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+[I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+[I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+[I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+
+--- every identifier in nexus/ that (?i)outstanding matches but (?i)balance does not ---
+    (the surface the synonym newly rules on; a name here is refused wherever it is WRITTEN)
+    134 outstanding
+     43 AmountOutstanding
+     38 OutstandingPrincipalMinor
+     28 outstanding_principal_minor
+     23 PrincipalOutstanding
+     18 HasOutstanding
+     16 InterestOutstanding
+     15 TotalOutstanding
+     13 outstanding_principal_major_text
+     13 PenaltyOutstanding
+     13 FeeOutstanding
+     10 outstandingMinor
+      9 PenaltyChargesOutstanding
+      9 FeeChargesOutstanding
+      8 amountOutstanding
+      8 WriteOffOutstanding
+      8 StatusClosedRescheduleOutstandingAmount
+      8 OutstandingInterestStrategy
+      8 OutstandingAmount
+      8 FieldOutstandingPrincipalMinor
+      7 calculateAmountOutstanding
+      7 CalculateOutstanding
+      6 noOutstanding
+      5 totalOutstanding
+      5 getTotalOutstanding
+      4 principal_outstanding_derived
+      4 PAYABLE_OUTSTANDING
+      4 OutstandingInterestStrategyKey
+      4 OutstandingInterestStrategyFor
+      4 OUTSTANDING_INTEREST_STRATEGY
+      4 EventWriteOffOutstandingUndo
+      4 EventWriteOffOutstanding
+      4 DeriveTotalOutstanding
+      3 total_outstanding_derived
+      3 totalOutstandingAmount
+      3 TotalOutstandingIsZero
+      3 TOTAL_OUTSTANDING
+      3 OutstandingInterestStrategyPayableOutstanding
+      3 Outstanding
+      3 IsClosedRescheduleOutstandingAmount
+      3 CLOSED_RESCHEDULE_OUTSTANDING_AMOUNT
+      2 totalPrincipalOutstanding
+      2 totalPenaltyChargesOutstanding
+      2 totalInterestOutstanding
+      2 totalFeeChargesOutstanding
+      2 penalty_charges_outstanding_derived
+      2 interest_outstanding_derived
+      2 getPrincipalOutstanding
+      2 fee_charges_outstanding_derived
+      2 WRITE_OFF_OUTSTANDING_UNDO
+      2 WRITE_OFF_OUTSTANDING
+      2 TotalOutstandingPrincipal
+      2 OutstandingPrincipalMajorText
+      2 OutstandingPrincipal
+      2 OutstandingInterestStrategyTotal
+      2 OutstandingInterest
+      2 OUTSTANDING
+      2 NormalizedTotalOutstanding
+      2 MoveOutstandingDueToReAging
+      1 updateTotalOutstanding
+      1 setTotalOutstanding
+      1 getPenaltyOutstanding
+      1 getPenaltyChargesOutstanding
+      1 getOutstandingAmountsTillDate
+      1 getInterestOutstanding
+      1 getFeeOutstanding
+      1 getFeeChargesOutstanding
+      1 calculateOutstanding
+      1 TestWriteOffOutstanding
+      1 TestTransferDetailsDeriveTotalOutstanding
+      1 TestOutstandingInterestStrategyFor
+      1 TestLoanSummaryTotalOutstanding
+      1 TestLoanChargeCalculateOutstandingAndChargeAmount
+      1 B_withdrawn_final_outstanding_is_not_a_silent_hold
+      1 A_withdrawn_disbursement_outstanding_is_not_a_red
+
+--- SQL column/table-shaped tokens with "outstanding" and no "balance", in string literals ---
+_withdrawn_disbursement_outstanding_is_not_a_red
+_withdrawn_final_outstanding_is_not_a_silent_hold
+fee_charges_outstanding_derived
+interest_outstanding_derived
+penalty_charges_outstanding_derived
+principal_outstanding_derived
+total_outstanding_derived

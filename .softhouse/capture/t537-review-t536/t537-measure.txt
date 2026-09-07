@@ -1,0 +1,55 @@
+==============================================================================
+A. T527's checker (on main) over the record at 18c64389
+==============================================================================
+check-branch-published: REFUSE -- 7 claim(s) origin has never heard of
+origin: 62 branches, main=b09d2dcf89e7 | records checked: 475 terminal-or-awaiting-review tasks
+backed: 49 branch(es) on origin, 77 pruned-but-proved-on-main, 117 commit(s) reachable from an origin ref
+WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 77
+
+==============================================================================
+B. T536's checker over the same record
+==============================================================================
+check-branch-published: REFUSE -- 19 claim(s) origin has never heard of
+origin: 62 branches, main=b09d2dcf89e7 | records checked: 475 terminal-or-awaiting-review tasks
+backed: 49 branch(es) on origin, 68 pruned-but-proved-on-main, 134 commit(s) reachable from an origin ref
+baseline freeze line: T527 (from baseline.json) -- a claim from a LATER generation cannot be baselined.
+WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 68
+
+==============================================================================
+C. the two waiver sets, diffed by task+branch
+==============================================================================
+T527 pruned-proved waivers: 77
+T536 pruned-proved waivers: 68
+
+LOST by T536's stricter classifier (in T527, not in T536):
+T353	softhouse/T353-t342-conditions
+T357	softhouse/T357-a2-11-section1-red
+T358	softhouse/T358-t323-conditions
+T361	softhouse/T361-review-t353
+T375	softhouse/rescued-agent-ac5a2db446e903ba0-20260828-140005
+T476	softhouse/T467-t464-conditions
+T477	softhouse/T466-skipwt-smudge
+T520	softhouse/T508-journalentry-insert-schema
+T522	softhouse/T515-savings-classification-rework
+
+GAINED by T536 (in T536, not in T527):
+
+==============================================================================
+D. findings counts
+==============================================================================
+T527 findings: 7
+T536 findings: 19
+
+==============================================================================
+E. does the documented flag --measure-waivers exist?
+==============================================================================
+usage error: unknown argument '--measure-waivers'
+(exit above)
+
+==============================================================================
+F. highest task id in the shipped baseline (T536 claims T504)
+==============================================================================
+entries: 314  distinct tasks: 293
+frozen_above: T527
+highest id present: T504
+entries ABOVE the freeze line: none

@@ -1,0 +1,29 @@
+# T553 — fail-closed sweep of the SHELL PROLOGUE (T552 MAJOR-2)
+# rc=1 is a VERDICT about the producer; only rc=2 is 'no verdict'.
+
+--streak with no value                         before_rc=1  after_rc=2  ok
+--ref with no value                            before_rc=1  after_rc=2  ok
+--explain with no value                        before_rc=1  after_rc=2  ok
+--producer with no value                       before_rc=1  after_rc=2  ok
+--now with no value                            before_rc=1  after_rc=2  ok
+--min-subst-lines with no value                before_rc=1  after_rc=2  ok
+--lookback-days with no value                  before_rc=1  after_rc=2  ok
+--silence-hours with no value                  before_rc=1  after_rc=2  ok
+--earned-silence-hours with no value           before_rc=1  after_rc=2  ok
+unwritable TMPDIR (mktemp fails)               before_rc=1  after_rc=2  ok
+NOFS_PAYLOAD_CAP=abc (cap disabled)            before_rc=0  after_rc=2  ok
+NOFS_PAYLOAD_CAP=0                             before_rc=1  after_rc=2  ok
+NOFS_PAYLOAD_CAP=-5                            before_rc=1  after_rc=2  ok
+--min-subst-lines 0 (floor would be off)       before_rc=0  after_rc=2  ok
+unknown argument                               before_rc=2  after_rc=2  ok
+unknown producer                               before_rc=2  after_rc=2  ok
+ref that does not exist                        before_rc=2  after_rc=2  ok
+bad NOFS_SURFACE_RE (analyser crash)           before_rc=2  after_rc=2  ok
+bad NOFS_BOOKKEEPING_RE (analyser crash)       before_rc=2  after_rc=2  ok
+--now not-a-date (analyser crash)              before_rc=2  after_rc=2  ok
+--streak xyz (analyser crash)                  before_rc=2  after_rc=2  ok
+
+# NOTE: 'NOFS_PAYLOAD_CAP=' (empty) is NOT listed: ${NOFS_PAYLOAD_CAP:-200}
+# substitutes the default for an EMPTY value as well as an unset one, so the
+# empty case never reaches awk. T552 MINOR-5's 'abc' half reproduces; its
+# empty-string half does not — measured, both guards, see the handoff.

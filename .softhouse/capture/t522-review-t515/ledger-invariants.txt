@@ -1,0 +1,319 @@
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /home/user/gerege-nbfi/.softhouse/toolchain
+    /home/user/gerege-nbfi/.claude/worktrees/agent-ad57c8f66f706f175/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /home/user/gerege-nbfi/.claude/worktrees/agent-ad57c8f66f706f175/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /usr/local/go/bin/go
+go-env.sh:   go version go1.24.7 linux/amd64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+go-env.sh: GEREGE_GO_STRICT=1 refuses instead of substituting (returns 2).
+ledger-invariants: selftest OK — 24 cases, 19 RED, 5 GREEN (P-22 and P-50)
+ledger-invariants: CENSUS ledger-invariants — inspected 245 Go files / 26 packages / 1939 funcs (15 hold-named) / 2182 assignment or inc-dec statements / 1206 write targets / 10756 string literals in 9446 concatenation groups / 12356 calls under /home/user/gerege-nbfi/.claude/worktrees/agent-ad57c8f66f706f175/nexus (recursive, whole Go tree)
+ledger-invariants: CENSUS ledger-invariants SQL surface — 400 SQL-shaped literals, of which 63 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 52 name an actual table; 103 exec-family calls (16 mutating driver calls, 82 calls to 4 tree-local SQL wrappers). Findings: 34
+ledger-invariants: CENSUS ledger-invariants composite surface — 2243 composite literals carrying 3356 keyed elements (the denominator of I3-COMPOSITE-BALANCE); 1 SELECT(s) naming a balance column (NAMED, NOT REFUSED — see the balance-read note below)
+ledger-invariants: CENSUS   covered: internal/apps/branch
+ledger-invariants: CENSUS   covered: internal/apps/charges
+ledger-invariants: CENSUS   covered: internal/apps/charges/conformance
+ledger-invariants: CENSUS   covered: internal/apps/charges/conformance/cmd/conformance
+ledger-invariants: CENSUS   covered: internal/apps/cob
+ledger-invariants: CENSUS   covered: internal/apps/collateral
+ledger-invariants: CENSUS   covered: internal/apps/investor
+ledger-invariants: CENSUS   covered: internal/apps/ledger
+ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loan
+ledger-invariants: CENSUS   covered: internal/apps/loanproduct
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance/cmd/conformance
+ledger-invariants: CENSUS   covered: internal/apps/loanschedule/contract
+ledger-invariants: CENSUS   covered: internal/apps/origination
+ledger-invariants: CENSUS   covered: internal/apps/parties
+ledger-invariants: CENSUS   covered: internal/apps/provisioning
+ledger-invariants: CENSUS   covered: internal/apps/provisioning/conformance
+ledger-invariants: CENSUS   covered: internal/apps/provisioning/conformance/cmd/conformance
+ledger-invariants: CENSUS   covered: internal/apps/savings
+ledger-invariants: CENSUS   covered: internal/apps/shares
+ledger-invariants: CENSUS   covered: internal/apps/workingcapital
+ledger-invariants: CENSUS   covered: internal/conformance
+ledger-invariants: CENSUS   covered: internal/floatguard
+ledger-invariants: CENSUS   covered: internal/platform/postgres
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/branch/postgres.go:34:54  INSERT INTO m_tellers (office_id, debit_account_id, credit_account_id, name, description, valid_from, valid_to, state) VALUES ($1,$2,$3,$...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/branch/postgres.go:104:54  INSERT INTO m_cashiers (staff_id, teller_id, description, start_date, end_date, full_day, start_time, end_time) VALUES ($1,$2,$3,$4,$5,$6...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/branch/postgres.go:162:54  INSERT INTO m_cashier_transactions (cashier_id, txn_type, txn_date, txn_amount, txn_note, entity_type, entity_id, currency_code) VALUES (...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:38:54  INSERT INTO m_collateral_management (name, quality, base_price, unit_type, pct_to_base, currency) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:103:54  INSERT INTO m_client_collateral_management (quantity, client_id, collateral_id) VALUES ($1,$2,$3) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:162:30  UPDATE m_client_collateral_management SET quantity = $1 WHERE id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:164:21  collateral: update client collateral quantity: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:190:54  INSERT INTO m_loan_collateral_management (quantity, transaction_id, loan_id, is_released, client_collateral_id) VALUES ($1,$2,$3,$4,$5) R...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:260:30  UPDATE m_loan_collateral_management SET is_released = true WHERE id = $1
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:286:54  INSERT INTO m_loan_collateral (loan_id, type_cv_id, value, description) VALUES ($1,$2,$3,$4) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:347:30  UPDATE m_loan_collateral SET type_cv_id = $1, value = $2, description = $3 WHERE id = $4
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/collateral/postgres.go:350:21  collateral: update loan collateral: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/investor/postgres.go:38:54  INSERT INTO m_external_asset_owner (external_id) VALUES ($1) ON CONFLICT (external_id) DO UPDATE SET external_id = EXCLUDED.external_id R...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/investor/postgres.go:96:54  INSERT INTO m_external_asset_owner_transfer (owner_id, previous_owner_id, external_id, status, sub_status, purchase_price_ratio, settleme...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/investor/postgres.go:108:30  INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/investor/postgres.go:245:54  INSERT INTO m_external_asset_owner_loan_product_configurable_attributes (loan_product_id, attribute_key, attribute_value) VALUES ($1,$2,$...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/admit.go:1939:5  citationNameOnlyPin carries %q, but part two of that citation resolved %s on this run, not FILE-NAME-ONLY. The pin excuses a weakness tha...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived.go:743:3  balance ON the posted row and job 9 'Update Accounting Running Balances' rewrites it in
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived.go:744:3  place, nightly, by raw UPDATE ... WHERE id=?, outside the command bus. A port that
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/conformance/oraclederived_test.go:410:13  %s.%s names writer %q, which does not mention job 9. Every column in this carve-out was measured to move under 'Update Accounting Running...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:62:13  %d is creatable but NOT settable on update
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:67:13  %d should be settable on update
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/journalentry_postgres.go:263:30  INSERT INTO acc_gl_journal_entry (account_id, office_id, currency_code, transaction_id, reversed, manual_entry, entry_date, type_enum, am...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:523:8  invariant_exemptions switches off %q, BUT THAT INVARIANT HOLDS OUTRIGHT ON THE SCHEDULE THIS VECTOR ITSELF RECORDED, with no assertion wi...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1160:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/origination_test.go:45:12  Update did not replace all fields: %+v
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:57:54  INSERT INTO m_loan_originator (external_id, name, status, originator_type_cv_id, channel_type_cv_id) VALUES ($1,$2,$3,$4,$5) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:108:30  UPDATE m_loan_originator SET name = $1, status = $2, originator_type_cv_id = $3, channel_type_cv_id = $4 WHERE id = $5
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:112:21  origination: update originator: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:119:30  DELETE FROM m_loan_originator WHERE id = $1
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:120:21  origination: delete originator: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:146:54  INSERT INTO m_loan_originator_mapping (loan_id, originator_id) VALUES ($1,$2) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:183:30  DELETE FROM m_loan_originator_mapping WHERE loan_id = $1 AND originator_id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:185:21  origination: delete loan originator mapping: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:213:54  INSERT INTO m_wc_loan_originator_mapping (loan_id, originator_id) VALUES ($1,$2) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:250:30  DELETE FROM m_wc_loan_originator_mapping WHERE loan_id = $1 AND originator_id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/origination/postgres.go:252:21  origination: delete working-capital loan originator mapping: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:50:54  INSERT INTO m_client (account_no, office_id, transfer_to_office_id, image_id, status_enum, sub_status, activation_date, office_joining_da...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:110:30  UPDATE m_client SET status_enum = $1 WHERE id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:111:21  parties: update client status: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:186:54  INSERT INTO m_group (external_id, status_enum, activation_date, office_id, staff_id, parent_id, level_id, display_name, hierarchy, closur...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:251:30  UPDATE m_group SET status_enum = $1 WHERE id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/parties/postgres.go:252:21  parties: update group status: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/savings/balance_test.go:504:12  HeldOf(hold paired to a reversed release) = %d, want 0 — oracle-faithful, and a documented fail-OPEN; if this changed deliberately, upd...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/savings/postgres.go:127:54  INSERT INTO m_savings_account (external_id, status_enum, currency_code, currency_digits) VALUES ($1,$2,$3,$4) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/savings/postgres.go:173:30  UPDATE m_savings_account SET status_enum = $1 WHERE id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/savings/postgres.go:175:21  savings: update account status: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/savings/postgres.go:356:54  INSERT INTO m_savings_account_transaction (savings_account_id, transaction_type_enum, amount, is_reversed, is_reversal) VALUES ($1,$2,$3,...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/shares/postgres.go:36:54  INSERT INTO m_share_product (name, short_name, external_id, description, currency_code, digits_after_decimal, in_multiples_of, minimum_sh...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/shares/postgres.go:96:54  INSERT INTO m_share_product_market_price (product_id, from_date, to_date, share_value) VALUES ($1,$2,$3,$4) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/shares/postgres.go:108:54  INSERT INTO m_share_product_charge (product_id, charge_id) VALUES ($1,$2) RETURNING id
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/shares/postgres.go:176:54  INSERT INTO m_share_account (account_no, external_id, client_id, product_id, status_enum, submitted_on_date, approved_date, activated_dat...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/shares/postgres.go:243:54  INSERT INTO m_share_account_transactions (account_id, transaction_date, total_shares, transaction_type_enum, amount, status_enum, charge_...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:172:54  INSERT INTO m_wc_loan (account_no, external_id, client_id, fund_id, product_id, loan_status_id, loan_counter, loan_product_counter, submi...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:344:30  UPDATE m_wc_loan SET loan_status_id = $1 WHERE id = $2
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:346:21  workingcapital: update loan status: %w
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:464:54  INSERT INTO m_wc_loan_disbursement_detail (wc_loan_id, expected_disburse_date, expected_amount, expected_maturity_date, actual_disburse_d...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:544:54  INSERT INTO m_wc_loan_transaction (wc_loan_id, transaction_type_id, transaction_date, transaction_amount, is_reversed, reversal_external_...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:558:30  INSERT INTO m_wc_loan_transaction_allocation (wc_loan_transaction_id, principal_portion, fee_charges_portion, penalty_charges_portion, ov...
+ledger-invariants: CENSUS   DML-classified literal: internal/apps/workingcapital/postgres.go:669:54  INSERT INTO m_wc_loan_payment_allocation_rule (wc_loan_id, transaction_type, allocation_types) VALUES ($1,$2,$3) ON CONFLICT (wc_loan_id,...
+ledger-invariants: CENSUS   DML-classified literal: internal/platform/postgres/migrate.go:140:4  INSERT INTO schema_migrations (version, name) VALUES ($1, $2)
+ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
+ledger-invariants: CENSUS   hold-named func: internal/apps/loan/status.go:132:1  IsTransferOnHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/loanproduct/repaymentperiod.go:612:1  SetReAgedEarlyRepaymentHolder
+ledger-invariants: CENSUS   hold-named func: internal/apps/parties/clientstatus.go:87:1  IsTransferOnHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/parties/group.go:72:1  IsTransferOnHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/accountstatus.go:114:1  IsTransferOnHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:53:1  TestHoldsMoveAvailableAndNeverThePostedBalance
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:264:1  TestHoldNetRunningBalancesMatchTheCapturedOracleRows
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:340:1  TestRunningBalancesArePostedPrefixFoldsAndDifferFromTheHoldNetChain
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:489:1  TestAReversedReleaseStillDischargesItsHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:558:1  releasedHold
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/balance_test.go:670:1  TestAReversedHoldHoldsNothing
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/summary.go:504:1  HoldNetRunningBalancesOf
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/transaction.go:138:1  IsHoldNotReleased
+ledger-invariants: CENSUS   hold-named func: internal/apps/savings/transactiontype.go:155:1  IsAmountHold
+ledger-invariants: CENSUS   tree-local SQL wrapper: InsertReturningInt64 (arg 2) — takes sql string and calls the wrapper QueryRows()
+ledger-invariants: CENSUS   tree-local SQL wrapper: QueryRows (arg 2) — takes sql string and calls the driver method Query()
+ledger-invariants: CENSUS   tree-local SQL wrapper: findOne (arg 1) — takes query string and calls the wrapper QueryRows()
+ledger-invariants: CENSUS   tree-local SQL wrapper: queryMappings (arg 0) — takes sql string and calls the wrapper QueryRows()
+ledger-invariants: CENSUS   balance column READ (seen, NOT refused — I-3 grades writes): internal/apps/investor/postgres.go:187:39  principal_outstanding_derived  SELECT principal_outstanding_derived::text, interest_outstanding_derived::text, fee_charges_outstanding_derived::text, penalty_charges_ou...
+ledger-invariants:   census figure READ: inspected 245 >= 245 tracked by git (floor DERIVED, not pinned)
+ledger-invariants: the guard REFUSED:
+REFUSED — the double-entry invariants DEC-2 §4.4 obliges are violated in the Go tree:
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/interestperiod.go:614:3
+      &InterestPeriod{balanceCorrectionAmount: ip.BalanceCorrectionAmount()}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func copy. This is the same act as `p := &T{}; p.balanceCorrectionAmount = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/interestperiod.go:615:3
+      &InterestPeriod{outstandingLoanBalance: ip.OutstandingLoanBalance()}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func copy. This is the same act as `p := &T{}; p.outstandingLoanBalance = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/interestperiod.go:641:3
+      &InterestPeriod{balanceCorrectionAmount: zero}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func withEmptyInterestPeriod. This is the same act as `p := &T{}; p.balanceCorrectionAmount = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/interestperiod.go:642:3
+      &InterestPeriod{outstandingLoanBalance: zero}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func withEmptyInterestPeriod. This is the same act as `p := &T{}; p.outstandingLoanBalance = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/repaymentperiod.go:96:3
+      &InterestPeriod{balanceCorrectionAmount: moneyZero(p.currency, p.rounding)}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func NewInterestPeriod. This is the same act as `p := &T{}; p.balanceCorrectionAmount = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-COMPOSITE-BALANCE] internal/apps/loanproduct/repaymentperiod.go:97:3
+      &InterestPeriod{outstandingLoanBalance: moneyZero(p.currency, p.rounding)}
+      a balance-named field is written by a COMPOSITE LITERAL that is then ALLOCATED (`&T{...}`) in func NewInterestPeriod. This is the same act as `p := &T{}; p.outstandingLoanBalance = ...`, which this guard refuses as I3-FIELD-WRITE — it was invisible only because writeTarget is applied to assignments and not to composite-literal keys. CLAUDE.md non-negotiable: "Balances are derived, never written." Derive by summation over the postings. NOTE: moving the write into a constructor does NOT clear this, and CANNOT-CATCH item 8 no longer recommends it.
+  [I3-FIELD-WRITE] internal/apps/investor/postgres.go:199:7
+      d.PrincipalOutstanding =
+      a write to a field named as a balance in func loadDetails. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/investor/postgres.go:202:7
+      d.InterestOutstanding =
+      a write to a field named as a balance in func loadDetails. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/investor/postgres.go:205:7
+      d.FeeChargesOutstanding =
+      a write to a field named as a balance in func loadDetails. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/investor/postgres.go:208:7
+      d.PenaltyChargesOutstanding =
+      a write to a field named as a balance in func loadDetails. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/investor/postgres.go:211:7
+      d.TotalOutstanding =
+      a write to a field named as a balance in func loadDetails. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:126:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func MarkAsFullyPaid. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:137:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func ReconcileFullyPaid. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:152:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func ResetToOriginal. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:162:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func ResetPaidAmount. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:172:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func Waive. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:181:2
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UndoWaive. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:201:3
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UpdatePaidAmountBy. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:211:3
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UpdatePaidAmountBy. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:229:3
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UndoPaidOrPartiallyAmountBy. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:235:3
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UndoPaidOrPartiallyAmountBy. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loan/charge.go:249:3
+      c.AmountOutstanding =
+      a write to a field named as a balance in func UpdateWaivedAmount. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:430:4
+      ip.outstandingLoanBalance =
+      a write to a field named as a balance in func UpdateOutstandingLoanBalance. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:441:2
+      ip.outstandingLoanBalance =
+      a write to a field named as a balance in func UpdateOutstandingLoanBalance. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanproduct/interestperiod.go:549:2
+      ip.balanceCorrectionAmount =
+      a write to a field named as a balance in func AddBalanceCorrectionAmount. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanproduct/repaymentperiod.go:688:4
+      ip.balanceCorrectionAmount =
+      a write to a field named as a balance in func copyWithoutPaidAmounts. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanschedule/conformance/exemption_test.go:1446:2
+      got.Periods[len(got.Periods) - 1].OutstandingPrincipalMinor =
+      a write to a field named as a balance in func Generate. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanschedule/emi.go:1720:5
+      s.outstandingMinor =
+      a write to a field named as a balance in func updateOutstandingBalances. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-FIELD-WRITE] internal/apps/loanschedule/emi.go:1726:4
+      s.outstandingMinor =
+      a write to a field named as a balance in func updateOutstandingBalances. CLAUDE.md non-negotiable: "Balances are derived, never written." DEC-2 §4.4 I-3: "No write path to any balance column exists in the Go tree." Derive by summation over the postings; a bare local accumulator (`var debit, credit MinorUnits`) is the shape nexus/internal/apps/ledger/money.go already uses and is NOT flagged.
+  [I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+      INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+      an INSERT populates the balance column "penalty_charges_outstanding_derived" on table "m_external_asset_owner_transfer_details". This is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 refuses to port: a written, stored sum wearing a balance's name. A stored balance is still a written balance.
+  [I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+      INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+      an INSERT populates the balance column "fee_charges_outstanding_derived" on table "m_external_asset_owner_transfer_details". This is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 refuses to port: a written, stored sum wearing a balance's name. A stored balance is still a written balance.
+  [I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+      INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+      an INSERT populates the balance column "interest_outstanding_derived" on table "m_external_asset_owner_transfer_details". This is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 refuses to port: a written, stored sum wearing a balance's name. A stored balance is still a written balance.
+  [I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+      INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+      an INSERT populates the balance column "principal_outstanding_derived" on table "m_external_asset_owner_transfer_details". This is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 refuses to port: a written, stored sum wearing a balance's name. A stored balance is still a written balance.
+  [I3-SQL-BALANCE] internal/apps/investor/postgres.go:108:30
+      INSERT INTO m_external_asset_owner_transfer_details (asset_owner_transfer_id, principal_outstanding_derived, interest_outstanding_derived...
+      an INSERT populates the balance column "total_outstanding_derived" on table "m_external_asset_owner_transfer_details". This is the m_trial_balance shape DEC-2 §4.4 I-3 names and §7 refuses to port: a written, stored sum wearing a balance's name. A stored balance is still a written balance.
+CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
+  1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
+     builder's own AST) is not readable as text. The guard converts that blind spot into a
+     REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
+     the call. A mutating call through an interface method it does not name, or through
+     reflection, is invisible.
+  2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
+     Position that IS a stored balance is not detected: the surface is the NAME, because
+     without a type checker there is nothing else to key on. Renaming a balance defeats it.
+     T509 WIDENED THE NAME, IT DID NOT FIX THE CLASS: "outstanding" now counts as a balance
+     word alongside "balance", which closes the MEASURED case (two ports of one Fineract
+     method, "outstandingLoanBalance" refused and "outstandingMinor" passed). Every other
+     spelling is still invisible, and this item is why.
+  3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
+     Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+     and the schema is Fineract's, which HAS such objects.
+  4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
+     decidable once a leg type and a correction path exist in the Go tree. Neither does. The
+     mechanical half (a write to a committed row, a write to a balance) IS covered; the
+     semantic half is not, and is not claimed.
+  5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
+     returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
+     covers the package-level case). A struct-field cache inside a service object with a
+     non-balance name is not.
+  6. NON-GO CALLERS. Anything that reaches the database without going through this module.
+  7. THREE MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+     test fires on English prose: on nexus/ at the commit this guard was written, all three
+     DML-classified literals are message text, not SQL — which is why every one is PRINTED
+     with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+     count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
+     nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
+     as a hold-named function. (iii) IT ALSO FIRES ON "...Holder", a third shape this list
+     used to omit: nexus/internal/apps/loanproduct/repaymentperiod.go:486
+     SetReAgedEarlyRepaymentHolder [T502 B-3, confirmed exactly by T505 §6 and T514]. None of
+     the three can produce a FINDING on its own — a finding additionally requires a protected
+     table, a balance column, or a balance write — so all are noise in a count, never a false
+     rejection. The point of this list is completeness, so an incomplete list was itself the
+     defect.
+  8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+     FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
+     fixture ever trips it, the correct answers are a bare accumulator, a non-balance name for
+     a non-balance quantity, or an argued DEC-2 exemption. ⚠ THIS ITEM USED TO SAY "the fix is
+     a constructor, not an exemption" AND THAT WAS ADVICE FOR EVADING THIS GUARD: a composite
+     literal's keys were invisible to writeTarget, so moving the write into a constructor
+     silenced the finding while storing the identical value (T502 B-2; T505 §6 confirmed six
+     such writes in the same package, one four lines from a refused site). T509 closed the
+     allocated form — see class I3-COMPOSITE-BALANCE — and deleted the advice. The residual is
+     item 10.
+  9. THE BALANCE-READ CENSUS IS SIGHT, NOT ENFORCEMENT. Every SELECT naming a balance column
+     is printed with its position and NONE is refused. DEC-2 §4.4 I-3's gradeable text is "No
+     WRITE PATH to any balance column exists in the Go tree"; a read is not a write path, and
+     raising it to a refusal is an amendment to a ratified DEC-n, which CLAUDE.md routes as a
+     "user" gate. It is printed because T501's defect entered exactly there — a stored balance
+     decoded on the way IN and then treated as authoritative. A site on that list has been
+     SEEN, never cleared.
+ 10. THE STORE THAT A COMPOSITE LITERAL REACHES. I3-COMPOSITE-BALANCE fires on the ALLOCATED
+     form "&T{Balance: v}", because allocation produces something that outlives the
+     expression — writeTarget's own doctrine. It does NOT fire on "v := T{Balance: x}"
+     followed by a store of "&v", nor on "append(store.rows, T{Balance: x})". Following a
+     value into a store requires go/types, and there is a hard design constraint on that work
+     recorded by T514 and repeated here because it is the trap: SUCH AN ANALYSIS MUST FAIL
+     CLOSED ON UNRESOLVED VALUE FLOW. An analysis that answers "not persisted" on an edge it
+     cannot resolve reintroduces the same fail-open one layer up, and — unlike a waiver, which
+     is a visible document a human must amend — a heuristic's failure produces NO ARTEFACT AT
+     ALL.
+ 11. WRAPPER DISCOVERY IS BY NAME AND BY PARAMETER NAME. A function is recognised as carrying
+     SQL when it has a string parameter called sql/query/stmt/statement/ddl/dml/q and its body
+     reaches a driver method or another discovered wrapper. Two functions of the same name in
+     different packages are ONE NAME to this guard (it has no type checker), and a wrapper
+     that names its parameter something else, or assembles the statement from a struct field
+     rather than taking it as an argument, is not discovered at all.
+ 12. THE FOUR loanproduct SITES ARE A KNOWN, ARGUED, TEST-PINNED RED — NOT A GUARD DEFECT AND
+     NOT AN ACCIDENT. interestperiod.go and repaymentperiod.go write schedule intermediates
+     that are not ledger balances on the two legs that survive (T516): LEG 1 parity — applying
+     I-3's remedy to the cell changes the money, because the oracle refreshes
+     outstandingLoanBalance only at explicit sweeps and reads it stale in between, and this is
+     executable, not argued (TestOutstandingLoanBalanceIsASweptSnapshot); and LEG 2
+     reachability — the value reaches no journal entry, no GL posting and no column any
+     aggregate reads as an account balance, its persistence being a closed loop written by the
+     projection and reloaded as the same projection's starting state. The posting-stream test
+     is RETIRED (T516), not merely demoted. They stay REFUSED because the only mechanism that
+     could distinguish them soundly — LEG 2's go/types reachability discriminator — does not
+     exist yet, and the persistence-surface heuristic that was proposed instead was MEASURED
+     being defeated by a single git mv of an unrelated real savings balance write into a
+     subdirectory (T505 MAJOR-1). A known red is an acceptable state; a green bar bought with
+     a defeatable predicate is not.
+ledger-invariants: the I-3/I-4 SOURCE GUARD FAILED. DEC-2 §4.4 obliges these invariants
+ledger-invariants: and §4.4.1 records that this guard is the only mechanism that can
+ledger-invariants: enforce them. This is NOT a pass.

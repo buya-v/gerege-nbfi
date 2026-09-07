@@ -1,0 +1,14 @@
+guard on UNPLANTED copy: exit=1
+
+PLANT 1  I3-FIELD-WRITE            OLD-form(class anywhere)=23 PASS(WRONG)    NEW-form(class@path)=0  fail(correct)
+PLANT 2  I4-DML                    OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 3  I4-DML                    OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 4  I6-HOLD-BALANCE           OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 5  I3-SQL-BALANCE            OLD-form(class anywhere)=5  PASS(WRONG)    NEW-form(class@path)=0  fail(correct)
+PLANT 6  I4-BUILDER                OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 7  OPAQUE-SQL                OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 8  I3-PKG-STATE              OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 9  I3-SQL-BALANCE-TABLE      OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)
+PLANT 10 I3-COMPOSITE-BALANCE      OLD-form(class anywhere)=6  PASS(WRONG)    NEW-form(class@path)=0  fail(correct)
+PLANT 11 I3-FIELD-WRITE            OLD-form(class anywhere)=23 PASS(WRONG)    NEW-form(class@path)=0  fail(correct)
+PLANT 12 OPAQUE-SQL                OLD-form(class anywhere)=0  fail(correct)  NEW-form(class@path)=0  fail(correct)

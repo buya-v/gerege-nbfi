@@ -1,0 +1,60 @@
+check-branch-published --selftest
+
+GREEN CONTROLS -- the check must be able to PASS:
+  G-CLEAN-branch-on-origin                   PASS  (rc=0 want=0)
+  G-PRUNED-MERGED-proved-ancestor            PASS  (rc=0 want=0)
+  G-PRUNED-anti-vacuity-proof-removed        PASS  (rc=2 want=2)
+  G-not-terminal-status-is-not-checked       PASS  (rc=0 want=0)
+
+RED CASES -- each must go RED, and each is re-run with its subject REMOVED
+to prove the RED is caused by the subject and not by the fixture:
+  R1-branch-absent-from-origin               PASS  (rc=2 want=2)
+  R1-control-subject-removed                 PASS  (rc=0 want=0)
+  R2-sha-does-not-resolve                    PASS  (rc=2 want=2)
+  R2-control-sha-removed-from-note           PASS  (rc=0 want=0)
+  R2b-sha-only-in-a-stack-clause             PASS  (rc=2 want=2)
+  R2b-control-stack-clause-removed           PASS  (rc=0 want=0)
+  R3-sha-resolves-but-on-no-origin-ref       PASS  (rc=2 want=2)
+  R3-control-same-note-with-a-pushed-sha     PASS  (rc=0 want=0)
+  R4-origin-unreachable-is-exit-3            PASS  (rc=3 want=3)
+  R4-control-origin-restored                 PASS  (rc=0 want=0)
+  R4b-unreachable-dominates-a-dirty-record   PASS  (rc=3 want=3)
+  R5-merge-base-does-not-prove-a-branch      PASS  (rc=2 want=2)
+  R5-control-same-sha-claimed-as-LANDING     PASS  (rc=0 want=0)
+  A5b-B-merge-base-COMMIT-worded             PASS  (rc=2 want=2)
+  A5b-C-branched-from-at                     PASS  (rc=2 want=2)
+  A5b-E-base-branch-paren                    PASS  (rc=2 want=2)
+  A5b-G-review-cites-another-task            PASS  (rc=2 want=2)
+  A5b-H-diverges-at                          PASS  (rc=2 want=2)
+  A5b-K-stack-region-base                    PASS  (rc=2 want=2)
+  A5b-L-supersedes                           PASS  (rc=2 want=2)
+  A5b-GREEN-genuine-landing                  PASS  (rc=0 want=0)
+  A5b-GREEN-MERGED-at-by-fire                PASS  (rc=0 want=0)
+  A5b-GREEN-COMPLETE-at                      PASS  (rc=0 want=0)
+  A5b-GREEN-tip                              PASS  (rc=0 want=0)
+  A5b-ii-APPROVED-carrying-another-task      PASS  (rc=2 want=2)
+  A5b-ii-GREEN-APPROVED-own-work             PASS  (rc=0 want=0)
+  A5b-ii-base-word-adjacent-still-vetoes     PASS  (rc=2 want=2)
+  A5b-ii-GREEN-base-sha-then-own-tip         PASS  (rc=0 want=0)
+  A5c-two-branches-one-landing-waives-exactly-one PASS  (rc=2 want=2)
+  A5c-control-the-landing-branch-alone-is-CLEAN PASS  (rc=0 want=0)
+  R6-control-digest-context-is-not-a-claim   PASS  (rc=0 want=0)
+  R6-anti-vacuity-same-hex-without-the-digest-word PASS  (rc=2 want=2)
+  R7-tip-field-is-read                       PASS  (rc=2 want=2)
+  R7-control-tip-field-holds-a-pushed-sha    PASS  (rc=0 want=0)
+
+EXEMPTION CONTROLS -- the waivers must waive exactly what they claim to:
+  B-baseline-waives-only-the-named-subject   PASS  (rc=2 want=2)
+
+FREEZE-LINE CONTROLS -- --write-baseline must refuse a LIVE incident and
+still accept a HISTORICAL one:
+  F-above-the-line-is-REFUSED                PASS  (waived 0, refused 1: above the freeze line T527 -- this is a claim from AFTER the control existed, so it is a live incident, not history)
+  F-below-the-line-is-waivable               PASS  (waived 1, refused 0: -)
+  F-undatable-id-is-REFUSED                  PASS  (waived 0, refused 1: task id 'rescue-x' is not a form this tool can place in time; an id it cannot date cannot be shown to be historical)
+  F-case-folded-incident-id-is-REFUSED       PASS  (waived 0, refused 1: 2026-09-04 incident task)
+
+INCIDENT CONTROL -- the shipped baseline must not waive the defect it was
+generated beside:
+  G-BASELINE-EXCLUDES-INCIDENT               PASS  (314 entries, incident tasks present: none)
+
+44 case(s), 0 failure(s)

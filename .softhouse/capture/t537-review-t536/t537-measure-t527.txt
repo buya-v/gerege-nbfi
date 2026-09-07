@@ -1,0 +1,526 @@
+==============================================================================
+check-branch-published: REFUSE -- 7 claim(s) origin has never heard of
+==============================================================================
+origin: 62 branches, main=b09d2dcf89e7 | records checked: 475 terminal-or-awaiting-review tasks
+backed: 49 branch(es) on origin, 77 pruned-but-proved-on-main, 117 commit(s) reachable from an origin ref
+
+UNBACKED CLAIMS -- the record asserts work that is not on origin:
+  UNBACKED-BRANCH    T509      softhouse/T509-ledgerguard-blindspot
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T510      softhouse/T510-savings-fold-reversal
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T512      softhouse/T512-scope-instrument
+      claimed at field branch -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-BRANCH    T523      softhouse/T509-ledgerguard-blindspot
+      claimed at note -- absent from `git ls-remote --heads origin`, and no LANDING commit this task claims is an ancestor of origin/main
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T509      857dd4d8
+      claimed at note: 'landed 857dd4d8 on softhouse/T509-ledgerguard-blinds' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T512      8ff5ff15
+      claimed at note: 'landed 8ff5ff15 on softhouse/T512-scope-instrument. ' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+  UNBACKED-COMMIT    T523      857dd4d8
+      claimed at note: 'bject is T509 at commit 857dd4d8 on branch softhouse' -- resolves to no commit in this repository, and the object store is level with origin
+      recorded in .softhouse/tasks.json
+
+WAIVED (merged-and-pruned, PROVED by `git merge-base --is-ancestor <sha> origin/main`): 77
+  T145      softhouse/T145-analysis-float
+      branch absent from origin, but 08be3c56 is an ancestor of origin/main (b09d2dcf89e7)
+  T272      softhouse/T272-goenv-graft
+      branch absent from origin, but 16c59715 is an ancestor of origin/main (b09d2dcf89e7)
+  T277      softhouse/T277-shapelaw-salvage
+      branch absent from origin, but e8374743 is an ancestor of origin/main (b09d2dcf89e7)
+  T278      softhouse/T278-review-t277
+      branch absent from origin, but fa045d8c is an ancestor of origin/main (b09d2dcf89e7)
+  T279      softhouse/T279-lock-partition
+      branch absent from origin, but eac45bdc is an ancestor of origin/main (b09d2dcf89e7)
+  T282      softhouse/T282-pnumber-drift
+      branch absent from origin, but 35a92f30 is an ancestor of origin/main (b09d2dcf89e7)
+  T301      softhouse/T301-wrapper-self-modification
+      branch absent from origin, but 3e024dfa is an ancestor of origin/main (b09d2dcf89e7)
+  T306      softhouse/T306-admit-gate-adjudication
+      branch absent from origin, but 3da08fbb is an ancestor of origin/main (b09d2dcf89e7)
+  T307      softhouse/T307-grade-refusal-args
+      branch absent from origin, but ca745981 is an ancestor of origin/main (b09d2dcf89e7)
+  T321      softhouse/T321-variable-paths-and-resets
+      branch absent from origin, but 4246ce63 is an ancestor of origin/main (b09d2dcf89e7)
+  T322      softhouse/T322-admit-widening
+      branch absent from origin, but f39ed526 is an ancestor of origin/main (b09d2dcf89e7)
+  T324      softhouse/T324-worktree-prune-skipbit
+      branch absent from origin, but d36863ad is an ancestor of origin/main (b09d2dcf89e7)
+  T325      softhouse/T325-adopt-attestation
+      branch absent from origin, but e590b865 is an ancestor of origin/main (b09d2dcf89e7)
+  T326      softhouse/T326-frontier-host-state
+      branch absent from origin, but 6c3d0787 is an ancestor of origin/main (b09d2dcf89e7)
+  T328      softhouse/T328-date-rule-promotion
+      branch absent from origin, but 817d2b53 is an ancestor of origin/main (b09d2dcf89e7)
+  T330      softhouse/T330-reconcile-merged-work
+      branch absent from origin, but fc104776 is an ancestor of origin/main (b09d2dcf89e7)
+  T331      softhouse/T331-wire-pnumber-checker
+      branch absent from origin, but 57521fee is an ancestor of origin/main (b09d2dcf89e7)
+  T332      softhouse/T332-residual-twin-sweep
+      branch absent from origin, but 167b98fc is an ancestor of origin/main (b09d2dcf89e7)
+  T334      softhouse/T334-writer-guidance
+      branch absent from origin, but 1fdf1c49 is an ancestor of origin/main (b09d2dcf89e7)
+  T349      softhouse/T349-pretooluse-eval
+      branch absent from origin, but b973825e is an ancestor of origin/main (b09d2dcf89e7)
+  T353      softhouse/T353-t342-conditions
+      branch absent from origin, but d870db1d is an ancestor of origin/main (b09d2dcf89e7)
+  T357      softhouse/T357-a2-11-section1-red
+      branch absent from origin, but 1f90ee76 is an ancestor of origin/main (b09d2dcf89e7)
+  T358      softhouse/T358-t323-conditions
+      branch absent from origin, but 137f6e15 is an ancestor of origin/main (b09d2dcf89e7)
+  T360      softhouse/T360-divergence-class
+      branch absent from origin, but cc45c5af is an ancestor of origin/main (b09d2dcf89e7)
+  T361      softhouse/T361-review-t353
+      branch absent from origin, but 539a7201 is an ancestor of origin/main (b09d2dcf89e7)
+  T362      softhouse/T362-review-t357
+      branch absent from origin, but 1f90ee76 is an ancestor of origin/main (b09d2dcf89e7)
+  T363      softhouse/T363-oracle-baseline
+      branch absent from origin, but 8313ab6d is an ancestor of origin/main (b09d2dcf89e7)
+  T364      softhouse/T364-review-t358
+      branch absent from origin, but 137f6e15 is an ancestor of origin/main (b09d2dcf89e7)
+  T365      softhouse/T365-t361-conditions
+      branch absent from origin, but 5aedfc4a is an ancestor of origin/main (b09d2dcf89e7)
+  T367      softhouse/T367-review-t363
+      branch absent from origin, but 8e979296 is an ancestor of origin/main (b09d2dcf89e7)
+  T368      softhouse/T368-review-t365
+      branch absent from origin, but 9cbbd54b is an ancestor of origin/main (b09d2dcf89e7)
+  T374      softhouse/T374-t362-conditions
+      branch absent from origin, but 01a7a05a is an ancestor of origin/main (b09d2dcf89e7)
+  T375      softhouse/T375-t364-conditions
+      branch absent from origin, but 2c1f5723 is an ancestor of origin/main (b09d2dcf89e7)
+  T375      softhouse/rescued-agent-ac5a2db446e903ba0-20260828-140005
+      branch absent from origin, but 2c1f5723 is an ancestor of origin/main (b09d2dcf89e7)
+  T377      softhouse/T377-t368-conditions
+      branch absent from origin, but 5c17f822 is an ancestor of origin/main (b09d2dcf89e7)
+  T379      softhouse/T379-review-t371
+      branch absent from origin, but 8cc0eed3 is an ancestor of origin/main (b09d2dcf89e7)
+  T380      softhouse/T380-review-t377
+      branch absent from origin, but db9ba603 is an ancestor of origin/main (b09d2dcf89e7)
+  T381      softhouse/T381-t379-conditions
+      branch absent from origin, but 9eedfe4d is an ancestor of origin/main (b09d2dcf89e7)
+  T382      softhouse/T382-review-t374
+      branch absent from origin, but 01a7a05a is an ancestor of origin/main (b09d2dcf89e7)
+  T383      softhouse/T383-t380-conditions
+      branch absent from origin, but 151ef180 is an ancestor of origin/main (b09d2dcf89e7)
+  T385      softhouse/T385-review-t383
+      branch absent from origin, but e6cd307f is an ancestor of origin/main (b09d2dcf89e7)
+  T386      softhouse/T386-review-t381
+      branch absent from origin, but 5497a85d is an ancestor of origin/main (b09d2dcf89e7)
+  T387      softhouse/T387-review-t360
+      branch absent from origin, but 026954a4 is an ancestor of origin/main (b09d2dcf89e7)
+  T388      softhouse/T388-accrual-capture
+      branch absent from origin, but 977e37af is an ancestor of origin/main (b09d2dcf89e7)
+  T389      softhouse/T389-review-t388
+      branch absent from origin, but a010f733 is an ancestor of origin/main (b09d2dcf89e7)
+  T391      softhouse/T391-accrual-promotion
+      branch absent from origin, but e0eb4fe2 is an ancestor of origin/main (b09d2dcf89e7)
+  T396      softhouse/T396-t389-conditions
+      branch absent from origin, but e96197a4 is an ancestor of origin/main (b09d2dcf89e7)
+  T401      softhouse/T401-zsh-census-gap
+      branch absent from origin, but 842607fc is an ancestor of origin/main (b09d2dcf89e7)
+  T402      softhouse/T402-t386-conditions
+      branch absent from origin, but eb005ba8 is an ancestor of origin/main (b09d2dcf89e7)
+  T445      softhouse/T445-case-route
+      branch absent from origin, but 236fc829 is an ancestor of origin/main (b09d2dcf89e7)
+  T451      softhouse/T451-t449-conditions
+      branch absent from origin, but de7c24b1 is an ancestor of origin/main (b09d2dcf89e7)
+  T452      softhouse/T452-t447-conditions
+      branch absent from origin, but dda1f031 is an ancestor of origin/main (b09d2dcf89e7)
+  T453      softhouse/T453-gate-state-set
+      branch absent from origin, but 141e3ae5 is an ancestor of origin/main (b09d2dcf89e7)
+  T454      softhouse/T454-longs-route
+      branch absent from origin, but 02fb1af4 is an ancestor of origin/main (b09d2dcf89e7)
+  T458      softhouse/T458-fixture-literal-pattern
+      branch absent from origin, but 0db7538b is an ancestor of origin/main (b09d2dcf89e7)
+  T462      softhouse/T462-wallclock-refusal
+      branch absent from origin, but 04956e8b is an ancestor of origin/main (b09d2dcf89e7)
+  T465      softhouse/T465-lock-frontier
+      branch absent from origin, but b9b37f9c is an ancestor of origin/main (b09d2dcf89e7)
+  T466      softhouse/T466-skipwt-smudge
+      branch absent from origin, but 11afb281 is an ancestor of origin/main (b09d2dcf89e7)
+  T467      softhouse/T467-t464-conditions
+      branch absent from origin, but 6a345e4a is an ancestor of origin/main (b09d2dcf89e7)
+  T468      softhouse/T468-review-t458
+      branch absent from origin, but 0db7538b is an ancestor of origin/main (b09d2dcf89e7)
+  T470      softhouse/T470-refusal-forecloses
+      branch absent from origin, but 28fdfee3 is an ancestor of origin/main (b09d2dcf89e7)
+  T472      softhouse/T472-review-t467
+      branch absent from origin, but 6a345e4a is an ancestor of origin/main (b09d2dcf89e7)
+  T476      softhouse/T467-t464-conditions
+      branch absent from origin, but 36e01f25 is an ancestor of origin/main (b09d2dcf89e7)
+  T476      softhouse/T476-t472-repair
+      branch absent from origin, but 36e01f25 is an ancestor of origin/main (b09d2dcf89e7)
+  T477      softhouse/T466-skipwt-smudge
+      branch absent from origin, but a6bf50a3 is an ancestor of origin/main (b09d2dcf89e7)
+  T477      softhouse/T477-t473-repair
+      branch absent from origin, but a6bf50a3 is an ancestor of origin/main (b09d2dcf89e7)
+  T503      softhouse/T503-opaque-sql
+      branch absent from origin, but c482b07d is an ancestor of origin/main (b09d2dcf89e7)
+  T505      softhouse/T505-review-t502
+      branch absent from origin, but a18d054d is an ancestor of origin/main (b09d2dcf89e7)
+  T506      softhouse/T506-review-t503
+      branch absent from origin, but 535d2c73 is an ancestor of origin/main (b09d2dcf89e7)
+  T508      softhouse/T508-journalentry-insert-schema
+      branch absent from origin, but 1abd3a11 is an ancestor of origin/main (b09d2dcf89e7)
+  T511      softhouse/T511-t505-conditions
+      branch absent from origin, but fc35f4eb is an ancestor of origin/main (b09d2dcf89e7)
+  T513      softhouse/T513-review-t510
+      branch absent from origin, but e0b57187 is an ancestor of origin/main (b09d2dcf89e7)
+  T514      softhouse/T514-review-t511
+      branch absent from origin, but e1ddc707 is an ancestor of origin/main (b09d2dcf89e7)
+  T515      softhouse/T515-savings-classification-rework
+      branch absent from origin, but 2e1a09df is an ancestor of origin/main (b09d2dcf89e7)
+  T516      softhouse/T516-t514-conditions
+      branch absent from origin, but 709e51c3 is an ancestor of origin/main (b09d2dcf89e7)
+  T520      softhouse/T508-journalentry-insert-schema
+      branch absent from origin, but 1abd3a11 is an ancestor of origin/main (b09d2dcf89e7)
+  T522      softhouse/T515-savings-classification-rework
+      branch absent from origin, but 84dc208e is an ancestor of origin/main (b09d2dcf89e7)
+
+WAIVED (baseline -- enumerated by exact subject in the committed baseline file, which cannot
+forgive a subject that did not exist when it was written): 314
+  A2-1      softhouse/A2-1-behaviour                             UNBACKED-BRANCH
+  A2-11     softhouse/A2-11-review-a2-7                          UNBACKED-BRANCH
+  A2-12     softhouse/A2-12-a2-8-microfix                        UNBACKED-BRANCH
+  A2-13     softhouse/A2-13-dec2-gl-contract                     UNBACKED-BRANCH
+  A2-14     softhouse/A2-14-review-dec2                          UNBACKED-BRANCH
+  A2-15     softhouse/A2-15-ledger-parity-vectors                UNBACKED-BRANCH
+  A2-16     softhouse/A2-16-dec2-rev2                            UNBACKED-BRANCH
+  A2-17     softhouse/A2-17-review-dec2-rev2                     UNBACKED-BRANCH
+  A2-18     softhouse/A2-18-ledger-invariant-guard               UNBACKED-BRANCH
+  A2-19     softhouse/A2-19-review-dec2-rev2-second              UNBACKED-BRANCH
+  A2-2      softhouse/A2-2-review-a2-1                           UNBACKED-BRANCH
+  A2-20     softhouse/A2-20-context-allowlist                    UNBACKED-BRANCH
+  A2-21     softhouse/A2-21-dec2-rev3                            UNBACKED-BRANCH
+  A2-22     softhouse/A2-22-refused-vector-coverage              UNBACKED-BRANCH
+  A2-23     softhouse/A2-23-empty-context-dir                    UNBACKED-BRANCH
+  A2-24     softhouse/A2-24-corroborations-adjudication          UNBACKED-BRANCH
+  A2-25     softhouse/A2-25-dec2-rev3-review                     UNBACKED-BRANCH
+  A2-26     softhouse/A2-26-ledger-capture-readiness             UNBACKED-BRANCH
+  A2-27     softhouse/A2-27-corroboration-followups              UNBACKED-BRANCH
+  A2-28     softhouse/A2-28-dec2-rev4                            UNBACKED-BRANCH
+  A2-29     softhouse/A2-29-running-balance                      UNBACKED-BRANCH
+  A2-3      softhouse/A2-3-capture                               UNBACKED-BRANCH
+  A2-32     softhouse/A2-32-dec2-rev5                            UNBACKED-BRANCH
+  A2-33     softhouse/A2-33-review-dec2-rev5                     UNBACKED-BRANCH
+  A2-34     softhouse/A2-34-review-a2-15                         UNBACKED-BRANCH
+  A2-4      softhouse/A2-4-review-a2-3                           UNBACKED-BRANCH
+  A2-6      softhouse/A2-6-a2-1-microfix                         UNBACKED-BRANCH
+  A2-6      softhouse/A2-6-behaviour-doc-microfix                UNBACKED-BRANCH
+  T10       softhouse/T10-go-schedule-port                       UNBACKED-BRANCH
+  T101      softhouse/T100-g8-two-families                       UNBACKED-BRANCH
+  T101      softhouse/T101-review-t100                           UNBACKED-BRANCH
+  T102      softhouse/T102-literal-fork-sha                      UNBACKED-BRANCH
+  T102      softhouse/T82-pass3i-defects                         UNBACKED-BRANCH
+  T103      softhouse/T103-review-t102                           UNBACKED-BRANCH
+  T104      softhouse/T104-review-t90                            UNBACKED-BRANCH
+  T106      softhouse/T106-review-t97                            UNBACKED-BRANCH
+  T107      softhouse/T107-review-t91                            UNBACKED-BRANCH
+  T107      softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001 UNBACKED-BRANCH
+  T108      softhouse/T108-grep-adjudication                     UNBACKED-BRANCH
+  T109      softhouse/T109-fork-point-digest-compare             UNBACKED-BRANCH
+  T11       softhouse/T11-go-port-review                         UNBACKED-BRANCH
+  T110      softhouse/T110-duplicate-caseid-refusal              UNBACKED-BRANCH
+  T112      softhouse/T112-g8-rework-retry                       UNBACKED-BRANCH
+  T114      softhouse/T114-review-t112                           UNBACKED-BRANCH
+  T115      softhouse/T115-t91-microfixes                        UNBACKED-BRANCH
+  T116      softhouse/T116-familyb-promotion                     UNBACKED-BRANCH
+  T117      softhouse/T117-familyb-probe                         UNBACKED-BRANCH
+  T119      softhouse/T119-review-t110                           UNBACKED-BRANCH
+  T121      softhouse/T121-review-t113                           UNBACKED-BRANCH
+  T122      7e49bd93                                             UNBACKED-COMMIT
+  T122      softhouse/T122-g8-t114-fixes                         UNBACKED-BRANCH
+  T125      softhouse/T125-attest-canary-gates                   UNBACKED-BRANCH
+  T127      softhouse/T127-review-t109                           UNBACKED-BRANCH
+  T128      softhouse/T128-review-t96                            UNBACKED-BRANCH
+  T129      softhouse/T129-review-t122                           UNBACKED-BRANCH
+  T13       softhouse/T13-uat                                    UNBACKED-BRANCH
+  T130      softhouse/T130-t113-microfixes                       UNBACKED-BRANCH
+  T131      softhouse/T131-review-t108                           UNBACKED-BRANCH
+  T135      softhouse/T135-review-t99                            UNBACKED-BRANCH
+  T136      softhouse/T136-review-t125                           UNBACKED-BRANCH
+  T153      softhouse/T153-review-t149                           UNBACKED-BRANCH
+  T154      softhouse/T154-nofloat-guards                        UNBACKED-BRANCH
+  T155      softhouse/T155-review-t154                           UNBACKED-BRANCH
+  T156      softhouse/T156-redgreen-exit-trap                    UNBACKED-BRANCH
+  T157      softhouse/T157-fire-program-grep-hardening           UNBACKED-BRANCH
+  T16       softhouse/T16-tier0-vector-capture-plan              UNBACKED-BRANCH
+  T161      softhouse/T161-provef1-trap-and-recovery             UNBACKED-BRANCH
+  T162      softhouse/T162-mutator-sigterm-coverage              UNBACKED-BRANCH
+  T163      softhouse/T163-resolve7-money-literals               UNBACKED-BRANCH
+  T164      softhouse/T164-analyze7-float-guard                  UNBACKED-BRANCH
+  T165      softhouse/T165-findreporoot-cwd                      UNBACKED-BRANCH
+  T166      softhouse/T166-nofloat-guard-widening                UNBACKED-BRANCH
+  T167      softhouse/T167-adr-rewriter-atomic-and-refusing      UNBACKED-BRANCH
+  T168      softhouse/T168-sigquit-trap-sweep                    UNBACKED-BRANCH
+  T169      softhouse/T169-capture-rig-throwable                 UNBACKED-BRANCH
+  T17       softhouse/T17-vector-capture-plan-review             UNBACKED-BRANCH
+  T176      softhouse/T176-t159-generator-reproduces             UNBACKED-BRANCH
+  T180      softhouse/T180-remove-attester-overwrite             UNBACKED-BRANCH
+  T181      softhouse/T181-review-t178                           UNBACKED-BRANCH
+  T182      softhouse/T182-review-t177                           UNBACKED-BRANCH
+  T183      softhouse/T183-review-t179                           UNBACKED-BRANCH
+  T184      softhouse/T184-review-t173                           UNBACKED-BRANCH
+  T185      softhouse/T185-review-t175                           UNBACKED-BRANCH
+  T186      softhouse/T186-wire-money-form-ruling                UNBACKED-BRANCH
+  T187      softhouse/T187-t41probe-rewriters-guarded            UNBACKED-BRANCH
+  T188      softhouse/T188-review-driver-merge-fix               UNBACKED-BRANCH
+  T189      softhouse/T189-grep-adjudication-final               UNBACKED-BRANCH
+  T190      softhouse/T190-fireprogram-dirty-failopen            UNBACKED-BRANCH
+  T191      softhouse/T191-failopen-money-guards                 UNBACKED-BRANCH
+  T193      softhouse/T193-request-body-guard                    UNBACKED-BRANCH
+  T194      softhouse/T194-census-value-read                     UNBACKED-BRANCH
+  T196      softhouse/T196-backstep-classifier                   UNBACKED-BRANCH
+  T197      softhouse/T197-review-t194                           UNBACKED-BRANCH
+  T198      softhouse/T198-review-t196                           UNBACKED-BRANCH
+  T199      softhouse/T199-review-t165                           UNBACKED-BRANCH
+  T200      softhouse/T200-review-t190                           UNBACKED-BRANCH
+  T201      softhouse/T201-repo-root-bypass                      UNBACKED-BRANCH
+  T202      softhouse/T202-fireprogram-twin                      UNBACKED-BRANCH
+  T203      softhouse/T203-vectorstore-rewriters                 UNBACKED-BRANCH
+  T204      softhouse/T204-correct-t178-split                    UNBACKED-BRANCH
+  T205      softhouse/T205-classifier-unknown                    UNBACKED-BRANCH
+  T206      softhouse/T206-seventh-writer                        UNBACKED-BRANCH
+  T208      softhouse/T208-wire-ledger-guard                     UNBACKED-BRANCH
+  T209      softhouse/T209-cannot-catch-reaches-green            UNBACKED-BRANCH
+  T21       softhouse/T21-capture-pass3-audit                    UNBACKED-BRANCH
+  T210      softhouse/T210-anchor-regression-unfreeze            UNBACKED-BRANCH
+  T211      softhouse/T211-sigterm-prompt-stop                   UNBACKED-BRANCH
+  T212      softhouse/T212-enforce-zero-population               UNBACKED-BRANCH
+  T214      softhouse/T214-unmerged-evidence                     UNBACKED-BRANCH
+  T215      softhouse/T215-lock-exclusion-second-site            UNBACKED-BRANCH
+  T216      softhouse/T216-quit-trap-tail                        UNBACKED-BRANCH
+  T217      softhouse/T217-release-lock-followups                UNBACKED-BRANCH
+  T218      softhouse/T218-t127-microfixes                       UNBACKED-BRANCH
+  T219      softhouse/T219-g8-residual-measurement               UNBACKED-BRANCH
+  T22       softhouse/T22-pathb-capture-audit                    UNBACKED-BRANCH
+  T220      softhouse/T220-review-t116                           UNBACKED-BRANCH
+  T227      softhouse/T227-retracted-claim-third-file            UNBACKED-BRANCH
+  T228      softhouse/T228-dead-concept-sweep                    UNBACKED-BRANCH
+  T229      softhouse/T229-g8-rescue-site3                       UNBACKED-BRANCH
+  T230      softhouse/T230-rework-t222-grounding                 UNBACKED-BRANCH
+  T231      softhouse/T231-g8-section-rebuild                    UNBACKED-BRANCH
+  T232      softhouse/T232-pattern-p72-sweep-calibration         UNBACKED-BRANCH
+  T233      softhouse/T233-exemption-citation-gate               UNBACKED-BRANCH
+  T234      softhouse/T234-sweep-instrument-audit                UNBACKED-BRANCH
+  T236      softhouse/T236-cap9-quit                             UNBACKED-BRANCH
+  T237      softhouse/T237-stale-selftest                        UNBACKED-BRANCH
+  T238      softhouse/T238-failopen-dead-cd                      UNBACKED-BRANCH
+  T239      softhouse/T239-r11-hygiene-rerun                     UNBACKED-BRANCH
+  T241      softhouse/T241-site3-formula                         UNBACKED-BRANCH
+  T242      softhouse/T242-ledger-coverage-derived               UNBACKED-BRANCH
+  T243      softhouse/T243-wire-the-guards                       UNBACKED-BRANCH
+  T244      softhouse/T244-dec2-rev6-prepared                    UNBACKED-BRANCH
+  T245      softhouse/T245-oracle-pin                            UNBACKED-BRANCH
+  T246      softhouse/T246-review-dec2-rev6                      UNBACKED-BRANCH
+  T247      softhouse/T247-dec2-rev7                             UNBACKED-BRANCH
+  T248      softhouse/T248-failopen-widen                        UNBACKED-BRANCH
+  T249      softhouse/T249-g14-scope                             UNBACKED-BRANCH
+  T250      softhouse/T250-tenant-attestation                    UNBACKED-BRANCH
+  T251      softhouse/T251-review-dec2-rev7                      UNBACKED-BRANCH
+  T252      softhouse/T252-failopen-counts                       UNBACKED-BRANCH
+  T253      softhouse/T253b-harness-portability-mac              UNBACKED-BRANCH
+  T255      softhouse/T255-dec2-rev8                             UNBACKED-BRANCH
+  T258      softhouse/T258-frontier-rot-residuals                UNBACKED-BRANCH
+  T259      softhouse/T259-verdict-predicate                     UNBACKED-BRANCH
+  T260      softhouse/T260-review-dec2-rev8                      UNBACKED-BRANCH
+  T261      softhouse/T261-review-tenant-attestation             UNBACKED-BRANCH
+  T262      softhouse/T262-review-verdict-predicate              UNBACKED-BRANCH
+  T263      softhouse/T263-review-analyze7-float-guard           UNBACKED-BRANCH
+  T264      softhouse/t264-review-cloud-t241                     UNBACKED-BRANCH
+  T265      softhouse/t265-review-lock-fix                       UNBACKED-BRANCH
+  T268      softhouse/t268-rvpa-failopen                         UNBACKED-BRANCH
+  T270      softhouse/T270-superseded-trap                       UNBACKED-BRANCH
+  T271      softhouse/t271-b1-t219                               UNBACKED-BRANCH
+  T273      softhouse/t273-tmp-residue                           UNBACKED-BRANCH
+  T274      softhouse/t274-attestation-failopen                  UNBACKED-BRANCH
+  T275      softhouse/t275-a2-gap-capture                        UNBACKED-BRANCH
+  T276      softhouse/t276-review-t275-capture                   UNBACKED-BRANCH
+  T280      softhouse/T280-review-t279                           UNBACKED-BRANCH
+  T281      softhouse/t281-review-t268                           UNBACKED-BRANCH
+  T283      softhouse/rescued-agent-af19d6f14414d32f0-20260822-140002 UNBACKED-BRANCH
+  T283      softhouse/t283-review-t274                           UNBACKED-BRANCH
+  T285      softhouse/rescued-agent-ad4264728c497493b-20260822-140002 UNBACKED-BRANCH
+  T285      softhouse/t285-review-t273                           UNBACKED-BRANCH
+  T286      softhouse/t286-t268-retry                            UNBACKED-BRANCH
+  T287      softhouse/t287-closure-refusals                      UNBACKED-BRANCH
+  T297      softhouse/t297-review-t295                           UNBACKED-BRANCH
+  T298      softhouse/T298-review-t256                           UNBACKED-BRANCH
+  T299      softhouse/t299-t256-namespace-collision              UNBACKED-BRANCH
+  T302      softhouse/T302-review-t288                           UNBACKED-BRANCH
+  T304      softhouse/T304-evidence-destruction                  UNBACKED-BRANCH
+  T304      softhouse/T304b-evidence-destruction                 UNBACKED-BRANCH
+  T305      softhouse/t305-openingbalance-accepting-side         UNBACKED-BRANCH
+  T308      softhouse/T308-review-t292                           UNBACKED-BRANCH
+  T309      softhouse/t309-sigterm-reconcile-bypass              UNBACKED-BRANCH
+  T312      softhouse/T312-branch-case-collision                 UNBACKED-BRANCH
+  T314      softhouse/T314-witness-path-forgery                  UNBACKED-BRANCH
+  T316      softhouse/T316-dead-path-guards                      UNBACKED-BRANCH
+  T318      softhouse/T318-committed-clobber-blindness           UNBACKED-BRANCH
+  T319      softhouse/T319-reconciler-f5                         UNBACKED-BRANCH
+  T320      softhouse/T320-review-t305                           UNBACKED-BRANCH
+  T323      softhouse/T323-wire-unwired-guards                   UNBACKED-BRANCH
+  T329      61c0f382                                             UNBACKED-COMMIT
+  T329      softhouse/T329-date-zone-disagreement                UNBACKED-BRANCH
+  T335      softhouse/T335-rvpa-list-traversal                   UNBACKED-BRANCH
+  T335      softhouse/rescued-agent-afc904cf109cb64cf-20260828-080001 UNBACKED-BRANCH
+  T336      softhouse/T336-post-checkout-decision                UNBACKED-BRANCH
+  T337      softhouse/T337-review-t323                           UNBACKED-BRANCH
+  T339      softhouse/T339-review-t270                           UNBACKED-BRANCH
+  T340      softhouse/T340-review-t258                           UNBACKED-BRANCH
+  T342      softhouse/T342-releasedat-failopen                   UNBACKED-BRANCH
+  T350      softhouse/T350-reconcile-content                     UNBACKED-BRANCH
+  T351      a0139c5d                                             UNBACKED-COMMIT
+  T351      e10e3f07                                             UNBACKED-COMMIT
+  T351      softhouse/T351-progress-accounting                   UNBACKED-BRANCH
+  T352      softhouse/T352-a2-next-tranche                       UNBACKED-BRANCH
+  T359      softhouse/T359-review-t352                           UNBACKED-BRANCH
+  T369      e10e3f07                                             UNBACKED-COMMIT
+  T369      softhouse/T369-review-t351                           UNBACKED-BRANCH
+  T370      4925bbef                                             UNBACKED-COMMIT
+  T370      softhouse/T370-t351-retry                            UNBACKED-BRANCH
+  T371      softhouse/T371-t367-conditions                       UNBACKED-BRANCH
+  T376      softhouse/T376-review-t370                           UNBACKED-BRANCH
+  T38       softhouse/T38-dec1-v7                                UNBACKED-BRANCH
+  T38       softhouse/T38-dec1-v7-pass2                          UNBACKED-BRANCH
+  T384      softhouse/T384-review-t375                           UNBACKED-BRANCH
+  T39       softhouse/T39-periodratio-observation                UNBACKED-BRANCH
+  T390      softhouse/T390-baseline-attribution                  UNBACKED-BRANCH
+  T392      softhouse/T392-vacuous-pass-pattern                  UNBACKED-BRANCH
+  T393      softhouse/T393-t382-conditions                       UNBACKED-BRANCH
+  T397      softhouse/T397-t387-conditions                       UNBACKED-BRANCH
+  T398      softhouse/T398-measured-but-backwards                UNBACKED-BRANCH
+  T3b       softhouse/T3b-progressive-schedule-rereview          UNBACKED-BRANCH
+  T4        softhouse/T4-dec1-contract-v2                        UNBACKED-BRANCH
+  T40       softhouse/T40-charges-capture                        UNBACKED-BRANCH
+  T400      softhouse/T400-t385-conditions                       UNBACKED-BRANCH
+  T404      softhouse/T404-t384-conditions                       UNBACKED-BRANCH
+  T405      softhouse/T405-review-t397                           UNBACKED-BRANCH
+  T406      softhouse/T406-review-t391                           UNBACKED-BRANCH
+  T407      softhouse/T407-review-t404                           UNBACKED-BRANCH
+  T408      softhouse/T408-review-t402                           UNBACKED-BRANCH
+  T409      softhouse/T409-review-t390                           UNBACKED-BRANCH
+  T41       softhouse/T41-dec1-v8                                UNBACKED-BRANCH
+  T410      softhouse/T410-review-t400                           UNBACKED-BRANCH
+  T411      softhouse/T411-review-t401                           UNBACKED-BRANCH
+  T412      softhouse/T412-driver-selfgrading                    UNBACKED-BRANCH
+  T414      softhouse/T414-review-t398                           UNBACKED-BRANCH
+  T416      softhouse/T416-t405-conditions                       UNBACKED-BRANCH
+  T417      softhouse/T417-scheduler-attribution                 UNBACKED-BRANCH
+  T42       softhouse/T42-mathcontext-inforce                    UNBACKED-BRANCH
+  T421      softhouse/T421-t406-conditions                       UNBACKED-BRANCH
+  T422      softhouse/T416-t405-conditions                       UNBACKED-BRANCH
+  T422      softhouse/T422-review-t416                           UNBACKED-BRANCH
+  T423      softhouse/T423-review-t393                           UNBACKED-BRANCH
+  T424      softhouse/T424-t408-conditions                       UNBACKED-BRANCH
+  T428      softhouse/T428-review-t421                           UNBACKED-BRANCH
+  T428      softhouse/rescued-agent-aba498d1a28770847-20260828-140005 UNBACKED-BRANCH
+  T429      softhouse/T429-oracle-derived-columns                UNBACKED-BRANCH
+  T43       softhouse/T43-dec1-v8-rereview                       UNBACKED-BRANCH
+  T431      softhouse/T431-t407-conditions                       UNBACKED-BRANCH
+  T433      softhouse/T433-t423-c1                               UNBACKED-BRANCH
+  T438      softhouse/T438-review-t417                           UNBACKED-BRANCH
+  T439      softhouse/T439-review-t429                           UNBACKED-BRANCH
+  T44       softhouse/T44-capture-audit                          UNBACKED-BRANCH
+  T440      softhouse/T440-review-t424                           UNBACKED-BRANCH
+  T442      softhouse/T442-t440-conditions                       UNBACKED-BRANCH
+  T444      softhouse/T444-review-t431                           UNBACKED-BRANCH
+  T446      softhouse/T446-review-t445                           UNBACKED-BRANCH
+  T447      softhouse/T447-review-t442                           UNBACKED-BRANCH
+  T448      softhouse/T448-review-t433                           UNBACKED-BRANCH
+  T449      softhouse/T449-review-t350                           UNBACKED-BRANCH
+  T45       softhouse/T45-dec1-v9                                UNBACKED-BRANCH
+  T450      softhouse/T450-review-t412                           UNBACKED-BRANCH
+  T455      softhouse/T455-t448-conditions                       UNBACKED-BRANCH
+  T456      softhouse/T456-review-t451                           UNBACKED-BRANCH
+  T457      softhouse/T457-review-t452                           UNBACKED-BRANCH
+  T459      softhouse/T459-review-t454                           UNBACKED-BRANCH
+  T46       softhouse/T46-capture-corrections                    UNBACKED-BRANCH
+  T461      softhouse/T461-review-t453                           UNBACKED-BRANCH
+  T464      softhouse/T464-review-t455                           UNBACKED-BRANCH
+  T469      softhouse/T469-review-t462                           UNBACKED-BRANCH
+  T47       softhouse/T47-dec1-v10                               UNBACKED-BRANCH
+  T471      softhouse/T471-review-t465                           UNBACKED-BRANCH
+  T472      0accb769                                             UNBACKED-COMMIT
+  T473      4bce914a                                             UNBACKED-COMMIT
+  T473      softhouse/T473-review-t466                           UNBACKED-BRANCH
+  T474      409c7693                                             UNBACKED-COMMIT
+  T474      softhouse/T474-t471-conditions                       UNBACKED-BRANCH
+  T475      softhouse/T475-t469-conditions                       UNBACKED-BRANCH
+  T479      softhouse/T479-review-t477                           UNBACKED-BRANCH
+  T48       softhouse/T48-actualactual-captures                  UNBACKED-BRANCH
+  T480      softhouse/T480-challenge-repair                      UNBACKED-BRANCH
+  T482      softhouse/T482-superset-control                      UNBACKED-BRANCH
+  T483      softhouse/T483-review-t470                           UNBACKED-BRANCH
+  T484      softhouse/T484-review-t474                           UNBACKED-BRANCH
+  T484      softhouse/rescued-agent-a79caaa539cd4992d-20260829-080002 UNBACKED-BRANCH
+  T485      softhouse/T485-review-t480                           UNBACKED-BRANCH
+  T49       softhouse/T49-dec1-v10-rereview                      UNBACKED-BRANCH
+  T5        softhouse/T5-dec1-contract-review                    UNBACKED-BRANCH
+  T50       softhouse/T50-ambient-vs-threaded-rounding           UNBACKED-BRANCH
+  T501      softhouse/T501-savings-i3                            UNBACKED-BRANCH
+  T502      softhouse/T502-loanproduct-i3                        UNBACKED-BRANCH
+  T504      softhouse/T504-review-t501                           UNBACKED-BRANCH
+  T51       softhouse/T51-alias-and-tranche-captures             UNBACKED-BRANCH
+  T52       softhouse/T52-dec1-v11                               UNBACKED-BRANCH
+  T53       softhouse/T53-dec1-v11-diffcheck                     UNBACKED-BRANCH
+  T54       softhouse/T54-dec1-v12                               UNBACKED-BRANCH
+  T55       softhouse/T55-leap-boundary-capture                  UNBACKED-BRANCH
+  T59       softhouse/T59-cancellation-and-cost                  UNBACKED-BRANCH
+  T60       softhouse/T60-unrecorded-cell-grading                UNBACKED-BRANCH
+  T61       softhouse/T61-mutation-hunt-round-2                  UNBACKED-BRANCH
+  T63       softhouse/T63-review-memo-and-cancellation           UNBACKED-BRANCH
+  T66       softhouse/T66-unrecognized-interest                  UNBACKED-BRANCH
+  T67       softhouse/T67-review-t65                             UNBACKED-BRANCH
+  T69       softhouse/T65-t63-p1s                                UNBACKED-BRANCH
+  T7        softhouse/T7-conformance-harness                     UNBACKED-BRANCH
+  T73       softhouse/T73-review-t72                             UNBACKED-BRANCH
+  T74       softhouse/T74-pathA-multiplesof                      UNBACKED-BRANCH
+  T77       softhouse/T77-review-t76                             UNBACKED-BRANCH
+  T79       softhouse/T79-review-t78                             UNBACKED-BRANCH
+  T80       softhouse/T80-pathb-recipe-hardening                 UNBACKED-BRANCH
+  T81       softhouse/T81-conformance-shell-guard                UNBACKED-BRANCH
+  T82       softhouse/T82-pass3i-defects                         UNBACKED-BRANCH
+  T84       softhouse/T84-review-t83                             UNBACKED-BRANCH
+  T85       softhouse/T85-review-t80                             UNBACKED-BRANCH
+  T86       softhouse/T86-review-t81                             UNBACKED-BRANCH
+  T87       softhouse/T87-review-t82                             UNBACKED-BRANCH
+  T88       softhouse/T88-fui-marker-d6                          UNBACKED-BRANCH
+  T89       softhouse/T89-review-t88                             UNBACKED-BRANCH
+  T9        softhouse/T9-harness-vectors-review                  UNBACKED-BRANCH
+  T90       softhouse/T90-report-determinism                     UNBACKED-BRANCH
+  T91       softhouse/T91-preconditions-copy                     UNBACKED-BRANCH
+  T96       softhouse/T96-sole-caller-census                     UNBACKED-BRANCH
+  T99       softhouse/T99-pathb-lower-findings                   UNBACKED-BRANCH
+  T99       softhouse/rescued-agent-a23f30596288e4322-20260820-230001 UNBACKED-BRANCH
+
+UNCLASSIFIED HEX IN NOTES -- NOT CHECKED (984 occurrence(s), 219 distinct).
+These are hex tokens no claim anchor captured. Most are sha256 digests and tree
+hashes; some belong to the pinned Fineract checkout, a different repository. If a
+real commit claim is sitting in here, the phrasing needs an anchor in CLAIM_ANCHORS.
+  A2-1      20260821                                   (all-digit: indistinguishable from a fire id or a date)
+  T116      20260822                                   (all-digit: indistinguishable from a fire id or a date)
+  T116      73c3ea7b43dd75f04884072719a87fc8e1d255c1   (digest / foreign-repo context)
+  T153      b126725a                                   (no claim anchor matched)
+  T153      10858003                                   (all-digit: indistinguishable from a fire id or a date)
+  T153      39f56dc2                                   (digest / foreign-repo context)
+  T161      c56825ad                                   (no claim anchor matched)
+  T161      567e4cf0                                   (no claim anchor matched)
+  T165      a9dc03a754bd32556                          (digest / foreign-repo context)
+  T167      49dc8923                                   (no claim anchor matched)
+  T167      cabc2aeb                                   (no claim anchor matched)
+  T176      fecea4b2                                   (digest / foreign-repo context)
+  ... 207 more distinct; re-run with --json for the full list
+
+WHY THIS MATTERS: on 2026-09-04 five tasks -- T508, T509 (the program's
+recorded critical path), T510, T512, T515 -- were recorded terminal on main
+with notes naming commits that exist on one laptop and nowhere else. The tree
+was clean; what was wrong was what the tree ASSERTED about work not in it.
+REPAIR is one of two things, and neither is editing this tool: push the branch
+to origin, or correct the note to say the work is UNRECOVERED.

@@ -1,0 +1,48 @@
+==============================================================================
+A. plain run over the real record -- timing and the shape of the report
+==============================================================================
+exit code: 5
+wall clock: 3.033470359 s
+report lines: 404
+
+where the driver's own sections land:
+2:STEP 0 -- IS THE RECORD BACKED BY origin?  (T527, check-branch-published.py)
+5:check-branch-published: REFUSE -- 19 claim(s) origin has never heard of
+252:>>> THE RECORD BELOW CLAIMS WORK THAT origin HAS NEVER HEARD OF. A task
+257:IN PROGRESS -- ALREADY DISPATCHED, do not dispatch again (2)
+274:READY (64)
+370:BLOCKED (15)
+401:STEP 0 VERDICT: NOT CLEAN -- check-branch-published.py did not say CLEAN.
+
+==============================================================================
+B. --json must stay valid JSON on stdout
+==============================================================================
+exit code: 5
+stdout bytes: 1439   stderr bytes: 21681
+stdout parses as JSON: YES
+top-level keys: ['blocked', 'branch_published', 'in_progress', 'ready', 'unresolved_edges']
+branch_published: NOT_CLEAN
+ready count: 64
+
+==============================================================================
+C. checker --json in the exit-3 arm: document on stdout, banner on stderr
+==============================================================================
+exit: 3
+stdout parses as JSON: YES CANNOT_ESTABLISH_ORIGIN
+stderr first line: ==============================================================================
+
+==============================================================================
+D. IS THERE A BYPASS? -- flags and env vars in both files
+==============================================================================
+--- argument names the checker accepts:
+"--bare" "--baseline" "--delete" "--full-baseline" "--git-dir" "--heads" "--help" "--is-ancestor" "--is-shallow-repository" "--json" "--keep" "--no-ff" "--quiet" "--repo" "--selftest" "--timeout" "--unshallow" "--verify" "--write-baseline" 
+--- bypass-shaped words anywhere in either file:
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/check-branch-published.py:47:enforces nothing at least five times over, and an offline pass here would have reported
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/check-branch-published.py:137:There is deliberately NO flag that lets this pass without contacting origin. A `--offline`
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/check-branch-published.py:138:or `--no-fetch` escape hatch is the `P-91` burden inversion: the caller that most wants it
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/ready-tasks.py:127:`in_progress`, and a human had to override it -- the exact state STEP 5.5 item 4 calls
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/ready-tasks.py:2246:    two-line de-facto disable, in a program whose recorded failure mode is a red guard
+(lines above are non-comment hits; none = no bypass)
+
+--- every os.environ / getenv read in either file:
+/tmp/claude-0/-home-user/e117303a-43e0-5307-9735-ae54878b46b3/scratchpad/t536wt/.softhouse/bin/check-branch-published.py:1141:    env = dict(os.environ)
