@@ -1,0 +1,40 @@
+{
+ "schema": "gerege.origination.vector/v1",
+ "case_id": "OR-03-inactive",
+ "title": "INACTIVE originator stored string",
+ "class": "parity",
+ "context": "origination",
+ "_note": "Parity vector transcribed from capture .softhouse/capture/origination/out/loan-originators-template-raw.json (GET /loan-originators/template, tenant gerege). request.name=\"INACTIVE\" came from the capture statusOptions array entry \"INACTIVE\"; expect.stored=\"INACTIVE\" is that same entry's string value. LoanOriginatorStatus is a STRING enum (no ordinal column): the oracle stores the enum name itself, declared in LoanOriginatorStatus.java:23-28 as INACTIVE(\"INACTIVE\"). A wrong name-to-string mapping (e.g. INACTIVE stored as ACTIVE) silently corrupts every originator written and nothing throws.",
+ "oracle": {
+  "seam": "origination-loan-originator-status",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Both fields are transcribed from the committed capture .softhouse/capture/origination/out/loan-originators-template-raw.json; capture_case_id names the statusOptions value of the observed entry.",
+  "capture_ref": ".softhouse/capture/origination/out/loan-originators-template-raw.json",
+  "capture_sha256": "59d4a563dff477cd04a47b93d6a0153f59d03e4aadb14ae1ea417dee77928f22",
+  "capture_case_id": "INACTIVE",
+  "citation": "fineract-loan-origination/src/main/java/org/apache/fineract/portfolio/loanorigination/domain/LoanOriginatorStatus.java:23-28 — INACTIVE(\"INACTIVE\")"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "INACTIVE"
+ },
+ "expect": {
+  "stored": "INACTIVE"
+ },
+ "capabilities_required": [
+  "loan-originator-status"
+ ],
+ "graded_against": [
+  "origination-go"
+ ]
+}
