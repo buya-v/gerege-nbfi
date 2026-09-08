@@ -1,0 +1,45 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L06-summary-total-outstanding",
+    "title": "SEED-L06 read-back summary total outstanding (derive-don't-store)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the SEED-L06 loan-detail summary read-back. request.summary.principal_outstanding_minor=10005050 is the capture summary's \"principalOutstanding\":100050.500000 in minor units; request.summary.interest_outstanding_minor=662189 is \"interestOutstanding\":6621.890000; the fee and penalty buckets are the empty \"feeChargesOutstanding\":0.000000 and \"penaltyChargesOutstanding\":0.000000. expect.summary_total_minor=10667239 is the capture summary's \"totalOutstanding\":106672.390000 in minor units. This is the discriminating loan SEED-L06 (principal 100050.50, the MANIFEST roundingSurface input), so the derived total is pinned on an observation whose period-1 interest already ties HALF_UP against HALF_EVEN; the vector itself discriminates the registered wrong implementation loan-wrong-summary-interest-not-outstanding (principal + fee only), which reads 10005050 here, 662189 short of the posted total. Nothing was computed by this promotion.",
+    "oracle": {
+        "seam": "loan-summary-outstanding",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-L06-detail-raw.json; capture_case_id names the externalId of the observed loan.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-L06-detail-raw.json",
+        "capture_sha256": "096f2d90a922f51e498e546323b67edf4c910c0573f4a6083141cf81d7ef6b30",
+        "capture_case_id": "SEED-L06",
+        "citation": "loan-L06-detail-raw.json {\"externalId\":\"SEED-L06\",\"summary\":{\"principalOutstanding\":100050.500000,\"interestOutstanding\":6621.890000,\"feeChargesOutstanding\":0.000000,\"penaltyChargesOutstanding\":0.000000,\"totalOutstanding\":106672.390000}}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "summary": {
+            "principal_outstanding_minor": "10005050",
+            "interest_outstanding_minor": "662189",
+            "fee_outstanding_minor": "0",
+            "penalty_outstanding_minor": "0"
+        }
+    },
+    "expect": {
+        "summary_total_minor": "10667239"
+    },
+    "capabilities_required": [
+        "summary-total-outstanding"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}
