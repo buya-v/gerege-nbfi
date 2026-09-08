@@ -1,0 +1,45 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L01-summary-total-outstanding-after-waiver",
+    "title": "SEED-L01 post-waiver read-back summary total outstanding (derive-don't-store)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the SEED-L01 loan-detail summary read-back taken AFTER the 1000.00 interest waiver (MANIFEST objects.waiver: loan 1, transaction 13, amount 1000.00). request.summary.principal_outstanding_minor=10000000 is the capture summary's \"principalOutstanding\":100000.000000 in minor units; request.summary.interest_outstanding_minor=561853 is \"interestOutstanding\":5618.530000, the pre-waiver 6618.53 reduced by the \"interestWaived\":1000.000000 that the same summary block reports; the fee and penalty buckets are empty. expect.summary_total_minor=10561853 is \"totalOutstanding\":105618.530000 in minor units, the total Fineract derived from the post-waiver buckets. This pins a DIFFERENT (principal, interest, total) observation from the pre-waiver loan-1-detail-raw.json read-back (106618.53), so the derive-don't-store total is asserted over two independent loan-1 observations; and it discriminates: the registered wrong implementation loan-wrong-summary-interest-not-outstanding (principal + fee only, interest bucket treated as recovered) reads 10000000 here, 561853 short of the posted total. Nothing was computed by this promotion; the loan slice has no interest-waiver arithmetic, and this vector grades only the derived total of the read-back buckets.",
+    "oracle": {
+        "seam": "loan-summary-outstanding",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-1-detail-after-raw.json; capture_case_id names the externalId of the observed loan.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-1-detail-after-raw.json",
+        "capture_sha256": "3b3fa85ab2226786bc699b5728c8ac17913bd79a70ea2741c977b842e3b679e6",
+        "capture_case_id": "SEED-L01",
+        "citation": "loan-1-detail-after-raw.json {\"externalId\":\"SEED-L01\",\"summary\":{\"principalOutstanding\":100000.000000,\"interestOutstanding\":5618.530000,\"feeChargesOutstanding\":0.000000,\"penaltyChargesOutstanding\":0.000000,\"interestWaived\":1000.000000,\"totalOutstanding\":105618.530000}}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "summary": {
+            "principal_outstanding_minor": "10000000",
+            "interest_outstanding_minor": "561853",
+            "fee_outstanding_minor": "0",
+            "penalty_outstanding_minor": "0"
+        }
+    },
+    "expect": {
+        "summary_total_minor": "10561853"
+    },
+    "capabilities_required": [
+        "summary-total-outstanding"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}
