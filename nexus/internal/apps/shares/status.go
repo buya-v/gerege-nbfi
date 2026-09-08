@@ -75,6 +75,36 @@ func PurchaseStatusFromInt(v int32) PurchaseStatus {
 	}
 }
 
+// ShareAccountDividendStatus is the m_share_account_dividends.status_enum value
+// the graded captures observe: a dividend row read back either from the
+// share-product dividend list or from the share-account aggregate's dividends
+// list carries status id 100 with code shareAccountDividendStatusType.initiated
+// and value "Dividend Initiated". INVALID(0) is the default fromInt value.
+//
+// The oracle's dividend reaches a posted state after the dividend is posted,
+// but no capture in this programme reads that state back, so its stored value
+// is deliberately NOT asserted here: the enum exposes exactly the states the
+// graded captures observed.
+type ShareAccountDividendStatus int32
+
+const (
+	ShareAccountDividendStatusInvalid   ShareAccountDividendStatus = 0
+	ShareAccountDividendStatusInitiated ShareAccountDividendStatus = 100
+)
+
+// StoredValue returns the integer Fineract persists in status_enum.
+func (s ShareAccountDividendStatus) StoredValue() int32 { return int32(s) }
+
+// ShareAccountDividendStatusFromInt ports ShareAccountDividendStatus.fromInt.
+func ShareAccountDividendStatusFromInt(v int32) ShareAccountDividendStatus {
+	switch v {
+	case 100:
+		return ShareAccountDividendStatusInitiated
+	default:
+		return ShareAccountDividendStatusInvalid
+	}
+}
+
 // ShareAccountTransactionType is the m_share_account_transaction
 // transaction_type_enum value.
 //

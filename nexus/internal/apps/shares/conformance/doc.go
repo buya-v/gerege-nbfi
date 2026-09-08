@@ -6,22 +6,40 @@
 // # What this harness grades
 //
 // The shares slice is the MODEL plus the pure, testable vocabulary of Fineract's
-// share-accounts domain: the share-account status and purchase-status
+// share-accounts domain: the share-account, purchase-status and dividend-status
 // enumerations, and the money type every money column is normalised to. The
-// running oracle's captures (T15/T16 family) expose two observable money
-// surfaces, each graded by its own seam:
+// running oracle's captures (T15/T16 family) expose the vocabulary across three
+// seams, each graded behind its own request kind:
 //
-//   - share-account: the account aggregate readback. The purchase total is
-//     requestedShares * unitPrice = 100 * 100 = 10000.00, an integer-times-
-//     integer minor-unit product, so there is NO rounding surface (the MANIFEST
-//     records this). The harness grades the account status, the purchase status,
-//     and the normalisation of the purchased price and amount into integer minor
-//     units.
-//   - share-dividend: the share-product dividend amount. The oracle received
-//     dividendAmount "0.005" and STORED "0.010000" — the HALF_UP-rounded
-//     read-back (the MANIFEST records HALF_UP 0.01 / HALF_EVEN 0.00, verdict
-//     HALF_UP). This harness grades the normalisation of that STORED amount to
-//     one minor unit. The rounding itself is NOT graded: see below.
+//   - share-account: the account aggregate readback AND one row of the
+//     share-account list. The aggregate purchase total is requestedShares *
+//     unitPrice = 100 * 100 = 10000.00, an integer-times-integer minor-unit
+//     product, so there is NO rounding surface. The harness grades the stored
+//     account status, the summary's approved and pending share counts and — when
+//     the read-back carried the purchase group — the stored purchase status and
+//     the normalisation of the purchased price and amount into integer minor
+//     units. A share-account LIST row serialises no purchase group and no money,
+//     so it is graded on its stored status and summary counts only.
+//   - share-dividend: the share-product dividend amount and its stored status.
+//     The oracle received dividendAmount "0.005" and STORED "0.010000" — the
+//     HALF_UP-rounded read-back (the MANIFEST records HALF_UP 0.01 / HALF_EVEN
+//     0.00, verdict HALF_UP). This harness grades the normalisation of that
+//     STORED amount to one minor unit; when the read-back carried the dividend
+//     row (the account aggregate's dividends list does), it also pins the row's
+//     stored status integer (100, initiated), never the label. The rounding
+//     itself is NOT graded: see below.
+//   - share-product: the share-product detail read or one row of the share-
+//     product list. The harness grades the normalisation of the unit price and
+//     the share capital into integer minor units and the total share count. One
+//     captured row carries a PRESENT-but-ZERO share capital (0.00), so a
+//     serialiser that drops a zero money cell is a visible defect.
+//
+// Every money figure above is exact 2dp decimal text the oracle stored,
+// transcribed to integer minor units; no figure is ever computed by the
+// harness. The graded cells per vector: SH-01 account aggregate grades 7 cells
+// (account status, approved, pending, purchase shares, purchase price, purchase
+// amount, purchase status), SH-02/03 the dividend amount and status, SH-04/05/06
+// the three product cells, SH-07 the account-list status and summary cells.
 //
 // # What this harness cannot grade
 //

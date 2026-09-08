@@ -4,14 +4,14 @@
  "title": "share account SEED-SHARE-ACCT purchase: 100 shares at 100.00 MNT, no rounding surface",
  "class": "parity",
  "context": "shares",
- "_note": "share-account seam (no rounding surface). request.purchased_price \"100.00\" is share-account-detail-raw.json purchasedShares[0].purchasedPrice, the exact decimal text the oracle stored; expect.purchased_price_minor \"10000\" is that same value transcribed to integer minor units (2dp). request.purchased_amount \"10000.00\" is purchasedShares[0].amount and expect.purchased_amount_minor \"1000000\" is its minor-unit form: the purchase total is requestedShares 100 * unitPrice 100.00 = 10000.00, an integer-times-integer minor-unit product, so NO HALF_UP/HALF_EVEN tie exists. request.account_status_id 300 and expect.account_status_stored 300 are share-account-detail-raw.json status.id (shareAccountStatusType.active). request.purchased_status_id 300 and expect.purchased_status_stored 300 are purchasedShares[0].status.id (purchasedSharesStatusType.approved). request.total_approved_shares 100 and request.purchased_shares 100 are summary.totalApprovedShares and purchasedShares[0].numberOfShares respectively.",
+ "_note": "share-account seam (no rounding surface). request.purchased_price \"100.00\" is share-account-detail-raw.json purchasedShares[0].purchasedPrice, the exact decimal text the oracle stored; expect.purchased_price_minor \"10000\" is that same value transcribed to integer minor units (2dp). request.purchased_amount \"10000.00\" is purchasedShares[0].amount and expect.purchased_amount_minor \"1000000\" is its minor-unit form: the purchase total is requestedShares 100 * unitPrice 100.00 = 10000.00, an integer-times-integer minor-unit product, so NO HALF_UP/HALF_EVEN tie exists. request.account_status_id 300 and expect.account_status_stored 300 are share-account-detail-raw.json status.id (shareAccountStatusType.active). request.purchased_status_id 300 and expect.purchased_status_stored 300 are purchasedShares[0].status.id (purchasedSharesStatusType.approved). request.total_approved_shares 100 and request.purchased_shares 100 are summary.totalApprovedShares and purchasedShares[0].numberOfShares respectively. request.total_pending_shares 0 and expect.total_pending_shares 0 are summary.totalPendingForApprovalShares: the aggregate read-back carries the pending figure (0 here). Because the observed pending figure is 0, a serialiser that merely OMITS the fold is indistinguishable from correct; the defect this cell makes visible is a summary TRANSPOSE that fills totalPendingForApprovalShares from totalApprovedShares (writes 100 into the 0 cell), which shares-wrong-summary-approved-as-pending encodes and this vector goes red on.",
  "oracle": {
   "seam": "share-account",
   "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
  },
  "provenance": {
   "kind": "oracle-capture",
-  "note": "transcribed from .softhouse/capture/shares/out/share-account-detail-raw.json (account id 3): status.id 300, summary.totalApprovedShares 100, purchasedShares[0].numberOfShares 100, purchasedShares[0].purchasedPrice 100.00, purchasedShares[0].amount 10000.00, purchasedShares[0].status.id 300",
+  "note": "transcribed from .softhouse/capture/shares/out/share-account-detail-raw.json (account id 3): status.id 300, summary.totalApprovedShares 100, summary.totalPendingForApprovalShares 0, purchasedShares[0].numberOfShares 100, purchasedShares[0].purchasedPrice 100.00, purchasedShares[0].amount 10000.00, purchasedShares[0].status.id 300",
   "capture_ref": ".softhouse/capture/shares/out/share-account-detail-raw.json",
   "capture_sha256": "80a2bd43778837de37c550e620f2282bd1d184425f3fd2ad1c81d16e3c6e789f",
   "capture_case_id": "3"
@@ -29,6 +29,7 @@
   "currency_code": "MNT",
   "account_status_id": 300,
   "total_approved_shares": 100,
+  "total_pending_shares": 0,
   "purchased_shares": 100,
   "purchased_price": "100.00",
   "purchased_amount": "10000.00",
@@ -38,6 +39,7 @@
   "kind": "account",
   "account_status_stored": 300,
   "total_approved_shares": 100,
+  "total_pending_shares": 0,
   "purchased_shares": 100,
   "purchased_price_minor": "10000",
   "purchased_amount_minor": "1000000",

@@ -71,7 +71,7 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		return r
 	}
 
-	diffs, graded, money := compareExpect(v.Expect, got)
+	diffs, graded, money := compareExpect(v.Request, v.Expect, got)
 	r.GradedCells = graded
 	r.MoneyCells = money
 	r.Diffs = diffs
@@ -94,8 +94,10 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 
 // compareExpect compares an expected share result with the one an implementation
 // produced. It returns the diffs and the graded/money cell counts for the seam
-// named by the expected kind.
-func compareExpect(want, got Expect) (diffs []string, graded, money int) {
+// named by the expected kind. The request gates optional cells: a share-account
+// list row carries no purchase group, and a dividend read-back that did not show
+// the dividend row's status leaves that cell ungraded.
+func compareExpect(req Request, want, got Expect) (diffs []string, graded, money int) {
 	cmpInt32 := func(name string, w, g int32) {
 		graded++
 		if w != g {
@@ -120,12 +122,22 @@ func compareExpect(want, got Expect) (diffs []string, graded, money int) {
 	case KindAccount:
 		cmpInt32("account_status_stored", want.AccountStatusStored, got.AccountStatusStored)
 		cmpInt64("total_approved_shares", want.TotalApprovedShares, got.TotalApprovedShares)
-		cmpInt64("purchased_shares", want.PurchasedShares, got.PurchasedShares)
-		cmpMoney("purchased_price_minor", want.PurchasedPriceMinor, got.PurchasedPriceMinor)
-		cmpMoney("purchased_amount_minor", want.PurchasedAmountMinor, got.PurchasedAmountMinor)
-		cmpInt32("purchased_status_stored", want.PurchasedStatusStored, got.PurchasedStatusStored)
+		cmpInt64("total_pending_shares", want.TotalPendingShares, got.TotalPendingShares)
+		if req.PurchasedShares != 0 {
+			cmpInt64("purchased_shares", want.PurchasedShares, got.PurchasedShares)
+			cmpMoney("purchased_price_minor", want.PurchasedPriceMinor, got.PurchasedPriceMinor)
+			cmpMoney("purchased_amount_minor", want.PurchasedAmountMinor, got.PurchasedAmountMinor)
+			cmpInt32("purchased_status_stored", want.PurchasedStatusStored, got.PurchasedStatusStored)
+		}
 	case KindDividend:
 		cmpMoney("dividend_amount_minor", want.DividendAmountMinor, got.DividendAmountMinor)
+		if req.DividendStatusID != 0 {
+			cmpInt32("dividend_status_stored", want.DividendStatusStored, got.DividendStatusStored)
+		}
+	case KindProduct:
+		cmpMoney("unit_price_minor", want.UnitPriceMinor, got.UnitPriceMinor)
+		cmpMoney("share_capital_minor", want.ShareCapitalMinor, got.ShareCapitalMinor)
+		cmpInt64("total_shares", want.TotalShares, got.TotalShares)
 	}
 	return diffs, graded, money
 }

@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-06-share-product-list-seed-prod-1-zero-capital",
+ "title": "share product SEED-Share-Prod list row: present-but-zero share capital 0.00",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-product seam, ZERO-MONEY ROW. request.share_capital \"0.00\" is shares-products-list-raw.json pageItems[2].shareCapital for product id 1 (SEED-Share-Prod), the exact decimal text the oracle stored: the seed product carries a PRESENT but zero share capital. expect.share_capital_minor \"0\" is its minor-unit form. request.unit_price \"100.00\" (pageItems[2].unitPrice) and expect.unit_price_minor \"10000\". request.total_shares 1000 is pageItems[2].totalShares. A port that serialises a money cell only when it is non-zero DROPS the present-but-zero 0.00 read-back, so it returns an empty share-capital cell and goes red here (and trips the share_capital_minor non-negative invariant).",
+ "oracle": {
+  "seam": "share-product",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/shares-products-list-raw.json (product id 1, pageItems[2]): unitPrice 100.00, shareCapital 0.00 (present-but-zero), totalShares 1000.",
+  "capture_ref": ".softhouse/capture/shares/out/shares-products-list-raw.json",
+  "capture_sha256": "70e8958331ac7b01115f718a92c16ac8a13a31d77035a10c347796296483b934",
+  "capture_case_id": "1"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "product",
+  "currency_code": "MNT",
+  "unit_price": "100.00",
+  "share_capital": "0.00",
+  "total_shares": 1000
+ },
+ "expect": {
+  "kind": "product",
+  "unit_price_minor": "10000",
+  "share_capital_minor": "0",
+  "total_shares": 1000
+ },
+ "capabilities_required": [
+  "share-product"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}

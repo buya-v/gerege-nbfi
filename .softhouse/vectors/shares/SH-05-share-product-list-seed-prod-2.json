@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-05-share-product-list-seed-prod-2",
+ "title": "share product SEED-Share-Prod-2 list row: unit 100.00 vs capital 1.00 (column discriminator)",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-product seam, PRODUCT LIST ROW. request.share_capital \"1.00\" is shares-products-list-raw.json pageItems[1].shareCapital for product id 2 (SEED-Share-Prod-2), the exact decimal text the oracle stored, distinct from the 100000.00 capital of product id 3; expect.share_capital_minor \"100\" is its minor-unit form. request.unit_price \"100.00\" is pageItems[1].unitPrice and expect.unit_price_minor \"10000\" its minor-unit form. request.total_shares 1000 is pageItems[1].totalShares. This row discriminates the money COLUMN the list serialiser fills: unit price and share capital differ, so a transposed-money-column defect goes red on this vector.",
+ "oracle": {
+  "seam": "share-product",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/shares-products-list-raw.json (product id 2, pageItems[1]): unitPrice 100.00, shareCapital 1.00, totalShares 1000.",
+  "capture_ref": ".softhouse/capture/shares/out/shares-products-list-raw.json",
+  "capture_sha256": "70e8958331ac7b01115f718a92c16ac8a13a31d77035a10c347796296483b934",
+  "capture_case_id": "2"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "product",
+  "currency_code": "MNT",
+  "unit_price": "100.00",
+  "share_capital": "1.00",
+  "total_shares": 1000
+ },
+ "expect": {
+  "kind": "product",
+  "unit_price_minor": "10000",
+  "share_capital_minor": "100",
+  "total_shares": 1000
+ },
+ "capabilities_required": [
+  "share-product"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}
