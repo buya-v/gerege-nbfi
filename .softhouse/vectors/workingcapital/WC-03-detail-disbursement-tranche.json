@@ -1,0 +1,58 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-03-detail-disbursement-tranche",
+ "title": "disbursement tranche the seeded draw recorded (detail read-back)",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture wc-loan-detail-raw.json (GET /working-capital-loans/1, tenant gerege): the disbursementDetails block of the seeded draw. The draw recorded one tranche on m_wc_loan_disbursement_detail: principal=1000.51 and actualAmount=1000.51. expect.detail.disbursement.principal=\"100051\" and .actual_amount=\"100051\" transcribe those two money cells as integer minor units. WHAT THIS VECTOR DISCRIMINATES: a draw write path that credits the m_wc_loan_balance row but never records the tranche row (registered as workingcapital-wrong-tranche-dropped) renders NO disbursement block on the detail read-back, so this vector goes red under it — WC-02, which pins no tranche cell, cannot see that defect. The mandatory detail cells (id, status, the nine balance cells) are re-pinned because the detail comparator grades them on every detail vector; they are the same captured cells WC-02 already pins.",
+ "oracle": {
+  "seam": "working-capital-loans-detail",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture wc-loan-detail-raw.json; capture_case_id names the seeded loan whose disbursementDetails block holds the tranche.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/wc-loan-detail-raw.json",
+  "capture_sha256": "33ee14f87682497189494a5685f8479ea54262b2ff498db06634882e6ab0efb9",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "wc-loan-detail-raw.json disbursementDetails block [{\"id\":1,\"loanId\":1,\"expectedDisbursementDate\":\"2026-09-01\",\"principal\":1000.51,\"actualDisbursementDate\":\"2026-09-01\",\"actualAmount\":1000.51}] on loan externalId SEED-WC-L01, with balance.principal=1000.51"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 1
+ },
+ "expect": {
+  "detail": {
+   "id": "1",
+   "status": "loanStatusType.active",
+   "balance": {
+    "principal": "100051",
+    "principal_paid": "0",
+    "total_disbursement": "0",
+    "total_discount_fee": "0",
+    "principal_outstanding": "100051",
+    "total_expected_repayment": "100051",
+    "total_repayment": "0",
+    "total_outstanding": "100051",
+    "unrealized_income_from_discount_fee": "0"
+   },
+   "disbursement": {
+    "principal": "100051",
+    "actual_amount": "100051"
+   }
+  }
+ },
+ "capabilities_required": [
+  "wc-loan-balance-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

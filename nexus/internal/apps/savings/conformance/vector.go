@@ -29,6 +29,35 @@ const SeamSavingsDailyInterest = "savings-daily-interest"
 // transcriptable.
 const SeamSavingsAccountStatus = "savings-account-status"
 
+// SeamSavingsDeposit is the deposit capture seam this schema grades: what one
+// observed DEPOSIT posting does to the posted balance of the discriminating
+// savings account. The oracle's account read-back records the opening deposit
+// of 1000.00 MNT against a zero opening balance, and the running balance
+// straight after that row is 1000.00 (transactionType.id 1, entryType CREDIT).
+// The deposit row is the account's FIRST row in both read-backs, so the seam
+// pins that a deposit CREDITS the posted balance by its full amount and that
+// the fold starts from a zero opening balance.
+const SeamSavingsDeposit = "savings-deposit"
+
+// SeamSavingsTransactions is the transaction-stream capture seam this schema
+// grades: the append-only read-back of the discriminating savings accounts,
+// folded to per-row running balances. The oracle's read-back already carries the
+// derived running_balance column; this seam does not read that column — it
+// derives the fold over the observed rows and pins the observed values, so a
+// port whose deposit/posting classification differs (deposit or interest
+// posting not credited, running balance folded before instead of after the row)
+// goes red. Rows are transcribed in the running-balance chain order the
+// read-back's recorded running balances make — the opening deposit first, then
+// each posting on its posted date. On the daily account that is also the row
+// (id) order; on the monthly account it is not (the read-back lists rows
+// date-descending, and the account's ids are not monotonic with posting date:
+// the 0.16 posting has id 2, the 0.15 posting id 3), so the transcription
+// follows the recorded balance chain, never a raw array or id order. Two
+// accounts are captured: the daily account (deposit 1000.00 then an interest
+// posting of 0.01) and the monthly account (deposit 1000.00 then interest
+// postings of 0.15 and 0.16).
+const SeamSavingsTransactions = "savings-transactions"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{SavingsContext} }
@@ -103,20 +132,52 @@ type AccountStatusRequest struct {
 	Step string `json:"step"`
 }
 
+// TransactionRow is ONE posting of the account's append-only transaction
+// stream, transcribed from the oracle's account read-back (m_savings_account
+// transactions). Only the cells that feed the running-balance fold are carried:
+// the transaction_type_enum stored value (transactionType.id on the read-back
+// row) and the row amount. Rows are transcribed in the running-balance chain
+// order the read-back's recorded running balances make — the order a port must
+// fold to reproduce them. On the daily account that equals the read-back's id
+// order; on the monthly account it does not (the read-back lists rows
+// date-descending and the ids are not monotonic with posting date: the 0.15
+// posting has id 3 and precedes the 0.16 posting with id 2 in the balance
+// chain).
+type TransactionRow struct {
+	// TypeStoredValue is transaction_type_enum: 1 DEPOSIT, 3 INTEREST_POSTING.
+	// Only those two are transcriptable — the two types the captured accounts
+	// carry.
+	TypeStoredValue int32 `json:"type_id"`
+	// AmountMinor is the row's amount as an integer STRING in minor units.
+	AmountMinor string `json:"amount_minor"`
+}
+
+// TransactionStreamRequest is the savings-deposit and savings-transactions
+// seams' input: the observed postings in row (id) order. For the deposit seam
+// it is the opening DEPOSIT row alone; for the transactions seam it is the full
+// stream of the captured account.
+type TransactionStreamRequest struct {
+	Transactions []TransactionRow `json:"transactions"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one sub-request.
 type Request struct {
-	DailyInterest *DailyInterestRequest `json:"daily_interest,omitempty"`
-	AccountStatus *AccountStatusRequest `json:"account_status,omitempty"`
+	DailyInterest *DailyInterestRequest     `json:"daily_interest,omitempty"`
+	AccountStatus *AccountStatusRequest     `json:"account_status,omitempty"`
+	Stream        *TransactionStreamRequest `json:"transaction_stream,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the daily-interest
 // seam it is the single-period interest, an integer STRING in minor units; for
 // the account-status seam it is the m_savings_account.status_enum stored value
-// (an integer ordinal, NOT money).
+// (an integer ordinal, NOT money); for the savings-deposit and
+// savings-transactions seams it is the per-row running balance, one integer
+// STRING in minor units per observed row, as the read-back recorded them.
 type Expect struct {
-	InterestMinor string `json:"interest_minor,omitempty"`
-	StatusID      int32  `json:"status_id,omitempty"`
+	InterestMinor   string   `json:"interest_minor,omitempty"`
+	StatusID        int32    `json:"status_id,omitempty"`
+	RunningBalances []string `json:"running_balances,omitempty"`
 }
 
 // Vector is one savings golden vector.

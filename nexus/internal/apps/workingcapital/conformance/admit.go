@@ -167,7 +167,16 @@ func admitExpect(v *Vector) []string {
 		if v.Expect.Detail.Status == "" {
 			problems = append(problems, "expect.detail.status is empty")
 		}
-		b := v.Expect.Detail.Balance
+		d := v.Expect.Detail
+		if d.StatusOrdinal != "" && !isDigitString(d.StatusOrdinal) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.detail.status_id %q is not an integer string", d.StatusOrdinal))
+		}
+		if d.StatusActive != "" && d.StatusActive != "true" && d.StatusActive != "false" {
+			problems = append(problems, fmt.Sprintf(
+				"expect.detail.status_active %q is not \"true\" or \"false\"", d.StatusActive))
+		}
+		b := d.Balance
 		for name, val := range map[string]string{
 			"principal":                           b.Principal,
 			"principal_paid":                      b.PrincipalPaid,
@@ -183,8 +192,33 @@ func admitExpect(v *Vector) []string {
 				problems = append(problems, fmt.Sprintf("expect.detail.balance.%s %q is not a non-negative integer minor amount", name, val))
 			}
 		}
+		if dd := d.Disbursement; dd != nil {
+			for name, val := range map[string]string{
+				"disbursement.principal":     dd.Principal,
+				"disbursement.actual_amount": dd.ActualAmount,
+			} {
+				if val != "" && !isIntegerMinorString(val) {
+					problems = append(problems, fmt.Sprintf(
+						"expect.detail.%s %q is not a non-negative integer minor amount", name, val))
+				}
+			}
+		}
 	}
 	return problems
+}
+
+// isDigitString reports whether s is a non-empty run of digits (used for
+// non-money integer cells such as a stored status ordinal).
+func isDigitString(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 // isIntegerMinorString reports whether s is a non-negative integer (money in

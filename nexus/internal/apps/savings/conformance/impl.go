@@ -12,7 +12,7 @@ import (
 )
 
 // SavingsEvaluator is what a savings implementation must be able to do for this
-// harness to grade it. The graded surface is the two capture seams:
+// harness to grade it. The graded surface is the capture seams:
 //
 //   - seam savings-daily-interest: the single-period daily-balance interest of
 //     the discriminating savings account, the one cell the MANIFEST records as
@@ -20,6 +20,9 @@ import (
 //   - seam savings-account-status: the m_savings_account.status_enum stored
 //     value Fineract wrote back after a lifecycle command (approve -> 200,
 //     activate -> 300), the enum-ordinal cell a port can silently corrupt.
+//   - seams savings-deposit and savings-transactions: the running balance a
+//     posted transaction stream derives, asserted against the read-back's
+//     recorded running_balance values.
 type SavingsEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -108,9 +111,52 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goDailyInterest(*req.DailyInterest, roundHalfUp)
 	case req.AccountStatus != nil:
 		return goAccountStatus(*req.AccountStatus)
+	case req.Stream != nil:
+		return goTransactionStream(*req.Stream)
 	default:
 		return Expect{}, fmt.Errorf("savings: request must set exactly one seam sub-request")
 	}
+}
+
+// evalStreamRows decodes every row of an observed append-only posting stream
+// and folds it to per-row running balances with the savings package's own fold,
+// in row order. decode is the stored-value-to-type mapping the implementation
+// under test applies — the correct evaluator uses the savings package's decode,
+// and each DELIBERATELY WRONG evaluator passes a corrupt mapping in its place.
+// The posted rows of both captured accounts are unreversed, so the correct
+// derived balances are exactly the values the oracle's read-back recorded next
+// to each row.
+func evalStreamRows(r TransactionStreamRequest, decode func(stored int32) (savingspkg.SavingsAccountTransactionType, bool)) (Expect, error) {
+	rows := make([]savingspkg.SavingsAccountTransaction, 0, len(r.Transactions))
+	for i, row := range r.Transactions {
+		t, ok := decode(row.TypeStoredValue)
+		if !ok {
+			return Expect{}, fmt.Errorf("savings: row %d: transaction type stored value %d is not a savings transaction type", i, row.TypeStoredValue)
+		}
+		amount, err := parseMinorText(row.AmountMinor)
+		if err != nil {
+			return Expect{}, fmt.Errorf("savings: row %d amount: %v", i, err)
+		}
+		rows = append(rows, savingspkg.SavingsAccountTransaction{
+			Type:   t,
+			Amount: savingspkg.MinorUnits(amount),
+		})
+	}
+	balances := savingspkg.RunningBalancesOf(rows)
+	out := make([]string, 0, len(balances))
+	for _, b := range balances {
+		out = append(out, strconv.FormatInt(int64(b), 10))
+	}
+	return Expect{RunningBalances: out}, nil
+}
+
+// savingsDecode is the correct stored-value decode.
+func savingsDecode(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+	return savingspkg.SavingsAccountTransactionTypeFromStoredValue(stored)
+}
+
+func goTransactionStream(r TransactionStreamRequest) (Expect, error) {
+	return evalStreamRows(r, savingsDecode)
 }
 
 func goDailyInterest(r DailyInterestRequest, round func(numerator, denominator *big.Int) int64) (Expect, error) {
@@ -234,6 +280,75 @@ func (w statusWrongEvaluator) Evaluate(req Request) (Expect, error) {
 	return w.goEvaluator.Evaluate(req)
 }
 
+// depositNotCreditedEvaluator is a DELIBERATELY WRONG implementation: its
+// stored-value decode maps a DEPOSIT row to a balance-neutral type, so a
+// deposit does NOT credit the posted balance. This is the port of a savings
+// classification that drops the deposit from the running-balance fold (a
+// deposit posting whose type does not move the balance). The deposit seam's
+// vector and the transaction-stream vectors go red against it (the opening
+// deposit leaves the balance at 0 instead of 1000.00).
+type depositNotCreditedEvaluator struct{ goEvaluator }
+
+func (w depositNotCreditedEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Stream != nil {
+		return evalStreamRows(*req.Stream, func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+			if stored == savingspkg.TxnDeposit.StoredValue() {
+				// A balance-neutral type: the deposit is folded but credits nothing.
+				return savingspkg.TxnAccrual, true
+			}
+			return savingsDecode(stored)
+		})
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// interestPostingDebitsEvaluator is a DELIBERATELY WRONG implementation: its
+// stored-value decode maps an INTEREST_POSTING row to a DEBIT type, so an
+// interest posting REDUCES the posted balance instead of crediting it — the
+// sign error of a port that posts interest on the wrong side of the fold. The
+// transaction-stream vectors (which carry interest postings) go red against it;
+// the deposit-only seam vector does not (it carries no posting row).
+type interestPostingDebitsEvaluator struct{ goEvaluator }
+
+func (w interestPostingDebitsEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Stream != nil {
+		return evalStreamRows(*req.Stream, func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+			if stored == savingspkg.TxnInterestPosting.StoredValue() {
+				return savingspkg.TxnWithdrawal, true
+			}
+			return savingsDecode(stored)
+		})
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// runningBalanceBeforeEvaluator is a DELIBERATELY WRONG implementation: it
+// derives each row's running balance as the balance BEFORE that row's posting
+// instead of after it — the off-by-one of a port that records the running
+// balance_derived column from the pre-posting state. Every row of a
+// transaction-stream vector goes red (the opening deposit reads 0 instead of
+// 1000.00).
+type runningBalanceBeforeEvaluator struct{ goEvaluator }
+
+func (w runningBalanceBeforeEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Stream != nil {
+		after, err := evalStreamRows(*req.Stream, savingsDecode)
+		if err != nil {
+			return Expect{}, err
+		}
+		out := make([]string, len(after.RunningBalances))
+		for i := range after.RunningBalances {
+			if i == 0 {
+				out[i] = "0"
+				continue
+			}
+			out[i] = after.RunningBalances[i-1]
+		}
+		return Expect{RunningBalances: out}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
 func init() {
 	Register("savings-go", NewGoEvaluator())
 	RegisterWrong("savings-wrong-half-even-daily-interest",
@@ -244,4 +359,15 @@ func init() {
 		"encodes the account status enum as the Go declaration ordinal (iota) instead of the "+
 			"Fineract stored value, so APPROVED reads 2 and ACTIVE reads 3 rather than 200 and 300",
 		statusWrongEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-deposit-not-credited",
+		"decodes a DEPOSIT row to a balance-neutral type, so the opening deposit of 1000.00 "+
+			"leaves the posted balance at 0 instead of crediting 1000.00",
+		depositNotCreditedEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-interest-posting-debits",
+		"decodes an INTEREST_POSTING row to a DEBIT type, so an interest posting reduces "+
+			"the posted balance instead of crediting it",
+		interestPostingDebitsEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-running-balance-before",
+		"derives each row's running balance as the balance BEFORE that row instead of after it",
+		runningBalanceBeforeEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

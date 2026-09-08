@@ -1,6 +1,6 @@
 {
  "schema": "gerege.savings.capabilities/v1",
- "note": "Savings parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the single-period daily-balance interest rounding of the discriminating savings account (savings-daily-interest seam) and the m_savings_account.status_enum stored value a lifecycle command acknowledgement writes back (savings-account-status seam, approve -> 200 and activate -> 300). The monthly-posting account (SEED-Savings-Product) is captured but NOT in the graded domain: its two interest postings' day counts are derived from the MANIFEST prose rather than single transcribed capture fields, and neither posting is a discriminating rounding surface.",
+ "note": "Savings parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Four capabilities are graded: (1) the single-period daily-balance interest rounding of the discriminating savings account (savings-daily-interest seam); (2) the m_savings_account.status_enum stored value a lifecycle command acknowledgement writes back (savings-account-status seam, approve -> 200 and activate -> 300); (3) the credit a DEPOSIT posting brings to the posted balance (savings-deposit seam and savings-transactions seam); (4) the credit and accumulation an INTEREST_POSTING posting brings to the posted balance (savings-transactions seam). The monthly-posting account (SEED-Savings-Product, product id 1) IS in the graded domain for the running-balance fold of its observed postings (savings-transactions seam): each fold row's amount and running balance are single transcribed fields of savings-account-monthly-raw.json. What stays OUT of the graded domain is the monthly-posting INTEREST CALCULATION capability: the two postings' day counts (30 and 31) are derived from the MANIFEST prose rather than single transcribed capture fields, and neither posting is a discriminating rounding surface.",
  "capabilities": [
   {
    "name": "daily-balance-interest-rounding",
@@ -15,8 +15,20 @@
    "evidence": "Captures savings-daily-approve-raw.json and savings-daily-activate-raw.json under tenant gerege: each command acknowledgement's changes.status field records the resulting status id (200 then 300) and code."
   },
   {
+   "name": "deposit-credit-balance",
+   "description": "A DEPOSIT posting on a savings account CREDITS the posted balance by its full amount, and the fold starts from a zero opening balance on the account's first row. Each captured account opens with a 1000.00 MNT deposit against a zero balance; the read-backs record runningBalance 1000.000000 straight after the deposit row.",
+   "in_graded_domain": true,
+   "evidence": "Captures savings-account-daily-raw.json (transaction id 4, the account's first row: amount 1000.000000, runningBalance 1000.000000, entryType CREDIT, date 2026-08-31) and savings-account-monthly-raw.json (transaction id 1: amount 1000.000000, runningBalance 1000.000000, entryType CREDIT, date 2026-07-02) under tenant gerege."
+  },
+  {
+   "name": "interest-posting-credit-balance",
+   "description": "An INTEREST_POSTING posting CREDITS the posted balance by its posted (already rounded) amount, and successive postings ACCUMULATE on the running deposit balance rather than replacing it. The daily read-back records 1000.010000 after a 0.010000 posting on a 1000.00 balance; the monthly read-back records 1000.150000 then 1000.310000 after 0.150000 and 0.160000 postings on the same 1000.00 deposit.",
+   "in_graded_domain": true,
+   "evidence": "Captures savings-account-daily-raw.json (transaction id 5: amount 0.010000, runningBalance 1000.010000, entryType CREDIT) and savings-account-monthly-raw.json (transaction id 3: amount 0.150000, runningBalance 1000.150000; transaction id 2: amount 0.160000, runningBalance 1000.310000) under tenant gerege."
+  },
+  {
    "name": "monthly-posting",
-   "description": "The monthly-posting account SEED-Savings-Product (product id 1) with interest postings 0.15 (30 days) and 0.16 (31 days). The day counts are derived from the MANIFEST prose, not single transcribed capture fields, and neither posting ties HALF_UP against HALF_EVEN.",
+   "description": "The INTEREST CALCULATION behind the monthly-posting account SEED-Savings-Product (product id 1): postings 0.15 (30 days) and 0.16 (31 days). The day counts are derived from the MANIFEST prose, not single transcribed capture fields, and neither posting ties HALF_UP against HALF_EVEN. The account's observed posting AMOUNTS and running balances ARE graded, but under the deposit-credit-balance and interest-posting-credit-balance capabilities (the savings-transactions seam), not under this calculation capability.",
    "in_graded_domain": false,
    "evidence": "Capture savings-account-monthly-raw.json under tenant gerege: transactions id 2 (0.16) and id 3 (0.15), but no single field records the 30-day/31-day day counts, so promotion does not port them."
   }
@@ -34,6 +46,21 @@
    "description": "The lifecycle command acknowledgements on the same account, tenant gerege: changes.status.id in the approve ack (200) and the activate ack (300), the m_savings_account.status_enum stored values the oracle wrote for each observed step.",
    "status": {
     "account-status-stored-value": "exercised"
+   }
+  },
+  {
+   "name": "savings-deposit",
+   "description": "The account read-back on the running Fineract server, tenant gerege: what a DEPOSIT posting does to the posted balance. The observed surface is the opening row of the discriminating savings account (transaction id 4, amount 1000.000000, entryType CREDIT), the account's FIRST row, whose recorded running balance 1000.000000 pins that the fold credits the deposit in full from a zero opening balance.",
+   "status": {
+    "deposit-credit-balance": "exercised"
+   }
+  },
+  {
+   "name": "savings-transactions",
+   "description": "The append-only read-back of the captured savings accounts, tenant gerege: the per-row derived running balances a deposit and posted interest write into the balance chain. The daily account (000000002) carries a deposit and one interest posting; the monthly account (000000001) carries a deposit and two interest postings. Rows are transcribed in the running-balance chain order the read-back's recorded running balances make.",
+   "status": {
+    "deposit-credit-balance": "exercised",
+    "interest-posting-credit-balance": "exercised"
    }
   }
  ]

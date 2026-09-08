@@ -31,6 +31,11 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 	switch v.Oracle.Seam {
 	case SeamSavingsDailyInterest:
 		return []InvariantResult{assertInterestNonNegative(got)}
+	case SeamSavingsDeposit, SeamSavingsTransactions:
+		return []InvariantResult{
+			assertRunningBalanceRowCount(v, got),
+			assertRunningBalanceMoneyIntegrity(got),
+		}
 	default:
 		return nil
 	}
@@ -47,5 +52,41 @@ func assertInterestNonNegative(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("interest %q is a non-negative integer minor amount", got.InterestMinor)
+	return r
+}
+
+// assertRunningBalanceRowCount: the fold must return exactly one running
+// balance per posted row — one balance cell per append-only row is the shape
+// the oracle's read-back carries, and a fold that drops or doubles a row is a
+// fold that is not over the same stream.
+func assertRunningBalanceRowCount(v *Vector, got Expect) InvariantResult {
+	want := 0
+	if v.Request.Stream != nil {
+		want = len(v.Request.Stream.Transactions)
+	}
+	r := InvariantResult{Name: "running_balances_per_row", Assertions: 1}
+	if len(got.RunningBalances) != want {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("running_balances has %d cells for a %d-row stream", len(got.RunningBalances), want)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("running_balances has %d cells for a %d-row stream", len(got.RunningBalances), want)
+	return r
+}
+
+// assertRunningBalanceMoneyIntegrity: every returned running balance is a
+// non-negative integer minor-unit amount.
+func assertRunningBalanceMoneyIntegrity(got Expect) InvariantResult {
+	r := InvariantResult{Name: "running_balance_money_is_integer_minor", Assertions: len(got.RunningBalances)}
+	for i, b := range got.RunningBalances {
+		if !isIntegerMinorString(b) {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("running_balances[%d] %q is not a non-negative integer minor amount", i, b)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("all %d running-balance cells are non-negative integer minor units", len(got.RunningBalances))
 	return r
 }

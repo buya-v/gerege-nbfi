@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamSavingsDailyInterest, SeamSavingsAccountStatus:
+	case SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the %q and %q seams",
-			v.Oracle.Seam, SeamSavingsDailyInterest, SeamSavingsAccountStatus))
+			"oracle.seam %q: this harness grades only the %q, %q, %q and %q seams",
+			v.Oracle.Seam, SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -134,6 +134,9 @@ func admitRequest(v *Vector) []string {
 		}
 		if v.Request.AccountStatus != nil {
 			problems = append(problems, "daily-interest seam must not set request.account_status")
+		}
+		if v.Request.Stream != nil {
+			problems = append(problems, "daily-interest seam must not set request.transaction_stream")
 			return problems
 		}
 		d := v.Request.DailyInterest
@@ -156,6 +159,9 @@ func admitRequest(v *Vector) []string {
 		}
 		if v.Request.DailyInterest != nil {
 			problems = append(problems, "account-status seam must not set request.daily_interest")
+		}
+		if v.Request.Stream != nil {
+			problems = append(problems, "account-status seam must not set request.transaction_stream")
 			return problems
 		}
 		switch v.Request.AccountStatus.Step {
@@ -164,6 +170,66 @@ func admitRequest(v *Vector) []string {
 			problems = append(problems, fmt.Sprintf(
 				"request.account_status.step %q is not an observed lifecycle step (approve, activate)",
 				v.Request.AccountStatus.Step))
+		}
+	case SeamSavingsDeposit:
+		if v.Request.Stream == nil {
+			problems = append(problems, "deposit seam must set exactly request.transaction_stream")
+			return problems
+		}
+		if v.Request.DailyInterest != nil {
+			problems = append(problems, "deposit seam must not set request.daily_interest")
+		}
+		if v.Request.AccountStatus != nil {
+			problems = append(problems, "deposit seam must not set request.account_status")
+		}
+		if len(v.Request.Stream.Transactions) != 1 {
+			problems = append(problems, fmt.Sprintf(
+				"deposit seam transcribes exactly the account's opening DEPOSIT row, got %d rows",
+				len(v.Request.Stream.Transactions)))
+			return problems
+		}
+		if v.Request.Stream.Transactions[0].TypeStoredValue != 1 {
+			problems = append(problems, fmt.Sprintf(
+				"deposit seam's single row has transaction type stored value %d, not the observed DEPOSIT value 1",
+				v.Request.Stream.Transactions[0].TypeStoredValue))
+		}
+		problems = append(problems, admitTransactionRows(v.Request.Stream.Transactions)...)
+	case SeamSavingsTransactions:
+		if v.Request.Stream == nil {
+			problems = append(problems, "transactions seam must set exactly request.transaction_stream")
+			return problems
+		}
+		if v.Request.DailyInterest != nil {
+			problems = append(problems, "transactions seam must not set request.daily_interest")
+		}
+		if v.Request.AccountStatus != nil {
+			problems = append(problems, "transactions seam must not set request.account_status")
+		}
+		problems = append(problems, admitTransactionRows(v.Request.Stream.Transactions)...)
+	}
+	return problems
+}
+
+// admitTransactionRows enforces that every transcribed row is one of the two
+// observed transaction types (1 DEPOSIT, 3 INTEREST_POSTING) with a
+// non-negative integer minor-unit amount, in the running-balance chain order
+// the transcription states.
+func admitTransactionRows(rows []TransactionRow) []string {
+	var problems []string
+	if len(rows) == 0 {
+		return []string{"request.transaction_stream.transactions is empty: a parity vector transcribes at least one observed row"}
+	}
+	for i, row := range rows {
+		switch row.TypeStoredValue {
+		case 1, 3:
+		default:
+			problems = append(problems, fmt.Sprintf(
+				"request.transactions[%d].type_id %d is not an observed transaction type (1 DEPOSIT, 3 INTEREST_POSTING)",
+				i, row.TypeStoredValue))
+		}
+		if !isIntegerMinorString(row.AmountMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"request.transactions[%d].amount_minor %q is not a non-negative integer minor amount", i, row.AmountMinor))
 		}
 	}
 	return problems
@@ -182,6 +248,22 @@ func admitExpect(v *Vector) []string {
 	case SeamSavingsAccountStatus:
 		if v.Expect.StatusID <= 0 {
 			problems = append(problems, fmt.Sprintf("expect.status_id %d is not a positive status stored value", v.Expect.StatusID))
+		}
+	case SeamSavingsDeposit, SeamSavingsTransactions:
+		want := 0
+		if v.Request.Stream != nil {
+			want = len(v.Request.Stream.Transactions)
+		}
+		if len(v.Expect.RunningBalances) != want {
+			problems = append(problems, fmt.Sprintf(
+				"expect.running_balances has %d cells for a %d-row stream",
+				len(v.Expect.RunningBalances), want))
+		}
+		for i, b := range v.Expect.RunningBalances {
+			if !isIntegerMinorString(b) {
+				problems = append(problems, fmt.Sprintf(
+					"expect.running_balances[%d] %q is not a non-negative integer minor amount", i, b))
+			}
 		}
 	}
 	return problems

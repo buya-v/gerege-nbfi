@@ -1,0 +1,56 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-04-detail-status-ordinal",
+ "title": "stored status ordinal of the disbursed loan (detail read-back)",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture wc-loan-detail-raw.json (GET /working-capital-loans/1, tenant gerege): the status block of the disbursed loan. The m_wc_loan row carries loan_status_id 300 (loanStatusType.active, flag active=true) after the draw, and the read-back serialises it as status {\"id\":300,\"code\":\"loanStatusType.active\",\"active\":true}. expect.detail.status_id=\"300\" transcribes the stored ordinal the detail read-back's status.id field carries and expect.detail.status_active=\"true\" its active flag; neither is a money cell. WHAT THIS VECTOR DISCRIMINATES: a status read-back that derives code and active flag from an enum that says ACTIVE but serialises status_id from a stored row the disburse step left stale at 200 (registered as workingcapital-wrong-status-ordinal) goes red on status_id under this vector — WC-02, which pins the code only, cannot see that drift. Both the enum code (WC-02) and the stored ordinal (WC-04) are pinned, so the two cannot silently disagree.",
+ "oracle": {
+  "seam": "working-capital-loans-detail",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture wc-loan-detail-raw.json; capture_case_id names the seeded loan whose status block holds the stored ordinal.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/wc-loan-detail-raw.json",
+  "capture_sha256": "33ee14f87682497189494a5685f8479ea54262b2ff498db06634882e6ab0efb9",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "wc-loan-detail-raw.json status block {\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\",\"active\":true,...} on loan externalId SEED-WC-L01"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 1
+ },
+ "expect": {
+  "detail": {
+   "id": "1",
+   "status": "loanStatusType.active",
+   "status_id": "300",
+   "status_active": "true",
+   "balance": {
+    "principal": "100051",
+    "principal_paid": "0",
+    "total_disbursement": "0",
+    "total_discount_fee": "0",
+    "principal_outstanding": "100051",
+    "total_expected_repayment": "100051",
+    "total_repayment": "0",
+    "total_outstanding": "100051",
+    "unrealized_income_from_discount_fee": "0"
+   }
+  }
+ },
+ "capabilities_required": [
+  "wc-loan-balance-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

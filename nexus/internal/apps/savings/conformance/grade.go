@@ -74,6 +74,22 @@ func (s *cellSink) cmpStatusID(name string, want, got int32) {
 	}
 }
 
+// cmpMoneyList compares one running-balance cell per observed row. A length
+// disagreement is reported as a structural diff (the per-row invariants also
+// flag it); the compared cells are the common prefix, each a money cell.
+func (s *cellSink) cmpMoneyList(name string, want, got []string) {
+	if len(want) != len(got) {
+		s.diffs = append(s.diffs, fmt.Sprintf("%s: length want %d, got %d", name, len(want), len(got)))
+	}
+	n := len(want)
+	if len(got) < n {
+		n = len(got)
+	}
+	for i := 0; i < n; i++ {
+		s.cmpMoney(fmt.Sprintf("%s[%d]", name, i), want[i], got[i])
+	}
+}
+
 // gradeOne admits, checks capabilities, evaluates and compares one vector.
 func gradeOne(v *Vector, opts Options) vectorResult {
 	r := vectorResult{CaseID: v.CaseID}
@@ -105,6 +121,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpMoney("interest", v.Expect.InterestMinor, got.InterestMinor)
 	case SeamSavingsAccountStatus:
 		s.cmpStatusID("status_id", v.Expect.StatusID, got.StatusID)
+	case SeamSavingsDeposit, SeamSavingsTransactions:
+		s.cmpMoneyList("running_balances", v.Expect.RunningBalances, got.RunningBalances)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money
