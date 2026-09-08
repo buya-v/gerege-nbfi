@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.branch.vector/v1",
+ "case_id": "BR-03-cashier-summary-pre",
+ "title": "cashier 2 summary before the allocate/settle run: two seed allocations fold to 112346.17 net till cash",
+ "class": "parity",
+ "context": "branch",
+ "_note": "cashier-summary PRE point of the three-point series (read before allocate-raw/settle-raw). request.cashier_summary.rows transcribe the two rows the pre read-back listed (id 2 allocate 100000.50, id 6 allocate 12345.67) from summary-cashier2-pre-raw.json. expect.sum_cash_allocation 11234617 is that read-back's sumCashAllocation 112346.17; expect.sum_cash_settlement 0 and expect.net_cash 11234617 are its sumCashSettlement 0 and netCash 112346.17, all transcribed to integer minor units. No read in the series observes an inward or outward cash row, so this vector grades only the allocation bucket, the settlement bucket and the net fold; a wrong implementation that DROPS a row (branch-wrong-summary-drops-last-row) or raises a bucket by one minor unit (branch-wrong-off-by-one) goes red on the two-row allocation sum, and one that mislabels an allocate as a settle (branch-wrong-txn-label-transposed) misbuckets both rows.",
+ "oracle": {
+  "seam": "cashier-summary",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/branch/out/summary-cashier2-pre-raw.json (rows 2 and 6, sumCashAllocation 112346.17, sumCashSettlement 0, netCash 112346.17)",
+  "capture_ref": ".softhouse/capture/branch/out/summary-cashier2-pre-raw.json",
+  "capture_sha256": "8c8ec6efcb0c5a5474c37a63e612a6eb42f9a847a87d6425b304a022072e5f84",
+  "capture_case_id": "pre"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "cashier_summary": {
+   "rows": [
+    {
+     "id": 2,
+     "txn_type": 101,
+     "txn_amount": "100000.50"
+    },
+    {
+     "id": 6,
+     "txn_type": 101,
+     "txn_amount": "12345.67"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "sum_cash_allocation": "11234617",
+  "sum_cash_settlement": "0",
+  "net_cash": "11234617"
+ },
+ "capabilities_required": [
+  "cashier-summary"
+ ],
+ "graded_against": [
+  "branch-go"
+ ]
+}

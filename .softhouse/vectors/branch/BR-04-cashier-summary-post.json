@@ -1,0 +1,64 @@
+{
+ "schema": "gerege.branch.vector/v1",
+ "case_id": "BR-04-cashier-summary-post",
+ "title": "cashier 2 summary after allocate 100000.50 and settle 40000.25: the four-row delta set folds to 172346.42 net till cash",
+ "class": "parity",
+ "context": "branch",
+ "_note": "cashier-summary POST point of the three-point series (read after allocate-raw created row 7 and settle-raw created row 8). request.cashier_summary.rows transcribe the four rows the post read-back listed from summary-cashier2-post-raw.json: seed rows id 2 and id 6 plus the run's allocate id 7 (100000.50) and settle id 8 (40000.25). expect.sum_cash_allocation 21234667, sum_cash_settlement 4000025 and net_cash 17234642 are that read-back's sumCashAllocation 212346.67, sumCashSettlement 40000.25 and netCash 172346.42. Because this read contains a settlement row, every registered cashier-summary defect goes red here: dropping a row (branch-wrong-summary-drops-last-row), feeding the settle into the allocation bucket (branch-wrong-summary-settle-as-allocate), deriving net as allocation PLUS settlement (branch-wrong-summary-net-adds-settlement), an off-by-one bucket (branch-wrong-off-by-one) and a transposed allocate/settle label (branch-wrong-txn-label-transposed).",
+ "oracle": {
+  "seam": "cashier-summary",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/branch/out/summary-cashier2-post-raw.json (rows 2, 6, 7 and 8; sumCashAllocation 212346.67, sumCashSettlement 40000.25, netCash 172346.42)",
+  "capture_ref": ".softhouse/capture/branch/out/summary-cashier2-post-raw.json",
+  "capture_sha256": "c4e180e2ad095064d62b64901f2d81c361174ff1426746999bcd6256d2fd0e55",
+  "capture_case_id": "post"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "cashier_summary": {
+   "rows": [
+    {
+     "id": 2,
+     "txn_type": 101,
+     "txn_amount": "100000.50"
+    },
+    {
+     "id": 6,
+     "txn_type": 101,
+     "txn_amount": "12345.67"
+    },
+    {
+     "id": 7,
+     "txn_type": 101,
+     "txn_amount": "100000.50"
+    },
+    {
+     "id": 8,
+     "txn_type": 102,
+     "txn_amount": "40000.25"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "sum_cash_allocation": "21234667",
+  "sum_cash_settlement": "4000025",
+  "net_cash": "17234642"
+ },
+ "capabilities_required": [
+  "cashier-summary"
+ ],
+ "graded_against": [
+  "branch-go"
+ ]
+}

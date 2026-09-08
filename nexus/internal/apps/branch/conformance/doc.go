@@ -8,24 +8,41 @@
 // The branch slice is the MODEL plus the pure, testable vocabulary of Fineract's
 // organisation/teller domain: the teller status state machine, the cashier
 // transaction-type table, and the money type every money column is normalised to.
-// The running reference oracle's allocate/settle captures are direct cash
-// movements: a txn_amount arrives as decimal text and is stored as DECIMAL(19,6)
-// with NO rounding surface (the MANIFEST records "roundingSurface": "none"). The
-// one gradeable, observable money computation is the port's normalisation of that
-// decimal text into integer minor units (branch.MinorUnitsFromDecimalText), which
-// refuses any sub-minor-unit residue rather than reproducing Fineract's
-// DECIMAL(19,6) storage. A vector therefore carries a cashier-transaction amount
-// as the exact decimal text the oracle received, and expects the transaction type
-// (id + value) and the amount as an INTEGER STRING of minor units.
+// Three seams are graded.
+//
+// The cashier-transaction seam grades direct cash movements: a txn_amount arrives
+// as decimal text and is stored as DECIMAL(19,6) with NO rounding surface (the
+// MANIFEST records "roundingSurface": "none"). The port normalises that text into
+// integer minor units (branch.MinorUnitsFromDecimalText), refusing any
+// sub-minor-unit residue rather than reproducing Fineract's DECIMAL(19,6)
+// storage. A vector carries the amount as the exact decimal text the oracle
+// received and expects the transaction type (id + value) and the amount as an
+// INTEGER STRING of minor units.
+//
+// The cashier-summary seam grades the cashier summary read-back of the same row
+// set. The captures read the SAME cashier at three moments — pre, post and final
+// — with the allocate and settle movements between them. The pre and post reads
+// bound a row set whose buckets (sumCashAllocation / sumCashSettlement / netCash)
+// the port's derived summary fold (branch.FoldCashierSummary) reproduces, so a
+// delta that a single read cannot show becomes gradeable: which figure each
+// movement moved, and by how much. The final read is NOT promoted because it
+// follows the 3dp probe's sub-minor-unit row (below).
+//
+// The teller-status seam grades the m_tellers.state stored integer behind the
+// teller list's status label: the label the read-back serialised ("ACTIVE") maps
+// through the port's TellerStatus enum to the stored value (300), so a port that
+// re-encodes the lifecycle state as a contiguous ordinal goes red.
 //
 // # What this harness cannot grade
 //
-// The summary aggregation (sumCashAllocation / sumCashSettlement / netCash) and
-// the double-entry posting the in/out movements feed are later slices and are not
-// in the branch package. The 3dp probe (40000.245) demonstrates that the oracle
-// stores sub-minor-unit residue exactly, but the port's 2dp minor-unit model
-// refuses it, so there is no rounding cell to pin and no parity vector is derived
-// from it.
+// The in/out cashier-transaction posting and its double-entry accounting is a
+// later slice and is not in the branch package, and no capture in this context
+// records a cash-in or cash-out row, so the summary fold's inward/outward buckets
+// have no transcribed cell. The 3dp probe (40000.245) demonstrates that the
+// oracle stores sub-minor-unit residue exactly; the port's 2dp minor-unit model
+// refuses it. That divergence is documented and awaits a USER DECISION: it is
+// neither pinned as parity nor declared a departure, and no parity vector is
+// derived from the final read that includes it.
 //
 // # What it needs from a tenant
 //

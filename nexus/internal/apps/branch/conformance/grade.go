@@ -71,9 +71,9 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		return r
 	}
 
-	diffs := compareTxn(v.Expect, got)
-	r.GradedCells = 3 // txn_type_id, txn_type_value, txn_amount_minor
-	r.MoneyCells = 1  // txn_amount_minor
+	diffs, graded, money := compareSeam(v.Request, v.Expect, got)
+	r.GradedCells = graded
+	r.MoneyCells = money
 	r.Diffs = diffs
 
 	invs := AssertInvariants(v, got)
@@ -92,21 +92,44 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	return r
 }
 
-// compareTxn compares an expected cashier-transaction row against the evaluated
-// one. txn_amount_minor is the money cell; txn_type_id and txn_type_value are
-// the enum cells that pin which transaction type the amount belongs to.
-func compareTxn(want Expect, got Expect) []string {
-	var diffs []string
-	if want.TxnTypeID != got.TxnTypeID {
-		diffs = append(diffs, fmt.Sprintf("txn_type_id: want %d, got %d", want.TxnTypeID, got.TxnTypeID))
+// compareSeam compares an expected branch result against the evaluated one for
+// the seam the request names. It returns the diffs and the graded/money cell
+// counts for that seam. Every cell comparison is seam-specific so a vector never
+// grades cells its request cannot produce.
+func compareSeam(req Request, want, got Expect) (diffs []string, graded, money int) {
+	cmpMoney := func(name, w, g string) {
+		graded++
+		money++
+		if w != g {
+			diffs = append(diffs, fmt.Sprintf("%s: MONEY want %q, got %q", name, w, g))
+		}
 	}
-	if want.TxnTypeValue != got.TxnTypeValue {
-		diffs = append(diffs, fmt.Sprintf("txn_type_value: want %q, got %q", want.TxnTypeValue, got.TxnTypeValue))
+	cmpInt32 := func(name string, w, g int32) {
+		graded++
+		if w != g {
+			diffs = append(diffs, fmt.Sprintf("%s: want %d, got %d", name, w, g))
+		}
 	}
-	if want.TxnAmountMinor != got.TxnAmountMinor {
-		diffs = append(diffs, fmt.Sprintf("txn_amount_minor: want %q, got %q", want.TxnAmountMinor, got.TxnAmountMinor))
+	cmpStr := func(name, w, g string) {
+		graded++
+		if w != g {
+			diffs = append(diffs, fmt.Sprintf("%s: want %q, got %q", name, w, g))
+		}
 	}
-	return diffs
+
+	switch requestSeam(&req) {
+	case SeamCashierSummary:
+		cmpMoney("sum_cash_allocation", want.SumCashAllocation, got.SumCashAllocation)
+		cmpMoney("sum_cash_settlement", want.SumCashSettlement, got.SumCashSettlement)
+		cmpMoney("net_cash", want.NetCash, got.NetCash)
+	case SeamTellerStatus:
+		cmpInt32("teller_status_stored", want.TellerStatusStored, got.TellerStatusStored)
+	default: // SeamCashierTxnAmount
+		cmpInt32("txn_type_id", want.TxnTypeID, got.TxnTypeID)
+		cmpStr("txn_type_value", want.TxnTypeValue, got.TxnTypeValue)
+		cmpMoney("txn_amount_minor", want.TxnAmountMinor, got.TxnAmountMinor)
+	}
+	return diffs, graded, money
 }
 
 // Run loads the store, runs the no-float census and grades every vector.
