@@ -37,7 +37,7 @@ func main() {
 	var (
 		contextFilter = flag.String("context", "", "grade only this context directory of the vector store")
 		storeRoot     = flag.String("store", "", "vector store root (default <repo>/.softhouse/vectors)")
-		implName      = flag.String("impl", "", "registered implementation to grade (default: the only one, if exactly one is registered)")
+		implName      = flag.String("impl", "", "registered implementation to grade (default: the single registered CORRECT implementation; a deliberately-wrong one must be named explicitly)")
 		oracleProbe   = flag.String("oracle-probe", "down", `reference-oracle reachability as measured by the caller: "up", "down" or "skipped". Defaults to "down" so a caller that forgets cannot obtain exit 0.`)
 		selfTest      = flag.Bool("self-test", false, "grade the HARNESS using the replay implementation instead of a port. Never a conformance PASS.")
 		replayStore   = flag.String("replay-store", "", "with -self-test: the PRISTINE store the replay implementation answers from. Point -store at a perturbed copy to prove the harness goes red.")
@@ -79,8 +79,16 @@ func main() {
 		if len(names) == 0 {
 			fmt.Println("(no implementation registered — see cmd/conformance/impl_hook.go)")
 		}
+		// WRONG IMPLEMENTATIONS ARE PRINTED WITH THEIR DEFECT, in the same form as
+		// the ledger half below. DEC-2 P-10's point is that graded_against is
+		// DECLARATIVE; a list a reader can see and a flag a reader can run is
+		// what turns a registered wrong drive into an executable measurement.
 		for _, n := range names {
-			fmt.Println(n)
+			if defect, bad := conformance.IsRegisteredWrong(n); bad {
+				fmt.Printf("%s   [-impl] DELIBERATELY WRONG: %s\n", n, defect)
+				continue
+			}
+			fmt.Printf("%s   [-impl]\n", n)
 		}
 		// THE LEDGER REGISTRY IS PRINTED TOO, and the WRONG implementations are
 		// printed WITH THEIR DEFECT. DEC-2 precondition P-10 exists because
@@ -130,16 +138,20 @@ func main() {
 		opts.Implementation = impl
 		opts.ImplementationName = *implName
 	default:
-		names := conformance.RegisteredNames()
+		// The default is the single registered CORRECT implementation. A
+		// deliberately-wrong one must be named explicitly with -impl, so no
+		// default selection can ever land on one -- the same rule the ledger
+		// half enforces for -ledger-impl (DEC-2 P-10).
+		names := conformance.CorrectImplementationNames()
 		if len(names) == 1 {
 			impl, _ := conformance.Lookup(names[0])
 			opts.Implementation = impl
 			opts.ImplementationName = names[0]
 		}
-		// Zero registered implementations leaves Implementation nil on purpose.
-		// Run reports it as a fatal reason and the exit code is 2. It is NOT a
-		// pass over zero work, and it is NOT a crash either: "there is no port
-		// yet" is a legitimate, legible state of this program.
+		// Zero CORRECT implementations leaves Implementation nil on purpose. Run
+		// reports it as a fatal reason and the exit code is 2. It is NOT a pass
+		// over zero work, and it is NOT a crash either: "no port is registered
+		// as correct" is a legitimate, legible state of this program.
 	}
 
 	summary, err := conformance.Run(context.Background(), opts)

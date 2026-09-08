@@ -79,6 +79,14 @@ type repaymentPeriod struct {
 type scheduleModel struct {
 	periods []*repaymentPeriod
 
+	// v is the wrong-drive variant this model is being built under (see
+	// wrongdrives.go). Its ZERO value is the graded port's exact behaviour: every
+	// switch below defaults to the pinned one, so a model built under the zero
+	// variant is a model of the correct port and nothing in this file's
+	// arithmetic changes on the graded path. Set once in newScheduleModel and
+	// copied by deepCopy, never written afterwards.
+	v variant
+
 	// ctx is the request's context, carried on the model so that a linear pass
 	// over the periods can be abandoned when the caller has gone away.
 	//
@@ -1464,6 +1472,7 @@ func newRepaymentPeriod(from, due civilDate) *repaymentPeriod {
 
 func (m *scheduleModel) deepCopy() *scheduleModel {
 	out := &scheduleModel{
+		v:           m.v,
 		minorDigits: m.minorDigits, precision: m.precision, scale: m.scale,
 		rate: m.rate, repaymentEvery: m.repaymentEvery,
 		daysInMonth: m.daysInMonth, daysInYear: m.daysInYear,
@@ -1536,6 +1545,15 @@ func inPeriodM3(target, from, due civilDate) bool {
 // [VERIFIED: ProgressiveLoanInterestScheduleModel.java:238-245].
 func (m *scheduleModel) findPeriodForBalanceChange(d civilDate) *repaymentPeriod {
 	for i, p := range m.periods {
+		if m.v.registrationBoundaryDueExclusive {
+			// Counterfactual: the registered wrong drive
+			// loanschedule-wrong-due-date-exclusive (wrongdrives.go). A due date
+			// then registers into the NEXT period, never the period it closes.
+			if inPeriodM3(d, p.from, p.due) {
+				return p
+			}
+			continue
+		}
 		if inPeriodM1(d, p.from, p.due, i == 0) {
 			return p
 		}
@@ -1797,15 +1815,7 @@ func (m *scheduleModel) interestChainUpTo(last int) (calculated, due int64) {
 			return calculated, due
 		}
 		p := m.periods[i]
-		// SUM THE SEGMENTS, THEN MAKE IT MONEY -- exactly once, and in that order:
-		// rounding each segment to the minor unit and then adding is a different
-		// function [VERIFIED: RepaymentPeriod.java:246-252, Money.of(currency, sum,
-		// mc) whose constructor applies the currency scale at Money.java:52].
-		sum := new(big.Rat)
-		for _, s := range p.segments {
-			sum.Add(sum, m.segmentCalculatedInterest(p, s))
-		}
-		calculated = maxInt64(0, minorFromMajor(sum, m.minorDigits)+carriedUnrecognized)
+		calculated = maxInt64(0, m.accumulatedInterestMinor(p)+carriedUnrecognized)
 		// CAP AT THE INSTALLMENT [VERIFIED: RepaymentPeriod.java:266-280]. Nothing
 		// is ever paid on a schedule this contract generates, so the paid-amount
 		// arms of that expression collapse to the min.
@@ -1827,6 +1837,47 @@ func (m *scheduleModel) calculatedDueInterestMinor(p *repaymentPeriod) int64 {
 func (m *scheduleModel) dueInterestMinor(p *repaymentPeriod) int64 {
 	_, d := m.interestChainUpTo(p.idx)
 	return d
+}
+
+// accumulatedInterestMinor makes a period's calculated interest into money.
+//
+// SUM THE SEGMENTS, THEN MAKE IT MONEY -- exactly once, and in that order:
+// rounding each segment to the minor unit and then adding is a different
+// function [VERIFIED: RepaymentPeriod.java:246-252, Money.of(currency, sum,
+// mc) whose constructor applies the currency scale at Money.java:52].
+func (m *scheduleModel) accumulatedInterestMinor(p *repaymentPeriod) int64 {
+	if m.v.roundSegmentsThenSum {
+		// Counterfactual: the registered wrong drive
+		// loanschedule-wrong-round-segments-then-sum (wrongdrives.go). Rounding
+		// each segment to the minor unit FIRST and then adding is what a porter
+		// writes who reads Money.of(currency, PRINCIPAL, mc) at the top of
+		// calculatePrincipalPerPeriod (:243-245) and generalises the constructor
+		// call to the interest fold -- Money.of is invoked once there and its
+		// scale step is per-SEGMENT, not per-period-sum.
+		var segs int64
+		for _, s := range p.segments {
+			segs += m.minorFromMajor(m.segmentCalculatedInterest(p, s))
+		}
+		return segs
+	}
+	sum := new(big.Rat)
+	for _, s := range p.segments {
+		sum.Add(sum, m.segmentCalculatedInterest(p, s))
+	}
+	return m.minorFromMajor(sum)
+}
+
+// minorFromMajor is the currency layer of a model: a computed major-unit
+// quantity becomes money by being scaled to the model's currency decimal places
+// and recorded as an int64 count of minor units. On the graded path this is
+// minorFromMajor under the tenant's pinned HALF_UP; the variant switches to a
+// HALF_EVEN tie-break for the registered wrong drive
+// loanschedule-wrong-half-even (wrongdrives.go).
+func (m *scheduleModel) minorFromMajor(x *big.Rat) int64 {
+	if m.v.halfEvenMoney {
+		return minorFromMajorHalfEven(x, m.minorDigits)
+	}
+	return minorFromMajor(x, m.minorDigits)
 }
 
 // duePrincipalMinor is the BALANCING non-negative remainder of the installment
@@ -2070,7 +2121,7 @@ func (m *scheduleModel) calculateLevelInstallment(related []*repaymentPeriod) {
 	balance := majorFromMinor(m.initialBalanceMinor(related[0]), m.minorDigits)
 	numerator := roundSignificant(new(big.Rat).Mul(rateFactorN, balance), m.precision)
 	installment := roundSignificant(new(big.Rat).Quo(numerator, fn), m.precision)
-	emi := minorFromMajor(installment, m.minorDigits)
+	emi := m.minorFromMajor(installment)
 	// The balance was read from the chain above; the installments are written
 	// after it, so the invalidation belongs here and not before the read.
 	m.invalidateFrom(related[0].idx)

@@ -80,10 +80,17 @@ type Result struct {
 // Summary is the whole run.
 type Summary struct {
 	ImplementationName string
-	OracleProbe        string
-	SelfTestMode       bool
-	StoreRoot          string
-	ContextFilter      string
+
+	// ImplementationWrong is the DEFECT of the graded implementation when it is
+	// a REGISTERED deliberately-wrong one (loanschedule-wrong-*), empty
+	// otherwise. It is set in Run from IsRegisteredWrong, so a run that selects
+	// a wrong drive says so in the report; a RED under a wrong drive is the
+	// EXPECTED result, never a defect in the port.
+	ImplementationWrong string
+	OracleProbe         string
+	SelfTestMode        bool
+	StoreRoot           string
+	ContextFilter       string
 
 	// RepoRoot is the checkout that was graded and RepoRootRes is how it was
 	// chosen. Both are printed in the header. "store" alone was not enough: a
@@ -382,6 +389,13 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	}
 	if s.ImplementationName == "" {
 		s.ImplementationName = "(none)"
+	}
+	if d, bad := IsRegisteredWrong(s.ImplementationName); bad {
+		// A REGISTERED deliberately-wrong implementation (loanschedule-wrong-*)
+		// names its defect here so the report can say what was graded; selecting
+		// one is the mechanism that turns a graded_against sentence into an
+		// executable measurement (DEC-2 P-10).
+		s.ImplementationWrong = d
 	}
 	if s.OracleProbe == "" {
 		s.OracleProbe = "down"
