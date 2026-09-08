@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-07-share-account-list-row",
+ "title": "share-account list row for account id 3: stored status 300, approved 100, pending 0 (no purchase group)",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-account seam, LIST-ROW IDENTITY. request.account_status_id 300 and expect.account_status_stored 300 are shares-accounts-list-raw.json pageItems[0].status.id (shareAccountStatusType.active) for account id 3. request.total_approved_shares 100 and expect.total_approved_shares 100 are summary.totalApprovedShares; request.total_pending_shares 0 and expect.total_pending_shares 0 are summary.totalPendingForApprovalShares. A share-account LIST row serialises NO purchasedShares group (the list omits it), so this vector carries no purchase fields on either side: a port that fills the purchase group from a list row has nothing to read and must leave it silent. The stored status integer 300 is what a status-iota-ordinal defect would re-encode as 3, so this vector is red for it. The pending fold is 0 against the approved fold 100, so the summary-transpose defect shares-wrong-summary-approved-as-pending encodes (filling totalPendingForApprovalShares from totalApprovedShares, writing 100 into the 0 cell) also goes red here.",
+ "oracle": {
+  "seam": "share-account",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/shares-accounts-list-raw.json (account id 3, pageItems[0]): status.id 300, summary.totalApprovedShares 100, summary.totalPendingForApprovalShares 0; the list row carries no purchasedShares group.",
+  "capture_ref": ".softhouse/capture/shares/out/shares-accounts-list-raw.json",
+  "capture_sha256": "3c2379a96469c12ca9608ad7545b15fbccc9239ddcb815a279d6817c54867be5",
+  "capture_case_id": "3"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "account",
+  "currency_code": "MNT",
+  "account_status_id": 300,
+  "total_approved_shares": 100,
+  "total_pending_shares": 0
+ },
+ "expect": {
+  "kind": "account",
+  "account_status_stored": 300,
+  "total_approved_shares": 100,
+  "total_pending_shares": 0
+ },
+ "capabilities_required": [
+  "share-account"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}

@@ -68,6 +68,7 @@ func accountProbe() *Vector {
 			CurrencyCode:        "MNT",
 			AccountStatusID:     300,
 			TotalApprovedShares: 100,
+			TotalPendingShares:  0,
 			PurchasedShares:     100,
 			PurchasedPrice:      "100.00",
 			PurchasedAmount:     "10000.00",
@@ -77,6 +78,7 @@ func accountProbe() *Vector {
 			Kind:                  KindAccount,
 			AccountStatusStored:   300,
 			TotalApprovedShares:   100,
+			TotalPendingShares:    0,
 			PurchasedShares:       100,
 			PurchasedPriceMinor:   "10000",
 			PurchasedAmountMinor:  "1000000",
@@ -123,6 +125,156 @@ func dividendProbe() *Vector {
 			DividendAmountMinor: "1",
 		},
 		CapabilitiesRequired: []string{"share-dividend"},
+		GradedAgainst:        []string{"shares-go"},
+	}
+}
+
+// dividendStatusProbe builds a valid share-dividend vector that also pins the
+// dividend row's stored status integer (the account aggregate's dividends list
+// read the same row SH-02 grades by amount back with status id 100).
+func dividendStatusProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-dividend-status",
+		Title:   "probe share-account dividend row status readback",
+		Class:   ClassParity,
+		Context: SharesContext,
+		Note:    "probe: transcribed from share-account-detail-raw.json dividends[0], not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamShareDividend, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from share-account-detail-raw.json",
+			CaptureRef:    ".softhouse/capture/shares/out/share-account-detail-raw.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "3",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{
+			Kind:             KindDividend,
+			CurrencyCode:     "MNT",
+			DividendAmount:   "0.01",
+			DividendStatusID: 100,
+		},
+		Expect: Expect{
+			Kind:                 KindDividend,
+			DividendAmountMinor:  "1",
+			DividendStatusStored: 100,
+		},
+		CapabilitiesRequired: []string{"share-dividend"},
+		GradedAgainst:        []string{"shares-go"},
+	}
+}
+
+// productDetailProbe builds a valid share-product vector (product id 3,
+// unit 100.00, capital 100000.00, no rounding surface).
+func productDetailProbe() *Vector {
+	return productProbe("100.00", "100000.00", "10000", "10000000")
+}
+
+// productListProbe builds a share-product list-row vector whose unit price and
+// share capital differ (product id 2, unit 100.00, capital 1.00), so a
+// transposed-money-column defect discriminates.
+func productListProbe() *Vector {
+	return productProbe("100.00", "1.00", "10000", "100")
+}
+
+// productZeroProbe builds the share-product list row with a PRESENT-but-ZERO
+// share capital (product id 1, unit 100.00, capital 0.00): a port that drops a
+// zero money cell goes red here.
+func productZeroProbe() *Vector {
+	return productProbe("100.00", "0.00", "10000", "0")
+}
+
+func productProbe(unitPrice, capital, unitMinor, capitalMinor string) *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-product",
+		Title:   "probe share-product readback",
+		Class:   ClassParity,
+		Context: SharesContext,
+		Note:    "probe: transcribed from share-product captures, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamShareProduct, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from share-product-detail-raw.json",
+			CaptureRef:    ".softhouse/capture/shares/out/share-product-detail-raw.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "3",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{
+			Kind:         KindProduct,
+			CurrencyCode: "MNT",
+			UnitPrice:    unitPrice,
+			ShareCapital: capital,
+			TotalShares:  1000,
+		},
+		Expect: Expect{
+			Kind:              KindProduct,
+			UnitPriceMinor:    unitMinor,
+			ShareCapitalMinor: capitalMinor,
+			TotalShares:       1000,
+		},
+		CapabilitiesRequired: []string{"share-product"},
+		GradedAgainst:        []string{"shares-go"},
+	}
+}
+
+// accountListProbe builds a valid share-account LIST-ROW vector (account id 3,
+// no purchase group, no money): it grades the stored status and summary counts
+// only.
+func accountListProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-account-list",
+		Title:   "probe share-account list row readback",
+		Class:   ClassParity,
+		Context: SharesContext,
+		Note:    "probe: transcribed from shares-accounts-list-raw.json, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamShareAccount, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from shares-accounts-list-raw.json",
+			CaptureRef:    ".softhouse/capture/shares/out/shares-accounts-list-raw.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "3",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{
+			Kind:                KindAccount,
+			CurrencyCode:        "MNT",
+			AccountStatusID:     300,
+			TotalApprovedShares: 100,
+			TotalPendingShares:  0,
+		},
+		Expect: Expect{
+			Kind:                KindAccount,
+			AccountStatusStored: 300,
+			TotalApprovedShares: 100,
+			TotalPendingShares:  0,
+		},
+		CapabilitiesRequired: []string{"share-account"},
 		GradedAgainst:        []string{"shares-go"},
 	}
 }
@@ -176,31 +328,92 @@ func TestRejectFloatTokens(t *testing.T) {
 	}
 }
 
+// allProbes returns every probe the red-drive exercises. A probe is never
+// written to the store: it exists to prove, in-test, that the correct
+// implementation PASSes and each registered wrong implementation FAILs with a
+// non-zero diff on the vectors its defect can see.
+func allProbes() []*Vector {
+	return []*Vector{
+		accountProbe(), dividendProbe(), dividendStatusProbe(),
+		productDetailProbe(), productListProbe(), productZeroProbe(),
+		accountListProbe(),
+	}
+}
+
+// wrongImplRed is one registered wrong implementation and the probes its defect
+// MUST turn red (its "drive set"). A wrong implementation may PASS a probe its
+// defect cannot see: off-by-one cannot move a share-account list row that has
+// no money cell, and a status-ordinal defect cannot touch an amount-only
+// dividend vector.
+var wrongImplRed = map[string][]*Vector{
+	"shares-wrong-off-by-one": {
+		accountProbe(), dividendProbe(), dividendStatusProbe(),
+		productDetailProbe(), productListProbe(), productZeroProbe(),
+	},
+	"shares-wrong-status-iota-ordinal": {
+		accountProbe(), dividendStatusProbe(), accountListProbe(),
+	},
+	"shares-wrong-summary-approved-as-pending": {
+		accountProbe(), accountListProbe(),
+	},
+	"shares-wrong-product-price-transposed": {
+		productDetailProbe(), productListProbe(), productZeroProbe(),
+	},
+	"shares-wrong-zero-money-dropped": {
+		productZeroProbe(),
+	},
+}
+
 func TestWrongImplementationRunsRed(t *testing.T) {
-	for _, v := range []*Vector{accountProbe(), dividendProbe()} {
+	// The correct implementation must PASS every probe.
+	for _, v := range allProbes() {
 		if p := Admit(v, Options{}); len(p) > 0 {
 			t.Fatalf("%s should be admissible: %v", v.CaseID, p)
 		}
-
 		correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
 		if correct.Outcome != OutcomePass {
 			t.Fatalf("%s correct impl outcome = %s, want PASS; diffs=%v", v.CaseID, correct.Outcome, correct.Diffs)
 		}
+	}
 
-		wrongImpl, ok := Lookup("shares-wrong-off-by-one")
+	for name, drive := range wrongImplRed {
+		wrongImpl, ok := Lookup(name)
 		if !ok {
-			t.Fatal("wrong implementation not registered")
+			t.Fatalf("wrong implementation %q not registered", name)
 		}
-		if _, bad := IsRegisteredWrong("shares-wrong-off-by-one"); !bad {
-			t.Fatal("wrong implementation not marked wrong")
+		if _, bad := IsRegisteredWrong(name); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", name)
 		}
 
-		red := gradeOne(v, Options{Implementation: wrongImpl})
-		if red.Outcome != OutcomeFail {
-			t.Fatalf("%s wrong impl outcome = %s, want FAIL", v.CaseID, red.Outcome)
+		// Every probe in its drive set must go red with a non-zero diff.
+		for _, v := range drive {
+			red := gradeOne(v, Options{Implementation: wrongImpl})
+			if red.Outcome != OutcomeFail {
+				t.Fatalf("%s wrong impl %q outcome = %s, want FAIL", v.CaseID, name, red.Outcome)
+			}
+			if len(red.Diffs) == 0 {
+				t.Fatalf("%s wrong impl %q produced no diffs", v.CaseID, name)
+			}
 		}
-		if len(red.Diffs) == 0 {
-			t.Fatalf("%s wrong impl produced no diffs", v.CaseID)
+
+		// And a probe the defect cannot see must still PASS: a wrong
+		// implementation that is red on everything proves nothing about its
+		// specificity.
+		for _, v := range allProbes() {
+			skip := false
+			for _, dv := range drive {
+				if dv.CaseID == v.CaseID {
+					skip = true
+					break
+				}
+			}
+			if skip {
+				continue
+			}
+			if red := gradeOne(v, Options{Implementation: wrongImpl}); red.Outcome != OutcomePass {
+				t.Fatalf("%s wrong impl %q should PASS (defect cannot see it): outcome = %s, diffs=%v",
+					v.CaseID, name, red.Outcome, red.Diffs)
+			}
 		}
 	}
 }
@@ -210,6 +423,7 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 		byName: map[string]Capability{
 			"share-account":  {Name: "share-account", InGradedDomain: true, Evidence: "share-account-detail"},
 			"share-dividend": {Name: "share-dividend", InGradedDomain: true, Evidence: "shares-product-dividends"},
+			"share-product":  {Name: "share-product", InGradedDomain: true, Evidence: "share-product-detail"},
 		},
 		bySeam: map[string]Seam{
 			SeamShareAccount: {Name: SeamShareAccount, Status: map[string]SeamStatus{
@@ -218,6 +432,9 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 			SeamShareDividend: {Name: SeamShareDividend, Status: map[string]SeamStatus{
 				"share-dividend": StatusExercised,
 			}},
+			SeamShareProduct: {Name: SeamShareProduct, Status: map[string]SeamStatus{
+				"share-product": StatusExercised,
+			}},
 		},
 	}
 
@@ -225,6 +442,9 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 		t.Fatalf("exercised+graded should be gradeable: %v", v.Detail)
 	}
 	if v := r.Assess(SeamShareDividend, []string{"share-dividend"}); !v.Gradeable {
+		t.Fatalf("exercised+graded should be gradeable: %v", v.Detail)
+	}
+	if v := r.Assess(SeamShareProduct, []string{"share-product"}); !v.Gradeable {
 		t.Fatalf("exercised+graded should be gradeable: %v", v.Detail)
 	}
 	if v := r.Assess("unknown-seam", []string{"share-account"}); v.Gradeable || v.Reason != reasonUnknownSeam {
@@ -303,7 +523,8 @@ func TestAdmitDefaultDeny(t *testing.T) {
 }
 
 func TestInvariants(t *testing.T) {
-	held := AssertInvariants(nil, Expect{
+	acct := &Vector{Request: Request{PurchasedShares: 100}}
+	held := AssertInvariants(acct, Expect{
 		Kind:                 KindAccount,
 		PurchasedPriceMinor:  "10000",
 		PurchasedAmountMinor: "1000000",
@@ -317,12 +538,32 @@ func TestInvariants(t *testing.T) {
 		}
 	}
 
-	heldDiv := AssertInvariants(nil, Expect{Kind: KindDividend, DividendAmountMinor: "1"})
+	// A share-account LIST row carries no purchase group, so its money
+	// invariants must not be asserted (an absent group is not a violation).
+	if got := AssertInvariants(&Vector{}, Expect{Kind: KindAccount}); len(got) != 0 {
+		t.Fatalf("account list row produced invariants %+v, want none", got)
+	}
+
+	heldDiv := AssertInvariants(&Vector{}, Expect{Kind: KindDividend, DividendAmountMinor: "1"})
 	if len(heldDiv) != 1 || heldDiv[0].Status != InvariantHeld {
 		t.Fatalf("dividend invariant = %+v, want one HOLD", heldDiv)
 	}
 
-	neg := AssertInvariants(nil, Expect{
+	heldProd := AssertInvariants(&Vector{}, Expect{
+		Kind:              KindProduct,
+		UnitPriceMinor:    "10000",
+		ShareCapitalMinor: "0",
+	})
+	if len(heldProd) != 2 {
+		t.Fatalf("product invariants = %+v, want two HOLDs", heldProd)
+	}
+	for _, iv := range heldProd {
+		if iv.Status != InvariantHeld {
+			t.Fatalf("product invariant %s = %s, want HOLD", iv.Name, iv.Status)
+		}
+	}
+
+	neg := AssertInvariants(acct, Expect{
 		Kind:                 KindAccount,
 		PurchasedPriceMinor:  "10000",
 		PurchasedAmountMinor: "-1",
@@ -335,5 +576,20 @@ func TestInvariants(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("purchased_amount_minor_non_negative = %+v, want VIOLATED", neg)
+	}
+
+	negProd := AssertInvariants(&Vector{}, Expect{
+		Kind:              KindProduct,
+		UnitPriceMinor:    "10000",
+		ShareCapitalMinor: "1.5",
+	})
+	found = false
+	for _, iv := range negProd {
+		if iv.Name == "share_capital_minor_non_negative" && iv.Status == InvariantViolated {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("share_capital_minor_non_negative = %+v, want VIOLATED", negProd)
 	}
 }

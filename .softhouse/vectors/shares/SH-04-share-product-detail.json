@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-04-share-product-detail",
+ "title": "share product SEED-Share-Product: unit price 100.00 and share capital 100000.00",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-product seam, PRODUCT DETAIL READ-BACK. request.unit_price \"100.00\" is share-product-detail-raw.json unitPrice, the exact decimal text the oracle stored; expect.unit_price_minor \"10000\" is its minor-unit form. request.share_capital \"100000.00\" is shareCapital (issued 1000 shares * 100.00) and expect.share_capital_minor \"10000000\" its minor-unit form. request.total_shares 1000 is totalShares. No rounding surface: every product figure is an exact 2dp decimal transcribed to integer minor units. A port that serialises unit price into the share-capital field (or vice versa) goes red, as does one that rounds any money cell up by a minor unit.",
+ "oracle": {
+  "seam": "share-product",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/share-product-detail-raw.json (product id 3): unitPrice 100.00, shareCapital 100000.00, totalShares 1000.",
+  "capture_ref": ".softhouse/capture/shares/out/share-product-detail-raw.json",
+  "capture_sha256": "c14ed249635eb3b840f2c5dd73dc0f7dd5dcbb07e84ddb3b2a302629a78cee0b",
+  "capture_case_id": "3"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "product",
+  "currency_code": "MNT",
+  "unit_price": "100.00",
+  "share_capital": "100000.00",
+  "total_shares": 1000
+ },
+ "expect": {
+  "kind": "product",
+  "unit_price_minor": "10000",
+  "share_capital_minor": "10000000",
+  "total_shares": 1000
+ },
+ "capabilities_required": [
+  "share-product"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}

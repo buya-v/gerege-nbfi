@@ -1,0 +1,41 @@
+{
+ "schema": "gerege.branch.vector/v1",
+ "case_id": "BR-05-teller-status-active",
+ "title": "teller list serialises state ACTIVE; the stored m_tellers.state integer behind it is 300",
+ "class": "parity",
+ "context": "branch",
+ "_note": "teller-status seam. request.teller_status.status_label ACTIVE is the status the teller list read-back serialised for both rows of tellers-list-raw.json (id 2 SEED-Teller-01 and id 1 SMOKE-Teller). expect.teller_status_stored 300 is the stored m_tellers.state integer Fineract's TellerStatus enum maps ACTIVE to (VERIFIED: TellerStatus.java). A wrong implementation that re-encodes the lifecycle state as a contiguous Go enum ordinal (branch-wrong-teller-status-ordinal returns 2) or bumps the stored value by one (branch-wrong-off-by-one returns 301) goes red; a label-only harness that never looked at the stored integer would not see either defect. Only the ACTIVE label appears in the branch captures: PENDING/INACTIVE/CLOSED were never serialised, so no other state may be pinned (oracle gap).",
+ "oracle": {
+  "seam": "teller-status",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/branch/out/tellers-list-raw.json (state label ACTIVE on tellers 2 and 1, stored m_tellers.state 300)",
+  "capture_ref": ".softhouse/capture/branch/out/tellers-list-raw.json",
+  "capture_sha256": "c42d619bd0cd5e72cb25b8c1decd6309184e5f0b248d80eb50d87dec1ad37006",
+  "capture_case_id": "teller id 2 (SEED-Teller-01)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "teller_status": {
+   "status_label": "ACTIVE"
+  }
+ },
+ "expect": {
+  "teller_status_stored": 300
+ },
+ "capabilities_required": [
+  "teller-status"
+ ],
+ "graded_against": [
+  "branch-go"
+ ]
+}

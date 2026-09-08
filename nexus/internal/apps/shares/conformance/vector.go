@@ -27,6 +27,11 @@ const SeamShareAccount = "share-account"
 // the rounding itself is a later slice and not graded here (see doc.go).
 const SeamShareDividend = "share-dividend"
 
+// SeamShareProduct grades the share-product readback (the share-product detail
+// read or one row of the share-product list): the product's unit price and share
+// capital normalised to integer minor units and the total share count.
+const SeamShareProduct = "share-product"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{SharesContext} }
@@ -82,30 +87,46 @@ type TenantParams = shared.TenantParams
 type RequestKind string
 
 const (
-	// KindAccount is the share-account seam: the account aggregate readback.
+	// KindAccount is the share-account seam: the account aggregate readback or
+	// one row of the share-account list.
 	KindAccount RequestKind = "account"
-	// KindDividend is the share-dividend seam: the share-product dividend amount.
+	// KindDividend is the share-dividend seam: the share-product dividend amount
+	// (and, when the capture read it back, its stored status).
 	KindDividend RequestKind = "dividend"
+	// KindProduct is the share-product seam: the share-product detail read or
+	// one row of the share-product list.
+	KindProduct RequestKind = "product"
 )
 
 // Request is the input the implementation is graded on. It is the union of the
-// two seams: an account vector sets kind "account" and the account fields; a
-// dividend vector sets kind "dividend" and dividend_amount. Monetary values are
-// the exact decimal text the oracle stored, never a computed float.
+// three seams: an account vector sets kind "account" and the account fields; a
+// dividend vector sets kind "dividend" and dividend_amount; a product vector
+// sets kind "product" and the product money fields. Monetary values are the
+// exact decimal text the oracle stored, never a computed float.
 type Request struct {
 	Kind         RequestKind `json:"kind"`
 	CurrencyCode string      `json:"currency_code"`
 
-	// account seam
+	// account seam. A purchase row is present iff purchased_shares is non-zero:
+	// the account aggregate read-back carries the purchase group, a share-account
+	// list row does not, so the group is graded only when the read-back showed it.
 	AccountStatusID     int32  `json:"account_status_id"`
 	TotalApprovedShares int64  `json:"total_approved_shares"`
+	TotalPendingShares  int64  `json:"total_pending_shares"`
 	PurchasedShares     int64  `json:"purchased_shares"`
 	PurchasedPrice      string `json:"purchased_price"`
 	PurchasedAmount     string `json:"purchased_amount"`
 	PurchasedStatusID   int32  `json:"purchased_status_id"`
 
-	// dividend seam
-	DividendAmount string `json:"dividend_amount"`
+	// dividend seam. dividend_status_id is present iff non-zero: a dividend
+	// vector whose capture read the dividend row's status back grades it.
+	DividendAmount   string `json:"dividend_amount"`
+	DividendStatusID int32  `json:"dividend_status_id"`
+
+	// product seam.
+	UnitPrice    string `json:"unit_price"`
+	ShareCapital string `json:"share_capital"`
+	TotalShares  int64  `json:"total_shares"`
 }
 
 // Expect is what the oracle produced for the request, normalised to the port's
@@ -115,12 +136,18 @@ type Expect struct {
 
 	AccountStatusStored   int32  `json:"account_status_stored"`
 	TotalApprovedShares   int64  `json:"total_approved_shares"`
+	TotalPendingShares    int64  `json:"total_pending_shares"`
 	PurchasedShares       int64  `json:"purchased_shares"`
 	PurchasedPriceMinor   string `json:"purchased_price_minor"`
 	PurchasedAmountMinor  string `json:"purchased_amount_minor"`
 	PurchasedStatusStored int32  `json:"purchased_status_stored"`
 
-	DividendAmountMinor string `json:"dividend_amount_minor"`
+	DividendAmountMinor  string `json:"dividend_amount_minor"`
+	DividendStatusStored int32  `json:"dividend_status_stored"`
+
+	UnitPriceMinor    string `json:"unit_price_minor"`
+	ShareCapitalMinor string `json:"share_capital_minor"`
+	TotalShares       int64  `json:"total_shares"`
 }
 
 // Vector is one shares golden vector.

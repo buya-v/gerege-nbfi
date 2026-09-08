@@ -3,32 +3,45 @@
  "capabilities": [
   {
    "name": "share-account",
-   "description": "Normalise a share-account aggregate readback into the port's vocabulary: map the account status and purchase status stored ids to their stored values, and transcribe the purchased price and purchased amount DECIMAL money into 2 minor units. The purchase total is requestedShares * unitPrice = 100 * 100 = 10000.00, an integer-times-integer minor-unit product with NO rounding surface.",
+   "description": "Normalise a share-account read-back into the port's vocabulary: map the account status (and, when the read-back carries a purchase group, the purchase status) stored id to its stored value; transcribe the summary's approved and pending share counts; and, for an account whose read-back shows a purchase, transcribe purchased price and purchased amount DECIMAL money into 2 minor units. The aggregate purchase total is requestedShares * unitPrice = 100 * 100 = 10000.00, an integer-times-integer minor-unit product with NO rounding surface. A share-account LIST row carries no purchase group and no money, so it grades only the stored status and the summary counts; the harness never grades a group the read-back did not show.",
    "in_graded_domain": true,
-   "evidence": "Capture share-account-detail-raw.json under tenant gerege: the running oracle stored account id 3 (status 300 Active, totalApprovedShares 100) with purchasedShares[0] numberOfShares 100, purchasedPrice 100.00, amount 10000.00, purchase status 300 Approved."
+   "evidence": "Captures share-account-detail-raw.json and shares-accounts-list-raw.json under tenant gerege: the running oracle stored account id 3 (status 300 Active, summary totalApprovedShares 100 / totalPendingForApprovalShares 0) with purchasedShares[0] numberOfShares 100, purchasedPrice 100.00, amount 10000.00, purchase status 300 Approved; the account LIST row serialises the same status and summary but no purchasedShares group."
   },
   {
    "name": "share-dividend",
-   "description": "Normalise a share-product dividend's dividendAmount field into integer minor units. The capture records the amount the oracle STORED (0.010000), which is the HALF_UP-rounded read-back of the 0.005 request; the rounding itself is a later slice and is NOT graded, so the port only normalises the stored read-back to one minor unit.",
+   "description": "Normalise a share-product dividend's dividendAmount field into integer minor units and, when the read-back carried the dividend row's status, pin its stored status integer. The capture records the amount the oracle STORED (0.010000), which is the HALF_UP-rounded read-back of the 0.005 request; the rounding itself is a later slice and is NOT graded, so the port only normalises the stored read-back to one minor unit. A dividend read through the account aggregate's dividends list carries the row's status id 100 (initiated); the harness pins that stored integer, never the label.",
    "in_graded_domain": true,
-   "evidence": "Capture shares-product-dividends-raw.json under tenant gerege: the running oracle stored dividend id 3 with amount 0.010000, the HALF_UP read-back of the discriminating 0.005 dividendAmount request (HALF_UP 0.01 / HALF_EVEN 0.00, verdict HALF_UP)."
+   "evidence": "Captures shares-product-dividends-raw.json and share-account-detail-raw.json under tenant gerege: the running oracle stored dividend id 3 with amount 0.010000 (HALF_UP read-back of the discriminating 0.005 dividendAmount request: HALF_UP 0.01 / HALF_EVEN 0.00, verdict HALF_UP); the account aggregate's dividends list reads the same dividend row back with status id 100 shareAccountDividendStatusType.initiated."
+  },
+  {
+   "name": "share-product",
+   "description": "Normalise a share-product read-back (the product detail read or one row of the share-product list) into the port's vocabulary: transcribe the unit price and the share capital DECIMAL money into 2 minor units and the total share count. Every product figure is an exact 2dp decimal, so there is no rounding surface. The list serialiser fills the same money columns the detail read does; one captured product row carries a PRESENT-but-ZERO share capital (0.00), so a port that drops a zero money cell is visible here.",
+   "in_graded_domain": true,
+   "evidence": "Captures share-product-detail-raw.json and shares-products-list-raw.json under tenant gerege: product id 3 (unitPrice 100.00, shareCapital 100000.00, totalShares 1000); product id 2 list row (unitPrice 100.00, shareCapital 1.00); product id 1 list row (unitPrice 100.00, shareCapital 0.00, totalShares 1000)."
   }
  ],
  "seams": [
   {
    "name": "share-account",
-   "description": "GET /accounts/share/{accountId} on the running Fineract server (Path B), tenant gerege, read back as the share-account aggregate (status, summary, purchasedShares).",
+   "description": "GET /accounts/share/{accountId} and the share-account LIST read on the running Fineract server (Path B), tenant gerege, read back as the share-account aggregate or a list row (status, summary, and \u2014 aggregate only \u2014 purchasedShares).",
    "status": {
     "share-account": "exercised"
    }
   },
   {
    "name": "share-dividend",
-   "description": "GET /shareproduct/{productId}/dividend (and the share-account aggregate's dividends list) on the running Fineract server (Path B), tenant gerege, read back as the share-product dividend row.",
+   "description": "GET /shareproduct/{productId}/dividend and the share-account aggregate's dividends list on the running Fineract server (Path B), tenant gerege, read back as the share-product dividend row.",
    "status": {
     "share-dividend": "exercised"
    }
+  },
+  {
+   "name": "share-product",
+   "description": "GET /shareproduct/{productId} and the share-product LIST read on the running Fineract server (Path B), tenant gerege, read back as the share-product row (unitPrice, shareCapital, totalShares).",
+   "status": {
+    "share-product": "exercised"
+   }
   }
  ],
- "note": "Shares parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the share-account aggregate normalisation (share-account seam) and the share-product dividend amount normalisation (share-dividend seam). The dividend create command's HALF_UP rounding (0.005 -> 0.01) is NOT in the graded domain: the shares slice's command plumbing is not yet ported, and the port's exact-money parser (MinorUnitsFromDecimalText) refuses sub-minor-unit residue rather than reproducing the oracle's Money.setScale(2, HALF_UP). The dividend vector therefore transcribes the STORED read-back (0.010000 -> 1 minor unit), not the rounding."
+ "note": "Shares parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). THREE capabilities are graded: the share-account aggregate/list normalisation (share-account seam), the share-product dividend amount and status normalisation (share-dividend seam), and the share-product read-back normalisation (share-product seam). The dividend create command's HALF_UP rounding (0.005 -> 0.01) is NOT in the graded domain: the shares slice's command plumbing is not yet ported, and the port's exact-money parser (MinorUnitsFromDecimalText) refuses sub-minor-unit residue rather than reproducing the oracle's Money.setScale(2, HALF_UP). Dividend vectors therefore transcribe the STORED read-back (0.010000 -> 1 minor unit) and its stored status integer (100), not the rounding."
 }

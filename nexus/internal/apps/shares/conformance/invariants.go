@@ -20,18 +20,27 @@ type InvariantResult struct {
 }
 
 // AssertInvariants runs every gradeable shares invariant against the result an
-// implementation returned.
+// implementation returned. The purchase money invariants are asserted only when
+// the vector's request carried a purchase group: a share-account list row has no
+// purchase money, and asserting on an absent group would fail the empty string.
 func AssertInvariants(v *Vector, got Expect) []InvariantResult {
-	_ = v
 	switch got.Kind {
 	case KindAccount:
-		return []InvariantResult{
-			assertAmountNonNegative("purchased_price_minor", got.PurchasedPriceMinor),
-			assertAmountNonNegative("purchased_amount_minor", got.PurchasedAmountMinor),
+		if v.Request.PurchasedShares != 0 {
+			return []InvariantResult{
+				assertAmountNonNegative("purchased_price_minor", got.PurchasedPriceMinor),
+				assertAmountNonNegative("purchased_amount_minor", got.PurchasedAmountMinor),
+			}
 		}
+		return nil
 	case KindDividend:
 		return []InvariantResult{
 			assertAmountNonNegative("dividend_amount_minor", got.DividendAmountMinor),
+		}
+	case KindProduct:
+		return []InvariantResult{
+			assertAmountNonNegative("unit_price_minor", got.UnitPriceMinor),
+			assertAmountNonNegative("share_capital_minor", got.ShareCapitalMinor),
 		}
 	default:
 		return nil

@@ -146,6 +146,140 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 }
 
+// summaryPostProbe builds the cashier-summary POST-point vector as a probe (see
+// BR-04): the row set summary-cashier2-post-raw.json listed, folded to the
+// buckets that read-back published.
+func summaryPostProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-summary-post",
+		Title:   "probe cashier 2 summary after allocate/settle",
+		Class:   ClassParity,
+		Context: BranchContext,
+		Note:    "probe: transcribed from summary-cashier2-post-raw.json, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamCashierSummary, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from summary-cashier2-post-raw.json",
+			CaptureRef:    ".softhouse/capture/branch/out/summary-cashier2-post-raw.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "post",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{Summary: &SummaryRequest{Rows: []CashierSummaryRow{
+			{ID: 2, TxnType: 101, TxnAmount: "100000.50"},
+			{ID: 6, TxnType: 101, TxnAmount: "12345.67"},
+			{ID: 7, TxnType: 101, TxnAmount: "100000.50"},
+			{ID: 8, TxnType: 102, TxnAmount: "40000.25"},
+		}}},
+		Expect:               Expect{SumCashAllocation: "21234667", SumCashSettlement: "4000025", NetCash: "17234642"},
+		CapabilitiesRequired: []string{"cashier-summary"},
+		GradedAgainst:        []string{"branch-go"},
+	}
+}
+
+// tellerStatusProbe builds the teller-status ACTIVE vector as a probe (see
+// BR-05): the label the teller list read-back serialised for its two rows.
+func tellerStatusProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-teller-active",
+		Title:   "probe teller status ACTIVE stored integer",
+		Class:   ClassParity,
+		Context: BranchContext,
+		Note:    "probe: transcribed from tellers-list-raw.json, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamTellerStatus, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from tellers-list-raw.json",
+			CaptureRef:    ".softhouse/capture/branch/out/tellers-list-raw.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "teller id 2 (SEED-Teller-01)",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request:              Request{TellerStatus: &TellerStatusRequest{StatusLabel: "ACTIVE"}},
+		Expect:               Expect{TellerStatusStored: 300},
+		CapabilitiesRequired: []string{"teller-status"},
+		GradedAgainst:        []string{"branch-go"},
+	}
+}
+
+// gradeProbe admits and grades a probe against one implementation, failing the
+// test if the probe is inadmissible.
+func gradeProbe(t *testing.T, v *Vector, name string) vectorResult {
+	t.Helper()
+	if p := Admit(v, Options{}); len(p) > 0 {
+		t.Fatalf("%s probe should be admissible: %v", v.CaseID, p)
+	}
+	impl, ok := Lookup(name)
+	if !ok {
+		t.Fatalf("implementation %q not registered", name)
+	}
+	return gradeOne(v, Options{Implementation: impl})
+}
+
+func TestCashierSummarySeamWrongImplsRunRed(t *testing.T) {
+	v := summaryPostProbe()
+
+	if r := gradeProbe(t, v, "branch-go"); r.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", r.Outcome, r.Diffs)
+	}
+	for _, w := range []string{
+		"branch-wrong-summary-drops-last-row",
+		"branch-wrong-summary-settle-as-allocate",
+		"branch-wrong-summary-net-adds-settlement",
+		"branch-wrong-off-by-one",
+	} {
+		if _, bad := IsRegisteredWrong(w); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", w)
+		}
+		r := gradeProbe(t, v, w)
+		if r.Outcome != OutcomeFail {
+			t.Fatalf("wrong impl %s outcome = %s, want FAIL", w, r.Outcome)
+		}
+		if len(r.Diffs) == 0 {
+			t.Fatalf("wrong impl %s produced no diffs", w)
+		}
+	}
+}
+
+func TestTellerStatusSeamWrongImplsRunRed(t *testing.T) {
+	v := tellerStatusProbe()
+
+	if r := gradeProbe(t, v, "branch-go"); r.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", r.Outcome, r.Diffs)
+	}
+	for _, w := range []string{
+		"branch-wrong-teller-status-ordinal",
+		"branch-wrong-off-by-one",
+	} {
+		if _, bad := IsRegisteredWrong(w); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", w)
+		}
+		r := gradeProbe(t, v, w)
+		if r.Outcome != OutcomeFail {
+			t.Fatalf("wrong impl %s outcome = %s, want FAIL", w, r.Outcome)
+		}
+		if len(r.Diffs) == 0 {
+			t.Fatalf("wrong impl %s produced no diffs", w)
+		}
+	}
+}
+
 func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	r := &CapabilityRegistry{
 		byName: map[string]Capability{

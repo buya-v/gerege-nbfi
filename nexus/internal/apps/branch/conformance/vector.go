@@ -16,10 +16,24 @@ const SchemaV1 = "gerege.branch.vector/v1"
 // anything about, and it is the directory name that context's vectors live in.
 const BranchContext = "branch"
 
-// SeamCashierTxnAmount is the one capture seam this schema grades: the
+// SeamCashierTxnAmount is a capture seam this schema grades: the
 // m_cashier_transactions row produced by an allocate/settle cash movement, whose
 // txn_amount the port normalises to integer minor units with no rounding surface.
 const SeamCashierTxnAmount = "cashier-txn-amount"
+
+// SeamCashierSummary is a capture seam this schema grades: the cashier summary
+// read-back (GET /cashiers/{cashierId}/summary) of the m_cashier_transactions
+// row set. The row set is a three-point series — the same cashier read at the
+// pre, post and final moments of the allocate/settle run — and each read-back's
+// sumCashAllocation / sumCashSettlement / netCash buckets are derived from the
+// rows by the port's summary fold.
+const SeamCashierSummary = "cashier-summary"
+
+// SeamTellerStatus is a capture seam this schema grades: the m_tellers.state
+// stored value behind the teller list's status label. The list serialises the
+// state enum as its display label ("ACTIVE"); the port's TellerStatus enum maps
+// the label to the stored integer the read-back stands for.
+const SeamTellerStatus = "teller-status"
 
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
@@ -72,23 +86,60 @@ type Provenance struct {
 // currency MNT, 2 minor units, Asia/Ulaanbaatar.
 type TenantParams = shared.TenantParams
 
-// Request is the input the implementation is graded on: a cashier-transaction
-// cash movement. TxnType is the cashier txn-type stored id (101 allocate, 102
-// settle); TxnAmount is the exact decimal text the oracle received; CurrencyCode
-// is the currency the amount is denominated in.
-type Request struct {
-	TxnType      int32  `json:"txn_type"`
-	TxnAmount    string `json:"txn_amount"`
-	CurrencyCode string `json:"currency_code"`
+// CashierSummaryRow is one m_cashier_transactions row of a summary request: its
+// observed transaction type (101 allocate, 102 settle, 103 cash in, 104 cash
+// out) and its observed DECIMAL(19,6) amount as exact decimal text, in the order
+// the read-back listed them.
+type CashierSummaryRow struct {
+	ID        int32  `json:"id"`
+	TxnType   int32  `json:"txn_type"`
+	TxnAmount string `json:"txn_amount"`
 }
 
-// Expect is what the oracle produced for the request: the transaction type as
-// stored (id + display value) and the amount normalised to an INTEGER STRING of
-// minor units. Money is integer minor units, never a float.
+// SummaryRequest is the cashier-summary seam's input: the row set a summary
+// read-back was taken from. The port folds the rows into the four till buckets
+// and derives the net till cash, so the graded cells are the read-back's bucket
+// sums transcribed from the capture.
+type SummaryRequest struct {
+	Rows []CashierSummaryRow `json:"rows"`
+}
+
+// TellerStatusRequest is the teller-status seam's input: the status label the
+// teller list read-back serialised.
+type TellerStatusRequest struct {
+	StatusLabel string `json:"status_label"`
+}
+
+// Request is the input the implementation is graded on. A vector sets exactly
+// one of the three seams: the cashier-transaction cash movement (TxnType +
+// TxnAmount + CurrencyCode, the cashier-txn-amount seam), the cashier summary
+// row set (CashierSummary, the cashier-summary seam), or the teller status label
+// (TellerStatus, the teller-status seam). Monetary values are the exact decimal
+// text the oracle received or stored, never a computed float.
+type Request struct {
+	TxnType      int32                `json:"txn_type"`
+	TxnAmount    string               `json:"txn_amount"`
+	CurrencyCode string               `json:"currency_code"`
+	Summary      *SummaryRequest      `json:"cashier_summary,omitempty"`
+	TellerStatus *TellerStatusRequest `json:"teller_status,omitempty"`
+}
+
+// Expect is what the oracle produced for the request, normalised to the port's
+// vocabulary. The cashier-txn-amount seam fills the transaction type as stored
+// (id + display value) and the amount as an INTEGER STRING of minor units; the
+// cashier-summary seam fills the three bucket sums as integer minor-unit
+// strings; the teller-status seam fills the stored state integer. Money is
+// integer minor units, never a float.
 type Expect struct {
 	TxnTypeID      int32  `json:"txn_type_id"`
 	TxnTypeValue   string `json:"txn_type_value"`
 	TxnAmountMinor string `json:"txn_amount_minor"`
+
+	SumCashAllocation string `json:"sum_cash_allocation,omitempty"`
+	SumCashSettlement string `json:"sum_cash_settlement,omitempty"`
+	NetCash           string `json:"net_cash,omitempty"`
+
+	TellerStatusStored int32 `json:"teller_status_stored,omitempty"`
 }
 
 // Vector is one branch golden vector.

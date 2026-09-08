@@ -1,21 +1,41 @@
 {
- "schema": "gerege.branch.capabilities/v1",
- "capabilities": [
-  {
-   "name": "cashier-txn-amount",
-   "description": "Normalise a cashier-transaction cash movement (allocate/settle) amount into integer minor units: map the txn-type stored id to its stored value and transcribe the DECIMAL(19,6) txn_amount to 2 minor units with no rounding surface.",
-   "in_graded_domain": true,
-   "evidence": "Capture summary-cashier2-final-raw.json under tenant gerege: the running oracle stored allocate txn id 7 (txnType 101 Allocate Cash, txnAmount 100000.500000) and settle txn id 8 (txnType 102 Settle Cash, txnAmount 40000.250000); both are direct cash movements with no rounding surface."
-  }
- ],
- "seams": [
-  {
-   "name": "cashier-txn-amount",
-   "description": "POST /cashiers/{cashierId}/allocate and POST /cashiers/{cashierId}/settle on the running Fineract server (Path B), tenant gerege, read back as the m_cashier_transactions rows.",
-   "status": {
-    "cashier-txn-amount": "exercised"
-   }
-  }
- ],
- "note": "Branch parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the cashier-transaction amount normalisation (cashier-txn-amount seam). The summary aggregation (sumCashAllocation/sumCashSettlement/netCash), the in/out double-entry posting, and the teller/cashier/staff aggregate reads are NOT in the graded domain: the branch slice's later command/aggregation plumbing is not yet ported, and the 3dp probe (40000.245) demonstrates the port's 2dp minor-unit model refuses sub-minor-unit residue rather than reproducing the oracle's DECIMAL(19,6) storage, so there is no rounding cell to transcribe."
+  "schema": "gerege.branch.capabilities/v1",
+  "capabilities": [
+    {
+      "name": "cashier-txn-amount",
+      "description": "Normalise a cashier-transaction cash movement (allocate/settle) amount into integer minor units: map the txn-type stored id to its stored value and transcribe the DECIMAL(19,6) txn_amount to 2 minor units with no rounding surface.",
+      "in_graded_domain": true,
+      "evidence": "Capture summary-cashier2-final-raw.json under tenant gerege: the running oracle stored allocate txn id 7 (txnType 101 Allocate Cash, txnAmount 100000.500000) and settle txn id 8 (txnType 102 Settle Cash, txnAmount 40000.250000); txns-cashier2-raw.json adds allocate rows id 2 (100000.500000) and id 6 (12345.670000). All are direct cash movements with no rounding surface."
+    },
+    {
+      "name": "cashier-summary",
+      "description": "Fold a cashier summary read-back's m_cashier_transactions row set into the sumCashAllocation / sumCashSettlement / netCash buckets as integer minor units. The read-backs are a three-point series over the same cashier; the pre/post reads carry only allocate and settle rows, so the allocation and settlement buckets and the net till-cash fold are what a graded summary vector pins.",
+      "in_graded_domain": true,
+      "evidence": "Captures summary-cashier2-pre-raw.json (rows 2 and 6; sumCashAllocation 112346.17, sumCashSettlement 0, netCash 112346.17) and summary-cashier2-post-raw.json (rows 2, 6, 7, 8; sumCashAllocation 212346.67, sumCashSettlement 40000.25, netCash 172346.42)."
+    },
+    {
+      "name": "teller-status",
+      "description": "Map the teller list's serialised state label to the stored m_tellers.state integer (ACTIVE is 300). Only the ACTIVE label appears in any branch capture; the other lifecycle labels were never serialised.",
+      "in_graded_domain": true,
+      "evidence": "Capture tellers-list-raw.json: both tellers (id 2 SEED-Teller-01, id 1 SMOKE-Teller) serialise status ACTIVE, which Fineract's TellerStatus enum stores as m_tellers.state 300."
+    }
+  ],
+  "seams": [
+    {
+      "name": "cashier-txn-amount",
+      "description": "POST /cashiers/{cashierId}/allocate and POST /cashiers/{cashierId}/settle on the running Fineract server (Path B), tenant gerege, read back as the m_cashier_transactions rows.",
+      "status": { "cashier-txn-amount": "exercised" }
+    },
+    {
+      "name": "cashier-summary",
+      "description": "GET /cashiers/{cashierId}/summary on the running Fineract server (Path B), tenant gerege: the same cashier 2 read at the pre, post and final moments of the allocate/settle run, each read-back carrying the m_cashier_transactions rows folded into its sumCashAllocation / sumCashSettlement / netCash buckets.",
+      "status": { "cashier-summary": "exercised" }
+    },
+    {
+      "name": "teller-status",
+      "description": "GET /tellers on the running Fineract server (Path B), tenant gerege: the m_tellers rows whose state column the list serialises as the status label.",
+      "status": { "teller-status": "exercised" }
+    }
+  ],
+  "note": "Branch parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded: the cashier-transaction amount normalisation (cashier-txn-amount seam), the cashier summary fold (cashier-summary seam, pre and post points of the three-point series) and the teller stored state integer (teller-status seam). The FINAL summary point (summary-cashier2-final-raw.json) is deliberately NOT promoted: it contains settle row id 9 (txnAmount 40000.245), money finer than MNT's minor unit, which the 2dp port refuses rather than reproduces; that divergence is documented in branch/conformance/doc.go and awaits a user decision, so no vector pins it either way. The in/out double-entry posting, the inward/outward cash buckets (no capture records a 103/104 row) and the remaining teller lifecycle labels (never serialised) are oracle gaps, not graded cells."
 }

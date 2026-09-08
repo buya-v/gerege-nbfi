@@ -1,0 +1,44 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-03-share-dividend-status",
+ "title": "share-account dividend row id 3 (0.01 MNT initiated) read back with its stored status 100",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-dividend seam, STATUS READ-BACK. request.dividend_amount \"0.01\" is share-account-detail-raw.json dividends[0].amount, the exact decimal text the oracle stored; expect.dividend_amount_minor \"1\" is that value transcribed to integer minor units (2dp). request.dividend_status_id 100 and expect.dividend_status_stored 100 are dividends[0].status.id (shareAccountDividendStatusType.initiated, value \"Dividend Initiated\"): the SAME dividend row SH-02 grades by amount is read back here through the account aggregate's dividends list, so this vector pins the stored dividend status integer (never the label). A port that re-encodes the stored status as a contiguous Go iota ordinal (stored id / 100 = 1) goes red on this cell, as does one that drops the dividend row's amount.",
+ "oracle": {
+  "seam": "share-dividend",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares/out/share-account-detail-raw.json (account id 3, dividends[0]): amount 0.01, status.id 100 (shareAccountDividendStatusType.initiated).",
+  "capture_ref": ".softhouse/capture/shares/out/share-account-detail-raw.json",
+  "capture_sha256": "80a2bd43778837de37c550e620f2282bd1d184425f3fd2ad1c81d16e3c6e789f",
+  "capture_case_id": "3"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "dividend",
+  "currency_code": "MNT",
+  "dividend_amount": "0.01",
+  "dividend_status_id": 100
+ },
+ "expect": {
+  "kind": "dividend",
+  "dividend_amount_minor": "1",
+  "dividend_status_stored": 100
+ },
+ "capabilities_required": [
+  "share-dividend"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}

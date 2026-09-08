@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.branch.vector/v1",
+ "case_id": "BR-07-allocate-seed-2-1234567",
+ "title": "txn row id 6: seed allocate of 12345.67 MNT to cashier 2, stored at DECIMAL(19,6) 12345.670000",
+ "class": "parity",
+ "context": "branch",
+ "_note": "cashier-txn-amount movement. request.txn_type 101 and request.txn_amount \"12345.67\" are the txn-type id and exact amount of row id 6 of the cashier-2 transaction list (txns-cashier2-raw.json), the second SEED allocate that the summary reads carry. expect.txn_type_id 101, txn_type_value \"Allocate Cash\" and txn_amount_minor 1234567 are that row's txnType and its txnAmount 12345.670000 transcribed to integer minor units; the DECIMAL(19,6) spelling is exact with no rounding surface. Pins the odd-valued allocate amount of the transaction read-back; a wrong implementation that raises the money cell (branch-wrong-off-by-one) or transposed the allocate label (branch-wrong-txn-label-transposed) goes red.",
+ "oracle": {
+  "seam": "cashier-txn-amount",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/branch/out/txns-cashier2-raw.json (txn row id 6, txnType 101 Allocate Cash, txnAmount 12345.670000)",
+  "capture_ref": ".softhouse/capture/branch/out/txns-cashier2-raw.json",
+  "capture_sha256": "5936ea0ecdb000a7e51f587674fe5fa386841e83002f7e40021041893d63bd5d",
+  "capture_case_id": "6"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "txn_type": 101,
+  "txn_amount": "12345.67",
+  "currency_code": "MNT"
+ },
+ "expect": {
+  "txn_type_id": 101,
+  "txn_type_value": "Allocate Cash",
+  "txn_amount_minor": "1234567"
+ },
+ "capabilities_required": [
+  "cashier-txn-amount"
+ ],
+ "graded_against": [
+  "branch-go"
+ ]
+}
