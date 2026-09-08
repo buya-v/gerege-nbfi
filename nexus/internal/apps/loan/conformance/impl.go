@@ -342,6 +342,96 @@ func (w wrongStatusEvaluator) Evaluate(req Request) (Expect, error) {
 	return w.goEvaluator.Evaluate(req)
 }
 
+// wrongSummaryDropsPrincipalEvaluator is a DELIBERATELY WRONG implementation of
+// the summary seam: it derives total_outstanding from the fee, interest and
+// penalty buckets only, dropping the principal bucket as if the outstanding
+// principal had already been repaid. Its pinning case is the principal-only
+// SEED-L05 read-back, whose entire total lives in the principal bucket and so
+// comes out as zero; on every interest-bearing read-back the derived total is
+// short by the whole outstanding principal.
+type wrongSummaryDropsPrincipalEvaluator struct{ goEvaluator }
+
+func (w wrongSummaryDropsPrincipalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Summary != nil {
+		return wrongSummaryDropsPrincipal(*req.Summary)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+func wrongSummaryDropsPrincipal(s SummaryRequest) (Expect, error) {
+	interest, err := parseMinorText(s.InterestOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(s.FeeOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	penalty, err := parseMinorText(s.PenaltyOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	total := interest + fee + penalty
+	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
+// mifosOrderNoPrincipal is the repayment allocation order a port would produce
+// by transcribing the mifos-standard-strategy but dropping the principal leg:
+// penalties, fees, then interest — the loan never amortises because no repayment
+// is ever allocated to principal.
+var mifosOrderNoPrincipal = []loan.PaymentAllocationType{
+	loan.PaymentDuePenalty, loan.PaymentDueFee, loan.PaymentDueInterest,
+}
+
+// wrongRepaymentEvaluator is a DELIBERATELY WRONG implementation of the
+// repayment-allocation seam: its allocation order omits the principal bucket, so
+// every repayment is recognised wholly against charges and interest and the loan
+// never amortises. On the pinned SEED-L03 repayment the instalment's 7884.88 of
+// principal is never allocated: the allocation reports principal=0 and the whole
+// 7884.88 falls through to the leftover, and the vector goes red on both cells.
+type wrongRepaymentEvaluator struct{ goEvaluator }
+
+func (w wrongRepaymentEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Repayment != nil {
+		return wrongRepayment(*req.Repayment)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+func wrongRepayment(r RepaymentRequest) (Expect, error) {
+	penalty, err := parseMinorText(r.Outstanding.Penalty)
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(r.Outstanding.Fee)
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(r.Outstanding.Interest)
+	if err != nil {
+		return Expect{}, err
+	}
+	principal, err := parseMinorText(r.Outstanding.Principal)
+	if err != nil {
+		return Expect{}, err
+	}
+	amount, err := parseMinorText(r.AmountMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	outstanding := loan.Allocation{Penalty: penalty, Fee: fee, Interest: interest, Principal: principal}
+	alloc, leftover := loan.AllocatePayment(outstanding, amount, mifosOrderNoPrincipal)
+	return Expect{
+		Allocation: &AllocationMoney{
+			Penalty:   strconv.FormatInt(int64(alloc.Penalty), 10),
+			Fee:       strconv.FormatInt(int64(alloc.Fee), 10),
+			Interest:  strconv.FormatInt(int64(alloc.Interest), 10),
+			Principal: strconv.FormatInt(int64(alloc.Principal), 10),
+		},
+		LeftoverMinor: strconv.FormatInt(int64(leftover), 10),
+	}, nil
+}
+
 func init() {
 	Register("loan-go", NewGoEvaluator())
 	RegisterWrong("loan-wrong-half-even-schedule-interest",
@@ -358,4 +448,14 @@ func init() {
 			"non-contiguous stored value (ACTIVE 3, not 300), so the round-trip stored_value "+
 			"cell of every status vector goes red",
 		wrongStatusEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-summary-drops-principal",
+		"derives total_outstanding from the fee, interest and penalty buckets only, dropping the "+
+			"principal bucket as if the outstanding principal were already repaid, so the pinned "+
+			"principal-only SEED-L05 total (41850.09) reads 0 and the vector goes red",
+		wrongSummaryDropsPrincipalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-repayment-omits-principal",
+		"allocates a repayment across penalties, fees and interest but never the principal bucket, "+
+			"so the pinned SEED-L03 repayment reports principal=0 and the whole 7884.88 instalment "+
+			"principal falls through to the leftover, and the vector goes red on both cells",
+		wrongRepaymentEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

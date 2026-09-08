@@ -1,0 +1,45 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L05-summary-total-outstanding",
+    "title": "SEED-L05 read-back summary total outstanding (derive-don't-store)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the SEED-L05 loan-detail summary read-back, the zero-interest loan of the seeded population (annualInterestRate 0.00). request.summary.principal_outstanding_minor=4185009 is the capture summary's \"principalOutstanding\":41850.090000 in minor units; the interest, fee and penalty buckets are the empty \"interestOutstanding\":0.000000, \"feeChargesOutstanding\":0.000000 and \"penaltyChargesOutstanding\":0.000000. expect.summary_total_minor=4185009 is the capture summary's \"totalOutstanding\":41850.090000, the total Fineract derived from those buckets (total_outstanding_derived). The four buckets are observed, nothing was computed: the whole total lives in the principal bucket. The registered wrong implementation loan-wrong-summary-drops-principal derives total_outstanding from the interest, fee and penalty buckets only and drops the principal bucket as if the outstanding principal were repaid, so it computes 0 here, 4185009 short of the oracle's 4185009, and the vector goes red. It is the isolating counterpart of the interest-bearing vectors: on this principal-only loan the complementary wrong implementation loan-wrong-summary-interest-not-outstanding (which reads the interest bucket as recovered) is invisible, because the capture carries no interest to drop. Nothing was computed by this promotion.",
+    "oracle": {
+        "seam": "loan-summary-outstanding",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-5-detail-raw.json; capture_case_id names the externalId of the observed loan.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-5-detail-raw.json",
+        "capture_sha256": "7b8231aa7e998dfeaab7897edfd82367529fbfbf0fb53ced04d38ec0fe87f2a4",
+        "capture_case_id": "SEED-L05",
+        "citation": "loan-5-detail-raw.json {\"externalId\":\"SEED-L05\",\"summary\":{\"principalOutstanding\":41850.090000,\"interestOutstanding\":0.000000,\"feeChargesOutstanding\":0.000000,\"penaltyChargesOutstanding\":0.000000,\"totalOutstanding\":41850.090000}}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "summary": {
+            "principal_outstanding_minor": "4185009",
+            "interest_outstanding_minor": "0",
+            "fee_outstanding_minor": "0",
+            "penalty_outstanding_minor": "0"
+        }
+    },
+    "expect": {
+        "summary_total_minor": "4185009"
+    },
+    "capabilities_required": [
+        "summary-total-outstanding"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}
