@@ -1,0 +1,55 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-05-daily-stream-100000-100001",
+ "title": "the daily savings account (id 2) deposit-then-interest-posting stream folds to running balances 100000 then 100001 minor",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from capture savings-account-daily-raw.json (GET account read-back, tenant gerege). The two rows are the account's whole append-only stream in its running-balance chain order: transaction id 4 (DEPOSIT, transactionType.id 1, amount 1000.000000, dated 2026-08-31, runningBalance 1000.000000) then transaction id 5 (INTEREST_POSTING, transactionType.id 3, amount 0.010000, dated 2026-09-01, runningBalance 1000.010000). The seam does not read the recorded running_balance column; it derives the fold over the observed rows and pins the observed values. expect.running_balances are the integer minor-unit forms of those two recorded running balances. This vector pins the deposit credit AND that the posted interest CREDITS and ACCUMULATES on the deposit (100001 = 100000 + 1): a fold that does not credit the deposit (balances 0 then 1), that posts the interest on the debit side (100000 then 99999), that reads each running balance before the row (0 then 100000), or that reorders the two rows goes red here. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "savings-transactions",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected running-balance cells are transcribed from the committed capture savings-account-daily-raw.json; capture_case_id names the account number the rows belong to.",
+  "capture_ref": ".softhouse/capture/savings/out/savings-account-daily-raw.json",
+  "capture_sha256": "15999be438f6d8db15d13b4eb351c6749260db7f6790cb42ce4b2af8843eddf8",
+  "capture_case_id": "000000002",
+  "citation": "savings-account-daily-raw.json account id 2 (accountNo 000000002), transaction id 4 (DEPOSIT) {\"amount\":1000.000000,\"runningBalance\":1000.000000,\"date\":[2026,8,31]} and transaction id 5 (INTEREST_POSTING) {\"amount\":0.010000,\"runningBalance\":1000.010000,\"date\":[2026,9,1]}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "transaction_stream": {
+   "transactions": [
+    {
+     "type_id": 1,
+     "amount_minor": "100000"
+    },
+    {
+     "type_id": 3,
+     "amount_minor": "1"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "running_balances": [
+   "100000",
+   "100001"
+  ]
+ },
+ "capabilities_required": [
+  "deposit-credit-balance",
+  "interest-posting-credit-balance"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}

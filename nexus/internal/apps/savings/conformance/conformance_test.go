@@ -353,3 +353,210 @@ func TestInvariants(t *testing.T) {
 		t.Fatalf("interest_non_negative = %s, want HOLD", invs[0].Status)
 	}
 }
+
+// streamProbe builds a valid deposit- or transactions-seam vector whose rows
+// and running balances are transcribed from a committed account read-back
+// capture, in the running-balance chain order the read-back records.
+func streamProbe(caseID, title, seam string, ref, sha256, caseIDInCapture string, rows []TransactionRow, balances []string, caps []string) *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  caseID,
+		Title:   title,
+		Class:   ClassParity,
+		Context: SavingsContext,
+		Note:    "probe: transcribed from an account read-back capture, not an observation to promote",
+		Oracle:  OracleStamp{Seam: seam, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: running-balance cells of the captured account stream",
+			CaptureRef:    ref,
+			CaptureSHA256: sha256,
+			CaptureCaseID: caseIDInCapture,
+		},
+		TenantParams:         probeTenant(),
+		Request:              Request{Stream: &TransactionStreamRequest{Transactions: rows}},
+		Expect:               Expect{RunningBalances: balances},
+		CapabilitiesRequired: caps,
+		GradedAgainst:        []string{"savings-go"},
+	}
+}
+
+const (
+	dailyCaptureSum   = "15999be438f6d8db15d13b4eb351c6749260db7f6790cb42ce4b2af8843eddf8"
+	monthlyCaptureSum = "9fbafd509cda6f462a16f4e1f7f46127c12d94b19648981f65a85fea7788ad50"
+	dailyCaptureRef   = ".softhouse/capture/savings/out/savings-account-daily-raw.json"
+	monthlyCaptureRef = ".softhouse/capture/savings/out/savings-account-monthly-raw.json"
+)
+
+// depositProbe is the opening DEPOSIT row of the daily account (id 2): amount
+// 1000.00 against the zero opening balance, recorded running balance 1000.00.
+func depositProbe() *Vector {
+	return streamProbe(
+		"probe-deposit-credits-100000",
+		"probe deposit credits 100000 minor",
+		SeamSavingsDeposit,
+		dailyCaptureRef, dailyCaptureSum, "000000002",
+		[]TransactionRow{{TypeStoredValue: 1, AmountMinor: "100000"}},
+		[]string{"100000"},
+		[]string{"deposit-credit-balance"},
+	)
+}
+
+// transactionsDailyProbe is the daily account's full stream: deposit 1000.00
+// (transaction id 4) then interest posting 0.01 (transaction id 5), recorded
+// running balances 1000.00 then 1000.01.
+func transactionsDailyProbe() *Vector {
+	return streamProbe(
+		"probe-daily-stream-100000-100001",
+		"probe daily deposit-then-posting stream",
+		SeamSavingsTransactions,
+		dailyCaptureRef, dailyCaptureSum, "000000002",
+		[]TransactionRow{{TypeStoredValue: 1, AmountMinor: "100000"}, {TypeStoredValue: 3, AmountMinor: "1"}},
+		[]string{"100000", "100001"},
+		[]string{"deposit-credit-balance", "interest-posting-credit-balance"},
+	)
+}
+
+// transactionsMonthlyProbe is the monthly account's full stream: deposit 1000.00
+// (transaction id 1) then interest postings 0.15 (transaction id 3, 2026-08-01)
+// and 0.16 (transaction id 2, 2026-09-01), in the recorded running-balance chain
+// order; recorded running balances 1000.00, 1000.15, 1000.31.
+func transactionsMonthlyProbe() *Vector {
+	return streamProbe(
+		"probe-monthly-stream-100000-100015-100031",
+		"probe monthly deposit-plus-two-postings stream",
+		SeamSavingsTransactions,
+		monthlyCaptureRef, monthlyCaptureSum, "000000001",
+		[]TransactionRow{
+			{TypeStoredValue: 1, AmountMinor: "100000"},
+			{TypeStoredValue: 3, AmountMinor: "15"},
+			{TypeStoredValue: 3, AmountMinor: "16"},
+		},
+		[]string{"100000", "100015", "100031"},
+		[]string{"deposit-credit-balance", "interest-posting-credit-balance"},
+	)
+}
+
+func TestDepositSeamGrading(t *testing.T) {
+	v := depositProbe()
+	if p := Admit(v, Options{}); len(p) > 0 {
+		t.Fatalf("deposit probe should be admissible: %v", p)
+	}
+	correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	if correct.GradedCells != 1 || correct.MoneyCells != 1 {
+		t.Fatalf("deposit graded cells = %d, money = %d; want 1/1", correct.GradedCells, correct.MoneyCells)
+	}
+
+	for _, wrong := range []string{
+		"savings-wrong-deposit-not-credited",
+		"savings-wrong-running-balance-before",
+	} {
+		impl, ok := Lookup(wrong)
+		if !ok {
+			t.Fatalf("%s not registered", wrong)
+		}
+		if _, bad := IsRegisteredWrong(wrong); !bad {
+			t.Fatalf("%s not marked wrong", wrong)
+		}
+		red := gradeOne(v, Options{Implementation: impl})
+		if red.Outcome != OutcomeFail {
+			t.Fatalf("%s outcome = %s, want FAIL; diffs=%v", wrong, red.Outcome, red.Diffs)
+		}
+		if len(red.Diffs) == 0 {
+			t.Fatalf("%s produced no diffs", wrong)
+		}
+	}
+
+	// An interest-posting-debits defect cannot show on a deposit-only stream:
+	// the vector carries no posting row, so the wrong side never engages. The
+	// stream vectors below catch it instead.
+	if impl, ok := Lookup("savings-wrong-interest-posting-debits"); ok {
+		if green := gradeOne(v, Options{Implementation: impl}); green.Outcome != OutcomePass {
+			t.Fatalf("interest-posting-debits impl outcome = %s on a deposit-only stream, want PASS; diffs=%v",
+				green.Outcome, green.Diffs)
+		}
+	}
+}
+
+func TestTransactionsSeamGrading(t *testing.T) {
+	cases := []struct {
+		name string
+		v    *Vector
+		rows int
+	}{
+		{"daily", transactionsDailyProbe(), 2},
+		{"monthly", transactionsMonthlyProbe(), 3},
+	}
+	wrongImpls := []string{
+		"savings-wrong-deposit-not-credited",
+		"savings-wrong-interest-posting-debits",
+		"savings-wrong-running-balance-before",
+	}
+	for _, c := range cases {
+		if p := Admit(c.v, Options{}); len(p) > 0 {
+			t.Fatalf("%s probe should be admissible: %v", c.name, p)
+		}
+		correct := gradeOne(c.v, Options{Implementation: NewGoEvaluator()})
+		if correct.Outcome != OutcomePass {
+			t.Fatalf("%s correct impl outcome = %s, want PASS; diffs=%v", c.name, correct.Outcome, correct.Diffs)
+		}
+		if correct.GradedCells != c.rows || correct.MoneyCells != c.rows {
+			t.Fatalf("%s graded cells = %d, money = %d; want %d/%d",
+				c.name, correct.GradedCells, correct.MoneyCells, c.rows, c.rows)
+		}
+		for _, wrong := range wrongImpls {
+			impl, ok := Lookup(wrong)
+			if !ok {
+				t.Fatalf("%s not registered", wrong)
+			}
+			red := gradeOne(c.v, Options{Implementation: impl})
+			if red.Outcome != OutcomeFail {
+				t.Fatalf("%s: %s outcome = %s, want FAIL; diffs=%v", c.name, wrong, red.Outcome, red.Diffs)
+			}
+			if len(red.Diffs) == 0 {
+				t.Fatalf("%s: %s produced no diffs", c.name, wrong)
+			}
+		}
+	}
+}
+
+func TestStreamSeamAdmissionDefaultDeny(t *testing.T) {
+	base := transactionsDailyProbe()
+
+	depositSubRequest := *base
+	depositSubRequest.Request.DailyInterest = &DailyInterestRequest{
+		BalanceMinor: "100000", RatePerAnnumMicroPct: 182500, DaysInYear: 365, Days: 1,
+	}
+	if p := Admit(&depositSubRequest, Options{}); len(p) == 0 {
+		t.Fatal("transactions vector carrying daily_interest too admitted")
+	}
+
+	depositSeamMultiRow := *depositProbe()
+	depositSeamMultiRow.Request.Stream.Transactions = append(depositSeamMultiRow.Request.Stream.Transactions,
+		TransactionRow{TypeStoredValue: 3, AmountMinor: "1"})
+	depositSeamMultiRow.Expect.RunningBalances = []string{"100000", "100001"}
+	if p := Admit(&depositSeamMultiRow, Options{}); len(p) == 0 {
+		t.Fatal("deposit seam vector carrying more than the opening deposit row admitted")
+	}
+
+	badType := *base
+	badType.Request.Stream.Transactions = []TransactionRow{{TypeStoredValue: 2, AmountMinor: "100000"}}
+	if p := Admit(&badType, Options{}); len(p) == 0 {
+		t.Fatal("unobserved transaction type admitted")
+	}
+
+	emptyStream := *base
+	emptyStream.Request.Stream.Transactions = nil
+	if p := Admit(&emptyStream, Options{}); len(p) == 0 {
+		t.Fatal("empty transaction stream admitted")
+	}
+
+	balanceCountMismatch := *base
+	balanceCountMismatch.Expect.RunningBalances = []string{"100000"}
+	if p := Admit(&balanceCountMismatch, Options{}); len(p) == 0 {
+		t.Fatal("running-balance cell count not matching the row count admitted")
+	}
+}

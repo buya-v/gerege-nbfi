@@ -1,0 +1,49 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-04-deposit-credits-100000",
+ "title": "the opening deposit of the discriminating daily savings account (id 2) credits the posted balance from zero to 100000 minor (1000.00 MNT)",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from capture savings-account-daily-raw.json (GET account read-back, tenant gerege). request.transaction_stream.transactions[0] is the account's opening DEPOSIT row (transaction id 4, transactionType.id 1, amount 1000.000000, entryType CREDIT, dated 2026-08-31), transcribed as type_id 1 and amount_minor \"100000\". expect.running_balances[0]=\"100000\" is the integer minor-unit form of the runningBalance 1000.000000 the read-back recorded on that row, the account's FIRST row, so the fold starts from a zero opening balance. The seam does not read the recorded running_balance column; it derives the fold over the observed row and pins the observed value. A port that fails to CREDIT the deposit (leaves the opening balance at zero or less), that scales or signs the amount wrongly, or that starts the fold from a nonzero opening balance goes red here. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "savings-deposit",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected running-balance cell is transcribed from the committed capture savings-account-daily-raw.json; capture_case_id names the account number the row belongs to.",
+  "capture_ref": ".softhouse/capture/savings/out/savings-account-daily-raw.json",
+  "capture_sha256": "15999be438f6d8db15d13b4eb351c6749260db7f6790cb42ce4b2af8843eddf8",
+  "capture_case_id": "000000002",
+  "citation": "savings-account-daily-raw.json account id 2 (accountNo 000000002), transaction id 4 (DEPOSIT, the account's first transaction) {\"amount\":1000.000000,\"runningBalance\":1000.000000,\"entryType\":\"CREDIT\",\"date\":[2026,8,31]}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "transaction_stream": {
+   "transactions": [
+    {
+     "type_id": 1,
+     "amount_minor": "100000"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "running_balances": [
+   "100000"
+  ]
+ },
+ "capabilities_required": [
+  "deposit-credit-balance"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}

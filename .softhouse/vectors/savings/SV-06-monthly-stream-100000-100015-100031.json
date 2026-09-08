@@ -1,0 +1,60 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-06-monthly-stream-100000-100015-100031",
+ "title": "the monthly savings account (id 1) deposit-plus-two-interest-postings stream folds to running balances 100000, 100015, 100031 minor",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from capture savings-account-monthly-raw.json (GET account read-back, tenant gerege). The three rows are the account's whole append-only stream in the read-back's own running-balance chain order: transaction id 1 (DEPOSIT, transactionType.id 1, amount 1000.000000, dated 2026-07-02, runningBalance 1000.000000), then the 2026-08-01 INTEREST_POSTING (transaction id 3, transactionType.id 3, amount 0.150000, runningBalance 1000.150000), then the 2026-09-01 INTEREST_POSTING (transaction id 2, amount 0.160000, runningBalance 1000.310000). NOTE ON ORDER: the read-back's array lists the rows date-descending and this account's ids are NOT monotonic with posting date (the 0.16 posting has id 2, the 0.15 posting id 3), so the transcription follows the chain the read-back's recorded running balances make, opening deposit first and then each posting on its posted date; folding any other order reproduces none of the three recorded running balances. The seam does not read the recorded running_balance column; it derives the fold over the observed rows and pins the observed values. expect.running_balances are the integer minor-unit forms of the three recorded running balances. This vector pins that the two interest postings each CREDIT and ACCUMULATE onto the running deposit balance across rows (100031 = 100000 + 15 + 16): a fold that drops or replaces an earlier posting, that keeps only the deposit, or that posts either interest posting on the debit side goes red here. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "savings-transactions",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected running-balance cells are transcribed from the committed capture savings-account-monthly-raw.json; capture_case_id names the account number the rows belong to.",
+  "capture_ref": ".softhouse/capture/savings/out/savings-account-monthly-raw.json",
+  "capture_sha256": "9fbafd509cda6f462a16f4e1f7f46127c12d94b19648981f65a85fea7788ad50",
+  "capture_case_id": "000000001",
+  "citation": "savings-account-monthly-raw.json account id 1 (accountNo 000000001), transaction id 1 (DEPOSIT) {\"amount\":1000.000000,\"runningBalance\":1000.000000,\"date\":[2026,7,2]}, transaction id 3 (INTEREST_POSTING) {\"amount\":0.150000,\"runningBalance\":1000.150000,\"date\":[2026,8,1]} and transaction id 2 (INTEREST_POSTING) {\"amount\":0.160000,\"runningBalance\":1000.310000,\"date\":[2026,9,1]}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "transaction_stream": {
+   "transactions": [
+    {
+     "type_id": 1,
+     "amount_minor": "100000"
+    },
+    {
+     "type_id": 3,
+     "amount_minor": "15"
+    },
+    {
+     "type_id": 3,
+     "amount_minor": "16"
+    }
+   ]
+  }
+ },
+ "expect": {
+  "running_balances": [
+   "100000",
+   "100015",
+   "100031"
+  ]
+ },
+ "capabilities_required": [
+  "deposit-credit-balance",
+  "interest-posting-credit-balance"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}
