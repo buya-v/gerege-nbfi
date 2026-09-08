@@ -187,6 +187,46 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 }
 
+// wrongRunsRedOn is the shared assertion for the additional red-drives: the
+// probe must PASS under the correct implementation and FAIL under the named
+// registered-wrong one, producing at least one diff.
+func wrongRunsRedOn(t *testing.T, name string, probe *Vector) {
+	t.Helper()
+	wrongImpl, ok := Lookup(name)
+	if !ok {
+		t.Fatalf("%s not registered", name)
+	}
+	if _, bad := IsRegisteredWrong(name); !bad {
+		t.Fatalf("%s not marked wrong", name)
+	}
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	red := gradeOne(probe, Options{Implementation: wrongImpl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("%s outcome = %s, want FAIL", name, red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatalf("%s produced no diffs", name)
+	}
+}
+
+func TestIotaOrdinalWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "loanproduct-wrong-iota-ordinals",
+		configProbe(VocabularyDaysInYear, 360, "DaysInYearType.days360", "DAYS_360", "days-in-year"))
+}
+
+func TestDimSiblingNameWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "loanproduct-wrong-dim-sibling-name",
+		configProbe(VocabularyDaysInMonth, 30, "DaysInMonthType.days360", "DAYS_30", "days-in-month"))
+}
+
+func TestFreqFieldQualifiedCodeWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "loanproduct-wrong-freq-field-qualified-code",
+		configProbe(VocabularyPeriodFrequency, 2, "periodFrequencyType.months", "MONTHS", "period-frequency"))
+}
+
 func TestUnknownStoredErrs(t *testing.T) {
 	for _, v := range probeVectors() {
 		v.Request.Stored = 9999
