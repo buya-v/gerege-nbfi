@@ -1,0 +1,49 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-05-loans-list-row-identity",
+ "title": "working-capital loan list row identity (account and client)",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture loans-list-raw.json (GET /working-capital-loans, tenant gerege). The pinned capture holds exactly one seeded working-capital loan: id 1, accountNo 000000001, clientId 5, externalId SEED-WC-L01, status loanStatusType.active. expect.loans[0].account_no=\"000000001\" is the row's own \"accountNo\" field and expect.loans[0].client_id=\"5\" its \"clientId\"; the other expect cells (id, external_id, status, total_elements) are the cells WC-01 already pins, re-pinned because the list comparator grades them on every list vector. No money cell is graded on this seam, so this vector records no rounding surface. WHAT THIS VECTOR DISCRIMINATES: the row carries BOTH the loan row's accountNo (000000001) and the borrowing client's clientAccountNo (000000005), so a list mapper that emits the client's account number for the loan row's own account_no (registered as workingcapital-wrong-list-row-mapping) goes red on account_no under this vector — WC-01, which pins no account cell, cannot see that transposition.",
+ "oracle": {
+  "seam": "working-capital-loans-list",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture loans-list-raw.json; capture_case_id names the seeded loan row as observed in the list.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/loans-list-raw.json",
+  "capture_sha256": "2327a39aa6703f5df462c10abf6ab77d4788dfca7e3b446cbc0112c1b31dd68e",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "loans-list-raw.json content[0] row {\"id\":1,\"accountNo\":\"000000001\",\"externalId\":\"SEED-WC-L01\",\"clientId\":5,\"clientAccountNo\":\"000000005\",\"status\":{\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\"}} with page \"totalElements\":1"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 0
+ },
+ "expect": {
+  "loans": [
+   {
+    "id": "1",
+    "external_id": "SEED-WC-L01",
+    "status": "loanStatusType.active",
+    "account_no": "000000001",
+    "client_id": "5"
+   }
+  ],
+  "total_elements": 1
+ },
+ "capabilities_required": [
+  "wc-loan-list-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

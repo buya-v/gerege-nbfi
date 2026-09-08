@@ -81,10 +81,20 @@ type Request struct {
 }
 
 // LoanExpect is one working-capital loan row as the oracle serialises it.
+//
+// A list vector pins the cells a wrong implementation could corrupt on the LIST
+// read without disturbing the balance read-back: the row identity (account_no,
+// the loan row's own account number, and client_id, the borrowing client's id).
+// The list seam grades NO money cell — the balance is read through the detail
+// endpoint, never the list — so these cells are structural. They are OPTIONAL on
+// the vector: a comparator grades a cell only when the vector pins it, so WC-01
+// keeps grading id/external_id/status alone.
 type LoanExpect struct {
 	ID         string `json:"id"`
 	ExternalID string `json:"external_id"`
 	Status     string `json:"status"`
+	AccountNo  string `json:"account_no,omitempty"` // the loan row's own account number
+	ClientID   string `json:"client_id,omitempty"`  // the borrowing client's id
 }
 
 // BalanceExpect is the read-back of one m_wc_loan_balance row: the subset of
@@ -111,12 +121,30 @@ type BalanceExpect struct {
 	UnrealizedIncomeFromDiscountFee string `json:"unrealized_income_from_discount_fee"` // derived
 }
 
+// DisbursementExpect is one working-capital disbursement tranche as the read-back
+// serialises it in "disbursementDetails": the tranche's principal (the amount
+// scheduled/expected for the tranche) and its actualAmount (what the draw
+// actually recorded). A disbursement that updates the balance row but never
+// records the tranche row renders no disbursement block, so a detail vector can
+// pin these cells to discriminate that write-path defect.
+type DisbursementExpect struct {
+	Principal    string `json:"principal,omitempty"`     // tranche principal, integer minor
+	ActualAmount string `json:"actual_amount,omitempty"` // tranche actualAmount, integer minor
+}
+
 // DetailExpect is the working-capital-loans-detail seam's expected cells: the
-// row identity, its status (loan-status code) and the balance read-back above.
+// row id, its loan-status code, the balance read-back above, and the OPTIONAL
+// cells a vector may pin — the stored status ordinal (status_id) and active flag
+// (status_active) the status block carries, and the disbursement tranche the
+// seeded draw recorded. An optional cell is graded only when the vector pins it,
+// so WC-02 keeps grading id/status/balance alone.
 type DetailExpect struct {
-	ID      string        `json:"id"`
-	Status  string        `json:"status"`
-	Balance BalanceExpect `json:"balance"`
+	ID            string              `json:"id"`
+	Status        string              `json:"status"`
+	StatusOrdinal string              `json:"status_id,omitempty"`     // stored status ordinal (300 = active), integer
+	StatusActive  string              `json:"status_active,omitempty"` // "true"/"false" active flag
+	Balance       BalanceExpect       `json:"balance"`
+	Disbursement  *DisbursementExpect `json:"disbursement,omitempty"` // the tranche the seeded draw recorded
 }
 
 // Expect is what the oracle produced for the request. For a list request it is

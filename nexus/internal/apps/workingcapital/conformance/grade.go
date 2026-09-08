@@ -76,8 +76,7 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	var diffs []string
 	switch v.Oracle.Seam {
 	case SeamWorkingCapitalLoansList:
-		diffs = compareLoans(v.Expect, got)
-		cellGraded = 1 + len(got.Loans)*3 // total_elements + (id, external_id, status) per loan
+		cellGraded, cellMoney, diffs = compareLoans(v.Expect, got)
 	case SeamWorkingCapitalLoansDetail:
 		cellGraded, cellMoney, diffs = compareDetail(v.Expect, got)
 	}
@@ -102,35 +101,73 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 }
 
 // compareLoans compares the expected loan list against the evaluated one. The
-// list seam grades total_elements and, per loan, id/external_id/status; it has
-// no money cell (the list read does not serialise balance money).
-func compareLoans(want Expect, got Expect) []string {
+// list seam grades total_elements and, per loan, id/external_id/status plus any
+// OPTIONAL row-identity cell a vector pins (account_no, client_id). The list
+// read serialises no money cell — the balance is read through the detail
+// endpoint — so nothing on this seam is counted as money. A cell is graded only
+// when the want side carries it. Returns the graded-cell and money-cell counts
+// alongside the diffs.
+func compareLoans(want Expect, got Expect) (int, int, []string) {
+	graded, money := 0, 0
 	var diffs []string
+
 	if want.TotalElements != got.TotalElements {
 		diffs = append(diffs, fmt.Sprintf("total_elements: want %d, got %d", want.TotalElements, got.TotalElements))
 	}
+	graded++
 	if len(want.Loans) != len(got.Loans) {
 		diffs = append(diffs, fmt.Sprintf("loans length: want %d, got %d", len(want.Loans), len(got.Loans)))
-		return diffs
+		return graded, money, diffs
 	}
 	for i := range want.Loans {
-		if want.Loans[i].ID != got.Loans[i].ID {
-			diffs = append(diffs, fmt.Sprintf("loans[%d].id: want %q, got %q", i, want.Loans[i].ID, got.Loans[i].ID))
+		wl, gl := want.Loans[i], got.Loans[i]
+		// Mandatory row cells: id/external_id/status.
+		for _, cell := range []struct {
+			name string
+			want string
+			got  string
+		}{
+			{"id", wl.ID, gl.ID},
+			{"external_id", wl.ExternalID, gl.ExternalID},
+			{"status", wl.Status, gl.Status},
+		} {
+			graded++
+			if cell.want != cell.got {
+				diffs = append(diffs, fmt.Sprintf("loans[%d].%s: STRUCTURAL want %q, got %q",
+					i, cell.name, cell.want, cell.got))
+			}
 		}
-		if want.Loans[i].ExternalID != got.Loans[i].ExternalID {
-			diffs = append(diffs, fmt.Sprintf("loans[%d].external_id: want %q, got %q", i, want.Loans[i].ExternalID, got.Loans[i].ExternalID))
-		}
-		if want.Loans[i].Status != got.Loans[i].Status {
-			diffs = append(diffs, fmt.Sprintf("loans[%d].status: want %q, got %q", i, want.Loans[i].Status, got.Loans[i].Status))
+		// Optional row cells: a vector pins the cell it wants graded. The list
+		// seam grades no money cell, so every optional cell is structural.
+		for _, cell := range []struct {
+			name string
+			want string
+			got  string
+		}{
+			{"account_no", wl.AccountNo, gl.AccountNo},
+			{"client_id", wl.ClientID, gl.ClientID},
+		} {
+			if cell.want == "" {
+				continue
+			}
+			graded++
+			if cell.want == cell.got {
+				continue
+			}
+			diffs = append(diffs, fmt.Sprintf("loans[%d].%s: STRUCTURAL want %q, got %q",
+				i, cell.name, cell.want, cell.got))
 		}
 	}
-	return diffs
+	return graded, money, diffs
 }
 
 // compareDetail compares one working-capital loan's balance read-back. The
-// detail seam grades the row id, its status code, and the nine balance cells the
-// port's stored-column + derive-don't-store contract reproduces. Money cells are
-// integer strings; a mismatch is reported as a MONEY diff.
+// detail seam grades the row id, its status code and the nine balance cells the
+// port's stored-column + derive-don't-store contract reproduces, plus any
+// OPTIONAL cell a vector pins (the stored status ordinal/active flag and the
+// disbursement tranche the draw recorded). A cell is graded only when the want
+// side carries it. Money cells are integer strings; a mismatch is reported as a
+// MONEY diff.
 func compareDetail(want Expect, got Expect) (int, int, []string) {
 	graded, money := 0, 0
 	var diffs []string
@@ -163,6 +200,16 @@ func compareDetail(want Expect, got Expect) (int, int, []string) {
 	cmp("id", false, w.ID, g.ID)
 	cmp("status", false, w.Status, g.Status)
 
+	// Optional status cells: graded only when the vector pins them.
+	cmpOpt := func(name string, wantVal, gotVal string) {
+		if wantVal == "" {
+			return
+		}
+		cmp(name, false, wantVal, gotVal)
+	}
+	cmpOpt("status_id", w.StatusOrdinal, g.StatusOrdinal)
+	cmpOpt("status_active", w.StatusActive, g.StatusActive)
+
 	wb, gb := w.Balance, g.Balance
 	cmp("balance.principal", true, wb.Principal, gb.Principal)
 	cmp("balance.principal_paid", true, wb.PrincipalPaid, gb.PrincipalPaid)
@@ -173,6 +220,45 @@ func compareDetail(want Expect, got Expect) (int, int, []string) {
 	cmp("balance.total_repayment", true, wb.TotalRepayment, gb.TotalRepayment)
 	cmp("balance.total_outstanding", true, wb.TotalOutstanding, gb.TotalOutstanding)
 	cmp("balance.unrealized_income_from_discount_fee", true, wb.UnrealizedIncomeFromDiscountFee, gb.UnrealizedIncomeFromDiscountFee)
+
+	// Optional disbursement-tranche block: when the vector pins a tranche, the
+	// implementation must have recorded one (the seeded draw did) and the pinned
+	// money cells must match.
+	if w.Disbursement != nil {
+		wd := w.Disbursement
+		gd := g.Disbursement
+		pinned := func(val string) bool { return val != "" }
+		if gd == nil {
+			for _, field := range []struct {
+				name string
+				val  string
+			}{
+				{"principal", wd.Principal},
+				{"actual_amount", wd.ActualAmount},
+			} {
+				if !pinned(field.val) {
+					continue
+				}
+				graded++
+				money++
+			}
+			diffs = append(diffs, "detail.disbursement: MONEY want a recorded tranche, got none (the draw never wrote the tranche row)")
+		} else {
+			for _, cell := range []struct {
+				name string
+				want string
+				got  string
+			}{
+				{"principal", wd.Principal, gd.Principal},
+				{"actual_amount", wd.ActualAmount, gd.ActualAmount},
+			} {
+				if !pinned(cell.want) {
+					continue
+				}
+				cmp("disbursement."+cell.name, true, cell.want, cell.got)
+			}
+		}
+	}
 	return graded, money, diffs
 }
 
