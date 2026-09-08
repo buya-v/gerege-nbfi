@@ -48,6 +48,16 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("    context filter  %s", s.ContextFilter)
 	}
 	p("    implementation  %s", s.ImplementationName)
+	if s.ImplementationWrong != "" {
+		// A run that selects a REGISTERED deliberately-wrong implementation says
+		// so HERE, in the header, before a single vector is graded -- the same
+		// banner the ledger half prints for -ledger-impl. A RED under a wrong
+		// drive is the EXPECTED result: the drive exists to prove the vectors
+		// can fail, so its failures are measurements, never defects in the port.
+		p("    ⚠ THIS IS A DELIBERATELY WRONG IMPLEMENTATION, selected with -impl:")
+		p("      %s", s.ImplementationWrong)
+		p("      A RED below is the EXPECTED result and is not a defect in the port.")
+	}
 	p("    oracle probe    %s", strings.ToUpper(s.OracleProbe))
 	p("")
 
