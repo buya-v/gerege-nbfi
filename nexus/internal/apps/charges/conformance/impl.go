@@ -270,10 +270,185 @@ func (truncatingEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
 	return res, nil
 }
 
+// oneScaleShortEvaluator is a DELIBERATELY WRONG implementation: it computes a
+// percentage fee by dividing the product by 10^6 — the scale of the DECIMAL(19,6)
+// column the percentage travels in — and never by the further 100 that turns the
+// stored "whole per cent" figure into a fraction. m_charge stores 1.234500 to
+// mean 1.2345 %; the multiplier the oracle uses is that figure divided by a
+// further 100 (value * percent/100) [VERIFIED: LoanCharge.java:310-319], so the
+// exact product carries /10^8 in total. A porter who ports the DECIMAL(19,6)
+// column shape but reads the stored 1234500 as already a fraction multiplies the
+// base by 1234500/10^6 and answers exactly 100x too large. This is the near-miss
+// charges/money.go:14-34 documents — a column Fineract reuses for money and for
+// percentage — and no amount of HALF_UP rounding hides a 100x error. Flat
+// charges never touch the scale, so the seven flat vectors stay green; every
+// percentage vector dies.
+type oneScaleShortEvaluator struct{ goEvaluator }
+
+func (oneScaleShortEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
+	res, err := (goEvaluator{}).Evaluate(req)
+	if err != nil || !res.FeePresent {
+		return res, err
+	}
+	c, err := chargeFromRequest(req)
+	if err != nil {
+		return res, err
+	}
+	if c.CalculationType.IsPercentageOfAmount() || c.CalculationType.IsPercentageOfDisbursementAmount() {
+		base, err := parseMinorText(req.BaseAmountMinor)
+		if err != nil {
+			return res, err
+		}
+		n := new(big.Int).Mul(big.NewInt(int64(base)), big.NewInt(int64(c.Percentage)))
+		d := big.NewInt(percentScale / 100) // the DECIMAL(19,6) shift only; the /100 is dropped
+		q, r := new(big.Int), new(big.Int)
+		q.QuoRem(n, d, r)
+		q = roundHalfUp(q, r, d)
+		res.FeeMinor = charges.MinimumAndMaximumCap(charges.MinorUnits(q.Int64()), c.MinCap, c.MaxCap)
+	}
+	return res, nil
+}
+
+// halfEvenEvaluator is a DELIBERATELY WRONG implementation: it rounds an exact
+// .5 minor-unit product to even instead of away from zero. BigDecimal's
+// ROUND_HALF_EVEN is the substitute a porter reaches for when the surrounding
+// platform — a database engine's native decimal, a spreadsheet library — rounds
+// half to even and the charge slice's HALF_UP pin is not propagated; the
+// loan-schedule work that pinned rounding into the tenant context exists because
+// exactly this drift happens. A HALF_UP answer and a HALF_EVEN answer differ
+// ONLY on an exact .5 remainder, and no stored product lands on one: FC-09's
+// captured product carries the fraction .55525 (rounds up under both modes) and
+// every other captured product is exact. So this port is byte-identical to the
+// correct one across the whole corpus, and the money cell of no vector can see
+// it. That it kills nothing is the finding: the store grades rounding drift
+// toward zero (charges-wrong-percent-truncating), never a mode substitution
+// that agrees everywhere except the un-captured tie.
+type halfEvenEvaluator struct{ goEvaluator }
+
+func (halfEvenEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
+	res, err := (goEvaluator{}).Evaluate(req)
+	if err != nil || !res.FeePresent {
+		return res, err
+	}
+	c, err := chargeFromRequest(req)
+	if err != nil {
+		return res, err
+	}
+	if c.CalculationType.IsPercentageOfAmount() || c.CalculationType.IsPercentageOfDisbursementAmount() {
+		base, err := parseMinorText(req.BaseAmountMinor)
+		if err != nil {
+			return res, err
+		}
+		n := new(big.Int).Mul(big.NewInt(int64(base)), big.NewInt(int64(c.Percentage)))
+		d := big.NewInt(percentScale)
+		q, r := new(big.Int), new(big.Int)
+		q.QuoRem(n, d, r)
+		q = roundHalfEven(q, r, d)
+		res.FeeMinor = charges.MinimumAndMaximumCap(charges.MinorUnits(q.Int64()), c.MinCap, c.MaxCap)
+	}
+	return res, nil
+}
+
+// validationSkippedEvaluator is a DELIBERATELY WRONG implementation: it computes
+// the fee and never runs Charge.Validate(), trusting the request as already
+// vetted. Charge.java's constructor runs Validate() before any fee field is
+// assigned [VERIFIED: Charge.java:240-300], and a porter who ports the fee
+// arithmetic but drops the gate writes exactly this: where the oracle answers a
+// construction-invalid charge with codes and no fee, this port answers with a
+// fee. The corpus carries ten construction-VALID charges and no validation-
+// refused observation, so this port is indistinguishable from the correct one on
+// every stored vector — and the fee_requires_valid invariant cannot see it
+// either, because its validation list is empty and a fee with an empty list is
+// the invariant's HOLD shape. That it kills nothing is the finding: the
+// construction-validation refusal path is ungraded by the store.
+type validationSkippedEvaluator struct{}
+
+func (validationSkippedEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
+	var res ChargeResult
+	c, err := chargeFromRequest(req)
+	if err != nil {
+		return res, err
+	}
+	fee, ok, err := feeFor(c, req)
+	if err != nil {
+		return res, err
+	}
+	if ok {
+		res.FeeMinor = fee
+		res.FeePresent = true
+	}
+	return res, nil
+}
+
+// roundHalfUp rounds q + r/d to the nearest integer, half away from zero (the
+// port's pinned HALF_UP), big.Int only. It mirrors charges.roundHalfAwayFromZero,
+// which this package cannot call.
+func roundHalfUp(q, r, d *big.Int) *big.Int {
+	twoR := new(big.Int).Lsh(new(big.Int).Abs(r), 1)
+	if twoR.Cmp(d) < 0 {
+		return q
+	}
+	if q.Sign() >= 0 {
+		return q.Add(q, big.NewInt(1))
+	}
+	return q.Sub(q, big.NewInt(1))
+}
+
+// roundHalfEven rounds q + r/d to the nearest integer, an exact half to even
+// (BigDecimal ROUND_HALF_EVEN), big.Int only. It differs from roundHalfUp only
+// when 2|r| == d and |q| is odd.
+func roundHalfEven(q, r, d *big.Int) *big.Int {
+	twoR := new(big.Int).Lsh(new(big.Int).Abs(r), 1)
+	switch twoR.Cmp(d) {
+	case -1:
+		return q
+	case 1:
+		if q.Sign() >= 0 {
+			return q.Add(q, big.NewInt(1))
+		}
+		return q.Sub(q, big.NewInt(1))
+	}
+	// Exact half: round to even.
+	if new(big.Int).Mod(q, big.NewInt(2)).Sign() == 0 {
+		return q
+	}
+	if q.Sign() >= 0 {
+		return q.Add(q, big.NewInt(1))
+	}
+	return q.Sub(q, big.NewInt(1))
+}
+
 func init() {
 	Register("charges-go", NewGoEvaluator())
 	RegisterWrong("charges-wrong-percent-truncating",
 		"computes the percentage fee by truncating toward zero instead of rounding HALF_UP, so any "+
 			"percentage whose exact fee carries a fraction that rounds up is one minor unit low",
 		truncatingEvaluator{})
+	RegisterWrong("charges-wrong-percent-one-scale-short",
+		"divides the percentage product by 10^6 (the DECIMAL(19,6) column scale) instead of the 10^8 the oracle "+
+			"needs, because m_charge stores 'whole per cent' (1.234500 means 1.2345 %) and percentageOf multiplies "+
+			"the base by percent/100 [VERIFIED: LoanCharge.java:310-319]; a porter who ports the column shape but "+
+			"reads the stored figure as already a fraction answers exactly 100x too large [the A2-209c near-miss "+
+			"documented in charges/money.go:14-34]. Flat charges never touch the scale and stay green; the money "+
+			"cell of FC-03-pctamount-disbursement, FC-09-pctamount-instalment-p2 and "+
+			"T46-CH-06-defvsreq-pctamount-disb dies",
+		oneScaleShortEvaluator{})
+	RegisterWrong("charges-wrong-rounding-half-even",
+		"rounds an exact .5 minor-unit product to even (BigDecimal ROUND_HALF_EVEN) instead of the pinned HALF_UP "+
+			"away from zero, the substitute a porter inherits when the surrounding platform rounds half to even and "+
+			"the tenant-context rounding pin is not propagated. HALF_UP and HALF_EVEN differ only on an exact .5 "+
+			"remainder; the captured products carry no tie (FC-09's fraction is .55525, every other product is "+
+			"exact), so this port is byte-identical to the correct one and kills ZERO vectors: the store grades "+
+			"rounding drift toward zero but cannot see a mode substitution that agrees everywhere except the "+
+			"un-captured tie",
+		halfEvenEvaluator{})
+	RegisterWrong("charges-wrong-validation-skipped",
+		"computes the fee and never runs Charge.Validate(), trusting the request as already vetted, where the "+
+			"oracle's constructor validates BEFORE any fee field is assigned [VERIFIED: Charge.java:240-300]. A "+
+			"construction-invalid charge is answered with a fee instead of codes and no fee. The corpus carries ten "+
+			"construction-VALID charges and no validation-refused observation, so this port is indistinguishable "+
+			"from the correct one and kills ZERO vectors: the construction-validation refusal path is ungraded by "+
+			"the store, and the fee_requires_valid invariant cannot catch it because the produced validation list "+
+			"is empty",
+		validationSkippedEvaluator{})
 }

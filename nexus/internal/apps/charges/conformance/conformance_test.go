@@ -12,8 +12,7 @@ import (
 
 // Every Vector built in this file is a PROBE: its numbers are meaningless and it
 // is never written to the store. It exists only so the harness machinery can be
-// exercised with a zero-vector corpus, which is the legitimate current state of
-// the charges store.
+// exercised without depending on the state of the vector store.
 
 const probeCommit = "426a23544e8426a38ae43ae404670a0a7e85b9eb"
 
@@ -212,6 +211,129 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 	if len(red.Diffs) == 0 {
 		t.Fatal("wrong impl produced no diffs")
+	}
+}
+
+// wrongRunsRedOn is the shared assertion for a registered-wrong driver whose
+// defect the probe can see: the probe must PASS under the correct implementation
+// and FAIL under the named one, producing at least one diff.
+func wrongRunsRedOn(t *testing.T, name string, probe *Vector) {
+	t.Helper()
+	wrongImpl, ok := Lookup(name)
+	if !ok {
+		t.Fatalf("%s not registered", name)
+	}
+	if _, bad := IsRegisteredWrong(name); !bad {
+		t.Fatalf("%s not marked wrong", name)
+	}
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	red := gradeOne(probe, Options{Implementation: wrongImpl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("%s outcome = %s, want FAIL", name, red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatalf("%s produced no diffs", name)
+	}
+}
+
+func TestOneScaleShortWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-percent-one-scale-short", percentFeeProbe())
+}
+
+// TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red
+// drive: the two rounding modes agree on every non-tie product (so the driver
+// is byte-identical to the correct port on the stored corpus, whose one
+// rounding vector FC-09 carries the fraction .55525), and differ only when the
+// exact fee lands on .5 minor units — a product no stored vector carries. The
+// probe is an exact half: 100 minor units x 0.5% = 0.5, which HALF_UP rounds to
+// 1 and HALF_EVEN rounds to 0.
+func TestHalfEvenDiffersOnlyOnAnExactHalf(t *testing.T) {
+	tie := percentFeeProbe()
+	tie.CaseID = "probe-half-even-tie"
+	tie.Request.TimeType = 1
+	tie.Request.BaseAmountMinor = "100"
+	tie.Request.Percentage = 500000
+	tie.Expect.FeeMinor = "1"
+
+	// HALF_UP answers 1 and PASSES.
+	correct := gradeOne(tie, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	halfEven, ok := Lookup("charges-wrong-rounding-half-even")
+	if !ok {
+		t.Fatal("wrong implementation not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-rounding-half-even"); !bad {
+		t.Fatal("wrong implementation not marked wrong")
+	}
+
+	// On the corpus-shaped probe (fraction .67, no tie) it is indistinguishable
+	// from the correct port — that is why the stored corpus grades it green.
+	corpusLike := gradeOne(percentFeeProbe(), Options{Implementation: halfEven})
+	if corpusLike.Outcome != OutcomePass {
+		t.Fatalf("half-even on a non-tie probe = %s, want PASS (indistinguishable); diffs=%v",
+			corpusLike.Outcome, corpusLike.Diffs)
+	}
+
+	// On the tie it rounds to even, answering 0 where the oracle answers 1.
+	red := gradeOne(tie, Options{Implementation: halfEven})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("half-even on the exact-half probe = %s, want FAIL", red.Outcome)
+	}
+	if red.MoneyCells != 1 {
+		t.Fatalf("half-even money cells = %d, want 1 (the tie kill is a MONEY kill)", red.MoneyCells)
+	}
+}
+
+// TestValidationSkippedChargesARequestTheOracleRefuses pins the shape of the
+// validation-skipped red drive: a loan PENALTY due at disbursement is
+// construction-invalid — Charge.java refuses it with
+// charge.due.at.disbursement.cannot.be.penalty and no fee is assigned — so the
+// correct port answers codes and no fee. A port that computes the fee without
+// ever running Validate() answers a fee for that same request. The corpus
+// carries only construction-valid charges, so no stored vector can see the
+// difference; the probe can.
+func TestValidationSkippedChargesARequestTheOracleRefuses(t *testing.T) {
+	refused := percentFeeProbe()
+	refused.CaseID = "probe-penalty-at-disbursement"
+	refused.Request.CalculationType = 1 // FLAT
+	refused.Request.TimeType = 1        // disbursement
+	refused.Request.Penalty = true
+	refused.Request.AmountMinor = "750000"
+	refused.Request.Percentage = 0
+	refused.Request.BaseAmountMinor = ""
+	refused.Expect = ChargeExpect{
+		Kind:            ExpectValidation,
+		ValidationCodes: []string{"charge.due.at.disbursement.cannot.be.penalty"},
+	}
+
+	if p := Admit(refused, Options{}); len(p) > 0 {
+		t.Fatalf("refused probe should be admissible: %v", p)
+	}
+	correct := gradeOne(refused, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	skip, ok := Lookup("charges-wrong-validation-skipped")
+	if !ok {
+		t.Fatal("wrong implementation not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-validation-skipped"); !bad {
+		t.Fatal("wrong implementation not marked wrong")
+	}
+
+	red := gradeOne(refused, Options{Implementation: skip})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("validation-skipped outcome = %s, want FAIL: it charges a request the oracle refuses", red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatalf("validation-skipped produced no diffs")
 	}
 }
 

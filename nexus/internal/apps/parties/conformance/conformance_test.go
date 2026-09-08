@@ -208,6 +208,56 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 }
 
+// clientStatusProbeNamed builds a client-status probe for one enum member,
+// transcribed from the same read-back capture as clientStatusProbe.
+func clientStatusProbeNamed(name string, ordinal int32) *Vector {
+	v := clientStatusProbe()
+	v.CaseID = "probe-client-" + name
+	v.Title = "probe client " + name + " ordinal"
+	v.Request.Name = name
+	v.Expect = Expect{Ordinal: ordinal}
+	return v
+}
+
+// wrongRunsRedOn is the shared assertion for the additional red-drives: the
+// probe must PASS under the correct implementation and FAIL under the named
+// registered-wrong one, producing at least one diff.
+func wrongRunsRedOn(t *testing.T, name string, probe *Vector) {
+	t.Helper()
+	wrongImpl, ok := Lookup(name)
+	if !ok {
+		t.Fatalf("%s not registered", name)
+	}
+	if _, bad := IsRegisteredWrong(name); !bad {
+		t.Fatalf("%s not marked wrong", name)
+	}
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("%s correct impl outcome = %s, want PASS; diffs=%v", probe.CaseID, correct.Outcome, correct.Diffs)
+	}
+	red := gradeOne(probe, Options{Implementation: wrongImpl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("%s outcome = %s, want FAIL", name, red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatalf("%s produced no diffs", name)
+	}
+}
+
+func TestIotaOrdinalWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "parties-wrong-iota-ordinals",
+		clientStatusProbeNamed("ACTIVE", 300))
+}
+
+func TestTransferStatesSwappedWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "parties-wrong-transfer-states-swapped",
+		clientStatusProbeNamed("TRANSFER_IN_PROGRESS", 303))
+}
+
+func TestLegalFormPersonAsUnsetWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "parties-wrong-legalform-person-as-unset", legalFormProbe())
+}
+
 func TestUnknownNameErrs(t *testing.T) {
 	for _, v := range []*Vector{clientStatusProbe(), legalFormProbe(), groupingStatusProbe()} {
 		v.Request.Name = "NOT_A_REAL_MEMBER"
