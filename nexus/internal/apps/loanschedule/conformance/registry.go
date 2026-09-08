@@ -26,6 +26,7 @@ import (
 var (
 	implMu sync.RWMutex
 	impls  = map[string]contract.ScheduleGenerator{}
+	wrong  = map[string]string{}
 )
 
 // Register makes a ScheduleGenerator available to the harness under name.
@@ -38,6 +39,45 @@ func Register(name string, g contract.ScheduleGenerator) {
 		panic(fmt.Sprintf("conformance: implementation %q registered twice", name))
 	}
 	impls[name] = g
+}
+
+// RegisterWrong registers a DELIBERATELY WRONG implementation under name, with
+// the defect it embodies stated.
+//
+// It is a separate call from Register so that the report can say which
+// implementations are known-wrong, and so that the default selection (below)
+// can never pick one. A harness that could silently grade against a wrong
+// implementation and report PASS would be worse than no harness.
+func RegisterWrong(name, defect string, g contract.ScheduleGenerator) {
+	implMu.Lock()
+	wrong[name] = defect
+	implMu.Unlock()
+	Register(name, g)
+}
+
+// IsRegisteredWrong reports whether name is a known-wrong implementation, and
+// the defect it embodies.
+func IsRegisteredWrong(name string) (string, bool) {
+	implMu.RLock()
+	defer implMu.RUnlock()
+	d, ok := wrong[name]
+	return d, ok
+}
+
+// CorrectImplementationNames lists the registered implementations that are NOT
+// declared wrong. The default selection uses this list, so `-impl` must be given
+// explicitly to grade against a wrong one.
+func CorrectImplementationNames() []string {
+	implMu.RLock()
+	defer implMu.RUnlock()
+	out := make([]string, 0, len(impls))
+	for n := range impls {
+		if _, bad := wrong[n]; !bad {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
 }
 
 // Lookup returns the named implementation.

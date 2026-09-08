@@ -32,6 +32,14 @@ import "math/big"
 // tenant mode. Every other mode is outside the graded domain and is refused by
 // the generator before any of this runs, so an unimplemented mode can never be
 // silently applied.
+//
+// The ONE exception is minorFromMajorHalfEven, which exists ONLY to be the
+// registered wrong drive loanschedule-wrong-half-even (wrongdrives.go). It is
+// never on the graded path; it is the executable version of the counterfactual
+// "the schedule generator used HALF_EVEN for money" that the half-even vectors
+// in the store exist to disprove, and it is walled off in its own function so
+// the claim above stays literally true of every helper a schedule computes
+// with.
 
 // pow10 returns 10^n as an exact integer. n must be >= 0.
 func pow10(n int32) *big.Int {
@@ -138,6 +146,47 @@ func majorFromMinor(minor int64, minorDigits int32) *big.Rat {
 func minorFromMajor(x *big.Rat, minorDigits int32) int64 {
 	shifted := new(big.Rat).Mul(x, new(big.Rat).SetInt(pow10(minorDigits)))
 	return roundHalfUpToInt(shifted).Int64()
+}
+
+// minorFromMajorHalfEven is minorFromMajor's WRONG-DRIVE twin: the currency
+// layer rounding ties to the nearest EVEN neighbour, java.math.RoundingMode
+// HALF_EVEN ordinal 6.
+//
+// It is the executable form of "the schedule generator quantised money with
+// HALF_EVEN instead of the tenant's HALF_UP". The schedule request carries the
+// tenant's RoundingMode and the generator validates it before any arithmetic
+// runs, so a schedule generator in this programme never rounds money any way
+// but HALF_UP -- the counterfactual can only exist as this deliberately wrong
+// function, which only the registered wrong drive
+// loanschedule-wrong-half-even (wrongdrives.go) calls. See the package comment
+// for the wall that keeps it off every graded path.
+func minorFromMajorHalfEven(x *big.Rat, minorDigits int32) int64 {
+	shifted := new(big.Rat).Mul(x, new(big.Rat).SetInt(pow10(minorDigits)))
+	return roundHalfEvenToInt(shifted).Int64()
+}
+
+// roundHalfEvenToInt rounds an exact rational to the nearest integer, ties to
+// the even neighbour: java.math.RoundingMode.HALF_EVEN applied at scale 0.
+// Used only by minorFromMajorHalfEven.
+func roundHalfEvenToInt(x *big.Rat) *big.Int {
+	sign := x.Sign()
+	num := new(big.Int).Abs(x.Num())
+	den := x.Denom()
+	quo, rem := new(big.Int), new(big.Int)
+	quo.QuoRem(num, den, rem)
+	twice := new(big.Int).Lsh(rem, 1)
+	switch twice.Cmp(den) {
+	case 1:
+		quo.Add(quo, big.NewInt(1))
+	case 0: // tie: round to the even neighbour
+		if new(big.Int).And(quo, big.NewInt(1)).Sign() != 0 {
+			quo.Add(quo, big.NewInt(1))
+		}
+	}
+	if sign < 0 {
+		quo.Neg(quo)
+	}
+	return quo
 }
 
 // divideMinorHalfUp divides an int64 minor-unit amount by a positive integer

@@ -69,6 +69,16 @@ var _ contract.ScheduleGenerator = Generator{}
 // must return the SAME sentinel for the same request, or a request one refuses
 // and the other answers is indistinguishable from a conformance failure.
 func (Generator) Generate(ctx context.Context, req contract.GenerateRequest) (contract.Schedule, error) {
+	return generateFor(ctx, req, variant{})
+}
+
+// generateFor is the validated front half shared by the graded port and by every
+// registered wrong drive (wrongdrives.go). The graded port calls it with the
+// ZERO variant; each deliberately-wrong drive calls it with exactly one switch
+// set. A wrong drive is therefore the graded engine with one defect in it,
+// sharing this front half -- including the refusal order Generate documents
+// above -- and it cannot drift into a second one.
+func generateFor(ctx context.Context, req contract.GenerateRequest, v variant) (contract.Schedule, error) {
 	if err := ctx.Err(); err != nil {
 		return contract.Schedule{}, err
 	}
@@ -99,7 +109,7 @@ func (Generator) Generate(ctx context.Context, req contract.GenerateRequest) (co
 		return contract.Schedule{}, err
 	}
 
-	return generate(ctx, req, dueDates)
+	return generate(ctx, req, dueDates, v)
 }
 
 // ---------------------------------------------------------------------------
@@ -424,9 +434,9 @@ func validateGradedDomain(req contract.GenerateRequest, lastDue civilDate) error
 // mistaken for an answer -- the model's sticky cancelled flag is the single
 // authority and it is consulted after the loop, not inside it.
 func generate(ctx context.Context, req contract.GenerateRequest,
-	dueDates []civilDate) (contract.Schedule, error) {
+	dueDates []civilDate, v variant) (contract.Schedule, error) {
 
-	model := newScheduleModel(ctx, req, dueDates)
+	model := newScheduleModel(ctx, req, dueDates, v)
 
 	disbursement := req.Disbursements[0]
 	pending := true
@@ -495,10 +505,22 @@ func generate(ctx context.Context, req contract.GenerateRequest,
 // [VERIFIED: ProgressiveEMICalculator.java:100-111 ->
 // RepaymentPeriod.java:143-151].
 func newScheduleModel(ctx context.Context, req contract.GenerateRequest,
-	dueDates []civilDate) *scheduleModel {
+	dueDates []civilDate, v variant) *scheduleModel {
 
+	// DayCountFixed30Over360 maps onto (DaysInMonthType.DAYS_30,
+	// DaysInYearType.DAYS_360); the mapping is normative on the contract's
+	// DayCountConvention. The days-in-year constant is the ONE term a wrong
+	// drive varies: loanschedule-wrong-days-in-year-365 (wrongdrives.go) reads
+	// the convention's 30/360 as 30/365 and charges one extra day of interest on
+	// every 30-day month, moving every interest cell of every period.
+	daysInMonth := ratInt64(30)
+	daysInYear := ratInt64(360)
+	if v.daysInYear365 {
+		daysInYear = ratInt64(365)
+	}
 	m := &scheduleModel{
 		ctx:            ctx,
+		v:              v,
 		minorDigits:    req.Currency.MinorUnitDigits,
 		precision:      req.Rounding.SignificantDigits,
 		scale:          req.Rounding.RateFactorScale,
@@ -510,11 +532,8 @@ func newScheduleModel(ctx context.Context, req contract.GenerateRequest,
 		rate: roundSignificant(new(big.Rat).SetFrac64(
 			req.AnnualNominalInterestRate.Numerator,
 			req.AnnualNominalInterestRate.Denominator), req.Rounding.SignificantDigits),
-		// DayCountFixed30Over360 maps onto (DaysInMonthType.DAYS_30,
-		// DaysInYearType.DAYS_360); the mapping is normative on the contract's
-		// DayCountConvention.
-		daysInMonth: ratInt64(30),
-		daysInYear:  ratInt64(360),
+		daysInMonth: daysInMonth,
+		daysInYear:  daysInYear,
 	}
 	from := req.ScheduleStartDate
 	m.periods = make([]*repaymentPeriod, 0, len(dueDates))
