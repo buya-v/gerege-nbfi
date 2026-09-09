@@ -8,6 +8,7 @@ without testing it once. Each script here was wrong at least once before it was 
     capcount.sh    <worktree> <ctx> <impl> same, against an arbitrary worktree
     redcount.sh    <worktree> <ctx>        count of registered <ctx>-wrong-* drives
     drivecount.sh  <worktree> <ctx>        same, simpler form
+    ohwatch.sh     [conv-dir ...]          status of every live OpenHands run
 
 ## The rule these encode
 
@@ -57,6 +58,29 @@ with the prose **wrapping onto continuation lines** — so the name is the **fir
 field**. Matching the whole line finds nothing (this was wrong once, here, and the
 control caught it); matching a substring would accept a name merely *mentioned* in
 another drive's prose, and they do cite each other by name.
+
+## `ohwatch.sh` — detect the STALL SIGNATURE, never CPU
+
+A stalled agent is **not an idle process**. Run K sat at **14% CPU doing nothing for
+twelve minutes**, so any liveness check built on load average would have called it
+healthy the whole time. The signature is the agent **polling a dead terminal**: an
+EMPTY terminal command, an observation carrying `exit_code -1`, then ANOTHER empty
+command.
+
+`ohwatch.sh` reads the event stream (`~/.openhands/conversations/<id>/events`) and
+reports, per run, the event count, seconds since the last event, the last action, and
+`STALLED` when the signature is present in the recent tail. It requires the
+**conjunction** — repeated empty commands AND a `-1` exit — because either alone is
+normal: an agent legitimately sends one empty command to drain a long-running terminal,
+and `-1` appears on a genuine timeout.
+
+**Control-tested on the case it was built for.** Run K's own conversation
+(`b515218ef37c4175afed35872b126de2`, worktree `oh-gerege-redk`) is flagged `STALLED`
+with `empty=2 exit-1=2`, while two concurrently healthy runs on the same machine are
+not flagged. An instrument that only ever reports "fine" has not been tested.
+
+When it fires: **kill the run, verify its tree against the bar, and commit its finished
+work on its behalf.** A stalled agent has usually done most of the work already.
 
 ## The three traps baked into these scripts
 
