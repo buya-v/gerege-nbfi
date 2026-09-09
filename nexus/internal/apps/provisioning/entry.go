@@ -62,6 +62,13 @@ type reserveKey struct {
 	ExpenseAccount   int64
 }
 
+// PercentageFunc computes one input row's reserve amount from its outstanding
+// balance and the matched band's percentage. The port's own function is
+// PercentageOf; GenerateReserveEntriesWith exists so a conformance wrong-drive
+// can grade the reserve arithmetic under a DIFFERENT rounding function without
+// re-implementing (and silently diverging from) the aggregation key below.
+type PercentageFunc func(balance MinorUnits, percentage Percent) (MinorUnits, error)
+
 // GenerateReserveEntries ports ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.
 // generateLoanProvisioningEntry [VERIFIED: ...Impl.java:166-214]: for each
 // input row it computes the reserve amount with Money.percentageOf and then
@@ -72,11 +79,18 @@ type reserveKey struct {
 // but which makes the port reproducible for tests. A caller that needs the
 // oracle's unspecified ordering must sort independently.
 func GenerateReserveEntries(inputs []ReserveInput) ([]ReserveEntry, error) {
+	return GenerateReserveEntriesWith(inputs, PercentageOf)
+}
+
+// GenerateReserveEntriesWith is GenerateReserveEntries with the per-row
+// percentage function supplied. Correct callers pass PercentageOf; only the
+// conformance wrong-drives pass a mis-rounded variant.
+func GenerateReserveEntriesWith(inputs []ReserveInput, percentageOf PercentageFunc) ([]ReserveEntry, error) {
 	byKey := make(map[reserveKey]int) // key -> index into out
 	var out []ReserveEntry
 
 	for _, in := range inputs {
-		amount, err := PercentageOf(in.Balance, in.Percentage)
+		amount, err := percentageOf(in.Balance, in.Percentage)
 		if err != nil {
 			return nil, fmt.Errorf("provisioning: reserve amount for product %d: %w", in.ProductID, err)
 		}
