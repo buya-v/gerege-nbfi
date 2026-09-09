@@ -106,3 +106,44 @@ a context whose blind spots are undeclared.
 (P4) points it at the workingcapital captures. If it reaches this independently, that is
 corroboration. If it does not, this is the gap in that run, and the comparison is the
 reason this was recorded before the run landed rather than after.
+
+---
+
+## UPDATE, same day — `loan` adopted the discipline, in a SECOND DIALECT
+
+`OH-PROM-O` merged (`03b4aefb`) while this finding was open, and did something it was
+never asked to do: `loan/outstandingbalance.go` returns **`ErrNotTranscribed`** for a
+posting type no committed capture observes — *"The derivation ports the transcribed subset
+of the oracle's rule; behaviour for an untranscribed type is refused, never guessed."*
+
+That is this finding's remedy (2), arrived at independently, and it corroborates the
+finding rather than being prompted by it: the run's brief said nothing about refusals, and
+the agent had no access to this file.
+
+**Re-measured after the merge:**
+
+    loanschedule    ungraded()/unsupported() 19   NotTranscribed 0
+    loan            ungraded()/unsupported()  0   NotTranscribed 6
+    workingcapital  ungraded()/unsupported()  0   NotTranscribed 0
+    charges         ungraded()/unsupported()  0   NotTranscribed 0
+    shares          ungraded()/unsupported()  0   NotTranscribed 0
+
+**And a correction to how this finding must be measured from now on.** The original census
+counted `ungraded(`/`unsupported(` — **loanschedule's spelling**. That is a dialect, not
+the property. The property is "does the port refuse an input it cannot grade", and `loan`
+now satisfies it through a Go error sentinel instead. A census that counts only one
+spelling will report a context as undisciplined the moment it chooses the other idiom.
+
+The original table is **not** retracted: measured at `955499ec`, the commit where this
+finding was written, `loan` had **0 of both** dialects (control: loanschedule 19 at the
+same commit, matching the working tree). The finding was true when written. It is the
+*method* that needed widening, not the result.
+
+*(That control matters: the first attempt to measure this at a past commit used a
+`git grep <rev> -- <pathspec>` form that returned 0 for loanschedule too. Reported as
+written it would have "shown" that loanschedule had no refusals either. The known control
+— loanschedule must read 19 — caught it. Third time in this session that a control
+changed a conclusion.)*
+
+**`workingcapital` is unchanged and remains the live instance**: five always-zero money
+terms, an unexercised `max(…, 0)` clamp, and no refusal in either dialect.
