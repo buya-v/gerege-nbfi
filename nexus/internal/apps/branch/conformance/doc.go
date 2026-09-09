@@ -40,9 +40,31 @@
 // records a cash-in or cash-out row, so the summary fold's inward/outward buckets
 // have no transcribed cell. The 3dp probe (40000.245) demonstrates that the
 // oracle stores sub-minor-unit residue exactly; the port's 2dp minor-unit model
-// refuses it. That divergence is documented and awaits a USER DECISION: it is
-// neither pinned as parity nor declared a departure, and no parity vector is
-// derived from the final read that includes it.
+// refuses it.
+//
+// THAT REFUSAL IS A RATIFIED DELIBERATE DEPARTURE, not an open question.
+// Buyan ratified it on 2026-09-09, closing gate G-19 and extending to this
+// context the position DEC-2 already states as predicate G-08: "Refuse residue;
+// do not truncate and do not round" -- a wire text carrying a non-zero digit
+// beyond the currency's minor unit is ErrInvalidRequest, not a value. Truncating
+// invents money in one direction and rounding in the other, and either makes a
+// parity comparison pass while the two systems disagree by a fraction that
+// accumulates.
+//
+// So no parity vector is derived from the final read that includes 40000.245,
+// and none ever should be: there is no int64 count of MNT minor units equal to
+// 40000.245, and any vector claiming one would have to invent a number neither
+// system produced. The oracle's characters are recorded; the port's refusal is
+// the graded answer. The ledger context records the same departure as
+// LDG-DIV-01, and shares records a second instance (a stored 0.005 served back
+// as 0.010000).
+//
+// ONE QUESTION STAYS OPEN and is attached to CUTOVER, not to this file: this
+// seam performs no arithmetic on the amount, so it cannot show whether the
+// oracle's OWN arithmetic can GENERATE residue. If a live instance ever computes
+// an amount carrying residue, a port that refuses what the oracle stores would
+// diverge on real traffic rather than on a probe. That is a parallel-run
+// question and parallel-run sign-off is a user gate.
 //
 // # What it needs from a tenant
 //

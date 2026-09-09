@@ -3,6 +3,27 @@
 // harness) and is a separate schema on purpose rather than a widening of any
 // existing one.
 //
+// # The sub-minor-unit departure, ratified
+//
+// SH-02 records the oracle publishing 0.010000 from a stored 0.005 -- a value
+// finer than MNT's minor unit. This port's exact-money parser REFUSES that
+// residue rather than reproducing Fineract's setScale(2, HALF_UP), so the vector
+// grades only the normalisation of the read-back and NOT the rounding step. That
+// is why shares is not among the five seams proving the tenant's HALF_UP; the
+// seams that do are loanschedule, ledger, loan and branch, plus shares' own
+// account seam on a different cell.
+//
+// THE REFUSAL IS A RATIFIED DELIBERATE DEPARTURE. Buyan ratified it on
+// 2026-09-09, closing gate G-19 and extending to this context the position DEC-2
+// already states as predicate G-08: "Refuse residue; do not truncate and do not
+// round." This is the SECOND observed instance of one behaviour, not a local
+// quirk -- ledger records it as LDG-DIV-01 (100.125 accepted, served back
+// 100.125000) and branch as the 3dp probe (40000.245). Three contexts, one rule.
+//
+// No parity vector may be derived from the residue itself: no int64 count of MNT
+// minor units equals 0.005, and a vector claiming one would invent a number
+// neither system produced.
+//
 // # What this harness grades
 //
 // The shares slice is the MODEL plus the pure, testable vocabulary of Fineract's

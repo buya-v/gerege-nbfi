@@ -4453,7 +4453,48 @@ Probe line **PRESENT**, tested for presence **before** value (**P-83**), and rea
 ## G-19 — the reference oracle ACCEPTS a sub-minor-unit residue that the Go port's READER refuses
 
 **Raised by:** local fire `20260828-140005` (driver), from `T352`'s captures.
-**Class:** ENGINEERING. **State:** OPEN. **Blocks:** nothing.
+**Class:** ENGINEERING. **State:** **RATIFIED AND CLOSED — Buyan, 2026-09-09.** **Blocks:** nothing.
+
+### THE DECISION (Buyan, 2026-09-09)
+
+> "ratify the refusal as a deliberate departure."
+
+Option **(a)**, the recommended one: the port's refusal of a sub-minor-unit residue is a
+**deliberate departure from the reference oracle**, not a defect and not a gap awaiting work.
+This confirms what `DEC-2 :970-976` already ratifies as predicate **G-08** — *"Refuse residue;
+do not truncate and do not round"* — so **no normative rule changes**. What the decision adds is
+SCOPE: the position now stands for **every context**, not only the ledger seam where it was first
+observed, and the two later instances are recorded as declared departures rather than left
+looking like unexamined mismatches.
+
+**Three observed instances of one behaviour:**
+
+| context | observation | recorded as |
+|---|---|---|
+| ledger | `100.125` accepted HTTP 200, served back `100.125000` (txn `a29bca0816a7`); `300.6255545` -> `300.625555` | `LDG-DIV-01`, class `divergence` |
+| branch | 3dp probe `txnAmount 40000.245` stored exactly | `branch/conformance/doc.go`, declared |
+| shares | stored `0.005` published as `0.010000` | `shares/conformance/doc.go`, declared; `SH-02` grades the read-back normalisation only |
+
+**What may NOT be done as a consequence.** No parity vector may be derived from a residue value.
+There is no `int64` count of MNT minor units equal to `100.125`, `40000.245` or `0.005`, and a
+vector claiming one would have to invent a number **neither system produced**. The oracle's
+characters are recorded; the port's refusal is the graded answer. `branch` and `shares` therefore
+gain NO new parity vector from this ratification, by design.
+
+### THE ONE QUESTION THAT STAYS OPEN — reattached to CUTOVER
+
+The narrow question `T359` isolated is **not** settled by this ratification and is deliberately
+carried forward to the parallel-run gate:
+
+> These seams perform **no arithmetic on the amount**, so none of them can show whether the
+> oracle's **own arithmetic** can GENERATE residue. Every instance so far had its extra digit
+> supplied by a prober. If a live Fineract instance ever *computes* an amount carrying residue —
+> interest, accrual, a split — a port that refuses what the oracle stores diverges on **real
+> traffic**, not on a probe.
+
+That is a **parallel-run** question and parallel-run sign-off is a `user` gate. `FU-T352-2` — can
+the oracle's own arithmetic generate residue? — is the capture that would inform it. It blocks
+nothing now and must be answered before Tier-A cutover is contemplated.
 **CORRECTED IN PLACE, same fire, after `T359`'s independent review — see "What the driver got wrong" below.
 The first version of this gate asked Buyan to ratify something DEC-2 already ratifies, and carried a
 `MAJOR` finding that is false. Neither ever reached him; both are struck here rather than quietly edited.**
