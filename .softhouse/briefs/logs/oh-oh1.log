@@ -1,0 +1,79 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-pro[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m202[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m The `gerege` tenant is restored and the two arms are demonstrably different. [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## The two numbers                                                           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | tenant | rounding | `1,162,502.50 × 0.018 = 20,925.045` → period‑1         [36m│[0m
+[36m│[0m `interestOriginalDue` |                                                      [36m│[0m
+[36m│[0m |---|---|---|                                                                [36m│[0m
+[36m│[0m | `gerege` | HALF_UP (ordinal 4) | **20925.05** |                            [36m│[0m
+[36m│[0m | `default` | HALF_EVEN (ordinal 6) | **20925.04** |                         [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## RAW evidence (exit codes inline)                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **1) health** — `EXIT=0`                                                     [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m {"status":"UP","groups":["liveness","readiness"]}                            [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **2) tenants table (both rows)** — `EXIT=0`                                  [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m  id | identifier |                    name                    |              [36m│[0m
+[36m│[0m timezone_id                                                                  [36m│[0m
+[36m│[0m ----+------------+--------------------------------------------+------------- [36m│[0m
+[36m│[0m -----                                                                        [36m│[0m
+[36m│[0m   1 | default    | Default Demo Tenant                        | Asia/Kolkata [36m│[0m
+[36m│[0m   2 | gerege     | Gerege T22 Audit Tenant (Asia/Ulaanbaatar) |              [36m│[0m
+[36m│[0m Asia/Ulaanbaatar                                                             [36m│[0m
+[36m│[0m (2 rows)                                                                     [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **3) tie under `gerege`** — `EXIT=0`, period 1 →                             [36m│[0m
+[36m│[0m `interestOriginalDue:20925.05`, `totalInterestCharged:140457.89`,            [36m│[0m
+[36m│[0m `totalRepaymentExpected:1302960.39`                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **4) tie under `default`** — `EXIT=0`, period 1 →                            [36m│[0m
+[36m│[0m `interestOriginalDue:20925.04`, `totalInterestCharged:140457.88`,            [36m│[0m
+[36m│[0m `totalRepaymentExpected:1302960.38`                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## What was done and recorded                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - Re-created tenant **`gerege`** (tenants id 2, `Asia/Ulaanbaatar`), its     [36m│[0m
+[36m│[0m `tenant_server_connections` row, and schema `fineract_gerege` migrated to    [36m│[0m
+[36m│[0m the pinned commit's Liquibase state.                                         [36m│[0m
+[36m│[0m - Confirmed all four ratified parameters live and read by the running app:   [36m│[0m
+[36m│[0m `rounding-mode = 4` (HALF_UP), currency **MNT** (`m_currency.decimal_places  [36m│[0m
+[36m│[0m = 2`, ISO 4217 numeric 496), `Asia/Ulaanbaatar`.                             [36m│[0m
+[36m│[0m - The app had cached `gerege` as HALF_EVEN from before the value was set to  [36m│[0m
+[36m│[0m 4; after a restart it initializes as `HALF_UP` (log line `Initialized        [36m│[0m
+[36m│[0m rounding mode for tenant 'gerege': HALF_UP`).                                [36m│[0m
+[36m│[0m - `default` was not dropped or re-migrated; its rounding mode remains 6,     [36m│[0m
+[36m│[0m timezone `Asia/Kolkata`. The only writes were the minimal fixtures to drive  [36m│[0m
+[36m│[0m the tie: MNT+USD org-currencies and one client + one product in `gerege`,    [36m│[0m
+[36m│[0m and one additive loan product in `default` (documented in the file).         [36m│[0m
+[36m│[0m - Connection facts appended to `.softhouse/reference-oracle.md` and          [36m│[0m
+[36m│[0m committed on `ops/OH1-restore-gerege-tenant` (commit `4cc8721f`), not        [36m│[0m
+[36m│[0m `main`.                                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Only PostgreSQL engines are involved (the stack's `postgres:18.3` db + the   [36m│[0m
+[36m│[0m Fineract app); no MySQL/MariaDB/Oracle engine was started, and no            [36m│[0m
+[36m│[0m `:1521`/`:3306`/`:3307` listener is present.                                 [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 5b996c138ea4475e9a2f3580bb86e8c6
+Hint: run openhands --resume 5b996c13-8ea4-475e-9a2f-3580bb86e8c6 to resume this
+conversation.
