@@ -149,6 +149,47 @@ func clientProbe() *Vector {
 	}
 }
 
+// valuationProbe builds a valid collateral-valuation-seam vector transcribed
+// from the committed client-collateral-single-raw.json capture: the oracle
+// returned the SINGLE-row read-back WITH a computed valuation for client 5's
+// holding 2 — quantity 1.50000, total 150000.0000000000 and totalCollateral
+// 75000.000000000000000, all transcribed as scale-5 integer counts.
+func valuationProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-client-collateral-valuation",
+		Title:   "probe single-row client-collateral valuation",
+		Class:   ClassParity,
+		Context: CollateralContext,
+		Note:    "probe: transcribed from client-collateral-single-raw.json, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamClientCollateralValuationRead, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from client-collateral-single-raw.json",
+			CaptureRef:    ".softhouse/capture/collateral/out/client-collateral-single-raw.json",
+			CaptureSHA256: "3e25c7e51f624d9b51a88f7a025e788bb55695ba0a20b2918e5cd808b2c3ec0d",
+			CaptureCaseID: "150000.0000000000",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{ClientID: 5, CollateralID: 2},
+		Expect: Expect{
+			ID:              2,
+			Quantity:        "150000",
+			Total:           "15000000000",
+			TotalCollateral: "7500000000",
+		},
+		CapabilitiesRequired: []string{"collateral-valuation"},
+		GradedAgainst:        []string{"collateral-go"},
+	}
+}
+
 func TestEmptyStoreRefuses(t *testing.T) {
 	store := t.TempDir()
 	s, err := Run(context.Background(), Options{
@@ -294,13 +335,81 @@ func TestClientSeamGrading(t *testing.T) {
 	}
 }
 
+func TestValuationSeamGrading(t *testing.T) {
+	v := valuationProbe()
+	if p := Admit(v, Options{}); len(p) > 0 {
+		t.Fatalf("valuation probe should be admissible: %v", p)
+	}
+
+	// The correct port must reproduce the oracle's computed valuation exactly:
+	// quantity 1.50000 of product 2 (base_price 100000.00000, pct_to_base
+	// 50.00000) values at total 15000000000 and total_collateral 7500000000
+	// (scale-5 counts) through the port's own arithmetic.
+	correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl valuation outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	// The pct-scale drive is valuation-seam only: it misvalues total_collateral
+	// by a factor of 10^5 and must kill exactly this vector.
+	pctScale, ok := Lookup("collateral-wrong-valuation-pct-scale")
+	if !ok {
+		t.Fatal("wrong valuation implementation not registered")
+	}
+	if _, bad := IsRegisteredWrong("collateral-wrong-valuation-pct-scale"); !bad {
+		t.Fatal("wrong valuation implementation not marked wrong")
+	}
+	red := gradeOne(v, Options{Implementation: pctScale})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("pct-scale impl valuation outcome = %s, want FAIL", red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatal("pct-scale impl produced no diffs")
+	}
+	for _, d := range red.Diffs {
+		if strings.HasPrefix(d, "quantity:") || strings.HasPrefix(d, "total:") {
+			t.Fatalf("pct-scale defect must leave quantity and total green; unexpected diff %q", d)
+		}
+	}
+	if !strings.Contains(strings.Join(red.Diffs, "\n"), "total_collateral:") {
+		t.Fatalf("pct-scale defect must redden the total_collateral cell, got diffs %v", red.Diffs)
+	}
+
+	// Other seams' drives must leave the valuation read green: the total_collateral
+	// cell belongs to the valuation seam and no other drive may claim it.
+	for _, name := range []string{
+		"collateral-wrong-blank-quality",
+		"collateral-wrong-type-id",
+		"collateral-wrong-fabricates-client-holding",
+	} {
+		other, _ := Lookup(name)
+		if red := gradeOne(v, Options{Implementation: other}); red.Outcome != OutcomePass {
+			t.Fatalf("%s impl valuation outcome = %s, want PASS (defects are separate drives)", name, red.Outcome)
+		}
+	}
+
+	// The pct-scale drive must leave the product, link and client reads green.
+	pct := productProbe()
+	if red := gradeOne(pct, Options{Implementation: pctScale}); red.Outcome != OutcomePass {
+		t.Fatalf("pct-scale impl product outcome = %s, want PASS (defects are separate drives)", red.Outcome)
+	}
+	link := linkProbe()
+	if red := gradeOne(link, Options{Implementation: pctScale}); red.Outcome != OutcomePass {
+		t.Fatalf("pct-scale impl link outcome = %s, want PASS (defects are separate drives)", red.Outcome)
+	}
+	client := clientProbe()
+	if red := gradeOne(client, Options{Implementation: pctScale}); red.Outcome != OutcomePass {
+		t.Fatalf("pct-scale impl client outcome = %s, want PASS (defects are separate drives)", red.Outcome)
+	}
+}
+
 func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	r := &CapabilityRegistry{
 		byName: map[string]Capability{
 			"product-aggregate-read": {Name: "product-aggregate-read", InGradedDomain: true, Evidence: "collateral-product-readback-raw.json"},
 			"collateral-type-link":   {Name: "collateral-type-link", InGradedDomain: true, Evidence: "loan-collateral-readback-raw.json"},
 			"client-collateral-read": {Name: "client-collateral-read", InGradedDomain: true, Evidence: "client-collateral-readback-raw.json"},
-			"collateral-valuation":   {Name: "collateral-valuation", InGradedDomain: false, Evidence: "no API read-back computes basePrice*pctToBase*quantity"},
+			"collateral-valuation":   {Name: "collateral-valuation", InGradedDomain: true, Evidence: "client-collateral-single-raw.json: the single-row read-back computes and returns total and totalCollateral"},
 		},
 		bySeam: map[string]Seam{
 			SeamCollateralProductRead: {Name: SeamCollateralProductRead, Status: map[string]SeamStatus{
@@ -313,6 +422,9 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 			SeamClientCollateralRead: {Name: SeamClientCollateralRead, Status: map[string]SeamStatus{
 				"client-collateral-read": StatusExercised,
 			}},
+			SeamClientCollateralValuationRead: {Name: SeamClientCollateralValuationRead, Status: map[string]SeamStatus{
+				"collateral-valuation": StatusExercised,
+			}},
 		},
 	}
 
@@ -321,6 +433,9 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	}
 	if v := r.Assess(SeamClientCollateralRead, []string{"client-collateral-read"}); !v.Gradeable {
 		t.Fatalf("client exercised+graded should be gradeable: %v", v.Detail)
+	}
+	if v := r.Assess(SeamClientCollateralValuationRead, []string{"collateral-valuation"}); !v.Gradeable {
+		t.Fatalf("valuation exercised+graded should be gradeable: %v", v.Detail)
 	}
 	if v := r.Assess("unknown-seam", []string{"product-aggregate-read"}); v.Gradeable || v.Reason != reasonUnknownSeam {
 		t.Fatalf("unknown seam should refuse with reason %q, got gradeable=%v reason=%q", reasonUnknownSeam, v.Gradeable, v.Reason)
@@ -331,6 +446,9 @@ func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	if v := r.Assess(SeamCollateralProductRead, []string{"nope"}); v.Gradeable || v.Reason != reasonUnknownCapability {
 		t.Fatalf("unknown capability should refuse with reason %q, got %q", reasonUnknownCapability, v.Reason)
 	}
+	// A graded capability still refuses on a seam that never exercised it: the
+	// product seam has the valuation capability blind, so requiring it there is
+	// still default-deny.
 	if v := r.Assess(SeamCollateralProductRead, []string{"collateral-valuation"}); v.Gradeable || v.Reason != reasonSeamBlind {
 		t.Fatalf("blind capability should refuse with reason %q, got %q", reasonSeamBlind, v.Reason)
 	}
@@ -431,6 +549,51 @@ func TestAdmitDefaultDeny(t *testing.T) {
 	if p := Admit(emptyLink, Options{}); len(p) == 0 {
 		t.Fatal("link seam asserting expect.empty admitted")
 	}
+
+	// Valuation seam default-deny: the single-row read-back (client 5, collateral
+	// 2) is the only observed valuation capture, and only scale-5 integer count
+	// cells may be asserted.
+	valuation := valuationProbe()
+	zeroCollateral := *valuation
+	zeroCollateral.Request.CollateralID = 0
+	if p := Admit(&zeroCollateral, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with collateral_id 0 admitted")
+	}
+	zeroValuationClient := *valuation
+	zeroValuationClient.Request.ClientID = 0
+	if p := Admit(&zeroValuationClient, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with client_id 0 admitted")
+	}
+	valuationWithProduct := *valuation
+	valuationWithProduct.Request.ProductID = 2
+	if p := Admit(&valuationWithProduct, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with product_id admitted")
+	}
+	valuationWithLink := *valuation
+	valuationWithLink.Request.LinkID = 1
+	if p := Admit(&valuationWithLink, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with link_id admitted")
+	}
+	valuationEmpty := *valuation
+	valuationEmpty.Expect = Expect{Empty: true}
+	if p := Admit(&valuationEmpty, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam asserting expect.empty admitted")
+	}
+	valuationZeroID := *valuation
+	valuationZeroID.Expect.ID = 0
+	if p := Admit(&valuationZeroID, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with non-positive expect.id admitted")
+	}
+	valuationFloatCell := *valuation
+	valuationFloatCell.Expect.TotalCollateral = "7500000000.5"
+	if p := Admit(&valuationFloatCell, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with a fractional scale-5 cell admitted")
+	}
+	valuationZeroQuantity := *valuation
+	valuationZeroQuantity.Expect.Quantity = ""
+	if p := Admit(&valuationZeroQuantity, Options{}); len(p) == 0 {
+		t.Fatal("valuation seam with an empty quantity cell admitted")
+	}
 }
 
 func TestInvariants(t *testing.T) {
@@ -469,5 +632,25 @@ func TestInvariants(t *testing.T) {
 	}
 	if invs := AssertInvariants(client, Expect{ID: 2}); invs[0].Status != InvariantNotApplicable {
 		t.Fatalf("client_collateral_page_presence on a fabricated holding = %s, want N/A", invs[0].Status)
+	}
+
+	// The valuation seam asserts the holding-key and percentage bounds: id must
+	// be positive, and total_collateral = total * pct_to_base/100 can never
+	// exceed total for the graded corpus's product (pct_to_base = 50.00000).
+	valuation := &Vector{Oracle: OracleStamp{Seam: SeamClientCollateralValuationRead}}
+	heldValuation := AssertInvariants(valuation, Expect{ID: 2, Quantity: "150000", Total: "15000000000", TotalCollateral: "7500000000"})
+	if len(heldValuation) != 2 {
+		t.Fatalf("valuation seam invariant set has %d invariants, want 2", len(heldValuation))
+	}
+	for _, iv := range heldValuation {
+		if iv.Status != InvariantHeld {
+			t.Fatalf("valuation invariant %s = %s, want HOLD", iv.Name, iv.Status)
+		}
+	}
+	if invs := AssertInvariants(valuation, Expect{ID: 0, Total: "15000000000", TotalCollateral: "7500000000"}); invs[0].Status != InvariantViolated {
+		t.Fatalf("valuation_id_positive = %s, want VIOLATED", invs[0].Status)
+	}
+	if invs := AssertInvariants(valuation, Expect{ID: 2, Total: "100", TotalCollateral: "200"}); invs[1].Status != InvariantViolated {
+		t.Fatalf("total_collateral_lte_total = %s, want VIOLATED when total_collateral exceeds total", invs[1].Status)
 	}
 }

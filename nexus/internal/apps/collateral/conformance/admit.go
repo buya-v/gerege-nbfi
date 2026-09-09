@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead:
+	case SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead, SeamClientCollateralValuationRead:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q and %q",
-			v.Oracle.Seam, SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead))
+			"oracle.seam %q: this harness grades only seams %q, %q, %q and %q",
+			v.Oracle.Seam, SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead, SeamClientCollateralValuationRead))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -124,6 +124,9 @@ func Admit(v *Vector, opts Options) []string {
 		if v.Request.ClientID != 0 {
 			problems = append(problems, "product seam must not set request.client_id")
 		}
+		if v.Request.CollateralID != 0 {
+			problems = append(problems, "product seam must not set request.collateral_id")
+		}
 		if v.Expect.Empty {
 			problems = append(problems, "expect.empty true contradicts the product seam: the oracle read back a real product row (non-empty capture), so an empty read is not an observed state")
 		}
@@ -149,6 +152,9 @@ func Admit(v *Vector, opts Options) []string {
 		if v.Request.ClientID != 0 {
 			problems = append(problems, "link seam must not set request.client_id")
 		}
+		if v.Request.CollateralID != 0 {
+			problems = append(problems, "link seam must not set request.collateral_id")
+		}
 		if v.Expect.Empty {
 			problems = append(problems, "expect.empty true contradicts the link seam: the oracle read back a real link row (non-empty capture), so an empty read is not an observed state")
 		}
@@ -168,12 +174,43 @@ func Admit(v *Vector, opts Options) []string {
 		if v.Request.LinkID != 0 {
 			problems = append(problems, "client seam must not set request.link_id")
 		}
+		if v.Request.CollateralID != 0 {
+			problems = append(problems, "client seam must not set request.collateral_id: the empty client page and the single-row valuation read are different captures (client-collateral-readback-raw.json vs client-collateral-single-raw.json) and different seams")
+		}
 		if !v.Expect.Empty {
 			problems = append(problems, "expect.empty must be true: the oracle's only client-collateral read-back (client-collateral-readback-raw.json, GET /clients/5/collaterals) returned content [], so a holding row was never observed and stating one would be fabrication")
 		}
 		// Default-deny on the empty page: no row cell may be stated alongside
 		// expect.empty, because an empty page has no holding row to transcribe.
 		problems = append(problems, admitEmptyClientExpect(v)...)
+	case SeamClientCollateralValuationRead:
+		if v.Request.ClientID <= 0 {
+			problems = append(problems, fmt.Sprintf("request.client_id %d is not a positive client id", v.Request.ClientID))
+		}
+		if v.Request.CollateralID <= 0 {
+			problems = append(problems, fmt.Sprintf("request.collateral_id %d is not a positive collateral id", v.Request.CollateralID))
+		}
+		if v.Request.ProductID != 0 {
+			problems = append(problems, "valuation seam must not set request.product_id")
+		}
+		if v.Request.LinkID != 0 {
+			problems = append(problems, "valuation seam must not set request.link_id")
+		}
+		if v.Expect.Empty {
+			problems = append(problems, "expect.empty true contradicts the valuation seam: the oracle's single-row read-back (client-collateral-single-raw.json) returned a populated holding, not an empty page")
+		}
+		if v.Expect.ID <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.id %d is not positive", v.Expect.ID))
+		}
+		if !isIntegerMinorString(v.Expect.Quantity) {
+			problems = append(problems, fmt.Sprintf("expect.quantity %q is not a non-negative integer scale-5 count", v.Expect.Quantity))
+		}
+		if !isIntegerMinorString(v.Expect.Total) {
+			problems = append(problems, fmt.Sprintf("expect.total %q is not a non-negative integer scale-5 amount", v.Expect.Total))
+		}
+		if !isIntegerMinorString(v.Expect.TotalCollateral) {
+			problems = append(problems, fmt.Sprintf("expect.total_collateral %q is not a non-negative integer scale-5 amount", v.Expect.TotalCollateral))
+		}
 	}
 
 	problems = append(problems, checkGradedAgainst(v)...)
@@ -211,6 +248,15 @@ func admitEmptyClientExpect(v *Vector) []string {
 	}
 	if v.Expect.TypeID != 0 {
 		problems = append(problems, fmt.Sprintf("expect.type_id %d contradicts expect.empty: an empty client-collateral page has no holding row", v.Expect.TypeID))
+	}
+	if v.Expect.Quantity != "" {
+		problems = append(problems, "expect.quantity contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.Total != "" {
+		problems = append(problems, "expect.total contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.TotalCollateral != "" {
+		problems = append(problems, "expect.total_collateral contradicts expect.empty: an empty client-collateral page has no holding row")
 	}
 	return problems
 }

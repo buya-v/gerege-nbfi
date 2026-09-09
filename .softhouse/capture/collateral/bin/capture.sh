@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # collateral context — collateral products, client collateral, loan-collateral links.
 #
-# This context has NO rounding surface exposed through the API:
-#   * m_collateral_management.base_price and pct_to_base are STORED config, but no
-#     API read-back computes base_price * pct_to_base/100 * quantity into a value.
+# This context has ONE rounding surface exposed through the API:
+#   * GET /clients/{clientId}/collaterals/{collateralId} returns the single holding
+#     with total = base_price * quantity and totalCollateral = total *
+#     pct_to_base/100 computed on the read path (ClientCollateralManagement.java
+#     getTotal / getTotalCollateral), even though the column holds only quantity
+#     (verified via SQL: m_client_collateral_management has no total column).
 #   * The loan-collateral link in this build is the LEGACY model (m_loan_collateral,
 #     keyed by a LoanCollateral code value). Its `value` and `description` columns are
 #     not populated by the POST; no quantity is stored. No division/rounding occurs.
-# So the honest result is "this seam cannot discriminate" — nothing here rounds.
 set -uo pipefail
 
 cd "$(dirname "$0")/../../../.." || exit 1
@@ -77,6 +79,7 @@ fi
 
 # --- read-backs ---------------------------------------------------------------
 ohs_get client-collateral-readback "/clients/$CLIENT/collaterals"
+ohs_get client-collateral-single "/clients/$CLIENT/collaterals/$CC_ID"
 ohs_get loan-collateral-readback   "/loans/$LOAN/collaterals"
 ohs_get collateral-product-readback "/collateral-management"
 
@@ -88,11 +91,13 @@ product_id, cc_id, lc_id, cv_id = sys.argv[2:6]
 manifest = {
     "context": "collateral",
     "roundingSurface": {
-        "seam": "none exposed via API",
-        "note": ("collateral-management stores basePrice and pctToBase but no API read-back computes "
-                 "basePrice*pctToBase/100*quantity. The loan-collateral link in this build is the legacy "
-                 "m_loan_collateral model keyed by a LoanCollateral code value; POST stores only type_cv_id "
-                 "(value/description null, no quantity). No division or rounding occurs through the API.")
+        "seam": "client-collateral-single read-back",
+        "note": ("GET /clients/{clientId}/collaterals/{collateralId} (client-collateral-single-raw.json) "
+                 "computes total = base_price * quantity and totalCollateral = total * (pct_to_base/100) on "
+                 "the read path and returns them as JSON numbers; the m_client_collateral_management column "
+                 "stores only quantity (verified via SQL, no total column). The loan-collateral link in this "
+                 "build is the legacy m_loan_collateral model keyed by a LoanCollateral code value; POST "
+                 "stores only type_cv_id (value/description null, no quantity).")
     },
     "objects": {
         "collateralProduct": {"id": product_id, "name": "SEED-Collateral-Product",
@@ -103,7 +108,8 @@ manifest = {
         "pendingLoanForLink": {"id": 7, "externalId": "SEED-L07", "state": "submitted and pending approval"},
     },
     "readBackQuirks": {
-        "clientCollateral": "GET /clients/5/collaterals returns [] even though m_client_collateral_management has the row (verified via SQL); the write path and read path appear to target different models in this build."
+        "clientCollateral": "GET /clients/5/collaterals returns [] even though m_client_collateral_management has the row (verified via SQL); the write path and read path appear to target different models in this build.",
+        "clientCollateralSingle": "GET /clients/5/collaterals/2 returns the single row with computed total=150000.0000000000 and totalCollateral=75000.000000000000000 (basePrice 100000.00000 * quantity 1.50000 = total; total * 50/100 = totalCollateral)."
     },
 }
 open(os.path.join(out, "..", "MANIFEST.json"), "w").write(json.dumps(manifest, indent=2))

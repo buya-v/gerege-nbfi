@@ -8,15 +8,18 @@
 //
 // The collateral slice owns the four collateral aggregates and the pure
 // valuation arithmetic (ClientCollateral.Total, ClientCollateral.TotalCollateral)
-// that links a client's pledged collateral to a loan. Of those, the running
-// reference oracle exposes NO rounding surface through the API: the
-// m_collateral_management product row and the m_loan_collateral row are read
-// back verbatim, and NO API read-back computes basePrice*pctToBase/100*quantity.
-// The valuation arithmetic is therefore OUTSIDE this harness's graded domain —
-// a vector that required it would be INADMISSIBLE, never guessed.
+// that links a client's pledged collateral to a loan. The m_collateral_management
+// product row and the m_loan_collateral row are read back verbatim, and the
+// SINGLE-row client-collateral read-back
+// (GET /clients/{clientId}/collaterals/{collateralId}) computes and returns the
+// valuation: total = base_price * quantity and totalCollateral = total *
+// (pct_to_base/100) on the read path
+// (ClientCollateralManagementReadServiceImpl.getClientCollateralManagementData,
+// javap-verified). The valuation arithmetic IS in the graded domain; a capture
+// that records that computed read-back is transcribed, never guessed.
 //
-// What IS observable and transcribed is the read of the aggregates the
-// captures recorded:
+// What is observable and transcribed is the read of the aggregates the captures
+// recorded:
 //
 //   - seam "collateral-product-read": the m_collateral_management row returned
 //     by the product read-back (id, name, quality, base_price, unit_type,
@@ -32,7 +35,15 @@
 //     m_client_collateral_management. The graded cell is page presence: a
 //     conformant read reproduces the EMPTY page, so a read that answers the
 //     client from the table the write populated fabricates a row the oracle
-//     never returned.
+//     never returned;
+//   - seam "collateral-valuation-read": the SINGLE-row client-collateral
+//     read-back (client-collateral-single-raw.json, GET /clients/5/collaterals/2),
+//     which the oracle returned WITH a computed valuation (total and
+//     totalCollateral as JSON numbers, no stored column). The graded cells are
+//     id, quantity and the two COMPUTED valuation fields total and
+//     total_collateral, all scale-5 integer counts, so a port whose valuation
+//     arithmetic differs from the oracle's read path goes red even when the
+//     stored quantity matches.
 //
 // # Money representation
 //

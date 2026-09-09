@@ -18,6 +18,12 @@
    "description": "Read a client's collateral holdings page as returned by the client-collateral read-back.",
    "in_graded_domain": true,
    "evidence": "Capture client-collateral-readback-raw.json under tenant gerege: the running oracle returned content [] for client 5 (an EMPTY page) even though its own write path stored holding id 2 under m_client_collateral_management (client-collateral-raw.json) — the read and write paths target different models in the pinned build."
+  },
+  {
+   "name": "collateral-valuation",
+   "description": "Reproduce the SINGLE-row client-collateral read-back's computed valuation: total = base_price * quantity and total_collateral = total * pct_to_base/100, evaluated by the read path (the m_client_collateral_management column holds only quantity).",
+   "in_graded_domain": true,
+   "evidence": "Capture client-collateral-single-raw.json under tenant gerege: the running oracle returned the single holding row (id 2, clientId 5, quantity 1.50000) WITH computed total 150000.0000000000 and totalCollateral 75000.000000000000000 (basePrice 100000.00000 * quantity 1.50000; total * pctToBase 50.00000/100), demonstrating the valuation arithmetic IS observable through an API read-back."
   }
  ],
  "seams": [
@@ -41,7 +47,14 @@
    "status": {
     "client-collateral-read": "exercised"
    }
+  },
+  {
+   "name": "collateral-valuation-read",
+   "description": "GET the single-row client-collateral read-back on the running Fineract server, tenant gerege (GET /clients/{clientId}/collaterals/{collateralId}): the holding with its COMPUTED valuation.",
+   "status": {
+    "collateral-valuation": "exercised"
+   }
   }
  ],
- "note": "Collateral parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded: the product aggregate read (collateral-product-read seam), the loan-collateral type_cv_id link read (collateral-link-read seam) and the client-collateral read (collateral-client-read seam, graded on page presence: the oracle observed the EMPTY page for client 5). The valuation arithmetic (ClientCollateral.Total / TotalCollateral, i.e. basePrice*pctToBase/100*quantity) is NOT in the graded domain: the running oracle exposed no API read-back that computes it, so no vector may require it."
+ "note": "Collateral parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Four capabilities are graded: the product aggregate read (collateral-product-read seam), the loan-collateral type_cv_id link read (collateral-link-read seam), the client-collateral read (collateral-client-read seam, graded on page presence: the oracle observed the EMPTY page for client 5) and the collateral valuation (collateral-valuation-read seam: the SINGLE-row read-back GET /clients/5/collaterals/2 returns computed total and totalCollateral on the read path, so the valuation arithmetic ClientCollateral.Total / TotalCollateral IS in the graded domain and a port whose arithmetic differs goes red on the transcribed capture)."
 }
