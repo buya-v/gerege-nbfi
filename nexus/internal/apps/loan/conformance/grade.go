@@ -89,6 +89,27 @@ func diffAllocation(s *cellSink, want AllocationMoney, wantLeftover string, got 
 	s.cmpMoney("leftover", wantLeftover, gotLeftover)
 }
 
+// diffTransactionBalance compares the per-row balance verdicts of the
+// transaction-balance seam. Each row grades two cells: whether the read-back
+// serialises an outstandingLoanBalance cell at all, and — when it does — the
+// derived balance. A row the oracle leaves WITHOUT a balance cell (an accrual)
+// grades only the serialisation cell: the ABSENCE is the observation, and an
+// implementation that emits a zero balance where the oracle emits nothing
+// fails on that cell alone.
+func diffTransactionBalance(s *cellSink, wantRows, gotRows []TransactionBalanceRow) {
+	s.cmpText("transaction_rows.count", fmt.Sprintf("%d", len(wantRows)), fmt.Sprintf("%d", len(gotRows)))
+	for i := range wantRows {
+		if i >= len(gotRows) {
+			break
+		}
+		name := fmt.Sprintf("transactions[%d].serialized", i)
+		s.cmpText(name, fmt.Sprintf("%t", wantRows[i].Serialized), fmt.Sprintf("%t", gotRows[i].Serialized))
+		if wantRows[i].Serialized {
+			s.cmpMoney(fmt.Sprintf("transactions[%d].balance", i), wantRows[i].BalanceMinor, gotRows[i].BalanceMinor)
+		}
+	}
+}
+
 // gradeOne admits, checks capabilities, evaluates and compares one vector.
 func gradeOne(v *Vector, opts Options) vectorResult {
 	r := vectorResult{CaseID: v.CaseID}
@@ -127,6 +148,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	case SeamLoanStatus:
 		s.cmpText("status_code", v.Expect.StatusCode, got.StatusCode)
 		s.cmpStoredValue("status_stored_value", v.Expect.StatusStoredValue, got.StatusStoredValue)
+	case SeamLoanTransactionBalance:
+		diffTransactionBalance(&s, v.Expect.TransactionRows, got.TransactionRows)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

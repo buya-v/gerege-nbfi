@@ -1,0 +1,65 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L01-transaction-balance-waiver-unmoved",
+    "title": "SEED-L01 per-row outstandingLoanBalance column: a waiver does not move the balance",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector pinning the DERIVED per-row outstandingLoanBalance column of the SEED-L01 transactions read-back (loan-1-transactions-after-raw.json), three rows: disbursement 100000.00 (balance 100000.00); accrual 6618.53 carrying NO balance cell (the oracle leaves it absent, null, never zero); waive-interest 1000.00 whose outstandingLoanBalance is 100000.00 UNCHANGED from the disbursement, because the balance tracks principal and a waiver recognises no principal. The three request rows transcribe amount and principalPortion only; principal_minor is omitted where the capture row's principalPortion is null. No amount here was computed: 10000000 and 661853 are 100000.00 and 6618.53 in minor units, and the post-waiver balance 100000.00 is exactly the disbursement balance the capture shows on the waiver row.",
+    "oracle": {
+        "seam": "loan-transaction-balance",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.transactions and expect.transaction_rows transcribe rows 1, 2 and 13 of the committed capture loan-1-transactions-after-raw.json; capture_case_id names the externalId of the observed loan.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-1-transactions-after-raw.json",
+        "capture_sha256": "4a74f23eba3f56e9c3b52699097d9c5330bb950a41e2cc196694d13116ecb47f",
+        "capture_case_id": "SEED-L01",
+        "citation": "loan-1-transactions-after-raw.json {\"id\":13,\"type\":{\"code\":\"loanTransactionType.waiver\"},\"amount\":1000.0,\"interestPortion\":1000.0,\"outstandingLoanBalance\":100000.0}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "transactions": [
+            {
+                "type": "disbursement",
+                "amount_minor": "10000000"
+            },
+            {
+                "type": "accrual",
+                "amount_minor": "661853"
+            },
+            {
+                "type": "waiver",
+                "amount_minor": "100000"
+            }
+        ]
+    },
+    "expect": {
+        "transaction_rows": [
+            {
+                "serialized": true,
+                "balance_minor": "10000000"
+            },
+            {
+                "serialized": false
+            },
+            {
+                "serialized": true,
+                "balance_minor": "10000000"
+            }
+        ]
+    },
+    "capabilities_required": [
+        "transaction-balance"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}

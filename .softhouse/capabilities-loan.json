@@ -1,12 +1,18 @@
 {
  "schema": "gerege.loan.capabilities/v1",
- "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Five capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), and the persisted loan-status ordinal read-back (loan-status seam). The SEED-L01 interest waiver is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it.",
+ "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Six capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), the persisted loan-status ordinal read-back (loan-status seam), and the derived per-row outstandingLoanBalance column of the transactions read-back (loan-transaction-balance seam). The SEED-L01 interest waiver arithmetic is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it. The waiver's read-back footprint — a posting that does NOT move the outstanding balance — IS graded, under the transaction-balance capability.",
  "capabilities": [
   {
    "name": "repayment-allocation",
    "description": "The four-bucket greedy allocation of a repayment across penalty/fee/interest/principal of one instalment, as written back in the SEED-L03 repayment transaction (transaction 12).",
    "in_graded_domain": true,
    "evidence": "Capture loan-3-transactions-after-raw.json under tenant gerege: transaction 12 (REPAYMENT, amount 8884.88) wrote back principalPortion 7884.88 and interestPortion 1000.00; the first instalment's due amounts are transcribed from loan-3-schedule-raw.json periods[1]."
+  },
+  {
+   "name": "transaction-balance",
+   "description": "The running outstandingLoanBalance column of the transactions read-back, DERIVED row by row from principal portions (I-3: balances derived, never written). A waiver moves the balance by zero; an accrual row carries NO balance at all (absent, never zero); a repayment moves the balance by its principal portion alone.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-1-transactions-after-raw.json under tenant gerege: the waive-interest transaction (1000.00) read back outstandingLoanBalance 100000.00, unchanged from disbursement; the accrual transaction (6618.53) read back outstandingLoanBalance null. Capture loan-3-transactions-after-raw.json: the repayment transaction 12 (8884.88, principalPortion 7884.88) read back outstandingLoanBalance 92115.12."
   },
   {
    "name": "schedule-interest-rounding",
@@ -73,6 +79,13 @@
    "description": "The loan-status read-backs on the running Fineract server, tenant gerege: the SEED-L06 approval command's changes.status block (approved, id 200) and the SEED-L01 loan detail read-back's status block (active, id 300).",
    "status": {
     "loan-status-encoding": "exercised"
+   }
+  },
+  {
+   "name": "loan-transaction-balance",
+   "description": "The transactions read-back on the running Fineract server, tenant gerege: the per-row outstandingLoanBalance column of SEED-L01 (disbursement 100000.00, accrual null, waive-interest 100000.00) and SEED-L03 (disbursement 100000.00, accrual null, repayment 92115.12).",
+   "status": {
+    "transaction-balance": "exercised"
    }
   }
  ]

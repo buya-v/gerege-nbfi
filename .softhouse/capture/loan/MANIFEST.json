@@ -53,5 +53,168 @@
       "transactionId": 13,
       "amount": "1000.00"
     }
+  },
+  "promotionSurvey": {
+    "context": "loan",
+    "run": "OH-PROM-O 2026-09-09: property survey of the 27 committed captures against the 12 registered vectors. Every capture was re-read; no capture was taken and no POST/PUT/DELETE issued (the oracle was on a moving business date, held by OH-INV-N).",
+    "verdict": "No further genuinely-uncovered money property is reachable from the 27 committed captures without a fresh capture. The run's two new vectors pin the three uncovered properties that DO exist (P1 waiver-unmoved balance, P2 accrual absent-not-zero, P3 principal-derived running balance) via the loan-transaction-balance seam; every remaining uncited capture is a write-path echo, a byte/whole-file clone of a covered read-back, a template with no money cell, or a duplicate list, and is recorded below so the next agent does not re-survey it.",
+    "captures": {
+      "loan-1-detail-raw.json": {
+        "sha256": "fd410c402f1fbd824f14681acb83b86663c79d0e9ff027b9a644b015212f35e9",
+        "status": "covered",
+        "vectors": [
+          "LN-L01-status-active",
+          "LN-L01-summary-total-outstanding"
+        ]
+      },
+      "loan-1-detail-after-raw.json": {
+        "sha256": "3b3fa85ab2226786bc699b5728c8ac17913bd79a70ea2741c977b842e3b679e6",
+        "status": "covered",
+        "vectors": [
+          "LN-L01-summary-total-outstanding-after-waiver"
+        ]
+      },
+      "loan-1-transactions-after-raw.json": {
+        "sha256": "4a74f23eba3f56e9c3b52699097d9c5330bb950a41e2cc196694d13116ecb47f",
+        "status": "covered",
+        "vectors": [
+          "LN-L01-transaction-balance-waiver-unmoved"
+        ]
+      },
+      "loan-1-schedule-raw.json": {
+        "sha256": "fad586c92075e0a90525c35592f2553290b10a72c5461a7ad9dfa136c09259bb",
+        "status": "no_distinct_property",
+        "reason": "identical-term schedule of the 100000.00 seed (period interest 1000.00 exact); same schedule-interest seam already pinned on the SEED-L06 discriminator. A vector here would re-pin the same linear formula point for another loan id."
+      },
+      "loan-1-transactions-raw.json": {
+        "sha256": "dad36c2a5f27db89e34e4cc68bdecb3c9c22538998fc94a8ceec739ca691f42a",
+        "status": "no_distinct_property",
+        "reason": "pre-waiver page (disbursement + accrual). Every row is also present in the covered superset loan-1-transactions-after-raw.json (which adds the waiver row); no money observation the covered capture lacks."
+      },
+      "loan-2-detail-raw.json": {
+        "sha256": "a7cb5c31fea8f163e57821487f7bbbbbe6518cb41838d4e7c247ca76fa257c2d",
+        "status": "no_distinct_property",
+        "reason": "whole-file clone of the SEED-L01 read-back (principal 100000.00, summary total 106618.53) for a second identical loan id 2; only id/accountNo/client differ."
+      },
+      "loan-2-schedule-raw.json": {
+        "sha256": "da90d20b3c632e34fc73f0135c0a76a7c2a2151a037db6bd9136e2ad077e56d5",
+        "status": "no_distinct_property",
+        "reason": "identical-term schedule clone (see loan-1-schedule-raw.json)."
+      },
+      "loan-2-transactions-raw.json": {
+        "sha256": "773bd412ca5500410dd14d683463d24423e9c957cff3453427073fbf061e7190",
+        "status": "no_distinct_property",
+        "reason": "transaction page identical to loan-1-transactions-raw.json (same disbursement/accrual money cells)."
+      },
+      "loan-3-detail-raw.json": {
+        "sha256": "84de8b87dfe14a9d453a1d41df93eca327841fabb639b23e08c659986d4c4b6b",
+        "status": "no_distinct_property",
+        "reason": "pre-repayment detail (summary total 106618.53), money cells equal to loan-1-detail-raw.json; superseded by the covered loan-3-detail-after-raw.json (97733.65)."
+      },
+      "loan-3-detail-after-raw.json": {
+        "sha256": "078346667bea4e80f8326f877ecde55997f206e2362f3e7100c97ad9bfbb2245",
+        "status": "covered",
+        "vectors": [
+          "LN-L03-summary-total-outstanding"
+        ]
+      },
+      "loan-3-schedule-raw.json": {
+        "sha256": "3fec03bf2fa97aad06d7d653bdf85e2df8678734a7c09fb33461bcd8b1adeb43",
+        "status": "no_distinct_property",
+        "reason": "identical-term schedule; its instalment figures were transcribed as the repayment-vector request but its executed allocation is read off the covered loan-3-transactions-after-raw.json row 12."
+      },
+      "loan-3-transactions-after-raw.json": {
+        "sha256": "054b73bb9f2cc2e513d76a181aecae96226a2aaa1adde89390176abda45f5f46",
+        "status": "covered",
+        "vectors": [
+          "LN-L03-repayment-allocation",
+          "LN-L03-transaction-balance-principal-derived"
+        ]
+      },
+      "loan-3-transactions-raw.json": {
+        "sha256": "5c0401932c85882d359f3b8d3f7674acda6718105b830384d69404cd2649a93f",
+        "status": "no_distinct_property",
+        "reason": "pre-repayment page (disbursement + accrual); rows all present in the covered after-capture superset."
+      },
+      "loan-4-detail-raw.json": {
+        "sha256": "859daf3461276d4a2db094f8e4b435d5826a25cd84cfd00cf15ef55524961739",
+        "status": "no_distinct_property",
+        "reason": "whole-file clone of the SEED-L01 read-back for loan id 4 (see loan-2-detail-raw.json)."
+      },
+      "loan-4-schedule-raw.json": {
+        "sha256": "f687ebc8f6a2fd9f6ebe39aff3324b2f9defb446c5e334c96c4d2231b724c202",
+        "status": "no_distinct_property",
+        "reason": "identical-term schedule clone."
+      },
+      "loan-4-transactions-raw.json": {
+        "sha256": "55b83cd5ebca6be40a44073ed546e15e39da2b9691bd476c9b3cfdee3de07318",
+        "status": "no_distinct_property",
+        "reason": "transaction page identical to loan-1/loan-2 transactions-raw."
+      },
+      "loan-5-detail-raw.json": {
+        "sha256": "7b8231aa7e998dfeaab7897edfd82367529fbfbf0fb53ced04d38ec0fe87f2a4",
+        "status": "covered",
+        "vectors": [
+          "LN-L05-summary-total-outstanding"
+        ]
+      },
+      "loan-5-schedule-raw.json": {
+        "sha256": "acd1bbb603883ad1c9e2306b837b49f9638dcf92a16a6d738269c0a6cc265acc",
+        "status": "no_distinct_property",
+        "reason": "schedule of the 41850.09-principal loan; period interest 418.5009 is not a half-minor tie, so it carries no rounding discrimination over the covered SEED-L06 point on the same formula."
+      },
+      "loan-5-transactions-raw.json": {
+        "sha256": "f3332dad22c82486872e518c796bb02c287eeb1f293bb4c75c0409323636c76a",
+        "status": "no_distinct_property",
+        "reason": "single disbursement row, balance == principal 41850.09: same 'disbursement creates the tracked principal' row property already pinned on SEED-L01. Reading it back for another loan id is cloning."
+      },
+      "loan-L06-approve-raw.json": {
+        "sha256": "51feed08c991fd57e3c7bbfa49c7f31bc531e6188839e2c54a022811655b4411",
+        "status": "covered",
+        "vectors": [
+          "LN-L06-status-approved"
+        ]
+      },
+      "loan-L06-detail-raw.json": {
+        "sha256": "096f2d90a922f51e498e546323b67edf4c910c0573f4a6083141cf81d7ef6b30",
+        "status": "covered",
+        "vectors": [
+          "LN-L06-disbursement-net",
+          "LN-L06-summary-total-outstanding"
+        ]
+      },
+      "loan-L06-schedule-raw.json": {
+        "sha256": "b64596033dacf3b74249633e07df6cc5a22368061b2ae899a078504317519281",
+        "status": "covered",
+        "vectors": [
+          "LN-L06-schedule-interest-period-1"
+        ]
+      },
+      "loan-L06-submit-raw.json": {
+        "sha256": "4ebfd714c3253804fc7be4b63025aef058b7c99eea9659c15f1710434044eee5",
+        "status": "no_money_property",
+        "reason": "submit write-path echo (ids + externalId); no money cell."
+      },
+      "loan-L06-disburse-raw.json": {
+        "sha256": "bb4de651c7fcf8b543c90acb537d178be474fc92fa2f63da556631c2770ca480",
+        "status": "no_distinct_property",
+        "reason": "disburse write-path echo; its money footprint (net disbursal 100050.50) is already pinned by LN-L06-disbursement-net from the covered detail read-back."
+      },
+      "loans-list-raw.json": {
+        "sha256": "0f94773eb1bb51502a81a2f384a1ed7ca4ba5b810fa83da41bd16f540b85d707",
+        "status": "no_distinct_property",
+        "reason": "loan-context list page of the five loans. Only money cell per row is principal, duplicating detail-pinned values (4x 100000.00, 1x 41850.09); totalOutstanding is null on every row. No list seam exists in the loan Go module, and adding one would grade a clone."
+      },
+      "repay-L03-raw.json": {
+        "sha256": "11fe846eec41619decbcad662cdb8297f06cb1ac1b962321ac4de54f3a553397",
+        "status": "no_distinct_property",
+        "reason": "repayment write-path echo; money footprint (amount 8884.88 -> principal 7884.88 / interest 1000.00, balance 92115.12) pinned by LN-L03-repayment-allocation and LN-L03-transaction-balance-principal-derived."
+      },
+      "waive-L01-raw.json": {
+        "sha256": "6bb27f425ca1fa19608c71fb65ef3c2cfdda9cea21753b831de7a30053b6bc9b",
+        "status": "no_distinct_property",
+        "reason": "waiver write-path echo; money footprint (1000.00 waived, balance unmoved) pinned by LN-L01-summary-total-outstanding-after-waiver and LN-L01-transaction-balance-waiver-unmoved."
+      }
+    }
   }
 }
