@@ -11,13 +11,17 @@ import (
 
 // CollateralEvaluator is what a collateral implementation must be able to do
 // for this harness to grade it. For this promotion the graded surface is the
-// read of the two aggregates the capture recorded:
+// read of the aggregates the capture recorded:
 //
 //   - seam collateral-product-read: given a product id, return the
 //     m_collateral_management row (id, name, quality, unit_type, currency,
 //     base_price, pct_to_base);
 //   - seam collateral-link-read: given a link id, return the m_loan_collateral
-//     row (id, type_cv_id).
+//     row (id, type_cv_id);
+//   - seam collateral-client-read: given a client id, return the
+//     client-collateral page the oracle read back, which is EMPTY for client 5
+//     (content []) even though the write path stored a holding under
+//     m_client_collateral_management.
 //
 // The valuation arithmetic (ClientCollateral.Total / TotalCollateral) is NOT
 // graded here: the running oracle never computed basePrice*pctToBase*quantity
@@ -100,10 +104,17 @@ func CorrectImplementationNames() []string {
 // the port's model of the m_collateral_management and m_loan_collateral rows the
 // running oracle returned (captures collateral-product-readback-raw.json and
 // loan-collateral-readback-raw.json); each field is a faithful transcription of
-// that capture, not a computed value.
+// that capture, not a computed value. Client 5's client-collateral read is the
+// port's model of the m_client_collateral read the oracle exposed: an EMPTY
+// page, because the oracle read content [] for client 5 even though its write
+// path stored holding id 2 under m_client_collateral_management
+// (client-collateral-readback-raw.json / client-collateral-raw.json).
 type goEvaluator struct {
 	products map[int64]collateral.CollateralProduct
 	links    map[int64]collateral.LoanCollateral
+	// clientEmpties is the set of clients the oracle observed with an EMPTY
+	// client-collateral read-back.
+	clientEmpties map[int64]struct{}
 }
 
 // NewGoEvaluator returns the port-backed implementation.
@@ -122,6 +133,9 @@ func NewGoEvaluator() CollateralEvaluator {
 		},
 		links: map[int64]collateral.LoanCollateral{
 			2: {ID: 2, TypeID: 24},
+		},
+		clientEmpties: map[int64]struct{}{
+			5: {},
 		},
 	}
 }
@@ -148,8 +162,13 @@ func (g goEvaluator) Evaluate(req Request) (Expect, error) {
 			return Expect{}, fmt.Errorf("collateral: link id %d was not returned by the oracle capture", req.LinkID)
 		}
 		return Expect{ID: l.ID, TypeID: l.TypeID}, nil
+	case req.ClientID > 0:
+		if _, none := g.clientEmpties[req.ClientID]; none {
+			return Expect{Empty: true}, nil
+		}
+		return Expect{}, fmt.Errorf("collateral: client id %d was not returned by the oracle capture", req.ClientID)
 	default:
-		return Expect{}, fmt.Errorf("collateral: request must set exactly one of product_id or link_id")
+		return Expect{}, fmt.Errorf("collateral: request must set exactly one of product_id, link_id or client_id")
 	}
 }
 
@@ -188,6 +207,23 @@ func (w wrongTypeIDEvaluator) Evaluate(req Request) (Expect, error) {
 	return e, nil
 }
 
+// wrongFabricatesClientHoldingEvaluator is a DELIBERATELY WRONG implementation:
+// it answers the client-collateral read from m_client_collateral_management —
+// the table the seed's own write path populated with holding id 2 — fabricating
+// a holding row for a client whose read the oracle returned EMPTY (content [],
+// because the oracle's read targets the legacy m_client_collateral model). Only
+// a vector that asserts the empty page (CL-03) goes red.
+type wrongFabricatesClientHoldingEvaluator struct{ goEvaluator }
+
+func (w wrongFabricatesClientHoldingEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ClientID <= 0 {
+		return w.goEvaluator.Evaluate(req)
+	}
+	// Fabricate the holding row the write path stored; the read the oracle
+	// exposed for this client was the EMPTY page, so this row is not observed.
+	return Expect{ID: 2}, nil
+}
+
 func init() {
 	Register("collateral-go", NewGoEvaluator())
 	RegisterWrong("collateral-wrong-blank-quality",
@@ -196,4 +232,7 @@ func init() {
 	RegisterWrong("collateral-wrong-type-id",
 		"returns a wrong type_cv_id on the loan-collateral link read, so any vector that asserts the type cell goes red",
 		wrongTypeIDEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-fabricates-client-holding",
+		"answers the client-collateral read from m_client_collateral_management (where the seed's write path stored holding id 2), fabricating a holding row for client 5 whose read the oracle returned EMPTY, so any vector that asserts the empty page goes red",
+		wrongFabricatesClientHoldingEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

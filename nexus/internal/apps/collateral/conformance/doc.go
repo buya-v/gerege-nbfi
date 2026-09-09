@@ -15,8 +15,8 @@
 // The valuation arithmetic is therefore OUTSIDE this harness's graded domain —
 // a vector that required it would be INADMISSIBLE, never guessed.
 //
-// What IS observable and transcribed is the read of the two aggregates the
-// capture recorded:
+// What IS observable and transcribed is the read of the aggregates the
+// captures recorded:
 //
 //   - seam "collateral-product-read": the m_collateral_management row returned
 //     by the product read-back (id, name, quality, base_price, unit_type,
@@ -25,7 +25,14 @@
 //     loan-collateral read-back (id, type_cv_id). The classic loan-collateral
 //     row stores only a LoanCollateral code value; value and description are
 //     null and there is no quantity, which is exactly why the seam has no
-//     rounding surface.
+//     rounding surface;
+//   - seam "collateral-client-read": the client-collateral read-back, which the
+//     oracle returned as an EMPTY content page for client 5 (content []) even
+//     though its own write path stored holding id 2 under
+//     m_client_collateral_management. The graded cell is page presence: a
+//     conformant read reproduces the EMPTY page, so a read that answers the
+//     client from the table the write populated fabricates a row the oracle
+//     never returned.
 //
 // # Money representation
 //

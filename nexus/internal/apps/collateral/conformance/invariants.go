@@ -29,10 +29,17 @@ type InvariantResult struct {
 // an implementation returned. The link seam asserts a different set than the
 // product seam, so the seam decides the set.
 func AssertInvariants(v *Vector, got Expect) []InvariantResult {
-	if v != nil && v.Oracle.Seam == SeamCollateralLinkRead {
-		return []InvariantResult{
-			assertLinkIDPositive(got),
-			assertLinkTypeIDPositive(got),
+	if v != nil {
+		switch v.Oracle.Seam {
+		case SeamCollateralLinkRead:
+			return []InvariantResult{
+				assertLinkIDPositive(got),
+				assertLinkTypeIDPositive(got),
+			}
+		case SeamClientCollateralRead:
+			return []InvariantResult{
+				assertClientCollateralRead(got),
+			}
 		}
 	}
 	return []InvariantResult{
@@ -94,5 +101,22 @@ func assertLinkTypeIDPositive(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("link type_id %d is positive", got.TypeID)
+	return r
+}
+
+// assertClientCollateralRead: the client-collateral seam grades PAGE PRESENCE,
+// not a row. The only observed client read-back returned content [], so no
+// holding-row invariant is gradeable: an answer is either the empty page the
+// oracle observed (graded green by the page-presence comparison) or a holding
+// row the oracle never returned (graded red by that same comparison). Nothing
+// here claims a row that could break a NOT NULL / positive-key contract, so the
+// one invariant slot is NotApplicable in both cases.
+func assertClientCollateralRead(got Expect) InvariantResult {
+	r := InvariantResult{Name: "client_collateral_page_presence", Status: InvariantNotApplicable, Assertions: 0}
+	if got.Empty {
+		r.Detail = "client read-back returned the empty page the oracle observed (content []); page presence is graded by comparison"
+	} else {
+		r.Detail = fmt.Sprintf("client read-back returned holding id %d, a row the oracle never returned; page presence is graded by comparison", got.ID)
+	}
 	return r
 }
