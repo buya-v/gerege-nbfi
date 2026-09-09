@@ -37,6 +37,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertSummaryTotalNonNegative(got)}
 	case SeamLoanStatus:
 		return []InvariantResult{assertStatusIdentity(v, got)}
+	case SeamLoanTransactionBalance:
+		return []InvariantResult{assertTransactionBalances(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -133,5 +135,33 @@ func assertNetDisbursalNonNegative(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("net_disbursal %q is a non-negative integer minor amount", got.NetDisbursalMinor)
+	return r
+}
+
+// assertTransactionBalances: every serialised balance row of a
+// transaction-balance result is a non-negative integer minor-unit amount and
+// the row count matches the request. A negative or fractional serialised
+// balance cannot be a transcription of the oracle's principal-only running
+// balance.
+func assertTransactionBalances(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "transaction_balances_integer", Assertions: len(v.Request.Transactions)}
+	if len(got.TransactionRows) != len(v.Request.Transactions) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("result has %d balance rows for a %d-transaction request",
+			len(got.TransactionRows), len(v.Request.Transactions))
+		return r
+	}
+	for i, row := range got.TransactionRows {
+		if !row.Serialized {
+			continue
+		}
+		if !isIntegerMinorString(row.BalanceMinor) {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("serialised row %d balance %q is not a non-negative integer minor amount", i, row.BalanceMinor)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = "all serialised balances are non-negative integer minor units; row count matches the request"
 	return r
 }

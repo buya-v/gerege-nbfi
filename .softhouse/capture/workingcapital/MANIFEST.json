@@ -15,5 +15,79 @@
     "nearBreach": "GET /working-capital/near-breach returns [] because no breach/delinquency range is configured on the seed (near-breach-list-raw.json).",
     "writePath": "The seed was written through POST /working-capital-loan-products (wc-product-create), POST /working-capital-loans (wc-loan-submit), and the approve/disburse commands on /working-capital-loans/1 (wc-loan-approve, wc-loan-disburse).",
     "unreachable": "The breach-schedule and delinquency-range-schedule seams (/working-capital-loans/{loanId}/breach-schedule and /delinquency-range-schedule) are still unreachable: the seed configures no breach/delinquency range, so the schedule reads would be empty and declaring them exercised would be a fabricated observation."
+  },
+  "promotionSurvey": {
+    "context": "workingcapital",
+    "run": "OH-PROM-O 2026-09-09: property survey of the 12 committed captures against the 5 registered vectors (driver's P4 sweep). No capture was taken (oracle on a moving business date).",
+    "verdict": "Five captures carry no distinct money property to pin (three write echoes with no money cell, two GET templates with no money cell, one empty breach list). Two are byte-identical duplicates of captures that ARE covered (wc-loans-list-raw == loans-list-raw, both sha 2327a39a...; wc-products-list-raw == loan-products-list-raw, both sha ae60eab0...). The remaining uncited capture (the product definition list) carries product-CONFIG values that belong to the loanproduct bounded context, not to a loan/workingcapital money read-back. near-breach-list is empty because the seed configures no breach/delinquency range; the threshold comparison its name suggests is unobservable without a seed change (a fresh capture this run must not take).",
+    "captures": {
+      "wc-loan-detail-raw.json": {
+        "sha256": "33ee14f87682497189494a5685f8479ea54262b2ff498db06634882e6ab0efb9",
+        "status": "covered",
+        "vectors": [
+          "WC-02-balance-detail",
+          "WC-03-detail-disbursement-tranche",
+          "WC-04-detail-status-ordinal"
+        ]
+      },
+      "loans-list-raw.json": {
+        "sha256": "2327a39aa6703f5df462c10abf6ab77d4788dfca7e3b446cbc0112c1b31dd68e",
+        "status": "covered",
+        "vectors": [
+          "WC-01-loans-list",
+          "WC-05-loans-list-row-identity"
+        ]
+      },
+      "wc-loans-list-raw.json": {
+        "sha256": "2327a39aa6703f5df462c10abf6ab77d4788dfca7e3b446cbc0112c1b31dd68e",
+        "status": "duplicate_file",
+        "reason": "byte-identical to the covered loans-list-raw.json (same sha256 2327a39a6703f5d2...). Earlier duplicate filename of the same GET; a vector citing it would re-pin the identical rows."
+      },
+      "loan-products-list-raw.json": {
+        "sha256": "ae60eab058258706e1f0260f0f9077650d26c372d4f9d4a9233e2b4fb23701b4",
+        "status": "outside_domain",
+        "reason": "product-definition read-back of SEED-WC-Product. Money cells are product CONFIG values (minPrincipal 10.00, principal 100.00, maxPrincipal 100000.00, periodPaymentRate 1.0, currency MNT decimalPlaces 2 inMultiplesOf 1) - loan-PRODUCT cells, which belong to the loanproduct bounded context boundary, not to a loan/workingcapital read-back. Leave for the loanproduct slice; do not grade here."
+      },
+      "wc-products-list-raw.json": {
+        "sha256": "ae60eab058258706e1f0260f0f9077650d26c372d4f9d4a9233e2b4fb23701b4",
+        "status": "duplicate_file",
+        "reason": "byte-identical to loan-products-list-raw.json (same sha256 ae60eab058258706...)."
+      },
+      "loan-products-template-raw.json": {
+        "sha256": "bbec956ded3cade27ac1da7dcf67225cf352200567a64cb28cd7ba59cd143f49",
+        "status": "no_money_property",
+        "reason": "GET template of option enums (payment types, funds, etc.); no money cell."
+      },
+      "loans-template-raw.json": {
+        "sha256": "6ab86dff732d359aa268b5d62c7399ea02a174bde9b0639bbb72ada8da8c89a4",
+        "status": "no_money_property",
+        "reason": "GET template of option enums (frequency types, etc.); no money cell."
+      },
+      "near-breach-list-raw.json": {
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "status": "empty_unobservable",
+        "reason": "returns [] (content is literally '[]'): the seed configures no breach/delinquency range, so the limit/threshold comparison its name suggests is unobservable. A vector would need a reconfigured seed = a fresh capture, which this run refuses."
+      },
+      "wc-product-create-raw.json": {
+        "sha256": "a4ea621ccf3599dc5b02bdee0e5861a508000db39ea0bd37c3a83fd650ee633b",
+        "status": "no_money_property",
+        "reason": "create echo {\"resourceId\":1}; no money cell."
+      },
+      "wc-loan-submit-raw.json": {
+        "sha256": "b9212dadc6c7ba26af700d0df5a95b83e7d12da4b2c663b6af2050578246d6cf",
+        "status": "no_money_property",
+        "reason": "submit echo (officeId/clientId/loanId/resourceId/externalId); no money cell."
+      },
+      "wc-loan-approve-raw.json": {
+        "sha256": "ed70c0a3d1bbb6f30a1a432971c12d4cfcd5739af8e75a5152970fcab1c59791",
+        "status": "no_money_property",
+        "reason": "approve echo (status APPROVED + approvedOnDate); no money cell."
+      },
+      "wc-loan-disburse-raw.json": {
+        "sha256": "2204f80a0fed2e698922812380dec12d7926b4d4cf0c04eac4c2f514f9e0b42d",
+        "status": "no_distinct_property",
+        "reason": "disburse echo whose only money cell is changes.transactionAmount 1000.51, equal to the pinned principal/balance 100051 minor (WC-02/WC-03); a write-path duplicate facet of the covered read-back."
+      }
+    }
   }
 }

@@ -38,12 +38,12 @@ func Admit(v *Vector, opts Options) []string {
 	}
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
-		SeamLoanSummaryOutstanding, SeamLoanStatus:
+		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
-			SeamLoanSummaryOutstanding, SeamLoanStatus))
+			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -123,7 +123,7 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// requestShapeCount is how many of the five request sub-shapes a vector sets.
+// requestShapeCount is how many of the six request sub-shapes a vector sets.
 // Every seam requires exactly one.
 func requestShapeCount(v *Vector) int {
 	n := 0
@@ -142,7 +142,22 @@ func requestShapeCount(v *Vector) int {
 	if v.Request.Status != nil {
 		n++
 	}
+	if len(v.Request.Transactions) > 0 {
+		n++
+	}
 	return n
+}
+
+// transactionTypeCodeAdmitted reports whether t is one of the four
+// transaction_type_enum code suffixes the committed captures observe on the
+// transaction-balance path. It is a predicate, not a lookup table, so no
+// mutable package state exists to drift from the captures it pins.
+func transactionTypeCodeAdmitted(t string) bool {
+	switch t {
+	case "disbursement", "accrual", "repayment", "waiver":
+		return true
+	}
+	return false
 }
 
 // admitRequest enforces that a vector sets exactly the request sub-shape its
@@ -221,6 +236,22 @@ func admitRequest(v *Vector) []string {
 		if v.Request.Status.StoredValue <= 0 {
 			problems = append(problems, fmt.Sprintf("request.status.stored_value %d is not a positive loan status ordinal", v.Request.Status.StoredValue))
 		}
+	case SeamLoanTransactionBalance:
+		if len(v.Request.Transactions) == 0 || requestShapeCount(v) != 1 {
+			problems = append(problems, "transaction-balance seam must set exactly request.transactions")
+			return problems
+		}
+		for i, tr := range v.Request.Transactions {
+			if !transactionTypeCodeAdmitted(tr.Type) {
+				problems = append(problems, fmt.Sprintf("request.transactions[%d].type %q is not an observed transaction type (disbursement, accrual, repayment, waiver)", i, tr.Type))
+			}
+			if !isIntegerMinorString(tr.AmountMinor) {
+				problems = append(problems, fmt.Sprintf("request.transactions[%d].amount_minor %q is not a non-negative integer minor amount", i, tr.AmountMinor))
+			}
+			if tr.PrincipalMinor != "" && !isIntegerMinorString(tr.PrincipalMinor) {
+				problems = append(problems, fmt.Sprintf("request.transactions[%d].principal_minor %q is not a non-negative integer minor amount", i, tr.PrincipalMinor))
+			}
+		}
 	}
 	return problems
 }
@@ -271,6 +302,30 @@ func admitExpect(v *Vector) []string {
 			problems = append(problems, fmt.Sprintf(
 				"expect.status_stored_value %d does not round-trip request.status.stored_value %d",
 				v.Expect.StatusStoredValue, v.Request.Status.StoredValue))
+		}
+	case SeamLoanTransactionBalance:
+		if len(v.Expect.TransactionRows) == 0 {
+			problems = append(problems, "expect.transaction_rows is empty for the transaction-balance seam")
+			return problems
+		}
+		if len(v.Expect.TransactionRows) != len(v.Request.Transactions) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.transaction_rows has %d rows but request.transactions has %d",
+				len(v.Expect.TransactionRows), len(v.Request.Transactions)))
+			return problems
+		}
+		for i, row := range v.Expect.TransactionRows {
+			if !row.Serialized {
+				if row.BalanceMinor != "" {
+					problems = append(problems, fmt.Sprintf(
+						"expect.transaction_rows[%d] is not serialized but carries balance_minor %q: an absent cell is absent, not a balance of zero", i, row.BalanceMinor))
+				}
+				continue
+			}
+			if !isIntegerMinorString(row.BalanceMinor) {
+				problems = append(problems, fmt.Sprintf(
+					"expect.transaction_rows[%d].balance_minor %q is not a non-negative integer minor amount", i, row.BalanceMinor))
+			}
 		}
 	}
 	return problems

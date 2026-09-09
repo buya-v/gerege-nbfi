@@ -35,6 +35,16 @@
 //     over LoanStatus and the approve/reject/recalculate-interest transitions.
 //     The schedule recomputation a reschedule triggers lives in the
 //     loanschedule package, not here.
+//   - outstandingbalance.go — The transaction-level outstanding-principal
+//     balance column of the loan read-back (outstandingbalance.go),
+//     ported from LoanBalanceService.updateLoanOutstandingBalances. Each
+//     monetary posting moves the running balance by the PRINCIPAL it
+//     recognises (a disbursement creates it, a repayment reduces it); a
+//     non-monetary posting such as an accrual is excluded and serialises no
+//     balance cell; a posting whose principal portion is absent (an interest
+//     waiver) moves nothing. The balances are derived row by row from the
+//     earlier postings, never stored independently — the G-12 ruling applied
+//     to the transaction column rather than to the summary total.
 //
 // This slice does NOT own:
 //

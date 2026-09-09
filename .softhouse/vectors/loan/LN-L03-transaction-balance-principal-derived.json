@@ -1,0 +1,66 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L03-transaction-balance-principal-derived",
+    "title": "SEED-L03 per-row outstandingLoanBalance column: the running balance is principal-only and derived",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector pinning the DERIVED per-row outstandingLoanBalance column of the SEED-L03 transactions read-back (loan-3-transactions-after-raw.json), three rows: disbursement 100000.00 (balance 100000.00); accrual 6618.53 carrying NO balance cell (the oracle leaves it absent, null, never zero); repayment amount 8884.88 = principal 7884.88 + interest 1000.00, whose outstandingLoanBalance is 92115.12 = 100000.00 - 7884.88 exactly. The balance moved only on the row carrying a principalPortion, and by that portion alone: accrual interest 6618.53 and repayment interest 1000.00 never touch it. The three request rows transcribe amount and principalPortion only; principal_minor is omitted where the capture row's principalPortion is null. No amount here was computed by this promotion: 10000000 / 661853 / 888488 / 788488 are 100000.00 / 6618.53 / 8884.88 / 7884.88 in minor units, and the post-repayment balance 9211512 = 92115.12 is read off the capture row, not recomputed.",
+    "oracle": {
+        "seam": "loan-transaction-balance",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.transactions and expect.transaction_rows transcribe rows 5, 6 and 12 of the committed capture loan-3-transactions-after-raw.json; capture_case_id names the externalId of the observed loan.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-3-transactions-after-raw.json",
+        "capture_sha256": "054b73bb9f2cc2e513d76a181aecae96226a2aaa1adde89390176abda45f5f46",
+        "capture_case_id": "SEED-L03",
+        "citation": "loan-3-transactions-after-raw.json {\"id\":12,\"type\":{\"code\":\"loanTransactionType.repayment\"},\"amount\":8884.88,\"principalPortion\":7884.88,\"interestPortion\":1000.0,\"outstandingLoanBalance\":92115.12}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "transactions": [
+            {
+                "type": "disbursement",
+                "amount_minor": "10000000"
+            },
+            {
+                "type": "accrual",
+                "amount_minor": "661853"
+            },
+            {
+                "type": "repayment",
+                "amount_minor": "888488",
+                "principal_minor": "788488"
+            }
+        ]
+    },
+    "expect": {
+        "transaction_rows": [
+            {
+                "serialized": true,
+                "balance_minor": "10000000"
+            },
+            {
+                "serialized": false
+            },
+            {
+                "serialized": true,
+                "balance_minor": "9211512"
+            }
+        ]
+    },
+    "capabilities_required": [
+        "transaction-balance"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}

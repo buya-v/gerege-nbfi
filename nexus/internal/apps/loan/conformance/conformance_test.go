@@ -253,6 +253,124 @@ func TestDisburseSeamGrading(t *testing.T) {
 	}
 }
 
+// seedL01Transactions is the SEED-L01 posting stream observed in
+// loan-1-transactions-after-raw.json, reduced to the balance-derivation cells
+// (disbursement 100000.00; accrual 6618.53; waive-interest 1000.00, balance
+// unmoved at 100000.00 because the waiver recognises no principal).
+var seedL01Transactions = []TransactionRow{
+	{Type: "disbursement", AmountMinor: "10000000"},
+	{Type: "accrual", AmountMinor: "661853"},
+	{Type: "waiver", AmountMinor: "100000"},
+}
+
+// seedL03Transactions is the SEED-L03 posting stream observed in
+// loan-3-transactions-after-raw.json (disbursement 100000.00; accrual 6618.53;
+// repayment 8884.88 recognising principal 7884.88, balance 92115.12).
+var seedL03Transactions = []TransactionRow{
+	{Type: "disbursement", AmountMinor: "10000000"},
+	{Type: "accrual", AmountMinor: "661853"},
+	{Type: "repayment", AmountMinor: "888488", PrincipalMinor: "788488"},
+}
+
+func transactionBalanceVector(caseID string, rows []TransactionRow, want []TransactionBalanceRow, captureRef, captureSha, caseLabel, citation string) *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  caseID,
+		Title:   "probe: derived outstandingLoanBalance column",
+		Class:   ClassParity,
+		Context: "loan",
+		Note:    "probe: transcribed from " + captureRef + ", not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamLoanTransactionBalance, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          "oracle-capture",
+			Note:          "probe: rows and balances transcribed from " + captureRef,
+			CaptureRef:    captureRef,
+			CaptureSHA256: captureSha,
+			CaptureCaseID: caseLabel,
+			Citation:      citation,
+		},
+		TenantParams:         probeTenant(),
+		Request:              Request{Transactions: rows},
+		Expect:               Expect{TransactionRows: want},
+		CapabilitiesRequired: []string{"transaction-balance"},
+		GradedAgainst:        []string{"loan-go"},
+	}
+}
+
+func TestTransactionBalanceSeamGrading(t *testing.T) {
+	// SEED-L01: disbursement, accrual, waiver. The accrual row serialises NO
+	// balance cell and the waiver leaves the balance unmoved at 100000.00.
+	l01 := transactionBalanceVector(
+		"probe-transaction-balance-l01",
+		seedL01Transactions,
+		[]TransactionBalanceRow{
+			{Serialized: true, BalanceMinor: "10000000"},
+			{Serialized: false},
+			{Serialized: true, BalanceMinor: "10000000"},
+		},
+		".softhouse/capture/loan/out/loan-1-transactions-after-raw.json",
+		"4a74f23eba3f56e9c3b52699097d9c5330bb950a41e2cc196694d13116ecb47f",
+		"SEED-L01",
+		`loan-1-transactions-after-raw.json {"id":13,"type":{"code":"loanTransactionType.waiver"},"amount":1000.0,"principalPortion":null,"interestPortion":1000.0,"outstandingLoanBalance":100000.0}`,
+	)
+	// SEED-L03: disbursement, accrual, repayment. Same absent accrual balance;
+	// the repayment moves the running balance by its 7884.88 principal portion.
+	l03 := transactionBalanceVector(
+		"probe-transaction-balance-l03",
+		seedL03Transactions,
+		[]TransactionBalanceRow{
+			{Serialized: true, BalanceMinor: "10000000"},
+			{Serialized: false},
+			{Serialized: true, BalanceMinor: "9211512"},
+		},
+		".softhouse/capture/loan/out/loan-3-transactions-after-raw.json",
+		"054b73bb9f2cc2e513d76a181aecae96226a2aaa1adde89390176abda45f5f46",
+		"SEED-L03",
+		`loan-3-transactions-after-raw.json {"id":12,"type":{"code":"loanTransactionType.repayment"},"amount":8884.88,"principalPortion":7884.88,"interestPortion":1000.0,"outstandingLoanBalance":92115.12}`,
+	)
+
+	for _, v := range []*Vector{l01, l03} {
+		if p := Admit(v, Options{}); len(p) > 0 {
+			t.Fatalf("probe %s should be admissible: %v", v.CaseID, p)
+		}
+		correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+		if correct.Outcome != OutcomePass {
+			t.Fatalf("correct impl on %s = %s, want PASS; diffs=%v", v.CaseID, correct.Outcome, correct.Diffs)
+		}
+		// Three rows: one count cell, three serialization cells, and two money
+		// cells (the two serialized balances).
+		if correct.GradedCells != 6 || correct.MoneyCells != 2 {
+			t.Fatalf("%s graded cells = %d, money = %d; want 6/2", v.CaseID, correct.GradedCells, correct.MoneyCells)
+		}
+	}
+
+	wrongWaiver, _ := Lookup("loan-wrong-transaction-balance-waiver-moves-principal")
+	wrongAccrual, _ := Lookup("loan-wrong-transaction-balance-accrual-zero")
+	wrongRepayment, _ := Lookup("loan-wrong-transaction-balance-folds-repayment-interest")
+
+	red := gradeOne(l01, Options{Implementation: wrongWaiver})
+	if red.Outcome != OutcomeFail || len(red.Diffs) == 0 {
+		t.Fatalf("waiver drive on l01 = %s (diffs %v), want FAIL", red.Outcome, red.Diffs)
+	}
+	// The waiver drive observes no waiver on the SEED-L03 stream: it must stay green there.
+	if pass := gradeOne(l03, Options{Implementation: wrongWaiver}); pass.Outcome != OutcomePass {
+		t.Fatalf("waiver drive on l03 = %s, want PASS (isolated to the waiver-bearing vector)", pass.Outcome)
+	}
+	for _, v := range []*Vector{l01, l03} {
+		red := gradeOne(v, Options{Implementation: wrongAccrual})
+		if red.Outcome != OutcomeFail || len(red.Diffs) == 0 {
+			t.Fatalf("accrual-zero drive on %s = %s (diffs %v), want FAIL", v.CaseID, red.Outcome, red.Diffs)
+		}
+	}
+	red = gradeOne(l03, Options{Implementation: wrongRepayment})
+	if red.Outcome != OutcomeFail || len(red.Diffs) == 0 {
+		t.Fatalf("folds-interest drive on l03 = %s (diffs %v), want FAIL", red.Outcome, red.Diffs)
+	}
+	if pass := gradeOne(l01, Options{Implementation: wrongRepayment}); pass.Outcome != OutcomePass {
+		t.Fatalf("folds-interest drive on l01 = %s, want PASS (isolated to the repayment-bearing vector)", pass.Outcome)
+	}
+}
+
 func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	r := &CapabilityRegistry{
 		byName: map[string]Capability{

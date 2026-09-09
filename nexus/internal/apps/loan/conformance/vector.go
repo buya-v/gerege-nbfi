@@ -41,6 +41,19 @@ const SeamLoanDisbursement = "loan-disbursement"
 // observation.
 const SeamLoanStatus = "loan-status"
 
+// SeamLoanTransactionBalance is the capture seam this schema grades: the
+// per-transaction outstandingLoanBalance column of the loan read-back, DERIVED
+// row by row from the earlier postings by
+// LoanBalanceService.updateLoanOutstandingBalances. The balances track
+// PRINCIPAL only: a disbursement creates principal, a repayment recognises a
+// principal portion, a non-monetary accrual is excluded from the balance
+// stream and its row serialises NO balance cell, and an interest waiver
+// (which recognises no principal portion) leaves the balance unmoved. A
+// capture that observes this column therefore pins the running derivation, the
+// null-not-zero absence of a balance cell on an accrual row, and the
+// "a waiver does not move the outstanding balance" consequence in one go.
+const SeamLoanTransactionBalance = "loan-transaction-balance"
+
 // SeamLoanSummaryOutstanding is the capture seam this schema grades: the loan
 // summary's total outstanding, DERIVED from the four outstanding buckets the
 // oracle read back. Fineract persists total_outstanding_derived; the port's
@@ -149,21 +162,37 @@ type StatusRequest struct {
 	StoredValue int32 `json:"stored_value"`
 }
 
+// TransactionRow is one row of the loan-transaction-balance seam's input: a
+// transaction read-back row reduced to the cells the balance derivation reads.
+// Type is the row's Fineract transaction_type_enum in code-suffix form —
+// "disbursement", "accrual", "repayment" or "waiver", the four type codes the
+// committed captures observe on the balance path. AmountMinor is the row's full
+// amount; PrincipalMinor is the row's principalPortion, which the read-back
+// leaves ABSENT on the observed disbursement, accrual and waiver rows and is
+// therefore omitted (zero) there.
+type TransactionRow struct {
+	Type           string `json:"type"`
+	AmountMinor    string `json:"amount_minor"`
+	PrincipalMinor string `json:"principal_minor,omitempty"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one of the sub-requests.
 type Request struct {
-	Repayment *RepaymentRequest `json:"repayment,omitempty"`
-	Schedule  *ScheduleRequest  `json:"schedule,omitempty"`
-	Disburse  *DisburseRequest  `json:"disburse,omitempty"`
-	Summary   *SummaryRequest   `json:"summary,omitempty"`
-	Status    *StatusRequest    `json:"status,omitempty"`
+	Repayment    *RepaymentRequest `json:"repayment,omitempty"`
+	Schedule     *ScheduleRequest  `json:"schedule,omitempty"`
+	Disburse     *DisburseRequest  `json:"disburse,omitempty"`
+	Summary      *SummaryRequest   `json:"summary,omitempty"`
+	Status       *StatusRequest    `json:"status,omitempty"`
+	Transactions []TransactionRow  `json:"transactions,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
 // is the allocated buckets and the leftover; for the schedule seam the
 // single-period interest; for the disbursement seam the net disbursal amount;
 // for the summary seam the derived total outstanding; for the status seam the
-// status_code the read-back emitted plus the round-trip stored value. Every
+// status_code the read-back emitted plus the round-trip stored value; for the
+// transaction-balance seam one per-row verdict for each request row. Every
 // money field is an integer STRING in minor units.
 type Expect struct {
 	Allocation        *AllocationMoney `json:"allocation,omitempty"`
@@ -179,6 +208,20 @@ type Expect struct {
 	// to: m_loan.loan_status_id of the enum the port derived from the request's
 	// stored value. It must equal request.status.stored_value.
 	StatusStoredValue int32 `json:"status_stored_value,omitempty"`
+	// TransactionRows is the transaction-balance seam's per-row verdicts, one
+	// entry per request.transactions row in order.
+	TransactionRows []TransactionBalanceRow `json:"transaction_rows,omitempty"`
+}
+
+// TransactionBalanceRow is the transaction-balance seam's verdict for one
+// transaction row: does the read-back serialise an outstandingLoanBalance cell
+// on the row, and what is its derived value. A non-monetary posting (an
+// accrual) serialises NO cell — the oracle returns absent, never zero.
+type TransactionBalanceRow struct {
+	Serialized bool `json:"serialized"`
+	// BalanceMinor is the derived balance when Serialized is true. It is empty
+	// (absent) on a row the read-back leaves without a balance cell.
+	BalanceMinor string `json:"balance_minor,omitempty"`
 }
 
 // Vector is one loan golden vector.

@@ -29,15 +29,29 @@
 //   - seam "loan-disbursement": NetDisbursalAmount, graded against the SEED-L06
 //     disbursal (approved principal 100050.50, no charges due at disbursement,
 //     net 100050.50; loan-L06-detail-raw.json).
+//   - seam "loan-transaction-balance": the running outstandingLoanBalance column
+//     of the transactions read-back, DERIVED row by row by
+//     DeriveOutstandingBalances (I-3: the balance is never written). Each row
+//     that carries a balance contributes one money cell; an accrual row, which
+//     the oracle leaves balance-absent (null, never zero), contributes a
+//     serialisation cell instead. Two vector families pin it:
+//     SEED-L01 (loan-1-transactions-after-raw.json): disbursement 100000.00,
+//     accrual 6618.53 (absent), waive-interest 1000.00 — the balance does NOT
+//     move, it stays 100000.00, because a waiver recognises no principal;
+//     SEED-L03 (loan-3-transactions-after-raw.json): disbursement 100000.00,
+//     accrual 6618.53 (absent), repayment 8884.88 with principalPortion
+//     7884.88 — the balance falls only by the principal portion, to 92115.12.
 //
 // # What this harness cannot grade
 //
-// The interest waiver on SEED-L01 is captured but NOT graded: the loan slice has
-// no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive
-// covers fee/penalty charges only), and promotion does not port new arithmetic
-// beyond the discriminating rounding surface. The full repayment schedule (all
-// periods, amortisation) belongs to the loanschedule context and is OUTSIDE this
-// harness's graded domain.
+// The interest-waiver ARITHMETIC (the recomputation that produces the 1000.00
+// waived-interest portion) is not owned by the loan slice — interest is not a
+// LoanCharge; LoanCharge.Waive covers fee/penalty charges only — so promotion
+// does not port it. What IS graded on the SEED-L01 waiver is its read-back
+// footprint: the waiver is a posting that leaves the outstanding balance
+// unmoved, and the transaction-balance seam pins exactly that. The full
+// repayment schedule (all periods, amortisation) belongs to the loanschedule
+// context and is OUTSIDE this harness's graded domain.
 //
 // # Money representation
 //

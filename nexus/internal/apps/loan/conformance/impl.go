@@ -25,7 +25,10 @@ import (
 //   - seam loan-summary-outstanding: the summary total outstanding, DERIVED by
 //     loan.LoanSummary.TotalOutstanding from the four outstanding buckets;
 //   - seam loan-status: the persisted loan-status ordinal decoded by
-//     loan.LoanStatusFromStoredValue and its code/round-trip stored value.
+//     loan.LoanStatusFromStoredValue and its code/round-trip stored value;
+//   - seam loan-transaction-balance: the running outstandingLoanBalance column,
+//     DERIVED row by row by loan.DeriveOutstandingBalances from the request's
+//     posting stream.
 type LoanEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -134,9 +137,71 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goSummary(*req.Summary)
 	case req.Status != nil:
 		return goStatus(*req.Status)
+	case len(req.Transactions) > 0:
+		return goTransactionBalance(req.Transactions)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions")
 	}
+}
+
+// transactionPostingType resolves a transaction-balance request row's type token
+// (the code suffix of the observed transaction_type_enum) to the loan posting
+// type the balance derivation switches on. It is a pure switch, not a lookup
+// table, so no mutable package state exists to drift from the captures it pins.
+func transactionPostingType(t string) (loan.LoanTransactionType, bool) {
+	switch t {
+	case "disbursement":
+		return loan.TransactionDisbursement, true
+	case "accrual":
+		return loan.TransactionAccrual, true
+	case "repayment":
+		return loan.TransactionRepayment, true
+	case "waiver":
+		return loan.TransactionWaiveInterest, true
+	}
+	return 0, false
+}
+
+// goTransactionBalance derives the per-row outstandingLoanBalance column from
+// the request's posting stream via loan.DeriveOutstandingBalances. A row the
+// derivation leaves without a balance (an accrual) is serialised WITHOUT the
+// balance cell — the oracle returns absent there, never zero.
+func goTransactionBalance(rows []TransactionRow) (Expect, error) {
+	postings := make([]loan.OutstandingBalancePosting, len(rows))
+	for i, tr := range rows {
+		typ, ok := transactionPostingType(tr.Type)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-transaction-balance: type %q is not transcribed", tr.Type)
+		}
+		amount, err := parseMinorText(tr.AmountMinor)
+		if err != nil {
+			return Expect{}, err
+		}
+		var pp loan.MinorUnits
+		if tr.PrincipalMinor != "" {
+			pp, err = parseMinorText(tr.PrincipalMinor)
+			if err != nil {
+				return Expect{}, err
+			}
+		}
+		postings[i] = loan.OutstandingBalancePosting{Type: typ, Amount: amount, PrincipalPortion: pp}
+	}
+	derived, err := loan.DeriveOutstandingBalances(postings)
+	if err != nil {
+		return Expect{}, err
+	}
+	out := make([]TransactionBalanceRow, len(derived))
+	for i, r := range derived {
+		if !r.Serialized {
+			out[i] = TransactionBalanceRow{Serialized: false}
+			continue
+		}
+		out[i] = TransactionBalanceRow{
+			Serialized:   true,
+			BalanceMinor: strconv.FormatInt(int64(r.BalanceMinor), 10),
+		}
+	}
+	return Expect{TransactionRows: out}, nil
 }
 
 func goRepayment(r RepaymentRequest) (Expect, error) {
@@ -432,6 +497,110 @@ func wrongRepayment(r RepaymentRequest) (Expect, error) {
 	}, nil
 }
 
+// txnBalanceWrongMode is which deliberately-wrong balance derivation to run.
+type txnBalanceWrongMode int
+
+const (
+	// wrongWaiverMovesPrincipal subtracts the FULL amount of an interest
+	// waiver from the running balance, as a port does when it mistakes the
+	// waived interest for settled principal (the P1 defect: a waiver does not
+	// move the outstanding balance).
+	wrongWaiverMovesPrincipal txnBalanceWrongMode = iota
+	// wrongAccrualSerializesZero emits a serialised zero balance cell on an
+	// accrual row where the oracle leaves the balance ABSENT (the P2 defect:
+	// null is not zero).
+	wrongAccrualSerializesZero
+	// wrongRepaymentSubtractsAmount subtracts the FULL amount of a repayment
+	// from the running balance, folding the interest portion into the
+	// principal as if the balance tracked payments rather than principal (the
+	// P3 derive-drift defect).
+	wrongRepaymentSubtractsAmount
+)
+
+// wrongTransactionBalanceEvaluator is a DELIBERATELY WRONG implementation of
+// the transaction-balance seam, parameterised by which of the three pinned
+// balance defects it commits. On any request that is not a transaction stream
+// it delegates to the correct port, so each drive goes red ONLY on the vectors
+// that observe its defect and stays green everywhere else (vector isolation).
+type wrongTransactionBalanceEvaluator struct {
+	goEvaluator
+	mode txnBalanceWrongMode
+}
+
+func (w wrongTransactionBalanceEvaluator) Evaluate(req Request) (Expect, error) {
+	if len(req.Transactions) > 0 {
+		return wrongTransactionBalance(req.Transactions, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongTransactionBalance runs the defective derivation. The running balance
+// tracks principal; each wrong mode changes exactly one leg of that
+// derivation.
+func wrongTransactionBalance(rows []TransactionRow, mode txnBalanceWrongMode) (Expect, error) {
+	type posting struct {
+		typ       loan.LoanTransactionType
+		amount    loan.MinorUnits
+		principal loan.MinorUnits
+	}
+	postings := make([]posting, len(rows))
+	for i, tr := range rows {
+		typ, ok := transactionPostingType(tr.Type)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-transaction-balance: type %q is not transcribed", tr.Type)
+		}
+		amount, err := parseMinorText(tr.AmountMinor)
+		if err != nil {
+			return Expect{}, err
+		}
+		var pp loan.MinorUnits
+		if tr.PrincipalMinor != "" {
+			pp, err = parseMinorText(tr.PrincipalMinor)
+			if err != nil {
+				return Expect{}, err
+			}
+		}
+		postings[i] = posting{typ: typ, amount: amount, principal: pp}
+	}
+
+	var running loan.MinorUnits
+	out := make([]TransactionBalanceRow, len(postings))
+	for i, p := range postings {
+		switch p.typ {
+		case loan.TransactionAccrual:
+			if mode == wrongAccrualSerializesZero {
+				// A zero default for the missing balance cell.
+				out[i] = TransactionBalanceRow{Serialized: true, BalanceMinor: "0"}
+				continue
+			}
+			// Non-monetary: excluded from the balance stream.
+			out[i] = TransactionBalanceRow{Serialized: false}
+			continue
+		case loan.TransactionDisbursement:
+			running += p.amount
+		case loan.TransactionWaiveInterest:
+			deduct := p.principal
+			if mode == wrongWaiverMovesPrincipal {
+				deduct = p.amount
+			}
+			running -= deduct
+		case loan.TransactionRepayment:
+			deduct := p.principal
+			if mode == wrongRepaymentSubtractsAmount {
+				deduct = p.amount
+			}
+			running -= deduct
+		default:
+			return Expect{}, fmt.Errorf("loan-transaction-balance: type %q is not transcribed", p.typ)
+		}
+		if running < 0 {
+			running = 0
+		}
+		out[i] = TransactionBalanceRow{Serialized: true, BalanceMinor: strconv.FormatInt(int64(running), 10)}
+	}
+	return Expect{TransactionRows: out}, nil
+}
+
 func init() {
 	Register("loan-go", NewGoEvaluator())
 	RegisterWrong("loan-wrong-half-even-schedule-interest",
@@ -458,4 +627,18 @@ func init() {
 			"so the pinned SEED-L03 repayment reports principal=0 and the whole 7884.88 instalment "+
 			"principal falls through to the leftover, and the vector goes red on both cells",
 		wrongRepaymentEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-transaction-balance-waiver-moves-principal",
+		"subtracts the full amount of an interest waiver from the outstanding balance, as if the "+
+			"waived interest settled principal, so the pinned post-waiver read-back (balance unmoved "+
+			"at 100000.00) reads 1000.00 short and the vector goes red",
+		wrongTransactionBalanceEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWaiverMovesPrincipal})
+	RegisterWrong("loan-wrong-transaction-balance-accrual-zero",
+		"emits a serialised zero balance on an accrual row where the oracle leaves the balance "+
+			"ABSENT, so every transaction-balance vector's accrual row goes red on the serialisation cell",
+		wrongTransactionBalanceEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAccrualSerializesZero})
+	RegisterWrong("loan-wrong-transaction-balance-folds-repayment-interest",
+		"subtracts the full amount of a repayment from the outstanding balance, folding the interest "+
+			"portion into principal, so the pinned SEED-L03 post-repayment balance (92115.12) reads "+
+			"8884.88-portion short and the vector goes red",
+		wrongTransactionBalanceEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentSubtractsAmount})
 }
