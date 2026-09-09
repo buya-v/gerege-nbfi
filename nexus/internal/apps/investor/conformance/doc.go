@@ -19,12 +19,16 @@
 // one would be a fabricated observation.
 //
 // What IS observable and transcribed is the read of the one transfer the
-// capture recorded:
+// capture recorded, on the two loans the read was exercised against:
 //
 //   - seam "external-asset-owner-transfer-read": the m_external_asset_owner_transfer
 //     row returned by GET /external-asset-owners/transfers?loanId=6 (transfer
 //     id, owner external id, loan external id, transfer external id, purchase
-//     price ratio, status, settlement date, effective-from and effective-to).
+//     price ratio, status, settlement date, effective-from and effective-to);
+//   - the SAME seam answered for loanId=1 with an EMPTY page (transfer-read-loan-1:
+//     content [], totalElements 0), so the graded Expect carries an empty-page
+//     presence cell in addition to the nine row cells. A read that fabricates a
+//     transfer for a loan the oracle observed as having none diverges.
 //
 // # Money representation
 //

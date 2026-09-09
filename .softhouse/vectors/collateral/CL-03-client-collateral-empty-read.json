@@ -1,0 +1,40 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-03-client-collateral-empty-read",
+ "title": "client collateral read-back is EMPTY for client 5",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture client-collateral-readback-raw.json (GET /clients/5/collaterals, tenant gerege): the oracle returned content [] — an EMPTY page. request.client_id=5 is the client id of that read-back, which the collateral MANIFEST records as clientId 5 (the client the seed's write path stored holding id 2 for under m_client_collateral_management, client-collateral-raw.json resourceId 2). expect.empty=true transcribes the observed empty content page; no row cell is stated because an empty page has no holding row to transcribe. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "collateral-client-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The single graded cell — page_presence (empty page) — is transcribed from the committed capture client-collateral-readback-raw.json; capture_case_id quotes the content cell of the observed empty page.",
+  "capture_ref": ".softhouse/capture/collateral/out/client-collateral-readback-raw.json",
+  "capture_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "capture_case_id": "[]",
+  "citation": "client-collateral-readback-raw.json content [] (GET /clients/5/collaterals): the oracle returned an EMPTY page even though m_client_collateral_management holds the row the write path stored"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "client_id": 5
+ },
+ "expect": {
+  "empty": true
+ },
+ "capabilities_required": [
+  "client-collateral-read"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}

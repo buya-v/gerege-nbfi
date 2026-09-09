@@ -85,6 +85,9 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	case SeamCollateralLinkRead:
 		diffs = compareLinkExpect(v.Expect, got)
 		r.GradedCells = 2 // id, type_id
+	case SeamClientCollateralRead:
+		diffs = compareClientExpect(v.Expect, got)
+		r.GradedCells = 1 // page_presence (empty client-collateral page)
 	default:
 		diffs = compareProductExpect(v.Expect, got)
 		r.GradedCells = 7 // id, name, quality, unit_type, currency, base_price, pct_to_base
@@ -133,6 +136,25 @@ func compareProductExpect(want Expect, got Expect) []string {
 		diffs = append(diffs, fmt.Sprintf("pct_to_base: want %q, got %q", want.PctToBase, got.PctToBase))
 	}
 	return diffs
+}
+
+// compareClientExpect compares the expected client-collateral read-back against
+// the evaluated one. The oracle returned an EMPTY content page for client 5
+// (client-collateral-readback-raw.json: content []), while the seed's own write
+// path stored holding id 2 under m_client_collateral_management — the write and
+// read paths target different models in this build. Page presence is the
+// discriminating cell: a conformant port reproduces the read-back the oracle
+// exposed, so a read that answers the client from the table the write populated
+// fabricates a holding row the oracle never returned.
+func compareClientExpect(want Expect, got Expect) []string {
+	if want.Empty != got.Empty {
+		if want.Empty {
+			return []string{fmt.Sprintf(
+				"page: expected an EMPTY client-collateral read (the oracle returned content [] for this client); implementation returned a holding row (holding id %d)", got.ID)}
+		}
+		return []string{"page: expected a client-collateral holding row; implementation returned an EMPTY page"}
+	}
+	return nil
 }
 
 // compareLinkExpect compares an expected loan-collateral row against the

@@ -84,7 +84,16 @@ type Request struct {
 // verbatim as a string (the port stores it as a string and performs no
 // arithmetic on it); the dates are calendar-date strings exactly as the oracle
 // serialised them.
+//
+// Empty marks a read-back whose content page is EMPTY — the oracle returned no
+// transfer for the loan (transfer-read-loan-1: loanId=1 -> content [], the
+// discriminating counterpart of loan 6's single row). A row vector omits Empty
+// (false); an empty-page vector sets it true and states no row cells, because a
+// page with no transfer has no row to transcribe and stating one would be
+// fabrication.
 type Expect struct {
+	Empty bool `json:"empty,omitempty"`
+
 	TransferID         int64  `json:"transfer_id"`
 	OwnerExternalID    string `json:"owner_external_id"`
 	LoanExternalID     string `json:"loan_external_id"`

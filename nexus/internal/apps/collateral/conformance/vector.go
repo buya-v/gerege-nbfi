@@ -24,6 +24,13 @@ const SeamCollateralProductRead = "collateral-product-read"
 // m_loan_collateral row as returned by the loan-collateral read-back.
 const SeamCollateralLinkRead = "collateral-link-read"
 
+// SeamClientCollateralRead is the third capture seam this schema grades: the
+// client-collateral read-back, which the oracle returned as an EMPTY content
+// page for client 5 (client-collateral-readback-raw.json). The write and read
+// paths target different models in the pinned build, so the graded fact is the
+// empty page, not a holding row.
+const SeamClientCollateralRead = "collateral-client-read"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{CollateralContext} }
@@ -76,18 +83,29 @@ type Provenance struct {
 type TenantParams = shared.TenantParams
 
 // Request is the input the implementation is graded on. It is the union of the
-// two seams: the product read (product_id) and the link read (link_id). A
-// product vector sets exactly product_id; a link vector sets exactly link_id.
+// three seams: the product read (product_id), the link read (link_id) and the
+// client-collateral read (client_id). A product vector sets exactly product_id;
+// a link vector sets exactly link_id; a client vector sets exactly client_id.
 type Request struct {
 	ProductID int64 `json:"product_id"`
 	LinkID    int64 `json:"link_id"`
+	ClientID  int64 `json:"client_id"`
 }
 
 // Expect is what the oracle produced for the request. For the product seam it is
 // the m_collateral_management row's identity and stored columns; base_price and
 // pct_to_base are integer strings of the scale-5 count. For the link seam it is
 // the m_loan_collateral row's id and type_cv_id (the LoanCollateral code value).
+//
+// Empty marks a client-collateral read-back whose content page is EMPTY: the
+// oracle returned no collateral holding for the client
+// (client-collateral-readback-raw.json: GET /clients/5/collaterals -> content
+// []). A product or link vector omits Empty (false); a client vector sets it
+// true and states no row cell, because an empty page has no holding row to
+// transcribe and stating one would be fabrication.
 type Expect struct {
+	Empty bool `json:"empty,omitempty"`
+
 	ID        int64  `json:"id"`
 	Name      string `json:"name"`
 	Quality   string `json:"quality"`

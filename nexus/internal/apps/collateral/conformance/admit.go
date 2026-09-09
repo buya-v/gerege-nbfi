@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamCollateralProductRead, SeamCollateralLinkRead:
+	case SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q and %q",
-			v.Oracle.Seam, SeamCollateralProductRead, SeamCollateralLinkRead))
+			"oracle.seam %q: this harness grades only seams %q, %q and %q",
+			v.Oracle.Seam, SeamCollateralProductRead, SeamCollateralLinkRead, SeamClientCollateralRead))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -121,6 +121,12 @@ func Admit(v *Vector, opts Options) []string {
 		if v.Request.LinkID != 0 {
 			problems = append(problems, "product seam must not set request.link_id")
 		}
+		if v.Request.ClientID != 0 {
+			problems = append(problems, "product seam must not set request.client_id")
+		}
+		if v.Expect.Empty {
+			problems = append(problems, "expect.empty true contradicts the product seam: the oracle read back a real product row (non-empty capture), so an empty read is not an observed state")
+		}
 		if v.Expect.ID <= 0 {
 			problems = append(problems, fmt.Sprintf("expect.id %d is not positive", v.Expect.ID))
 		}
@@ -140,17 +146,72 @@ func Admit(v *Vector, opts Options) []string {
 		if v.Request.ProductID != 0 {
 			problems = append(problems, "link seam must not set request.product_id")
 		}
+		if v.Request.ClientID != 0 {
+			problems = append(problems, "link seam must not set request.client_id")
+		}
+		if v.Expect.Empty {
+			problems = append(problems, "expect.empty true contradicts the link seam: the oracle read back a real link row (non-empty capture), so an empty read is not an observed state")
+		}
 		if v.Expect.ID <= 0 {
 			problems = append(problems, fmt.Sprintf("expect.id %d is not positive", v.Expect.ID))
 		}
 		if v.Expect.TypeID <= 0 {
 			problems = append(problems, fmt.Sprintf("expect.type_id %d is not positive", v.Expect.TypeID))
 		}
+	case SeamClientCollateralRead:
+		if v.Request.ClientID <= 0 {
+			problems = append(problems, fmt.Sprintf("request.client_id %d is not a positive client id", v.Request.ClientID))
+		}
+		if v.Request.ProductID != 0 {
+			problems = append(problems, "client seam must not set request.product_id")
+		}
+		if v.Request.LinkID != 0 {
+			problems = append(problems, "client seam must not set request.link_id")
+		}
+		if !v.Expect.Empty {
+			problems = append(problems, "expect.empty must be true: the oracle's only client-collateral read-back (client-collateral-readback-raw.json, GET /clients/5/collaterals) returned content [], so a holding row was never observed and stating one would be fabrication")
+		}
+		// Default-deny on the empty page: no row cell may be stated alongside
+		// expect.empty, because an empty page has no holding row to transcribe.
+		problems = append(problems, admitEmptyClientExpect(v)...)
 	}
 
 	problems = append(problems, checkGradedAgainst(v)...)
 
 	sort.Strings(problems)
+	return problems
+}
+
+// admitEmptyClientExpect refuses any row cell stated on an empty client-collateral
+// page. The only observed client read-back (client-collateral-readback-raw.json)
+// is content [], so a stated holding row alongside expect.empty would contradict
+// the observed page and is refused under default-deny rather than ignored.
+func admitEmptyClientExpect(v *Vector) []string {
+	var problems []string
+	if v.Expect.ID != 0 {
+		problems = append(problems, fmt.Sprintf("expect.id %d contradicts expect.empty: an empty client-collateral page has no holding row", v.Expect.ID))
+	}
+	if v.Expect.Name != "" {
+		problems = append(problems, "expect.name contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.Quality != "" {
+		problems = append(problems, "expect.quality contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.UnitType != "" {
+		problems = append(problems, "expect.unit_type contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.Currency != "" {
+		problems = append(problems, "expect.currency contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.BasePrice != "" {
+		problems = append(problems, "expect.base_price contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.PctToBase != "" {
+		problems = append(problems, "expect.pct_to_base contradicts expect.empty: an empty client-collateral page has no holding row")
+	}
+	if v.Expect.TypeID != 0 {
+		problems = append(problems, fmt.Sprintf("expect.type_id %d contradicts expect.empty: an empty client-collateral page has no holding row", v.Expect.TypeID))
+	}
 	return problems
 }
 
