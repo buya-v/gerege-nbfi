@@ -1,11 +1,9 @@
 #!/bin/bash
-# Two failure texts exist: "-root is required" (binaries that need it) and
-# "flag provided but not defined: -root" (loanschedule, which rejects it).
-c=$1; w=$2; b="./internal/apps/$c/conformance/cmd/conformance"
-out=$(go run "$b" -root /Users/buv/gerege-nbfi -impl "$w" 2>&1)
-case "$out" in
-  *"not defined: -root"*|*"-root is required"*) out=$(go run "$b" -impl "$w" 2>&1);;
-esac
-n=$(printf '%s\n' "$out" | grep -oE 'parity_fail=[0-9]+' | head -1 | tr -dc '0-9')
-[ -z "$n" ] && n=$(printf '%s\n' "$out" | grep -oE 'LOAN SCHEDULE [0-9]+ mismatch' | head -1 | tr -dc '0-9')
-printf '%s' "${n:-0}"
+# kills.sh <context> <impl> [worktree]  -> kill count for one wrong implementation.
+# Worktree defaults to the repo this script lives in, so cwd no longer decides the
+# answer -- it used to, and from the wrong cwd every control reported 0. See _measure.sh.
+. "$(dirname "$0")/_measure.sh"
+[ $# -ge 2 ] || m_die "usage: kills.sh <context> <impl> [worktree]"
+m_setup "${3:-$(cd "$(dirname "$0")/../../.." && pwd)}" "$1"
+m_require_registered "$2" "$(m_list)"
+m_extract "$(m_run "$2")"

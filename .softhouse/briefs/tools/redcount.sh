@@ -1,9 +1,11 @@
 #!/bin/bash
-# $1=worktree $2=context. Some binaries REQUIRE -root, loanschedule REJECTS it.
-# Try both, take whichever produced output. grep -c prints 0 and exits 1 -- never
-# append `|| echo 0`, that yields "0\n0" and breaks arithmetic downstream.
-cd "$1/nexus" 2>/dev/null || { printf 0; exit 0; }
-b="./internal/apps/$2/conformance/cmd/conformance"
-out=$(go run "$b" -root "$1" -list-implementations 2>/dev/null)
-[ -z "$out" ] && out=$(go run "$b" -list-implementations 2>/dev/null)
-printf '%s' "$(printf '%s\n' "$out" | grep -c "^$2-wrong-" | tr -dc '0-9')"
+# redcount.sh <worktree> <context> -> count of registered <context>-wrong-* drives.
+# `grep -c` prints 0 and EXITS 1; that exit must not reach the caller as a failure,
+# but an EMPTY listing must -- an unbuildable binary lists nothing, which is not "0 drives".
+. "$(dirname "$0")/_measure.sh"
+[ $# -ge 2 ] || m_die "usage: redcount.sh <worktree> <context>"
+m_setup "$1" "$2"
+listing="$(m_list)"
+printf '%s\n' "$listing" | grep -q . \
+  || m_die "-list-implementations produced NO output for '$2'. An empty listing is a broken binary, not zero drives."
+printf '%s' "$(printf '%s\n' "$listing" | grep -c "^$2-wrong-" | tr -dc '0-9')"
