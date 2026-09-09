@@ -1,0 +1,609 @@
+<title>Nexus Parity Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root{
+    --paper:#FBFAF7; --raised:#F4F2ED; --ink:#191B1E; --ink-soft:#4A5054;
+    --rule:#DDD9D1; --rule-strong:#C3BEB4;
+    --accent:#0A6C74; --accent-soft:#0A6C7419;
+    --graded:#2F6F4F; --thin:#8A5F10; --blocked:#9E3B2E;
+    --bar:#0A6C74; --bar-track:#E6E2DA;
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --cond:'IBM Plex Sans Condensed','Helvetica Neue',Arial,sans-serif;
+    --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#131619; --raised:#1B1F23; --ink:#E9E7E2; --ink-soft:#A3ABAF;
+      --rule:#2A2F34; --rule-strong:#3C434A;
+      --accent:#54B9C0; --accent-soft:#54B9C01F;
+      --graded:#6BBF8E; --thin:#D2A047; --blocked:#DE7A66;
+      --bar:#54B9C0; --bar-track:#23282D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131619; --raised:#1B1F23; --ink:#E9E7E2; --ink-soft:#A3ABAF;
+    --rule:#2A2F34; --rule-strong:#3C434A;
+    --accent:#54B9C0; --accent-soft:#54B9C01F;
+    --graded:#6BBF8E; --thin:#D2A047; --blocked:#DE7A66;
+    --bar:#54B9C0; --bar-track:#23282D;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--serif);
+       font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .page{max-width:940px;margin:0 auto;padding:44px 26px 90px}
+  @media(max-width:640px){.page{padding:30px 18px 64px}}
+
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+           text-transform:uppercase;color:var(--accent);font-weight:500}
+
+  /* ---- masthead ---- */
+  .mast{border-bottom:2px solid var(--ink);padding-bottom:16px}
+  h1{font-family:var(--cond);font-weight:700;font-size:clamp(30px,5.4vw,46px);
+     line-height:1.02;letter-spacing:-.015em;margin:8px 0 0;text-wrap:balance}
+  .sub{font-size:17px;color:var(--ink-soft);margin:10px 0 0;max-width:60ch}
+  .stamp{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;
+         font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+  .stamp b{color:var(--ink);font-weight:500}
+
+  /* ---- headline figures ---- */
+  .figs{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:30px 0 0;
+        border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  @media(max-width:680px){.figs{grid-template-columns:repeat(2,1fr)}}
+  .fig{padding:16px 18px 15px;border-left:1px solid var(--rule)}
+  .fig:first-child{border-left:0;padding-left:0}
+  @media(max-width:680px){.fig:nth-child(3){border-left:0;padding-left:0}
+    .fig:nth-child(n+3){border-top:1px solid var(--rule)}}
+  .fig .n{font-family:var(--mono);font-size:27px;font-weight:600;
+          font-variant-numeric:tabular-nums;letter-spacing:-.02em;display:block}
+  .fig .l{font-family:var(--cond);font-size:12.5px;text-transform:uppercase;
+          letter-spacing:.07em;color:var(--ink-soft);margin-top:3px;display:block}
+  .fig .d{font-size:13px;color:var(--ink-soft);margin-top:5px;line-height:1.4}
+
+  section{margin-top:46px}
+  h2{font-family:var(--cond);font-weight:600;font-size:22px;letter-spacing:-.005em;
+     margin:8px 0 6px;text-wrap:balance}
+  p{margin:0 0 14px;max-width:66ch}
+  .lede{font-size:17.5px}
+  .rule-head{border-top:1px solid var(--rule-strong);padding-top:12px}
+
+  /* ---- coverage table ---- */
+  .tablewrap{overflow-x:auto;margin-top:18px}
+  table{border-collapse:collapse;width:100%;min-width:600px}
+  caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:12px;
+          color:var(--ink-soft);padding-bottom:9px}
+  th{font-family:var(--cond);font-size:11.5px;text-transform:uppercase;
+     letter-spacing:.07em;color:var(--ink-soft);font-weight:600;text-align:left;
+     padding:0 10px 7px 0;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+  th.num,td.num{text-align:right}
+  td{padding:7px 10px 7px 0;border-bottom:1px solid var(--rule);
+     font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums}
+  td.ctx{font-family:var(--cond);font-size:15px;font-weight:500;letter-spacing:.005em}
+  tr:last-child td{border-bottom:0}
+  .track{display:block;height:7px;background:var(--bar-track);border-radius:1px;
+         min-width:80px;position:relative}
+  .track i{display:block;height:7px;background:var(--bar);border-radius:1px}
+  td.dens{color:var(--ink-soft);font-size:12.5px}
+
+  .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+       text-transform:uppercase;padding:1.5px 6px;border-radius:2px;white-space:nowrap}
+  .t-ok{color:var(--graded);border:1px solid var(--graded)}
+  .t-thin{color:var(--thin);border:1px solid var(--thin)}
+
+  /* ---- in flight ---- */
+  .flight{margin-top:20px;border:1px solid var(--rule-strong);border-radius:2px;
+          background:var(--raised);padding:16px 18px 6px}
+  .fl-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .fl-head .eyebrow{color:var(--thin)}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--thin);display:inline-block;
+         animation:p 2.4s ease-in-out infinite}
+  @keyframes p{0%,100%{opacity:1}50%{opacity:.35}}
+  @media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+  .fl-row{display:grid;grid-template-columns:minmax(150px,1fr) 118px 96px;gap:10px;
+          align-items:baseline;padding:9px 0;border-top:1px solid var(--rule);
+          font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+  .fl-row b{font-family:var(--cond);font-size:15px;font-weight:600;letter-spacing:.005em}
+  .fl-row .goal{color:var(--ink-soft);text-align:right}
+  .fl-row .st{text-align:right;color:var(--thin);font-size:11px;letter-spacing:.05em;
+              text-transform:uppercase}
+  .fl-note{font-size:14px;color:var(--ink-soft);margin:10px 0 12px;max-width:72ch;
+           font-family:var(--serif)}
+
+  /* ---- day delta ---- */
+  .delta{margin:18px 0 6px;border-top:1px solid var(--rule-strong);
+         border-bottom:1px solid var(--rule-strong);overflow-x:auto}
+  .d-row{display:grid;grid-template-columns:minmax(190px,1fr) 78px 78px 78px;
+         align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule);
+         font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums;
+         min-width:430px}
+  .d-row:last-child{border-bottom:0}
+  .d-row span:first-child{font-family:var(--cond);font-size:15px;font-weight:500}
+  .d-row .num{text-align:right}
+  .d-head{font-family:var(--cond);font-size:11.5px;text-transform:uppercase;
+          letter-spacing:.07em;color:var(--ink-soft);border-bottom:1px solid var(--rule-strong)}
+  .d-head span:first-child{font-size:11.5px;font-weight:600}
+  .d-head .num{font-family:var(--cond);font-weight:600}
+  .d-row .up{color:var(--graded);font-weight:600}
+  code.inline{font-family:var(--mono);font-size:13px}
+
+  /* ---- established / findings ---- */
+  .findings{display:grid;gap:0;margin-top:16px;border-top:1px solid var(--rule)}
+  .f{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:15px 0;
+     border-bottom:1px solid var(--rule)}
+  @media(max-width:640px){.f{grid-template-columns:1fr;gap:6px}}
+  .f .k{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent)}
+  .f .v{font-size:15.5px;line-height:1.55}
+  .f .v code{font-family:var(--mono);font-size:13px;background:var(--accent-soft);
+             padding:1px 4px;border-radius:2px}
+
+  /* ---- discriminator strip ---- */
+  .disc{margin-top:16px;border:1px solid var(--rule-strong);border-radius:2px;
+        overflow-x:auto}
+  .disc table{min-width:520px}
+  .disc caption{padding:11px 14px 8px}
+  .disc th{padding:0 14px 7px}
+  .disc td{padding:7px 14px}
+  .disc td:first-child{font-family:var(--cond);font-size:14.5px;font-weight:500}
+  .halfup{color:var(--graded);font-weight:600}
+  .halfeven{color:var(--ink-soft);text-decoration:line-through;
+            text-decoration-thickness:1px}
+
+  /* ---- gaps ---- */
+  ul.gaps{list-style:none;padding:0;margin:14px 0 0;border-top:1px solid var(--rule)}
+  ul.gaps li{padding:12px 0 12px 16px;border-bottom:1px solid var(--rule);
+             position:relative;max-width:74ch}
+  ul.gaps li::before{content:"";position:absolute;left:0;top:19px;width:6px;height:6px;
+                     background:var(--thin);border-radius:50%}
+  ul.gaps li.blocked::before{background:var(--blocked)}
+  ul.gaps b{font-family:var(--cond);font-weight:600}
+  ul.gaps code{font-family:var(--mono);font-size:13px}
+
+  /* ---- decisions: the one lifted block ---- */
+  .decisions{margin-top:18px;background:var(--raised);border:1px solid var(--rule-strong);
+             border-left:3px solid var(--accent);border-radius:2px;padding:20px 22px}
+  .decisions h3{font-family:var(--cond);font-size:17px;font-weight:600;margin:0 0 4px}
+  .dec{padding:13px 0;border-bottom:1px solid var(--rule)}
+  .dec:last-child{border-bottom:0;padding-bottom:0}
+  .dec:first-of-type{padding-top:4px}
+  .dec p{margin:5px 0 0;font-size:15px;max-width:70ch}
+  .dec code{font-family:var(--mono);font-size:13px}
+
+  footer{margin-top:52px;padding-top:14px;border-top:1px solid var(--rule);
+         font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);line-height:1.7}
+  a{color:var(--accent)}
+</style>
+
+<div class="page">
+
+  <header class="mast">
+    <span class="eyebrow">Fineract → Go migration · conformance state</span>
+    <h1>Nexus Parity Record</h1>
+    <p class="sub">Every bounded context now has graded golden vectors. Coverage is
+       real, uneven, and thinner than the context count suggests.</p>
+    <div class="stamp">
+      <span>Recorded <b>2026-09-09 14:40 +08</b> Asia/Ulaanbaatar</span>
+      <span>main <b>ad43c610</b></span>
+      <span>oracle pin <b>426a2354</b></span>
+      <span>tenant <b>gerege · MNT · HALF_UP</b></span>
+    </div>
+  </header>
+
+  <div class="figs">
+    <div class="fig">
+      <span class="n">15/15</span><span class="l">contexts graded</span>
+      <span class="d">Two conformance harnesses existed yesterday.</span>
+    </div>
+    <div class="fig">
+      <span class="n">168</span><span class="l">parity vectors</span>
+      <span class="d">From 73. All passing. 580 raw captures.</span>
+    </div>
+    <div class="fig">
+      <span class="n">70</span><span class="l">red-drives, none inert</span>
+      <span class="d">Wrong ports the store provably catches. Every one kills a vector.</span>
+    </div>
+    <div class="fig">
+      <span class="n">G-19</span><span class="l">ratified 9 Sep</span>
+      <span class="d">Sub-minor residue is refused by deliberate departure, in three contexts.</span>
+    </div>
+  </div>
+
+  <section>
+    <h2 class="rule-head">The day, measured</h2>
+    <p class="lede">Figures below cover <b>6–7 September</b>, read from git at the
+      <code class="inline">2026-09-06 00:00</code> boundary, not from recollection. The phase that closed was the <em>repeatable</em>
+      one — build a harness, capture, promote — which is why it moved fast and why the
+      remainder will not.</p>
+
+    <div class="delta">
+      <div class="d-row d-head"><span></span><span class="num">before</span><span class="num">after</span><span class="num">Δ</span></div>
+      <div class="d-row"><span>conformance harnesses</span><span class="num">2</span><span class="num">15</span><span class="num up">+13</span></div>
+      <div class="d-row"><span>parity vectors</span><span class="num">73</span><span class="num">144</span><span class="num up">+71</span></div>
+      <div class="d-row"><span>raw oracle captures</span><span class="num">443</span><span class="num">579</span><span class="num up">+136</span></div>
+      <div class="d-row"><span>seams proving HALF_UP</span><span class="num">1</span><span class="num">5</span><span class="num up">+4</span></div>
+    </div>
+
+    <div class="findings">
+      <div class="f">
+        <div class="k">30 agent runs</div>
+        <div class="v">OpenHands, headless, each in an isolated worktree under
+          <code>caffeinate</code>. <b>97 commits</b>, <b>23 merges</b>, every push through
+          the bar and the attestation gate.</div>
+      </div>
+      <div class="f">
+        <div class="k">3 runs killed</div>
+        <div class="v">One spent <b>478 events</b> and 9 failed POSTs against unhyphenated
+          routes; one spent <b>579</b> reading instead of calling; one <b>426</b> writing
+          nothing to disk. Each was stopped and re-dispatched with the verified paths
+          pasted in — and produced its captures within minutes.</div>
+      </div>
+      <div class="f">
+        <div class="k">the leverage</div>
+        <div class="v">Capture is the only phase needing the oracle, so one seeding pass
+          covered five contexts at once and promotion ran in parallel. A shared
+          conformance core replaced per-context copies — worth <b>−16 lines</b> the day it
+          landed, and roughly <b>12,000</b> across the eleven contexts that followed.</div>
+      </div>
+      <div class="f">
+        <div class="k">guards caught the driver</div>
+        <div class="v">Four times the refusal was mine, not an agent's: <code>gofmt</code>
+          after a scripted patch (twice), a dead path my own guard introduced, and a
+          stop-sentinel guard that passed while bypassed because its <code>grep</code>
+          matched the comment explaining it rather than the code.</div>
+      </div>
+      <div class="f">
+        <div class="k">softhouse, twice</div>
+        <div class="v">A power cut reloaded the launchd job at boot; a cloud routine fired
+          from another host the same day. Both committed to <code>main</code> against a
+          standing decision. Neither was visible until the dead-path frontier went red —
+          which is why the stop now lives in the repository with a guard over it.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">Coverage, ordered by density</h2>
+    <p class="lede">Sorted by vectors per thousand lines rather than alphabetically,
+      because that is the number that says whether a context is <em>covered</em> or
+      merely <em>touched</em>. Every row passes; the bars show how much of each context
+      the passing actually speaks for.</p>
+
+    <div class="tablewrap">
+      <table>
+        <caption>vectors ÷ non-comment Go lines · 168 vectors, 70 red-drives, FAIL 0 across all rows</caption>
+        <thead><tr><th>context</th><th class="num">vectors</th><th class="num">red-drives</th><th>coverage density</th><th class="num">per 1k</th><th>state</th></tr></thead>
+        <tbody>
+          <tr><td class="ctx">loanschedule</td><td class="num">50</td><td class="num">2</td><td><span class="track"><i style="width:100%"></i></span></td><td class="num dens">26.9</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">provisioning</td><td class="num">8</td><td class="num">4</td><td><span class="track"><i style="width:91%"></i></span></td><td class="num dens">24.5</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">parties</td><td class="num">16</td><td class="num">4</td><td><span class="track"><i style="width:76%"></i></span></td><td class="num dens">20.4</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">cob</td><td class="num">6</td><td class="num">3</td><td><span class="track"><i style="width:76%"></i></span></td><td class="num dens">20.4</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">charges</td><td class="num">12</td><td class="num">4</td><td><span class="track"><i style="width:58%"></i></span></td><td class="num dens">15.6</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">branch</td><td class="num">6</td><td class="num">6</td><td><span class="track"><i style="width:46%"></i></span></td><td class="num dens">12.3</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">shares</td><td class="num">7</td><td class="num">5</td><td><span class="track"><i style="width:42%"></i></span></td><td class="num dens">11.4</td><td><span class="tag t-ok">covered</span></td></tr>
+          <tr><td class="ctx">collateral</td><td class="num">4</td><td class="num">4</td><td><span class="track"><i style="width:25%"></i></span></td><td class="num dens">6.8</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">loanproduct</td><td class="num">15</td><td class="num">4</td><td><span class="track"><i style="width:22%"></i></span></td><td class="num dens">5.8</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">origination</td><td class="num">3</td><td class="num">2</td><td><span class="track"><i style="width:22%"></i></span></td><td class="num dens">5.8</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">investor</td><td class="num">2</td><td class="num">2</td><td><span class="track"><i style="width:16%"></i></span></td><td class="num dens">4.3</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">loan</td><td class="num">10</td><td class="num">5</td><td><span class="track"><i style="width:16%"></i></span></td><td class="num dens">4.3</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">workingcapital</td><td class="num">5</td><td class="num">4</td><td><span class="track"><i style="width:15%"></i></span></td><td class="num dens">4.0</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">ledger</td><td class="num">17</td><td class="num">16</td><td><span class="track"><i style="width:12%"></i></span></td><td class="num dens">3.3</td><td><span class="tag t-thin">partial</span></td></tr>
+          <tr><td class="ctx">savings</td><td class="num">6</td><td class="num">5</td><td><span class="track"><i style="width:12%"></i></span></td><td class="num dens">3.2</td><td><span class="tag t-thin">partial</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">What the vectors established</h2>
+    <p>Three of these are facts about Fineract that appear in no documentation. They were
+      found because a vector disagreed, not because anyone went looking.</p>
+
+    <div class="disc">
+      <table>
+        <caption>the rounding discriminators — each constructed so the two modes differ</caption>
+        <thead><tr><th>Seam</th><th>Raw value</th><th class="num">HALF_UP</th><th class="num">HALF_EVEN</th></tr></thead>
+        <tbody>
+          <tr><td>charges · schedule calc</td><td>20925.045</td><td class="num halfup">20925.05</td><td class="num halfeven">20925.04</td></tr>
+          <tr><td>provisioning · reserve</td><td>53309.265 + 20925.045</td><td class="num halfup">74234.32</td><td class="num halfeven">74234.30</td></tr>
+          <tr><td>loan · period-1 interest</td><td>1000.505</td><td class="num halfup">1000.51</td><td class="num halfeven">1000.50</td></tr>
+          <tr><td>savings · daily accrual</td><td>0.005 / day</td><td class="num halfup">0.01</td><td class="num halfeven">0.00</td></tr>
+          <tr><td>shares · dividend</td><td>0.005</td><td class="num halfup">0.01</td><td class="num halfeven">0.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="findings">
+      <div class="f">
+        <div class="k">aggregation order</div>
+        <div class="v">Fineract reserves <b>per loan</b>, rounds each to the minor unit,
+          <b>then</b> sums. A port that sums the balances first and applies the percentage
+          once lands on <code>74234.31</code> — one minor unit out, on every provisioning
+          run, with no rounding error to point at.</div>
+      </div>
+      <div class="f">
+        <div class="k">enum ordinals</div>
+        <div class="v">Client status <code>ACTIVE</code> is <b>300</b>, not 2.
+          <code>DAYS_360</code> stores <b>360</b> — the value, not a sequential index.
+          A port that assumes ordinals count upward uses the wrong day-count basis on
+          every interest calculation and never raises an error.</div>
+      </div>
+      <div class="f">
+        <div class="k">step order</div>
+        <div class="v">The six COB business steps are pinned in sequence. Run
+          <code>add-periodic-accrual-entries</code> before
+          <code>loan-delinquency-classification</code> and the money differs, with the
+          arithmetic correct throughout.</div>
+      </div>
+      <div class="f">
+        <div class="k">publication</div>
+        <div class="v">DEC-2 §4.4.2 is operative. The bar stays red by recorded decision
+          while the finding set matches its baseline exactly — and refuses in
+          <b>both</b> directions, so silencing a finding blocks publication as hard as
+          introducing one.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">The I-3 adjudication — and the defect it found</h2>
+    <p class="lede">The ledger baseline is <em>pair-granular</em>, and says so: “a SECOND
+      finding of an already-listed class in an already-listed file does not move this set.”
+      One row had covered <b>eleven</b> sites in <code class="inline">loan/charge.go</code>
+      since T509. Nobody had examined them individually. Two passes later, <b>all 33 sites
+      across every unexamined cluster carry a verdict</b>, each citation checked against the
+      pinned Fineract checkout.</p>
+
+    <div class="delta">
+      <div class="d-row d-head"><span>cluster</span><span class="num">sites</span><span class="num">verdict</span><span class="num">outcome</span></div>
+      <div class="d-row"><span>loan/charge.go</span><span class="num">11</span><span class="num">D</span><span class="num">benign</span></div>
+      <div class="d-row"><span>investor/postgres.go</span><span class="num">10</span><span class="num">A</span><span class="num up">REPAIRED</span></div>
+      <div class="d-row"><span>loanproduct seeds</span><span class="num">6</span><span class="num">B</span><span class="num">benign</span></div>
+      <div class="d-row"><span>roll-forward writes</span><span class="num">6</span><span class="num">—</span><span class="num">UNDECIDABLE</span></div>
+    </div>
+
+    <div class="findings">
+      <div class="f">
+        <div class="k">why 11 are benign</div>
+        <div class="v">Not because they port a Fineract column — that argument alone is
+          worthless. The Go side was <b>proved</b>: the loan slice owns no persistence (no
+          <code>postgres.go</code>, no <code>database/sql</code> import) and
+          <code>AmountOutstanding</code> has no reader outside its own file and test. So no
+          derived balance reaches a persistence boundary. Verified against
+          <code>LoanCharge.java:152-156</code> and the
+          <code>amount_outstanding_derived</code> column at <code>:108-109</code>.</div>
+      </div>
+      <div class="f">
+        <div class="k">why 10 are real</div>
+        <div class="v"><code>investor/postgres.go</code> <b>does</b> own a persistence
+          boundary — the exact condition the other eleven relied on, and it is absent here.
+          <code>Insert</code> (:108-120) writes the loan-outstanding snapshot into five
+          <code>*_outstanding_derived</code> columns; <code>loadDetails</code> (:187-215)
+          SELECTs them back as authoritative. The write and the read-back
+          <b>close the loop I-3 exists to refuse</b>.</div>
+      </div>
+      <div class="f">
+        <div class="k">the principle</div>
+        <div class="v">Stated better by the adjudication than by the brief that commissioned
+          it: <b>“adopting the schema is not adopting the write paths.”</b> The value
+          originates as <code>loan.getSummary().getTotalPrincipalOutstanding()</code> — a
+          balance Fineract derives and this port stored instead.</div>
+      </div>
+      <div class="f">
+        <div class="k">one defect, not ten</div>
+        <div class="v">Repairing the INSERT alone leaves a decoded balance still trusted;
+          repairing the SELECT alone leaves the write path. The repair template already
+          exists in-tree at <code>savings/postgres.go:26-37</code>, where the same defect was
+          fixed. Both were repaired together and published: <code>Insert</code> stopped writing
+          the five columns, <code>loadDetails</code> stopped SELECTing them back, and the
+          type kept all eight <code>[VERIFIED:]</code> citations.
+          <b>38 findings → 31, under 12 argued pairs.</b></div>
+      </div>
+      <div class="f">
+        <div class="k">nothing was destroyed</div>
+        <div class="v">A prior task in this programme made a finding vanish by deleting the
+          ported type and its <code>[VERIFIED:]</code> citation. Throughout the adjudication
+          the count held at <b>38, byte-identical</b> to the pre-adjudication census, and the
+          type survives the repair with its citations intact.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">The falsification turn</h2>
+    <p class="lede">The store stopped growing and started <em>biting</em>. Vectors rose 144 to
+      165; <b>red-drives rose 0 to 60</b>. A red-drive is a deliberately wrong port registered
+      beside the correct one — the store's claim to catch a defect becomes a number you can run,
+      not a sentence in a note.</p>
+
+    <div class="delta">
+      <div class="d-row d-head"><span>context</span><span class="num">before</span><span class="num">after</span><span class="num">&Delta;</span></div>
+      <div class="d-row"><span>loanschedule</span><span class="num">0</span><span class="num">2</span><span class="num up">+2</span></div>
+      <div class="d-row"><span>parties</span><span class="num">1</span><span class="num">4</span><span class="num up">+3</span></div>
+      <div class="d-row"><span>loanproduct</span><span class="num">1</span><span class="num">4</span><span class="num up">+3</span></div>
+      <div class="d-row"><span>charges</span><span class="num">1</span><span class="num">4</span><span class="num up">+3</span></div>
+      <div class="d-row"><span>branch · shares</span><span class="num">2</span><span class="num">11</span><span class="num up">+9</span></div>
+    </div>
+
+    <div class="findings">
+      <div class="f">
+        <div class="k">the biggest gap</div>
+        <div class="v"><code>loanschedule</code> held <b>50 vectors and not one red-drive</b> —
+          the largest corpus in the programme, never shown to fail against anything. The ledger
+          context, sharing the same harness binary, carried sixteen. <b>HALF_UP is now
+          executable there</b>: a HALF_EVEN generator kills 5 of 50. The two modes differ only
+          on an exact half-minor-unit tie, so five is what a real discriminator looks like.</div>
+      </div>
+      <div class="f">
+        <div class="k">the likeliest defect</div>
+        <div class="v">Fineract's enums are <b>non-sequential</b> — <code>ACTIVE</code>=300,
+          <code>DAYS_360</code>=360. A port re-encoding a decoded value as its contiguous Go
+          <code>iota</code> ordinal is the most probable real error in this migration, and
+          nothing tested for it. It turns out <b>12 of parties' 16</b> vectors and 7 of
+          loanproduct's 15 can see it. They were already correct; the proof was missing.</div>
+      </div>
+      <div class="f">
+        <div class="k">four drives killed nothing</div>
+        <div class="v">And that was the finding, not the failure. Two <b>charges</b> gaps were
+          closed by new captures against the live oracle. Two <b>loanschedule</b> drives were
+          <b>deleted</b> after proving the discriminating input cannot enter the graded domain
+          at all: <code>generator.go:293-294</code> refuses any request with more than one
+          disbursement, so a period can never carry the second interest segment the aggregation
+          defect needs. That removed dead branches from money code rather than adding them.</div>
+      </div>
+      <div class="f">
+        <div class="k">an accidental discriminator</div>
+        <div class="v">The HALF_EVEN drive is killed by a <b>fifth</b> vector nobody designed for
+          it: <code>T116-G8-CLEAN-N103</code>, the 600%-rate case, whose extreme daily interest
+          lands quantizations on ties <em>no tie-built vector reaches</em>.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">G-19 — ratified 9 September</h2>
+    <p class="lede">Fineract accepts money finer than MNT's minor unit. This port refuses it.
+      <b>That refusal is now a ratified deliberate departure</b>, not an open question — and the
+      same rule now covers three contexts rather than the one seam where it was first seen.</p>
+
+    <div class="delta">
+      <div class="d-row d-head"><span>context</span><span class="num" style="grid-column:span 2">observed</span><span class="num">recorded</span></div>
+      <div class="d-row"><span>ledger</span><span class="num" style="grid-column:span 2">100.125 → served 100.125000</span><span class="num">LDG-DIV-01</span></div>
+      <div class="d-row"><span>branch</span><span class="num" style="grid-column:span 2">txnAmount 40000.245 stored</span><span class="num">declared</span></div>
+      <div class="d-row"><span>shares</span><span class="num" style="grid-column:span 2">0.005 → published 0.010000</span><span class="num">declared</span></div>
+    </div>
+
+    <div class="findings">
+      <div class="f">
+        <div class="k">no rule changed</div>
+        <div class="v">DEC-2 predicate <b>G-08</b> already said it: <em>"Refuse residue; do not
+          truncate and do not round."</em> Truncating invents money one way, rounding the other,
+          and either makes a parity comparison pass while the systems disagree by a fraction that
+          accumulates. What the ratification added is <b>scope</b>.</div>
+      </div>
+      <div class="f">
+        <div class="k">what it forbids</div>
+        <div class="v">No parity vector may ever be derived from a residue value. No
+          <code>int64</code> of MNT minor units equals <code>100.125</code>,
+          <code>40000.245</code> or <code>0.005</code>, so such a vector would have to invent a
+          number <b>neither system produced</b>. The oracle's characters are recorded; the port's
+          refusal is the graded answer.</div>
+      </div>
+      <div class="f">
+        <div class="k">the oracle does generate it</div>
+        <div class="v">Every earlier instance had its extra digit supplied by a prober, and the
+          open question was whether Fineract's own arithmetic could produce one. It can: a 1%
+          charge on <code>1162502.50</code> yields <code>periods[0].feeChargesDue =
+          11625.025</code>. But the <b>persisted</b> charge is <code>11625.03</code> — clean, and
+          rounded HALF_UP. So the hazard is narrower than feared: it lives in projection cells,
+          not stored money. That distinction belongs in the parallel-run assessment, which stays
+          a user gate.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="rule-head">The promotion backlog</h2>
+    <p class="lede">The thin contexts are not thin because the oracle was never asked.
+      <b>580 captures sit on disk</b>, and the ones below were observed and never promoted
+      to a vector. This is the cheapest work left in the programme — it needs no live
+      Fineract, and it cannot fabricate a number, because every value must already appear
+      in a capture.</p>
+
+    <div class="delta">
+      <div class="d-row d-head"><span>context</span><span class="num">captures</span><span class="num">vectors</span><span class="num">headroom</span></div>
+      <div class="d-row"><span>loan</span><span class="num">27</span><span class="num">10</span><span class="num up">17</span></div>
+      <div class="d-row"><span>workingcapital</span><span class="num">12</span><span class="num">5</span><span class="num up">7</span></div>
+      <div class="d-row"><span>collateral</span><span class="num">9</span><span class="num">2</span><span class="num up">7</span></div>
+      <div class="d-row"><span>shares</span><span class="num">10</span><span class="num">7</span><span class="num up">3</span></div>
+      <div class="d-row"><span>branch</span><span class="num">11</span><span class="num">6</span><span class="num up">5</span></div>
+      <div class="d-row"><span>investor</span><span class="num">4</span><span class="num">1</span><span class="num up">3</span></div>
+      <div class="d-row"><span>savings</span><span class="num">8</span><span class="num">6</span><span class="num up">2</span></div>
+    </div>
+    <p class="fl-note">Headroom is not a promise: captures are not one-to-one with vectors,
+      and a capture that pins nothing discriminating is rightly left alone. It is an upper
+      bound on what can be graded without asking the oracle anything new.</p>
+  </section>
+
+  <section>
+    <h2 class="rule-head">What is not covered</h2>
+    <p>Recorded here rather than left for someone to discover from a green run.
+      Every item below sits behind a passing verdict.</p>
+    <ul class="gaps">
+      <li><b>savings</b> — three vectors against 1,862 lines. Status ordinals
+        (<code>200</code>/<code>300</code>) and the daily-accrual tie are pinned behind a
+        permanent red-drive; submit, approve, activate and deposit are not.</li>
+      <li class="blocked"><b>investor</b> — the purchase price, <code>97.25%</code> of an
+        outstanding balance, appears in <b>no capture</b>. That is an <em>oracle gap</em>,
+        not a promotion gap: no amount of transcription reaches it, only a new capture pass
+        against an endpoint that exposes a settled transfer amount — if one exists.</li>
+      <li><b>workingcapital</b> — two vectors, including the balance decomposition. The
+        stored balance <em>is</em> observable after all, through the detail endpoint rather
+        than the list; the remaining draw and repayment paths are not.</li>
+      <li><b>collateral</b> — <s>the <code>ScaledInt</code> valuation has no observable
+        oracle counterpart</s>. <b>That claim was false and is now retracted.</b>
+        <code>GET /clients/{id}/collaterals/{id}</code> computes
+        <code>total = base_price × quantity</code> and
+        <code>totalCollateral = total × pct_to_base/100</code> on the read path. The proof
+        is that the values <em>cannot</em> be stored: the table carries four columns —
+        <code>id, quantity, client_id, collateral_id</code> — and no total column exists.
+        Pinned as <code>CL-04</code>; the seam is graded.</li>
+      <li class="blocked"><b>loanproduct · DAYS_360</b> — the value with the largest money
+        impact is the least corroborated. It is published by the template and exercised by
+        no product in the tenant, so the persistence side is unconfirmed.</li>
+      <li class="blocked"><b>six roll-forward writes</b> — the only sites that returned
+        <b>UNDECIDABLE</b>, and the most useful result of the adjudication. They name
+        precisely what would settle them: a type-checked forward reachability analysis that
+        fails closed on unresolved value flow. Clearing them on hand-walked evidence would
+        repeat the error the original heuristic already made, so they stay open.</li>
+      <li><b>the remaining findings</b> — 31 under 12 baseline pairs, each carrying its
+        argument and a stated removal condition. Every one now has a site-level verdict;
+        what is left is remedy, not triage.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="rule-head">Scale, in proportion</h2>
+    <p>The reference implementation is roughly <b>544,000</b> lines of main Java across
+      5,317 files. The Go port stands at <b>57,626</b> non-test lines. That ratio is not a
+      completion percentage — the port deliberately excludes Spring Batch, the API layer
+      and much else — but nobody should read <em>15 of 15 contexts</em> as
+      <em>the migration is done</em>.</p>
+    <p>The conformance harness is <b>45,369</b> lines, roughly 79% the size of the port it
+      grades. That is the cost of proving behaviour against a live oracle rather than
+      asserting it, and it is why extracting a shared core mattered more than the
+      sixteen lines it saved on the day.</p>
+  </section>
+
+  <section>
+    <h2 class="rule-head">Open decisions</h2>
+    <div class="decisions">
+      <div class="dec">
+        <h3>The softhouse routine — closed</h3>
+        <p>The local job is stopped and its plist deleted; a repository sentinel plus a
+          hard guard make any fire refuse before it takes a lock. I had recorded the cloud
+          routine as "still scheduled"; the Scheduled tab was empty and the fire history —
+          5 irregular against 178 local — shows no cron ever ran there.
+          <b>That claim is withdrawn. Nothing remains to unschedule.</b></p>
+      </div>
+      <div class="dec">
+        <h3>The branch sub-minor divergence</h3>
+        <p>Fineract accepted and stored <code>txnAmount 40000.245</code> — money finer
+          than MNT's minor unit — while the port refuses it as sub-minor-unit residue.
+          Same input, opposite outcomes. It is documented but neither matched nor
+          declared. Recommendation: <b>ratify the port's refusal as deliberate</b>, since
+          accepting sub-minor money into a ledger to mirror upstream permissiveness
+          imports a defect.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Generated from the working tree at ad43c610 · bar EXIT 2 by recorded decision,
+    probe present, ATTESTED FULL · 15/15 contexts, 168 vectors, 70 red-drives, FAIL 0 · build clean,
+    0 test failures<br>
+    A passing verdict means "matches the reference oracle on captured vectors" — never
+    "safe to cut over". Cutover remains a user gate.
+  </footer>
+
+</div>
