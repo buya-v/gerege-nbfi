@@ -2,6 +2,7 @@ package conformance
 
 import (
 	"fmt"
+	"math/big"
 	"sort"
 	"strconv"
 	"sync"
@@ -10,17 +11,16 @@ import (
 )
 
 // ProvisioningEvaluator is what a provisioning implementation must be able to do
-// for this harness to grade it. For this first promotion the graded surface is
-// the m_provision_category aggregate: given a category's primary key, return the
-// category's id, name and description. The port models that aggregate as
-// provisioning.ProvisioningCategory; the evaluation returns its three members.
+// for this harness to grade it. Two surfaces are graded:
 //
-// The money core of the slice (PercentageOf and GenerateReserveEntries, the
-// reserve-amount arithmetic a parity vector exists to pin) is NOT graded here:
-// the gerege tenant carries no provisioning criteria and no provisioning entries,
-// so the running oracle never produced a reserve amount to transcribe, and
-// creating one would write to the tenant (forbidden). See the capture attestation
-// for that decision.
+//   - the m_provision_category aggregate: given a category's primary key, return
+//     the category's id, name and description. The port models that aggregate as
+//     provisioning.ProvisioningCategory; the evaluation returns its three members.
+//   - the entry-reserve seam: given the per-loan reserve rows of one observed
+//     provisioning entry, return the aggregated reserve amount and its key, via
+//     GenerateReserveEntries (which applies PercentageOf to each row).
+//
+// Both surfaces carry parity vectors (PV-01..04 categories, PV-05..08 reserves).
 type ProvisioningEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -123,18 +123,15 @@ func (g goEvaluator) Evaluate(req Request) (Expect, error) {
 	return Expect{ID: c.ID, Name: c.Name, Description: c.Description}, nil
 }
 
-// evaluateReserveEntries ports the oracle's reserve generation for the
-// entry-reserve seam: it feeds the per-loan reserve rows through the port's
-// GenerateReserveEntries (which computes each PercentageOf and sums rows that
-// share a partial hash key) and returns the single aggregated entry. A reserve
-// vector grades ONE observed entry, so the rows must collapse to exactly one
-// distinct entry.
-func evaluateReserveEntries(req Request) (Expect, error) {
+// reserveRowsFrom parses a reserve request's per-loan rows into the port's
+// ReserveInput shape. Balance is carried as an integer minor-unit string and is
+// parsed, never computed.
+func reserveRowsFrom(req Request) ([]provisioning.ReserveInput, error) {
 	inputs := make([]provisioning.ReserveInput, 0, len(req.Inputs))
 	for i, row := range req.Inputs {
 		bal, err := strconv.ParseInt(row.BalanceMinor, 10, 64)
 		if err != nil {
-			return Expect{}, fmt.Errorf(
+			return nil, fmt.Errorf(
 				"provisioning: request.inputs[%d].balance_minor %q is not an integer minor-unit amount: %w",
 				i, row.BalanceMinor, err)
 		}
@@ -151,7 +148,19 @@ func evaluateReserveEntries(req Request) (Expect, error) {
 			CriteriaID:       row.CriteriaID,
 		})
 	}
-	entries, err := provisioning.GenerateReserveEntries(inputs)
+	return inputs, nil
+}
+
+// evaluateReserveEntriesWith ports the oracle's reserve generation for the
+// entry-reserve seam using the supplied generator, and returns the single
+// aggregated entry. A reserve vector grades ONE observed entry, so the rows
+// must collapse to exactly one distinct entry.
+func evaluateReserveEntriesWith(req Request, gen func([]provisioning.ReserveInput) ([]provisioning.ReserveEntry, error)) (Expect, error) {
+	inputs, err := reserveRowsFrom(req)
+	if err != nil {
+		return Expect{}, err
+	}
+	entries, err := gen(inputs)
 	if err != nil {
 		return Expect{}, err
 	}
@@ -174,6 +183,13 @@ func evaluateReserveEntries(req Request) (Expect, error) {
 	}, nil
 }
 
+// evaluateReserveEntries is evaluateReserveEntriesWith under the port's own
+// generator, GenerateReserveEntries (which applies the correct PercentageOf to
+// each row).
+func evaluateReserveEntries(req Request) (Expect, error) {
+	return evaluateReserveEntriesWith(req, provisioning.GenerateReserveEntries)
+}
+
 // wrongCategoryEvaluator is a DELIBERATELY WRONG implementation: it returns a
 // category whose description is blanked. It exists so a graded_against row can
 // name an executable defect, exactly as the charges harness's
@@ -189,10 +205,154 @@ func (w wrongCategoryEvaluator) Evaluate(req Request) (Expect, error) {
 	return e, nil
 }
 
+// percentScale mirrors provisioning's scale: Percent / 10^8 == the fraction
+// "percentage / 100" the oracle multiplies by [VERIFIED: Money.java:405-408
+// amount.multiply(percentage).divide(100, mc)].
+var percentScale = big.NewInt(100_000_000)
+
+// roundToNearestEven rounds q + r/d to the nearest integer with an exact half
+// tie going to the EVEN neighbour (Java HALF_EVEN). q and r are the QuoRem
+// result of an integer n by positive d, so r carries n's sign. HALF_EVEN
+// diverges from the tenant's HALF_UP only on an exact half-minor-unit tie whose
+// truncated value is EVEN: the oracle's Money would round 0.025 up to 0.03
+// [HALF_UP] while this function leaves it at 0.02.
+func roundToNearestEven(q, r, d *big.Int) *big.Int {
+	twoR := new(big.Int).Lsh(new(big.Int).Abs(r), 1) // 2*|r|
+	switch twoR.Cmp(d) {
+	case -1: // strictly below the half: truncate
+		return q
+	case 1: // strictly above the half: away from zero, sign-aware
+		if r.Sign() > 0 {
+			return q.Add(q, big.NewInt(1))
+		}
+		return q.Sub(q, big.NewInt(1))
+	}
+	// exact half: round to the EVEN neighbour. When q is odd, move one away in
+	// r's direction (making the magnitude even); when q is even, stay.
+	if q.Bit(0) == 0 {
+		return q
+	}
+	if r.Sign() > 0 {
+		return q.Add(q, big.NewInt(1))
+	}
+	return q.Sub(q, big.NewInt(1))
+}
+
+// halfEvenPercentageOf computes a reserve amount exactly as the port's
+// PercentageOf does (integer multiply, divide by 10^8, set to whole minor
+// units) but rounds an exact half-tie to the nearest EVEN minor unit instead of
+// away from zero. See roundToNearestEven for the one case where the two modes
+// differ.
+func halfEvenPercentageOf(balance provisioning.MinorUnits, percentage provisioning.Percent) (provisioning.MinorUnits, error) {
+	n := new(big.Int).Mul(big.NewInt(int64(balance)), big.NewInt(int64(percentage)))
+	q, r := new(big.Int), new(big.Int)
+	q.QuoRem(n, percentScale, r)
+	if r.Sign() != 0 {
+		q = roundToNearestEven(q, r, percentScale)
+	}
+	if !q.IsInt64() {
+		return 0, fmt.Errorf("provisioning: HALF_EVEN percentage of %d at %d overflows int64 minor units", int64(balance), int64(percentage))
+	}
+	return provisioning.MinorUnits(q.Int64()), nil
+}
+
+// truncatingPercentageOf computes a reserve amount like PercentageOf but drops
+// the remainder below one minor unit (integer division / RoundingMode.DOWN,
+// Java enum ordinal 1) instead of rounding the scaled product to the nearest
+// minor unit. Every row whose percentage of the outstanding balance carries any
+// sub-minor-unit fraction comes out one minor unit short.
+func truncatingPercentageOf(balance provisioning.MinorUnits, percentage provisioning.Percent) (provisioning.MinorUnits, error) {
+	n := new(big.Int).Mul(big.NewInt(int64(balance)), big.NewInt(int64(percentage)))
+	q, _ := new(big.Int), new(big.Int)
+	q.QuoRem(n, percentScale, new(big.Int))
+	if !q.IsInt64() {
+		return 0, fmt.Errorf("provisioning: truncated percentage of %d at %d overflows int64 minor units", int64(balance), int64(percentage))
+	}
+	return provisioning.MinorUnits(q.Int64()), nil
+}
+
+// wrongReserveEvaluator is a DELIBERATELY WRONG implementation: it answers the
+// category reads exactly as the correct port does but computes every reserve
+// amount with a wrong per-row percentage function (halfEvenPercentageOf or
+// truncatingPercentageOf), so the vectors whose observed entry is rounding-
+// sensitive go red while the category vectors stay green.
+type wrongReserveEvaluator struct {
+	goEvaluator
+	percentageOf provisioning.PercentageFunc
+}
+
+func (w wrongReserveEvaluator) Evaluate(req Request) (Expect, error) {
+	if len(req.Inputs) == 0 {
+		return w.goEvaluator.Evaluate(req)
+	}
+	return evaluateReserveEntriesWith(req, func(inputs []provisioning.ReserveInput) ([]provisioning.ReserveEntry, error) {
+		return provisioning.GenerateReserveEntriesWith(inputs, w.percentageOf)
+	})
+}
+
+// wrongDefinitionIDEvaluator is a DELIBERATELY WRONG implementation: it keys
+// the provisioning category aggregate by the m_provisioning_criteria_definition
+// stored id instead of the m_provision_category id. The two aggregate readbacks
+// both render a member literally named "id", but the criteria-definition rows
+// the oracle returned for category ids 1..4 carry primary keys 3, 4, 2, 1
+// [VERIFIED: CRI-02 capture definitions "id":3->STANDARD, 4->SUB-STANDARD,
+// 2->DOUBTFUL, 1->LOSS, each with its own categoryId], while the category rows
+// carry ids 1..4 [VERIFIED: CAT-00 capture]. A porter that catalogued
+// categories from the criteria retrieve rather than the category read answers
+// category_id 1 with LOSS, 2 with DOUBTFUL, 3 with STANDARD and 4 with
+// SUB-STANDARD. The reserve seam is unaffected (the reserve vectors never name
+// a category in their expect).
+type wrongDefinitionIDEvaluator struct{ goEvaluator }
+
+func (w wrongDefinitionIDEvaluator) Evaluate(req Request) (Expect, error) {
+	if len(req.Inputs) > 0 {
+		return w.goEvaluator.Evaluate(req)
+	}
+	byDefinitionID := map[int64]provisioning.ProvisioningCategory{
+		1: {ID: 1, Name: "LOSS", Description: "Principal and/or Interest overdue by y days"},
+		2: {ID: 2, Name: "DOUBTFUL", Description: "Principal and/or Interest overdue by x days and less than y"},
+		3: {ID: 3, Name: "STANDARD", Description: "Punctual Payment without any dues"},
+		4: {ID: 4, Name: "SUB-STANDARD", Description: "Principal and/or Interest overdue by x days"},
+	}
+	c, ok := byDefinitionID[req.CategoryID]
+	if !ok {
+		return Expect{}, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
+	}
+	return Expect{ID: c.ID, Name: c.Name, Description: c.Description}, nil
+}
+
 func init() {
 	Register("provisioning-go", NewGoEvaluator())
 	RegisterWrong("provisioning-wrong-blank-description",
 		"returns the correct category id and name but blanks the description, so any vector "+
 			"that asserts a non-empty description goes red on that cell",
 		wrongCategoryEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("provisioning-wrong-half-even-rounding",
+		"rounds every reserve amount with HALF_EVEN (tie to the even neighbour) instead of the "+
+			"tenant's HALF_UP. The oracle builds the scale on the tenant-configured mode: "+
+			"MoneyHelper.getMathContext() returns new MathContext(19, getRoundingMode()) "+
+			"[VERIFIED: MoneyHelper.java:91-93] and validateAndConvertRoundingMode accepts "+
+			"the RoundingMode enum ordinal, 4=HALF_UP 6=HALF_EVEN [VERIFIED: MoneyHelper.java:182-188]; "+
+			"the reserve amount is money.percentageOf(..., MoneyHelper.getMathContext()) "+
+			"[VERIFIED: ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.java:235] with the "+
+			"Money constructor's setScale(decimalPlaces, mc.getRoundingMode()) "+
+			"[VERIFIED: Money.java:40-56]. A porter that indexes the wrong ordinal (6) or uses a "+
+			"fixed MathContext.DECIMAL64 (whose default mode is HALF_EVEN) differs ONLY on an "+
+			"exact half-minor-unit tie whose truncated value is even; the DOUBTFUL capture rows "+
+			"(74234.32 = two exact .5-tie rows) prove the mode is HALF_UP.",
+		wrongReserveEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), percentageOf: halfEvenPercentageOf})
+	RegisterWrong("provisioning-wrong-truncating",
+		"drops the remainder below one minor unit (integer division / RoundingMode.DOWN, ordinal 1) "+
+			"when computing each reserve amount, where the oracle rounds the scaled product to whole "+
+			"minor units under the tenant's HALF_UP (same write path as provisioning-wrong-half-even-"+
+			"rounding: ...Impl.java:235 -> MoneyHelper.java:91-93 -> Money.java:40-56). Any observed "+
+			"reserve whose fraction is between one minor unit and zero comes out one minor unit short.",
+		wrongReserveEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), percentageOf: truncatingPercentageOf})
+	RegisterWrong("provisioning-wrong-category-by-definition-id",
+		"keys the category aggregate by the criteria-definition stored id (CRI-02 capture ids 3,4,2,1) "+
+			"instead of the m_provision_category id (CAT-00 capture ids 1,2,3,4): a porter that "+
+			"catalogued categories from the provisioning-criteria retrieve transcribes a category whose "+
+			"definition row id is 1 as LOSS, 2 as DOUBTFUL, 3 as STANDARD and 4 as SUB-STANDARD, so every "+
+			"category-name vector goes red while reserve amounts stay correct.",
+		wrongDefinitionIDEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }
