@@ -1,8 +1,8 @@
 {
   "context": "collateral",
   "roundingSurface": {
-    "seam": "none exposed via API",
-    "note": "collateral-management stores basePrice and pctToBase but no API read-back computes basePrice*pctToBase/100*quantity. The loan-collateral link in this build is the legacy m_loan_collateral model keyed by a LoanCollateral code value; POST stores only type_cv_id (value/description null, no quantity). No division or rounding occurs through the API."
+    "seam": "client-collateral-single read-back",
+    "note": "GET /clients/{clientId}/collaterals/{collateralId} (client-collateral-single-raw.json) computes total = base_price * quantity and totalCollateral = total * (pct_to_base/100) on the read path and returns them as JSON numbers; the m_client_collateral_management column stores only quantity (verified via SQL, no total column). The loan-collateral link in this build is the legacy m_loan_collateral model keyed by a LoanCollateral code value; POST stores only type_cv_id (value/description null, no quantity)."
   },
   "objects": {
     "collateralProduct": {
@@ -36,6 +36,7 @@
     }
   },
   "readBackQuirks": {
-    "clientCollateral": "GET /clients/5/collaterals returns [] even though m_client_collateral_management has the row (verified via SQL); the write path and read path appear to target different models in this build."
+    "clientCollateral": "GET /clients/5/collaterals returns [] even though m_client_collateral_management has the row (verified via SQL); the write path and read path appear to target different models in this build.",
+    "clientCollateralSingle": "GET /clients/5/collaterals/2 returns the single row with computed total=150000.0000000000 and totalCollateral=75000.000000000000000 (basePrice 100000.00000 * quantity 1.50000 = total; total * 50/100 = totalCollateral)."
   }
 }
