@@ -1,0 +1,56 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "OHCAPj-penalty-at-disbursement-refused",
+ "title": "Flat PENALTY due at disbursement is construction-refused: HTTP 403 with charge.due.at.disbursement.cannot.be.penalty, no fee.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A construction-INVALID loan charge: is_penalty true with charge_time_enum 1 DISBURSEMENT. Charge.java refuses a penalty due at disbursement before any fee field is assigned, and POST /charges answers HTTP 403 userMessageGlobalisationCode error.msg.charge.due.at.disbursement.cannot.be.penalty (observed, no charge created). The correct port answers one validation code and no fee; a port that computes the fee without running Charge.Validate (charges-wrong-validation-skipped) answers a 750000-minor fee for the same request. This is the store's first validation-refused observation: XR-01-fee-before-disbursement-HTTP403.json exists on disk but is a SCHEDULE-range refusal of a loanCharge (specified due date outside the loan schedule), which the pure charge-evaluate seam cannot grade; this penalty-at-disbursement refusal is the one the charge definition's own Validate() produces. The expect code carries the port's code vocabulary, which mirrors the observed Fineract userMessageGlobalisationCode with its fixed \"error.msg.\" prefix dropped, exactly as Charge.Validate emits every code.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the POST /charges refusal observation OHCAPj-penalty-at-disbursement-create-HTTP403.json under tenant gerege (request req/charge-OHCAPj-penalty-at-disbursement.json: flat amount 7500 = 750000 minor, penalty true, chargeTimeType 1). HTTP status 403 and the single observed code suffix charge.due.at.disbursement.cannot.be.penalty (the observed userMessageGlobalisationCode with the constant Fineract \"error.msg.\" prefix, which the port's Validate does not emit) are the expect cells; no fee is expected and none was created. The request amount_minor 750000 is the exact major->minor scaling of the observed request amount 7500.",
+  "capture_ref": ".softhouse/capture/charges/out/ohcapj/OHCAPj-penalty-at-disbursement-create-HTTP403.json",
+  "capture_sha256": "97a1da58f2ab007bbaa62cc6c9fd5c8a0050e3b60b86b52c3eab52cf475ea2d5",
+  "capture_case_id": "OHCAPj-penalty-at-disbursement-create-HTTP403",
+  "citation": "{\"httpStatusCode\":\"403\", ... \"userMessageGlobalisationCode\":\"error.msg.charge.due.at.disbursement.cannot.be.penalty\",\"parameterName\":\"id\" ...}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "OHCAP-J PENALTY due at disbursement (refusal probe)",
+  "currency_code": "MNT",
+  "amount_minor": "750000",
+  "percentage": 0,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 1,
+  "payment_mode": 0,
+  "penalty": true,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": ""
+ },
+ "expect": {
+  "kind": "validation",
+  "validation_codes": [
+   "charge.due.at.disbursement.cannot.be.penalty"
+  ],
+  "fee_minor": ""
+ },
+ "capabilities_required": [
+  "flat-fee",
+  "penalty-charge"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}

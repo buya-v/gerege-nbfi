@@ -1,0 +1,13 @@
+{
+ "name": "OHCAP-J PENALTY due at disbursement (refusal probe)",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 1,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 7500,
+ "active": true,
+ "penalty": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}
