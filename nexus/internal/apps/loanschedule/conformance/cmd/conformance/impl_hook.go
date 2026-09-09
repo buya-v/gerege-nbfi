@@ -62,7 +62,7 @@ func init() {
 			"citation, but HALF_EVEN is the stock BigDecimal and IEEE-754 default, and a porter who "+
 			"reaches for 'the usual rounding' at Money.java:52's setScale(currency.getDecimalPlaces(), "+
 			"mc.getRoundingMode()) instead of reading the tenant pin writes exactly this. The two "+
-			"rules differ ONLY on an exact half-minor-unit tie with an odd truncated value, so the "+
+			"rules differ ONLY on an exact half-minor-unit tie WHOSE TRUNCATED VALUE IS EVEN (0.025 -> HALF_UP 0.03, HALF_EVEN 0.02; 0.035 -> 0.04 under BOTH), so the "+
 			"drive is byte-identical on every vector that does not land a quantization on a tie. "+
 			"MEASURED (2026-09-08, oracle probe up): parity PASS 41 FAIL 5 -- the store's four "+
 			"declared killers T61-HE-A, T61-HE-B, T61-HE-C and T149-PATHB-TIE (graded_against "+
