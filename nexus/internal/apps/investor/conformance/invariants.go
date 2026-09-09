@@ -27,7 +27,20 @@ type InvariantResult struct {
 
 // AssertInvariants runs every gradeable investor invariant against the result an
 // implementation returned.
+//
+// The row invariants apply to a transfer ROW. An empty page (loan has no
+// transfer) has no row, so each invariant is NotApplicable rather than
+// Violated: nothing in the response claims to be a row that breaks the NOT
+// NULL / positive-key contract.
 func AssertInvariants(v *Vector, got Expect) []InvariantResult {
+	if got.Empty {
+		return []InvariantResult{
+			{Name: "transfer_id_positive", Status: InvariantNotApplicable, Assertions: 0, Detail: "no transfer row (empty page)"},
+			{Name: "owner_external_id_non_empty", Status: InvariantNotApplicable, Assertions: 0, Detail: "no transfer row (empty page)"},
+			{Name: "transfer_external_id_non_empty", Status: InvariantNotApplicable, Assertions: 0, Detail: "no transfer row (empty page)"},
+			{Name: "status_non_empty", Status: InvariantNotApplicable, Assertions: 0, Detail: "no transfer row (empty page)"},
+		}
+	}
 	return []InvariantResult{
 		assertTransferIDPositive(got),
 		assertOwnerExternalIDNonEmpty(got),

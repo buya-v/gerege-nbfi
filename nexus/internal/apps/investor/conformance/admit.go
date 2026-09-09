@@ -133,8 +133,43 @@ func admitRequest(v *Vector) []string {
 // structurally sane. purchase_price_ratio and the dates are verbatim strings,
 // not money, so the only money-adjacent check is that status and the identity
 // strings are non-empty.
+//
+// An empty-page vector (expect.empty true) is the mirror image: the read-back
+// observed NO transfer for the loan, so every row cell must be absent. A stated
+// row cell on an empty vector would contradict the observed content page, and
+// is refused under default-deny rather than silently ignored.
 func admitExpect(v *Vector) []string {
 	var problems []string
+	if v.Expect.Empty {
+		if v.Expect.TransferID != 0 {
+			problems = append(problems, fmt.Sprintf("expect.transfer_id %d contradicts expect.empty: an empty page has no transfer row", v.Expect.TransferID))
+		}
+		if v.Expect.OwnerExternalID != "" {
+			problems = append(problems, "expect.owner_external_id contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.LoanExternalID != "" {
+			problems = append(problems, "expect.loan_external_id contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.TransferExternalID != "" {
+			problems = append(problems, "expect.transfer_external_id contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.PurchasePriceRatio != "" {
+			problems = append(problems, "expect.purchase_price_ratio contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.Status != "" {
+			problems = append(problems, "expect.status contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.SettlementDate != "" {
+			problems = append(problems, "expect.settlement_date contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.EffectiveFrom != "" {
+			problems = append(problems, "expect.effective_from contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.EffectiveTo != "" {
+			problems = append(problems, "expect.effective_to contradicts expect.empty: an empty page has no transfer row")
+		}
+		return problems
+	}
 	if v.Expect.TransferID <= 0 {
 		problems = append(problems, fmt.Sprintf("expect.transfer_id %d is not positive", v.Expect.TransferID))
 	}

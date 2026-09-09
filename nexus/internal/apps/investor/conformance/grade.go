@@ -72,7 +72,12 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	}
 
 	diffs := compareTransferExpect(v.Expect, got)
+	// A row vector grades the nine transcribed row cells; an empty-page vector
+	// grades the one presence cell (loan has no transfer).
 	r.GradedCells = 9 // transfer_id, owner_external_id, loan_external_id, transfer_external_id, purchase_price_ratio, status, settlement_date, effective_from, effective_to
+	if v.Expect.Empty {
+		r.GradedCells = 1 // page_presence (empty page)
+	}
 	r.Diffs = diffs
 
 	invs := AssertInvariants(v, got)
@@ -91,10 +96,27 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	return r
 }
 
-// compareTransferExpect compares an expected transfer row against the evaluated
-// one. Every field is a verbatim transcription; none is money in integer minor
-// units, so the cells are plain string/integer comparisons.
+// compareTransferExpect compares an expected transfer read-back against the
+// evaluated one. Every field is a verbatim transcription; none is money in
+// integer minor units, so the cells are plain string/integer comparisons.
+//
+// The page's content presence is compared FIRST: the oracle returned one row
+// for loan 6 and an empty page for loan 1, and those are different facts. When
+// the expected and evaluated presence disagree no row cells are compared — the
+// page cardinality is the discriminating cell and a row-cell listing across a
+// presence mismatch would be noise, not information.
 func compareTransferExpect(want Expect, got Expect) []string {
+	if want.Empty != got.Empty {
+		if want.Empty {
+			return []string{fmt.Sprintf(
+				"page: expected an EMPTY page (loan has no transfer); implementation returned a transfer row (transfer_id %d)", got.TransferID)}
+		}
+		return []string{"page: expected a transfer row; implementation returned an EMPTY page"}
+	}
+	if want.Empty {
+		return nil
+	}
+
 	var diffs []string
 	if want.TransferID != got.TransferID {
 		diffs = append(diffs, fmt.Sprintf("transfer_id: want %d, got %d", want.TransferID, got.TransferID))

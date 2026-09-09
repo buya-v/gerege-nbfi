@@ -1,0 +1,40 @@
+{
+ "schema": "gerege.investor.vector/v1",
+ "case_id": "INV-02-transfer-read-empty",
+ "title": "external asset owner transfer read (loan 1 - no transfer)",
+ "class": "parity",
+ "context": "investor",
+ "_note": "Parity vector transcribed from capture transfer-read-loan-1-raw.json (GET /external-asset-owners/transfers?loanId=1, tenant gerege). request.loan_id=1 is the loanId of the read that produced this capture. The oracle returned an EMPTY content page for loan 1: the capture's \"content\":[],\"totalElements\":0,\"empty\":true. expect.empty=true is that observed page; no row cell is stated because the page has no transfer row to transcribe. Loan 6 is the discriminator: INV-01 transcribes the single row loan 6 returned, and this capture is the OTHER loan the transfer read was exercised on, so a read that answers loan 1 with any transfer (or with loan 6's row) diverges from the oracle. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "external-asset-owner-transfer-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect.empty is transcribed from the committed capture transfer-read-loan-1-raw.json; capture_case_id names the totalElements cell of the observed empty page.",
+  "capture_ref": ".softhouse/capture/investor/out/transfer-read-loan-1-raw.json",
+  "capture_sha256": "11525a84bc4a9934f600e1b2d3579069539f6dd890dea99cf246d469b8b742ca",
+  "capture_case_id": "\"totalElements\":0",
+  "citation": "transfer-read-loan-1-raw.json page {\"content\":[],\"totalElements\":0,\"empty\":true} for loanId=1"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 1
+ },
+ "expect": {
+  "empty": true
+ },
+ "capabilities_required": [
+  "transfer-read"
+ ],
+ "graded_against": [
+  "investor-go"
+ ]
+}
