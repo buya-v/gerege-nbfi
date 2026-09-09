@@ -129,9 +129,28 @@ func (wrongEvaluator) Evaluate(req Request) (Expect, error) {
 	}
 }
 
+// wrongDefaultActiveEvaluator is a DELIBERATELY WRONG implementation: it
+// always stores the create-default ACTIVE string, ignoring the requested status
+// name — the transcription-level analogue of a write path that never consults
+// the supplied status and always persists the default. ACTIVE stays green;
+// PENDING and INACTIVE go red. It is a SECOND shape alongside the swap drive
+// (a constant, not a permutation), so a graded cell's green run on OR-01 proves
+// the drive is not a blanket rejection of every request.
+type wrongDefaultActiveEvaluator struct{}
+
+func (wrongDefaultActiveEvaluator) Evaluate(req Request) (Expect, error) {
+	if _, ok := originatorStatusByName[req.Name]; !ok {
+		return Expect{}, fmt.Errorf("origination: status %q is not in the LoanOriginatorStatus vocabulary", req.Name)
+	}
+	return Expect{Stored: "ACTIVE"}, nil
+}
+
 func init() {
 	Register("origination-go", NewGoEvaluator())
 	RegisterWrong("origination-wrong-swap-status",
 		"swaps ACTIVE and PENDING stored strings, so any vector asserting that mapping goes red",
 		wrongEvaluator{})
+	RegisterWrong("origination-wrong-default-active",
+		"always stores the create-default ACTIVE string regardless of the requested status name, so any vector asserting PENDING or INACTIVE goes red",
+		wrongDefaultActiveEvaluator{})
 }

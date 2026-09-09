@@ -137,6 +137,48 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 }
 
+func TestWrongDefaultActiveRunsRed(t *testing.T) {
+	// The default-ACTIVE drive is the second shape guarding the one graded
+	// cell: a CONSTANT transcription rather than the swap's permutation. It
+	// must be red on exactly the vectors that assert PENDING or INACTIVE and
+	// green on ACTIVE — a drive that killed ACTIVE too would be a blanket
+	// rejection and indistinguishable from a broken implementation.
+	wrongImpl, ok := Lookup("origination-wrong-default-active")
+	if !ok {
+		t.Fatal("wrong implementation not registered")
+	}
+	if _, bad := IsRegisteredWrong("origination-wrong-default-active"); !bad {
+		t.Fatal("wrong implementation not marked wrong")
+	}
+
+	active := statusProbe()
+	green := gradeOne(active, Options{Implementation: wrongImpl})
+	if green.Outcome != OutcomePass {
+		t.Fatalf("default-active impl on ACTIVE = %s, want PASS (the default is ACTIVE); diffs=%v", green.Outcome, green.Diffs)
+	}
+
+	pending := statusProbe()
+	pending.Request.Name = "PENDING"
+	pending.Provenance.CaptureCaseID = "PENDING"
+	pending.Expect.Stored = "PENDING"
+	red := gradeOne(pending, Options{Implementation: wrongImpl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("default-active impl on PENDING = %s, want FAIL", red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatal("default-active impl produced no diffs on PENDING")
+	}
+
+	inactive := statusProbe()
+	inactive.Request.Name = "INACTIVE"
+	inactive.Provenance.CaptureCaseID = "INACTIVE"
+	inactive.Expect.Stored = "INACTIVE"
+	redInactive := gradeOne(inactive, Options{Implementation: wrongImpl})
+	if redInactive.Outcome != OutcomeFail {
+		t.Fatalf("default-active impl on INACTIVE = %s, want FAIL", redInactive.Outcome)
+	}
+}
+
 func TestUnknownStatusErrs(t *testing.T) {
 	v := statusProbe()
 	v.Request.Name = "NOT_A_REAL_STATUS"
