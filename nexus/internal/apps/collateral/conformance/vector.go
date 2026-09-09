@@ -31,6 +31,19 @@ const SeamCollateralLinkRead = "collateral-link-read"
 // empty page, not a holding row.
 const SeamClientCollateralRead = "collateral-client-read"
 
+// SeamClientCollateralValuationRead is the fourth capture seam this schema
+// grades: the SINGLE-row client-collateral read-back
+// (GET /clients/{clientId}/collaterals/{collateralId},
+// client-collateral-single-raw.json). Unlike the client page read it carries a
+// computed valuation: getClientCollateralManagementData divides pct_to_base by
+// 100 (line 66) and, when quantity is non-zero, returns total = base_price *
+// quantity (line 71) and totalCollateral = total * (pct_to_base/100) (line 72)
+// — evaluated on the read path (ClientCollateralManagementReadServiceImpl.java,
+// line numbers javap-verified from the pinned build). No total column is stored
+// (SQL-verified against m_client_collateral_management). quantity, total and
+// total_collateral are transcribed as scale-5 integer counts.
+const SeamClientCollateralValuationRead = "collateral-valuation-read"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{CollateralContext} }
@@ -83,26 +96,35 @@ type Provenance struct {
 type TenantParams = shared.TenantParams
 
 // Request is the input the implementation is graded on. It is the union of the
-// three seams: the product read (product_id), the link read (link_id) and the
-// client-collateral read (client_id). A product vector sets exactly product_id;
-// a link vector sets exactly link_id; a client vector sets exactly client_id.
+// four seams: the product read (product_id), the link read (link_id), the
+// client-collateral page read (client_id) and the single-row client-collateral
+// valuation read (client_id + collateral_id). A product vector sets exactly
+// product_id; a link vector sets exactly link_id; a client vector sets exactly
+// client_id; a valuation vector sets exactly client_id and collateral_id.
 type Request struct {
-	ProductID int64 `json:"product_id"`
-	LinkID    int64 `json:"link_id"`
-	ClientID  int64 `json:"client_id"`
+	ProductID    int64 `json:"product_id"`
+	LinkID       int64 `json:"link_id"`
+	ClientID     int64 `json:"client_id"`
+	CollateralID int64 `json:"collateral_id"`
 }
 
 // Expect is what the oracle produced for the request. For the product seam it is
 // the m_collateral_management row's identity and stored columns; base_price and
 // pct_to_base are integer strings of the scale-5 count. For the link seam it is
 // the m_loan_collateral row's id and type_cv_id (the LoanCollateral code value).
+// For the valuation seam it is the single-row read-back's id, quantity, and the
+// two COMPUTED valuation fields total and total_collateral, all integer strings
+// of the scale-5 count (quantity 1.50000 -> "150000", total 150000.0000000000
+// -> "15000000000", total_collateral 75000.000000000000000 -> "7500000000");
+// every conversion is exact because the oracle's fractional digits past scale 5
+// are zero.
 //
 // Empty marks a client-collateral read-back whose content page is EMPTY: the
 // oracle returned no collateral holding for the client
 // (client-collateral-readback-raw.json: GET /clients/5/collaterals -> content
-// []). A product or link vector omits Empty (false); a client vector sets it
-// true and states no row cell, because an empty page has no holding row to
-// transcribe and stating one would be fabrication.
+// []). A product or link or valuation vector omits Empty (false); a client
+// vector sets it true and states no row cell, because an empty page has no
+// holding row to transcribe and stating one would be fabrication.
 type Expect struct {
 	Empty bool `json:"empty,omitempty"`
 
@@ -115,6 +137,10 @@ type Expect struct {
 	PctToBase string `json:"pct_to_base"`
 
 	TypeID int64 `json:"type_id"`
+
+	Quantity        string `json:"quantity"`
+	Total           string `json:"total"`
+	TotalCollateral string `json:"total_collateral"`
 }
 
 // Vector is one collateral golden vector.

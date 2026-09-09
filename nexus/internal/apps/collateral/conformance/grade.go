@@ -88,6 +88,9 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	case SeamClientCollateralRead:
 		diffs = compareClientExpect(v.Expect, got)
 		r.GradedCells = 1 // page_presence (empty client-collateral page)
+	case SeamClientCollateralValuationRead:
+		diffs = compareValuationExpect(v.Expect, got)
+		r.GradedCells = 4 // id, quantity, total, total_collateral
 	default:
 		diffs = compareProductExpect(v.Expect, got)
 		r.GradedCells = 7 // id, name, quality, unit_type, currency, base_price, pct_to_base
@@ -155,6 +158,32 @@ func compareClientExpect(want Expect, got Expect) []string {
 		return []string{"page: expected a client-collateral holding row; implementation returned an EMPTY page"}
 	}
 	return nil
+}
+
+// compareValuationExpect compares an expected single-row client-collateral
+// read-back against the evaluated one. quantity, total and total_collateral are
+// scale-5 integer strings transcribed from the oracle's decimal displays in
+// client-collateral-single-raw.json. The discriminating cells are the two
+// COMPUTED valuation fields: the oracle derives total = base_price * quantity
+// and total_collateral = total * pct_to_base/100 on the read path
+// (ClientCollateralManagementReadServiceImpl.java), so an implementation whose
+// valuation arithmetic differs from the oracle's fails these cells even when the
+// stored quantity matches.
+func compareValuationExpect(want Expect, got Expect) []string {
+	var diffs []string
+	if want.ID != got.ID {
+		diffs = append(diffs, fmt.Sprintf("id: want %d, got %d", want.ID, got.ID))
+	}
+	if want.Quantity != got.Quantity {
+		diffs = append(diffs, fmt.Sprintf("quantity: want %q, got %q", want.Quantity, got.Quantity))
+	}
+	if want.Total != got.Total {
+		diffs = append(diffs, fmt.Sprintf("total: want %q, got %q", want.Total, got.Total))
+	}
+	if want.TotalCollateral != got.TotalCollateral {
+		diffs = append(diffs, fmt.Sprintf("total_collateral: want %q, got %q", want.TotalCollateral, got.TotalCollateral))
+	}
+	return diffs
 }
 
 // compareLinkExpect compares an expected loan-collateral row against the

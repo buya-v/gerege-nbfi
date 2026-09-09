@@ -1,0 +1,44 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-04-valuation-read",
+ "title": "single-row client-collateral read-back returns a computed valuation for client 5 holding 2",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture client-collateral-single-raw.json (GET /clients/5/collaterals/2, tenant gerege): the oracle returned the SINGLE holding row WITH a computed valuation — quantity 1.50000, total 150000.0000000000, totalCollateral 75000.000000000000000 — even though the DB column holds only quantity (SQL-verified: m_client_collateral_management has no total column), so total = base_price * quantity and total_collateral = total * pct_to_base/100 are computed by the read path, exactly the arithmetic ClientCollateral.Total / TotalCollateral ports. The two valuation fields are transcribed as scale-5 integer counts: total 150000.0000000000 -> \"15000000000\", total_collateral 75000.000000000000000 -> \"7500000000\". Nothing was recomputed by this promotion.",
+ "oracle": {
+  "seam": "collateral-valuation-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The graded cells — id, quantity, total and total_collateral — are transcribed from the committed capture client-collateral-single-raw.json; capture_case_id quotes a displayed cell of the observed computed read-back.",
+  "capture_ref": ".softhouse/capture/collateral/out/client-collateral-single-raw.json",
+  "capture_sha256": "3e25c7e51f624d9b51a88f7a025e788bb55695ba0a20b2918e5cd808b2c3ec0d",
+  "capture_case_id": "150000.0000000000",
+  "citation": "client-collateral-single-raw.json {\"name\":\"SEED-Collateral-Product\",\"quantity\":1.50000,\"total\":150000.0000000000,\"totalCollateral\":75000.000000000000000,\"clientId\":5,\"loanTransactionData\":[],\"id\":2} (GET /clients/5/collaterals/2): the oracle's single-row read-back returns computed total and totalCollateral (the column holds only quantity), so the valuation arithmetic IS observable"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "client_id": 5,
+  "collateral_id": 2
+ },
+ "expect": {
+  "id": 2,
+  "quantity": "150000",
+  "total": "15000000000",
+  "total_collateral": "7500000000"
+ },
+ "capabilities_required": [
+  "collateral-valuation"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}
