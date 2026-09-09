@@ -1545,15 +1545,6 @@ func inPeriodM3(target, from, due civilDate) bool {
 // [VERIFIED: ProgressiveLoanInterestScheduleModel.java:238-245].
 func (m *scheduleModel) findPeriodForBalanceChange(d civilDate) *repaymentPeriod {
 	for i, p := range m.periods {
-		if m.v.registrationBoundaryDueExclusive {
-			// Counterfactual: the registered wrong drive
-			// loanschedule-wrong-due-date-exclusive (wrongdrives.go). A due date
-			// then registers into the NEXT period, never the period it closes.
-			if inPeriodM3(d, p.from, p.due) {
-				return p
-			}
-			continue
-		}
 		if inPeriodM1(d, p.from, p.due, i == 0) {
 			return p
 		}
@@ -1844,22 +1835,12 @@ func (m *scheduleModel) dueInterestMinor(p *repaymentPeriod) int64 {
 // SUM THE SEGMENTS, THEN MAKE IT MONEY -- exactly once, and in that order:
 // rounding each segment to the minor unit and then adding is a different
 // function [VERIFIED: RepaymentPeriod.java:246-252, Money.of(currency, sum,
-// mc) whose constructor applies the currency scale at Money.java:52].
+// mc) whose constructor applies the currency scale at Money.java:52]. A wrong
+// drive that rounded per segment (loanschedule-wrong-round-segments-then-sum)
+// existed until OH-CAP-I removed it: with only one balance change in the graded
+// domain, no period ever carries two non-zero segments, so the two folds are
+// equal on every admitted request and no capture could grade the difference.
 func (m *scheduleModel) accumulatedInterestMinor(p *repaymentPeriod) int64 {
-	if m.v.roundSegmentsThenSum {
-		// Counterfactual: the registered wrong drive
-		// loanschedule-wrong-round-segments-then-sum (wrongdrives.go). Rounding
-		// each segment to the minor unit FIRST and then adding is what a porter
-		// writes who reads Money.of(currency, PRINCIPAL, mc) at the top of
-		// calculatePrincipalPerPeriod (:243-245) and generalises the constructor
-		// call to the interest fold -- Money.of is invoked once there and its
-		// scale step is per-SEGMENT, not per-period-sum.
-		var segs int64
-		for _, s := range p.segments {
-			segs += m.minorFromMajor(m.segmentCalculatedInterest(p, s))
-		}
-		return segs
-	}
 	sum := new(big.Rat)
 	for _, s := range p.segments {
 		sum.Add(sum, m.segmentCalculatedInterest(p, s))
