@@ -200,9 +200,15 @@ func TestLinkSeamGrading(t *testing.T) {
 	if correct.Outcome != OutcomePass {
 		t.Fatalf("correct impl link outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
 	}
-	wrongImpl, _ := Lookup("collateral-wrong-blank-quality")
-	if red := gradeOne(v, Options{Implementation: wrongImpl}); red.Outcome != OutcomeFail {
-		t.Fatalf("wrong impl link outcome = %s, want FAIL", red.Outcome)
+	wrongType, _ := Lookup("collateral-wrong-type-id")
+	if red := gradeOne(v, Options{Implementation: wrongType}); red.Outcome != OutcomeFail {
+		t.Fatalf("wrong-type-id impl link outcome = %s, want FAIL", red.Outcome)
+	}
+	// The blank-quality drive is product-seam only: it must LEAVE the link read
+	// green, proving the two defects carry separate attributable drives.
+	blankQuality, _ := Lookup("collateral-wrong-blank-quality")
+	if red := gradeOne(v, Options{Implementation: blankQuality}); red.Outcome != OutcomePass {
+		t.Fatalf("blank-quality impl link outcome = %s, want PASS (defects are separate drives)", red.Outcome)
 	}
 }
 

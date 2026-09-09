@@ -153,28 +153,47 @@ func (g goEvaluator) Evaluate(req Request) (Expect, error) {
 	}
 }
 
-// wrongEvaluator is a DELIBERATELY WRONG implementation: it blanks the product
-// quality and returns a wrong type_cv_id on the link read. It exists so a
-// graded_against row can name an executable defect.
-type wrongEvaluator struct{ goEvaluator }
+// wrongBlankQualityEvaluator is a DELIBERATELY WRONG implementation: it blanks
+// the product quality cell on the product read. It exists so a graded_against
+// row can name an executable defect, and it is a SINGLE defect: the product and
+// link seams carry separate drives so a kill is attributable to exactly one
+// defect rather than to a shotgun pair.
+type wrongBlankQualityEvaluator struct{ goEvaluator }
 
-func (w wrongEvaluator) Evaluate(req Request) (Expect, error) {
+func (w wrongBlankQualityEvaluator) Evaluate(req Request) (Expect, error) {
 	e, err := w.goEvaluator.Evaluate(req)
 	if err != nil {
 		return e, err
 	}
 	if req.ProductID > 0 {
 		e.Quality = ""
-		return e, nil
 	}
-	e.TypeID++
+	return e, nil
+}
+
+// wrongTypeIDEvaluator is a DELIBERATELY WRONG implementation: it returns a
+// wrong type_cv_id on the loan-collateral link read. It is the link-seam half
+// of the former single two-defect drive, split so the kill is attributable to
+// the type cell alone.
+type wrongTypeIDEvaluator struct{ goEvaluator }
+
+func (w wrongTypeIDEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := w.goEvaluator.Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	if req.LinkID > 0 {
+		e.TypeID++
+	}
 	return e, nil
 }
 
 func init() {
 	Register("collateral-go", NewGoEvaluator())
 	RegisterWrong("collateral-wrong-blank-quality",
-		"blanks the product quality and returns a wrong type_cv_id on the link read, so any "+
-			"vector that asserts those cells goes red",
-		wrongEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+		"blanks the product quality cell on the product read, so any vector that asserts the quality goes red",
+		wrongBlankQualityEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-type-id",
+		"returns a wrong type_cv_id on the loan-collateral link read, so any vector that asserts the type cell goes red",
+		wrongTypeIDEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }
