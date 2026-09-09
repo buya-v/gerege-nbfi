@@ -70,43 +70,19 @@ func init() {
 			"600%-rate vector whose extreme daily interest lands money quantizations on "+
 			"half-minor-unit ties no tie-built vector reaches",
 		loanschedule.NewWrongHalfEven())
-	conformance.RegisterWrong("loanschedule-wrong-round-segments-then-sum",
-		"makes each interest SEGMENT money first and then adds the minor units, where the graded "+
-			"engine sums the exact segments and makes money once [RepaymentPeriod.java:246-252 sums "+
-			"the segments and hands the SUM to Money.of, whose constructor applies the currency "+
-			"scale at Money.java:52]. A porter who reads calculatePrincipalPerPeriod (:243-245) "+
-			"invoking Money.of on the per-period principal and generalises the constructor call down "+
-			"to the SEGMENT fold writes exactly this. It is byte-identical to the graded engine on "+
-			"every period with a single interest segment and differs only where two or more segments "+
-			"in one period carry sub-minor-unit residues that round to different whole minor units "+
-			"than their exact sum -- the aggregation-order seam. MEASURED (2026-09-08, oracle probe "+
-			"up): parity PASS 46 FAIL 0, and the store CANNOT see it: all 46 parity vectors "+
-			"disburse ONCE on the schedule start, so no period ever folds two interest segments and "+
-			"the two functions are equal BY CONSTRUCTION on every graded input. The smallest input "+
-			"that could grade this seam is a schedule with TWO balance changes in one period; no "+
-			"graded vector carries one, so this registration IS the measurement and the answer is zero",
-		loanschedule.NewWrongRoundSegmentsThenSum())
-	conformance.RegisterWrong("loanschedule-wrong-due-date-exclusive",
-		"registers every balance change into the period whose HALF-OPEN window [FromDate, DueDate) "+
-			"contains the date, where the graded engine applies M1 -- [FromDate, DueDate] on the "+
-			"first period, (FromDate, DueDate] on every later one [ProgressiveLoanScheduleGenerator"+
-			".java emits the disbursement row against the half-open window at :306-307, and "+
-			"ProgressiveLoanInterestScheduleModel.java registers the balance change against M1 at "+
-			":238-245]. The two rules disagree on exactly one date -- a change dated on a repayment "+
-			"due date, which M1 puts in the period the date CLOSES and this drive puts in the NEXT "+
-			"-- and the two sites live five files apart, so a porter who reads the row-EMISSION site "+
-			"(the one that prints the row the corpus transcribes) and generalises it to the "+
-			"REGISTRATION path writes exactly this. It is the loanschedule twin of "+
-			"ledger-wrong-closure-boundary-exclusive: a boundary read the wrong way. MEASURED "+
-			"(2026-09-08, oracle probe up): parity PASS 46 FAIL 0, and the store CANNOT see it -- "+
-			"the corpus disburses ONCE per loan, so the only vector that lands a change on the trap "+
-			"date at all is P-03 (disbursement 2024-02-01, the first period's due date), where M1 and "+
-			"M3 register into ADJACENT periods yet recalculate the SAME related set from the SAME "+
-			"effective due date and converge to byte-identical cells. The half-open rule diverges "+
-			"observably only on a change dated on the MATURITY due date, where it drops the "+
-			"disbursement outright (findPeriodForBalanceChange returns nil); no graded vector "+
-			"carries one, so this registration IS the measurement and the answer is zero",
-		loanschedule.NewWrongDueDateExclusive())
+	// OH-CAP-I removed two drives that OH-RED-G had registered with a measured
+	// kill count of ZERO and a defect string ending in "the answer is zero":
+	// loanschedule-wrong-round-segments-then-sum and
+	// loanschedule-wrong-due-date-exclusive. Both change money and NOTHING in
+	// the graded domain can see them, and no vector CAN be built that grades
+	// them (see that commit's message for the algebra): the port admits exactly
+	// ONE balance change per loan (validateSupported refuses a second), so no
+	// period ever carries two non-zero interest segments (aggregation fold
+	// unobservable) and the only date on which the M1/M3 boundary rules differ
+	// observably is the MATURITY due date, which validateGradedDomain refuses
+	// as an all-zero degenerate schedule. A registered drive that can never die
+	// asserts coverage the store does not have, so the two were deleted rather
+	// than left green. The two drives below are the ones the corpus can fail.
 	conformance.RegisterWrong("loanschedule-wrong-days-in-year-365",
 		"charges interest against a 365-day year where the DAYS_360 convention fixes 360 -- the "+
 			"convention's name carries '360' but the constant a porter reads at the rate-factor seam "+

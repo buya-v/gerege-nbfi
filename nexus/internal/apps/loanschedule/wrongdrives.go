@@ -46,19 +46,6 @@ type variant struct {
 	// BigDecimal context the rate arithmetic runs under.
 	halfEvenMoney bool
 
-	// roundSegmentsThenSum rounds each interest segment to a whole minor unit
-	// and THEN sums, where the graded engine sums the exact segments and makes
-	// money once. Loanschedule-wrong-round-segments-then-sum.
-	roundSegmentsThenSum bool
-
-	// registrationBoundaryDueExclusive reads the balance-change membership rule
-	// as [FromDate, DueDate) — half-open at the due date — on EVERY period,
-	// where the graded engine applies M1 ([FromDate, DueDate] on the first
-	// period, (FromDate, DueDate] on every later one). A balance change dated
-	// exactly on a repayment due date then registers into the NEXT period
-	// instead of the one the date closes. Loanschedule-wrong-due-date-exclusive.
-	registrationBoundaryDueExclusive bool
-
 	// daysInYear365 reads the DAYS_360 convention's days-in-year constant as
 	// 365. Loanschedule-wrong-days-in-year-365.
 	daysInYear365 bool
@@ -95,47 +82,6 @@ var _ contract.ScheduleGenerator = wrongScheduleGenerator{}
 // built to force such a tie.
 func NewWrongHalfEven() contract.ScheduleGenerator {
 	return wrongScheduleGenerator{v: variant{halfEvenMoney: true}}
-}
-
-// NewWrongRoundSegmentsThenSum returns the wrong drive that sums interest
-// SEGMENTS ROUNDED to the minor unit, where the graded engine sums the exact
-// segments and quantizes once.
-//
-// WHY A COMPETENT PORTER WRITES THIS. The reference oracle's own structure
-// invites the misread: RepaymentPeriod.java:246-252 sums the segments and hands
-// the SUM to Money.of, whose constructor applies the currency scale
-// (Money.java:52) — but a porter who reads the interest-row construction as
-// "each segment is interest, each becomes money" and generalises the Money.of
-// call to the SEGMENT fold rounds per segment. The graded fold's own comment
-// states the two functions differ; this drive is the executable version of the
-// wrong one. It dies only where two or more segments in one period carry
-// sub-minor-unit residues that round to different whole minor units than their
-// exact sum — the aggregation-order seam.
-func NewWrongRoundSegmentsThenSum() contract.ScheduleGenerator {
-	return wrongScheduleGenerator{v: variant{roundSegmentsThenSum: true}}
-}
-
-// NewWrongDueDateExclusive returns the wrong drive that registers every balance
-// change into the period whose half-open window [FromDate, DueDate) contains the
-// date, reading the membership rule at the disbursement-row EMISSION site and
-// generalising it to the balance-change REGISTRATION site.
-//
-// WHY A COMPETENT PORTER WRITES THIS. ProgressiveLoanScheduleGenerator.java
-// emits the disbursement row against the HALF-OPEN window [FromDate, DueDate)
-// (:306-307) and ProgressiveLoanInterestScheduleModel.java registers the balance
-// change against M1 (:238-245, via
-// LoanRepaymentScheduleProcessingWrapper.java:251-254), which is [FromDate,
-// DueDate] on the first period and (FromDate, DueDate] on every later one. The
-// two rules disagree on exactly one date — a change dated on a repayment due
-// date, which M1 puts in the period the date CLOSES and the half-open rule puts
-// in the NEXT period — and both sites live five files apart. A porter who reads
-// the emission site (the one that prints the row the corpus transcribes) and
-// generalises it to the registration path writes exactly this drive. It is the
-// loan-schedule twin of ledger-wrong-closure-boundary-exclusive: a boundary
-// read the wrong way, INDISTINGUISHABLE from the correct port on every vector
-// whose balance changes avoid the boundary date.
-func NewWrongDueDateExclusive() contract.ScheduleGenerator {
-	return wrongScheduleGenerator{v: variant{registrationBoundaryDueExclusive: true}}
 }
 
 // NewWrongDaysInYear365 returns the wrong drive that charges interest against a
