@@ -36,6 +36,10 @@ type ignoreVariant struct {
 	// port that never decodes charge_time_enum would leave it.
 	// charges-wrong-time-type-ignored.
 	timeTypeAsInvalid bool
+	// amountAsZero replaces amount_minor with "0" before decode, as a port that
+	// never reads m_charge.amount would leave it. Flat fees are the stored amount
+	// and so answer 0. charges-wrong-amount-ignored.
+	amountAsZero bool
 }
 
 // apply rewrites the request fields this drive never reads.
@@ -51,6 +55,9 @@ func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	}
 	if v.timeTypeAsInvalid {
 		req.TimeType = 0
+	}
+	if v.amountAsZero {
+		req.AmountMinor = "0"
 	}
 	return req
 }

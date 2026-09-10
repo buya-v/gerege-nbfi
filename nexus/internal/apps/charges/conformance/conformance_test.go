@@ -82,6 +82,48 @@ func percentFeeProbe() *Vector {
 	}
 }
 
+// flatFeeProbe is a flat fee: the fee is the stored amount, unmodified, with no
+// arithmetic performed on it.
+func flatFeeProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-flat-fee",
+		Title:   "probe flat fee",
+		Class:   ClassParity,
+		Context: ChargesContext,
+		Note:    "probe: meaningless numbers, not an observation",
+		Oracle:  OracleStamp{Seam: SeamChargeEvaluate, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: meaningless numbers, not an observation",
+			CaptureRef:    ".softhouse/capture/charges/out/fc/FC-00-probe.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "probe-flat-fee",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: ChargeRequest{
+			Name:            "probe",
+			CurrencyCode:    "MNT",
+			AmountMinor:     "777777",
+			Percentage:      0,
+			AppliesTo:       1,
+			TimeType:        2,
+			CalculationType: 1,
+			PaymentMode:     0,
+			BaseAmountMinor: "",
+		},
+		Expect:        ChargeExpect{Kind: ExpectFee, FeeMinor: "777777"},
+		GradedAgainst: []string{"charges-go"},
+	}
+}
+
 // penaltyAtDisbursementProbe is a flat PENALTY due at disbursement: the charge
 // definition's own Validate() refuses it with one code and assigns no fee. Its
 // shape mirrors OHCAPj-penalty-at-disbursement-refused (750000 minor, penalty
@@ -371,6 +413,13 @@ func TestBaseAmountIgnoredWrongRunsRed(t *testing.T) {
 // and no fee.
 func TestTimeTypeIgnoredWrongRunsRed(t *testing.T) {
 	wrongRunsRedOn(t, "charges-wrong-time-type-ignored", percentFeeProbe())
+}
+
+// TestAmountIgnoredWrongRunsRed pins the shape of the ignore-amount drive: the
+// flat probe's fee is its stored amount, so a port that never decodes
+// amount_minor answers 0.
+func TestAmountIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-amount-ignored", flatFeeProbe())
 }
 
 // TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red

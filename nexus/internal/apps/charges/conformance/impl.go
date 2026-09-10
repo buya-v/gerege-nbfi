@@ -499,4 +499,15 @@ func init() {
 			"(not.allowed.charge.time.for.loan for charge.due.at.disbursement.cannot.be.penalty, because INVALID is "+
 			"not DISBURSEMENT)",
 		ignoreFieldEvaluator{v: ignoreVariant{timeTypeAsInvalid: true}})
+	RegisterWrong("charges-wrong-amount-ignored",
+		"never decodes amount_minor: the field is left at zero, as a port that drops m_charge.amount would have "+
+			"it. For a flat charge the fee IS the stored amount — getAmount returns the charge amount unmodified "+
+			"[VERIFIED: Charge.java:76-77; LoanCharge.java:405-406] — so every flat vector answers 0 instead of its "+
+			"recorded fee. The seven flat fee vectors die: FC-01-flat-disbursement (1500000), FC-02-flat-instalment "+
+			"(250000), FC-06-flat-penalty-specified-due-date (750000), FC-07-flat-fee-specified-due-date (900000), "+
+			"FC-08-flat-penalty-instalment (120000), T46-CH-02-defvsreq-flat-disb (777777) and "+
+			"T46-CH-07-defvsreq-penalty-instalment (33333). The four percentage vectors never read amount (they read "+
+			"base_amount_minor) and OHCAPj-penalty-at-disbursement-refused is refused before any fee, so five vectors "+
+			"survive by design",
+		ignoreFieldEvaluator{v: ignoreVariant{amountAsZero: true}})
 }
