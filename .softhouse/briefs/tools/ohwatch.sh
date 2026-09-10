@@ -15,6 +15,16 @@
 # =============================================================================
 set -u
 now=$(date +%s)
+# LIVE WORKTREES, resolved from the process table once. A conversation directory outlives
+# its process, so idle alone cannot tell a stalled run from a finished one -- the control
+# test caught that immediately, lighting up a run that had been merged hours earlier.
+# Liveness is the honest discriminator, so it is measured rather than inferred.
+OH_LIVE=""
+for p in $(ps aux | grep '[o]penhands/bin/python' | awk '{print $2}'); do
+  cwd="$(lsof -p "$p" -a -d cwd 2>/dev/null | tail -1 | awk '{print $NF}')"
+  [ -n "$cwd" ] && OH_LIVE="$OH_LIVE $cwd"
+done
+export OH_LIVE
 dirs=${@:-$(ls -dt ~/.openhands/conversations/*/ 2>/dev/null | head -6)}
 printf '%s\n' "$dirs" | tr ' ' '\n' | while IFS= read -r d; do
   [ -d "$d/events" ] || continue
@@ -74,9 +84,52 @@ recovered = sum(1 for ec in obs if ec == -1) - trailing
 #   trailing >= 2                -> WEDGED, visible, NOT a kill signal
 #   trailing >= 4                -> STALLED-NOW (dead terminal, regardless of idle)
 #   trailing >= 2 and idle>=180s -> STALLED-NOW (wedged and not recovering)
+# THERE IS A THIRD STALL THAT HAS NOTHING TO DO WITH THE TERMINAL, and it went
+# undetected on 2026-09-10 until a driver checked by hand. OH-GLVEC-AB sat at 11.6% CPU
+# for TEN MINUTES with `trailing-1 = 0`: its command had COMPLETED (no process left, its
+# output file stopped growing), it had not probed anything, and it simply never emitted
+# another event. The shell was fine; the agent was blocked on the LLM -- the same
+# provider that logged `DeepseekException - peer closed connection without sending
+# complete message body` earlier that day, retried with backoff, and never came back.
+#
+# That is EXACTLY the shape of run K, which the user described as "14% CPU doing nothing
+# for 12 minutes" -- and neither terminal rule above catches it, because there is no -1
+# to count. CPU is not the signal either: 11.6% of a core is indistinguishable from work.
+#
+# THE SIGNAL IS SILENCE. A working agent emits events. Even a long command emits one when
+# it finishes. So idle time ALONE is a stall, whatever the cause -- and it subsumes both
+# terminal cases as a backstop.
+#
+# The threshold must clear a legitimately long command: `conformance.sh` takes ~5 minutes
+# and emits nothing while it runs, so idle can honestly reach 300-400s. 600s is chosen to
+# sit clear of that, and it is the number that fired on OH-GLVEC-AB at 597s.
+# A FINISHED RUN IS NOT A STALLED ONE, and the first version of this rule could not tell
+# them apart: a conversation directory outlives its process, so `idle` grows without bound
+# and every completed run eventually looks silent. The control test caught it immediately --
+# run K and a run that had finished successfully and been MERGED hours earlier both lit up.
+#
+# So the silent rule applies only inside a WINDOW. Below SILENT_S the agent may legitimately
+# be inside a long command; above FINISHED_S it has almost certainly exited, and the driver
+# would have merged or salvaged it long before. Outside the window the terminal rules still
+# apply, and an old conversation is labelled `(idle>1h: likely finished)` rather than accused.
+#
+# The honest limitation, stated: this is a WINDOW, not a liveness check. ohwatch reads event
+# streams, not the process table, so it cannot prove a run is alive. Confirm with
+# `ps aux | grep openhands` before killing anything on a silent verdict.
+SILENT_S     = 600
+FINISHED_S   = 3600
 STALL_IDLE_S = 180
 STALL_PROBES = 4
-if trailing >= STALL_PROBES or (trailing >= 2 and idle >= STALL_IDLE_S):
+live_cwds = [c for c in os.environ.get('OH_LIVE','').split() if c]
+recent = ' '.join(
+    ((json.load(open(f)).get('action') or {}).get('command') or '')
+    for f in ev[-25:] if os.path.exists(f)) if live_cwds else ''
+is_live = any(c in recent for c in live_cwds)
+if not is_live:
+    flag = '(no live process)'
+elif idle >= SILENT_S:
+    flag = 'STALLED-NOW(silent)'
+elif trailing >= STALL_PROBES or (trailing >= 2 and idle >= STALL_IDLE_S):
     flag = 'STALLED-NOW'
 elif trailing >= 2:
     flag = 'wedged(recovering?)'

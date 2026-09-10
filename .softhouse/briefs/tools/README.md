@@ -97,6 +97,44 @@ run K (`trailing=2`, idle 24h) fires by time; the run killed on 2026-09-10
 (`trailing=6`, 8 events in 5 minutes, all failed probes) fires by repetition; a live
 recovering run (`trailing=2, idle=35s`) does NOT fire; a healthy run does not fire.
 
+### The THIRD stall: the agent, not the terminal
+
+`OH-GLVEC-AB` sat at **11.6% CPU for ten minutes** with `trailing-1 = 0`. Its command had
+COMPLETED — no process left, its output file had stopped growing — it had not probed
+anything, and it simply never emitted another event. The shell was fine; the agent was
+blocked on the LLM (the provider had logged `DeepseekException - peer closed connection
+without sending complete message body` earlier the same day). **Neither terminal rule
+catches this, because there is no `-1` to count**, and CPU says nothing: 11.6% of a core is
+indistinguishable from work. It is exactly the shape of run K.
+
+**The signal is SILENCE plus LIVENESS.** A working agent emits events; even a long command
+emits one when it finishes. But idle alone is not enough — a conversation directory
+outlives its process, so a *finished* run's idle grows without bound and eventually looks
+identical to a stalled one.
+
+    no live process whose cwd matches this conversation -> (no live process)
+    live, idle >= 600s                                  -> STALLED-NOW(silent)
+
+Liveness is **measured**, from `ps` + `lsof -d cwd`, not inferred from idle time.
+
+**This rule took three attempts, and each wrong version was caught by the control test, not
+in production:**
+
+1. idle alone — lit up run K *and* a run that had finished successfully and been **merged
+   hours earlier**.
+2. a 600s–3600s window — still flagged a merged run that happened to sit inside it.
+3. real liveness matching — correct on both polarities: a live run at `idle=1s` is
+   unflagged, killed and finished runs read `(no live process)`.
+
+**Attempt 3's first cut had a false NEGATIVE, and it was worth more than the fix.** It
+reported a genuinely live run as dead, because the run's commands said
+`cd /Users/buv/oh-gerege-glvec` while its process cwd was `/Users/buv/oh-gerege-glvec2` —
+**the driver had re-dispatched into a new worktree without updating the path written in the
+brief**, so the agent was working in the *previous, killed* run's directory on the *old*
+branch. The detector's disagreement with reality exposed a dispatch bug that would
+otherwise have produced a commit on an abandoned branch. **When an instrument and the world
+disagree, find out which is wrong before fixing either.**
+
 **What kills a terminal, in practice:** an **unterminated quote**. The 2026-09-10 kill was
 a `docker exec … psql -tAc "SELECT …` whose closing `"` was missing. The shell sat on stdin
 waiting for the rest of the string; it does not error, it hangs, and it takes the run with

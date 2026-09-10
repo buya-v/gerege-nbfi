@@ -1,6 +1,6 @@
 # OH-GLVEC-AB — vector the loan→GL postings. NO ORACLE.
 
-Worktree: `/Users/buv/oh-gerege-glvec` (branch `feat/OHGLVECab`)
+Worktree: `/Users/buv/oh-gerege-glvecb` (branch `feat/OHGLVECb`)
 Work ONLY in that directory. **Take no captures. Issue no POST/PUT/DELETE.** Another run
 holds the machine's oracle access. A read-only health probe is permitted.
 
