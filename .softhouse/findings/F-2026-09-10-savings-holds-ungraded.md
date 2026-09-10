@@ -60,3 +60,47 @@ account and its transactions. Two active accounts exist (id 1 balance 1000.31, i
 * release restores `available` and again leaves `balance` untouched.
 
 A port that decrements `balance` on a hold — the natural mistake — is invisible today.
+
+---
+
+## CORRECTION AND A BETTER INSTRUMENT (same day)
+
+The measurement above — *"78 exported, 3 referenced by conformance, 75 unexercised"* — was
+a **grep for identifiers in the conformance package**, and it **over-claims**. Conformance
+calls a handful of entry points which internally reach far more code, so "not referenced"
+is not "not exercised". Applied across all contexts it produced alarming numbers (loan
+151/165, ledger 133/146) that should NOT be acted on as they stand.
+
+**The right instrument is Go's own coverage, measured with the port as `-coverpkg` and the
+CONFORMANCE package as the test target:**
+
+    go test -coverpkg=./internal/apps/<ctx> -coverprofile=/tmp/c.cov ./internal/apps/<ctx>/conformance/...
+    go tool cover -func=/tmp/c.cov
+
+That answers exactly the question worth asking — **which port code does the golden-vector
+harness actually reach** — instead of a proxy for it.
+
+### What it says here, and it sharpens the finding rather than weakening it
+
+    function                    unit tests    from conformance
+    AccountBalanceOf              100.0%          0.0%
+    AvailableOf                   100.0%          0.0%
+    HeldOf                         92.9%          0.0%
+    HoldNetRunningBalancesOf       92.9%          0.0%
+
+**The hold/available implementation is well UNIT-TESTED and completely UNREACHED by the
+conformance harness.** That distinction is the whole thesis of this programme: a unit test
+proves the code does what its author intended; **only a vector proves it matches the
+oracle.** `CLAUDE.md` — "No ported Go context is correct until its golden vectors match
+Fineract's captured outputs."
+
+So the original conclusion holds — a named non-negotiable was ungraded — and the reason is
+now stated precisely: **not untested, unGRADED.**
+
+### The rule for reusing this
+
+Use the coverage form, not the grep. Treat a `0.0%`-from-conformance function as a
+**candidate**, then confirm the way the holds case was confirmed: **ask whether any
+observation behind it exists in the corpus.** For holds the answer was no — every apparent
+match was a field (`withholdTax`, `amountOnHold`), and no capture carried a hold-flagged
+transaction type. That confirmation is what made it a finding rather than a number.
