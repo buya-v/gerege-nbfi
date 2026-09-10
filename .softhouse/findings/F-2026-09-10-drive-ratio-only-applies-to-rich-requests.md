@@ -59,3 +59,13 @@ a port ignoring a field every vector holds fixed.
 
 **Fixing that needs new captures, not new drives**, and therefore the oracle. It is the
 natural successor to this campaign and is recorded here rather than acted on immediately.
+
+## Update — closed by OH-SHARES-K (2026-09-10)
+
+The residual above WAS acted on. A non-round share product (unit `137.50`, capital
+`188787.50`, 1373 shares) and an Active account (137 shares @ `137.50` = `18837.50`) were
+captured from the oracle, committed, and promoted as `SH-08`/`SH-09`. The new drive
+`shares-wrong-unit-price-hardcoded` kills exactly those two and was measured INERT against
+the old 7-vector store (`parity_fail=0`) — the honest proof that the gap was in the
+observations. Full evidence in
+`F-2026-09-10-shares-nonround-money-closes-corpus-gap.md`.

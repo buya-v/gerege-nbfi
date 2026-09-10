@@ -89,6 +89,59 @@ func accountProbe() *Vector {
 	}
 }
 
+// nonroundAccountProbe builds a valid share-account vector from the NON-ROUND
+// capture (account id 5): 137 shares at 137.50 = 18837.50, so the purchase price
+// and the share count both differ from the seed 100.00 / 100 corpus.
+func nonroundAccountProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-account-nonround",
+		Title:   "probe non-round share account purchase readback",
+		Class:   ClassParity,
+		Context: SharesContext,
+		Note:    "probe: transcribed from shares-nonround-money out/share-account-detail-raw.json, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamShareAccount, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from shares-nonround-money out/share-account-detail-raw.json (account 5)",
+			CaptureRef:    ".softhouse/capture/shares-nonround-money/out/share-account-detail-raw.json",
+			CaptureSHA256: "3d1af6c9640dfa776856c7189e9eb051b24c76eac0dcaf76abe8596824c69c7b",
+			CaptureCaseID: "5",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{
+			Kind:                KindAccount,
+			CurrencyCode:        "MNT",
+			AccountStatusID:     300,
+			TotalApprovedShares: 137,
+			TotalPendingShares:  0,
+			PurchasedShares:     137,
+			PurchasedPrice:      "137.50",
+			PurchasedAmount:     "18837.50",
+			PurchasedStatusID:   300,
+		},
+		Expect: Expect{
+			Kind:                  KindAccount,
+			AccountStatusStored:   300,
+			TotalApprovedShares:   137,
+			TotalPendingShares:    0,
+			PurchasedShares:       137,
+			PurchasedPriceMinor:   "13750",
+			PurchasedAmountMinor:  "1883750",
+			PurchasedStatusStored: 300,
+		},
+		CapabilitiesRequired: []string{"share-account"},
+		GradedAgainst:        []string{"shares-go"},
+	}
+}
+
 // dividendProbe builds a valid share-dividend vector (dividend id 3, the
 // HALF_UP read-back 0.010000 stored, normalised to one minor unit).
 func dividendProbe() *Vector {
@@ -234,6 +287,52 @@ func productProbe(unitPrice, capital, unitMinor, capitalMinor string) *Vector {
 	}
 }
 
+// nonroundProductProbe builds the share-product read-back whose unit price and
+// share capital are NOT the seed 100.00 / 100000.00 (product id 4, unit 137.50,
+// capital 188787.50, 1373 issued shares): the only product probe a hardcoded
+// unit_price = 10000 defect can see.
+func nonroundProductProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-product-nonround",
+		Title:   "probe non-round share-product readback",
+		Class:   ClassParity,
+		Context: SharesContext,
+		Note:    "probe: transcribed from shares-nonround-money out/share-product-detail-raw.json (product 4), not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamShareProduct, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from shares-nonround-money out/share-product-detail-raw.json (product 4)",
+			CaptureRef:    ".softhouse/capture/shares-nonround-money/out/share-product-detail-raw.json",
+			CaptureSHA256: "40c2bcc65b16c5ee579dcbfe9a99e9f57d4e1d3b61a1b4c3125fb4f48dc1b7b1",
+			CaptureCaseID: "4",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: Request{
+			Kind:         KindProduct,
+			CurrencyCode: "MNT",
+			UnitPrice:    "137.50",
+			ShareCapital: "188787.50",
+			TotalShares:  1373,
+		},
+		Expect: Expect{
+			Kind:              KindProduct,
+			UnitPriceMinor:    "13750",
+			ShareCapitalMinor: "18878750",
+			TotalShares:       1373,
+		},
+		CapabilitiesRequired: []string{"share-product"},
+		GradedAgainst:        []string{"shares-go"},
+	}
+}
+
 // accountListProbe builds a valid share-account LIST-ROW vector (account id 3,
 // no purchase group, no money): it grades the stored status and summary counts
 // only.
@@ -334,8 +433,8 @@ func TestRejectFloatTokens(t *testing.T) {
 // non-zero diff on the vectors its defect can see.
 func allProbes() []*Vector {
 	return []*Vector{
-		accountProbe(), dividendProbe(), dividendStatusProbe(),
-		productDetailProbe(), productListProbe(), productZeroProbe(),
+		accountProbe(), nonroundAccountProbe(), dividendProbe(), dividendStatusProbe(),
+		productDetailProbe(), productListProbe(), productZeroProbe(), nonroundProductProbe(),
 		accountListProbe(),
 	}
 }
@@ -347,20 +446,23 @@ func allProbes() []*Vector {
 // dividend vector.
 var wrongImplRed = map[string][]*Vector{
 	"shares-wrong-off-by-one": {
-		accountProbe(), dividendProbe(), dividendStatusProbe(),
-		productDetailProbe(), productListProbe(), productZeroProbe(),
+		accountProbe(), nonroundAccountProbe(), dividendProbe(), dividendStatusProbe(),
+		productDetailProbe(), productListProbe(), productZeroProbe(), nonroundProductProbe(),
 	},
 	"shares-wrong-status-iota-ordinal": {
-		accountProbe(), dividendStatusProbe(), accountListProbe(),
+		accountProbe(), nonroundAccountProbe(), dividendStatusProbe(), accountListProbe(),
 	},
 	"shares-wrong-summary-approved-as-pending": {
-		accountProbe(), accountListProbe(),
+		accountProbe(), nonroundAccountProbe(), accountListProbe(),
 	},
 	"shares-wrong-product-price-transposed": {
-		productDetailProbe(), productListProbe(), productZeroProbe(),
+		productDetailProbe(), productListProbe(), productZeroProbe(), nonroundProductProbe(),
 	},
 	"shares-wrong-zero-money-dropped": {
 		productZeroProbe(),
+	},
+	"shares-wrong-unit-price-hardcoded": {
+		nonroundAccountProbe(), nonroundProductProbe(),
 	},
 }
 
