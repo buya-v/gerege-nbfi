@@ -1,0 +1,102 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L12-repayment-five-leg-journal-posting",
+    "title": "GL read-back single-transaction FIVE-leg repayment posting (loan 12 L53: four bucket credits, one equal debit) mirrors the allocation",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the loan-produced journal-entry batch read back from the journal-entries endpoint for loan entityId 12, transactionId L53, the OHLGT-L03 four-bucket repayment. This is the only committed observation with FIVE legs and an ODD leg count. The posting is ONE transaction id carrying four CREDIT legs, each to a DIFFERENT receivable account, plus ONE DEBIT equal to their sum: CREDIT OHLGR-Loan-Portfolio 91203.12 (principal bucket), CREDIT OHLGR-Interest-Receivable 6618.53 (interest), CREDIT OHLGR-Fees-Receivable 100.0 (fee), CREDIT OHLGR-Penalties-Receivable 57.0 (penalty), DEBIT OHLGR-Fund-Source 97978.65 (cash received). The four credits are EXACTLY the four allocation buckets LN-L11 pins (9120312/661853/10000/5700) and sum to 9797865, the debit: this is the first vector that ties the ALLOCATION seam to the GL POSTING seam, so a port that allocates correctly and posts wrongly, or vice versa, is caught. LN-L09's admission rule (refuse fewer than two distinct transaction ids) does NOT admit this batch, because it has one transaction id; the seam's admission was extended to admit a single multi-leg posting whose credits land on at least two DISTINCT accounts, while keeping the single-pair refusal intact. Three things make it irreducible: (1) FIVE is ODD, so logic that walks legs two at a time drops the fifth (the debit) and no pair-based drive reaches it; (2) the four credits are to DISTINCT accounts, so collapsing them into one OHLGR-Loan-Portfolio credit of 97978.65 still balances and still has the right total and is wrong; (3) it mirrors LN-L11, so the posting cannot drift from the allocation. request.journal_entries transcribes each leg's transactionId, glAccountName, entryType.value and amount; amounts are raised to integer minor units (91203.12 -> 9120312, 6618.53 -> 661853, 100.0 -> 10000, 57.0 -> 5700, 97978.65 -> 9797865). expect.journal_entry_debits_minor and expect.journal_entry_credits_minor are the two independent side totals (9797865 each), transcribed as the sum over EVERY leg, never a netting and never a truncation. expect.journal_entry_account_sides is the third expected cell, transcribed from the same five legs: WHICH account takes WHICH side in WHICH transaction. The drives loan-wrong-journal-entry-batch-collapses-credits-to-one-account, loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time and loan-wrong-journal-entry-batch-debit-from-first-two-credits are the three defects this vector alone discriminates. Nothing was computed by this promotion; every cell is a transcription of the oracle's generated posting.",
+    "oracle": {
+        "seam": "loan-journal-entry-batch-balance",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.journal_entries and both expected totals are transcribed from the five pageItems of the committed capture journalentries-loan-12-after-raw.json whose entityType.value is LOAN, entityId is 12 and transactionId is L53 (entry ids 129-133). capture_case_id names the transaction the batch comprises. The capture is a filtered journal-entries page (totalFilteredRecords 29), so it is identified by the transaction id rather than an externalId. expect.journal_entry_account_sides is transcribed from the same five pageItems, keying each (transactionId, glAccountName) to its entryType.value; no side is inferred from an account's normal balance. The four CREDIT amounts are the same four bucket portions LN-L11 transcribes from loan-12-transactions-after-raw.json (principalPortion 91203.12, interestPortion 6618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0); this vector transcribes the GL posting side of that same repayment, not a recomputation of it.",
+        "capture_ref": ".softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json",
+        "capture_sha256": "9024add5df2946c369719f7d83623d525ddc77df59ca3b457a586d0feed490c9",
+        "capture_case_id": "L53",
+        "citation": "journalentries-loan-12-after-raw.json:1 pageItems for entityId 12 (entityType LOAN), transactionId L53: {\"transactionId\":\"L53\",\"glAccountName\":\"OHLGR-Loan-Portfolio\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":91203.12}, {\"transactionId\":\"L53\",\"glAccountName\":\"OHLGR-Interest-Receivable\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":6618.53}, {\"transactionId\":\"L53\",\"glAccountName\":\"OHLGR-Fees-Receivable\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":100.0}, {\"transactionId\":\"L53\",\"glAccountName\":\"OHLGR-Penalties-Receivable\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":57.0}, {\"transactionId\":\"L53\",\"glAccountName\":\"OHLGR-Fund-Source\",\"entryType\":{\"value\":\"DEBIT\"},\"amount\":97978.65}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "journal_entries": [
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Loan-Portfolio",
+                "entry_type": "CREDIT",
+                "amount_minor": "9120312"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Interest-Receivable",
+                "entry_type": "CREDIT",
+                "amount_minor": "661853"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Fees-Receivable",
+                "entry_type": "CREDIT",
+                "amount_minor": "10000"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Penalties-Receivable",
+                "entry_type": "CREDIT",
+                "amount_minor": "5700"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Fund-Source",
+                "entry_type": "DEBIT",
+                "amount_minor": "9797865"
+            }
+        ]
+    },
+    "expect": {
+        "journal_entry_debits_minor": "9797865",
+        "journal_entry_credits_minor": "9797865",
+        "journal_entry_account_sides": [
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Loan-Portfolio",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Interest-Receivable",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Fees-Receivable",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Penalties-Receivable",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L53",
+                "account": "OHLGR-Fund-Source",
+                "entry_type": "DEBIT"
+            }
+        ]
+    },
+    "capabilities_required": [
+        "journal-entry-batch-balance"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-journal-entry-batch-collapses-credits-to-one-account",
+        "loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time",
+        "loan-wrong-journal-entry-batch-debit-from-first-two-credits"
+    ]
+}
