@@ -194,6 +194,63 @@ func TestFailClosedDegrade(t *testing.T) {
 	t.Logf("fail-closed degrade: %s -> %s", before.Verdict, after.Verdict)
 }
 
+// Control 4 (increment 1, union positive): a binary expression ONE OF WHOSE OPERANDS reaches
+// a boundary must report REACHES-PERSISTENCE. The operand flow here reaches the store ONLY
+// through the binary expression, so the verdict proves union semantics rather than assuming
+// that `a + b` is safe because it is arithmetic.
+func TestBinaryUnionOperandReachesPersistence(t *testing.T) {
+	root := fixtureRoot(t, "binarypos")
+	r := analyze(t, root, "binarypos.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Reaches)
+	if r.Sink == "" {
+		t.Fatalf("REACHES verdict without a boundary is not evidence")
+	}
+	t.Logf("binary union boundary: %s", r.Sink)
+}
+
+// Control 5 (increment 1, union fail-closed): a binary expression with an UNRESOLVED operand
+// must stay UNRESOLVED. Union, not intersection: one operand resolving is never enough to
+// acquit an expression. There is no boundary in this fixture, so the only verdict that could
+// clear it is PROVABLY-NO — which the unresolved operand must forbid.
+func TestBinaryUnionUnresolvedOperandStaysUnresolved(t *testing.T) {
+	root := fixtureRoot(t, "binaryunres")
+	r := analyze(t, root, "binaryunres.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Unresolved)
+	if r.Verdict == ProvablyNo {
+		t.Fatalf("binary expression with an unresolved operand was PROVABLY-NO-PERSISTENCE: fail-open")
+	}
+	t.Logf("binary unresolved causes: %v", r.Causes)
+}
+
+// Control 6 (increment 2, pruning must not lose a path): a value passed to an allow-listed,
+// persistence-inert package AND ALSO stored must still report REACHES-PERSISTENCE. Pruning one
+// use of a value must never acquit the value.
+func TestPruningAllowListedDoesNotLoseStoredPath(t *testing.T) {
+	root := fixtureRoot(t, "prunealso")
+	r := analyze(t, root, "prunealso.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Reaches)
+	if r.Sink == "" {
+		t.Fatalf("REACHES verdict without a boundary is not evidence")
+	}
+	t.Logf("stored path survives pruning: %s", r.Sink)
+}
+
+// Control 7 (increment 2, the Fprint* family is NOT blanket-cleared): fmt.Fprintf writes into
+// an io.Writer, which can be any sink. Here the writer IS a persistence boundary (its Write
+// reaches a db.Exec of a GL posting). The balance handed to Fprintf must NOT be cleared: the
+// correct fail-closed outcome is UNRESOLVED, because Fprintf's writer parameter is not an inert
+// destination. If the family were pruned by package alone, this site would surface as REACHES
+// (arg->boundary-writer) or PROVABLY-NO — never UNRESOLVED.
+func TestFprintfIntoPersistenceWriterNotCleared(t *testing.T) {
+	root := fixtureRoot(t, "fprintf")
+	r := analyze(t, root, "fprintf.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Unresolved)
+	if r.Verdict == ProvablyNo {
+		t.Fatalf("fmt.Fprintf into a persistence-sink writer was PROVABLY-NO-PERSISTENCE: fail-open")
+	}
+	t.Logf("fprintf fail-closed causes: %v", r.Causes)
+}
+
 // copyTree copies a fixture tree (regular files only; fixtures contain no symlinks).
 func copyTree(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
