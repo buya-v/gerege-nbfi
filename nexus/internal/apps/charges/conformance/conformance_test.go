@@ -82,6 +82,97 @@ func percentFeeProbe() *Vector {
 	}
 }
 
+// flatFeeProbe is a flat fee: the fee is the stored amount, unmodified, with no
+// arithmetic performed on it.
+func flatFeeProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-flat-fee",
+		Title:   "probe flat fee",
+		Class:   ClassParity,
+		Context: ChargesContext,
+		Note:    "probe: meaningless numbers, not an observation",
+		Oracle:  OracleStamp{Seam: SeamChargeEvaluate, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: meaningless numbers, not an observation",
+			CaptureRef:    ".softhouse/capture/charges/out/fc/FC-00-probe.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "probe-flat-fee",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: ChargeRequest{
+			Name:            "probe",
+			CurrencyCode:    "MNT",
+			AmountMinor:     "777777",
+			Percentage:      0,
+			AppliesTo:       1,
+			TimeType:        2,
+			CalculationType: 1,
+			PaymentMode:     0,
+			BaseAmountMinor: "",
+		},
+		Expect:        ChargeExpect{Kind: ExpectFee, FeeMinor: "777777"},
+		GradedAgainst: []string{"charges-go"},
+	}
+}
+
+// penaltyAtDisbursementProbe is a flat PENALTY due at disbursement: the charge
+// definition's own Validate() refuses it with one code and assigns no fee. Its
+// shape mirrors OHCAPj-penalty-at-disbursement-refused (750000 minor, penalty
+// true, time 1), which is the only corpus vector whose output reads `penalty`.
+func penaltyAtDisbursementProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-penalty-at-disbursement",
+		Title:   "probe penalty due at disbursement refused",
+		Class:   ClassParity,
+		Context: ChargesContext,
+		Note:    "probe: meaningless numbers, not an observation",
+		Oracle:  OracleStamp{Seam: SeamChargeEvaluate, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: meaningless numbers, not an observation",
+			CaptureRef:    ".softhouse/capture/charges/out/fc/FC-00-probe.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "probe-penalty-at-disbursement",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: ChargeRequest{
+			Name:            "probe",
+			CurrencyCode:    "MNT",
+			AmountMinor:     "750000",
+			Percentage:      0,
+			AppliesTo:       1,
+			TimeType:        1,
+			CalculationType: 1,
+			PaymentMode:     0,
+			Penalty:         true,
+			BaseAmountMinor: "",
+		},
+		Expect: ChargeExpect{
+			Kind:            ExpectValidation,
+			ValidationCodes: []string{"charge.due.at.disbursement.cannot.be.penalty"},
+			FeeMinor:        "",
+		},
+		GradedAgainst: []string{"charges-go"},
+	}
+}
+
 func TestEmptyStoreRefuses(t *testing.T) {
 	store := t.TempDir()
 	s, err := Run(context.Background(), Options{
@@ -243,13 +334,103 @@ func TestOneScaleShortWrongRunsRed(t *testing.T) {
 	wrongRunsRedOn(t, "charges-wrong-percent-one-scale-short", percentFeeProbe())
 }
 
+// TestCalculationTypeAlwaysFlatWrongRunsRed pins the shape of the
+// ignore-calculation_type drive: on a percentage probe the correct port answers
+// the percentage fee (12346) while a port that prices everything as FLAT answers
+// the stored amount (0). The kill is a MONEY kill, which is the point of grading
+// this field before any of the lower-impact ones.
+func TestCalculationTypeAlwaysFlatWrongRunsRed(t *testing.T) {
+	probe := percentFeeProbe()
+
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	wrong, ok := Lookup("charges-wrong-calculation-type-always-flat")
+	if !ok {
+		t.Fatal("charges-wrong-calculation-type-always-flat not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-calculation-type-always-flat"); !bad {
+		t.Fatal("charges-wrong-calculation-type-always-flat not marked wrong")
+	}
+
+	red := gradeOne(probe, Options{Implementation: wrong})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("calculation-type-always-flat outcome = %s, want FAIL", red.Outcome)
+	}
+	if red.MoneyCells != 1 {
+		t.Fatalf("calculation-type-always-flat money cells = %d, want 1 (the kill must be a MONEY kill)", red.MoneyCells)
+	}
+}
+
+// TestPenaltyIgnoredWrongRunsRed pins the shape of the ignore-penalty drive: the
+// correct port refuses a penalty due at disbursement with one validation code,
+// while a port that leaves the flag at its zero value treats it as a fee and
+// returns 750000. The refusal is the only corpus output that reads `penalty`,
+// which is why the kill count is 1 and not more.
+func TestPenaltyIgnoredWrongRunsRed(t *testing.T) {
+	probe := penaltyAtDisbursementProbe()
+
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	wrong, ok := Lookup("charges-wrong-penalty-ignored")
+	if !ok {
+		t.Fatal("charges-wrong-penalty-ignored not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-penalty-ignored"); !bad {
+		t.Fatal("charges-wrong-penalty-ignored not marked wrong")
+	}
+
+	red := gradeOne(probe, Options{Implementation: wrong})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("penalty-ignored outcome = %s, want FAIL", red.Outcome)
+	}
+	var sawValidation bool
+	for _, d := range red.Diffs {
+		if strings.HasPrefix(d, "validation") {
+			sawValidation = true
+		}
+	}
+	if !sawValidation {
+		t.Fatalf("penalty-ignored diffs = %v, want at least one validation diff", red.Diffs)
+	}
+}
+
+// TestBaseAmountIgnoredWrongRunsRed pins the shape of the ignore-base drive: a
+// percentage fee computed against a zero base answers 0 where the probe's
+// recorded fee is 12346, a money kill.
+func TestBaseAmountIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-base-amount-ignored", percentFeeProbe())
+}
+
+// TestTimeTypeIgnoredWrongRunsRed pins the shape of the ignore-time-type drive:
+// the probe's time 2 (SPECIFIED_DUE_DATE) decodes to INVALID(0), which is not a
+// loan-legal charge time, so the fee probe is answered with a validation code
+// and no fee.
+func TestTimeTypeIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-time-type-ignored", percentFeeProbe())
+}
+
+// TestAmountIgnoredWrongRunsRed pins the shape of the ignore-amount drive: the
+// flat probe's fee is its stored amount, so a port that never decodes
+// amount_minor answers 0.
+func TestAmountIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-amount-ignored", flatFeeProbe())
+}
+
 // TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red
-// drive: the two rounding modes agree on every non-tie product (so the driver
-// is byte-identical to the correct port on the stored corpus, whose one
-// rounding vector FC-09 carries the fraction .55525), and differ only when the
-// exact fee lands on .5 minor units — a product no stored vector carries. The
-// probe is an exact half: 100 minor units x 0.5% = 0.5, which HALF_UP rounds to
-// 1 and HALF_EVEN rounds to 0.
+// drive: the two rounding modes agree on every product whose truncated value is
+// ODD (so the drive is indistinguishable from the correct port on the
+// non-tie probe, whose fraction is .67) and differ only when the exact fee
+// lands on a half-minor tie whose truncated value is EVEN — 1162502.5 rounds to
+// 1162503 under HALF_UP but 1162502 under HALF_EVEN, which is exactly the kill
+// the stored vector OHCAPj-pctamount-disbursement-halfup-tie reports. The
+// probe is an exact half: 100 minor units x 0.5% = 0.5, whose truncated 0 is
+// even, so HALF_UP rounds to 1 and HALF_EVEN rounds to 0.
 func TestHalfEvenDiffersOnlyOnAnExactHalf(t *testing.T) {
 	tie := percentFeeProbe()
 	tie.CaseID = "probe-half-even-tie"
@@ -272,8 +453,9 @@ func TestHalfEvenDiffersOnlyOnAnExactHalf(t *testing.T) {
 		t.Fatal("wrong implementation not marked wrong")
 	}
 
-	// On the corpus-shaped probe (fraction .67, no tie) it is indistinguishable
-	// from the correct port — that is why the stored corpus grades it green.
+	// On a non-tie probe (fraction .67) it agrees with the correct port; only the
+	// stored tie vector OHCAPj-pctamount-disbursement-halfup-tie sees the mode
+	// substitution, which is why the drive's kill count is exactly 1.
 	corpusLike := gradeOne(percentFeeProbe(), Options{Implementation: halfEven})
 	if corpusLike.Outcome != OutcomePass {
 		t.Fatalf("half-even on a non-tie probe = %s, want PASS (indistinguishable); diffs=%v",
