@@ -6,6 +6,12 @@
    "description": "Read the m_external_asset_owner_transfer row (transfer_id, owner.external_id, loan.loan_id, loan.external_id, transfer_external_id, purchase_price_ratio, settlement_date, status, effective_from, effective_to) by loan id, as returned by the external-asset-owner transfers read-back.",
    "in_graded_domain": true,
    "evidence": "Capture transfer-read-loan-6-raw.json under tenant gerege: the running oracle returned the single transfer row (transferId 1, owner.externalId SEED-Inv-01, loan.loanId 6, loan.externalId SEED-L06, transferExternalId SEED-Tr-01, purchasePriceRatio 97.25, settlementDate 2026-09-01, status PENDING, effectiveFrom 2026-09-01, effectiveTo 9999-12-31)."
+  },
+  {
+   "name": "transfer-settlement",
+   "description": "Settle an external asset owner transfer: the m_external_asset_owner_transfer row advances to ACTIVE, its one-to-one m_external_asset_owner_transfer_details snapshot carries the four outstanding buckets and their DERIVED total, and the COB transfer step posts balanced journal entries whose Transfers-Suspense leg is the FULL outstanding.",
+   "in_graded_domain": true,
+   "evidence": "Capture transfer-28-je-post.json under tenant gerege: COB settled transfer 28 on loan 12 (status ACTIVE, settlementDate 2026-09-02, effectiveFrom 2026-09-03), details {principal 100000.000000, interest 6618.530000, fee 100.000000, penalty 57.000000, totalOutstanding 106775.530000, totalOverpaid 0.000000}, and 10 journal entries ids 119-128 with debits == credits == 213551.060000 and Transfers-Suspense (OHLGR-10011) 106775.530000; db-transfer-je-mapping-ohinvy.txt maps all ten entries to owner_transfer_id 28. totalOverpaid is 0.0, so this capture cannot discriminate whether overpaid is excluded from the total."
   }
  ],
  "seams": [
@@ -15,7 +21,14 @@
    "status": {
     "transfer-read": "exercised"
    }
+  },
+  {
+   "name": "external-asset-owner-transfer-settlement",
+   "description": "The SETTLED m_external_asset_owner_transfer row (transfer 28 on loan 12) together with its one-to-one transfer-details snapshot and the journal entries COB posted for it, observed under tenant gerege after the ASSET_TRANSFER (100) financial-activity-account mapping was created.",
+   "status": {
+    "transfer-settlement": "exercised"
+   }
   }
  ],
- "note": "Investor parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). One capability is graded: the external-asset-owner transfer read. purchase_price_ratio is stored and returned as a decimal STRING (97.25) with no integer-minor-unit representation and no division/rounding surface on the read path, so it is not a money cell and carries no rounding surface."
+ "note": "Investor parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the external-asset-owner transfer read (seam external-asset-owner-transfer-read) and the external-asset-owner transfer settlement (seam external-asset-owner-transfer-settlement). purchase_price_ratio is stored and returned as a decimal STRING (97.25) with no integer-minor-unit representation and no division/rounding surface on the read path, so it is not a money cell and carries no rounding surface."
 }

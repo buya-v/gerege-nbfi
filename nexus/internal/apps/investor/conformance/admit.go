@@ -36,10 +36,10 @@ func Admit(v *Vector, opts Options) []string {
 	if v.Class != ClassParity {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
-	if v.Oracle.Seam != SeamExternalAssetOwnerTransferRead {
+	if v.Oracle.Seam != SeamExternalAssetOwnerTransferRead && v.Oracle.Seam != SeamExternalAssetOwnerTransferSettlement {
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the %q seam",
-			v.Oracle.Seam, SeamExternalAssetOwnerTransferRead))
+			"oracle.seam %q: this harness grades only the %q and %q seams",
+			v.Oracle.Seam, SeamExternalAssetOwnerTransferRead, SeamExternalAssetOwnerTransferSettlement))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -119,12 +119,25 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// admitRequest enforces that a vector sets exactly the transfer-read request
-// shape and that the loan id is a positive integer.
+// admitRequest enforces that a vector sets exactly the request shape its seam
+// uses, and that the keying id is a positive integer. The read seam is keyed by
+// loan id alone; the settlement seam is keyed by loan id AND transfer id.
 func admitRequest(v *Vector) []string {
 	var problems []string
 	if v.Request.LoanID <= 0 {
 		problems = append(problems, fmt.Sprintf("request.loan_id %d is not a positive loan id", v.Request.LoanID))
+	}
+	switch v.Oracle.Seam {
+	case SeamExternalAssetOwnerTransferSettlement:
+		if v.Request.TransferID <= 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.transfer_id %d is not a positive transfer id: the settlement seam is keyed by it", v.Request.TransferID))
+		}
+	default:
+		if v.Request.TransferID != 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.transfer_id %d is set on the read seam, which is keyed by loan id alone", v.Request.TransferID))
+		}
 	}
 	return problems
 }
@@ -140,6 +153,9 @@ func admitRequest(v *Vector) []string {
 // is refused under default-deny rather than silently ignored.
 func admitExpect(v *Vector) []string {
 	var problems []string
+	if v.Expect.Empty && v.Oracle.Seam == SeamExternalAssetOwnerTransferSettlement {
+		problems = append(problems, "expect.empty is set on the settlement seam: a SETTLED transfer carries a row, a one-to-one details snapshot and posted journal entries")
+	}
 	if v.Expect.Empty {
 		if v.Expect.TransferID != 0 {
 			problems = append(problems, fmt.Sprintf("expect.transfer_id %d contradicts expect.empty: an empty page has no transfer row", v.Expect.TransferID))
@@ -167,6 +183,12 @@ func admitExpect(v *Vector) []string {
 		}
 		if v.Expect.EffectiveTo != "" {
 			problems = append(problems, "expect.effective_to contradicts expect.empty: an empty page has no transfer row")
+		}
+		if v.Expect.Details != nil {
+			problems = append(problems, "expect.details contradicts expect.empty: an empty page has no transfer-details row")
+		}
+		if v.Expect.Journal != nil {
+			problems = append(problems, "expect.journal contradicts expect.empty: an empty page has no posted journal entries")
 		}
 		return problems
 	}
@@ -196,6 +218,89 @@ func admitExpect(v *Vector) []string {
 	}
 	if v.Expect.EffectiveTo == "" {
 		problems = append(problems, "expect.effective_to is empty")
+	}
+
+	// The two seams state different facts. The read seam observed a PENDING
+	// transfer with no details row; a details or journal claim there is not a
+	// parity observation and is refused. The settlement seam observes a settled
+	// transfer and MUST state both the details snapshot and the journal
+	// aggregate.
+	switch v.Oracle.Seam {
+	case SeamExternalAssetOwnerTransferRead:
+		if v.Expect.Details != nil {
+			problems = append(problems, "expect.details is set on the read seam: the observed PENDING transfer carries no m_external_asset_owner_transfer_details row")
+		}
+		if v.Expect.Journal != nil {
+			problems = append(problems, "expect.journal is set on the read seam: the read seam grades the transfer row, not posted journal entries")
+		}
+	case SeamExternalAssetOwnerTransferSettlement:
+		problems = append(problems, admitSettlementDetails(v.Expect.Details)...)
+		problems = append(problems, admitSettlementJournal(v.Expect.Journal)...)
+	}
+	return problems
+}
+
+// admitSettlementDetails enforces that the settlement seam states a complete,
+// structurally sane m_external_asset_owner_transfer_details snapshot. Every
+// amount is an integer minor-unit count carried by a signed int64; the floor is
+// non-negative. It does NOT require the stated total to equal the bucket sum:
+// if a capture ever stored a total that is not the bucket sum, that divergence
+// is exactly what the port's derivation must be graded against, and refusing the
+// vector at admit time would suppress the observation.
+func admitSettlementDetails(d *TransferDetails) []string {
+	if d == nil {
+		return []string{"expect.details is missing: the settlement seam grades the one-to-one m_external_asset_owner_transfer_details snapshot"}
+	}
+	var problems []string
+	if d.DetailsID <= 0 {
+		problems = append(problems, fmt.Sprintf("expect.details.details_id %d is not positive", d.DetailsID))
+	}
+	for _, cell := range []struct {
+		name  string
+		value int64
+	}{
+		{"total_principal_outstanding_minor", d.TotalPrincipalOutstandingMinor},
+		{"total_interest_outstanding_minor", d.TotalInterestOutstandingMinor},
+		{"total_fee_charges_outstanding_minor", d.TotalFeeChargesOutstandingMinor},
+		{"total_penalty_charges_outstanding_minor", d.TotalPenaltyChargesOutstandingMinor},
+		{"total_outstanding_minor", d.TotalOutstandingMinor},
+		{"total_overpaid_minor", d.TotalOverpaidMinor},
+	} {
+		if cell.value < 0 {
+			problems = append(problems, fmt.Sprintf("expect.details.%s %d is negative: a minor-unit count is non-negative", cell.name, cell.value))
+		}
+	}
+	return problems
+}
+
+// admitSettlementJournal enforces that the settlement seam states a complete,
+// balanced journal aggregate. Double-entry is a non-negotiable: a captured
+// posting that did not balance is not a valid parity observation of this port,
+// and is refused rather than vectored. As with the details total, the posted
+// amount is NOT required here to equal the details total: a capture where the
+// posted amount diverged from the outstanding would be this port's divergence
+// to expose, not to refuse at admit time.
+func admitSettlementJournal(j *JournalSummary) []string {
+	if j == nil {
+		return []string{"expect.journal is missing: the settlement seam grades the journal entries the transfer posted"}
+	}
+	var problems []string
+	if j.EntryCount <= 0 {
+		problems = append(problems, fmt.Sprintf("expect.journal.entry_count %d is not positive", j.EntryCount))
+	}
+	if j.DebitTotalMinor <= 0 {
+		problems = append(problems, fmt.Sprintf("expect.journal.debit_total_minor %d is not positive", j.DebitTotalMinor))
+	}
+	if j.CreditTotalMinor <= 0 {
+		problems = append(problems, fmt.Sprintf("expect.journal.credit_total_minor %d is not positive", j.CreditTotalMinor))
+	}
+	if j.DebitTotalMinor != j.CreditTotalMinor {
+		problems = append(problems, fmt.Sprintf(
+			"expect.journal does not balance: debits %d != credits %d, so it is not a valid double-entry posting",
+			j.DebitTotalMinor, j.CreditTotalMinor))
+	}
+	if j.PostedAmountMinor <= 0 {
+		problems = append(problems, fmt.Sprintf("expect.journal.posted_amount_minor %d is not positive", j.PostedAmountMinor))
 	}
 	return problems
 }
