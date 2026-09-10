@@ -21,6 +21,30 @@ product **id 3 `OHLGT`/`OHLGR-Accrual-Loan`, `ACCRUAL PERIODIC`**, with a full
 `accountingMappings` set and 11 `OHLGR-*` GL accounts. **Loans 10, 11 and 12 are on product
 3 and post journal entries.** Verify all of this before relying on it.
 
+## TERMINAL HAZARD — this killed the first attempt at this exact task
+
+The previous `OH-INV-W` run **wedged its terminal dead at event 31 and never recovered.**
+It was killed with nothing written. The command:
+
+    docker exec gerege-oracle-db psql -U root -d postgres -tAc "SELECT name FROM pg_database WHERE datname LIKE '%gerege%'
+
+**The double quote is never closed.** The shell sat waiting on stdin for the rest of the
+string; every later probe returned `exit_code -1`, and the agent's `C-c` did not help
+because the wrapper sends it as *input text* to a shell that is asking for more string.
+
+**Therefore:**
+* **Check every quote and heredoc is closed before you send a command.** An unterminated
+  quote does not error — it hangs, and it takes the whole run with it.
+* Prefer a **single-quoted** SQL string, or a heredoc you can see terminated.
+* Prefer the **REST API over `docker exec psql`** wherever it can answer the question. SQL
+  is read-only here anyway, so the API is usually the shorter path.
+* If a command does hang, `C-c` is unreliable — send an **empty command** to drain, and if
+  two probes in a row return `-1`, assume the terminal is dead and say so in your next
+  commit rather than burning the budget probing it.
+
+(That query was also wrong on its own terms: `pg_database` has no `name` column; it is
+`datname`.)
+
 ## The path
 
 1. **Verify the state.** Product 3 accounting rule and mappings; loans 10/11/12 exist;
