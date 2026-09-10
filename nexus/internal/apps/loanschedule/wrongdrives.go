@@ -49,6 +49,67 @@ type variant struct {
 	// daysInYear365 reads the DAYS_360 convention's days-in-year constant as
 	// 365. Loanschedule-wrong-days-in-year-365.
 	daysInYear365 bool
+
+	// frequencyUnitAsMonths replaces every RepaymentFrequencyUnit with MONTHS
+	// before any guard or stepping reads it.
+	// Loanschedule-wrong-frequency-unit-ignored.
+	frequencyUnitAsMonths bool
+
+	// repaymentCountAsOne replaces NumberOfRepayments with the minimum the
+	// contract admits, so the term never comes from the request.
+	// Loanschedule-wrong-repayments-fixed-one.
+	repaymentCountAsOne bool
+
+	// interestRateAsZero replaces AnnualNominalInterestRate with the Go zero
+	// value, so no interest cell is ever charged.
+	// Loanschedule-wrong-rate-zero.
+	interestRateAsZero bool
+
+	// scheduleStartAsDisbursement replaces ScheduleStartDate with the
+	// disbursement date, so the two are never distinguished.
+	// Loanschedule-wrong-schedule-start-ignored.
+	scheduleStartAsDisbursement bool
+
+	// disbursementSeedAsScheduleStart re-anchors the month-end rule to
+	// ScheduleStartDate instead of the disbursement date.
+	// Loanschedule-wrong-disbursement-seed-ignored.
+	disbursementSeedAsScheduleStart bool
+
+	// disbursementAmountAsOne replaces Disbursements[0].AmountMinor with one
+	// minor unit, so the principal never comes from the request.
+	// Loanschedule-wrong-disbursement-amount-ignored.
+	disbursementAmountAsOne bool
+}
+
+// applyRequest rewrites the request fields that a request-level wrong drive
+// never reads. Everything a drive does not switch is passed through untouched.
+func (v variant) applyRequest(req contract.GenerateRequest) contract.GenerateRequest {
+	if v.frequencyUnitAsMonths {
+		req.RepaymentFrequencyUnit = contract.FrequencyMonths
+	}
+	if v.repaymentCountAsOne {
+		req.NumberOfRepayments = 1
+	}
+	if v.interestRateAsZero {
+		req.AnnualNominalInterestRate = contract.Rate{Numerator: 0, Denominator: 1}
+	}
+	if v.scheduleStartAsDisbursement {
+		req.ScheduleStartDate = req.Disbursements[0].Date
+	}
+	if v.disbursementAmountAsOne && len(req.Disbursements) > 0 {
+		req.Disbursements[0].AmountMinor = 1
+	}
+	return req
+}
+
+// dueDateSeed returns the seed the month-end rule re-anchors to. The graded
+// port seeds on the disbursement date (contract.Disbursement.Date); a drive may
+// substitute the schedule start.
+func (v variant) dueDateSeed(req contract.GenerateRequest) civilDate {
+	if v.disbursementSeedAsScheduleStart {
+		return req.ScheduleStartDate
+	}
+	return req.Disbursements[0].Date
 }
 
 // wrongScheduleGenerator is the one wrong-drive type: a validated generator
@@ -100,4 +161,81 @@ func NewWrongHalfEven() contract.ScheduleGenerator {
 // one.
 func NewWrongDaysInYear365() contract.ScheduleGenerator {
 	return wrongScheduleGenerator{v: variant{daysInYear365: true}}
+}
+
+// NewWrongFrequencyUnitIgnored returns the wrong drive that never reads
+// RepaymentFrequencyUnit: it normalises every unit to MONTHS before the
+// unsupported-configuration arm and the graded-domain guard.
+//
+// WHY A COMPETENT PORTER WRITES THIS. Every capture in the corpus is monthly
+// and the contract says MONTHS "is the only unit in the graded domain", so the
+// only arm any working porter ever exercises is plusMonths. A porter who wires
+// the stepping directly to a monthly calendar add and never carries the enum
+// into the two guards that read it writes exactly this. The field's only
+// observable effect in the corpus is that REFUSE-03 is refused; with the unit
+// erased, its YEARS plus FIXED_30_360 request is answered instead.
+func NewWrongFrequencyUnitIgnored() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{frequencyUnitAsMonths: true}}
+}
+
+// NewWrongRepaymentsFixedOne returns the wrong drive that never reads
+// NumberOfRepayments and builds a single-repayment contract.
+//
+// WHY A COMPETENT PORTER WRITES THIS. NumberOfRepayments is the field that
+// decides how many periods exist, so a port with it unwired does not produce a
+// wrong interest cell, it produces a wrong SHAPE -- one period where the
+// request asked for many. 1 is the minimum the contract admits and is well
+// formed and inside the graded domain (contract.GenerateRequest.NumberOfRepayments),
+// so this drive passes the front half unchanged and differs only in the count.
+func NewWrongRepaymentsFixedOne() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{repaymentCountAsOne: true}}
+}
+
+// NewWrongRateZero returns the wrong drive that never reads
+// AnnualNominalInterestRate and charges 0% on every period.
+//
+// WHY A COMPETENT PORTER WRITES THIS. A rate that is never wired takes Go's
+// zero value, and Rate{0,1} is explicitly a legal, un-special-cased request
+// (contract.GenerateRequest.AnnualNominalInterestRate): the recurrence yields
+// the installment count and the installment is principal/count. So the port
+// validates, generates and answers -- it is only the graded cells that move.
+func NewWrongRateZero() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{interestRateAsZero: true}}
+}
+
+// NewWrongScheduleStartIgnored returns the wrong drive that never reads
+// ScheduleStartDate and uses the disbursement date as the period anchor.
+//
+// WHY A COMPETENT PORTER WRITES THIS. A simple loan model has one date, the
+// day the money moves, and the contract spends a paragraph insisting the two
+// dates "reach different places in the reference oracle"
+// (contract.GenerateRequest.ScheduleStartDate). A porter who collapses them
+// onto the disbursement date writes exactly this.
+func NewWrongScheduleStartIgnored() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{scheduleStartAsDisbursement: true}}
+}
+
+// NewWrongDisbursementSeedIgnored returns the wrong drive that re-anchors the
+// month-end rule to ScheduleStartDate instead of the disbursement date.
+//
+// WHY A COMPETENT PORTER WRITES THIS. The disbursement date is the seed of the
+// month-end rule only because LoanApplicationTerms.java:583-589 selects it;
+// the request also carries a schedule start that looks like the more natural
+// anchor. A porter who seeds on ScheduleStartDate writes exactly this, and the
+// two agree on every vector whose two dates fall on the same day.
+func NewWrongDisbursementSeedIgnored() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{disbursementSeedAsScheduleStart: true}}
+}
+
+// NewWrongDisbursementAmountIgnored returns the wrong drive that never reads
+// Disbursements[0].AmountMinor and advances one minor unit as principal.
+//
+// WHY A COMPETENT PORTER WRITES THIS. The disbursement record carries the only
+// copy of the principal, so the interesting failure is not a wrong cell but a
+// missing read: a porter who sizes the schedule from some other field (or from a
+// constant) never touches the amount. One minor unit is positive and keeps the
+// request inside the graded domain, so the port still validates and answers --
+// only the disbursement row's amount and every money cell move.
+func NewWrongDisbursementAmountIgnored() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{disbursementAmountAsOne: true}}
 }
