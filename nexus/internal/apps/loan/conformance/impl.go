@@ -776,6 +776,15 @@ const (
 	// What moves is WHICH account takes WHICH side, the per-(transaction,
 	// account) cell this drive exists to isolate.
 	wrongBatchSwapsFirstPairSides
+	// wrongBatchRoutesFeeThroughDisbursementAccounts posts every leg of a later
+	// transaction id through the FIRST transaction id's account mapping: the fee
+	// pair is routed to the disbursement's accounts instead of its own. Sides
+	// and amounts are untouched, so BOTH totals stay observed and every leg
+	// keeps its side; only WHICH GL account a fee leg names moves. It is the
+	// mapping defect the totals, the side swap and the truncation drives all
+	// miss, because a batch that posts a fee to the loan portfolio instead of to
+	// income still balances exactly.
+	wrongBatchRoutesFeeThroughDisbursementAccounts
 )
 
 // wrongJournalEntryBatchEvaluator is a DELIBERATELY WRONG implementation of the
@@ -836,6 +845,33 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 		}
 	}
 
+	// The account-mapping defect is the one the side cells' SIDE term cannot
+	// see and the side SWAP cannot either: the fee pair's own accounts are
+	// replaced by the disbursement transaction's accounts for the same side,
+	// leaving every leg's side and amount untouched. Both totals still equal the
+	// observed sums and the side list still reads DEBIT/CREDIT exactly as
+	// observed; only the account a fee leg names moves.
+	if mode == wrongBatchRoutesFeeThroughDisbursementAccounts {
+		first := order[0]
+		bySide := map[loan.JournalEntrySide]string{}
+		for _, l := range parsed {
+			if l.txn != first {
+				continue
+			}
+			if _, ok := bySide[l.side]; !ok {
+				bySide[l.side] = l.acct
+			}
+		}
+		for i := range parsed {
+			if parsed[i].txn == first {
+				continue
+			}
+			if acct, ok := bySide[parsed[i].side]; ok {
+				parsed[i].acct = acct
+			}
+		}
+	}
+
 	var debits, credits loan.MinorUnits
 	add := func(l parsedLeg) {
 		if l.side == loan.JournalEntryDebit {
@@ -885,8 +921,9 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 			}
 		}
 	default:
-		// wrongBatchSwapsFirstPairSides (and the zero value) sum every leg on
-		// its (possibly flipped) side: the totals are unchanged by the swap.
+		// wrongBatchSwapsFirstPairSides, wrongBatchRoutesFeeThroughDisbursementAccounts
+		// and the zero value sum every leg on its (possibly remapped/flipped)
+		// side: neither defect changes any amount, so both totals stay observed.
 		for _, l := range parsed {
 			add(l)
 		}
@@ -978,4 +1015,12 @@ func init() {
 			"EQUAL at the observed 100100.00 and only the per-(transaction, account) side cells go red — "+
 			"the defect the two total cells cannot see",
 		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchSwapsFirstPairSides})
+	RegisterWrong("loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts",
+		"routes every leg of a LATER transaction id through the FIRST transaction id's account "+
+			"mapping, so the pinned fee pair L18 posts DEBIT OHLGR-Loan-Portfolio / CREDIT "+
+			"OHLGR-Fund-Source instead of its own DEBIT OHLGR-Fund-Source / CREDIT "+
+			"OHLGR-Income-From-Fees; all four sides and both totals stay exactly at the observed "+
+			"100100.00/100100.00, so only the per-(transaction, account) side cells move — a fee "+
+			"posted to the loan portfolio instead of to income, and every total still balances",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchRoutesFeeThroughDisbursementAccounts})
 }

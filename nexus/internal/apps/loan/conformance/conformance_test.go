@@ -522,6 +522,7 @@ func journalBatchProbe() *Vector {
 			"loan-wrong-journal-entry-batch-drops-fee-pair",
 			"loan-wrong-journal-entry-batch-nets-account",
 			"loan-wrong-journal-entry-batch-swaps-first-pair-sides",
+			"loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts",
 		},
 	}
 }
@@ -582,6 +583,75 @@ func TestJournalEntryBatchSeamGrading(t *testing.T) {
 		swapped.JournalEntryAccountSides[1].EntryType != "DEBIT" {
 		t.Fatalf("swap sides = %s/%s, want the L17 pair reversed to CREDIT/DEBIT",
 			swapped.JournalEntryAccountSides[0].EntryType, swapped.JournalEntryAccountSides[1].EntryType)
+	}
+}
+
+// TestFeeMappingDriveIsInvisibleToTotalsAndSides proves the mapping defect is a
+// FOURTH, distinct shape rather than a restatement of the swap. Routing every
+// L18 fee leg through the L17 disbursement accounts keeps BOTH totals AND ALL
+// FOUR sides at the observed values and moves only the GL account a fee leg
+// names: a fee posted to the loan portfolio instead of to income, still exactly
+// balanced. That is the hole the totals, the side swap and the existing
+// truncation drives all miss.
+func TestFeeMappingDriveIsInvisibleToTotalsAndSides(t *testing.T) {
+	impl, ok := Lookup("loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts")
+	if !ok {
+		t.Fatal("mapping drive not registered")
+	}
+	got, err := impl.Evaluate(journalBatchProbe().Request)
+	if err != nil {
+		t.Fatalf("mapping Evaluate: %v", err)
+	}
+	if got.JournalEntryDebitsMinor != "10010000" || got.JournalEntryCreditsMinor != "10010000" {
+		t.Fatalf("mapping totals = %s/%s, want the observed 10010000/10010000",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+	}
+	// The sides are exactly the observed sides; only the two L18 accounts move,
+	// from the fee's own pair to the disbursement's pair.
+	wantSides := []string{"DEBIT", "CREDIT", "CREDIT", "DEBIT"}
+	wantAccounts := []string{
+		"OHLGR-Loan-Portfolio",
+		"OHLGR-Fund-Source",
+		"OHLGR-Fund-Source",
+		"OHLGR-Loan-Portfolio",
+	}
+	if len(got.JournalEntryAccountSides) != len(wantSides) {
+		t.Fatalf("mapping sides has %d entries, want %d", len(got.JournalEntryAccountSides), len(wantSides))
+	}
+	for i, s := range got.JournalEntryAccountSides {
+		if s.EntryType != wantSides[i] {
+			t.Fatalf("mapping sides[%d] = %s, want %s (the defect must not move a side)",
+				i, s.EntryType, wantSides[i])
+		}
+		if s.Account != wantAccounts[i] {
+			t.Fatalf("mapping accounts[%d] = %s, want %s", i, s.Account, wantAccounts[i])
+		}
+	}
+	// The fee pair no longer names either of its own accounts.
+	if got.JournalEntryAccountSides[2].Account == "OHLGR-Income-From-Fees" ||
+		got.JournalEntryAccountSides[3].Account == "OHLGR-Fund-Source" {
+		t.Fatal("the fee pair must no longer name its own Income-From-Fees/Fund-Source pair")
+	}
+
+	// Through the grader, the reclassification must leave BOTH money cells at
+	// the observed totals and fail only on the per-(transaction, account) side
+	// list. Note the side list is compared in a canonical (transaction, account)
+	// order, so the remapped L18 legs collide positionally with expected L18
+	// legs and the diff can surface as an entry_type term at a collided index as
+	// well as an account term. What matters, and what no total cell can see, is
+	// that the reclassification never moves money: both totals stay observed and
+	// the failure is confined to the side list.
+	red := gradeOne(journalBatchProbe(), Options{Implementation: impl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("mapping drive outcome = %s, want FAIL", red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatal("mapping drive produced no diffs")
+	}
+	for _, d := range red.Diffs {
+		if !strings.Contains(d, "journal_entry_account_sides[") {
+			t.Fatalf("mapping drive escaped the side list: %s", d)
+		}
 	}
 }
 
