@@ -80,7 +80,7 @@ summary and the transaction list are in one document).
 |---|---|---|---|---|
 | before | 1000.31 | 1000.31 | — (null) | none |
 | after hold | **1000.31** (unmoved) | **863.02** (-137.29) | **137.29** | id **6**, enum **20**, amount **137.29**, runningBalance **863.02** |
-| after release | _filled in by `bin/step02-release.sh`_ | _pending_ | _pending_ | _pending_ |
+| after release | **1000.31** (still unmoved) | **1000.31** (restored) | **0.00** | id **6** now `release_id 7`; release row id **7**, enum **21**, amount **137.29**, runningBalance **1000.31** |
 
 ### After the hold (observed)
 
@@ -105,6 +105,35 @@ summary and the transaction list are in one document).
   `transaction_type_enum 20` is the oracle's `AMOUNT_HOLD`. `account_balance_derived`
   is **1000.31**, unmoved by the hold; `total_savings_amount_on_hold` is 137.29.
 
+### After the release (observed)
+
+* `POST /savingsaccounts/1/transactions/6?command=releaseAmount` -> 200
+  (`out/savings-hold-releaseAmount-raw.json`):
+  `{"officeId":1,"clientId":5,"savingsId":1,"resourceId":7}` — the release row is
+  transaction id **7**.
+* `GET /savingsaccounts/1?associations=all` -> 200
+  (`out/savings-hold-after-release-account-raw.json`):
+  `summary.accountBalance = 1000.31`, `summary.availableBalance = 1000.31` —
+  available is restored and the posted balance still has not moved.
+* transaction list now: `(id, amountHold, amountRelease, amount, runningBalance, releaseTransactionId)` =
+  `(7, false, true, 137.29, 1000.31, 0)`, `(6, true, false, 137.29, 863.02, **7**)`,
+  `(2, false, false, 0.16, ...)`, `(3, false, false, 0.15, ...)`, `(1, false, false, 1000.0, ...)`.
+  The hold row id 6 now points at its release via `releaseTransactionId = 7`.
+* read-only DB cross-check (`out/db-after-release.txt`):
+
+      m_savings_account : 1|1000.310000|0.000000
+      m_savings_account_transaction (id|type|amount|running_balance|release_id|is_reversed|is_reversal):
+        1|1|1000.000000|1000.000000|0|f|f
+        2|3|0.160000|1000.310000|0|f|f
+        3|3|0.150000|1000.150000|0|f|f
+        6|20|137.290000|863.020000|7|f|f
+        7|21|137.290000|1000.310000|0|f|f
+
+  `transaction_type_enum 21` is the oracle's `AMOUNT_RELEASE`. The hold row id 6
+  carries `release_id_of_hold_amount = 7`; the account's
+  `total_savings_amount_on_hold` is back to **0**, and `account_balance_derived`
+  is **1000.31** throughout — before, during, and after the hold.
+
 ### Before the hold (observed)
 
 * `GET /savingsaccounts/1?associations=all` -> 200
@@ -124,9 +153,9 @@ summary and the transaction list are in one document).
 | **place hold** | `POST /savingsaccounts/1/transactions?command=holdAmount` | 200 `{"resourceId":6,...}` | `out/savings-hold-holdAmount-raw.json` (`req/savings-hold-holdAmount.json`) |
 | account after hold | `GET /savingsaccounts/1?associations=all` | 200 | `out/savings-hold-after-hold-account-raw.json` |
 | transactions after hold | `GET /savingsaccounts/1?associations=transactions` | 200 | `out/savings-hold-after-hold-transactions-raw.json` |
-| **release hold** | `POST /savingsaccounts/1/transactions/6?command=releaseAmount` | _pending_ | `out/savings-hold-releaseAmount-raw.json` (`req/savings-hold-releaseAmount.json`) |
-| account after release | `GET /savingsaccounts/1?associations=all` | _pending_ | `out/savings-hold-after-release-account-raw.json` |
-| transactions after release | `GET /savingsaccounts/1?associations=transactions` | _pending_ | `out/savings-hold-after-release-transactions-raw.json` |
+| **release hold** | `POST /savingsaccounts/1/transactions/6?command=releaseAmount` | 200 `{"resourceId":7,...}` | `out/savings-hold-releaseAmount-raw.json` (`req/savings-hold-releaseAmount.json`) |
+| account after release | `GET /savingsaccounts/1?associations=all` | 200 | `out/savings-hold-after-release-account-raw.json` |
+| transactions after release | `GET /savingsaccounts/1?associations=transactions` | 200 | `out/savings-hold-after-release-transactions-raw.json` |
 
 Scripts: `bin/step01-before-and-hold.sh`, `bin/step02-release.sh`
 (phase 2 is separate so the run could commit between the hold and the release).
@@ -154,7 +183,7 @@ Every money value in `req/` is a quoted decimal string; the only non-string is
 class drift.
 
     req/savings-hold-holdAmount.json   {"transactionDate":"03 September 2026","transactionAmount":"137.29","locale":"en","dateFormat":"dd MMMM yyyy","lienAllowed":false,"reasonForBlock":"OH-HOLDCAP-R reference-oracle hold/release capture"}
-    req/savings-hold-releaseAmount.json  {}    (pending; filled by step02)
+    req/savings-hold-releaseAmount.json  {}    (2 bytes, no trailing newline)
 
 ## Safety
 
