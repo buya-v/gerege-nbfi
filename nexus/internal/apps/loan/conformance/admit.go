@@ -38,12 +38,14 @@ func Admit(v *Vector, opts Options) []string {
 	}
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
-		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance:
+		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
+		SeamLoanJournalEntryBatchBalance:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
-			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance))
+			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
+			SeamLoanJournalEntryBatchBalance))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -123,7 +125,7 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// requestShapeCount is how many of the six request sub-shapes a vector sets.
+// requestShapeCount is how many of the seven request sub-shapes a vector sets.
 // Every seam requires exactly one.
 func requestShapeCount(v *Vector) int {
 	n := 0
@@ -145,6 +147,9 @@ func requestShapeCount(v *Vector) int {
 	if len(v.Request.Transactions) > 0 {
 		n++
 	}
+	if len(v.Request.JournalEntries) > 0 {
+		n++
+	}
 	return n
 }
 
@@ -155,6 +160,17 @@ func requestShapeCount(v *Vector) int {
 func transactionTypeCodeAdmitted(t string) bool {
 	switch t {
 	case "disbursement", "accrual", "repayment", "waiver":
+		return true
+	}
+	return false
+}
+
+// journalEntryTypeAdmitted reports whether t is one of the two entry_type value
+// codes the committed journal-entries captures observe. It is a predicate, not
+// a lookup table, so the admitted sides cannot drift from the captures.
+func journalEntryTypeAdmitted(t string) bool {
+	switch t {
+	case "DEBIT", "CREDIT":
 		return true
 	}
 	return false
@@ -252,6 +268,45 @@ func admitRequest(v *Vector) []string {
 				problems = append(problems, fmt.Sprintf("request.transactions[%d].principal_minor %q is not a non-negative integer minor amount", i, tr.PrincipalMinor))
 			}
 		}
+	case SeamLoanJournalEntryBatchBalance:
+		if len(v.Request.JournalEntries) == 0 || requestShapeCount(v) != 1 {
+			problems = append(problems, "journal-entry-batch seam must set exactly request.journal_entries")
+			return problems
+		}
+		seenTxn := map[string]bool{}
+		hasDebit, hasCredit := false, false
+		for i, leg := range v.Request.JournalEntries {
+			if leg.TransactionID == "" {
+				problems = append(problems, fmt.Sprintf("request.journal_entries[%d].transaction_id is empty", i))
+			} else {
+				seenTxn[leg.TransactionID] = true
+			}
+			if leg.Account == "" {
+				problems = append(problems, fmt.Sprintf("request.journal_entries[%d].account is empty", i))
+			}
+			switch {
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf("request.journal_entries[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case leg.EntryType == "DEBIT":
+				hasDebit = true
+			case leg.EntryType == "CREDIT":
+				hasCredit = true
+			}
+			if !isIntegerMinorString(leg.AmountMinor) {
+				problems = append(problems, fmt.Sprintf("request.journal_entries[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		// The property is a batch holding MORE THAN ONE PAIR. A single-pair
+		// batch balances under almost any defect, so it cannot discriminate the
+		// property this seam exists to grade; refuse it at admission rather
+		// than promote a vector that cannot fail.
+		if len(seenTxn) < 2 {
+			problems = append(problems, fmt.Sprintf(
+				"request.journal_entries holds %d distinct transaction id(s): the batch-balance property requires MORE THAN ONE PAIR", len(seenTxn)))
+		}
+		if !hasDebit || !hasCredit {
+			problems = append(problems, "request.journal_entries must carry at least one DEBIT and one CREDIT leg")
+		}
 	}
 	return problems
 }
@@ -326,6 +381,15 @@ func admitExpect(v *Vector) []string {
 				problems = append(problems, fmt.Sprintf(
 					"expect.transaction_rows[%d].balance_minor %q is not a non-negative integer minor amount", i, row.BalanceMinor))
 			}
+		}
+	case SeamLoanJournalEntryBatchBalance:
+		if !isIntegerMinorString(v.Expect.JournalEntryDebitsMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.journal_entry_debits_minor %q is not a non-negative integer minor amount", v.Expect.JournalEntryDebitsMinor))
+		}
+		if !isIntegerMinorString(v.Expect.JournalEntryCreditsMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.journal_entry_credits_minor %q is not a non-negative integer minor amount", v.Expect.JournalEntryCreditsMinor))
 		}
 	}
 	return problems

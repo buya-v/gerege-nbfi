@@ -1,6 +1,6 @@
 {
  "schema": "gerege.loan.capabilities/v1",
- "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Six capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), the persisted loan-status ordinal read-back (loan-status seam), and the derived per-row outstandingLoanBalance column of the transactions read-back (loan-transaction-balance seam). The SEED-L01 interest waiver arithmetic is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it. The waiver's read-back footprint — a posting that does NOT move the outstanding balance — IS graded, under the transaction-balance capability.",
+ "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Seven capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), the persisted loan-status ordinal read-back (loan-status seam), the derived per-row outstandingLoanBalance column of the transactions read-back (loan-transaction-balance seam), and the derived debit/credit totals of a loan-produced multi-pair journal-entry batch (loan-journal-entry-batch-balance seam). The SEED-L01 interest waiver arithmetic is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it. The waiver's read-back footprint — a posting that does NOT move the outstanding balance — IS graded, under the transaction-balance capability.",
  "capabilities": [
   {
    "name": "repayment-allocation",
@@ -13,6 +13,12 @@
    "description": "The running outstandingLoanBalance column of the transactions read-back, DERIVED row by row from principal portions (I-3: balances derived, never written). A waiver moves the balance by zero; an accrual row carries NO balance at all (absent, never zero); a repayment moves the balance by its principal portion alone.",
    "in_graded_domain": true,
    "evidence": "Capture loan-1-transactions-after-raw.json under tenant gerege: the waive-interest transaction (1000.00) read back outstandingLoanBalance 100000.00, unchanged from disbursement; the accrual transaction (6618.53) read back outstandingLoanBalance null. Capture loan-3-transactions-after-raw.json: the repayment transaction 12 (8884.88, principalPortion 7884.88) read back outstandingLoanBalance 92115.12."
+  },
+  {
+   "name": "journal-entry-batch-balance",
+   "description": "The derived debit and credit totals of a loan-produced journal-entry batch read back from the journal-entries endpoint, summed independently over EVERY leg: sum(debits) == sum(credits), exactly, in integer minor units. A batch holding MORE THAN ONE PAIR (a disbursement pair plus a fee pair) discriminates a port that sums only the first pair, drops a pair, or nets the two legs on one GL account; a single-pair batch cannot.",
+   "in_graded_domain": true,
+   "evidence": "Capture gl-accounting-surface/out/journalentries-all-raw.json under tenant gerege: loan entityId 10 read back four entries — transaction L17 debit OHLGR-Loan-Portfolio 100000.00 / credit OHLGR-Fund-Source 100000.00, and transaction L18 credit OHLGR-Income-From-Fees 100.00 / debit OHLGR-Fund-Source 100.00 — so sum(debits) 100100.00 == sum(credits) 100100.00. The single-pair loan entityId 12 batch (L20, 100000.00 each way) balances under almost any defect and is not used to grade this property."
   },
   {
    "name": "schedule-interest-rounding",
@@ -86,6 +92,13 @@
    "description": "The transactions read-back on the running Fineract server, tenant gerege: the per-row outstandingLoanBalance column of SEED-L01 (disbursement 100000.00, accrual null, waive-interest 100000.00) and SEED-L03 (disbursement 100000.00, accrual null, repayment 92115.12).",
    "status": {
     "transaction-balance": "exercised"
+   }
+  },
+  {
+   "name": "loan-journal-entry-batch-balance",
+   "description": "The journal-entries read-back on the running Fineract server, tenant gerege: the debit and credit totals of the multi-pair batch generated for loan entityId 10 (disbursement pair L17 plus fee pair L18), whose four legs sum to 100100.00 on each side.",
+   "status": {
+    "journal-entry-batch-balance": "exercised"
    }
   }
  ]
