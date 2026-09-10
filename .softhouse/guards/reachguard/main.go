@@ -911,6 +911,40 @@ func (a *analyzer) identVar(e ast.Expr) (*types.Var, bool) {
 // Expression -> source locations
 // ---------------------------------------------------------------------------------------------
 
+// binaryValueNodes models a *ast.BinaryExpr. A binary expression's value is DERIVED from BOTH
+// operands, so its flow is the UNION of the operands' flows: `a + b` reaches a boundary iff `a`
+// or `b` does. This is union, never intersection — returning BOTH operand node sets means a
+// resolved sink on either operand is found, and an operand that is itself unresolved carries its
+// cause into the result's provenance so the site stays UNRESOLVED. The binary expression adds no
+// flow of its own and no unresolved edge of its own.
+//
+// Modelled for the arithmetic/bitwise, comparison and logical operators. For a comparison the
+// result is a bool that does not carry the amount, so union is an over-approximation there too;
+// over-approximation can only add flow (turning a clear into a refusal), never remove it, so it
+// cannot turn an unresolved edge into a clear. Any operator outside the set below stays
+// UNRESOLVED rather than guessed.
+func (a *analyzer) binaryValueNodes(x *ast.BinaryExpr) []string {
+	if !isModelledBinaryOp(x.Op) {
+		n := a.unknownNode(x.Pos(), "unmodelled-binary-op")
+		a.g.addUnresolved(n, fmt.Sprintf("unmodelled binary operator %s", x.Op), x.Pos())
+		return []string{n}
+	}
+	out := a.valueNodes(x.X)
+	out = append(out, a.valueNodes(x.Y)...)
+	return out
+}
+
+func isModelledBinaryOp(op token.Token) bool {
+	switch op {
+	case token.ADD, token.SUB, token.MUL, token.QUO, token.REM,
+		token.AND, token.OR, token.XOR, token.SHL, token.SHR, token.AND_NOT,
+		token.EQL, token.NEQ, token.LSS, token.LEQ, token.GTR, token.GEQ,
+		token.LAND, token.LOR:
+		return true
+	}
+	return false
+}
+
 // valueNodes returns the set of locations whose current value is the value of expr. It is the
 // forward half of the flow relation. Anything it cannot model yields an "unknown" node, whose
 // taint is UNRESOLVED.
@@ -956,6 +990,8 @@ func (a *analyzer) valueNodes(e ast.Expr) []string {
 		n := a.unknownNode(x.Pos(), "type-assertion")
 		a.g.addUnresolved(n, "value flows through a type assertion", x.Pos())
 		return []string{n}
+	case *ast.BinaryExpr:
+		return a.binaryValueNodes(x)
 	case *ast.BasicLit:
 		return nil
 	case *ast.FuncLit:
@@ -1484,8 +1520,155 @@ func (a *analyzer) inModuleFunc(fn *types.Func) bool {
 	return p == a.modulePath || strings.HasPrefix(p, a.modulePath+"/")
 }
 
+// persistenceInertPkgs is the allow-list of standard-library package PATHS that cannot carry a
+// value to a persistence boundary. It is keyed on the callee package's PATH as resolved through
+// its types.Object (fn.Pkg().Path()), never on a name spelled in the source: a module package
+// somewhere else on disk named `fmt` has a different path and is NOT matched. Each entry states,
+// in one line, why the package cannot persist.
+//
+// The list is deliberately short. A package belongs here only if none of its exported functions
+// can write a value to a database, a journal entry or a GL posting. Even then, a call is pruned
+// only when it is PURE WITH RESPECT TO PERSISTENCE (see persistenceInert): a call that hands the
+// callee an io.Writer is NOT pruned, because that writer is the caller's and can be a store
+// (this is why fmt.Fprint* is refused); a callee with a typed pointer parameter is also refused
+// as a conservative out-write guard. The variadic ...any of the fmt Scan family is not a typed
+// pointer, but the package owns no store, so a scanned value stays in caller memory and cannot
+// reach a boundary.
+var persistenceInertPkgs = map[string]string{
+	"fmt":     "owns no persistence store; its output goes to an io.Writer/io.Reader or to caller pointers (the Scan family), never to a database, journal or posting. Calls handed an io.Writer are excluded below (Fprint*) because that writer is the caller's and can be the store",
+	"strconv": "pure numeric/string conversions with no I/O at all",
+	"strings": "pure string transformations with no I/O at all",
+	"testing": "formats and buffers test output for the test log; it opens no database, journal or posting",
+}
+
+// ioWriterIface resolves the io.Writer interface OBJECT from the loaded dependency graph. It is
+// found by package path, not by a source name, so an unrelated interface named Writer does not
+// match.
+func (a *analyzer) ioWriterIface() *types.Interface {
+	for _, p := range a.allPkgs {
+		if p.PkgPath != "io" || p.Types == nil {
+			continue
+		}
+		tn, ok := p.Types.Scope().Lookup("Writer").(*types.TypeName)
+		if !ok {
+			continue
+		}
+		if iface, ok := tn.Type().Underlying().(*types.Interface); ok {
+			return iface
+		}
+	}
+	return nil
+}
+
+// persistenceInert reports whether a call into fn may be PRUNED from the unresolved flow. It is
+// true only when BOTH hold:
+//
+//	(a) fn's package path is on the allow-list above, resolved through fn's types.Object; and
+//	(b) fn is pure with respect to persistence: it takes no io.Writer-implementing parameter
+//	    and no pointer parameter. A writer parameter can be an arbitrary destination (this is why
+//	    fmt.Fprintf is NOT pruned), and a pointer parameter is an out-write whose flow this
+//	    program does not model, so it is left UNRESOLVED rather than assumed harmless.
+//
+// A receiver is not a parameter and is not screened here: a method such as (*strings.Builder).WriteString
+// may write its argument into the receiver, so the caller adds argument->receiver edges for every
+// pruned method unless the receiver's own package is on trustReceiverNoPersistPkgs (testing), whose
+// receiver provably cannot hold a value on a path to a store.
+func (a *analyzer) persistenceInert(fn *types.Func) bool {
+	if fn == nil || fn.Pkg() == nil {
+		return false
+	}
+	if _, ok := persistenceInertPkgs[fn.Pkg().Path()]; !ok {
+		return false
+	}
+	sig, ok := fn.Type().(*types.Signature)
+	if !ok {
+		return false
+	}
+	iw := a.ioWriterIface()
+	for i := 0; i < sig.Params().Len(); i++ {
+		pt := sig.Params().At(i).Type()
+		if pt == nil {
+			continue
+		}
+		if _, isPtr := pt.Underlying().(*types.Pointer); isPtr {
+			return false
+		}
+		if iw != nil && types.Implements(pt, iw) {
+			return false
+		}
+	}
+	return true
+}
+
+// trustReceiverNoPersistPkgs are packages whose receiver types provably cannot carry a value
+// to a store, so a pruned method from them needs no arg->receiver edges. Only testing is
+// trusted: a *testing.T buffers a test log and is never handed to a driver. Every other
+// allow-listed method (e.g. (*strings.Builder).WriteString) still gets receiver-write edges,
+// because its receiver can hand the value on to a persistence path.
+var trustReceiverNoPersistPkgs = map[string]bool{"testing": true}
+
+// receiverTrustedNoPersist reports whether fn is a method whose receiver type's package is in
+// trustReceiverNoPersistPkgs, resolved through the receiver's types.Object (by package path,
+// never by a source-level name).
+func receiverTrustedNoPersist(fn *types.Func) bool {
+	sig, ok := fn.Type().(*types.Signature)
+	if !ok || sig.Recv() == nil {
+		return false
+	}
+	return trustReceiverNoPersistPkgs[typePkgPath(sig.Recv().Type())]
+}
+
+func typePkgPath(t types.Type) string {
+	if p, ok := t.(*types.Pointer); ok {
+		t = p.Elem()
+	}
+	if n, ok := t.(*types.Named); ok && n.Obj() != nil && n.Obj().Pkg() != nil {
+		return n.Obj().Pkg().Path()
+	}
+	return ""
+}
+
 func (a *analyzer) externalCall(call *ast.CallExpr, fn *types.Func, recvExpr ast.Expr) {
 	p := pkgPath(fn)
+	if a.persistenceInert(fn) {
+		// The callee's package cannot persist a value. The call is not a boundary, so the
+		// arguments are not tainted by leaving the module, and there is no unresolved edge of
+		// its own. The result, if any, is a NEW value DERIVED from the inputs: carry the flow
+		// forward (union) so that a later persistence of the derived value is still seen.
+		// Pruning one path never drops another.
+		//
+		// A method may also write its inputs into its receiver (strings.Builder.WriteString is
+		// the canonical case), so when there is a receiver we add arg->receiver edges as well.
+		// This over-approximates — a reader method gains edges it does not need — but it keeps
+		// the write-into-receiver flow from being dropped, which is the only direction that
+		// could hide a persistence. Over-approximation can only add flow, never clear a site.
+		//
+		// The one exception is a receiver whose own package is trusted not to persist
+		// (testing): a value logged into a *testing.T cannot reach a store, so connecting
+		// formatted arguments to t would only add false refusals. See trustReceiverNoPersist.
+		if a.typeOf(call) != nil {
+			res := a.resultNode(call)
+			var recvNodes []string
+			if recvExpr != nil {
+				recvNodes = a.valueNodes(recvExpr)
+				for _, n := range recvNodes {
+					a.g.addEdge(n, res)
+				}
+			}
+			modelRecvWrite := recvExpr != nil && !receiverTrustedNoPersist(fn)
+			for _, arg := range call.Args {
+				for _, n := range a.valueNodes(arg) {
+					a.g.addEdge(n, res)
+					if modelRecvWrite {
+						for _, rn := range recvNodes {
+							a.g.addEdge(n, rn)
+						}
+					}
+				}
+			}
+		}
+		return
+	}
 	reason := "value passed into external package " + p + ", whose body this analysis did not open"
 	if recvExpr != nil {
 		for _, n := range a.valueNodes(recvExpr) {
@@ -2132,7 +2315,13 @@ func report(results []siteResult, only bool) {
 	}
 	fmt.Printf("SUMMARY: %d REACHES, %d UNRESOLVED, %d PROVABLY-NO-PERSISTENCE — of %d site(s)\n",
 		nReach, nUnres, nProv, len(results))
+	if nProv > 0 {
+		// A PROVABLY-NO verdict is a FINDING for review, not a waiver: clearing a recorded red is
+		// a human act (an explicit baseline diff), never this program's. Say so instead of
+		// claiming no site was cleared, which stopped being true the moment a closure resolved.
+		fmt.Printf("%d site(s) resolved to PROVABLY-NO-PERSISTENCE — a finding for review, not a waiver.\n", nProv)
+	}
 	if nReach+nUnres > 0 {
-		fmt.Printf("THE RED STANDS on %d site(s); no site is cleared.\n", nReach+nUnres)
+		fmt.Printf("THE RED STANDS on %d site(s).\n", nReach+nUnres)
 	}
 }
