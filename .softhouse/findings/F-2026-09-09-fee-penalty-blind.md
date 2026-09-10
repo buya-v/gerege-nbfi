@@ -78,42 +78,63 @@ why a change exists, and a brief that was incomplete should say so.
 
 ---
 
-## UPDATE 2026-09-10 — THE CAPTURE NOW EXISTS. The finding is closable.
+## UPDATE 2026-09-10 — the observation EXISTS but is NOT admissible yet
 
-`OH-GL-R` created the first accounting-enabled loan product in this oracle and, with it,
-loans carrying **non-zero fee and penalty**. The observation this finding said it needed is
-now committed at `.softhouse/capture/gl-accounting-surface/out/`.
+`OH-GL-R` created the first accounting-enabled loan product in this oracle
+(`id 3 OHLGR-Accrual-Loan`, `ACCRUAL PERIODIC`, additive — products 1 and 2 untouched and
+still `NONE`) and with it loans carrying **non-zero fee and penalty**. It reached the
+500-iteration limit with 71 files on disk and zero commits.
 
-**Loan 11** (`loan-11-raw.json`) — all four summary terms non-zero, and **fee ≠ penalty**,
-which is exactly what this finding specified, because equal values would let a term-swap
-defect survive:
+**The observation this finding asked for was produced.** Loan 11 carries all four summary
+terms non-zero with **fee ≠ penalty**, which is what this finding specified, because equal
+values would let a term-swap defect survive:
 
-    principalOutstanding       100000.0
-    interestOutstanding          6618.53
-    feeChargesOutstanding         100.0
-    penaltyChargesOutstanding      57.0
-    totalOutstanding           106775.53
+    principalOutstanding 100000.0  interestOutstanding 6618.53
+    feeChargesOutstanding 100.0    penaltyChargesOutstanding 57.0
+    totalOutstanding     106775.53
 
-Minor units: `10000000 + 661853 + 10000 + 5700 = 10677553`. **No sub-minor residue**, so
-G-19 does not bite and this is a legitimate parity vector.
+Minor units `10000000 + 661853 + 10000 + 5700 = 10677553` — no sub-minor residue. Loan 10
+is the complementary shape (fee **0**, penalty **57**), discriminating the penalty term
+alone. Journal entries 17-22 are balanced double-entry (loan 10: debits 100100.0 == credits
+100100.0; loan 11: 100000.0 == 100000.0).
 
-**Loan 10** (`loan-10-raw.json`) is the complementary shape — `feeChargesOutstanding` **0**,
-`penaltyChargesOutstanding` **57** — which discriminates the penalty term alone, and gives a
-second, differently-shaped observation rather than a clone.
+### WHY IT IS NOT IN THE TREE — the wire-float guard refused it, correctly
 
-### What still has to happen — this finding is NOT yet closed
+The driver committed the salvage, ran the bar, and the bar **REFUSED with a failed HARD
+guard** — no verdict available, which is not a pass:
 
-Committing an observation and grading it are different acts. To close it:
+    REFUSED — a numeric token in a capture request body is NOT byte-preserved under a
+    binary-double round trip. This is the P-25 defect T163 found in resolve7.py: the money
+    that reaches the reference oracle is not the money that was written.
+      req/charge-OHLGR-Fee-Flat-100.json:1      100.00 -> 100.0
+      req/charge-OHLGR-Penalty-Flat-57.json:1    57.00 -> 57.0
+      req/loan-OHGLR-L01-submit.json:21,22      100.00 -> 100.0, 57.00 -> 57.0
+      req/loan-OHGLR-L02-submit.json:21,22      100.00 -> 100.0, 57.00 -> 57.0
 
-1. Promote a summary vector from loan 11 (all four terms non-zero) and, if it carries a
-   distinct fact, one from loan 10 (penalty-only).
-2. Register **`loan-wrong-summary-drops-fee`** and **`loan-wrong-summary-drops-penalty`**
-   and **show each kills**. Until a drive dies on these vectors, nothing is proven — the
-   whole point of this finding was that a dropped term is invisible, and a vector that no
-   drive tests does not fix that.
-3. Re-measure the four existing `*-summary-total-outstanding` vectors; they still pin one
-   fact between three of them (L05 excepted) and adding a fifth zero-fee summary remains
-   the cloning failure.
+The record is **not** falsified: `bin/step03-charges.sh:24` sends the body as a shell
+single-quoted literal containing `"amount":100.00`, and `req/` is a faithful byte-copy of
+what was sent. The defect is that **the request we sent the oracle carries a numeric token
+that is not byte-stable**, which is precisely the hazard the guard exists to catch.
 
-Until then this stays **OPEN**, with the blocking reason changed: it was "no capture can
-discriminate the term"; it is now "the capture exists and the drives are unwritten."
+**The salvage commit was REVERTED rather than trimmed.** Dropping `req/` would have turned
+the bar green by deleting the artefact that failed, which is the "green bar bought with a
+defeatable predicate" this programme refuses. The 72 files are preserved outside the repo
+at `/Users/buv/gerege-oracle-snapshots/gl-accounting-surface-evidence/`; nothing is lost.
+
+### What closes this now — and it is cheap, because the oracle state persists
+
+Product 3, the 11 GL accounts and both loans **still exist in the oracle**. A re-capture
+needs only byte-stable request bodies:
+
+1. Write charge and loan request amounts as byte-stable tokens (`100`, `57` — or splice the
+   placeholder into template bytes; `.softhouse/capture/tierA-a2/resolve8.py` is the worked
+   example the guard names). **Never re-serialise a request body through `json.dumps` of a
+   parsed number.**
+2. Re-issue the charge and loan creation against product 3, capture the `(request, response)`
+   pair, and commit both.
+3. Then promote the summary vector and register **`loan-wrong-summary-drops-fee`** and
+   **`loan-wrong-summary-drops-penalty`**, showing each kills. A vector no drive tests does
+   not fix a defect that was invisible by construction.
+
+Status stays **OPEN**, blocking reason changed twice today: from "no capture can
+discriminate the term", to "the capture exists but its request bodies are not byte-stable."
