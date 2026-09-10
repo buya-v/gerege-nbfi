@@ -4,14 +4,14 @@
     "title": "GL read-back multi-pair journal-entry batch (loan 10: disbursement pair plus fee pair) balances exactly",
     "class": "parity",
     "context": "loan",
-    "_note": "Parity vector transcribing the loan-produced journal-entry batch read back from the journal-entries endpoint for loan entityId 10. This is the only committed observation with MORE THAN ONE PAIR: transaction L17 disburses (DEBIT OHLGR-Loan-Portfolio 100000.0, CREDIT OHLGR-Fund-Source 100000.0) and transaction L18 collects a fee (CREDIT OHLGR-Income-From-Fees 100.0, DEBIT OHLGR-Fund-Source 100.0). The batch therefore holds four legs over two distinct transaction ids, and sum(debits)=100100.0 == sum(credits)=100100.0. request.journal_entries transcribes each leg's transactionId, glAccountName, entryType.value and amount; amounts are raised to integer minor units (100000.0 -> 10000000, 100.0 -> 10000). expect.journal_entry_debits_minor and expect.journal_entry_credits_minor are the two independent side totals, each transcribed as the sum over EVERY leg, never a netting of the two OHLGR-Fund-Source legs and never a truncation after the first pair. The single-pair loan 12 capture (journalentries-loan-12-raw.json, transaction L20, 100000.0 each way) cannot grade this property: a one-pair batch balances under almost any defect. Nothing was computed by this promotion; the four legs and the two totals are transcriptions of the oracle's generated postings.",
+    "_note": "Parity vector transcribing the loan-produced journal-entry batch read back from the journal-entries endpoint for loan entityId 10. This is the only committed observation with MORE THAN ONE PAIR: transaction L17 disburses (DEBIT OHLGR-Loan-Portfolio 100000.0, CREDIT OHLGR-Fund-Source 100000.0) and transaction L18 collects a fee (CREDIT OHLGR-Income-From-Fees 100.0, DEBIT OHLGR-Fund-Source 100.0). The batch therefore holds four legs over two distinct transaction ids, and sum(debits)=100100.0 == sum(credits)=100100.0. request.journal_entries transcribes each leg's transactionId, glAccountName, entryType.value and amount; amounts are raised to integer minor units (100000.0 -> 10000000, 100.0 -> 10000). expect.journal_entry_debits_minor and expect.journal_entry_credits_minor are the two independent side totals, each transcribed as the sum over EVERY leg, never a netting of the two OHLGR-Fund-Source legs and never a truncation after the first pair. The single-pair loan 12 capture (journalentries-loan-12-raw.json, transaction L20, 100000.0 each way) cannot grade this property: a one-pair batch balances under almost any defect. Nothing was computed by this promotion; the four legs and the two totals are transcriptions of the oracle's generated postings. expect.journal_entry_account_sides is the third expected cell, transcribed from the same four legs: WHICH account takes WHICH side in WHICH transaction. It is REQUIRED because the two totals cannot see a swapped pair — reversing both legs of a balanced pair keeps sum(debits)=sum(credits) while crediting the account that was debited — and the property is per-(transaction, account), not per-account globally: OHLGR-Fund-Source is CREDIT in L17 and DEBIT in L18. The drive loan-wrong-journal-entry-batch-swaps-first-pair-sides is the defect that moves ONLY this cell.",
     "oracle": {
         "seam": "loan-journal-entry-batch-balance",
         "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
     },
     "provenance": {
         "kind": "oracle-capture",
-        "note": "request.journal_entries and both expected totals are transcribed from the four pageItems of the committed capture journalentries-all-raw.json whose entityType.value is LOAN and entityId is 10 (transactionId L17 and L18). capture_case_id names L17, the disbursement transaction the batch opens with; the fee pair is L18 in the same capture. The capture is a filtered journal-entries page (totalFilteredRecords 18), so it is identified by the two transaction ids rather than an externalId.",
+        "note": "request.journal_entries and both expected totals are transcribed from the four pageItems of the committed capture journalentries-all-raw.json whose entityType.value is LOAN and entityId is 10 (transactionId L17 and L18). capture_case_id names L17, the disbursement transaction the batch opens with; the fee pair is L18 in the same capture. The capture is a filtered journal-entries page (totalFilteredRecords 18), so it is identified by the two transaction ids rather than an externalId. expect.journal_entry_account_sides is transcribed from the same four pageItems, keying each (transactionId, glAccountName) to its entryType.value; no side is inferred from an account's normal balance.",
         "capture_ref": ".softhouse/capture/gl-accounting-surface/out/journalentries-all-raw.json",
         "capture_sha256": "a400082a1b2974ccd6ec660789810b1ba1f8812a21024da230002ffee3a9913d",
         "capture_case_id": "L17",
@@ -55,7 +55,29 @@
     },
     "expect": {
         "journal_entry_debits_minor": "10010000",
-        "journal_entry_credits_minor": "10010000"
+        "journal_entry_credits_minor": "10010000",
+        "journal_entry_account_sides": [
+            {
+                "transaction_id": "L17",
+                "account": "OHLGR-Loan-Portfolio",
+                "entry_type": "DEBIT"
+            },
+            {
+                "transaction_id": "L17",
+                "account": "OHLGR-Fund-Source",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L18",
+                "account": "OHLGR-Income-From-Fees",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L18",
+                "account": "OHLGR-Fund-Source",
+                "entry_type": "DEBIT"
+            }
+        ]
     },
     "capabilities_required": [
         "journal-entry-batch-balance"
@@ -64,6 +86,7 @@
         "loan-go",
         "loan-wrong-journal-entry-batch-first-pair-only",
         "loan-wrong-journal-entry-batch-drops-fee-pair",
-        "loan-wrong-journal-entry-batch-nets-account"
+        "loan-wrong-journal-entry-batch-nets-account",
+        "loan-wrong-journal-entry-batch-swaps-first-pair-sides"
     ]
 }
