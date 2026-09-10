@@ -69,3 +69,14 @@ captured from the oracle, committed, and promoted as `SH-08`/`SH-09`. The new dr
 the old 7-vector store (`parity_fail=0`) — the honest proof that the gap was in the
 observations. Full evidence in
 `F-2026-09-10-shares-nonround-money-closes-corpus-gap.md`.
+
+## Update — closed by OH-COLL-L (2026-09-10)
+
+The **zero-varying** row of the table above was the last residual. The single seed
+collateral product (`basePrice 100000.00`, `pctToBase 50.00`) was joined by a non-round
+product (`basePrice 41850.08`, `pctToBase 37.5`) on a client holding of `quantity 2.5`,
+captured from the oracle, committed, and promoted as `CL-05`/`CL-06`. Four drives now see
+defects the four seed vectors could not — hardcoded base price, hardcoded percentage,
+`/2` shortcut, truncated quantity — and the first three were measured INERT against the
+old 4-vector store (`parity_fail=0`) before being promoted. Full evidence in
+`F-2026-09-10-collateral-nonround-money-closes-corpus-gap.md`.
