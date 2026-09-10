@@ -1,0 +1,12 @@
+{
+  "clientId": 5,
+  "productId": 2,
+  "externalId": "OHWCCAP-DISCNONZERO-L01",
+  "submittedOnDate": "03 September 2026",
+  "expectedDisbursementDate": "03 September 2026",
+  "principalAmount": 1000,
+  "totalPaymentVolume": 1000,
+  "periodPaymentRate": 1,
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}
