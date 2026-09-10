@@ -98,4 +98,77 @@ func init() {
 			"round to the SAME whole minor unit (1) on all 34 periods, so the switched constant "+
 			"moves not one graded cell",
 		loanschedule.NewWrongDaysInYear365())
+	conformance.RegisterWrong("loanschedule-wrong-frequency-unit-ignored",
+		"never reads RepaymentFrequencyUnit: it normalises every unit to MONTHS before the "+
+			"unsupported-configuration arm (generator.go's FrequencyYears plus FIXED_30_360) and before "+
+			"validateGradedDomain's monthly-only guard. Every capture in the corpus is monthly, so the "+
+			"only arm any working porter exercises is plusMonths and the enum never has to be carried "+
+			"into the guards at all. The field's one observable effect in the corpus is that REFUSE-03 "+
+			"is refused; with the unit erased its YEARS request is answered instead. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 46 FAIL 0, contract-refusal PASS 3 "+
+			"FAIL 1 -- parity_fail=1. THE SINGLE KILL IS REFUSE-03 (its expected "+
+			"ErrUnsupportedConfiguration becomes an answer). This is also the finding: the corpus "+
+			"varies the unit but its ONLY non-monthly request is a REFUSAL vector, and the graded "+
+			"domain refuses every YEARS request, so the field's money effect is STRUCTURALLY "+
+			"unreachable -- no vector can carry a graded annual schedule. The unit is proven CONSUMED "+
+			"only at the refusal seam.",
+		loanschedule.NewWrongFrequencyUnitIgnored())
+	conformance.RegisterWrong("loanschedule-wrong-repayments-fixed-one",
+		"never reads NumberOfRepayments and builds a single-repayment contract. The field decides "+
+			"the schedule's SHAPE, so an unwired count does not move an interest cell, it collapses "+
+			"the term: 1 is the minimum the contract admits and is well formed and inside the graded "+
+			"domain, so this drive passes the front half unchanged and differs only in the count. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 0 FAIL 46, contract-refusal PASS 4 "+
+			"FAIL 0, self-test fixture FAIL -- parity_fail=47. EVERY graded vector dies: the row count "+
+			"depends on the field, so each of the 46 parity vectors reports 'row count: expected N, "+
+			"got 2'. The 4 refusal vectors are unaffected (a refusal does not read the count).",
+		loanschedule.NewWrongRepaymentsFixedOne())
+	conformance.RegisterWrong("loanschedule-wrong-rate-zero",
+		"never reads AnnualNominalInterestRate and charges 0% on every period. An unwired rate takes "+
+			"Go's zero value, and the contract states Rate{0,1} is legal and not special-cased -- every "+
+			"rate factor is 0, every growth factor is 1, the installment is principal/count. The port "+
+			"validates, generates and answers, and only the graded cells move. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 0 FAIL 46, contract-refusal PASS 4 "+
+			"FAIL 0, self-test fixture PASS -- parity_fail=46. Every graded vector carries a nonzero "+
+			"rate, so every parity cell moves; the 4 refusal vectors do not read the rate and survive, "+
+			"and the self-test fixture is already zero-rate so it is byte-identical.",
+		loanschedule.NewWrongRateZero())
+	// NO `loanschedule-wrong-currency-code-ignored` DRIVE. A sixth varying field
+	// (Currency) was built and measured and is NOT registered, because it killed
+	// ZERO and a zero-kill drive must not be merged. Currency varies only in its
+	// Code (MNT vs USD); the port's output path never reads the code -- it scales
+	// money off Currency.MinorUnitDigits, which is 2 for both -- so a port that
+	// erases the code returns the recorded schedule on every vector. MEASURED
+	// (2026-09-10): the drive ran to a per-vector table with all 46 parity vectors
+	// PASS and all 4 refusal vectors PASS. The harness could not print a NUL
+	// count because with the oracle probe down it refuses to say PASS at all (its
+	// exit is UNUSABLE, which kills.sh correctly reports as a failed measurement,
+	// never as zero); the all-PASS table is the evidence. THE FINDING: at this
+	// seam Currency.Code is DECORATIVE -- the corpus varies it, but no vector's
+	// recorded OUTPUT depends on it. A vector that sees the code would need a
+	// second currency with a different MinorUnitDigits (the only part the money
+	// path reads), which the corpus does not carry.
+	conformance.RegisterWrong("loanschedule-wrong-schedule-start-ignored",
+		"never reads ScheduleStartDate and anchors the periods on the disbursement date. The contract "+
+			"insists the two dates reach different places in the reference oracle; a porter who collapses "+
+			"them onto the one date the money moves writes exactly this. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 37 FAIL 9, contract-refusal PASS 3 "+
+			"FAIL 1 -- parity_fail=10. The 9 parity kills are P-03 (its first row kind becomes "+
+			"DISBURSEMENT) and P-DRIFT-A..H (their first from_date moves), and the refusal kill is "+
+			"REFUSE-04, whose disbursement-after-maturity request becomes well formed once the anchor "+
+			"moves. The 37 survivors have ScheduleStartDate == Disbursements[0].Date, so collapsing the "+
+			"two is a no-op on them.",
+		loanschedule.NewWrongScheduleStartIgnored())
+	conformance.RegisterWrong("loanschedule-wrong-disbursement-seed-ignored",
+		"re-anchors the month-end rule to ScheduleStartDate instead of Disbursements[0].Date. The "+
+			"disbursement date is the seed only because LoanApplicationTerms.java:583-589 selects it, "+
+			"and the request carries a schedule start that looks like the more natural anchor; the two "+
+			"agree on every vector whose dates fall on the same day. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 38 FAIL 8, contract-refusal PASS 4 "+
+			"FAIL 0 -- parity_fail=8. The 8 kills are P-DRIFT-A..H exactly, all with seed day 29/30/31 "+
+			"and start day 28/29. Six of them fail first on a due_date; P-DRIFT-C and P-DRIFT-E fail "+
+			"first on row 1 principal_minor, because their first due date coincides under the two seeds "+
+			"while a later date diverges and moves the level installment solved over the whole schedule. "+
+			"Every vector whose two dates share a day-of-month is byte-identical.",
+		loanschedule.NewWrongDisbursementSeedIgnored())
 }

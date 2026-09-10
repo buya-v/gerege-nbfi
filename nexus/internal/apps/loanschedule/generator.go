@@ -82,6 +82,10 @@ func generateFor(ctx context.Context, req contract.GenerateRequest, v variant) (
 	if err := ctx.Err(); err != nil {
 		return contract.Schedule{}, err
 	}
+	// The graded port's variant is the zero value, so this is a no-op for it.
+	// A request-level wrong drive substitutes the fields it never reads before
+	// any guard or generation step sees the request.
+	req = v.applyRequest(req)
 	if err := validateWellFormed(req); err != nil {
 		return contract.Schedule{}, err
 	}
@@ -100,7 +104,7 @@ func generateFor(ctx context.Context, req contract.GenerateRequest, v variant) (
 	// and everything after it is linear in a caller-controlled number. From here
 	// down every linear pass is cancellable.
 	dueDates, err := repaymentDueDates(ctx, req.ScheduleStartDate, req.NumberOfRepayments,
-		int64(req.RepaymentEvery), req.RepaymentFrequencyUnit, req.Disbursements[0].Date)
+		int64(req.RepaymentEvery), req.RepaymentFrequencyUnit, v.dueDateSeed(req))
 	if err != nil {
 		return contract.Schedule{}, err
 	}
