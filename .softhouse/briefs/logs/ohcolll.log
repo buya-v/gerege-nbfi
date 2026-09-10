@@ -1,0 +1,100 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m141[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m OH-COLL-L is complete. Here's the summary.                                   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## What existed vs. what I found                                             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The capture, promotion, and drives were already committed by a               [36m│[0m
+[36m│[0m killed-in-progress run. The residual artifact was the **finding**, and the   [36m│[0m
+[36m│[0m prescribed **old-store-vs-new-store proof** had not been recorded. I         [36m│[0m
+[36m│[0m verified the prior work rather than redoing it, then wrote the measured      [36m│[0m
+[36m│[0m finding.                                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Oracle values chosen (arithmetic worked out before the write)             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | field | value | scale-5 |                                                  [36m│[0m
+[36m│[0m |---|---|---|                                                                [36m│[0m
+[36m│[0m | `basePrice` | 41850.08 (not round, ends `.08`) | 4185008000 |              [36m│[0m
+[36m│[0m | `pctToBase` | 37.5 (**not 50**, and non-integer) | 3750000 |               [36m│[0m
+[36m│[0m | `quantity` | 2.5 (not whole) | 250000 |                                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m total           = 41850.08 × 2.5        = 104625.20    (10462520000, minor   [36m│[0m
+[36m│[0m 10462520)                                                                    [36m│[0m
+[36m│[0m totalCollateral = 104625.20 × 37.5/100  = 39234.45     ( 3923445000, minor   [36m│[0m
+[36m│[0m 3923445)                                                                     [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Both minor-unit cells are whole → **no sub-minor residue** (G-19 / G-08).    [36m│[0m
+[36m│[0m The oracle stored exactly `104625.2000000000` / `39234.450000000000000`,     [36m│[0m
+[36m│[0m matching the arithmetic. Nothing refused, nothing SQL-inserted.              [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## The measurement (this is what makes it evidence, not a claim)             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Driven against the old 4-vector seed-only store vs the new 6-vector store:   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | drive | seed-only(4) | full(6) |                                           [36m│[0m
+[36m│[0m |---|---:|---:|                                                              [36m│[0m
+[36m│[0m | `collateral-wrong-base-price-hardcoded` | **0** | 1 |                      [36m│[0m
+[36m│[0m | `collateral-wrong-pct-hardcoded` | **0** | 1 |                             [36m│[0m
+[36m│[0m | `collateral-wrong-valuation-half` | **0** | 1 |                            [36m│[0m
+[36m│[0m | `collateral-wrong-quantity-truncated` | 1 | 2 |                            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The first three are the exact defects `100000.00`/`50.00` could not          [36m│[0m
+[36m│[0m distinguish — the seed's `50.0` *is* a `/2` shortcut. `quantity-truncated`   [36m│[0m
+[36m│[0m was already live on CL-04's `1.5`; it rises 1→2, so no manufactured          [36m│[0m
+[36m│[0m coverage. All four pre-existing drives still kill (`blank-quality 2`,        [36m│[0m
+[36m│[0m `type-id 1`, `fabricates-holding 1`, `valuation-pct-scale 2`);               [36m│[0m
+[36m│[0m `collateral-go` passes 6/6.                                                  [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Artifacts committed                                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `f51cea9f` — capture (`collateral-nonround-money/`), committed before      [36m│[0m
+[36m│[0m grading as required; capture hashes `aa8836db…` / `2d851432…` re-verified.   [36m│[0m
+[36m│[0m - `0c63eb9d` — `CL-05`/`CL-06` vectors + four drives (`impl.go`).            [36m│[0m
+[36m│[0m - `44dea717` — finding + OH-COLL-L closure note in the ratio-only finding.   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Controls after the change                                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `go build ./...` / `go test ./...` — pass.                                 [36m│[0m
+[36m│[0m - `bash .softhouse/conformance.sh` — **exit 2** as the recorded §4.4.2       [36m│[0m
+[36m│[0m decision, `uncommitted edits 0`, `ledger findings == baseline`, census       [36m│[0m
+[36m│[0m **17**, exemption/ledger pins unchanged, no-float guard 186 JSON / 48 pkgs / [36m│[0m
+[36m│[0m 373 files, wire-float `ALTERED 0`.                                           [36m│[0m
+[36m│[0m - No `.dump` tracked or in tree; `ledger-invariants.baseline` and            [36m│[0m
+[36m│[0m `conformance.sh` untouched; one bounded context (`collateral`).              [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Only `TASK.md` remains untracked (session context, not committed by prior    [36m│[0m
+[36m│[0m runs either). Everything else is committed and the branch is clean.          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The one thing worth flagging for your judgement: the four seed vectors       [36m│[0m
+[36m│[0m already kill `quantity-truncated`, so the genuinely *new* coverage is the    [36m│[0m
+[36m│[0m three hardcoded/half drives, each proven inert on the old store.             [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 8aa9b91474a7443281f7fa873b192db3
+Hint: run openhands --resume 8aa9b914-74a7-4432-81f7-fa873b192db3 to resume this
+conversation.
