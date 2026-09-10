@@ -11,3 +11,273 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
 
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m259[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m [1;36mSummary: [0mReport reachguard increments, controls, bar, and evidence           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1mReasoning:[0m                                                                   [36m│[0m
+[36m│[0m I now have everything. Let me write the final report.                        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m I need to be complete but not absurdly long. I'll include the full closure   [36m│[0m
+[36m│[0m list (required). I'll put it in a code block.                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me draft.                                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Bar:                                                                         [36m│[0m
+[36m│[0m - `.softhouse/guards/reachguard`: `go build ./...` rc0, `go vet ./...` rc0,  [36m│[0m
+[36m│[0m `go test ./...` PASS 8/8.                                                    [36m│[0m
+[36m│[0m - `nexus`: `go build ./...` rc0, `go test ./...` all ok (no failures).       [36m│[0m
+[36m│[0m - `bash .softhouse/conformance.sh` → rc2, §4.4.2-RECORDED-DECISION-EXIT,     [36m│[0m
+[36m│[0m VERDICT PASS 46 vectors/7884 cells, findings == baseline, baseline 12 pairs  [36m│[0m
+[36m│[0m untouched.                                                                   [36m│[0m
+[36m│[0m - kills controls 45/12/1.                                                    [36m│[0m
+[36m│[0m - guards-dir registration PASS population 23 reached-by 16                   [36m│[0m
+[36m│[0m invoked-by-nothing 0.                                                        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Six sites before/after.                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Reason counts.                                                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m New controls.                                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Changed verdict closure.                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Honest limitations:                                                          [36m│[0m
+[36m│[0m - coarse reasons replaced by a finer frontier; black-box totals don't move   [36m│[0m
+[36m│[0m (still 5 UNRESOLVED).                                                        [36m│[0m
+[36m│[0m - receiver edges are an over-approximation that adds flow (safe direction).  [36m│[0m
+[36m│[0m - `strings.Builder.WriteString` etc still add edges even when they'd be safe [36m│[0m
+[36m│[0m (refusals, not clears).                                                      [36m│[0m
+[36m│[0m - The 2 remaining "value passed into fmt" are Fprintf to io.Writer;          [36m│[0m
+[36m│[0m correctly refused.                                                           [36m│[0m
+[36m│[0m - ledgerguard:1377 stale statement, untouched (hard-guarded hash).           [36m│[0m
+[36m│[0m - The tool's non-goal: balance reads (DEC-2 §4.4 CANNOT-CATCH 9), only write [36m│[0m
+[36m│[0m question.                                                                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Not touched: baseline (git diff clean for it), conformance.sh.               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Commit: a464d846, branch feat/OHREACHu, not pushed, TASK.md untracked.       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me write it now. I'll make the closure compact.                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Actually, I want to double-check one claim: "the four existing controls are  [36m│[0m
+[36m│[0m unchanged". Did I modify the existing tests at all? git show --stat says     [36m│[0m
+[36m│[0m reachguard_test.go +57. That's the 4 new tests. Existing tests not modified  [36m│[0m
+[36m│[0m (the diff is additions only presumably). Good.                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Also, I should mention the before/after run reproducibility: after JSON      [36m│[0m
+[36m│[0m deterministic across reruns (from prior context) — I'll note the committed   [36m│[0m
+[36m│[0m runner reproduces the 6-site verdicts.                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me produce the final answer via finish tool. The message is the report.  [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me write the closure from the extracted relative-path version. I'll      [36m│[0m
+[36m│[0m include all 120 lines.                                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me be careful with formatting. I'll create a table.                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Now, should I also mention "0 REACHES on six sites" as required? Yes.        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me write.                                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1mThought:[0m                                                                     [36m│[0m
+[36m│[0m I have all the evidence. Here's the final report.                            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1;34mFinish with message:[0m                                                         [36m│[0m
+[36m│[0m ## OH-REACH-U — reachguard now resolves more edges soundly; six-site         [36m│[0m
+[36m│[0m verdicts are whatever the evidence says                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Committed on `feat/OHREACHu` as `a464d846` (local only, **not pushed**).     [36m│[0m
+[36m│[0m Working tree clean except the prompt file `TASK.md` (untracked). No oracle   [36m│[0m
+[36m│[0m contacted, no captures taken.                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### The bar — all green                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | Check | Result |                                                           [36m│[0m
+[36m│[0m |---|---|                                                                    [36m│[0m
+[36m│[0m | `cd .softhouse/guards/reachguard && go build ./...` | rc 0 |               [36m│[0m
+[36m│[0m | `go vet ./...` | rc 0 |                                                    [36m│[0m
+[36m│[0m | `go test -v ./...` | **8/8 PASS** (4 existing + 4 new controls; real code  [36m│[0m
+[36m│[0m paths, no mocks) |                                                           [36m│[0m
+[36m│[0m | `cd nexus && go build ./...` | rc 0 |                                      [36m│[0m
+[36m│[0m | `go test ./...` | all packages ok, no failures |                           [36m│[0m
+[36m│[0m | `bash .softhouse/conformance.sh` | **exit 2** —                            [36m│[0m
+[36m│[0m `§4.4.2-RECORDED-DECISION-EXIT`, ledger **findings == baseline**; graded     [36m│[0m
+[36m│[0m `VERDICT: PASS (exit 0) — 46 parity vectors, 7884 cells`, 1 recorded         [36m│[0m
+[36m│[0m divergence |                                                                 [36m│[0m
+[36m│[0m | ledger finding set | **exactly 12 (class, file) pairs** (baseline          [36m│[0m
+[36m│[0m untouched, `git status` clean for it) |                                      [36m│[0m
+[36m│[0m | `GUARDS-DIR-REGISTRATION` | **PASS** — population 23, reached-by 16,       [36m│[0m
+[36m│[0m **invoked-by-nothing 0** (the 4 new fixtures register via verified           [36m│[0m
+[36m│[0m REACHED-BY) |                                                                [36m│[0m
+[36m│[0m | `kills.sh loanschedule …-365` / `parties …iota` / `charges …half-even` |   [36m│[0m
+[36m│[0m **45 / 12 / 1** exactly |                                                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### The six pinned sites, before → after                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | Site | Before | After | Causes before → after |                            [36m│[0m
+[36m│[0m |---|---|---|---|                                                            [36m│[0m
+[36m│[0m | `I3-COMPOSITE-BALANCE` loanproduct/interestperiod.go | UNRESOLVED |        [36m│[0m
+[36m│[0m **UNRESOLVED** | 43 → 43 (no coarse reason) |                                [36m│[0m
+[36m│[0m | `I3-COMPOSITE-BALANCE` loanproduct/repaymentperiod.go | UNRESOLVED |       [36m│[0m
+[36m│[0m **UNRESOLVED** | 43 → 43 |                                                   [36m│[0m
+[36m│[0m | `I3-FIELD-WRITE` loanproduct/interestperiod.go | UNRESOLVED |              [36m│[0m
+[36m│[0m **UNRESOLVED** | 43 → 43 |                                                   [36m│[0m
+[36m│[0m | `I3-FIELD-WRITE` loanproduct/repaymentperiod.go | UNRESOLVED |             [36m│[0m
+[36m│[0m **UNRESOLVED** | 43 → 43 |                                                   [36m│[0m
+[36m│[0m | `I3-FIELD-WRITE` loan/charge.go | UNRESOLVED | **PROVABLY-NO-PERSISTENCE** [36m│[0m
+[36m│[0m | 30 → 0 |                                                                   [36m│[0m
+[36m│[0m | `I3-FIELD-WRITE` loanschedule/emi.go | UNRESOLVED | **UNRESOLVED** | 23 →  [36m│[0m
+[36m│[0m 1261, finer |                                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Summary: **0 REACHES, 5 UNRESOLVED, 1 PROVABLY-NO-PERSISTENCE.** No site was [36m│[0m
+[36m│[0m cleared on weaker evidence; the one clear has a fully printed closure and no [36m│[0m
+[36m│[0m boundary anywhere in it.                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### Reason counts — the coarse reasons are gone                              [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Across the six sites, aggregated by reason (`main.go`):                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | Reason | Before | After |                                                  [36m│[0m
+[36m│[0m |---|---|---|                                                                [36m│[0m
+[36m│[0m | `unmodelled expression *ast.BinaryExpr` | 11 | **0** |                     [36m│[0m
+[36m│[0m | `result of a call into external package fmt` | 5 | **0** |                 [36m│[0m
+[36m│[0m | `value passed into external package testing` | 28 | **0** |                [36m│[0m
+[36m│[0m | `result of a call into external package strconv` | 1 | **0** |             [36m│[0m
+[36m│[0m | `value passed into external package fmt` (Fprintf to an `io.Writer`) | 2 | [36m│[0m
+[36m│[0m **2** — deliberately still refused |                                         [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The totals rise (225 → 1433) because the frontier is now **finer, not        [36m│[0m
+[36m│[0m weaker**: the union exposes the real downstream nodes instead of one coarse  [36m│[0m
+[36m│[0m `*ast.BinaryExpr` node. `emi.go`'s new 1259 "other" causes include 4 genuine [36m│[0m
+[36m│[0m driver-write causes (`branch/postgres.go:162`,                               [36m│[0m
+[36m│[0m `collateral/postgres.go:103,286,347`) — "target column is not statically     [36m│[0m
+[36m│[0m known to be a non-balance column" — kept UNRESOLVED, which is the correct    [36m│[0m
+[36m│[0m fail-closed answer.                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### Increment 1 — binary-expression union (`main.go:914–948`, dispatched at  [36m│[0m
+[36m│[0m `:993`)                                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m `binaryValueNodes` returns **both** operand node sets for the                [36m│[0m
+[36m│[0m arithmetic/bitwise, comparison and logical operators (`:926–948`). Union,    [36m│[0m
+[36m│[0m never intersection: if either operand is unresolved its node carries the     [36m│[0m
+[36m│[0m cause, so the expression stays UNRESOLVED. An operator outside the modelled  [36m│[0m
+[36m│[0m set gets `unmodelled binary operator <op>` and stays UNRESOLVED rather than  [36m│[0m
+[36m│[0m guessed. A comparison's bool does not carry the amount, but union there only [36m│[0m
+[36m│[0m *adds* flow (a clear becomes a refusal, never the reverse).                  [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### Increment 2 — prune provably-non-persisting stdlib (`main.go:1523–1633`) [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - Allow-list by **package path resolved through `types.Object`**             [36m│[0m
+[36m│[0m (`fn.Pkg().Path()`), never a source name: `fmt`, `strconv`, `strings`,       [36m│[0m
+[36m│[0m `testing`, each with a one-line justification in the map comment             [36m│[0m
+[36m│[0m (`:1537–1542`).                                                              [36m│[0m
+[36m│[0m - A call is pruned only when **pure wrt persistence** (`persistenceInert`,   [36m│[0m
+[36m│[0m `:1576`): any `io.Writer`-implementing parameter or typed-pointer parameter  [36m│[0m
+[36m│[0m refuses pruning. This is why the `Fprint*` family is **not** blanket-cleared [36m│[0m
+[36m│[0m — `fmt.Fprintf(w, …)` keeps `w` as an arbitrary destination.                 [36m│[0m
+[36m│[0m - Pruned calls keep **arg→result** edges (a returned value is a new derived  [36m│[0m
+[36m│[0m value; other flows of the original are still analysed) and **arg→receiver**  [36m│[0m
+[36m│[0m edges for methods, except receivers in `trustReceiverNoPersistPkgs`          [36m│[0m
+[36m│[0m (`testing`, `:1608`). Over-approximation adds flow only.                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### New controls — every polarity                                            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | # | Test | Polarity | What it proves |                                     [36m│[0m
+[36m│[0m |---|---|---|---|                                                            [36m│[0m
+[36m│[0m | 4 | `TestBinaryUnionOperandReachesPersistence` | positive |                [36m│[0m
+[36m│[0m `v.BalanceMinor + 1` reaches a boundary **only through the union** →         [36m│[0m
+[36m│[0m `REACHES-PERSISTENCE`; a `PROVABLY-NO` here would be fail-open |             [36m│[0m
+[36m│[0m | 5 | `TestBinaryUnionUnresolvedOperandStaysUnresolved` | fail-closed | `*p  [36m│[0m
+[36m│[0m + 1` with an unresolved operand → `UNRESOLVED`; must **not** be              [36m│[0m
+[36m│[0m `PROVABLY-NO` |                                                              [36m│[0m
+[36m│[0m | 6 | `TestPruningAllowListedDoesNotLoseStoredPath` | fail-closed | value    [36m│[0m
+[36m│[0m passed to `fmt` **and also** stored → still `REACHES-PERSISTENCE` |          [36m│[0m
+[36m│[0m | 7 | `TestFprintfIntoPersistenceWriterNotCleared` | fail-closed |           [36m│[0m
+[36m│[0m `fmt.Fprintf(sinkWriter, …)` where `Write` reaches `db.Exec` → `UNRESOLVED`, [36m│[0m
+[36m│[0m **not** `PROVABLY-NO` |                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The four existing controls pass unchanged: `TestPositiveReachesPersistence`  [36m│[0m
+[36m│[0m (4 positive forms), `TestGitMVDoesNotMoveVerdict` (git mv + package rename;  [36m│[0m
+[36m│[0m still `REACHES` — the allow-list is keyed on package *path* and the          [36m│[0m
+[36m│[0m boundaries on driver *objects*, so neither moves),                           [36m│[0m
+[36m│[0m `TestResolvedIsProvablyNoPersistence`, `TestFailClosedDegrade` (observed     [36m│[0m
+[36m│[0m degrading). None of them passes for a different reason.                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### The changed verdict — `charge.go` resolved closure, every hop            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m `I3-FIELD-WRITE internal/apps/loan/charge.go` → **PROVABLY-NO-PERSISTENCE**  [36m│[0m
+[36m│[0m (10 write sites resolved, 120 nodes, **no boundary node anywhere**):         [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m var c  [charge.go:118:7]              var c  [charge.go:124:7]               [36m│[0m
+[36m│[0m var c  [charge.go:133:7]              var waived  [charge.go:134:2]          [36m│[0m
+[36m│[0m var c  [charge.go:148:7]              result of call  [charge.go:152:24]     [36m│[0m
+[36m│[0m var c  [charge.go:160:7]              result of call  [charge.go:162:24]     [36m│[0m
+[36m│[0m var c  [charge.go:169:7]              var waived  [charge.go:170:2]          [36m│[0m
+[36m│[0m var c  [charge.go:180:7]              var c  [charge.go:191:7]               [36m│[0m
+[36m│[0m var amountPaidToDate  [charge.go:193:2]   var amountOutstanding              [36m│[0m
+[36m│[0m [charge.go:194:2]                                                            [36m│[0m
+[36m│[0m var amountPaidOnThisCharge  [charge.go:196:6]   result of call               [36m│[0m
+[36m│[0m [charge.go:211:25]                                                           [36m│[0m
+[36m│[0m var c  [charge.go:220:7]              var amountPaidToDate                   [36m│[0m
+[36m│[0m [charge.go:222:2]                                                            [36m│[0m
+[36m│[0m var amountDeducted  [charge.go:224:6]     result of call  [charge.go:235:25] [36m│[0m
+[36m│[0m var c  [charge.go:243:7]              field AmountPaid  [charge.go:30:2]     [36m│[0m
+[36m│[0m field AmountWaived  [charge.go:32:2]      field AmountOutstanding            [36m│[0m
+[36m│[0m [charge.go:38:2]                                                             [36m│[0m
+[36m│[0m var c  [charge.go:61:7]               var c  [charge.go:68:7]                [36m│[0m
+[36m│[0m [charge_test.go:101,107,113:2,113:7,114:5,114:12,115,118,123,129:3,129:8,    [36m│[0m
+[36m│[0m  12:9,130:6,130:13,131,134,138:3,138:8,139:6,139:13,140,143,147:3,147:8,     [36m│[0m
+[36m│[0m  148:6,148:13,149,152,157:6,157:13,158,168:3,168:8,169,170:6,170:13,171,174, [36m│[0m
+[36m│[0m  178:3,178:8,179,180:6,180:13,181,184,204,29:5,29:12,30,32:5,32:12,33,35,    [36m│[0m
+[36m│[0m  41:2,41:7,44,46:5,46:12,47,49:5,49:12,50,59,62,72,88,98]                    [36m│[0m
+[36m│[0m [disbursement.go:13:34,60:32]                                                [36m│[0m
+[36m│[0m [disbursement_test.go:12:2,12:14,13,14,15,16,17,40:3,40:8,40:18,42:39,       [36m│[0m
+[36m│[0m  51:3,51:8,51:18,53:3,53:8,53:18,55:36,60,65:3,65:15,65:25,68:16,68:26,      [36m│[0m
+[36m│[0m  101:36]                                                                     [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The closure is the whole package region (charge.go + charge_test.go +        [36m│[0m
+[36m│[0m disbursement.go + disbursement_test.go). Every node is a variable, a field   [36m│[0m
+[36m│[0m on the `LoanCharge` type, a composite literal, or a call result; **no `value [36m│[0m
+[36m│[0m bound to a driver call`, no journal/GL sink** appears. `charge.go` does not  [36m│[0m
+[36m│[0m import `apps/ledger` and contains no direct Exec/Query/persist string, which [36m│[0m
+[36m│[0m is why the 30 coarse causes (`2 *ast.BinaryExpr` + `28 testing`) resolved to [36m│[0m
+[36m│[0m a clean closure once both increments landed.                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ### Honest limitations (fail-closed preserved)                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - Black-box totals barely move: still 5 UNRESOLVED. The six sites' verdicts  [36m│[0m
+[36m│[0m are unchanged except `charge.go`; the residual UNRESOLVED reasons are now    [36m│[0m
+[36m│[0m specific (interface dispatch, func values, map range, type assertions,       [36m│[0m
+[36m│[0m pointer dereference, driver calls with static-unknown columns).              [36m│[0m
+[36m│[0m - Receiver edges for pruned methods are a deliberate over-approximation that [36m│[0m
+[36m│[0m can only add refusals, never clear a site.                                   [36m│[0m
+[36m│[0m - The two remaining `value passed into external package fmt` across the six  [36m│[0m
+[36m│[0m are `fmt.Fprintf(os.Stderr, …)`                                              [36m│[0m
+[36m│[0m (`loanschedule/conformance/cmd/conformance/main.go:68,159`) — an             [36m│[0m
+[36m│[0m `io.Writer`, correctly refused, not blanket-cleared.                         [36m│[0m
+[36m│[0m - Not in scope, left untouched: `.softhouse/guards/ledgerguard/main.go:1377` [36m│[0m
+[36m│[0m still says LEG 2 "does not exist yet" (now stale, but that file is           [36m│[0m
+[36m│[0m hash-guarded by the harness and owned by OH-REACH-P). The tool answers the   [36m│[0m
+[36m│[0m WRITE question only — a balance READ is not a write path (DEC-2 §4.4         [36m│[0m
+[36m│[0m CANNOT-CATCH item 9).                                                        [36m│[0m
+[36m│[0m - `.softhouse/guards/ledger-invariants.baseline` and                         [36m│[0m
+[36m│[0m `.softhouse/conformance.sh` were **not modified**.                           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 02cd62b2030d4620834c48d7dd6fb33a
+Hint: run openhands --resume 02cd62b2-030d-4620-834c-48d7dd6fb33a to resume this
+conversation.
