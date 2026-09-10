@@ -1,0 +1,11 @@
+Pager usage is off.
+psql:<stdin>:2: ERROR:  column "business_date" does not exist
+LINE 1: SELECT 'business_date' AS k, business_date::text AS v FROM m...
+                                     ^
+acc_product_mapping_total|12
+mapping_product3|12
+transfer_details_total|0
+gl_accounts_total|16
+journal_entries_total|24
+external_owner_transfer_total|1
+loans_total|12
