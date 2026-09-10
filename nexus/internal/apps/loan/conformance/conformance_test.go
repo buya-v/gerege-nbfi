@@ -527,6 +527,60 @@ func journalBatchProbe() *Vector {
 	}
 }
 
+// fiveLegBatchProbe builds a valid journal-entry-batch-seam vector for the
+// SINGLE-transaction five-leg posting observed in
+// journalentries-loan-12-after-raw.json for loan entityId 12, transactionId L53:
+// four CREDIT legs, one per allocation bucket to a DISTINCT account, plus the
+// single DEBIT equal to their sum. It is the shape LN-L09's admission rule has
+// to admit without admitting a one-pair batch. The DEBIT is deliberately the
+// LAST leg in request order: the port sees the request legs verbatim, so a port
+// that walks legs two at a time drops that trailing debit, which is the
+// odd-count defect this shape exists to discriminate.
+func fiveLegBatchProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-five-leg-journal-entry-batch",
+		Title:   "probe single-transaction five-leg repayment posting",
+		Class:   ClassParity,
+		Context: LoanContext,
+		Note:    "probe: transcribed from journalentries-loan-12-after-raw.json pageItems for entityId 12 transactionId L53, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamLoanJournalEntryBatchBalance, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: the five loan-12 L53 legs and their sides",
+			CaptureRef:    ".softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json",
+			CaptureSHA256: "9024add5df2946c369719f7d83623d525ddc77df59ca3b457a586d0feed490c9",
+			CaptureCaseID: "L53",
+		},
+		TenantParams: probeTenant(),
+		Request: Request{JournalEntries: []JournalEntryLeg{
+			{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT", AmountMinor: "9120312"},
+			{TransactionID: "L53", Account: "OHLGR-Interest-Receivable", EntryType: "CREDIT", AmountMinor: "661853"},
+			{TransactionID: "L53", Account: "OHLGR-Fees-Receivable", EntryType: "CREDIT", AmountMinor: "10000"},
+			{TransactionID: "L53", Account: "OHLGR-Penalties-Receivable", EntryType: "CREDIT", AmountMinor: "5700"},
+			{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT", AmountMinor: "9797865"},
+		}},
+		Expect: Expect{
+			JournalEntryDebitsMinor:  "9797865",
+			JournalEntryCreditsMinor: "9797865",
+			JournalEntryAccountSides: []JournalEntryAccountSideCell{
+				{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT"},
+				{TransactionID: "L53", Account: "OHLGR-Interest-Receivable", EntryType: "CREDIT"},
+				{TransactionID: "L53", Account: "OHLGR-Fees-Receivable", EntryType: "CREDIT"},
+				{TransactionID: "L53", Account: "OHLGR-Penalties-Receivable", EntryType: "CREDIT"},
+				{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT"},
+			},
+		},
+		CapabilitiesRequired: []string{"journal-entry-batch-balance"},
+		GradedAgainst: []string{
+			"loan-go",
+			"loan-wrong-journal-entry-batch-collapses-credits-to-one-account",
+			"loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time",
+			"loan-wrong-journal-entry-batch-debit-from-first-two-credits",
+		},
+	}
+}
+
 // TestJournalEntryBatchSeamGrading grades the probe with the correct port and
 // with each registered wrong drive. The totals drive and the side drive are
 // asserted separately: the swap must FAIL on the side cells while its two money
@@ -669,6 +723,186 @@ func TestJournalEntryBatchDrivesAreIsolated(t *testing.T) {
 		if res.Outcome != OutcomePass {
 			t.Fatalf("%s reddened a repayment vector (isolation broken): %v", name, res.Diffs)
 		}
+	}
+}
+
+func problemsContain(problems []string, sub string) bool {
+	for _, p := range problems {
+		if strings.Contains(p, sub) {
+			return true
+		}
+	}
+	return false
+}
+
+// TestFiveLegJournalEntryBatchSeamGrading grades the five-leg probe with the
+// correct port and each new drive. This is an ODD leg count (5) over ONE
+// transaction id, so the correct grading is 2 money cells + 1 leg-count cell +
+// 5 legs x 3 side cells = 18 cells.
+func TestFiveLegJournalEntryBatchSeamGrading(t *testing.T) {
+	v := fiveLegBatchProbe()
+	if p := Admit(v, Options{RepoRoot: repoRoot(t)}); len(p) > 0 {
+		t.Fatalf("five-leg probe should be admissible: %v", p)
+	}
+	correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	if correct.GradedCells != 18 || correct.MoneyCells != 2 {
+		t.Fatalf("graded cells = %d, money = %d; want 18/2", correct.GradedCells, correct.MoneyCells)
+	}
+	for _, name := range v.GradedAgainst[1:] {
+		impl, ok := Lookup(name)
+		if !ok {
+			t.Fatalf("wrong implementation %q not registered", name)
+		}
+		if _, bad := IsRegisteredWrong(name); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", name)
+		}
+		red := gradeOne(v, Options{Implementation: impl})
+		if red.Outcome != OutcomeFail {
+			t.Fatalf("%s outcome = %s, want FAIL; diffs=%v", name, red.Outcome, red.Diffs)
+		}
+		if len(red.Diffs) == 0 && red.InvariantViolations == 0 {
+			t.Fatalf("%s produced no diffs and no invariant violation", name)
+		}
+	}
+}
+
+// TestFiveLegBatchDrivesAreDistinct pins that the three new drives are three
+// DIFFERENT defects, not restatements of each other, by asserting on the real
+// reconstruction path what each one moves:
+//
+//   - collapse: both totals stay the observed 9797865/9797865 (it still
+//     balances) and the four bucket credits become ONE credit;
+//   - pairs: the trailing leg (the single DEBIT, last in request order) is
+//     dropped, so the debit total reads 0 while all four credits still sum to
+//     9797865;
+//   - partial debit: every leg is still posted and the credit total is observed
+//     but the debit is only the first two credits, 9120312+661853 = 9782165.
+func TestFiveLegBatchDrivesAreDistinct(t *testing.T) {
+	req := fiveLegBatchProbe().Request
+
+	collapse, ok := Lookup("loan-wrong-journal-entry-batch-collapses-credits-to-one-account")
+	if !ok {
+		t.Fatal("collapse drive not registered")
+	}
+	got, err := collapse.Evaluate(req)
+	if err != nil {
+		t.Fatalf("collapse Evaluate: %v", err)
+	}
+	if got.JournalEntryDebitsMinor != "9797865" || got.JournalEntryCreditsMinor != "9797865" {
+		t.Fatalf("collapse totals = %s/%s, want the observed 9797865/9797865 (the collapse still balances)",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+	}
+	credits := 0
+	for _, s := range got.JournalEntryAccountSides {
+		if s.EntryType == "CREDIT" {
+			credits++
+		}
+	}
+	if credits != 1 {
+		t.Fatalf("collapse left %d credit leg(s), want the four bucket credits merged into ONE", credits)
+	}
+
+	pairs, ok := Lookup("loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time")
+	if !ok {
+		t.Fatal("pairs drive not registered")
+	}
+	got, err = pairs.Evaluate(req)
+	if err != nil {
+		t.Fatalf("pairs Evaluate: %v", err)
+	}
+	if got.JournalEntryDebitsMinor != "0" || got.JournalEntryCreditsMinor != "9797865" {
+		t.Fatalf("pairs totals = %s/%s, want the dropped-debit 0/9797865",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+	}
+	if len(got.JournalEntryAccountSides) != 4 {
+		t.Fatalf("pairs posted %d legs, want 4 (one of the odd five dropped)", len(got.JournalEntryAccountSides))
+	}
+
+	partial, ok := Lookup("loan-wrong-journal-entry-batch-debit-from-first-two-credits")
+	if !ok {
+		t.Fatal("partial-debit drive not registered")
+	}
+	got, err = partial.Evaluate(req)
+	if err != nil {
+		t.Fatalf("partial-debit Evaluate: %v", err)
+	}
+	if got.JournalEntryDebitsMinor != "9782165" || got.JournalEntryCreditsMinor != "9797865" {
+		t.Fatalf("partial-debit totals = %s/%s, want 9782165/9797865",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+	}
+	if len(got.JournalEntryAccountSides) != 5 {
+		t.Fatalf("partial-debit posted %d legs, want all 5 (only the debit total is short)",
+			len(got.JournalEntryAccountSides))
+	}
+}
+
+// TestFiveLegDrivesAreInvisibleToTwoPairBatch is the kill-count isolation for
+// the new property: each new drive must leave the two-pair LN-L09 batch PASSING,
+// so the drive reddens only the five-leg posting and its measured kill count is
+// the five-leg vector alone. The collapse is a no-op where a transaction has one
+// credit; the pairing is a no-op where every transaction has exactly two legs;
+// and the partial debit happens to equal the full debit where there are exactly
+// two credits and their sum is the single debit.
+func TestFiveLegDrivesAreInvisibleToTwoPairBatch(t *testing.T) {
+	for _, name := range fiveLegBatchProbe().GradedAgainst[1:] {
+		impl, ok := Lookup(name)
+		if !ok {
+			t.Fatalf("wrong implementation %q not registered", name)
+		}
+		res := gradeOne(journalBatchProbe(), Options{Implementation: impl})
+		if res.Outcome != OutcomePass {
+			t.Fatalf("%s reddened the two-pair LN-L09 batch (kill count would exceed 1): %v", name, res.Diffs)
+		}
+	}
+}
+
+// TestJournalEntryBatchAdmissionAdmitsFiveLegButRefusesSinglePair pins the
+// admission boundary itself: the five-leg single-transaction posting is admitted,
+// while a one-pair batch and a three-leg batch whose credits all land on ONE
+// account are still refused as unable to discriminate.
+func TestJournalEntryBatchAdmissionAdmitsFiveLegButRefusesSinglePair(t *testing.T) {
+	base := fiveLegBatchProbe()
+	if p := Admit(base, Options{RepoRoot: repoRoot(t)}); len(p) != 0 {
+		t.Fatalf("five-leg single-transaction batch must be admitted: %v", p)
+	}
+
+	pair := *base
+	pair.Request = Request{JournalEntries: []JournalEntryLeg{
+		{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT", AmountMinor: "100"},
+		{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT", AmountMinor: "100"},
+	}}
+	pair.Expect = Expect{
+		JournalEntryDebitsMinor:  "100",
+		JournalEntryCreditsMinor: "100",
+		JournalEntryAccountSides: []JournalEntryAccountSideCell{
+			{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT"},
+			{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT"},
+		},
+	}
+	if p := Admit(&pair, Options{RepoRoot: repoRoot(t)}); !problemsContain(p, "a discriminating batch carries") {
+		t.Fatalf("one-pair batch must be refused as non-discriminating; problems=%v", p)
+	}
+
+	sameAcct := *base
+	sameAcct.Request = Request{JournalEntries: []JournalEntryLeg{
+		{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT", AmountMinor: "60"},
+		{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT", AmountMinor: "40"},
+		{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT", AmountMinor: "100"},
+	}}
+	sameAcct.Expect = Expect{
+		JournalEntryDebitsMinor:  "100",
+		JournalEntryCreditsMinor: "100",
+		JournalEntryAccountSides: []JournalEntryAccountSideCell{
+			{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT"},
+			{TransactionID: "L53", Account: "OHLGR-Loan-Portfolio", EntryType: "CREDIT"},
+			{TransactionID: "L53", Account: "OHLGR-Fund-Source", EntryType: "DEBIT"},
+		},
+	}
+	if p := Admit(&sameAcct, Options{RepoRoot: repoRoot(t)}); !problemsContain(p, "a discriminating batch carries") {
+		t.Fatalf("three legs over ONE credit account must be refused as non-discriminating; problems=%v", p)
 	}
 }
 

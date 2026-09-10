@@ -967,6 +967,29 @@ const (
 	// miss, because a batch that posts a fee to the loan portfolio instead of to
 	// income still balances exactly.
 	wrongBatchRoutesFeeThroughDisbursementAccounts
+	// wrongBatchCollapsesCreditsToOneAccount merges, per transaction, every
+	// credit leg into ONE credit to that transaction's first credit account,
+	// leaving the debit total untouched. On the five-leg repayment L53 the four
+	// bucket credits (Loan-Portfolio 91203.12, Interest-Receivable 6618.53,
+	// Fees-Receivable 100.00, Penalties-Receivable 57.00) collapse to a single
+	// Loan-Portfolio credit of 97978.65: both totals STILL BALANCE and equal the
+	// observed 9797865, and only the accounts the credits name move — the
+	// collapse the two total cells cannot see and the per-(transaction, account)
+	// side list exists to catch.
+	wrongBatchCollapsesCreditsToOneAccount
+	// wrongBatchPairsLegsTwoAtATime walks, per transaction, the legs two at a
+	// time and DROPS any trailing unpaired leg, as logic that assumes every
+	// posting is a leg-PAIR does. The five-leg L53 batch is ODD, so the fifth
+	// leg (the single debit) is dropped: the debit total reads zero while the
+	// four credits still sum to the whole 9797865. No existing drive is an
+	// odd-count defect; the pair-based drives drop a whole transaction instead.
+	wrongBatchPairsLegsTwoAtATime
+	// wrongBatchDebitFromFirstTwoCredits posts the debit as the sum of only the
+	// FIRST TWO credit legs instead of all four, so the repayment's debit reads
+	// 9120312+661853=9782165 instead of 9797865 while every leg and the credit
+	// total stay observed. It is the partial-debit defect the collapse and
+	// odd-count drives are blind to.
+	wrongBatchDebitFromFirstTwoCredits
 )
 
 // wrongJournalEntryBatchEvaluator is a DELIBERATELY WRONG implementation of the
@@ -1054,6 +1077,54 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 		}
 	}
 
+	// The odd-count and credit-collapse defects rebuild the POSTED leg list
+	// itself; every other mode posts the parsed legs unchanged. The rebuilds
+	// are per-transaction, so the two-pair LN-L09 batch (each transaction a
+	// clean pair, one credit) passes both drives untouched and each new drive
+	// reddens only the five-leg repayment posting it targets.
+	posted := parsed
+	switch mode {
+	case wrongBatchCollapsesCreditsToOneAccount:
+		var out []parsedLeg
+		for _, txn := range order {
+			var firstAcct string
+			var sum loan.MinorUnits
+			credits := 0
+			for _, l := range parsed {
+				if l.txn != txn {
+					continue
+				}
+				if l.side == loan.JournalEntryCredit {
+					if credits == 0 {
+						firstAcct = l.acct
+					}
+					sum += l.amount
+					credits++
+					continue
+				}
+				out = append(out, l)
+			}
+			if credits > 0 {
+				out = append(out, parsedLeg{txn: txn, acct: firstAcct, side: loan.JournalEntryCredit, amount: sum})
+			}
+		}
+		posted = out
+	case wrongBatchPairsLegsTwoAtATime:
+		var out []parsedLeg
+		for _, txn := range order {
+			var group []parsedLeg
+			for _, l := range parsed {
+				if l.txn == txn {
+					group = append(group, l)
+				}
+			}
+			for i := 0; i+1 < len(group); i += 2 {
+				out = append(out, group[i], group[i+1])
+			}
+		}
+		posted = out
+	}
+
 	var debits, credits loan.MinorUnits
 	add := func(l parsedLeg) {
 		if l.side == loan.JournalEntryDebit {
@@ -1065,14 +1136,14 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 	switch mode {
 	case wrongBatchFirstPairOnly:
 		first := order[0]
-		for _, l := range parsed {
+		for _, l := range posted {
 			if l.txn == first {
 				add(l)
 			}
 		}
 	case wrongBatchDropsSecondPair:
 		last := order[len(order)-1]
-		for _, l := range parsed {
+		for _, l := range posted {
 			if l.txn != last {
 				add(l)
 			}
@@ -1085,7 +1156,7 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 		totals := map[key]loan.MinorUnits{}
 		var accounts []string
 		seenAcct := map[string]bool{}
-		for _, l := range parsed {
+		for _, l := range posted {
 			totals[key{l.acct, l.side}] += l.amount
 			if !seenAcct[l.acct] {
 				seenAcct[l.acct] = true
@@ -1102,17 +1173,32 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 				credits += c - d
 			}
 		}
+	case wrongBatchDebitFromFirstTwoCredits:
+		// Every leg and the credit total stay observed; the debit is posted as
+		// the sum of the first two credits, as if only the first two allocation
+		// buckets settled into cash.
+		seenCredits := 0
+		for _, l := range posted {
+			if l.side != loan.JournalEntryCredit {
+				continue
+			}
+			credits += l.amount
+			if seenCredits < 2 {
+				debits += l.amount
+				seenCredits++
+			}
+		}
 	default:
 		// wrongBatchSwapsFirstPairSides, wrongBatchRoutesFeeThroughDisbursementAccounts
 		// and the zero value sum every leg on its (possibly remapped/flipped)
 		// side: neither defect changes any amount, so both totals stay observed.
-		for _, l := range parsed {
+		for _, l := range posted {
 			add(l)
 		}
 	}
 
-	sides := make([]JournalEntryAccountSideCell, len(parsed))
-	for i, l := range parsed {
+	sides := make([]JournalEntryAccountSideCell, len(posted))
+	for i, l := range posted {
 		sides[i] = JournalEntryAccountSideCell{
 			TransactionID: l.txn,
 			Account:       l.acct,
@@ -1217,6 +1303,24 @@ func init() {
 			"100100.00/100100.00, so only the per-(transaction, account) side cells move — a fee "+
 			"posted to the loan portfolio instead of to income, and every total still balances",
 		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchRoutesFeeThroughDisbursementAccounts})
+	RegisterWrong("loan-wrong-journal-entry-batch-collapses-credits-to-one-account",
+		"merges the four allocation-bucket credits of the five-leg L53 repayment into ONE "+
+			"OHLGR-Loan-Portfolio credit of 97978.65; both totals still BALANCE at the observed "+
+			"9797865, so only the per-(transaction, account) side list goes red — the four "+
+			"distinct bucket accounts are gone while every total stays right",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchCollapsesCreditsToOneAccount})
+	RegisterWrong("loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time",
+		"walks the odd five-leg L53 repayment two legs at a time and DROPS the trailing unpaired "+
+			"leg (the single DEBIT OHLGR-Fund-Source), as logic that assumes every posting is a "+
+			"leg-PAIR does; the debit total reads 0 while the four credits still sum to 9797865, "+
+			"so the debit cell goes red on an ODD leg count where no pair-based drive can reach",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchPairsLegsTwoAtATime})
+	RegisterWrong("loan-wrong-journal-entry-batch-debit-from-first-two-credits",
+		"posts the debit as the sum of only the FIRST TWO credit legs (9120312+661853=9782165) "+
+			"instead of all four (9797865), so the debit cell reads 9782165 while every leg and "+
+			"the credit total stay observed — a partial debit the collapse and odd-count drives "+
+			"are blind to",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchDebitFromFirstTwoCredits})
 	RegisterWrong("loan-wrong-schedule-amortization-drops-final-component",
 		"reconstructs the whole repayment schedule without the LAST period's principal "+
 			"component, as a port does when it reads only the pre-adjustment rows, so the pinned "+

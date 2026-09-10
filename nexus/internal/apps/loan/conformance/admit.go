@@ -277,6 +277,7 @@ func admitRequest(v *Vector) []string {
 			return problems
 		}
 		seenTxn := map[string]bool{}
+		creditAccounts := map[string]bool{}
 		hasDebit, hasCredit := false, false
 		for i, leg := range v.Request.JournalEntries {
 			if leg.TransactionID == "" {
@@ -294,18 +295,40 @@ func admitRequest(v *Vector) []string {
 				hasDebit = true
 			case leg.EntryType == "CREDIT":
 				hasCredit = true
+				if leg.Account != "" {
+					creditAccounts[leg.Account] = true
+				}
 			}
 			if !isIntegerMinorString(leg.AmountMinor) {
 				problems = append(problems, fmt.Sprintf("request.journal_entries[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
 			}
 		}
-		// The property is a batch holding MORE THAN ONE PAIR. A single-pair
-		// batch balances under almost any defect, so it cannot discriminate the
-		// property this seam exists to grade; refuse it at admission rather
-		// than promote a vector that cannot fail.
-		if len(seenTxn) < 2 {
+		// The seam grades a batch that can DISCRIMINATE, and TWO observed shapes
+		// qualify:
+		//
+		//   (1) MORE THAN ONE PAIR: more than one distinct transaction id
+		//       (LN-L09, the loan-10 disbursement pair plus fee pair). A port
+		//       that sums only the first pair, drops a pair or nets a shared
+		//       account moves both totals.
+		//   (2) ONE MULTI-LEG POSTING: a single transaction id carrying at least
+		//       three legs whose credits land on at least two DISTINCT accounts
+		//       (LN-L12, the five-leg repayment L53: one credit per allocation
+		//       bucket plus one debit equal to their sum). A port that collapses
+		//       the credits onto one account moves the side list while both
+		//       totals still balance; a port that pairs the odd legs and drops
+		//       the fifth moves the debit total.
+		//
+		// A batch of ONE PAIR (one debit and one credit, whatever its
+		// transaction id) can discriminate neither defect and is STILL refused.
+		// This ADMITS a second discriminating shape; it does not weaken the
+		// single-pair refusal.
+		multiPair := len(seenTxn) >= 2
+		multiLegDistinctCredits := len(seenTxn) == 1 &&
+			len(v.Request.JournalEntries) >= 3 && len(creditAccounts) >= 2
+		if !multiPair && !multiLegDistinctCredits {
 			problems = append(problems, fmt.Sprintf(
-				"request.journal_entries holds %d distinct transaction id(s): the batch-balance property requires MORE THAN ONE PAIR", len(seenTxn)))
+				"request.journal_entries holds %d distinct transaction id(s) over %d credit account(s): a discriminating batch carries MORE THAN ONE PAIR (more than one transaction id) or a single multi-leg posting crediting at least two DISTINCT accounts",
+				len(seenTxn), len(creditAccounts)))
 		}
 		if !hasDebit || !hasCredit {
 			problems = append(problems, "request.journal_entries must carry at least one DEBIT and one CREDIT leg")
