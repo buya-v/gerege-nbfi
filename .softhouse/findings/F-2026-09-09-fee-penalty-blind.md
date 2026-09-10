@@ -75,3 +75,45 @@ It suppressed no work that run could do: `OH-PROM-O` is forbidden to capture (th
 was held by `OH-INV-N` advancing the business date), and no committed capture can close
 this. Recorded here rather than silently, per the briefs README: the instruction is half of
 why a change exists, and a brief that was incomplete should say so.
+
+---
+
+## UPDATE 2026-09-10 — THE CAPTURE NOW EXISTS. The finding is closable.
+
+`OH-GL-R` created the first accounting-enabled loan product in this oracle and, with it,
+loans carrying **non-zero fee and penalty**. The observation this finding said it needed is
+now committed at `.softhouse/capture/gl-accounting-surface/out/`.
+
+**Loan 11** (`loan-11-raw.json`) — all four summary terms non-zero, and **fee ≠ penalty**,
+which is exactly what this finding specified, because equal values would let a term-swap
+defect survive:
+
+    principalOutstanding       100000.0
+    interestOutstanding          6618.53
+    feeChargesOutstanding         100.0
+    penaltyChargesOutstanding      57.0
+    totalOutstanding           106775.53
+
+Minor units: `10000000 + 661853 + 10000 + 5700 = 10677553`. **No sub-minor residue**, so
+G-19 does not bite and this is a legitimate parity vector.
+
+**Loan 10** (`loan-10-raw.json`) is the complementary shape — `feeChargesOutstanding` **0**,
+`penaltyChargesOutstanding` **57** — which discriminates the penalty term alone, and gives a
+second, differently-shaped observation rather than a clone.
+
+### What still has to happen — this finding is NOT yet closed
+
+Committing an observation and grading it are different acts. To close it:
+
+1. Promote a summary vector from loan 11 (all four terms non-zero) and, if it carries a
+   distinct fact, one from loan 10 (penalty-only).
+2. Register **`loan-wrong-summary-drops-fee`** and **`loan-wrong-summary-drops-penalty`**
+   and **show each kills**. Until a drive dies on these vectors, nothing is proven — the
+   whole point of this finding was that a dropped term is invisible, and a vector that no
+   drive tests does not fix that.
+3. Re-measure the four existing `*-summary-total-outstanding` vectors; they still pin one
+   fact between three of them (L05 excepted) and adding a fifth zero-fee summary remains
+   the cloning failure.
+
+Until then this stays **OPEN**, with the blocking reason changed: it was "no capture can
+discriminate the term"; it is now "the capture exists and the drives are unwritten."

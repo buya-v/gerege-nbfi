@@ -1,0 +1,83 @@
+{
+  "gl": {
+    "OHLGR-10010": {
+      "name": "OHLGR-Loan-Portfolio",
+      "glCode": "OHLGR-10010",
+      "id": 5,
+      "reused": false
+    },
+    "OHLGR-10011": {
+      "name": "OHLGR-Transfers-Suspense",
+      "glCode": "OHLGR-10011",
+      "id": 6,
+      "reused": false
+    },
+    "OHLGR-10012": {
+      "name": "OHLGR-Interest-Receivable",
+      "glCode": "OHLGR-10012",
+      "id": 7,
+      "reused": false
+    },
+    "OHLGR-10013": {
+      "name": "OHLGR-Fees-Receivable",
+      "glCode": "OHLGR-10013",
+      "id": 8,
+      "reused": false
+    },
+    "OHLGR-10014": {
+      "name": "OHLGR-Penalties-Receivable",
+      "glCode": "OHLGR-10014",
+      "id": 9,
+      "reused": false
+    },
+    "OHLGR-20010": {
+      "name": "OHLGR-Fund-Source",
+      "glCode": "OHLGR-20010",
+      "id": 10,
+      "reused": false
+    },
+    "OHLGR-20011": {
+      "name": "OHLGR-Overpayment-Liability",
+      "glCode": "OHLGR-20011",
+      "id": 11,
+      "reused": false
+    },
+    "OHLGR-40010": {
+      "name": "OHLGR-Interest-On-Loans",
+      "glCode": "OHLGR-40010",
+      "id": 12,
+      "reused": false
+    },
+    "OHLGR-40011": {
+      "name": "OHLGR-Income-From-Fees",
+      "glCode": "OHLGR-40011",
+      "id": 13,
+      "reused": false
+    },
+    "OHLGR-40012": {
+      "name": "OHLGR-Income-From-Penalties",
+      "glCode": "OHLGR-40012",
+      "id": 14,
+      "reused": false
+    },
+    "OHLGR-40013": {
+      "name": "OHLGR-Income-From-Recovery",
+      "glCode": "OHLGR-40013",
+      "id": 15,
+      "reused": false
+    },
+    "OHLGR-50010": {
+      "name": "OHLGR-Losses-Written-Off",
+      "glCode": "OHLGR-50010",
+      "id": 16,
+      "reused": false
+    }
+  },
+  "loanProduct": 3,
+  "feeCharge": 3,
+  "penaltyCharge": 4,
+  "client": 11,
+  "loan": 10,
+  "feeSddCharge": 5,
+  "loan2": 11
+}
