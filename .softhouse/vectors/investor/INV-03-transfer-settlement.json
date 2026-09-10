@@ -1,0 +1,64 @@
+{
+ "schema": "gerege.investor.vector/v1",
+ "case_id": "INV-03-transfer-settlement",
+ "title": "external asset owner transfer settlement (loan 12, transfer 28)",
+ "class": "parity",
+ "context": "investor",
+ "_note": "Parity vector transcribed from capture transfer-28-je-post.json (COB settlement of external-asset-owner transfer 28 on loan 12, tenant gerege; business date 2026-09-02, COB settled it as transfer 28 ACTIVE effective 2026-09-03). request.loan_id=12 is transferData.loan.loanId; request.transfer_id=28 is transferData.transferId. All nine row cells are that same object: expect.owner_external_id=\"SEED-Inv-01\" is transferData.owner.externalId; expect.loan_external_id=\"OHLGT-L03\" is transferData.loan.externalId; expect.transfer_external_id=\"OHINVW-Tr-12\" is transferData.transferExternalId; expect.purchase_price_ratio=\"97.25\" is transferData.purchasePriceRatio (a decimal STRING, no integer-minor-unit form); expect.status=\"ACTIVE\"; expect.settlement_date=\"2026-09-02\"; expect.effective_from=\"2026-09-03\"; expect.effective_to=\"9999-12-31\". expect.details transcribes transferData.details into integer minor units (MNT, 2 digits): total_principal_outstanding_minor=10000000 from totalPrincipalOutstanding 100000.000000; total_interest_outstanding_minor=661853 from 6618.530000; total_fee_charges_outstanding_minor=10000 from 100.000000; total_penalty_charges_outstanding_minor=5700 from 57.000000; total_outstanding_minor=10677553 from totalOutstanding 106775.530000; total_overpaid_minor=0 from totalOverpaid 0.000000. The oracle's stored total is the sum of the four buckets, and the port DERIVES it (investor.ExternalAssetOwnerTransferDetails.DeriveTotalOutstanding = principal+interest+fee+penalty), so a derivation that drops fee (10000) or penalty (5700) diverges; fee and penalty are non-zero AND DIFFERENT, so both drops are discriminated. expect.journal transcribes journalEntryData: 10 entries ids 119-128, entry_count=10; debit_total_minor=21355106 from 213551.060000 and credit_total_minor=21355106 from 213551.060000 (debits==credits); posted_amount_minor=10677553 is the Transfers-Suspense leg (glAccountCode OHLGR-10011) of 106775.530000, i.e. the FULL outstanding, never purchase_price_ratio x outstanding. DB corroboration in the same capture directory: db-transfer-details-ohinvy.txt shows asset_owner_transfer_id=28 with the same six amounts, db-je-transfer-ohinvy.txt shows the ten entries with transaction_id=I28, and db-transfer-je-mapping-ohinvy.txt maps all ten journal_entry_id 119-128 to owner_transfer_id=28. LIMITATION: total_overpaid is 0.0, so this capture CANNOT discriminate whether overpaid is excluded from the total -- including or excluding zero both give 10677553. A drive that folds overpaid in would kill ZERO on this corpus and is deliberately NOT registered; a capture of a loan overpaid at transfer time is required before that can be vectorised. Nothing was computed by this promotion beyond the x100 minor-unit transcription of the observed decimal strings.",
+ "oracle": {
+  "seam": "external-asset-owner-transfer-settlement",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All expect cells are transcribed from the committed capture transfer-28-je-post.json; capture_case_id names the observed transferExternalId. The same directory's db-transfer-details-ohinvy.txt and db-transfer-je-mapping-ohinvy.txt corroborate the details snapshot and the owner_transfer_id=28 provenance of all ten journal entries.",
+  "capture_ref": ".softhouse/capture/investor-asset-transfer-100/out/transfer-28-je-post.json",
+  "capture_sha256": "256bde67a414273c241c4a0c0a031b77d034a7b55073676d861930109182f5a9",
+  "capture_case_id": "OHINVW-Tr-12",
+  "citation": "transfer-28-je-post.json transferData={\"transferId\":28,\"owner\":{\"externalId\":\"SEED-Inv-01\"},\"loan\":{\"loanId\":12,\"externalId\":\"OHLGT-L03\"},\"details\":{\"detailsId\":1,\"totalOutstanding\":106775.530000,\"totalPrincipalOutstanding\":100000.000000,\"totalInterestOutstanding\":6618.530000,\"totalFeeChargesOutstanding\":100.000000,\"totalPenaltyChargesOutstanding\":57.000000,\"totalOverpaid\":0.000000},\"transferExternalId\":\"OHINVW-Tr-12\",\"purchasePriceRatio\":\"97.25\",\"settlementDate\":\"2026-09-02\",\"status\":\"ACTIVE\",\"effectiveFrom\":\"2026-09-03\",\"effectiveTo\":\"9999-12-31\"}; journalEntryData.content = 10 entries ids 119-128, debits 213551.060000 == credits 213551.060000, Transfers-Suspense (OHLGR-10011) 106775.530000. Corroborated by db-transfer-details-ohinvy.txt (asset_owner_transfer_id=28, 106775.530000/100000.000000/6618.530000/100.000000/57.000000/0.000000) and db-transfer-je-mapping-ohinvy.txt (all of 119-128 -> owner_transfer_id=28)."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 12,
+  "transfer_id": 28
+ },
+ "expect": {
+  "transfer_id": 28,
+  "owner_external_id": "SEED-Inv-01",
+  "loan_external_id": "OHLGT-L03",
+  "transfer_external_id": "OHINVW-Tr-12",
+  "purchase_price_ratio": "97.25",
+  "status": "ACTIVE",
+  "settlement_date": "2026-09-02",
+  "effective_from": "2026-09-03",
+  "effective_to": "9999-12-31",
+  "details": {
+   "details_id": 1,
+   "total_principal_outstanding_minor": 10000000,
+   "total_interest_outstanding_minor": 661853,
+   "total_fee_charges_outstanding_minor": 10000,
+   "total_penalty_charges_outstanding_minor": 5700,
+   "total_outstanding_minor": 10677553,
+   "total_overpaid_minor": 0
+  },
+  "journal": {
+   "entry_count": 10,
+   "debit_total_minor": 21355106,
+   "credit_total_minor": 21355106,
+   "posted_amount_minor": 10677553
+  }
+ },
+ "capabilities_required": [
+  "transfer-settlement"
+ ],
+ "graded_against": [
+  "investor-go"
+ ]
+}

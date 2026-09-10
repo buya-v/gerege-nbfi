@@ -28,10 +28,16 @@ type InvariantResult struct {
 // AssertInvariants runs every gradeable investor invariant against the result an
 // implementation returned.
 //
-// The row invariants apply to a transfer ROW. An empty page (loan has no
-// transfer) has no row, so each invariant is NotApplicable rather than
-// Violated: nothing in the response claims to be a row that breaks the NOT
-// NULL / positive-key contract.
+// The four row invariants apply to a transfer ROW. An empty page (loan has no
+// transfer) has no row, so each is NotApplicable rather than Violated: nothing
+// in the response claims to be a row that breaks the NOT NULL / positive-key
+// contract.
+//
+// A settlement result additionally carries a details snapshot and a journal
+// aggregate, and two invariants apply to those: the derived total must equal the
+// sum of the four outstanding buckets, and the posting must balance. They are
+// asserted only when the result actually carries the corresponding part, so the
+// read seam (which carries neither) asserts the four row invariants alone.
 func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 	if got.Empty {
 		return []InvariantResult{
@@ -41,12 +47,19 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 			{Name: "status_non_empty", Status: InvariantNotApplicable, Assertions: 0, Detail: "no transfer row (empty page)"},
 		}
 	}
-	return []InvariantResult{
+	out := []InvariantResult{
 		assertTransferIDPositive(got),
 		assertOwnerExternalIDNonEmpty(got),
 		assertTransferExternalIDNonEmpty(got),
 		assertStatusNonEmpty(got),
 	}
+	if got.Details != nil {
+		out = append(out, assertDetailsTotalIsSumOfFourBuckets(got.Details))
+	}
+	if got.Journal != nil {
+		out = append(out, assertJournalDebitsEqualCredits(got.Journal))
+	}
+	return out
 }
 
 // assertTransferIDPositive: m_external_asset_owner_transfer.id is a positive
@@ -102,5 +115,47 @@ func assertStatusNonEmpty(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("status %q is non-empty", got.Status)
+	return r
+}
+
+// assertDetailsTotalIsSumOfFourBuckets: m_external_asset_owner_transfer_details
+// stores the four outstanding buckets, and total outstanding is DERIVED as their
+// sum. The port's derivation (investor...DeriveTotalOutstanding) adds principal,
+// interest, fee charges and penalty charges and EXCLUDES overpaid, so the
+// assertion is against exactly those four terms.
+//
+// LIMITATION: the committed settlement capture has total_overpaid = 0, so a
+// result that folds overpaid into the total is indistinguishable here from one
+// that excludes it (both yield the stored total). This invariant therefore
+// cannot and does not discriminate overpaid inclusion on this corpus; a capture
+// of a loan overpaid at transfer time is required.
+func assertDetailsTotalIsSumOfFourBuckets(d *TransferDetails) InvariantResult {
+	r := InvariantResult{Name: "details_total_is_sum_of_four_buckets", Assertions: 1}
+	sum := d.TotalPrincipalOutstandingMinor + d.TotalInterestOutstandingMinor +
+		d.TotalFeeChargesOutstandingMinor + d.TotalPenaltyChargesOutstandingMinor
+	if d.TotalOutstandingMinor != sum {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf(
+			"total outstanding %d != principal+interest+fee+penalty %d (overpaid is NOT a bucket and is excluded)",
+			d.TotalOutstandingMinor, sum)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("total outstanding %d == sum of the four outstanding buckets", d.TotalOutstandingMinor)
+	return r
+}
+
+// assertJournalDebitsEqualCredits: every posted journal entry is double-entry,
+// so the sum of debits equals the sum of credits. Debits and credits are only
+// ever appended; a balance that does not hold is a violation of I-3.
+func assertJournalDebitsEqualCredits(j *JournalSummary) InvariantResult {
+	r := InvariantResult{Name: "journal_debits_equal_credits", Assertions: 1}
+	if j.DebitTotalMinor != j.CreditTotalMinor {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("journal does not balance: debits %d != credits %d", j.DebitTotalMinor, j.CreditTotalMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("journal balances: debits == credits == %d across %d entries", j.DebitTotalMinor, j.EntryCount)
 	return r
 }

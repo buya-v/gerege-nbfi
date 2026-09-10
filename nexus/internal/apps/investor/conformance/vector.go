@@ -21,6 +21,15 @@ const InvestorContext = "investor"
 // read-back (GET /external-asset-owners/transfers?loanId=...).
 const SeamExternalAssetOwnerTransferRead = "external-asset-owner-transfer-read"
 
+// SeamExternalAssetOwnerTransferSettlement is the second capture seam this
+// schema grades: the SETTLED m_external_asset_owner_transfer row together with
+// its one-to-one m_external_asset_owner_transfer_details snapshot (the four
+// outstanding buckets and their DERIVED total) and the journal entries the COB
+// transfer step posted. The read seam above observes a PENDING transfer with NO
+// details row; this seam observes an ACTIVE transfer with details present, so
+// absent-versus-present is itself a graded fact, distinct from any cell value.
+const SeamExternalAssetOwnerTransferSettlement = "external-asset-owner-transfer-settlement"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{InvestorContext} }
@@ -72,10 +81,48 @@ type Provenance struct {
 // 19, currency MNT, 2 minor units, Asia/Ulaanbaatar.
 type TenantParams = shared.TenantParams
 
-// Request is the input the implementation is graded on: the loan id the
-// transfer read-back was queried by (the loanId query parameter).
+// Request is the input the implementation is graded on. The read seam is keyed
+// by the loanId query parameter alone. The settlement seam names both the loan
+// the transfer was read under and the transfer id whose one-to-one details
+// snapshot and posted journal entries are read back.
 type Request struct {
-	LoanID int64 `json:"loan_id"`
+	LoanID     int64 `json:"loan_id"`
+	TransferID int64 `json:"transfer_id,omitempty"`
+}
+
+// TransferDetails is the m_external_asset_owner_transfer_details row observed
+// for a settled transfer, transcribed into INTEGER MINOR UNITS (MNT, 2 digits).
+// The capture holds float-formatted money (106775.53); the four buckets and the
+// observed total are transcribed exactly, with no arithmetic performed here.
+//
+// total_outstanding_minor is the oracle's stored derived total. The port's
+// derivation (investor.ExternalAssetOwnerTransferDetails.DeriveTotalOutstanding)
+// is the sum of the four buckets and EXCLUDES total_overpaid; a vector
+// transcribed from a capture with a non-zero overpaid would be the only
+// observation able to discriminate whether overpaid belongs in the total. This
+// capture's overpaid is 0.0, so no such discrimination is possible here.
+type TransferDetails struct {
+	DetailsID int64 `json:"details_id"`
+
+	TotalPrincipalOutstandingMinor      int64 `json:"total_principal_outstanding_minor"`
+	TotalInterestOutstandingMinor       int64 `json:"total_interest_outstanding_minor"`
+	TotalFeeChargesOutstandingMinor     int64 `json:"total_fee_charges_outstanding_minor"`
+	TotalPenaltyChargesOutstandingMinor int64 `json:"total_penalty_charges_outstanding_minor"`
+	TotalOutstandingMinor               int64 `json:"total_outstanding_minor"`
+	TotalOverpaidMinor                  int64 `json:"total_overpaid_minor"`
+}
+
+// JournalSummary is the aggregate of the journal entries the COB transfer step
+// posted for one transfer, transcribed from the capture's journalEntryData. All
+// amounts are integer minor units. The posted amount is the
+// Transfers-Suspense leg, which is the full outstanding — never
+// purchase_price_ratio × outstanding. debit_total_minor == credit_total_minor is
+// the double-entry fact the capture must exhibit.
+type JournalSummary struct {
+	EntryCount        int64 `json:"entry_count"`
+	DebitTotalMinor   int64 `json:"debit_total_minor"`
+	CreditTotalMinor  int64 `json:"credit_total_minor"`
+	PostedAmountMinor int64 `json:"posted_amount_minor"`
 }
 
 // Expect is what the oracle produced for the request: the
@@ -103,6 +150,17 @@ type Expect struct {
 	SettlementDate     string `json:"settlement_date"`
 	EffectiveFrom      string `json:"effective_from"`
 	EffectiveTo        string `json:"effective_to"`
+
+	// Details is the m_external_asset_owner_transfer_details snapshot a settled
+	// transfer carries. It is nil for the read seam (a PENDING transfer has no
+	// details row) and non-nil for the settlement seam. Presence is graded: an
+	// implementation that invents details where the oracle observed none, or
+	// drops details the oracle observed, diverges on a fact that no cell value
+	// can express.
+	Details *TransferDetails `json:"details,omitempty"`
+	// Journal is the aggregate of the journal entries the transfer posted. It is
+	// nil for the read seam and non-nil for the settlement seam.
+	Journal *JournalSummary `json:"journal,omitempty"`
 }
 
 // Vector is one investor golden vector.

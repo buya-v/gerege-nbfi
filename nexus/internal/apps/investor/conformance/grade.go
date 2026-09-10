@@ -72,11 +72,17 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	}
 
 	diffs := compareTransferExpect(v.Expect, got)
-	// A row vector grades the nine transcribed row cells; an empty-page vector
-	// grades the one presence cell (loan has no transfer).
-	r.GradedCells = 9 // transfer_id, owner_external_id, loan_external_id, transfer_external_id, purchase_price_ratio, status, settlement_date, effective_from, effective_to
-	if v.Expect.Empty {
+	// A read-seam row vector grades the nine transcribed row cells; an empty-page
+	// vector grades the one presence cell (loan has no transfer). A settlement
+	// vector additionally grades details presence, the seven details cells,
+	// journal presence and the four journal cells.
+	switch {
+	case v.Oracle.Seam == SeamExternalAssetOwnerTransferSettlement:
+		r.GradedCells = 22 // 9 row + details_presence + details_id + 5 details money cells (incl. overpaid) + journal_presence + entry_count + debit_total + credit_total + posted_amount
+	case v.Expect.Empty:
 		r.GradedCells = 1 // page_presence (empty page)
+	default:
+		r.GradedCells = 9 // transfer_id, owner_external_id, loan_external_id, transfer_external_id, purchase_price_ratio, status, settlement_date, effective_from, effective_to
 	}
 	r.Diffs = diffs
 
@@ -144,6 +150,72 @@ func compareTransferExpect(want Expect, got Expect) []string {
 	}
 	if want.EffectiveTo != got.EffectiveTo {
 		diffs = append(diffs, fmt.Sprintf("effective_to: want %q, got %q", want.EffectiveTo, got.EffectiveTo))
+	}
+	diffs = append(diffs, compareDetails(want.Details, got.Details)...)
+	diffs = append(diffs, compareJournal(want.Journal, got.Journal)...)
+	return diffs
+}
+
+// compareDetails compares a settlement seam's details snapshot. Presence is the
+// first graded fact: the read seam observed no details row, so an implementation
+// that invents one (or that drops a row the oracle observed) diverges before any
+// cell is compared. All six amounts are integer minor units.
+func compareDetails(want, got *TransferDetails) []string {
+	switch {
+	case want == nil && got == nil:
+		return nil
+	case want == nil:
+		return []string{"details: expected ABSENT (a PENDING transfer has no details row); implementation returned a details snapshot"}
+	case got == nil:
+		return []string{"details: expected a details snapshot; implementation returned none"}
+	}
+	var diffs []string
+	if want.DetailsID != got.DetailsID {
+		diffs = append(diffs, fmt.Sprintf("details.details_id: want %d, got %d", want.DetailsID, got.DetailsID))
+	}
+	for _, c := range []struct {
+		name      string
+		want, got int64
+	}{
+		{"total_principal_outstanding_minor", want.TotalPrincipalOutstandingMinor, got.TotalPrincipalOutstandingMinor},
+		{"total_interest_outstanding_minor", want.TotalInterestOutstandingMinor, got.TotalInterestOutstandingMinor},
+		{"total_fee_charges_outstanding_minor", want.TotalFeeChargesOutstandingMinor, got.TotalFeeChargesOutstandingMinor},
+		{"total_penalty_charges_outstanding_minor", want.TotalPenaltyChargesOutstandingMinor, got.TotalPenaltyChargesOutstandingMinor},
+		{"total_outstanding_minor", want.TotalOutstandingMinor, got.TotalOutstandingMinor},
+		{"total_overpaid_minor", want.TotalOverpaidMinor, got.TotalOverpaidMinor},
+	} {
+		if c.want != c.got {
+			diffs = append(diffs, fmt.Sprintf("details.%s: want %d, got %d", c.name, c.want, c.got))
+		}
+	}
+	return diffs
+}
+
+// compareJournal compares a settlement seam's journal aggregate. Presence is
+// graded first, then the entry count and the three money cells. All amounts are
+// integer minor units.
+func compareJournal(want, got *JournalSummary) []string {
+	switch {
+	case want == nil && got == nil:
+		return nil
+	case want == nil:
+		return []string{"journal: expected ABSENT; implementation returned posted journal entries"}
+	case got == nil:
+		return []string{"journal: expected posted journal entries; implementation returned none"}
+	}
+	var diffs []string
+	for _, c := range []struct {
+		name      string
+		want, got int64
+	}{
+		{"entry_count", want.EntryCount, got.EntryCount},
+		{"debit_total_minor", want.DebitTotalMinor, got.DebitTotalMinor},
+		{"credit_total_minor", want.CreditTotalMinor, got.CreditTotalMinor},
+		{"posted_amount_minor", want.PostedAmountMinor, got.PostedAmountMinor},
+	} {
+		if c.want != c.got {
+			diffs = append(diffs, fmt.Sprintf("journal.%s: want %d, got %d", c.name, c.want, c.got))
+		}
 	}
 	return diffs
 }
