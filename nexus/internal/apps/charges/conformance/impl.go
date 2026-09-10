@@ -316,13 +316,12 @@ func (oneScaleShortEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) 
 // half to even and the charge slice's HALF_UP pin is not propagated; the
 // loan-schedule work that pinned rounding into the tenant context exists because
 // exactly this drift happens. A HALF_UP answer and a HALF_EVEN answer differ
-// ONLY on an exact .5 remainder, and no stored product lands on one: FC-09's
-// captured product carries the fraction .55525 (rounds up under both modes) and
-// every other captured product is exact. So this port is byte-identical to the
-// correct one across the whole corpus, and the money cell of no vector can see
-// it. That it kills nothing is the finding: the store grades rounding drift
-// toward zero (charges-wrong-percent-truncating), never a mode substitution
-// that agrees everywhere except the un-captured tie.
+// ONLY on an exact .5 remainder whose truncated value is EVEN. FC-09's captured
+// product carries the fraction .55525 (rounds up under both modes) and every
+// exact product is untouched, but OHCAPj-pctamount-disbursement-halfup-tie lands
+// on the tie: 116250250 * 1000000 / 10^8 is exactly 1162502.5, whose truncated
+// value 1162502 is even. HALF_UP answers 1162503 (the recorded fee) and this
+// port answers 1162502, so the money cell dies and it kills 1.
 type halfEvenEvaluator struct{ goEvaluator }
 
 func (halfEvenEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
@@ -355,12 +354,10 @@ func (halfEvenEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
 // assigned [VERIFIED: Charge.java:240-300], and a porter who ports the fee
 // arithmetic but drops the gate writes exactly this: where the oracle answers a
 // construction-invalid charge with codes and no fee, this port answers with a
-// fee. The corpus carries ten construction-VALID charges and no validation-
-// refused observation, so this port is indistinguishable from the correct one on
-// every stored vector — and the fee_requires_valid invariant cannot see it
-// either, because its validation list is empty and a fee with an empty list is
-// the invariant's HOLD shape. That it kills nothing is the finding: the
-// construction-validation refusal path is ungraded by the store.
+// fee. OHCAPj-penalty-at-disbursement-refused is that observation: the correct
+// port refuses it with charge.due.at.disbursement.cannot.be.penalty and no fee,
+// while this port prices the 750000 flat amount and returns a fee, so it dies
+// and kills 1. The other eleven vectors are construction-valid and survive.
 type validationSkippedEvaluator struct{}
 
 func (validationSkippedEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
@@ -437,19 +434,19 @@ func init() {
 		"rounds an exact .5 minor-unit product to even (BigDecimal ROUND_HALF_EVEN) instead of the pinned HALF_UP "+
 			"away from zero, the substitute a porter inherits when the surrounding platform rounds half to even and "+
 			"the tenant-context rounding pin is not propagated. HALF_UP and HALF_EVEN differ only on an exact .5 "+
-			"remainder; the captured products carry no tie (FC-09's fraction is .55525, every other product is "+
-			"exact), so this port is byte-identical to the correct one and kills ZERO vectors: the store grades "+
-			"rounding drift toward zero but cannot see a mode substitution that agrees everywhere except the "+
-			"un-captured tie",
+			"remainder whose truncated value is EVEN. FC-09's fraction is .55525 and every other product is exact "+
+			"under both modes, but OHCAPj-pctamount-disbursement-halfup-tie lands on the tie: 116250250 * 1000000 / "+
+			"10^8 is exactly 1162502.5, truncated 1162502 (even), so HALF_UP answers the recorded 1162503 and this "+
+			"port answers 1162502. That money cell dies and it kills 1; the other eleven vectors are byte-identical",
 		halfEvenEvaluator{})
 	RegisterWrong("charges-wrong-validation-skipped",
 		"computes the fee and never runs Charge.Validate(), trusting the request as already vetted, where the "+
 			"oracle's constructor validates BEFORE any fee field is assigned [VERIFIED: Charge.java:240-300]. A "+
-			"construction-invalid charge is answered with a fee instead of codes and no fee. The corpus carries ten "+
-			"construction-VALID charges and no validation-refused observation, so this port is indistinguishable "+
-			"from the correct one and kills ZERO vectors: the construction-validation refusal path is ungraded by "+
-			"the store, and the fee_requires_valid invariant cannot catch it because the produced validation list "+
-			"is empty",
+			"construction-invalid charge is answered with a fee instead of codes and no fee. OHCAPj-penalty-at-"+
+			"disbursement-refused is that observation: the correct port refuses it with "+
+			"charge.due.at.disbursement.cannot.be.penalty and no fee, while this port prices its 750000 flat amount "+
+			"and returns a fee, so it kills 1; the other eleven vectors are construction-VALID and are answered "+
+			"byte-identically",
 		validationSkippedEvaluator{})
 	RegisterWrong("charges-wrong-calculation-type-always-flat",
 		"prices every charge as FLAT: it reads the stored amount and never branches on calculation_type, so a "+

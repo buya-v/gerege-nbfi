@@ -453,8 +453,9 @@ func TestHalfEvenDiffersOnlyOnAnExactHalf(t *testing.T) {
 		t.Fatal("wrong implementation not marked wrong")
 	}
 
-	// On the corpus-shaped probe (fraction .67, no tie) it is indistinguishable
-	// from the correct port — that is why the stored corpus grades it green.
+	// On a non-tie probe (fraction .67) it agrees with the correct port; only the
+	// stored tie vector OHCAPj-pctamount-disbursement-halfup-tie sees the mode
+	// substitution, which is why the drive's kill count is exactly 1.
 	corpusLike := gradeOne(percentFeeProbe(), Options{Implementation: halfEven})
 	if corpusLike.Outcome != OutcomePass {
 		t.Fatalf("half-even on a non-tie probe = %s, want PASS (indistinguishable); diffs=%v",
