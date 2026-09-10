@@ -440,6 +440,70 @@ func wrongSummaryDropsPrincipal(s SummaryRequest) (Expect, error) {
 	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
 }
 
+// wrongSummaryDropsFeeEvaluator is a DELIBERATELY WRONG implementation of the
+// summary seam: it derives total_outstanding from the principal, interest and
+// penalty buckets only, dropping the FEE bucket as if the outstanding fee had
+// already been repaid. It exists because every summary vector that predates
+// F-2026-09-09 carries fee = 0, where dropping the term changes nothing; its
+// pinning case is the fee-bearing OHLGT-L03 read-back (fee 100.000000), whose
+// total comes out 10000 minor units short.
+type wrongSummaryDropsFeeEvaluator struct{ goEvaluator }
+
+func (w wrongSummaryDropsFeeEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Summary != nil {
+		return wrongSummaryDropsFee(*req.Summary)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+func wrongSummaryDropsFee(s SummaryRequest) (Expect, error) {
+	principal, err := parseMinorText(s.PrincipalOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(s.InterestOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	penalty, err := parseMinorText(s.PenaltyOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	total := principal + interest + penalty
+	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
+// wrongSummaryDropsPenaltyEvaluator is a DELIBERATELY WRONG implementation of
+// the summary seam: it derives total_outstanding from the principal, interest
+// and fee buckets only, dropping the PENALTY bucket. Its pinning cases are the
+// two penalty-bearing read-backs: OHLGT-L03 (penalty 57.000000) and OHGLR-L01
+// (penalty 57.000000, fee zero, so the PENALTY term alone is missing).
+type wrongSummaryDropsPenaltyEvaluator struct{ goEvaluator }
+
+func (w wrongSummaryDropsPenaltyEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Summary != nil {
+		return wrongSummaryDropsPenalty(*req.Summary)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+func wrongSummaryDropsPenalty(s SummaryRequest) (Expect, error) {
+	principal, err := parseMinorText(s.PrincipalOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(s.InterestOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(s.FeeOutstanding)
+	if err != nil {
+		return Expect{}, err
+	}
+	total := principal + interest + fee
+	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
 // mifosOrderNoPrincipal is the repayment allocation order a port would produce
 // by transcribing the mifos-standard-strategy but dropping the principal leg:
 // penalties, fees, then interest — the loan never amortises because no repayment
@@ -622,6 +686,16 @@ func init() {
 			"principal bucket as if the outstanding principal were already repaid, so the pinned "+
 			"principal-only SEED-L05 total (41850.09) reads 0 and the vector goes red",
 		wrongSummaryDropsPrincipalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-summary-drops-fee",
+		"derives total_outstanding from the principal, interest and penalty buckets only, dropping the "+
+			"fee bucket as if the outstanding fee had already been repaid, so the pinned fee-bearing "+
+			"OHLGT-L03 total (106775.53) reads 100.00 short and the vector goes red",
+		wrongSummaryDropsFeeEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-summary-drops-penalty",
+		"derives total_outstanding from the principal, interest and fee buckets only, dropping the "+
+			"penalty bucket, so the pinned penalty-bearing OHLGT-L03 total (106775.53) reads 57.00 "+
+			"short and the OHGLR-L01 vector (fee 0, penalty 57.00) goes red on the penalty term alone",
+		wrongSummaryDropsPenaltyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-repayment-omits-principal",
 		"allocates a repayment across penalties, fees and interest but never the principal bucket, "+
 			"so the pinned SEED-L03 repayment reports principal=0 and the whole 7884.88 instalment "+

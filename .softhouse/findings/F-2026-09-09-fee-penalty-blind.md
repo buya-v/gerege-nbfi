@@ -1,6 +1,10 @@
 # F-2026-09-09 — the corpus is BLIND to the fee and penalty terms of the loan summary
 
-**Status:** OPEN. Cannot be closed by promotion. Needs one new oracle capture.
+**Status:** **CLOSED 2026-09-10 by OH-GL-T.** The byte-stable re-capture exists, the
+fee/penalty-bearing summary vectors `LN-L07`/`LN-L08` are promoted, and both drives
+`loan-wrong-summary-drops-fee` and `loan-wrong-summary-drops-penalty` kill. See the
+final UPDATE below. (Original opening: OPEN. Cannot be closed by promotion. Needs one
+new oracle capture.)
 **Found by:** the driver, while two runs were live, by checking a claim it had just
 written into a brief. The claim was "the four `summary-total-outstanding` vectors are
 clones"; checking it produced this instead.
@@ -138,3 +142,54 @@ needs only byte-stable request bodies:
 
 Status stays **OPEN**, blocking reason changed twice today: from "no capture can
 discriminate the term", to "the capture exists but its request bodies are not byte-stable."
+
+---
+
+## UPDATE 2026-09-10 — CLOSED: byte-stable re-capture, two vectors, both drives kill
+
+`OH-GL-T` fixed the narrow defect and finished. The new capture is additive and lives at
+`.softhouse/capture/gl-accounting-surface/` (named for its subject; `OWNER.md` inside).
+It creates two NEW charges on product 3 — `OHLGT-Fee-SDD-100` (amount token `100`) and
+`OHLGT-Penalty-SDD-57` (amount token `57`) — and a NEW loan `OHLGT-L03` (oracle id 12)
+carrying both, then captures the `(request, response)` pair for every call.
+
+**Why the guard now passes.** Every numeric token in `req/*.json` is an integer or a JSON
+string; `100` and `57` are their own shortest round-trip reprs, so they survive the one
+genuine Java `double` on the POST /charges path. The self-check over the committed
+request bodies reports `req files=5 numeric tokens=26 NOT byte-stable=0`, and the
+conformance wire-float census reports `float-shaped tokens PRESENT 380, ALTERED 0`. No
+request body is re-serialised through `json.dumps` of a parsed number; the templates are
+literal bytes posted with `--data-binary` (`bin/common.sh:34-35`).
+
+**The vectors.** Both transcribe the oracle's `summary` block, nothing computed:
+
+    LN-L07  OHLGT-L03 (loan 12)  prin=10000000 int=661853 fee=10000 pen=5700 -> 10677553
+    LN-L08  OHGLR-L01 (loan 10)  prin=10000000 int=661853 fee=    0 pen=5700 -> 10667553
+
+`LN-L07` is the finding's requested shape: all four buckets non-zero and fee ≠ penalty, so
+a term-swap defect cannot survive. `LN-L08` is the second, differently-shaped observation
+(fee 0, penalty non-zero) that discriminates the penalty term alone.
+
+**The drives kill, measured in the same session with live controls**
+(`.softhouse/briefs/tools/kills.sh loan <impl>`):
+
+    loan-wrong-summary-drops-fee            -> 1  (LN-L07)
+    loan-wrong-summary-drops-penalty        -> 2  (LN-L07, LN-L08)
+    loan-wrong-summary-drops-principal      -> 7  (control, live)
+    loan-wrong-summary-interest-not-outstanding -> 6  (control, live)
+
+Neither new drive is inert: `drops-fee` was inert before this capture (every prior summary
+vector had fee = 0) and now kills on `LN-L07`; `drops-penalty` kills on two vectors. The
+two controls prove the instrument was live, so the non-zero counts are measurements, not
+artefacts of a dead tool. The register now has:
+
+    loan-wrong-summary-drops-fee
+    loan-wrong-summary-drops-penalty
+
+**Correction to the previous UPDATE:** the oracle has **12** `OHLGR-*` GL accounts
+(ids 5-16), not 11 — observed live via `GET /glaccounts` on 2026-09-10. That is more than
+the brief expected, not less. Products 1 and 2 are still `NONE`; loans 10 and 11 are
+untouched; nothing was SQL-inserted.
+
+**Full evidence, with the oracle-state verification table:**
+`.softhouse/capture/gl-accounting-surface/evidence/OHGLT-EVIDENCE.md`.
