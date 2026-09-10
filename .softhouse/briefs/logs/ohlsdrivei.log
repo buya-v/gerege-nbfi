@@ -1,0 +1,98 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m138[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m The measurement is complete and committed. Here is the result.               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Answer: the corpus discriminates **8 defect shapes**, not 2 — PROVEN      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m `loanschedule`'s 50 vectors are killed by every registered drive, but the    [36m│[0m
+[36m│[0m corpus turns out to be far broader in defects-proven than the motivating     [36m│[0m
+[36m│[0m 2-drive count suggested. Six new `loanschedule-wrong-*` drives were          [36m│[0m
+[36m│[0m registered, one per uncovered varying field, and each was measured with the  [36m│[0m
+[36m│[0m official tool (`.softhouse/briefs/tools/kills.sh`, oracle probe down — exit  [36m│[0m
+[36m│[0m 2 / empty stdout never reads as zero).                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | drive | field it ignores | kills |                                         [36m│[0m
+[36m│[0m |---|---|---|                                                                [36m│[0m
+[36m│[0m | `wrong-days-in-year-365` (existing) | `day_count` | 45 |                   [36m│[0m
+[36m│[0m | `wrong-half-even` (existing) | `rounding` | 5 |                            [36m│[0m
+[36m│[0m | `wrong-repayments-fixed-one` | `number_of_repayments` | 47 |               [36m│[0m
+[36m│[0m | `wrong-rate-zero` | `annual_nominal_interest_rate` | 46 |                  [36m│[0m
+[36m│[0m | `wrong-disbursement-amount-ignored` | `disbursements[0].amount_minor` | 44 [36m│[0m
+[36m│[0m |                                                                            [36m│[0m
+[36m│[0m | `wrong-schedule-start-ignored` | `schedule_start_date` | 10 |              [36m│[0m
+[36m│[0m | `wrong-disbursement-seed-ignored` | `disbursements[0].date` | 8 |          [36m│[0m
+[36m│[0m | `wrong-frequency-unit-ignored` | `repayment_frequency_unit` | 1 |          [36m│[0m
+[36m│[0m | `wrong-currency-code-ignored` | `currency.code` | **0 — inert, deleted     [36m│[0m
+[36m│[0m with the argument** |                                                        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m So **50 vectors, 8 proven defect shapes** (the premise's "45 + 5 = 50, only  [36m│[0m
+[36m│[0m two shapes" is disproven), and every `VARIES` field except `Currency.Code`   [36m│[0m
+[36m│[0m is now covered by a killing drive.                                           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## The zero — a real finding, resolved not merged                            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m `Currency` varies only in its **Code** (MNT/USD, 7/43 vectors). The port's   [36m│[0m
+[36m│[0m money path reads `Currency.MinorUnitDigits`, which is `2` for both; no       [36m│[0m
+[36m│[0m vector's recorded output ever reads the code. A port that erases the code    [36m│[0m
+[36m│[0m returns every recorded schedule unchanged — all 46 parity + 4 refusal        [36m│[0m
+[36m│[0m vectors PASS. So at this seam **`Currency.Code` is decorative**: the corpus  [36m│[0m
+[36m│[0m varies it but no vector's output depends on it. The drive was **deleted, not [36m│[0m
+[36m│[0m merged**, with the full argument and what a seeing vector would need (a      [36m│[0m
+[36m│[0m second currency with different `MinorUnitDigits`) recorded at                [36m│[0m
+[36m│[0m `impl_hook.go:136–149`.                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## The two honourable zeros-that-weren't                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `repayment_frequency_unit` was expected to be the biggest money lever, but [36m│[0m
+[36m│[0m `YEARS` appears **only in the one refusal vector** (`REFUSE-03`), so the     [36m│[0m
+[36m│[0m kill is 1. That is a coverage gap in the *inputs*, not an inert drive — the  [36m│[0m
+[36m│[0m field is load-bearing for the single vector that varies it.                  [36m│[0m
+[36m│[0m - The amount drive's 3 survivors are exactly the `T116-G8` vectors whose     [36m│[0m
+[36m│[0m principal is already 1 minor unit — the drive's substitute coincides with    [36m│[0m
+[36m│[0m theirs. (My earlier scan claimed "no vectors with amount==1"; that was a     [36m│[0m
+[36m│[0m type bug — the JSON stores `"1"` as a string. Corrected.)                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Controls and non-negotiables (all verified)                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `loanschedule-go`: **parity PASS 46 FAIL 0 + contract-refusal PASS 4 FAIL  [36m│[0m
+[36m│[0m 0 = all 50**. Both originals intact: **45** and **5**.                       [36m│[0m
+[36m│[0m - `go build ./...` clean; `go test ./...` RC=0; `bash                        [36m│[0m
+[36m│[0m .softhouse/conformance.sh` **exit 2** by the recorded §4.4.2 decision,       [36m│[0m
+[36m│[0m ledger findings **== baseline (12 pairs)**, census **17**, all 17 ledger     [36m│[0m
+[36m│[0m wrong impls died through the harness.                                        [36m│[0m
+[36m│[0m - Integer minor units only; HALF_UP/ordinal 4/19/`Asia/Ulaanbaatar`;         [36m│[0m
+[36m│[0m sub-minor residue refused; no existing vector weakened;                      [36m│[0m
+[36m│[0m `.softhouse/guards/ledger-invariants.baseline` and                           [36m│[0m
+[36m│[0m `.softhouse/conformance.sh` untouched (`.softhouse` diff empty). No          [36m│[0m
+[36m│[0m captures, no POST/PUT/DELETE.                                                [36m│[0m
+[36m│[0m - Committed as measured: `781a3855` (first five + retired currency drive)    [36m│[0m
+[36m│[0m and `5fdd1bfe` (amount drive + its MEASURED record). Only two source files   [36m│[0m
+[36m│[0m changed; `TASK.md` left untracked.                                           [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 13e82706f21c4c2497d74bb55d2c3770
+Hint: run openhands --resume 13e82706-f21c-4c24-97d7-4bb55d2c3770 to resume this
+conversation.
