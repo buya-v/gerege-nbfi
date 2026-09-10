@@ -74,6 +74,11 @@ type variant struct {
 	// ScheduleStartDate instead of the disbursement date.
 	// Loanschedule-wrong-disbursement-seed-ignored.
 	disbursementSeedAsScheduleStart bool
+
+	// disbursementAmountAsOne replaces Disbursements[0].AmountMinor with one
+	// minor unit, so the principal never comes from the request.
+	// Loanschedule-wrong-disbursement-amount-ignored.
+	disbursementAmountAsOne bool
 }
 
 // applyRequest rewrites the request fields that a request-level wrong drive
@@ -90,6 +95,9 @@ func (v variant) applyRequest(req contract.GenerateRequest) contract.GenerateReq
 	}
 	if v.scheduleStartAsDisbursement {
 		req.ScheduleStartDate = req.Disbursements[0].Date
+	}
+	if v.disbursementAmountAsOne && len(req.Disbursements) > 0 {
+		req.Disbursements[0].AmountMinor = 1
 	}
 	return req
 }
@@ -217,4 +225,17 @@ func NewWrongScheduleStartIgnored() contract.ScheduleGenerator {
 // two agree on every vector whose two dates fall on the same day.
 func NewWrongDisbursementSeedIgnored() contract.ScheduleGenerator {
 	return wrongScheduleGenerator{v: variant{disbursementSeedAsScheduleStart: true}}
+}
+
+// NewWrongDisbursementAmountIgnored returns the wrong drive that never reads
+// Disbursements[0].AmountMinor and advances one minor unit as principal.
+//
+// WHY A COMPETENT PORTER WRITES THIS. The disbursement record carries the only
+// copy of the principal, so the interesting failure is not a wrong cell but a
+// missing read: a porter who sizes the schedule from some other field (or from a
+// constant) never touches the amount. One minor unit is positive and keeps the
+// request inside the graded domain, so the port still validates and answers --
+// only the disbursement row's amount and every money cell move.
+func NewWrongDisbursementAmountIgnored() contract.ScheduleGenerator {
+	return wrongScheduleGenerator{v: variant{disbursementAmountAsOne: true}}
 }

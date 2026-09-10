@@ -171,4 +171,15 @@ func init() {
 			"while a later date diverges and moves the level installment solved over the whole schedule. "+
 			"Every vector whose two dates share a day-of-month is byte-identical.",
 		loanschedule.NewWrongDisbursementSeedIgnored())
+	conformance.RegisterWrong("loanschedule-wrong-disbursement-amount-ignored",
+		"never reads Disbursements[0].AmountMinor and advances one minor unit as principal. The "+
+			"disbursement record is the only copy of the principal, so an unwired amount leaves the "+
+			"schedule sized from a constant; 1 is positive and keeps the request inside the graded "+
+			"domain, so the port still validates and answers and only the money moves. "+
+			"MEASURED (2026-09-10, oracle probe down): parity PASS 3 FAIL 43, contract-refusal PASS 4 "+
+			"FAIL 0, self-test fixture FAIL; kills.sh = 44. The three survivors are exactly the vectors "+
+			"whose recorded principal is already 1 minor unit (T116-G8-CLEAN-N103, T116-G8-FAMB-N104, "+
+			"T116-G8-FAMB-N108), where the substitute coincides with the request -- they prove the "+
+			"drive's value IS the principal, not that the field is decorative.",
+		loanschedule.NewWrongDisbursementAmountIgnored())
 }
