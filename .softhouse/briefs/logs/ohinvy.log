@@ -11,3 +11,27 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
 
+[09/10/26 13:12:03] ERROR    PTY reader thread error: subprocess_terminal.py:281
+                             [Errno 9] Bad file                                 
+                             descriptor                                         
+                             ╭─ Traceback (most rec─╮                           
+                             │ /Users/buv/.local/sh │                           
+                             │ are/uv/tools/openhan │                           
+                             │ ds/lib/python3.12/si │                           
+                             │ te-packages/openhand │                           
+                             │ s/tools/terminal/ter │                           
+                             │ minal/subprocess_ter │                           
+                             │ minal.py:261 in      │                           
+                             │ _read_output_continu │                           
+                             │ ously_pty            │                           
+                             │                      │                           
+                             │   258 │   │   │   │  │                           
+                             │   259 │   │   │   │  │                           
+                             │   260 │   │   │   │  │                           
+                             │ ❱ 261 │   │   │   │  │                           
+                             │   262 │   │   │   │  │                           
+                             │   263 │   │   │   │  │                           
+                             │   264                │                           
+                             ╰──────────────────────╯                           
+                             OSError: [Errno 9] Bad                             
+                             file descriptor                                    
