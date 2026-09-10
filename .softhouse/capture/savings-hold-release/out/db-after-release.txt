@@ -1,0 +1,14 @@
+# OH-HOLDCAP-R read-only DB evidence — phase=after-release
+# captured at 2026-09-10T13:07:29Z
+--- m_savings_account (id=1) ---
+id|account_balance_derived|total_savings_amount_on_hold
+1|1000.310000|0.000000
+(1 row)
+--- m_savings_account_transaction (savings_account_id=1) ---
+id|transaction_type_enum|amount|running_balance_derived|release_id|is_reversed|is_reversal
+1|1|1000.000000|1000.000000|0|f|f
+2|3|0.160000|1000.310000|0|f|f
+3|3|0.150000|1000.150000|0|f|f
+6|20|137.290000|863.020000|7|f|f
+7|21|137.290000|1000.310000|0|f|f
+(5 rows)
