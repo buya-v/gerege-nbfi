@@ -83,10 +83,33 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	var diffs []string
 	switch v.Oracle.Seam {
 	case SeamProvisioningEntryReserve:
-		diffs = compareReserveExpect(v.Expect, got)
-		r.GradedCells = 3 // reserved_amount_minor, category_id, overdue_in_days
+		switch {
+		case len(v.ExpectEntries) > 0:
+			// Multi-entry observation: rows with different reserveKeys must yield
+			// one entry per observed key. Compare the produced entries as a SET,
+			// because the oracle returns a HashSet and fixes no order.
+			diffs = compareReserveEntrySet(v.ExpectEntries, got)
+			r.GradedCells = 3 * len(v.ExpectEntries) // reserved_amount_minor, category_id, overdue_in_days per entry
+		case len(got) == 1:
+			diffs = compareReserveExpect(v.Expect, got[0])
+			r.GradedCells = 3 // reserved_amount_minor, category_id, overdue_in_days
+		default:
+			// A single-observation vector that produces several entries is a
+			// harness/implementation mismatch, not a parity diff: the vector
+			// pinned one entry and the implementation returned another shape.
+			r.Outcome = OutcomeError
+			r.Reasons = []string{fmt.Sprintf(
+				"provisioning: request.inputs produced %d distinct reserve entries, want exactly 1 (a single-entry reserve vector grades one observed entry; use expect_entries for a multi-entry observation)",
+				len(got))}
+			return r
+		}
 	default:
-		diffs = compareExpect(v.Expect, got)
+		if len(got) != 1 {
+			r.Outcome = OutcomeError
+			r.Reasons = []string{fmt.Sprintf("provisioning: category read produced %d results, want exactly 1", len(got))}
+			return r
+		}
+		diffs = compareExpect(v.Expect, got[0])
 		r.GradedCells = 3 // id, name, description
 	}
 	r.Diffs = diffs
@@ -137,6 +160,44 @@ func compareReserveExpect(want Expect, got Expect) []string {
 	}
 	if want.OverdueInDays != got.OverdueInDays {
 		diffs = append(diffs, fmt.Sprintf("overdue_in_days: want %d, got %d", want.OverdueInDays, got.OverdueInDays))
+	}
+	return diffs
+}
+
+// compareReserveEntrySet compares an observed MULTI-ENTRY reserve result against
+// the produced entries as an unordered SET. Each observed entry is matched to a
+// distinct produced entry on the same three cells compareReserveExpect uses
+// (reserved_amount_minor, category_id, overdue_in_days); the match consumes the
+// produced entry, so two observations of the same cells cannot both satisfy one
+// produced entry. A count mismatch is reported first and alone -- it is the
+// distinct-key discriminator: an implementation that merges keys produces one
+// entry where the observation recorded several.
+func compareReserveEntrySet(want, got []Expect) []string {
+	if len(want) != len(got) {
+		return []string{fmt.Sprintf("reserve entry count: want %d, got %d", len(want), len(got))}
+	}
+	used := make([]bool, len(got))
+	var diffs []string
+	for i, w := range want {
+		matched := -1
+		for j := range got {
+			if used[j] {
+				continue
+			}
+			if w.ReservedAmountMinor == got[j].ReservedAmountMinor &&
+				w.CategoryID == got[j].CategoryID &&
+				w.OverdueInDays == got[j].OverdueInDays {
+				matched = j
+				break
+			}
+		}
+		if matched < 0 {
+			diffs = append(diffs, fmt.Sprintf(
+				"reserve entry[%d]: no produced entry has reserved_amount_minor %q, category_id %d, overdue_in_days %d",
+				i, w.ReservedAmountMinor, w.CategoryID, w.OverdueInDays))
+			continue
+		}
+		used[matched] = true
 	}
 	return diffs
 }

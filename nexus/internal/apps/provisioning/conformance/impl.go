@@ -20,9 +20,15 @@ import (
 //     provisioning entry, return the aggregated reserve amount and its key, via
 //     GenerateReserveEntries (which applies PercentageOf to each row).
 //
-// Both surfaces carry parity vectors (PV-01..04 categories, PV-05..08 reserves).
+// Evaluate returns a LIST because the entry-reserve seam can produce several
+// entries: rows carrying DIFFERENT reserveKeys aggregate separately, and a
+// vector with an expect_entries observation grades that distinct-key branch. The
+// category seam and every single-observation reserve vector return exactly one.
+//
+// Both surfaces carry parity vectors (PV-01..04 categories, PV-05..08 reserves,
+// and the multi-entry reserve vector promoted for OH-PROV-N).
 type ProvisioningEvaluator interface {
-	Evaluate(req Request) (Expect, error)
+	Evaluate(req Request) ([]Expect, error)
 }
 
 var (
@@ -112,15 +118,15 @@ func NewGoEvaluator() ProvisioningEvaluator {
 	return goEvaluator{categories: categories}
 }
 
-func (g goEvaluator) Evaluate(req Request) (Expect, error) {
+func (g goEvaluator) Evaluate(req Request) ([]Expect, error) {
 	if len(req.Inputs) > 0 {
 		return evaluateReserveEntries(req)
 	}
 	c, ok := g.categories[req.CategoryID]
 	if !ok {
-		return Expect{}, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
+		return nil, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
 	}
-	return Expect{ID: c.ID, Name: c.Name, Description: c.Description}, nil
+	return []Expect{{ID: c.ID, Name: c.Name, Description: c.Description}}, nil
 }
 
 // reserveRowsFrom parses a reserve request's per-loan rows into the port's
@@ -152,41 +158,40 @@ func reserveRowsFrom(req Request) ([]provisioning.ReserveInput, error) {
 }
 
 // evaluateReserveEntriesWith ports the oracle's reserve generation for the
-// entry-reserve seam using the supplied generator, and returns the single
-// aggregated entry. A reserve vector grades ONE observed entry, so the rows
-// must collapse to exactly one distinct entry.
-func evaluateReserveEntriesWith(req Request, gen func([]provisioning.ReserveInput) ([]provisioning.ReserveEntry, error)) (Expect, error) {
+// entry-reserve seam using the supplied generator and returns EVERY aggregated
+// entry it produced, in the generator's order. Rows sharing a reserveKey collapse
+// into one entry; rows differing in any key stay separate. Grading decides
+// whether the observed shape is one entry (expect) or several (expect_entries).
+func evaluateReserveEntriesWith(req Request, gen func([]provisioning.ReserveInput) ([]provisioning.ReserveEntry, error)) ([]Expect, error) {
 	inputs, err := reserveRowsFrom(req)
 	if err != nil {
-		return Expect{}, err
+		return nil, err
 	}
 	entries, err := gen(inputs)
 	if err != nil {
-		return Expect{}, err
+		return nil, err
 	}
-	if len(entries) != 1 {
-		return Expect{}, fmt.Errorf(
-			"provisioning: request.inputs produced %d distinct reserve entries, want exactly 1 (a reserve vector grades one observed entry)",
-			len(entries))
+	out := make([]Expect, 0, len(entries))
+	for _, e := range entries {
+		out = append(out, Expect{
+			ReservedAmountMinor: strconv.FormatInt(int64(e.ReservedAmount), 10),
+			OfficeID:            e.OfficeID,
+			CurrencyCode:        e.CurrencyCode,
+			ProductID:           e.ProductID,
+			CategoryID:          e.CategoryID,
+			OverdueInDays:       e.OverdueInDays,
+			LiabilityAccount:    e.LiabilityAccount,
+			ExpenseAccount:      e.ExpenseAccount,
+			CriteriaID:          e.CriteriaID,
+		})
 	}
-	e := entries[0]
-	return Expect{
-		ReservedAmountMinor: strconv.FormatInt(int64(e.ReservedAmount), 10),
-		OfficeID:            e.OfficeID,
-		CurrencyCode:        e.CurrencyCode,
-		ProductID:           e.ProductID,
-		CategoryID:          e.CategoryID,
-		OverdueInDays:       e.OverdueInDays,
-		LiabilityAccount:    e.LiabilityAccount,
-		ExpenseAccount:      e.ExpenseAccount,
-		CriteriaID:          e.CriteriaID,
-	}, nil
+	return out, nil
 }
 
 // evaluateReserveEntries is evaluateReserveEntriesWith under the port's own
 // generator, GenerateReserveEntries (which applies the correct PercentageOf to
 // each row).
-func evaluateReserveEntries(req Request) (Expect, error) {
+func evaluateReserveEntries(req Request) ([]Expect, error) {
 	return evaluateReserveEntriesWith(req, provisioning.GenerateReserveEntries)
 }
 
@@ -196,13 +201,15 @@ func evaluateReserveEntries(req Request) (Expect, error) {
 // charges-wrong-percent-truncating does.
 type wrongCategoryEvaluator struct{ goEvaluator }
 
-func (w wrongCategoryEvaluator) Evaluate(req Request) (Expect, error) {
-	e, err := w.goEvaluator.Evaluate(req)
+func (w wrongCategoryEvaluator) Evaluate(req Request) ([]Expect, error) {
+	es, err := w.goEvaluator.Evaluate(req)
 	if err != nil {
-		return e, err
+		return nil, err
 	}
-	e.Description = ""
-	return e, nil
+	for i := range es {
+		es[i].Description = ""
+	}
+	return es, nil
 }
 
 // percentScale mirrors provisioning's scale: Percent / 10^8 == the fraction
@@ -281,13 +288,110 @@ type wrongReserveEvaluator struct {
 	percentageOf provisioning.PercentageFunc
 }
 
-func (w wrongReserveEvaluator) Evaluate(req Request) (Expect, error) {
+func (w wrongReserveEvaluator) Evaluate(req Request) ([]Expect, error) {
 	if len(req.Inputs) == 0 {
 		return w.goEvaluator.Evaluate(req)
 	}
 	return evaluateReserveEntriesWith(req, func(inputs []provisioning.ReserveInput) ([]provisioning.ReserveEntry, error) {
 		return provisioning.GenerateReserveEntriesWith(inputs, w.percentageOf)
 	})
+}
+
+// wrongGeneratorEvaluator is a DELIBERATELY WRONG implementation that answers
+// category reads exactly as the correct port does but replaces the reserve
+// AGGREGATION generator, leaving each row's per-row arithmetic correct. It is
+// how the two order-of-operations defects below are registered: they are not
+// per-row rounding modes, so wrongReserveEvaluator cannot express them.
+type wrongGeneratorEvaluator struct {
+	goEvaluator
+	gen func([]provisioning.ReserveInput) ([]provisioning.ReserveEntry, error)
+}
+
+func (w wrongGeneratorEvaluator) Evaluate(req Request) ([]Expect, error) {
+	if len(req.Inputs) == 0 {
+		return w.goEvaluator.Evaluate(req)
+	}
+	return evaluateReserveEntriesWith(req, w.gen)
+}
+
+// sumThenRoundReserveEntries is a DELIBERATELY WRONG generator: for rows sharing
+// a reserveKey it SUMS THEIR BALANCES FIRST and applies the band percentage once
+// to the sum, instead of applying the percentage to each row and summing the
+// rounded minor-unit results. The oracle sums the per-row reserve amounts
+// [VERIFIED: ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.java:235
+// amountreserved accumulates each row's percentageOf] then rounds each to money
+// under the tenant's HALF_UP [Money.java:40-56]. The two orders differ ONLY when
+// at least two rows sharing a key produce sub-minor-unit fractions that
+// interfere -- for PV-07 the DOUBTFUL band's two exact .5-ties make round-then-sum
+// 7423432 while sum-then-round is 7423431.
+func sumThenRoundReserveEntries(inputs []provisioning.ReserveInput) ([]provisioning.ReserveEntry, error) {
+	type reserveKey struct {
+		criteriaID       int64
+		officeID         int64
+		currencyCode     string
+		productID        int64
+		categoryID       int64
+		overdueInDays    int64
+		liabilityAccount int64
+		expenseAccount   int64
+	}
+	order := make([]reserveKey, 0, len(inputs))
+	sums := map[reserveKey]provisioning.MinorUnits{}
+	pcts := map[reserveKey]provisioning.Percent{}
+	first := map[reserveKey]provisioning.ReserveInput{}
+	for _, in := range inputs {
+		k := reserveKey{in.CriteriaID, in.OfficeID, in.CurrencyCode, in.ProductID, in.CategoryID, in.OverdueInDays, in.LiabilityAccount, in.ExpenseAccount}
+		if _, ok := first[k]; !ok {
+			order = append(order, k)
+			first[k] = in
+			pcts[k] = in.Percentage
+		}
+		sums[k] += in.Balance
+	}
+	out := make([]provisioning.ReserveEntry, 0, len(order))
+	for _, k := range order {
+		in := first[k]
+		amount, err := provisioning.PercentageOf(sums[k], pcts[k])
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, provisioning.ReserveEntry{
+			OfficeID:         in.OfficeID,
+			CurrencyCode:     in.CurrencyCode,
+			ProductID:        in.ProductID,
+			CategoryID:       in.CategoryID,
+			OverdueInDays:    in.OverdueInDays,
+			ReservedAmount:   amount,
+			LiabilityAccount: in.LiabilityAccount,
+			ExpenseAccount:   in.ExpenseAccount,
+			CriteriaID:       in.CriteriaID,
+		})
+	}
+	return out, nil
+}
+
+// mergeReserveEntriesIgnoringKey is a DELIBERATELY WRONG generator: it ignores
+// the eight-field reserveKey entirely and collapses EVERY row into a single entry
+// keyed by the first row, summing the correctly computed per-row reserves. The
+// oracle aggregates by partialHashKey = criteria, office, currency, product,
+// category, overdue days, liability account, expense account
+// [VERIFIED: ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.java:225-235
+// reservesByKey.merge(partialHashKey(...), ...)]; a porter that dropped the key
+// still passes every single-key vector but merges two differently-keyed bands
+// into one entry.
+func mergeReserveEntriesIgnoringKey(inputs []provisioning.ReserveInput) ([]provisioning.ReserveEntry, error) {
+	entries, err := provisioning.GenerateReserveEntries(inputs)
+	if err != nil {
+		return nil, err
+	}
+	if len(entries) <= 1 {
+		return entries, nil
+	}
+	merged := entries[0]
+	for _, e := range entries[1:] {
+		merged.ReservedAmount += e.ReservedAmount
+	}
+	return []provisioning.ReserveEntry{merged}, nil
 }
 
 // wrongDefinitionIDEvaluator is a DELIBERATELY WRONG implementation: it keys
@@ -304,7 +408,7 @@ func (w wrongReserveEvaluator) Evaluate(req Request) (Expect, error) {
 // a category in their expect).
 type wrongDefinitionIDEvaluator struct{ goEvaluator }
 
-func (w wrongDefinitionIDEvaluator) Evaluate(req Request) (Expect, error) {
+func (w wrongDefinitionIDEvaluator) Evaluate(req Request) ([]Expect, error) {
 	if len(req.Inputs) > 0 {
 		return w.goEvaluator.Evaluate(req)
 	}
@@ -316,9 +420,9 @@ func (w wrongDefinitionIDEvaluator) Evaluate(req Request) (Expect, error) {
 	}
 	c, ok := byDefinitionID[req.CategoryID]
 	if !ok {
-		return Expect{}, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
+		return nil, fmt.Errorf("provisioning: category id %d was not returned by the oracle capture", req.CategoryID)
 	}
-	return Expect{ID: c.ID, Name: c.Name, Description: c.Description}, nil
+	return []Expect{{ID: c.ID, Name: c.Name, Description: c.Description}}, nil
 }
 
 func init() {
@@ -348,6 +452,23 @@ func init() {
 			"rounding: ...Impl.java:235 -> MoneyHelper.java:91-93 -> Money.java:40-56). Any observed "+
 			"reserve whose fraction is between one minor unit and zero comes out one minor unit short.",
 		wrongReserveEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), percentageOf: truncatingPercentageOf})
+	RegisterWrong("provisioning-wrong-sum-then-round",
+		"applies the band percentage to the SUM of the balances sharing a reserveKey and rounds once, "+
+			"instead of applying the percentage to each row and summing the rounded minor-unit amounts "+
+			"(the oracle accumulates each row's percentageOf at ...Impl.java:235). The two orders differ "+
+			"ONLY when rows sharing a key produce interfering sub-minor-unit fractions: PV-07's two "+
+			"DOUBTFUL exact .5-ties give round-then-sum 7423432 but sum-then-round 7423431. Single-row "+
+			"and distinct-key requests are unaffected, so this drive kills exactly PV-07.",
+		wrongGeneratorEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), gen: sumThenRoundReserveEntries})
+	RegisterWrong("provisioning-wrong-reserve-key-ignored",
+		"ignores the eight-field reserveKey (criteria, office, currency, product, category, overdue days, "+
+			"liability account, expense account) and collapses EVERY input row into a single entry, summing "+
+			"their correctly computed reserve amounts. The oracle merges rows by "+
+			"partialHashKey [VERIFIED: ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.java:225-235]. "+
+			"A single-key request still yields one entry either way, so this drive is inert against the "+
+			"one-input and identical-key vectors and is killed only by a request whose rows carry "+
+			"DIFFERENT keys (PV-09).",
+		wrongGeneratorEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), gen: mergeReserveEntriesIgnoringKey})
 	RegisterWrong("provisioning-wrong-category-by-definition-id",
 		"keys the category aggregate by the criteria-definition stored id (CRI-02 capture ids 3,4,2,1) "+
 			"instead of the m_provision_category id (CAT-00 capture ids 1,2,3,4): a porter that "+

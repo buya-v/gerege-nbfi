@@ -29,17 +29,26 @@ type InvariantResult struct {
 
 // AssertInvariants runs every gradeable provisioning invariant against the
 // result an implementation returned. The entry-reserve seam asserts a different
-// set than the category-read seam, so the seam decides the set.
-func AssertInvariants(v *Vector, got Expect) []InvariantResult {
+// set than the category-read seam, so the seam decides the set. A multi-entry
+// reserve result asserts the reserve invariants on EVERY produced entry, so a
+// merged or malformed entry cannot hide behind a well-formed sibling.
+func AssertInvariants(v *Vector, got []Expect) []InvariantResult {
 	if v != nil && v.Oracle.Seam == SeamProvisioningEntryReserve {
+		var out []InvariantResult
+		for _, e := range got {
+			out = append(out, assertReserveCategoryIDPositive(e), assertReservedAmountInteger(e))
+		}
+		return out
+	}
+	if len(got) == 0 {
 		return []InvariantResult{
-			assertReserveCategoryIDPositive(got),
-			assertReservedAmountInteger(got),
+			assertCategoryIDPositive(Expect{}),
+			assertCategoryNameNonEmpty(Expect{}),
 		}
 	}
 	return []InvariantResult{
-		assertCategoryIDPositive(got),
-		assertCategoryNameNonEmpty(got),
+		assertCategoryIDPositive(got[0]),
+		assertCategoryNameNonEmpty(got[0]),
 	}
 }
 
