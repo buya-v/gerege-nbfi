@@ -1,0 +1,77 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m396[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m The OH-DEEP-D/OH-PROM-O deliverable is committed on `feat/OHPROMo` as        [36m│[0m
+[36m│[0m **ba9ae64e** (15 files, +1067/−20), with `TASK.md` deliberately left         [36m│[0m
+[36m│[0m untracked.                                                                   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## What this session completed                                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The in-progress deliverable (transaction-balance seam + 2 parity vectors + 3 [36m│[0m
+[36m│[0m drives + capture MANIFEST surveys + capabilities/doc updates) was verified   [36m│[0m
+[36m│[0m end-to-end, one genuine gap was found and fixed, and the whole set was       [36m│[0m
+[36m│[0m committed.                                                                   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Gap found and fixed:** the loan MANIFEST survey omitted one of the 27      [36m│[0m
+[36m│[0m committed captures — `loan-3-detail-after-raw.json` (sha `07834666…b2245`)   [36m│[0m
+[36m│[0m was un-surveyed despite being the provenance of                              [36m│[0m
+[36m│[0m `LN-L03-summary-total-outstanding`. Added as a `covered` entry. Survey is    [36m│[0m
+[36m│[0m now complete: **27/27 loan, 12/12 workingcapital** with dispositions.        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Property pinning (the vectors' substance):**                               [36m│[0m
+[36m│[0m - `LN-L01-transaction-balance-waiver-unmoved` ←                              [36m│[0m
+[36m│[0m `loan-1-transactions-after-raw.json` `4a74f23e…ecb47f` — pins P1             [36m│[0m
+[36m│[0m (disbursement balance `100000.00` unmoved after the `1000.00` interest       [36m│[0m
+[36m│[0m waiver) and P2 (accrual row carries an **absent** balance, never `0`).       [36m│[0m
+[36m│[0m - `LN-L03-transaction-balance-principal-derived` ←                           [36m│[0m
+[36m│[0m `loan-3-transactions-after-raw.json` `054b73bb…f5f46` — pins P3 (balance     [36m│[0m
+[36m│[0m moves only on principal portions; post-repayment `92115.12`).                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Kill counts (every drive measured; none inert — each resolved by promotion [36m│[0m
+[36m│[0m of a vector that sees it):**                                                 [36m│[0m
+[36m│[0m | drive | kills |                                                            [36m│[0m
+[36m│[0m |---|---|                                                                    [36m│[0m
+[36m│[0m | `loan-wrong-transaction-balance-waiver-moves-principal` | 1 |              [36m│[0m
+[36m│[0m | `loan-wrong-transaction-balance-accrual-zero` | 2 |                        [36m│[0m
+[36m│[0m | `loan-wrong-transaction-balance-folds-repayment-interest` | 1 |            [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Prior 5 loan drives re-measured, still kill (1/1/2/5/4). `redcount`: loan    [36m│[0m
+[36m│[0m **8**, workingcapital **4**.                                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Bar, on the final tree:** `go build` OK; `go test` OK; `conformance.sh` →  [36m│[0m
+[36m│[0m VERDICT PASS (46 parity, 7884 cells) then **exit 2** as the §4.4.2 recorded  [36m│[0m
+[36m│[0m decision, with `ledger-invariants.baseline` untouched; direct loan run       [36m│[0m
+[36m│[0m `vectors_loaded=12 parity_pass=12`; measurement controls green (45/12/1/4);  [36m│[0m
+[36m│[0m all **165 vector→capture sha256 pairs re-verified, 0 mismatches**.           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m No captures were taken and no write was issued to the oracle — P4's survey   [36m│[0m
+[36m│[0m record stands: the workingcapital set carries no further money property, and [36m│[0m
+[36m│[0m any future capture need is recorded as a finding in the MANIFEST, not        [36m│[0m
+[36m│[0m executed.                                                                    [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 18c02d10180d485888549850a41789da
+Hint: run openhands --resume 18c02d10-180d-4858-8854-9850a41789da to resume this
+conversation.
