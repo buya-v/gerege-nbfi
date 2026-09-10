@@ -1,0 +1,5 @@
+ id | asset_owner_transfer_id | total_outstanding_derived | principal_outstanding_derived | interest_outstanding_derived | fee_charges_outstanding_derived | penalty_charges_outstanding_derived | total_overpaid_derived | created_by |        created_on_utc        | last_modified_by |     last_modified_on_utc     
+----+-------------------------+---------------------------+-------------------------------+------------------------------+---------------------------------+-------------------------------------+------------------------+------------+------------------------------+------------------+------------------------------
+  1 |                      28 |             106775.530000 |                 100000.000000 |                  6618.530000 |                      100.000000 |                           57.000000 |               0.000000 |          2 | 2026-09-10 05:03:03.25232+00 |                2 | 2026-09-10 05:03:03.25232+00
+(1 row)
+

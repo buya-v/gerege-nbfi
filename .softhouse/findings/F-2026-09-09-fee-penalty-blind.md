@@ -193,3 +193,19 @@ untouched; nothing was SQL-inserted.
 
 **Full evidence, with the oracle-state verification table:**
 `.softhouse/capture/gl-accounting-surface/evidence/OHGLT-EVIDENCE.md`.
+
+---
+
+## NOTE 2026-09-10 — the same loan's terms are now visible on the investor details seam
+
+`OH-INV-Y` settled transfer 28 on loan 12, and `details` carries the same four terms this
+finding is about, non-zero and different:
+
+    totalPrincipalOutstanding 100000.0  totalInterestOutstanding 6618.53
+    totalFeeChargesOutstanding   100.0  totalPenaltyChargesOutstanding 57.0
+    totalOutstanding         106775.53  totalOverpaid                   0.0
+
+That is a **second, independent surface** carrying the fee/penalty discrimination this
+finding needed — the loan summary read path closed it, and the investor details path now
+shows the same decomposition. Note `totalOverpaid` is **0.0**, so this observation does
+**not** discriminate whether overpaid is included in the total: 106775.53 either way.

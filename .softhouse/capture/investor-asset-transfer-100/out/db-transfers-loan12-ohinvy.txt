@@ -1,0 +1,6 @@
+ id | loan_id | owner_id | external_loan_id | external_id  | status  | sub_status | purchase_price_ratio | settlement_date | effective_date_from | effective_date_to 
+----+---------+----------+------------------+--------------+---------+------------+----------------------+-----------------+---------------------+-------------------
+ 17 |      12 |        1 | OHLGT-L03        | OHINVW-Tr-12 | PENDING |            | 97.25                | 2026-09-02      | 2026-09-02          | 2026-09-02
+ 28 |      12 |        1 | OHLGT-L03        | OHINVW-Tr-12 | ACTIVE  |            | 97.25                | 2026-09-02      | 2026-09-03          | 9999-12-31
+(2 rows)
+

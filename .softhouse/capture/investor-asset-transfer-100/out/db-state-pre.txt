@@ -1,0 +1,86 @@
+## external_asset_owner_transfer 17
+ id | loan_id | owner_id | external_loan_id | external_id  | status  | purchase_price_ratio | settlement_date | effective_date_from | effective_date_to | sub_status 
+----+---------+----------+------------------+--------------+---------+----------------------+-----------------+---------------------+-------------------+------------
+ 17 |      12 |        1 | OHLGT-L03        | OHINVW-Tr-12 | PENDING | 97.25                | 2026-09-02      | 2026-09-02          | 9999-12-31        | 
+(1 row)
+
+## external_asset_owner_transfer_details rows (all)
+ details_rows 
+--------------
+            0
+(1 row)
+
+## details rows for transfer 17
+ id | asset_owner_transfer_id | total_outstanding_derived | principal_outstanding_derived | interest_outstanding_derived | fee_charges_outstanding_derived | penalty_charges_outstanding_derived | total_overpaid_derived | created_by | created_on_utc | last_modified_by | last_modified_on_utc 
+----+-------------------------+---------------------------+-------------------------------+------------------------------+---------------------------------+-------------------------------------+------------------------+------------+----------------+------------------+----------------------
+(0 rows)
+
+## acc_gl_financial_activity_account
+ id | financial_activity_type | gl_account_id 
+----+-------------------------+---------------
+  1 |                     101 |             1
+  2 |                     102 |             1
+(2 rows)
+
+## acc_product_mapping for product 3 (count + rows)
+ mapping_rows 
+--------------
+           12
+(1 row)
+
+ id | product_id | financial_account_type | gl_account_id |   gl_code   |            name             
+----+------------+------------------------+---------------+-------------+-----------------------------
+  1 |          3 |                      1 |            10 | OHLGR-20010 | OHLGR-Fund-Source
+  2 |          3 |                      2 |             5 | OHLGR-10010 | OHLGR-Loan-Portfolio
+  7 |          3 |                      3 |            12 | OHLGR-40010 | OHLGR-Interest-On-Loans
+  8 |          3 |                      4 |            13 | OHLGR-40011 | OHLGR-Income-From-Fees
+  9 |          3 |                      5 |            14 | OHLGR-40012 | OHLGR-Income-From-Penalties
+ 11 |          3 |                      6 |            16 | OHLGR-50010 | OHLGR-Losses-Written-Off
+  4 |          3 |                      7 |             7 | OHLGR-10012 | OHLGR-Interest-Receivable
+  5 |          3 |                      8 |             8 | OHLGR-10013 | OHLGR-Fees-Receivable
+  6 |          3 |                      9 |             9 | OHLGR-10014 | OHLGR-Penalties-Receivable
+  3 |          3 |                     10 |             6 | OHLGR-10011 | OHLGR-Transfers-Suspense
+ 12 |          3 |                     11 |            11 | OHLGR-20011 | OHLGR-Overpayment-Liability
+ 10 |          3 |                     12 |            15 | OHLGR-40013 | OHLGR-Income-From-Recovery
+(12 rows)
+
+## gl account 6
+ id |   gl_code   |           name           | classification_enum | account_usage 
+----+-------------+--------------------------+---------------------+---------------
+  6 | OHLGR-10011 | OHLGR-Transfers-Suspense |                   1 |             1
+(1 row)
+
+## loan 12 product + principal
+ id | product_id | principal_amount | loan_status_id | loan_type_enum 
+----+------------+------------------+----------------+----------------
+ 12 |          3 |    100000.000000 |            300 |              1
+(1 row)
+
+ id |        name        | accounting_type 
+----+--------------------+-----------------
+  3 | OHLGR-Accrual-Loan |               3
+(1 row)
+
+## journal entries for entity_id = 17
+ je_rows 
+---------
+       0
+(1 row)
+
+## loan 12 outstanding components (accounting accumulators)
+psql:<stdin>:33: ERROR:  column "is_reversed" does not exist
+LINE 2:        transaction_date, is_reversed
+                                 ^
+HINT:  Perhaps you meant to reference the column "acc_gl_journal_entry.reversed".
+ id | principal_amount | total_overpaid_derived | interest_outstanding_derived | fee_charges_outstanding_derived | penalty_charges_outstanding_derived | principal_outstanding_derived | total_outstanding_derived 
+----+------------------+------------------------+------------------------------+---------------------------------+-------------------------------------+-------------------------------+---------------------------
+ 12 |    100000.000000 |                        |                  6618.530000 |                      100.000000 |                           57.000000 |                 100000.000000 |             106775.530000
+(1 row)
+
+## rounding-mode + business date config
+ id |         name         | value | enabled 
+----+----------------------+-------+---------
+ 44 | enable-business-date |       | t
+ 23 | rounding-mode        |     4 | t
+(2 rows)
+
