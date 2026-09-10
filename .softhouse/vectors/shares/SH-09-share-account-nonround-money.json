@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-09-share-account-nonround-money",
+ "title": "share account OHK-SHARE-ACCT purchase: 137 shares at 137.50 MNT = 18837.50 (non-round money)",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-account seam, ACCOUNT DETAIL READ-BACK, and the corpus's first NON-ROUND purchase price and share counts. request.purchased_price \"137.50\" is share-account-detail-raw.json purchasedShares[0].purchasedPrice, the exact 2dp decimal text the oracle stored; expect.purchased_price_minor \"13750\" is that same value in integer minor units (2dp). request.purchased_amount \"18837.50\" is purchasedShares[0].amount and expect.purchased_amount_minor \"1883750\" its minor-unit form: the purchase total is requestedShares 137 * unitPrice 137.50 = 18837.50, exact at 2dp, so NO sub-minor residue exists (G-19 / DEC-2 G-08). request.total_approved_shares 137 and request.purchased_shares 137 are summary.totalApprovedShares and purchasedShares[0].numberOfShares; 1373 = 137 * 10 + 3, so the count does not divide the product total. request.total_pending_shares 0 and expect.total_pending_shares 0 are summary.totalPendingForApprovalShares. request.account_status_id 300 and expect.account_status_stored 300 are status.id (shareAccountStatusType.active). request.purchased_status_id 300 and expect.purchased_status_stored 300 are purchasedShares[0].status.id (purchasedSharesStatusType.approved). The seed corpus fixes purchased_price at 100.00 and the counts at 100/1000 on every vector, so a port that hardcodes the price or the share count is invisible elsewhere; 137.50 and 137 make those defects go red here.",
+ "oracle": {
+  "seam": "share-account",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares-nonround-money/out/share-account-detail-raw.json (account id 5): status.id 300, summary.totalApprovedShares 137, summary.totalPendingForApprovalShares 0, purchasedShares[0].numberOfShares 137, purchasedShares[0].purchasedPrice 137.50, purchasedShares[0].amount 18837.50, purchasedShares[0].status.id 300.",
+  "capture_ref": ".softhouse/capture/shares-nonround-money/out/share-account-detail-raw.json",
+  "capture_sha256": "3d1af6c9640dfa776856c7189e9eb051b24c76eac0dcaf76abe8596824c69c7b",
+  "capture_case_id": "5"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "account",
+  "currency_code": "MNT",
+  "account_status_id": 300,
+  "total_approved_shares": 137,
+  "total_pending_shares": 0,
+  "purchased_shares": 137,
+  "purchased_price": "137.50",
+  "purchased_amount": "18837.50",
+  "purchased_status_id": 300
+ },
+ "expect": {
+  "kind": "account",
+  "account_status_stored": 300,
+  "total_approved_shares": 137,
+  "total_pending_shares": 0,
+  "purchased_shares": 137,
+  "purchased_price_minor": "13750",
+  "purchased_amount_minor": "1883750",
+  "purchased_status_stored": 300
+ },
+ "capabilities_required": [
+  "share-account"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}

@@ -323,6 +323,31 @@ func (dropZeroMoneyEvaluator) Evaluate(req Request) (Expect, error) {
 	return e, nil
 }
 
+// hardcodedUnitPriceEvaluator is a DELIBERATELY WRONG implementation: it writes the
+// SEED unit price 100.00 (10000 minor units) for every share product and every
+// purchase, ignoring request.unit_price / request.purchased_price entirely. On the
+// seed corpus — where all three products and every purchase carry 100.00 — this
+// defect is INVISIBLE: it kills ZERO vectors, and no drive can see a field every
+// vector holds fixed. The non-round 137.50 vectors (SH-08/SH-09) are what make it
+// red; without them this drive is inert and must not be registered.
+type hardcodedUnitPriceEvaluator struct{ goEvaluator }
+
+func (hardcodedUnitPriceEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := (goEvaluator{}).Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	switch e.Kind {
+	case KindAccount:
+		if req.PurchasedShares != 0 {
+			e.PurchasedPriceMinor = "10000"
+		}
+	case KindProduct:
+		e.UnitPriceMinor = "10000"
+	}
+	return e, nil
+}
+
 func init() {
 	Register("shares-go", NewGoEvaluator())
 	RegisterWrong("shares-wrong-off-by-one",
@@ -342,4 +367,9 @@ func init() {
 	RegisterWrong("shares-wrong-zero-money-dropped",
 		"omits a money cell whose minor-unit value is zero (the share-capital 0.00 read-back disappears)",
 		dropZeroMoneyEvaluator{})
+	RegisterWrong("shares-wrong-unit-price-hardcoded",
+		"hardcodes the SEED unit price 100.00 (10000 minor units) for every share product and purchase, "+
+			"ignoring request.unit_price / request.purchased_price; inert on a corpus where every price is 100.00, "+
+			"red on the non-round 137.50 vectors",
+		hardcodedUnitPriceEvaluator{})
 }

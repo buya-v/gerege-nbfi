@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.shares.vector/v1",
+ "case_id": "SH-08-share-product-nonround-money",
+ "title": "share product OHK-Share-Nonround: unit price 137.50 and share capital 188787.50 (non-round money)",
+ "class": "parity",
+ "context": "shares",
+ "_note": "share-product seam, PRODUCT DETAIL READ-BACK, and the corpus's first NON-ROUND money cell. request.unit_price \"137.50\" is share-product-detail-raw.json unitPrice, the exact 2dp decimal text the oracle stored; expect.unit_price_minor \"13750\" is its integer minor-unit form. request.share_capital \"188787.50\" is shareCapital (issued 1373 shares * 137.50) and expect.share_capital_minor \"18878750\" its minor-unit form. request.total_shares 1373 is totalShares (also totalSharesIssued 1373). The seed corpus fixes unit_price at 100.00 on all three products, so 100.00 * anything is a multiple of 100 minor units: a port that hardcodes unit_price = 10000, or one that drops the .50 as a whole-tugrik port, is INVISIBLE against every other shares vector. 137.50 breaks the roundness, so those defects go red here. No rounding surface: 137.50 is an exact 2dp decimal and 137.50 * 1373 = 188787.50 is exact at 2dp, so the transcription carries NO sub-minor residue (G-19 / DEC-2 predicate G-08). Money is integer minor units; no float in any path.",
+ "oracle": {
+  "seam": "share-product",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "transcribed from .softhouse/capture/shares-nonround-money/out/share-product-detail-raw.json (product id 4): unitPrice 137.50, shareCapital 188787.50, totalShares 1373, totalSharesIssued 1373, currency MNT.",
+  "capture_ref": ".softhouse/capture/shares-nonround-money/out/share-product-detail-raw.json",
+  "capture_sha256": "40c2bcc65b16c5ee579dcbfe9a99e9f57d4e1d3b61a1b4c3125fb4f48dc1b7b1",
+  "capture_case_id": "4"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "kind": "product",
+  "currency_code": "MNT",
+  "unit_price": "137.50",
+  "share_capital": "188787.50",
+  "total_shares": 1373
+ },
+ "expect": {
+  "kind": "product",
+  "unit_price_minor": "13750",
+  "share_capital_minor": "18878750",
+  "total_shares": 1373
+ },
+ "capabilities_required": [
+  "share-product"
+ ],
+ "graded_against": [
+  "shares-go"
+ ]
+}
