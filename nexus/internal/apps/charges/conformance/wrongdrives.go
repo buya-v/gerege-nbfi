@@ -25,12 +25,18 @@ type ignoreVariant struct {
 	// so a percentage charge is priced as if its stored Amount were the whole fee.
 	// charges-wrong-calculation-type-always-flat.
 	calculationTypeAsFlat bool
+	// penaltyAsFalse replaces penalty with the bool zero value, so every charge is
+	// treated as a fee. charges-wrong-penalty-ignored.
+	penaltyAsFalse bool
 }
 
 // apply rewrites the request fields this drive never reads.
 func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	if v.calculationTypeAsFlat {
 		req.CalculationType = charges.ChargeCalculationFlat.StoredValue()
+	}
+	if v.penaltyAsFalse {
+		req.Penalty = false
 	}
 	return req
 }

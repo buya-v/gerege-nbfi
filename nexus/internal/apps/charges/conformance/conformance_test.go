@@ -82,6 +82,55 @@ func percentFeeProbe() *Vector {
 	}
 }
 
+// penaltyAtDisbursementProbe is a flat PENALTY due at disbursement: the charge
+// definition's own Validate() refuses it with one code and assigns no fee. Its
+// shape mirrors OHCAPj-penalty-at-disbursement-refused (750000 minor, penalty
+// true, time 1), which is the only corpus vector whose output reads `penalty`.
+func penaltyAtDisbursementProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-penalty-at-disbursement",
+		Title:   "probe penalty due at disbursement refused",
+		Class:   ClassParity,
+		Context: ChargesContext,
+		Note:    "probe: meaningless numbers, not an observation",
+		Oracle:  OracleStamp{Seam: SeamChargeEvaluate, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: meaningless numbers, not an observation",
+			CaptureRef:    ".softhouse/capture/charges/out/fc/FC-00-probe.json",
+			CaptureSHA256: "0000000000000000000000000000000000000000000000000000000000000000",
+			CaptureCaseID: "probe-penalty-at-disbursement",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request: ChargeRequest{
+			Name:            "probe",
+			CurrencyCode:    "MNT",
+			AmountMinor:     "750000",
+			Percentage:      0,
+			AppliesTo:       1,
+			TimeType:        1,
+			CalculationType: 1,
+			PaymentMode:     0,
+			Penalty:         true,
+			BaseAmountMinor: "",
+		},
+		Expect: ChargeExpect{
+			Kind:            ExpectValidation,
+			ValidationCodes: []string{"charge.due.at.disbursement.cannot.be.penalty"},
+			FeeMinor:        "",
+		},
+		GradedAgainst: []string{"charges-go"},
+	}
+}
+
 func TestEmptyStoreRefuses(t *testing.T) {
 	store := t.TempDir()
 	s, err := Run(context.Background(), Options{
@@ -270,6 +319,42 @@ func TestCalculationTypeAlwaysFlatWrongRunsRed(t *testing.T) {
 	}
 	if red.MoneyCells != 1 {
 		t.Fatalf("calculation-type-always-flat money cells = %d, want 1 (the kill must be a MONEY kill)", red.MoneyCells)
+	}
+}
+
+// TestPenaltyIgnoredWrongRunsRed pins the shape of the ignore-penalty drive: the
+// correct port refuses a penalty due at disbursement with one validation code,
+// while a port that leaves the flag at its zero value treats it as a fee and
+// returns 750000. The refusal is the only corpus output that reads `penalty`,
+// which is why the kill count is 1 and not more.
+func TestPenaltyIgnoredWrongRunsRed(t *testing.T) {
+	probe := penaltyAtDisbursementProbe()
+
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	wrong, ok := Lookup("charges-wrong-penalty-ignored")
+	if !ok {
+		t.Fatal("charges-wrong-penalty-ignored not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-penalty-ignored"); !bad {
+		t.Fatal("charges-wrong-penalty-ignored not marked wrong")
+	}
+
+	red := gradeOne(probe, Options{Implementation: wrong})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("penalty-ignored outcome = %s, want FAIL", red.Outcome)
+	}
+	var sawValidation bool
+	for _, d := range red.Diffs {
+		if strings.HasPrefix(d, "validation") {
+			sawValidation = true
+		}
+	}
+	if !sawValidation {
+		t.Fatalf("penalty-ignored diffs = %v, want at least one validation diff", red.Diffs)
 	}
 }
 

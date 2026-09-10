@@ -462,4 +462,18 @@ func init() {
 			"OHCAPj-pctamount-disbursement-halfup-tie (1162503) and T46-CH-06-defvsreq-pctamount-disb (600000); "+
 			"the eight flat vectors and the validation-refused vector are byte-identical and survive",
 		ignoreFieldEvaluator{v: ignoreVariant{calculationTypeAsFlat: true}})
+	RegisterWrong("charges-wrong-penalty-ignored",
+		"never reads the penalty flag: the bool is left at its zero value, so every charge is treated as a fee. "+
+			"m_charge.is_penalty drives two construction invariants -- a penalty may not be due at disbursement and "+
+			"a non-penalty may not be an overdue-instalment charge [VERIFIED: Charge.java:305-308, "+
+			"Charge.java:300-352] -- and it is the input the GL split keys on: a fee credits "+
+			"OHLGR-Income-From-Fees while a penalty credits OHLGR-Income-From-Penalties, DIFFERENT accounts that "+
+			"leave every total balancing "+
+			"[.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json]. "+
+			"Grading the flag here is what makes that defect catchable at all. The only vector whose OUTPUT "+
+			"observes the flag is OHCAPj-penalty-at-disbursement-refused: the correct port refuses it with "+
+			"charge.due.at.disbursement.cannot.be.penalty while this drive accepts it and returns a fee, so it "+
+			"dies and kills 1. Threading the flag is a prerequisite for the account mapping, and a port that "+
+			"drops it books penalties to the fee account with no failed total to notice",
+		ignoreFieldEvaluator{v: ignoreVariant{penaltyAsFalse: true}})
 }
