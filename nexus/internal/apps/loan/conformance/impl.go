@@ -220,6 +220,30 @@ func journalEntrySide(t string) (loan.JournalEntrySide, bool) {
 	return loan.JournalEntrySideUnknown, false
 }
 
+// journalEntrySideCode renders a parsed side back in the observed code form for
+// an account-side cell. It returns "" for the unknown side so a leg that somehow
+// escaped journalEntrySide's refusal fails visibly rather than defaulting to a
+// side the capture never showed.
+func journalEntrySideCode(s loan.JournalEntrySide) string {
+	switch s {
+	case loan.JournalEntryDebit:
+		return "DEBIT"
+	case loan.JournalEntryCredit:
+		return "CREDIT"
+	}
+	return ""
+}
+
+// flipJournalEntrySide reverses the two observed sides. It is the wrong-port
+// operation the two totals cannot see when applied to BOTH legs of one balanced
+// pair: each side keeps the same sum, so the batch still "balances".
+func flipJournalEntrySide(s loan.JournalEntrySide) loan.JournalEntrySide {
+	if s == loan.JournalEntryDebit {
+		return loan.JournalEntryCredit
+	}
+	return loan.JournalEntryDebit
+}
+
 // goJournalEntryBatch derives the debit and credit totals of a loan-produced
 // journal-entry batch by summing EVERY leg on its observed side, via
 // loan.SumJournalEntryBatch. The totals are independent sums, never a netting
@@ -247,9 +271,22 @@ func goJournalEntryBatch(legs []JournalEntryLeg) (Expect, error) {
 	if err != nil {
 		return Expect{}, err
 	}
+	sides, err := loan.JournalEntryAccountSides(parsed)
+	if err != nil {
+		return Expect{}, err
+	}
+	cells := make([]JournalEntryAccountSideCell, len(sides))
+	for i, s := range sides {
+		cells[i] = JournalEntryAccountSideCell{
+			TransactionID: s.TransactionID,
+			Account:       s.Account,
+			EntryType:     s.Side,
+		}
+	}
 	return Expect{
 		JournalEntryDebitsMinor:  strconv.FormatInt(int64(totals.Debits), 10),
 		JournalEntryCreditsMinor: strconv.FormatInt(int64(totals.Credits), 10),
+		JournalEntryAccountSides: cells,
 	}, nil
 }
 
@@ -732,6 +769,13 @@ const (
 	// The two totals stay EQUAL (the difference is preserved) while the money
 	// actually posted moves, which only a per-side comparison can see.
 	wrongBatchNetsAccount
+	// wrongBatchSwapsFirstPairSides reverses the two legs of the first
+	// transaction id's pair, crediting the account that was debited and debiting
+	// the account that was credited. Both totals are UNCHANGED — a balanced
+	// pair swapped is still balanced — so the two total cells cannot see it.
+	// What moves is WHICH account takes WHICH side, the per-(transaction,
+	// account) cell this drive exists to isolate.
+	wrongBatchSwapsFirstPairSides
 )
 
 // wrongJournalEntryBatchEvaluator is a DELIBERATELY WRONG implementation of the
@@ -776,6 +820,19 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 		if !seenTxn[l.TransactionID] {
 			seenTxn[l.TransactionID] = true
 			order = append(order, l.TransactionID)
+		}
+	}
+
+	// The pair swap is the one defect the two total cells cannot see: reversing
+	// both legs of a balanced pair keeps each side's sum. Applying it only for
+	// its named mode keeps every other drive isolated to its own defect, so the
+	// swap drive is the ONLY one of the five that moves the side cells.
+	if mode == wrongBatchSwapsFirstPairSides {
+		first := order[0]
+		for i := range parsed {
+			if parsed[i].txn == first {
+				parsed[i].side = flipJournalEntrySide(parsed[i].side)
+			}
 		}
 	}
 
@@ -827,10 +884,26 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 				credits += c - d
 			}
 		}
+	default:
+		// wrongBatchSwapsFirstPairSides (and the zero value) sum every leg on
+		// its (possibly flipped) side: the totals are unchanged by the swap.
+		for _, l := range parsed {
+			add(l)
+		}
+	}
+
+	sides := make([]JournalEntryAccountSideCell, len(parsed))
+	for i, l := range parsed {
+		sides[i] = JournalEntryAccountSideCell{
+			TransactionID: l.txn,
+			Account:       l.acct,
+			EntryType:     journalEntrySideCode(l.side),
+		}
 	}
 	return Expect{
 		JournalEntryDebitsMinor:  strconv.FormatInt(int64(debits), 10),
 		JournalEntryCreditsMinor: strconv.FormatInt(int64(credits), 10),
+		JournalEntryAccountSides: sides,
 	}, nil
 }
 
@@ -899,4 +972,10 @@ func init() {
 			"(debit 100.00, credit 100000.00) contribute a single 99900.00 position; both totals stay "+
 			"EQUAL at 100000.00 but differ from the observed 100100.00, so the two per-side cells go red",
 		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchNetsAccount})
+	RegisterWrong("loan-wrong-journal-entry-batch-swaps-first-pair-sides",
+		"reverses both legs of the FIRST transaction id's pair, crediting OHLGR-Loan-Portfolio and "+
+			"debiting OHLGR-Fund-Source; a balanced pair swapped is still balanced, so both totals stay "+
+			"EQUAL at the observed 100100.00 and only the per-(transaction, account) side cells go red — "+
+			"the defect the two total cells cannot see",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchSwapsFirstPairSides})
 }

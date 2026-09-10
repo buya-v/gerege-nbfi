@@ -391,6 +391,50 @@ func admitExpect(v *Vector) []string {
 			problems = append(problems, fmt.Sprintf(
 				"expect.journal_entry_credits_minor %q is not a non-negative integer minor amount", v.Expect.JournalEntryCreditsMinor))
 		}
+		// The two totals are blind to a swapped pair. The per-(transaction,
+		// account) side expectation is REQUIRED, because a vector that pins only
+		// the totals would let that swap through and would be a vector that
+		// cannot see the property this seam now exists to grade.
+		if len(v.Expect.JournalEntryAccountSides) == 0 {
+			problems = append(problems, "expect.journal_entry_account_sides is empty for the journal-entry-batch seam: the per-(transaction, account) side is the property the two totals cannot see")
+			return problems
+		}
+		if len(v.Expect.JournalEntryAccountSides) != len(v.Request.JournalEntries) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.journal_entry_account_sides has %d entries but request.journal_entries has %d",
+				len(v.Expect.JournalEntryAccountSides), len(v.Request.JournalEntries)))
+			return problems
+		}
+		// The expected sides must be a PERMUTATION of the observed sides: the
+		// expectation is a transcription of the same read-back, not a second
+		// contested claim. An invented (transaction, account, side) is refused
+		// so no value is admitted that the capture did not show.
+		type sideKey struct{ txn, acct, side string }
+		observed := map[sideKey]int{}
+		for _, leg := range v.Request.JournalEntries {
+			observed[sideKey{leg.TransactionID, leg.Account, leg.EntryType}]++
+		}
+		for i, s := range v.Expect.JournalEntryAccountSides {
+			switch {
+			case s.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.journal_entry_account_sides[%d].transaction_id is empty", i))
+				continue
+			case s.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.journal_entry_account_sides[%d].account is empty", i))
+				continue
+			case !journalEntryTypeAdmitted(s.EntryType):
+				problems = append(problems, fmt.Sprintf("expect.journal_entry_account_sides[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, s.EntryType))
+				continue
+			}
+			k := sideKey{s.TransactionID, s.Account, s.EntryType}
+			if observed[k] == 0 {
+				problems = append(problems, fmt.Sprintf(
+					"expect.journal_entry_account_sides[%d] claims %s on account %q in transaction %q, which request.journal_entries does not observe",
+					i, s.EntryType, s.Account, s.TransactionID))
+				continue
+			}
+			observed[k]--
+		}
 	}
 	return problems
 }

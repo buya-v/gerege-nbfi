@@ -68,3 +68,48 @@ func SumJournalEntryBatch(legs []JournalEntryLeg) (JournalEntryBatchTotals, erro
 	}
 	return totals, nil
 }
+
+// JournalEntryAccountSide is the side ONE account takes in ONE transaction of a
+// loan-produced journal-entry batch. The property it pins is
+// per-(transaction, account), not per-account globally: OHLGR-Fund-Source takes
+// CREDIT in the disbursement transaction L17 and DEBIT in the fee transaction
+// L18, so a port that assigns one fixed side to an account would be wrong about
+// the oracle even before it is wrong about a single pair.
+//
+// Side is carried in its OBSERVED code form ("DEBIT"/"CREDIT"), the same
+// spelling the capture emitted, not a decoded enum another layer could reorder.
+type JournalEntryAccountSide struct {
+	TransactionID string
+	Account       string
+	Side          string
+}
+
+// JournalEntryAccountSides reports which side each observed leg's account takes,
+// in the order the legs were read back. It is a TRANSCRIPTION of the read-back,
+// never a side inferred from an account's normal balance.
+//
+// This is the property SumJournalEntryBatch cannot see. Swapping the two legs of
+// a balanced pair moves equal amounts across the two sides, so the totals are
+// unchanged and the batch still "balances" while the money posted to each
+// account has been reversed. The per-(transaction, account) side list is what
+// moves under that swap.
+func JournalEntryAccountSides(legs []JournalEntryLeg) ([]JournalEntryAccountSide, error) {
+	sides := make([]JournalEntryAccountSide, len(legs))
+	for i, leg := range legs {
+		var code string
+		switch leg.Side {
+		case JournalEntryDebit:
+			code = "DEBIT"
+		case JournalEntryCredit:
+			code = "CREDIT"
+		default:
+			return nil, fmt.Errorf("loan: journal-entry leg %d has an unknown side", i)
+		}
+		sides[i] = JournalEntryAccountSide{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			Side:          code,
+		}
+	}
+	return sides, nil
+}

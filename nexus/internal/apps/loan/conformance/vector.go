@@ -67,10 +67,21 @@ const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
 // the journal-entries endpoint. A loan disbursement GENERATES its postings, so
 // the observation is a read-back, not a posting command; the batch carries more
 // than one pair when a disbursement pair and a fee pair share one loan. The
-// property is sum(debits) == sum(credits), exactly, in integer minor units,
-// summed independently over EVERY leg: a port that sums only the first pair,
-// drops a pair, or nets the two legs on one account produces totals that a
-// single-pair batch cannot tell apart.
+// property is TWO things at once, and the second is invisible to the first:
+//
+//   - sum(debits) == sum(credits), exactly, in integer minor units, summed
+//     independently over EVERY leg: a port that sums only the first pair, drops
+//     a pair, or nets the two legs on one account produces totals that a
+//     single-pair batch cannot tell apart; and
+//   - WHICH account takes WHICH side in WHICH transaction
+//     (expect.journal_entry_account_sides). A port that swaps the two legs of a
+//     balanced pair moves equal amounts between the sides, so the totals are
+//     UNCHANGED and the batch still balances while the posting is reversed. The
+//     per-(transaction, account) side list is the cell that moves.
+//
+// The property is per-(transaction, account), not per-account globally:
+// OHLGR-Fund-Source is CREDIT in the disbursement transaction L17 and DEBIT in
+// the fee transaction L18.
 const SeamLoanJournalEntryBatchBalance = "loan-journal-entry-batch-balance"
 
 // SchemaContexts returns the complete set of store contexts a vector bearing
@@ -201,6 +212,16 @@ type JournalEntryLeg struct {
 	AmountMinor   string `json:"amount_minor"`
 }
 
+// JournalEntryAccountSideCell is the journal-entry-batch-balance seam's expected
+// side for one (transaction_id, account) pair of the request batch. It carries
+// the side in its OBSERVED code form ("DEBIT"/"CREDIT") and is the cell a
+// swapped-pair port moves while the two totals stay equal.
+type JournalEntryAccountSideCell struct {
+	TransactionID string `json:"transaction_id"`
+	Account       string `json:"account"`
+	EntryType     string `json:"entry_type"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one of the sub-requests.
 type Request struct {
@@ -242,6 +263,11 @@ type Expect struct {
 	// minor units, summed independently over every leg of the batch.
 	JournalEntryDebitsMinor  string `json:"journal_entry_debits_minor,omitempty"`
 	JournalEntryCreditsMinor string `json:"journal_entry_credits_minor,omitempty"`
+	// JournalEntryAccountSides is the journal-entry-batch seam's per-leg side
+	// expectation, one entry per request.journal_entries leg: WHICH account
+	// takes WHICH side in WHICH transaction. It is required, and it is the cell
+	// a swapped-pair port moves while both totals stay equal.
+	JournalEntryAccountSides []JournalEntryAccountSideCell `json:"journal_entry_account_sides,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

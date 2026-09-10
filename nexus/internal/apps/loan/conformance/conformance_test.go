@@ -478,6 +478,130 @@ func TestAdmitDefaultDeny(t *testing.T) {
 	}
 }
 
+// journalBatchProbe builds a valid journal-entry-batch-seam vector: the loan-10
+// multi-pair batch observed in journalentries-all-raw.json — disbursement pair
+// L17 (100000.00 each way) plus fee pair L18 (100.00 each way) — carrying the
+// per-(transaction, account) side expectation the two totals cannot see.
+func journalBatchProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-journal-entry-batch",
+		Title:   "probe multi-pair journal-entry batch",
+		Class:   ClassParity,
+		Context: LoanContext,
+		Note:    "probe: transcribed from journalentries-all-raw.json pageItems for entityId 10, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamLoanJournalEntryBatchBalance, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: the four loan-10 legs and their sides",
+			CaptureRef:    ".softhouse/capture/gl-accounting-surface/out/journalentries-all-raw.json",
+			CaptureSHA256: "a400082a1b2974ccd6ec660789810b1ba1f8812a21024da230002ffee3a9913d",
+			CaptureCaseID: "L17",
+		},
+		TenantParams: probeTenant(),
+		Request: Request{JournalEntries: []JournalEntryLeg{
+			{TransactionID: "L17", Account: "OHLGR-Loan-Portfolio", EntryType: "DEBIT", AmountMinor: "10000000"},
+			{TransactionID: "L17", Account: "OHLGR-Fund-Source", EntryType: "CREDIT", AmountMinor: "10000000"},
+			{TransactionID: "L18", Account: "OHLGR-Income-From-Fees", EntryType: "CREDIT", AmountMinor: "10000"},
+			{TransactionID: "L18", Account: "OHLGR-Fund-Source", EntryType: "DEBIT", AmountMinor: "10000"},
+		}},
+		Expect: Expect{
+			JournalEntryDebitsMinor:  "10010000",
+			JournalEntryCreditsMinor: "10010000",
+			JournalEntryAccountSides: []JournalEntryAccountSideCell{
+				{TransactionID: "L17", Account: "OHLGR-Loan-Portfolio", EntryType: "DEBIT"},
+				{TransactionID: "L17", Account: "OHLGR-Fund-Source", EntryType: "CREDIT"},
+				{TransactionID: "L18", Account: "OHLGR-Income-From-Fees", EntryType: "CREDIT"},
+				{TransactionID: "L18", Account: "OHLGR-Fund-Source", EntryType: "DEBIT"},
+			},
+		},
+		CapabilitiesRequired: []string{"journal-entry-batch-balance"},
+		GradedAgainst: []string{
+			"loan-go",
+			"loan-wrong-journal-entry-batch-first-pair-only",
+			"loan-wrong-journal-entry-batch-drops-fee-pair",
+			"loan-wrong-journal-entry-batch-nets-account",
+			"loan-wrong-journal-entry-batch-swaps-first-pair-sides",
+		},
+	}
+}
+
+// TestJournalEntryBatchSeamGrading grades the probe with the correct port and
+// with each registered wrong drive. The totals drive and the side drive are
+// asserted separately: the swap must FAIL on the side cells while its two money
+// cells remain the observed 10010000/10010000, which is the whole point of the
+// side expectation.
+func TestJournalEntryBatchSeamGrading(t *testing.T) {
+	v := journalBatchProbe()
+	if p := Admit(v, Options{RepoRoot: repoRoot(t)}); len(p) > 0 {
+		t.Fatalf("probe should be admissible: %v", p)
+	}
+
+	// The correct port grades: 2 money cells + count + 4 legs x 3 side cells.
+	correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	if correct.GradedCells != 15 || correct.MoneyCells != 2 {
+		t.Fatalf("graded cells = %d, money = %d; want 15/2", correct.GradedCells, correct.MoneyCells)
+	}
+
+	for _, name := range v.GradedAgainst[1:] {
+		wrongImpl, ok := Lookup(name)
+		if !ok {
+			t.Fatalf("wrong implementation %q not registered", name)
+		}
+		if _, bad := IsRegisteredWrong(name); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", name)
+		}
+		red := gradeOne(v, Options{Implementation: wrongImpl})
+		if red.Outcome != OutcomeFail {
+			t.Fatalf("%s outcome = %s, want FAIL; diffs=%v", name, red.Outcome, red.Diffs)
+		}
+		if len(red.Diffs) == 0 {
+			t.Fatalf("%s produced no diffs", name)
+		}
+	}
+
+	// The swap is invisible to the totals: prove it on the real reconstruction
+	// path, not by assertion on the drive's diff. Swapping the L17 legs leaves
+	// both money cells equal to the observed totals and moves only the side cell.
+	wrongImpl, ok := Lookup("loan-wrong-journal-entry-batch-swaps-first-pair-sides")
+	if !ok {
+		t.Fatal("swap drive not registered")
+	}
+	swapped, err := wrongImpl.Evaluate(v.Request)
+	if err != nil {
+		t.Fatalf("swap Evaluate: %v", err)
+	}
+	if swapped.JournalEntryDebitsMinor != "10010000" || swapped.JournalEntryCreditsMinor != "10010000" {
+		t.Fatalf("swap totals = %s/%s, want the observed 10010000/10010000",
+			swapped.JournalEntryDebitsMinor, swapped.JournalEntryCreditsMinor)
+	}
+	if swapped.JournalEntryAccountSides[0].EntryType != "CREDIT" ||
+		swapped.JournalEntryAccountSides[1].EntryType != "DEBIT" {
+		t.Fatalf("swap sides = %s/%s, want the L17 pair reversed to CREDIT/DEBIT",
+			swapped.JournalEntryAccountSides[0].EntryType, swapped.JournalEntryAccountSides[1].EntryType)
+	}
+}
+
+// TestJournalEntryBatchDrivesAreIsolated pins that each journal-entry-batch
+// drive delegates on every other seam, so a drive reddens only the batch vector
+// and the kill counts measure the drive, not collateral damage.
+func TestJournalEntryBatchDrivesAreIsolated(t *testing.T) {
+	other := repaymentProbe()
+	for _, name := range journalBatchProbe().GradedAgainst[1:] {
+		impl, ok := Lookup(name)
+		if !ok {
+			t.Fatalf("wrong implementation %q not registered", name)
+		}
+		res := gradeOne(other, Options{Implementation: impl})
+		if res.Outcome != OutcomePass {
+			t.Fatalf("%s reddened a repayment vector (isolation broken): %v", name, res.Diffs)
+		}
+	}
+}
+
 func TestInvariants(t *testing.T) {
 	rep := &Vector{Oracle: OracleStamp{Seam: SeamLoanRepaymentAllocation}}
 	held := AssertInvariants(rep, Expect{

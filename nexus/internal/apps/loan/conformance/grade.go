@@ -110,6 +110,45 @@ func diffTransactionBalance(s *cellSink, wantRows, gotRows []TransactionBalanceR
 	}
 }
 
+// diffJournalEntryAccountSides compares WHICH account takes WHICH side in WHICH
+// transaction — the property a swapped pair moves while leaving both totals
+// equal. Both lists are sorted into a canonical (transaction_id, account,
+// entry_type) order so the comparison grades the mapping, not the order the
+// evaluator happened to emit it in. The counts are compared first, so a dropped
+// or extra leg is a visible difference and not a silent truncation: the loop
+// below stops at the shorter list, and only the count cell would otherwise
+// carry that fact.
+func diffJournalEntryAccountSides(s *cellSink, want, got []JournalEntryAccountSideCell) {
+	s.cmpText("journal_entry_account_sides.count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
+	w := canonicalJournalEntryAccountSides(want)
+	g := canonicalJournalEntryAccountSides(got)
+	for i := range w {
+		if i >= len(g) {
+			break
+		}
+		s.cmpText(fmt.Sprintf("journal_entry_account_sides[%d].transaction_id", i), w[i].TransactionID, g[i].TransactionID)
+		s.cmpText(fmt.Sprintf("journal_entry_account_sides[%d].account", i), w[i].Account, g[i].Account)
+		s.cmpText(fmt.Sprintf("journal_entry_account_sides[%d].entry_type", i), w[i].EntryType, g[i].EntryType)
+	}
+}
+
+// canonicalJournalEntryAccountSides returns a copy of in sorted by
+// (transaction_id, account, entry_type) so the side comparison is
+// order-insensitive.
+func canonicalJournalEntryAccountSides(in []JournalEntryAccountSideCell) []JournalEntryAccountSideCell {
+	out := append([]JournalEntryAccountSideCell(nil), in...)
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].TransactionID != out[j].TransactionID {
+			return out[i].TransactionID < out[j].TransactionID
+		}
+		if out[i].Account != out[j].Account {
+			return out[i].Account < out[j].Account
+		}
+		return out[i].EntryType < out[j].EntryType
+	})
+	return out
+}
+
 // gradeOne admits, checks capabilities, evaluates and compares one vector.
 func gradeOne(v *Vector, opts Options) vectorResult {
 	r := vectorResult{CaseID: v.CaseID}
@@ -153,6 +192,7 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	case SeamLoanJournalEntryBatchBalance:
 		s.cmpMoney("journal_entry_debits", v.Expect.JournalEntryDebitsMinor, got.JournalEntryDebitsMinor)
 		s.cmpMoney("journal_entry_credits", v.Expect.JournalEntryCreditsMinor, got.JournalEntryCreditsMinor)
+		diffJournalEntryAccountSides(&s, v.Expect.JournalEntryAccountSides, got.JournalEntryAccountSides)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money
