@@ -1,0 +1,56 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L11-repayment-allocation-fee-and-penalty",
+    "title": "OHLGT-L03 (loan 12) repayment four-bucket allocation with ALL FOUR buckets non-zero and fee != penalty",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the four-bucket allocation of OHLGT-L03 (loan 12) repayment transaction 53. This is the ALLOCATION counterpart of F-2026-09-09: LN-L03, the only other allocation vector, carries fee=0 and penalty=0, so a port that drops the fee bucket, the penalty bucket, or both passes it. Here all four request buckets are non-zero and fee (10000) differs from penalty (5700), so the two omissions are discriminated separately. request.repayment.outstanding = {penalty 5700, fee 10000, interest 661853, principal 10000000} is the loan's pre-repayment outstanding derived from the committed before-state read-back (loan-12-before-raw.json: penaltyChargesOutstanding 57.0, feeChargesOutstanding 100.0, interestOutstanding 6618.53, principalOutstanding 100000.0) in integer minor units. request.repayment.amount_minor=9797865 is repayment 53's amount 97978.65. expect.allocation = {penalty 5700, fee 10000, interest 661853, principal 9120312} is transaction 53's penaltyChargesPortion 57.0, feeChargesPortion 100.0, interestPortion 6618.53 and principalPortion 91203.12; expect.leftover_minor=0 is the fully-consumed payment. The four portions SUMMED equal the amount paid exactly (5700+10000+661853+9120312=9797865), the splits-sum-to-the-whole invariant. The transaction's loanChargePaidByList names both real charges (OHLGT-Fee-SDD-100 100.0 and OHLGT-Penalty-SDD-57 57.0) because the loan-level pool is fully consumed, the observed allocation is exactly the greedy four-bucket order penalty, fee, interest, principal of that pool. Nothing was computed by this promotion; every cell is a transcription of the oracle's read-back.",
+    "oracle": {
+        "seam": "loan-repayment-allocation",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "expect.allocation and expect.leftover_minor are transcribed from transaction 53 of the committed capture loan-12-transactions-after-raw.json (externalId OHLGT-L03 appears in the same file); request.repayment.outstanding is transcribed from the committed before-state read-back loan-12-before-raw.json, both under .softhouse/capture/loan12-four-bucket-allocation/. capture_case_id names the externalId of the observed loan. The request body that drove the repayment (req/repay-OHALLOCG-97978.65.json) is committed byte-stable: transactionAmount and transactionDate are JSON strings, so the body carries NO numeric JSON token and survives a binary-double round trip trivially.",
+        "capture_ref": ".softhouse/capture/loan12-four-bucket-allocation/out/loan-12-transactions-after-raw.json",
+        "capture_sha256": "4d5e4d5389a5bb7ecae1472969ebe442a8b076965863335efec528575d2771c1",
+        "capture_case_id": "OHLGT-L03",
+        "citation": "loan-12-transactions-after-raw.json:1 {\"id\":53,\"amount\":97978.65,\"principalPortion\":91203.12,\"interestPortion\":6618.53,\"feeChargesPortion\":100.0,\"penaltyChargesPortion\":57.0}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "repayment": {
+            "outstanding": {
+                "penalty": "5700",
+                "fee": "10000",
+                "interest": "661853",
+                "principal": "10000000"
+            },
+            "amount_minor": "9797865"
+        }
+    },
+    "expect": {
+        "allocation": {
+            "penalty": "5700",
+            "fee": "10000",
+            "interest": "661853",
+            "principal": "9120312"
+        },
+        "leftover_minor": "0"
+    },
+    "capabilities_required": [
+        "repayment-allocation"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-allocation-drops-fee",
+        "loan-wrong-allocation-drops-penalty"
+    ]
+}
