@@ -1,0 +1,60 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-06-detail-discount-nonzero",
+ "title": "non-zero total_discount_fee and the principal that includes it (detail read-back)",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from capture wc-discount-nonzero (GET /working-capital-loans/2, tenant gerege, business date 2026-09-03): the balance read-back of a facility disbursed on a product whose discount is 37.53 MNT, the FIRST committed observation of a non-zero totalDiscountFee. STORED cells: balance.totalDiscountFee=37.53 -> \"3753\", balance.principal=1037.53 -> \"103753\". The oracle's applyDisbursement sets totalDiscountFee = product.discount and principal = disbursedAmount + discount [WorkingCapitalLoanBalance.java:115-120], so principal includes the discount: 1000 disbursed + 37.53 = 1037.53 exactly. balance.totalDisbursement=0.0 -> \"0\" (Fineract does not move this column on the disbursement write path). DERIVED cells (the port's balance getters): balance.unrealizedIncomeFromDiscountFee = max(37.53 - 0 - 0, 0) = 37.53 -> \"3753\" (the clamp's first non-zero operand; the max floor itself is still ungraded because both other operands are 0 — see .softhouse/findings/F-2026-09-10-workingcapital-discount-fee-graded.md), balance.principalOutstanding=1037.53 -> \"103753\", balance.totalExpectedRepayment=1037.53 -> \"103753\", balance.totalOutstanding=1037.53 -> \"103753\", balance.totalRepayment=0.0 -> \"0\". WHAT THIS VECTOR DISCRIMINATES: a disbursement port that sets principal to the disbursed amount ALONE, dropping the discount the oracle adds (registered as workingcapital-wrong-discount-dropped-from-principal); every earlier captured balance carried totalDiscountFee 0, so the dropped add changed nothing and no vector could see it. Structural: expect.detail.id=\"2\", status=\"loanStatusType.active\", status_id=\"300\" (stored m_wc_loan.loan_status_id, active=true), and the draw recorded one tranche of 1000 (principal/actualAmount 1000 -> \"100000\"). All money cells are transcribed as integer minor units; no cell is computed here.",
+ "oracle": {
+  "seam": "working-capital-loans-detail",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every expect field is transcribed from the committed capture wc-loan-discount-detail-raw.json; capture_case_id names the discounted facility whose balance block is read back.",
+  "capture_ref": ".softhouse/capture/wc-discount-nonzero/out/wc-loan-discount-detail-raw.json",
+  "capture_sha256": "65e67678218eda58aa1536726c98ef0ddd88ca962556adfe5ecd260f88f967b9",
+  "capture_case_id": "OHWCCAP-DISCNONZERO-L01",
+  "citation": "wc-loan-discount-detail-raw.json balance block {\"id\":2,\"principal\":1037.53,\"principalPaid\":0.0,\"principalAdjustment\":0.0,\"principalOutstanding\":1037.53,\"realizedIncomeFromDiscountFee\":0.0,\"unrealizedIncomeFromDiscountFee\":37.53,\"overpaymentAmount\":0.0,\"totalExpectedRepayment\":1037.53,\"totalRepayment\":0.0,\"totalOutstanding\":1037.53,\"totalDisbursement\":0.0,\"totalDiscountFee\":37.53,\"totalDiscountFeeAdjustment\":0.0,\"breachPastDueAmount\":0.0} with status {\"id\":300,\"code\":\"loanStatusType.active\",\"value\":\"Active\",\"active\":true} and disbursementDetails [{\"id\":2,\"loanId\":2,\"expectedDisbursementDate\":\"2026-09-03\",\"principal\":1000.0,\"actualDisbursementDate\":\"2026-09-03\",\"actualAmount\":1000.0}] on loan externalId OHWCCAP-DISCNONZERO-L01; the principal algebra is WorkingCapitalLoanBalance.java:115-120 (totalDiscountFee = discount at :118, principal = disbursedAmount.add(discount) at :119)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 2
+ },
+ "expect": {
+  "detail": {
+   "id": "2",
+   "status": "loanStatusType.active",
+   "status_id": "300",
+   "status_active": "true",
+   "balance": {
+    "principal": "103753",
+    "principal_paid": "0",
+    "total_disbursement": "0",
+    "total_discount_fee": "3753",
+    "principal_outstanding": "103753",
+    "total_expected_repayment": "103753",
+    "total_repayment": "0",
+    "total_outstanding": "103753",
+    "unrealized_income_from_discount_fee": "3753"
+   },
+   "disbursement": {
+    "principal": "100000",
+    "actual_amount": "100000"
+   }
+  }
+ },
+ "capabilities_required": [
+  "wc-loan-balance-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

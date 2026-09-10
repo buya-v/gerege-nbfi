@@ -58,23 +58,32 @@ type ungradedTerm struct {
 // ValidateGradedDomain refuses a balance that carries a non-zero value in any
 // money term the committed working-capital captures cannot discriminate.
 //
-// Principal is the ONE stored money term the pinned capture observes at a
-// non-zero value (100051 minor, wc-loan-detail-raw.json); it is therefore not
-// checked. Every other stored term is zero in every balance the captures
-// serialise (WC-02/WC-03/WC-04), so a port that drops the term, or returns a
-// constant zero for it, passes every vector that mentions it. The derived folds
-// are pure over a state this method has admitted; it is the seam that admits
-// the state, in the spirit of loanschedule's validateGradedDomain, and it is
-// called once before the getters run.
+// TWO stored money terms are now observed at a non-zero value and are therefore
+// not checked:
 //
-// The clamp in UnrealizedIncomeFromDiscountFee is the sharpest case. It is
-// observable only when TotalDiscountFee - TotalDiscountFeeAdjustment -
-// RealizedIncomeFromDiscountFee goes NEGATIVE, which requires non-zero
-// operands. No capture has one, so no vector exercises the clamp at all;
-// refusing each operand here is the only thing between the clamp and a
-// silently wrong answer. See
-// .softhouse/findings/F-2026-09-10-workingcapital-ungraded-terms.md for the
-// capture each term would need in order to be graded.
+//   - Principal, 100051 minor in wc-loan-detail-raw.json (the no-discount seed);
+//   - TotalDiscountFee, 3753 minor in the discount-nonzero capture
+//     (wc-loan-discount-detail-raw.json, facility 2), promoted by OH-WCGRADE-Q.
+//
+// Every OTHER stored term is zero in every balance the captures serialise, so a
+// port that drops the term, or returns a constant zero for it, passes every
+// vector that mentions it. The derived folds are pure over a state this method
+// has admitted; it is the seam that admits the state, in the spirit of
+// loanschedule's validateGradedDomain, and it is called once before the getters
+// run.
+//
+// The clamp in UnrealizedIncomeFromDiscountFee is STILL not exercised, and this
+// method still refuses its remaining operands. The first operand,
+// TotalDiscountFee, is now non-zero (3753), but TotalDiscountFeeAdjustment and
+// RealizedIncomeFromDiscountFee are both still 0, so the un-clamped expression
+// TotalDiscountFee - adjustment - realized stays POSITIVE (max(3753, 0)); the
+// max(..., 0) floor itself is ungraded (a port omitting it computes the same
+// answer). Refusing TotalDiscountFeeAdjustment and
+// RealizedIncomeFromDiscountFee is what keeps the clamp from being answerable
+// while it cannot be graded. See
+// .softhouse/findings/F-2026-09-10-workingcapital-discount-fee-graded.md (and
+// its predecessor F-2026-09-10-workingcapital-ungraded-terms.md) for what a
+// capture would need to drive each remaining term.
 func (b WorkingCapitalLoanBalance) ValidateGradedDomain() error {
 	for _, t := range []ungradedTerm{
 		{"PrincipalPaid", b.PrincipalPaid, "the capture records principalPaid 0 (no working-capital repayment has ever been captured), so no vector grades a non-zero principal paid"},
@@ -83,10 +92,9 @@ func (b WorkingCapitalLoanBalance) ValidateGradedDomain() error {
 		{"FeePaid", b.FeePaid, "the capture records feePaid 0, so no vector grades a non-zero fee paid"},
 		{"Penalty", b.Penalty, "the captured product carries no charges and the capture records penalty 0, so no vector grades a non-zero penalty"},
 		{"PenaltyPaid", b.PenaltyPaid, "the capture records penaltyPaid 0, so no vector grades a non-zero penalty paid"},
-		{"RealizedIncomeFromDiscountFee", b.RealizedIncomeFromDiscountFee, "the capture records realizedIncomeFromDiscountFee 0; it is an operand of the UnrealizedIncomeFromDiscountFee clamp, which no vector exercises"},
+		{"RealizedIncomeFromDiscountFee", b.RealizedIncomeFromDiscountFee, "the capture records realizedIncomeFromDiscountFee 0; it is an operand of the UnrealizedIncomeFromDiscountFee clamp, which no vector exercises (the other operand, totalDiscountFee, is now graded but this one is not)"},
 		{"OverpaymentAmount", b.OverpaymentAmount, "the capture records overpaymentAmount 0, so no vector grades an overpayment"},
 		{"TotalDisbursement", b.TotalDisbursement, "the capture records totalDisbursement 0 and the reference working-capital module has no call site that ever sets it (setTotalDisbursement has no caller under its src/main), so no capture can produce a non-zero value to grade"},
-		{"TotalDiscountFee", b.TotalDiscountFee, "the capture was disbursed with no discount and records totalDiscountFee 0; the discount is the first operand of the UnrealizedIncomeFromDiscountFee clamp, which no vector exercises"},
 		{"TotalDiscountFeeAdjustment", b.TotalDiscountFeeAdjustment, "the capture records totalDiscountFeeAdjustment 0; it is an operand of the UnrealizedIncomeFromDiscountFee clamp, and nothing grades the clamp"},
 		{"BreachPastDueAmount", b.BreachPastDueAmount, "the capture records breachPastDueAmount 0, so no vector grades a breach amount"},
 	} {
@@ -102,12 +110,14 @@ func (b WorkingCapitalLoanBalance) ValidateGradedDomain() error {
 // disbursed + discount, totalDiscountFee becomes discount, and any overpayment
 // is reset.
 //
-// A discount is REFUSED rather than applied when no committed capture has
-// graded the resulting state: a non-zero totalDiscountFee is an operand of the
-// UnrealizedIncomeFromDiscountFee clamp, and no vector has ever driven that
-// clamp. The would-be state is validated before the receiver is touched, so a
-// refused call leaves the balance exactly as it was. The graded seed
-// (100051, 0) is admitted.
+// The discount the product carries is now GRADED: OH-WCGRADE-Q observed a
+// facility disbursed with discount 3753 on a product whose discount is 37.53
+// MNT, and TotalDiscountFee was removed from the refusal set, so the resulting
+// state is admitted when no ungraded term is non-zero. The would-be state is
+// still validated before the receiver is touched, so a call refused for some
+// other ungraded term leaves the balance exactly as it was. The no-discount
+// seed (100051, 0) and the discount-nonzero capture (100000, 3753) are both
+// admitted; the latter yields principal 103753 and totalDiscountFee 3753.
 func (b *WorkingCapitalLoanBalance) ApplyDisbursement(disbursed, discount loan.MinorUnits) error {
 	next := *b
 	next.TotalDiscountFee = discount
