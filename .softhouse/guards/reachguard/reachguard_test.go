@@ -251,6 +251,78 @@ func TestFprintfIntoPersistenceWriterNotCleared(t *testing.T) {
 	t.Logf("fprintf fail-closed causes: %v", r.Causes)
 }
 
+// Control 8 (increment 3, math/big RESULT must keep the operand->result edge): a balance field
+// written from the RESULT of a math/big arithmetic call, then persisted, must report
+// REACHES-PERSISTENCE. math/big is persistence-inert and pruned; if pruning dropped the
+// operand->result edge the only path to the store would vanish and the derived balance would be
+// acquitted PROVABLY-NO — the exact fail-open the tool exists to prevent.
+func TestBigIntArithmeticResultStoredReaches(t *testing.T) {
+	root := fixtureRoot(t, "bigresult")
+	r := analyze(t, root, "bigresult.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Reaches)
+	if r.Sink == "" {
+		t.Fatalf("REACHES verdict without a boundary is not evidence")
+	}
+	t.Logf("math/big result boundary: %s", r.Sink)
+}
+
+// Control 9 (increment 3, math/big pointer-receiver mutation): big.Int methods mutate their
+// pointer receiver (z.Add(x, y) writes z). The written balance is an operand; the STORED value is
+// the mutated receiver, not Add's discarded return. Pruning must keep the operand->receiver edge
+// or the written balance loses its path to the store and the site is acquitted PROVABLY-NO.
+func TestBigIntReceiverMutationStoredReaches(t *testing.T) {
+	root := fixtureRoot(t, "bigmutate")
+	r := analyze(t, root, "bigmutate.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Reaches)
+	if r.Sink == "" {
+		t.Fatalf("REACHES verdict without a boundary is not evidence")
+	}
+	t.Logf("math/big receiver-mutation boundary: %s", r.Sink)
+}
+
+// Control 10 (increment 3, time NOT stored stays clear): a balance carried through the
+// allow-listed, persistence-inert time package and then discarded has a fully resolved closure
+// with no boundary, so PROVABLY-NO-PERSISTENCE is due. This is the polarity that proves the time
+// entry actually CLEARS rather than merely suppressing an unresolved edge.
+func TestTimeValueNotStoredStaysClear(t *testing.T) {
+	root := fixtureRoot(t, "timeclear")
+	r := analyze(t, root, "timeclear.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, ProvablyNo)
+	if r.Verdict == Unresolved {
+		t.Fatalf("time value with a resolved, boundary-free closure stayed UNRESOLVED: the allow-list clears nothing")
+	}
+	if len(r.Closure) == 0 {
+		t.Fatalf("PROVABLY-NO-PERSISTENCE without a printed closure is an assertion, not a proof")
+	}
+	t.Logf("time cleared closure (%d hop(s)): %v", len(r.Closure), r.Closure)
+}
+
+// Control 11 (increment 3, time value STORED still reaches): pruning a use of a value in the
+// time package must not lose its other uses. The balance is carried THROUGH time and then
+// persisted, so the path crosses the pruned package and must survive it.
+func TestTimeValueStoredReaches(t *testing.T) {
+	root := fixtureRoot(t, "timestore")
+	r := analyze(t, root, "timestore.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Reaches)
+	if r.Sink == "" {
+		t.Fatalf("REACHES verdict without a boundary is not evidence")
+	}
+	t.Logf("time-path boundary: %s", r.Sink)
+}
+
+// Control 12 (increment 3, the fail-closed edge deliberately NOT fixed): a call through a func
+// value is dynamic dispatch with no single callee. The analysis must leave it UNRESOLVED — never
+// approximate the common case. This proves the edge T514's rule protects still refuses to clear.
+func TestFuncValueCallStaysUnresolved(t *testing.T) {
+	root := fixtureRoot(t, "funcvalue")
+	r := analyze(t, root, "funcvalue.go", "I3-FIELD-WRITE")
+	requireVerdict(t, r, Unresolved)
+	if r.Verdict == ProvablyNo {
+		t.Fatalf("func-value call (dynamic dispatch) was PROVABLY-NO-PERSISTENCE: fail-open")
+	}
+	t.Logf("func-value fail-closed causes: %v", r.Causes)
+}
+
 // copyTree copies a fixture tree (regular files only; fixtures contain no symlinks).
 func copyTree(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {

@@ -1530,15 +1530,40 @@ func (a *analyzer) inModuleFunc(fn *types.Func) bool {
 // can write a value to a database, a journal entry or a GL posting. Even then, a call is pruned
 // only when it is PURE WITH RESPECT TO PERSISTENCE (see persistenceInert): a call that hands the
 // callee an io.Writer is NOT pruned, because that writer is the caller's and can be a store
-// (this is why fmt.Fprint* is refused); a callee with a typed pointer parameter is also refused
-// as a conservative out-write guard. The variadic ...any of the fmt Scan family is not a typed
-// pointer, but the package owns no store, so a scanned value stays in caller memory and cannot
-// reach a boundary.
-var persistenceInertPkgs = map[string]string{
-	"fmt":     "owns no persistence store; its output goes to an io.Writer/io.Reader or to caller pointers (the Scan family), never to a database, journal or posting. Calls handed an io.Writer are excluded below (Fprint*) because that writer is the caller's and can be the store",
-	"strconv": "pure numeric/string conversions with no I/O at all",
-	"strings": "pure string transformations with no I/O at all",
-	"testing": "formats and buffers test output for the test log; it opens no database, journal or posting",
+// (this is why fmt.Fprint* is refused); a callee with a typed pointer parameter is refused as a
+// conservative out-write guard UNLESS its package is marked pointerParamsAreOperands, in which
+// case the pointer slots are arithmetic operands/mutated results rather than arbitrary caller
+// destinations and the caller must preserve their flow (see modelOutWrites). The variadic ...any
+// of the fmt Scan family is not a typed pointer, but the package owns no store, so a scanned
+// value stays in caller memory and cannot reach a boundary.
+type inertPkg struct {
+	why string
+	// pointerParamsAreOperands marks a package whose typed-pointer parameters and pointer
+	// receivers are arithmetic operands or mutated results, not arbitrary out-writes owned by
+	// the caller. Relaxing the pointer-parameter guard for such a package is sound only because
+	// the pruner then RECONNECTS every input to every mutable slot (modelOutWrites), so a value
+	// the callee writes through a pointer cannot lose its path to a later store. It must remain
+	// false for any package whose pointer parameters could be the caller's own destinations.
+	pointerParamsAreOperands bool
+}
+
+var persistenceInertPkgs = map[string]inertPkg{
+	"fmt":     {why: "owns no persistence store; its output goes to an io.Writer/io.Reader or to caller pointers (the Scan family), never to a database, journal or posting. Calls handed an io.Writer are excluded below (Fprint*) because that writer is the caller's and can be the store"},
+	"strconv": {why: "pure numeric/string conversions with no I/O at all"},
+	"strings": {why: "pure string transformations with no I/O at all"},
+	"testing": {why: "formats and buffers test output for the test log; it opens no database, journal or posting"},
+	// time is a calendar/duration package: it performs no I/O and owns no database, journal or
+	// posting. Its values (Time, Duration, Location) are plain in-memory structs. It has typed
+	// pointer parameters (time.Date's *Location, time.Time.In/ParseInLocation) but those are
+	// read-only timezone operands, never destinations; marking the package reconnects them.
+	"time": {why: "calendar/duration arithmetic over in-memory values with no store and no I/O", pointerParamsAreOperands: true},
+	// math/big is this programme's money-arithmetic package, but the question is not whether it
+	// touches money — it is whether it can PERSIST money. It opens no database, writes no
+	// journal entry and owns no store. Its Int/Rat methods take pointer receivers and MUTATE
+	// them (z.Add(x, y) writes z), and some take pointer operands (QuoRem's remainder), so the
+	// pointer-parameter guard is relaxed ONLY together with modelOutWrites, which keeps the
+	// arg->receiver and input->mutable-slot edges that carry the arithmetic RESULT to a store.
+	"math/big": {why: "arbitrary-precision integer/rational arithmetic in caller memory; no I/O and no store of any kind", pointerParamsAreOperands: true},
 }
 
 // ioWriterIface resolves the io.Writer interface OBJECT from the loaded dependency graph. It is
@@ -1565,9 +1590,13 @@ func (a *analyzer) ioWriterIface() *types.Interface {
 //
 //	(a) fn's package path is on the allow-list above, resolved through fn's types.Object; and
 //	(b) fn is pure with respect to persistence: it takes no io.Writer-implementing parameter
-//	    and no pointer parameter. A writer parameter can be an arbitrary destination (this is why
-//	    fmt.Fprintf is NOT pruned), and a pointer parameter is an out-write whose flow this
-//	    program does not model, so it is left UNRESOLVED rather than assumed harmless.
+//	    and, unless its package's entry sets pointerParamsAreOperands, no pointer parameter. A
+//	    writer parameter can be an arbitrary destination (this is why fmt.Fprintf is NOT pruned),
+//	    and for an ordinary package a pointer parameter is an out-write whose flow this program
+//	    does not model, so it is left UNRESOLVED rather than assumed harmless. For a package
+//	    whose pointer slots are arithmetic operands the guard is relaxed, and externalCall then
+//	    calls modelOutWrites to reconnect every input to every mutable slot so no such flow is
+//	    lost.
 //
 // A receiver is not a parameter and is not screened here: a method such as (*strings.Builder).WriteString
 // may write its argument into the receiver, so the caller adds argument->receiver edges for every
@@ -1577,7 +1606,8 @@ func (a *analyzer) persistenceInert(fn *types.Func) bool {
 	if fn == nil || fn.Pkg() == nil {
 		return false
 	}
-	if _, ok := persistenceInertPkgs[fn.Pkg().Path()]; !ok {
+	entry, ok := persistenceInertPkgs[fn.Pkg().Path()]
+	if !ok {
 		return false
 	}
 	sig, ok := fn.Type().(*types.Signature)
@@ -1590,7 +1620,7 @@ func (a *analyzer) persistenceInert(fn *types.Func) bool {
 		if pt == nil {
 			continue
 		}
-		if _, isPtr := pt.Underlying().(*types.Pointer); isPtr {
+		if _, isPtr := pt.Underlying().(*types.Pointer); isPtr && !entry.pointerParamsAreOperands {
 			return false
 		}
 		if iw != nil && types.Implements(pt, iw) {
@@ -1667,6 +1697,14 @@ func (a *analyzer) externalCall(call *ast.CallExpr, fn *types.Func, recvExpr ast
 				}
 			}
 		}
+		// A relaxed package (math/big, time) may also write an input through a pointer operand,
+		// not only through its receiver. Without points-to we cannot tell which slot is written,
+		// so reconnect every input to every mutable slot: over-approximation adds flow and can
+		// never clear a site, but dropping these edges could lose the path where the RESULT of
+		// the arithmetic is what gets stored.
+		if entry, ok := persistenceInertPkgs[p]; ok && entry.pointerParamsAreOperands {
+			a.modelOutWrites(call, fn, recvExpr)
+		}
 		return
 	}
 	reason := "value passed into external package " + p + ", whose body this analysis did not open"
@@ -1681,6 +1719,65 @@ func (a *analyzer) externalCall(call *ast.CallExpr, fn *types.Func, recvExpr ast
 		}
 	}
 	a.g.addUnresolved(a.resultNode(call), "result of a call into external package "+p+" (provenance not opened)", call.Pos())
+}
+
+// persistenceMutableTarget reports whether a parameter or receiver of type t is a slot the
+// callee can mutate through the caller's reference: a pointer, slice, map, channel or interface.
+// A value of basic or struct type is a copy and cannot carry a mutation back to the caller.
+func persistenceMutableTarget(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	switch t.Underlying().(type) {
+	case *types.Pointer, *types.Slice, *types.Map, *types.Chan, *types.Interface:
+		return true
+	}
+	return false
+}
+
+// modelOutWrites conservatively preserves the flow a pruned callee can perform into a
+// caller-visible mutable slot. Every input (receiver and arguments) is connected to every
+// mutable slot (a pointer/reference receiver and any pointer/reference argument). This
+// over-approximates the callee's writes; over-approximation can only add flow, so it can never
+// turn an unresolved or reaching site into a clear.
+func (a *analyzer) modelOutWrites(call *ast.CallExpr, fn *types.Func, recvExpr ast.Expr) {
+	sig, ok := fn.Type().(*types.Signature)
+	if !ok {
+		return
+	}
+	var sources []string
+	if recvExpr != nil {
+		sources = append(sources, a.valueNodes(recvExpr)...)
+	}
+	for _, arg := range call.Args {
+		sources = append(sources, a.valueNodes(arg)...)
+	}
+	var targets []string
+	if recvExpr != nil && sig.Recv() != nil && persistenceMutableTarget(sig.Recv().Type()) {
+		targets = append(targets, a.valueNodes(recvExpr)...)
+	}
+	params := sig.Params()
+	for i, arg := range call.Args {
+		var pt types.Type
+		if sig.Variadic() && i >= params.Len()-1 {
+			pt = params.At(params.Len() - 1).Type()
+			if s, ok := pt.(*types.Slice); ok {
+				pt = s.Elem()
+			}
+		} else if i < params.Len() {
+			pt = params.At(i).Type()
+		}
+		if persistenceMutableTarget(pt) {
+			targets = append(targets, a.valueNodes(arg)...)
+		}
+	}
+	for _, s := range sources {
+		for _, t := range targets {
+			if s != t {
+				a.g.addEdge(s, t)
+			}
+		}
+	}
 }
 
 func (a *analyzer) isDriverObject(fn *types.Func) bool {
