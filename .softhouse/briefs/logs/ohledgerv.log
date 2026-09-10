@@ -11,3 +11,39 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
 
+[09/10/26 12:28:50] ERROR    litellm.InternalServerError:     retry_mixin.py:124
+                             InternalServerError:                               
+                             DeepseekException - peer closed                    
+                             connection without sending                         
+                             complete message body                              
+                             (incomplete chunked read).                         
+                             Attempt #1 | You can customize                     
+                             retry values in the                                
+                             configuration.                                     
+[09/10/26 12:38:47] ERROR    Agent reached maximum     local_conversation.py:863
+                             iterations limit (500).                            
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m503[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m [1mPredicted Security Risk: [0m[1;32mLOW[0m                                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1;36mSummary: [0mRead EntrySide type                                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1;32m$ [0m[37mcd /Users/buv/oh-gerege-ledgerv/nexus && grep -n "type EntrySide" [0m         [36m│[0m
+[36m│[0m [37minternal/apps/ledger/journalentry.go && sed -n '/type EntrySide/,/^}/p' [0m     [36m│[0m
+[36m│[0m [37minternal/apps/ledger/journalentry.go && grep -n "EntrySide" [0m                 [36m│[0m
+[36m│[0m [37minternal/apps/ledger/journalentry.go | head[0m                                  [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: e728dcada03747d394bc245e52897a3b
+Hint: run openhands --resume e728dcad-a037-47d3-94bc-245e52897a3b to resume this
+conversation.
