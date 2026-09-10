@@ -1,0 +1,23 @@
+# OH-INV-Q business date / COB date / accounting state (tenant gerege, schema fineract_gerege)
+# Captured 2026-09-10 UTC, READ-ONLY SQL against gerege-oracle-db.
+
+## m_business_date
+BUSINESS_DATE=2026-09-02 (advanced past settlement 2026-09-01)
+COB_DATE=2026-09-01
+
+## c_configuration
+enable-business-date enabled=true value=<null>
+rounding-mode enabled=true value=4  (HALF_UP)
+
+## acc_product_mapping (EMPTY = the settlement blocker: no product->GL mapping)
+acc_product_mapping_rows=0
+
+## m_external_asset_owner_transfer_details (EMPTY = details never written)
+transfer_details_rows=0
+
+## acc_gl_account
+gl_accounts=4
+
+## acc_gl_financial_activity_account
+fin_activity=101->1 (ASSET_TRANSFER present)
+fin_activity=102->1

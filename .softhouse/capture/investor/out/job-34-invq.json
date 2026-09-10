@@ -1,0 +1,1 @@
+{"jobId":34,"displayName":"Loan COB","shortName":"LA_ECOB","cronExpression":"0 0 0 * * ?","active":false,"currentlyRunning":false,"lastRunHistory":{"version":2,"jobRunStartTime":"2026-09-10T00:42:31.493Z","jobRunEndTime":"2026-09-10T00:42:32.045Z","status":"success","triggerType":"application"}}
