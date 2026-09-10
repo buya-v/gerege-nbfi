@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions:
+	case SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions, SeamSavingsHoldRelease:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the %q, %q, %q and %q seams",
-			v.Oracle.Seam, SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions))
+			"oracle.seam %q: this harness grades only the %q, %q, %q, %q and %q seams",
+			v.Oracle.Seam, SeamSavingsDailyInterest, SeamSavingsAccountStatus, SeamSavingsDeposit, SeamSavingsTransactions, SeamSavingsHoldRelease))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -206,6 +206,21 @@ func admitRequest(v *Vector) []string {
 			problems = append(problems, "transactions seam must not set request.account_status")
 		}
 		problems = append(problems, admitTransactionRows(v.Request.Stream.Transactions)...)
+	case SeamSavingsHoldRelease:
+		if v.Request.HoldRelease == nil {
+			problems = append(problems, "hold-release seam must set exactly request.hold_release")
+			return problems
+		}
+		if v.Request.DailyInterest != nil {
+			problems = append(problems, "hold-release seam must not set request.daily_interest")
+		}
+		if v.Request.AccountStatus != nil {
+			problems = append(problems, "hold-release seam must not set request.account_status")
+		}
+		if v.Request.Stream != nil {
+			problems = append(problems, "hold-release seam must not set request.transaction_stream")
+		}
+		problems = append(problems, admitHoldReleaseRows(v.Request.HoldRelease.Transactions)...)
 	}
 	return problems
 }
@@ -230,6 +245,117 @@ func admitTransactionRows(rows []TransactionRow) []string {
 		if !isIntegerMinorString(row.AmountMinor) {
 			problems = append(problems, fmt.Sprintf(
 				"request.transactions[%d].amount_minor %q is not a non-negative integer minor amount", i, row.AmountMinor))
+		}
+	}
+	return problems
+}
+
+// admitHoldReleaseRows enforces that the hold/release stream is one of the two
+// OBSERVED states of the captured account and nothing else, default-deny:
+//
+//   - every row is one of the four observed types (1 DEPOSIT, 3
+//     INTEREST_POSTING, 20 AMOUNT_HOLD, 21 AMOUNT_RELEASE) with a non-negative
+//     integer minor-unit amount;
+//   - ids are positive and unique (the pairing is by id, so a duplicated id
+//     could falsely discharge a hold);
+//   - exactly one AMOUNT_HOLD row, carrying no release id (after-hold) or the id
+//     of the single AMOUNT_RELEASE row that follows it (after-release);
+//   - a release id only ever names the release row present in the same stream,
+//     and no other row carries one. An AMOUNT_HOLD claiming a release that is
+//     not in the stream is not an observed state, and neither is a release with
+//     no hold — HeldOf refuses the latter as ErrOrphanRelease, so admitting it
+//     would grade a harness error rather than a kill.
+func admitHoldReleaseRows(rows []HoldReleaseRow) []string {
+	var problems []string
+	if len(rows) == 0 {
+		return []string{"request.hold_release.transactions is empty: a parity vector transcribes the observed account stream"}
+	}
+	byID := make(map[int64]int, len(rows))
+	var holdIDs, releaseIDs []int64
+	for i, row := range rows {
+		switch row.TypeStoredValue {
+		case 1, 3, 20, 21:
+		default:
+			problems = append(problems, fmt.Sprintf(
+				"request.hold_release.transactions[%d].type_id %d is not an observed transaction type (1 DEPOSIT, 3 INTEREST_POSTING, 20 AMOUNT_HOLD, 21 AMOUNT_RELEASE)",
+				i, row.TypeStoredValue))
+		}
+		if !isIntegerMinorString(row.AmountMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"request.hold_release.transactions[%d].amount_minor %q is not a non-negative integer minor amount", i, row.AmountMinor))
+		}
+		if row.ID <= 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.hold_release.transactions[%d].id %d is not a positive transaction id", i, row.ID))
+		} else if prev, dup := byID[row.ID]; dup {
+			problems = append(problems, fmt.Sprintf(
+				"request.hold_release.transactions[%d].id %d duplicates row %d: hold/release pairing is by id and a duplicate could discharge the wrong hold",
+				i, row.ID, prev))
+		} else {
+			byID[row.ID] = i
+		}
+		switch {
+		case row.TypeStoredValue == 20:
+			holdIDs = append(holdIDs, row.ID)
+			if row.ReleaseIDOfHoldAmount < 0 {
+				problems = append(problems, fmt.Sprintf(
+					"request.hold_release.transactions[%d].release_id_of_hold_amount %d is negative", i, row.ReleaseIDOfHoldAmount))
+			}
+		case row.TypeStoredValue == 21:
+			releaseIDs = append(releaseIDs, row.ID)
+			if row.ReleaseIDOfHoldAmount != 0 {
+				problems = append(problems, fmt.Sprintf(
+					"request.hold_release.transactions[%d] is an AMOUNT_RELEASE but carries release_id_of_hold_amount %d: only an AMOUNT_HOLD row names a release",
+					i, row.ReleaseIDOfHoldAmount))
+			}
+		default:
+			if row.ReleaseIDOfHoldAmount != 0 {
+				problems = append(problems, fmt.Sprintf(
+					"request.hold_release.transactions[%d] is type %d but carries release_id_of_hold_amount %d: only an AMOUNT_HOLD row names a release",
+					i, row.TypeStoredValue, row.ReleaseIDOfHoldAmount))
+			}
+		}
+	}
+	if len(holdIDs) != 1 {
+		problems = append(problems, fmt.Sprintf(
+			"request.hold_release.transactions carries %d AMOUNT_HOLD rows, want exactly the one observed hold", len(holdIDs)))
+	}
+	if len(releaseIDs) > 1 {
+		problems = append(problems, fmt.Sprintf(
+			"request.hold_release.transactions carries %d AMOUNT_RELEASE rows, want at most the one observed release", len(releaseIDs)))
+	}
+	releaseSet := make(map[int64]bool, len(releaseIDs))
+	for _, id := range releaseIDs {
+		releaseSet[id] = true
+	}
+	// A release id must name exactly one release row in this stream, and that
+	// release row must itself be unique (guarded above), so it is claimed once.
+	for i, row := range rows {
+		if row.ReleaseIDOfHoldAmount == 0 {
+			continue
+		}
+		if !releaseSet[row.ReleaseIDOfHoldAmount] {
+			problems = append(problems, fmt.Sprintf(
+				"request.hold_release.transactions[%d].release_id_of_hold_amount %d names no AMOUNT_RELEASE row in this stream",
+				i, row.ReleaseIDOfHoldAmount))
+		}
+	}
+	switch len(releaseIDs) {
+	case 0:
+		for i, row := range rows {
+			if row.TypeStoredValue == 20 && row.ReleaseIDOfHoldAmount != 0 {
+				problems = append(problems, fmt.Sprintf(
+					"request.hold_release.transactions[%d] is an unreleased hold but carries release_id_of_hold_amount %d",
+					i, row.ReleaseIDOfHoldAmount))
+			}
+		}
+	case 1:
+		for i, row := range rows {
+			if row.TypeStoredValue == 20 && row.ReleaseIDOfHoldAmount != releaseIDs[0] {
+				problems = append(problems, fmt.Sprintf(
+					"request.hold_release.transactions[%d] is an AMOUNT_HOLD but does not name the stream's AMOUNT_RELEASE row %d (got %d)",
+					i, releaseIDs[0], row.ReleaseIDOfHoldAmount))
+			}
 		}
 	}
 	return problems
@@ -263,6 +389,20 @@ func admitExpect(v *Vector) []string {
 			if !isIntegerMinorString(b) {
 				problems = append(problems, fmt.Sprintf(
 					"expect.running_balances[%d] %q is not a non-negative integer minor amount", i, b))
+			}
+		}
+	case SeamSavingsHoldRelease:
+		for _, c := range []struct {
+			name string
+			v    string
+		}{
+			{"account_balance_minor", v.Expect.AccountBalanceMinor},
+			{"held_minor", v.Expect.HeldMinor},
+			{"available_minor", v.Expect.AvailableMinor},
+		} {
+			if !isIntegerMinorString(c.v) {
+				problems = append(problems, fmt.Sprintf(
+					"expect.%s %q is not a non-negative integer minor amount", c.name, c.v))
 			}
 		}
 	}

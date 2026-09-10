@@ -58,6 +58,28 @@ const SeamSavingsDeposit = "savings-deposit"
 // postings of 0.15 and 0.16).
 const SeamSavingsTransactions = "savings-transactions"
 
+// SeamSavingsHoldRelease is the hold/release capture seam CLAUDE.md line 14
+// makes non-negotiable: "Holds are postings and alter `available` only, never
+// posted `balance`." The observation is the three-point read-back of savings
+// account 1 (id 1, accountNo 000000001) in savings-hold-release/: before
+// (balance 1000.31, available 1000.31), after an AMOUNT_HOLD of 137.29 (balance
+// STILL 1000.31, available 863.02), and after its AMOUNT_RELEASE (balance still
+// 1000.31, available restored to 1000.31). The port derives three cells from
+// the observed append-only stream — AccountBalanceOf, HeldOf and AvailableOf —
+// and this seam pins all three against the oracle's read-back, so all four
+// limbs of the rule are graded: (1) the hold posts a transaction (type 20,
+// amountHold); (2) available falls by the held amount; (3) the posted balance
+// does NOT move; (4) release restores available with the balance still unmoved.
+//
+// WHY TWO VECTORS AND NOT ONE. A single stream carrying both hold and release
+// folds the hold and the release into the posted balance net-zero (part 3 would
+// hold trivially) and leaves available at its unheld value, so the natural
+// mistake — folding the hold into the posted balance — is INVISIBLE: it reports
+// the correct available as its balance and the correct balance as nothing at
+// all. The after-hold state is the observation that distinguishes them, and the
+// after-release state is the one that pins restoration; both are on this seam.
+const SeamSavingsHoldRelease = "savings-hold-release"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{SavingsContext} }
@@ -160,12 +182,45 @@ type TransactionStreamRequest struct {
 	Transactions []TransactionRow `json:"transactions"`
 }
 
+// HoldReleaseRow is ONE posting of the hold/release account's append-only
+// stream, transcribed from the oracle's account read-back (m_savings_account
+// transactions). Unlike TransactionRow it carries the two facts the hold
+// algebra is built on beyond the amount and the type: the row's own id, and
+// (on an AMOUNT_HOLD row) the id of the AMOUNT_RELEASE row that released it
+// (release_id_of_hold_amount). Fineract pairs a release to its hold by writing
+// the release row's id onto the HOLD row, not by matching amounts
+// [VERIFIED: SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:1953], so
+// the pairing is only expressible if both ids are transcribed.
+type HoldReleaseRow struct {
+	// ID is m_savings_account_transaction.id of the posting.
+	ID int64 `json:"id"`
+	// TypeStoredValue is transaction_type_enum: 1 DEPOSIT, 3 INTEREST_POSTING,
+	// 20 AMOUNT_HOLD, 21 AMOUNT_RELEASE — the four types the captured account
+	// carries.
+	TypeStoredValue int32 `json:"type_id"`
+	// AmountMinor is the row's amount as an integer STRING in minor units.
+	AmountMinor string `json:"amount_minor"`
+	// ReleaseIDOfHoldAmount is release_id_of_hold_amount on an AMOUNT_HOLD row:
+	// the id of the releasing AMOUNT_RELEASE row, or 0 while the hold is
+	// outstanding. It is 0 on every other row type.
+	ReleaseIDOfHoldAmount int64 `json:"release_id_of_hold_amount"`
+}
+
+// HoldReleaseRequest is the savings-hold-release seam's input: the observed
+// append-only stream of savings account 1 in id order — (1,2,3,6) after the
+// hold, (1,2,3,6,7) after the release — so the posted-balance fold, the held
+// fold and available are all derived from the same observed rows.
+type HoldReleaseRequest struct {
+	Transactions []HoldReleaseRow `json:"transactions"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one sub-request.
 type Request struct {
 	DailyInterest *DailyInterestRequest     `json:"daily_interest,omitempty"`
 	AccountStatus *AccountStatusRequest     `json:"account_status,omitempty"`
 	Stream        *TransactionStreamRequest `json:"transaction_stream,omitempty"`
+	HoldRelease   *HoldReleaseRequest       `json:"hold_release,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the daily-interest
@@ -173,11 +228,20 @@ type Request struct {
 // the account-status seam it is the m_savings_account.status_enum stored value
 // (an integer ordinal, NOT money); for the savings-deposit and
 // savings-transactions seams it is the per-row running balance, one integer
-// STRING in minor units per observed row, as the read-back recorded them.
+// STRING in minor units per observed row, as the read-back recorded them; for
+// the savings-hold-release seam it is the three derived cells of the account's
+// observed state — AccountBalanceMinor (summary.accountBalance, the posted
+// balance), HeldMinor (the transaction-stream hold derived from the AMOUNT_HOLD
+// rows, which the read-back exposes only on the row and in
+// total_savings_amount_on_hold) and AvailableMinor (summary.availableBalance,
+// which the oracle derives as balance less held).
 type Expect struct {
-	InterestMinor   string   `json:"interest_minor,omitempty"`
-	StatusID        int32    `json:"status_id,omitempty"`
-	RunningBalances []string `json:"running_balances,omitempty"`
+	InterestMinor       string   `json:"interest_minor,omitempty"`
+	StatusID            int32    `json:"status_id,omitempty"`
+	RunningBalances     []string `json:"running_balances,omitempty"`
+	AccountBalanceMinor string   `json:"account_balance_minor,omitempty"`
+	HeldMinor           string   `json:"held_minor,omitempty"`
+	AvailableMinor      string   `json:"available_minor,omitempty"`
 }
 
 // Vector is one savings golden vector.

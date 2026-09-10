@@ -1,0 +1,75 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-08-release-restores-available-not-balance",
+ "title": "releasing the savings hold (account 1) restores available to 1000.31 while the posted balance stays 1000.31",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from the post-release account read-back, capture savings-hold-release/out/savings-hold-after-release-account-raw.json (GET /savingsaccounts/1?associations=all, tenant gerege, HTTP 200). The stream is the post-hold stream plus the AMOUNT_RELEASE row id 7 (transactionType.id 21, amountRelease true, amount 137.290000, runningBalance 1000.310000) and the hold row id 6 now carrying releaseTransactionId 7 (= release_id_of_hold_amount 7). expect.account_balance_minor is summary.accountBalance 1000.31 = 100031, still unmoved; expect.held_minor is 0 because the hold id 6 is discharged by id 7 and HeldOf pairs them by identity, not arithmetic; expect.available_minor is summary.availableBalance 1000.31 = 100031, restored. This vector completes the rule with the fourth limb: release restores available and the balance still has not moved. The after-hold vector (SV-07) carries the limb a release-only port cannot see, so both states are promoted.",
+ "oracle": {
+  "seam": "savings-hold-release",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected cells are transcribed from the committed post-release account read-back; that one document carries both the summary (accountBalance, availableBalance) and the transaction list, so held, balance and available are all read from a single observed state. capture_case_id is the account number the rows belong to.",
+  "capture_ref": ".softhouse/capture/savings-hold-release/out/savings-hold-after-release-account-raw.json",
+  "capture_sha256": "19852ab0a45d3d2e3b7ce0d42d1b7b347f364ea2296fd7f4fd65f1f2c24f3336",
+  "capture_case_id": "000000001",
+  "citation": "savings-hold-after-release-account-raw.json account id 1 (accountNo 000000001), summary {\"accountBalance\":1000.31,\"availableBalance\":1000.31}, transaction id 6 (AMOUNT_HOLD) {\"amount\":137.29,\"releaseTransactionId\":7}, transaction id 7 (AMOUNT_RELEASE, transactionType.id 21) {\"amount\":137.29,\"amountRelease\":true,\"runningBalance\":1000.31}; the three pre-hold rows are transaction id 1 (DEPOSIT) {\"amount\":1000.0}, id 3 (INTEREST_POSTING) {\"amount\":0.15} and id 2 (INTEREST_POSTING) {\"amount\":0.16}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "hold_release": {
+   "transactions": [
+    {
+     "id": 1,
+     "type_id": 1,
+     "amount_minor": "100000",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 2,
+     "type_id": 3,
+     "amount_minor": "16",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 3,
+     "type_id": 3,
+     "amount_minor": "15",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 6,
+     "type_id": 20,
+     "amount_minor": "13729",
+     "release_id_of_hold_amount": 7
+    },
+    {
+     "id": 7,
+     "type_id": 21,
+     "amount_minor": "13729",
+     "release_id_of_hold_amount": 0
+    }
+   ]
+  }
+ },
+ "expect": {
+  "account_balance_minor": "100031",
+  "held_minor": "0",
+  "available_minor": "100031"
+ },
+ "capabilities_required": [
+  "hold-release-available-only"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}
