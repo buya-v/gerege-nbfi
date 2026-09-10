@@ -76,7 +76,7 @@ and `out/savings-hold-{before,after-hold,after-release}-transactions-raw.json`
 (the two GETs return the same body shape; `?associations=all` is kept so the
 summary and the transaction list are in one document).
 
-| point | `summary.accountBalance` | `summary.availableBalance` | held (`m_savings_account.total_savings_amount_on_hold`) | AMOUNT_HOLD tx |
+| point | `summary.accountBalance` | `summary.availableBalance` | held (`m_savings_account.total_savings_amount_on_hold`) | hold/release tx |
 |---|---|---|---|---|
 | before | 1000.31 | 1000.31 | — (null) | none |
 | after hold | **1000.31** (unmoved) | **863.02** (-137.29) | **137.29** | id **6**, enum **20**, amount **137.29**, runningBalance **863.02** |
@@ -142,7 +142,9 @@ summary and the transaction list are in one document).
   `summary.totalDeposits = 1000.0`; transactions `(2, 0.16)`, `(3, 0.15)`, `(1, 1000.0)`;
   no hold transaction.
 * read-only DB cross-check (`out/db-before.txt`): `m_savings_account : 1|1000.310000|`
-  (held column null), same four pre-hold rows as above minus id 6.
+  (held column null); the same three pre-hold transaction rows as the after-hold
+  table above, without hold row id 6. Their dates are `(2, 2026-09-01 Interest
+  posting)`, `(3, 2026-08-01 Interest posting)`, `(1, 2026-07-02 Deposit)`.
 
 ## Endpoints driven
 
