@@ -11,3 +11,142 @@ It will be compatible before version 2.0.0.
 |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
 +----------------------------------------------------------------------+
 
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m114[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m Done. Here is the full report.                                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## What landed                                                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Commit `9402392c` on `feat/OHLEDGERx`, 2 files, +71/-1:                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `nexus/internal/apps/ledger/conformance/impl.go` — new wrong poster        [36m│[0m
+[36m│[0m `sideOrdinalsSwappedPoster` +                                                [36m│[0m
+[36m│[0m `RegisterWrong("ledger-wrong-side-ordinals-swapped", …)`.                    [36m│[0m
+[36m│[0m - `.softhouse/conformance.sh` — `EXEMPTION_PIN_LEDGER_WRONGIMPLS=16 → 17`.   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m The drive transposes every leg's entry side before posting: `SideDebit →     [36m│[0m
+[36m│[0m SideCredit`, `SideCredit → SideDebit`, so DEBIT is written as `EntryCredit`  [36m│[0m
+[36m│[0m (ordinal 1) and CREDIT as `EntryDebit` (ordinal 2). It is the                [36m│[0m
+[36m│[0m `parties-wrong-iota-ordinals` class applied to this context's own two-member [36m│[0m
+[36m│[0m `EntrySide` axis at `money.go:211-215`.                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Per-property verdict (checked against the existing sixteen)               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m 1. **Batch balances (I-1/I-2)** — already covered.                           [36m│[0m
+[36m│[0m `ledger-wrong-netting-totals` (parity FAIL 10) is the I-1 drive;             [36m│[0m
+[36m│[0m `ledger-wrong-split-drift` (parity FAIL 2) is the I-2 drive whose own defect [36m│[0m
+[36m│[0m string states it passes I-1 and fails I-2, so the two are not restatements.  [36m│[0m
+[36m│[0m Nothing new written near this.                                               [36m│[0m
+[36m│[0m 2. **Direction** — NOT covered before. No registered implementation assigned [36m│[0m
+[36m│[0m `.Side` at all (verified: the only `.Side =` writes in `impl.go` are the new [36m│[0m
+[36m│[0m poster's; lines 564/950 only *read* sides for accumulators). The new drive   [36m│[0m
+[36m│[0m fills this.                                                                  [36m│[0m
+[36m│[0m 3. **Side ordinals** — same cell in this schema. `grade.go:218` compares     [36m│[0m
+[36m│[0m only the `entry_side` string; `ExpectLeg.Side` is `EntrySide` and there is   [36m│[0m
+[36m│[0m no numeric `entryType.id` cell. An internally-consistent ordinal swap is     [36m│[0m
+[36m│[0m invisible, so the observable is the transposition — one drive kills both     [36m│[0m
+[36m│[0m properties.                                                                  [36m│[0m
+[36m│[0m 4. **Fee pair routes to a different account pair** — already covered.        [36m│[0m
+[36m│[0m `ledger-wrong-mapping-key-ignored` rewrites every slot to the first mapping  [36m│[0m
+[36m│[0m row while keeping slot names, sides, order and all money cells correct (dies [36m│[0m
+[36m│[0m on `gl_account_id`/`gl_account_code`, parity FAIL 3).                        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Inert drives:** none introduced. The new drive is provably live (killed on [36m│[0m
+[36m│[0m all ten parity vectors). No drive was deleted.                               [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Bar                                                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m go build ./...            exit 0                                             [36m│[0m
+[36m│[0m go test ./...             exit 0                                             [36m│[0m
+[36m│[0m bash .softhouse/conformance.sh   exit 2  (§4.4.2 recorded decision)          [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m `RED BY RECORDED DECISION (DEC-2 §4.4.2) — findings == baseline`. The        [36m│[0m
+[36m│[0m guard's finding set is exactly **12 (class, file) pairs**, byte-identical to [36m│[0m
+[36m│[0m `.softhouse/guards/ledger-invariants.baseline` (which is untouched; `git     [36m│[0m
+[36m│[0m diff` empty, still 12 rows).                                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## The census block                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m conformance: CENSUS wrong ledger implementations — discovered 17 registered  [36m│[0m
+[36m│[0m as DELIBERATELY                                                              [36m│[0m
+[36m│[0m conformance:   KILLED                                                        [36m│[0m
+[36m│[0m ledger-wrong-accounting-closed-echoes-transaction-date — exit 1, ledger      [36m│[0m
+[36m│[0m parity FAIL 0 + oracle-refusal FAIL 1                                        [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-closure-boundary-exclusive — exit 1,     [36m│[0m
+[36m│[0m ledger parity FAIL 0 + oracle-refusal FAIL 1                                 [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-code-ignored — exit 1, ledger parity     [36m│[0m
+[36m│[0m FAIL 10 + oracle-refusal FAIL 0                                              [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-date-rules-always-refusing — exit 1,     [36m│[0m
+[36m│[0m ledger parity FAIL 2 + oracle-refusal FAIL 0                                 [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-future-date-ignored — exit 1, ledger     [36m│[0m
+[36m│[0m parity FAIL 0 + oracle-refusal FAIL 1                                        [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-header-refusing — exit 1, ledger parity  [36m│[0m
+[36m│[0m FAIL 1 + oracle-refusal FAIL 0                                               [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-manual-permission-ignored — exit 1,      [36m│[0m
+[36m│[0m ledger parity FAIL 0 + oracle-refusal FAIL 1                                 [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-mapping-key-ignored — exit 1, ledger     [36m│[0m
+[36m│[0m parity FAIL 3 + oracle-refusal FAIL 0                                        [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-netting-totals — exit 1, ledger parity   [36m│[0m
+[36m│[0m FAIL 10 + oracle-refusal FAIL 0                                              [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-openingbalance-always-refusing — exit 1, [36m│[0m
+[36m│[0m ledger parity FAIL 1 + oracle-refusal FAIL 0                                 [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-openingbalance-no-contra — exit 1,       [36m│[0m
+[36m│[0m ledger parity FAIL 1 + oracle-refusal FAIL 0                                 [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-openingbalance-posted-entries-ignored —  [36m│[0m
+[36m│[0m exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1                         [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-residue-rounding — exit 1, ledger parity [36m│[0m
+[36m│[0m FAIL 1 + oracle-refusal FAIL 0                                               [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-side-ordinals-swapped — exit 1, ledger   [36m│[0m
+[36m│[0m parity FAIL 10 + oracle-refusal FAIL 0                                       [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-slot-family-blind — exit 1, ledger       [36m│[0m
+[36m│[0m parity FAIL 3 + oracle-refusal FAIL 0                                        [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-split-drift — exit 1, ledger parity FAIL [36m│[0m
+[36m│[0m 2 + oracle-refusal FAIL 0                                                    [36m│[0m
+[36m│[0m conformance:   KILLED  ledger-wrong-truncating — exit 1, ledger parity FAIL  [36m│[0m
+[36m│[0m 9 + oracle-refusal FAIL 0                                                    [36m│[0m
+[36m│[0m conformance:   all 17 wrong ledger implementations DIED through this         [36m│[0m
+[36m│[0m harness, not by hand.                                                        [36m│[0m
+[36m│[0m ```                                                                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Controls re-run live: `loanschedule 45`, `parties 12`, `charges 1` — all     [36m│[0m
+[36m│[0m `rc=0`. Instrument is live; the other sixteen still die.                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Capture verification (against the actual files)                           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m `.softhouse/capture/gl-accounting-surface/out/`:                             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `journalentries-loan-12-raw.json` — exactly two rows: `id=23               [36m│[0m
+[36m│[0m OHLGR-Loan-Portfolio DEBIT 100000.0 entryType.id=2`, `id=24                  [36m│[0m
+[36m│[0m OHLGR-Fund-Source CREDIT 100000.0 entryType.id=1`. Direction and ordinals    [36m│[0m
+[36m│[0m confirmed.                                                                   [36m│[0m
+[36m│[0m - **Discrepancy:** the brief's `journalentries-loan-10-raw.json` **does not  [36m│[0m
+[36m│[0m exist** in the tree. `loan-10-raw.json` is the loan object, not journal      [36m│[0m
+[36m│[0m entries. The loan-10 entries are in `journalentries-all-raw.json` (18 rows): [36m│[0m
+[36m│[0m entity 10 = disbursement pair `id=17 DEBIT 100000.0 / id=18 CREDIT 100000.0` [36m│[0m
+[36m│[0m plus fee pair `id=19 OHLGR-Income-From-Fees CREDIT 100.0 / id=20             [36m│[0m
+[36m│[0m OHLGR-Fund-Source DEBIT 100.0`. Debits 100100.0 == credits 100100.0, and the [36m│[0m
+[36m│[0m fee pair posts to a different account pair than principal. I did not         [36m│[0m
+[36m│[0m synthesise a value for the missing filename.                                 [36m│[0m
+[36m│[0m - The ten parity vectors (`LDG-01..07`, `LDG-ACC-01..03`) carry `entry_side` [36m│[0m
+[36m│[0m on every leg and cite loan→GL captures (`tierA-a2` repayment/overpay/header  [36m│[0m
+[36m│[0m readbacks and `t391` accruals); these are the cells the new drive turns red. [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m No captures taken, no POST/PUT/DELETE issued, `ledger-invariants.baseline`   [36m│[0m
+[36m│[0m untouched. `TASK.md` left untracked.                                         [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 7409fd567d854af4929b9b128036a8df
+Hint: run openhands --resume 7409fd56-7d85-4af4-929b-9b128036a8df to resume this
+conversation.
