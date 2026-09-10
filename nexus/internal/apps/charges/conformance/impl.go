@@ -486,4 +486,17 @@ func init() {
 			"OHCAPj-pctamount-disbursement-halfup-tie (1162503) and T46-CH-06-defvsreq-pctamount-disb (600000); "+
 			"the eight flat vectors and the validation-refused vector never read the base and survive",
 		ignoreFieldEvaluator{v: ignoreVariant{baseAmountAsZero: true}})
+	RegisterWrong("charges-wrong-time-type-ignored",
+		"never decodes charge_time_enum: the enum is left at its zero value (INVALID, stored 0), as a port that "+
+			"drops the column would have it. charge_time_enum is the switch that selects which construction rules "+
+			"run: it gates the penalty-at-disbursement refusal, the non-penalty-overdue-instalment refusal, and the "+
+			"loan-legal-time check, whose union is {DISBURSEMENT(1), SPECIFIED_DUE_DATE(2), INSTALMENT(8), "+
+			"OVERDUE_INSTALMENT(9), TRANCHE_DISBURSEMENT(12)} [VERIFIED: Charge.java:300-352, "+
+			"ChargeTimeType.java:61-64,202-212,235-236]. INVALID is outside every one of those unions, so an "+
+			"undecoded time answers not.allowed.charge.time.for.loan on every loan charge. All twelve vectors die: "+
+			"the eleven fee vectors acquire a spurious validation code and lose their fee, and "+
+			"OHCAPj-penalty-at-disbursement-refused answers the wrong code "+
+			"(not.allowed.charge.time.for.loan for charge.due.at.disbursement.cannot.be.penalty, because INVALID is "+
+			"not DISBURSEMENT)",
+		ignoreFieldEvaluator{v: ignoreVariant{timeTypeAsInvalid: true}})
 }

@@ -32,6 +32,10 @@ type ignoreVariant struct {
 	// percentage charge is computed against a zero base.
 	// charges-wrong-base-amount-ignored.
 	baseAmountAsZero bool
+	// timeTypeAsInvalid replaces time_type with the enum zero value (INVALID), as a
+	// port that never decodes charge_time_enum would leave it.
+	// charges-wrong-time-type-ignored.
+	timeTypeAsInvalid bool
 }
 
 // apply rewrites the request fields this drive never reads.
@@ -44,6 +48,9 @@ func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	}
 	if v.baseAmountAsZero {
 		req.BaseAmountMinor = "0"
+	}
+	if v.timeTypeAsInvalid {
+		req.TimeType = 0
 	}
 	return req
 }

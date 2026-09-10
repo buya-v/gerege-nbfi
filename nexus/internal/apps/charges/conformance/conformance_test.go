@@ -365,13 +365,23 @@ func TestBaseAmountIgnoredWrongRunsRed(t *testing.T) {
 	wrongRunsRedOn(t, "charges-wrong-base-amount-ignored", percentFeeProbe())
 }
 
+// TestTimeTypeIgnoredWrongRunsRed pins the shape of the ignore-time-type drive:
+// the probe's time 2 (SPECIFIED_DUE_DATE) decodes to INVALID(0), which is not a
+// loan-legal charge time, so the fee probe is answered with a validation code
+// and no fee.
+func TestTimeTypeIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-time-type-ignored", percentFeeProbe())
+}
+
 // TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red
-// drive: the two rounding modes agree on every non-tie product (so the driver
-// is byte-identical to the correct port on the stored corpus, whose one
-// rounding vector FC-09 carries the fraction .55525), and differ only when the
-// exact fee lands on .5 minor units — a product no stored vector carries. The
-// probe is an exact half: 100 minor units x 0.5% = 0.5, which HALF_UP rounds to
-// 1 and HALF_EVEN rounds to 0.
+// drive: the two rounding modes agree on every product whose truncated value is
+// ODD (so the drive is indistinguishable from the correct port on the
+// non-tie probe, whose fraction is .67) and differ only when the exact fee
+// lands on a half-minor tie whose truncated value is EVEN — 1162502.5 rounds to
+// 1162503 under HALF_UP but 1162502 under HALF_EVEN, which is exactly the kill
+// the stored vector OHCAPj-pctamount-disbursement-halfup-tie reports. The
+// probe is an exact half: 100 minor units x 0.5% = 0.5, whose truncated 0 is
+// even, so HALF_UP rounds to 1 and HALF_EVEN rounds to 0.
 func TestHalfEvenDiffersOnlyOnAnExactHalf(t *testing.T) {
 	tie := percentFeeProbe()
 	tie.CaseID = "probe-half-even-tie"
