@@ -150,6 +150,14 @@ type Vector struct {
 	TenantParams *TenantParams `json:"tenant_params"`
 	Request      Request       `json:"request"`
 	Expect       Expect        `json:"expect"`
+	// ExpectEntries, when non-empty, is a MULTI-ENTRY reserve observation: the
+	// request's rows carry DIFFERENT reserveKeys and must therefore produce
+	// several distinct entries. A vector states exactly one of expect (one
+	// observed entry) and expect_entries (two or more observed entries); this is
+	// the only shape that can see the DISTINCT-KEY branch of
+	// GenerateReserveEntriesWith, because every single-key request collapses to
+	// one entry whether or not the key is honoured.
+	ExpectEntries []Expect `json:"expect_entries"`
 	// CapabilitiesRequired states what this vector exercises, for the
 	// capability registry's default-deny check.
 	CapabilitiesRequired []string `json:"capabilities_required"`

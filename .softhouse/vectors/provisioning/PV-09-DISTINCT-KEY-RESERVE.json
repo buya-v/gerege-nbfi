@@ -1,0 +1,86 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-09-DISTINCT-KEY-RESERVE",
+ "title": "DISTINCT reserveKeys produce two entries (STANDARD 0d + LOSS 92d)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from capture ENT-04 (GET /v1/provisioningentries/{id}/entries, tenant gerege, business date pinned 2026-09-01). ENT-04 observed FOUR reserve entries in one generation pass, and those four rows carry DIFFERENT (categoryId, overdueInDays) pairs: (1,0), (2,31), (3,62), (4,92). This vector transcribes the (1,0) STANDARD row (amountreserved 1066.190000 -> 106619 minor) and the (4,92) LOSS row (amountreserved 106618.530000 -> 10661853 minor) as expect_entries, and carries the two per-loan request rows already promoted by PV-05-STANDARD-RESERVE and PV-08-LOSS-RESERVE. It is the only vector whose inputs carry DIFFERENT reserveKeys, so it is the only one that can see the DISTINCT-KEY branch of GenerateReserveEntriesWith: a port that ignores the eight-field key and merges every row into one entry would still pass every single-key vector (PV-05..08) but must fail this one. Every expect entry is transcribed from the cited capture; no value was computed by this promotion.",
+ "oracle": {
+  "seam": "provisioning-entry-reserve",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "expect_entries are transcribed from the committed capture ENT-04's STANDARD and LOSS rows; capture_case_id names the STANDARD categoryName in the cited capture, and the citation quotes BOTH transcribed rows.",
+  "capture_ref": ".softhouse/capture/provisioning/out/ENT-04-entry-loan-products-raw.json",
+  "capture_sha256": "96d596c24df85684c8d8fb1d204adddd9423f3ab101aedcaa890dd757b447ddb",
+  "capture_case_id": "STANDARD",
+  "citation": "ENT-04 rows {\"categoryId\":1,\"categoryName\":\"STANDARD\",\"overdueInDays\":0,\"amountreserved\":1066.190000,\"liablityAccount\":2,\"expenseAccount\":4,\"criteriaId\":1} and {\"categoryId\":4,\"categoryName\":\"LOSS\",\"overdueInDays\":92,\"amountreserved\":106618.530000,\"liablityAccount\":2,\"expenseAccount\":4,\"criteriaId\":1}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "inputs": [
+   {
+    "office_id": 1,
+    "currency_code": "MNT",
+    "product_id": 2,
+    "category_id": 1,
+    "overdue_in_days": 0,
+    "percentage": 1000000,
+    "balance_minor": "10661853",
+    "liability_account": 2,
+    "expense_account": 4,
+    "criteria_id": 1
+   },
+   {
+    "office_id": 1,
+    "currency_code": "MNT",
+    "product_id": 2,
+    "category_id": 4,
+    "overdue_in_days": 92,
+    "percentage": 100000000,
+    "balance_minor": "10661853",
+    "liability_account": 2,
+    "expense_account": 4,
+    "criteria_id": 1
+   }
+  ]
+ },
+ "expect_entries": [
+  {
+   "reserved_amount_minor": "106619",
+   "office_id": 1,
+   "currency_code": "MNT",
+   "product_id": 2,
+   "category_id": 1,
+   "overdue_in_days": 0,
+   "liability_account": 2,
+   "expense_account": 4,
+   "criteria_id": 1
+  },
+  {
+   "reserved_amount_minor": "10661853",
+   "office_id": 1,
+   "currency_code": "MNT",
+   "product_id": 2,
+   "category_id": 4,
+   "overdue_in_days": 92,
+   "liability_account": 2,
+   "expense_account": 4,
+   "criteria_id": 1
+  }
+ ],
+ "capabilities_required": [
+  "reserve-amount"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}

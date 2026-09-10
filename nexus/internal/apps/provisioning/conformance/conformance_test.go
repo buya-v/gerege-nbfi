@@ -149,6 +149,122 @@ func TestWrongImplementationRunsRed(t *testing.T) {
 	}
 }
 
+// reserveInput builds a valid per-loan reserve request row. BalanceMinor is an
+// integer minor-unit STRING, never a float.
+func reserveInput(categoryID, overdueDays, percentage int64, balanceMinor string) ReserveInputRow {
+	return ReserveInputRow{
+		OfficeID:         1,
+		CurrencyCode:     "MNT",
+		ProductID:        2,
+		CategoryID:       categoryID,
+		OverdueInDays:    overdueDays,
+		Percentage:       percentage,
+		BalanceMinor:     balanceMinor,
+		LiabilityAccount: 2,
+		ExpenseAccount:   4,
+		CriteriaID:       1,
+	}
+}
+
+// reserveProbe builds a valid reserve-seam vector. Its numbers are transcribed
+// from the committed ENT-04 capture (probe: never written to the store), and
+// with an empty RepoRoot the provenance file check is skipped.
+func reserveProbe(inputs []ReserveInputRow, single Expect, multi []Expect) *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-reserve",
+		Title:   "probe reserve aggregation",
+		Class:   ClassParity,
+		Context: ProvisioningContext,
+		Note:    "probe: transcribed from ENT-04, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamProvisioningEntryReserve, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: transcribed from ENT-04",
+			CaptureRef:    ".softhouse/capture/provisioning/out/ENT-04-entry-loan-products-raw.json",
+			CaptureSHA256: "96d596c24df85684c8d8fb1d204adddd9423f3ab101aedcaa890dd757b447ddb",
+			CaptureCaseID: "STANDARD",
+		},
+		TenantParams: &TenantParams{
+			RoundingMode:    "HALF_UP",
+			RoundingOrdinal: 4,
+			Precision:       19,
+			Currency:        "MNT",
+			MinorUnits:      2,
+			Timezone:        "Asia/Ulaanbaatar",
+		},
+		Request:              Request{Inputs: inputs},
+		Expect:               single,
+		ExpectEntries:        multi,
+		CapabilitiesRequired: []string{"reserve-amount"},
+		GradedAgainst:        []string{"provisioning-go"},
+	}
+}
+
+// TestDistinctKeyDriveKillsOnlyTheMultiEntryProbe pins GAP 2: an implementation
+// that ignores the eight-field reserveKey and merges every row into one entry
+// passes every single-key vector, so the probe's TWO differing-key inputs must
+// be the discriminator. The probe is first shown admissible, then green under
+// the correct port, then red -- by the count cell alone -- under the wrong one.
+func TestDistinctKeyDriveKillsOnlyTheMultiEntryProbe(t *testing.T) {
+	// STANDARD (cat 1, 0d) + LOSS (cat 4, 92d): different reserveKeys, two entries.
+	multi := reserveProbe(
+		[]ReserveInputRow{
+			reserveInput(1, 0, 1_000_000, "10661853"),
+			reserveInput(4, 92, 100_000_000, "10661853"),
+		},
+		Expect{},
+		[]Expect{
+			{ReservedAmountMinor: "106619", CategoryID: 1, OverdueInDays: 0},
+			{ReservedAmountMinor: "10661853", CategoryID: 4, OverdueInDays: 92},
+		},
+	)
+	if p := Admit(multi, Options{}); len(p) > 0 {
+		t.Fatalf("multi-entry probe should be admissible: %v", p)
+	}
+	if r := gradeOne(multi, Options{Implementation: NewGoEvaluator()}); r.Outcome != OutcomePass {
+		t.Fatalf("correct impl on multi-entry probe = %s, want PASS; diffs=%v", r.Outcome, r.Diffs)
+	}
+	if r := gradeOne(multi, Options{Implementation: mustLookup(t, "provisioning-wrong-reserve-key-ignored")}); r.Outcome != OutcomeFail {
+		t.Fatalf("key-ignoring impl on multi-entry probe = %s, want FAIL", r.Outcome)
+	}
+}
+
+// TestSumThenRoundDriveKillsOnlyTheIdenticalKeyTieProbe pins GAP 1: the two
+// DOUBTFUL rows share a reserveKey and are exact half-minor ties, so applying
+// the percentage to the summed balance and rounding once yields 7423431 where
+// the oracle's per-row accumulation yields 7423432. A single-entry observation
+// is graded, so this is the ONLY probe the sum-then-round order-aware defect
+// changes.
+func TestSumThenRoundDriveKillsOnlyTheIdenticalKeyTieProbe(t *testing.T) {
+	tie := reserveProbe(
+		[]ReserveInputRow{
+			reserveInput(3, 62, 50_000_000, "10661853"),
+			reserveInput(3, 62, 50_000_000, "4185009"),
+		},
+		Expect{ReservedAmountMinor: "7423432", CategoryID: 3, OverdueInDays: 62},
+		nil,
+	)
+	if p := Admit(tie, Options{}); len(p) > 0 {
+		t.Fatalf("tie probe should be admissible: %v", p)
+	}
+	if r := gradeOne(tie, Options{Implementation: NewGoEvaluator()}); r.Outcome != OutcomePass {
+		t.Fatalf("correct impl on tie probe = %s, want PASS; diffs=%v", r.Outcome, r.Diffs)
+	}
+	if r := gradeOne(tie, Options{Implementation: mustLookup(t, "provisioning-wrong-sum-then-round")}); r.Outcome != OutcomeFail {
+		t.Fatalf("sum-then-round impl on tie probe = %s, want FAIL", r.Outcome)
+	}
+}
+
+func mustLookup(t *testing.T, name string) ProvisioningEvaluator {
+	t.Helper()
+	e, ok := Lookup(name)
+	if !ok {
+		t.Fatalf("implementation %q not registered", name)
+	}
+	return e
+}
+
 func TestCapabilityRegistryDefaultDeny(t *testing.T) {
 	r := &CapabilityRegistry{
 		byName: map[string]Capability{
@@ -233,7 +349,7 @@ func TestAdmitDefaultDeny(t *testing.T) {
 }
 
 func TestInvariants(t *testing.T) {
-	held := AssertInvariants(nil, Expect{ID: 1, Name: "STANDARD", Description: "Punctual Payment without any dues"})
+	held := AssertInvariants(nil, []Expect{{ID: 1, Name: "STANDARD", Description: "Punctual Payment without any dues"}})
 	for _, iv := range held {
 		if iv.Status != InvariantHeld {
 			t.Fatalf("invariant %s = %s, want HOLD", iv.Name, iv.Status)
@@ -243,12 +359,12 @@ func TestInvariants(t *testing.T) {
 		}
 	}
 
-	neg := AssertInvariants(nil, Expect{ID: 0, Name: "STANDARD"})
+	neg := AssertInvariants(nil, []Expect{{ID: 0, Name: "STANDARD"}})
 	if neg[0].Name != "category_id_positive" || neg[0].Status != InvariantViolated {
 		t.Fatalf("category_id_positive = %s, want VIOLATED", neg[0].Status)
 	}
 
-	emptyName := AssertInvariants(nil, Expect{ID: 1, Name: ""})
+	emptyName := AssertInvariants(nil, []Expect{{ID: 1, Name: ""}})
 	if emptyName[1].Name != "category_name_non_empty" || emptyName[1].Status != InvariantViolated {
 		t.Fatalf("category_name_non_empty = %s, want VIOLATED", emptyName[1].Status)
 	}

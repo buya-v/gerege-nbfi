@@ -120,14 +120,37 @@ func Admit(v *Vector, opts Options) []string {
 		}
 	case SeamProvisioningEntryReserve:
 		problems = append(problems, validateReserveInputs(v.Request.Inputs)...)
-		if !isIntegerMinorString(v.Expect.ReservedAmountMinor) {
-			problems = append(problems, fmt.Sprintf("expect.reserved_amount_minor %q is not a non-negative integer minor-unit amount", v.Expect.ReservedAmountMinor))
-		}
-		if v.Expect.CategoryID <= 0 {
-			problems = append(problems, fmt.Sprintf("expect.category_id %d is not positive", v.Expect.CategoryID))
-		}
-		if v.Expect.OverdueInDays < 0 {
-			problems = append(problems, fmt.Sprintf("expect.overdue_in_days %d is negative", v.Expect.OverdueInDays))
+		hasSingle := v.Expect != (Expect{})
+		hasMulti := len(v.ExpectEntries) > 0
+		switch {
+		case hasSingle && hasMulti:
+			problems = append(problems, "expect and expect_entries are both set: a reserve vector states exactly one observation shape")
+		case hasMulti:
+			for i, e := range v.ExpectEntries {
+				at := fmt.Sprintf("expect_entries[%d]", i)
+				if !isIntegerMinorString(e.ReservedAmountMinor) {
+					problems = append(problems, fmt.Sprintf("%s.reserved_amount_minor %q is not a non-negative integer minor-unit amount", at, e.ReservedAmountMinor))
+				}
+				if e.CategoryID <= 0 {
+					problems = append(problems, fmt.Sprintf("%s.category_id %d is not positive", at, e.CategoryID))
+				}
+				if e.OverdueInDays < 0 {
+					problems = append(problems, fmt.Sprintf("%s.overdue_in_days %d is negative", at, e.OverdueInDays))
+				}
+			}
+			if len(v.ExpectEntries) < 2 {
+				problems = append(problems, "expect_entries carries fewer than two entries: the multi-entry shape exists to grade the DISTINCT-KEY branch, so it must record at least two distinct aggregation keys")
+			}
+		default:
+			if !isIntegerMinorString(v.Expect.ReservedAmountMinor) {
+				problems = append(problems, fmt.Sprintf("expect.reserved_amount_minor %q is not a non-negative integer minor-unit amount", v.Expect.ReservedAmountMinor))
+			}
+			if v.Expect.CategoryID <= 0 {
+				problems = append(problems, fmt.Sprintf("expect.category_id %d is not positive", v.Expect.CategoryID))
+			}
+			if v.Expect.OverdueInDays < 0 {
+				problems = append(problems, fmt.Sprintf("expect.overdue_in_days %d is negative", v.Expect.OverdueInDays))
+			}
 		}
 	}
 
