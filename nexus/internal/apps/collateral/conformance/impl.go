@@ -153,9 +153,24 @@ func NewGoEvaluator() CollateralEvaluator {
 		PctToBase:    5000000, // 50.00000 at scale 5
 		CurrencyCode: "MNT",
 	}
+	// product3 is the OH-COLL-L capture's NON-ROUND product
+	// (collateral-product-nonround-readback-raw.json): basePrice 41850.08000 and
+	// pctToBase 37.50000, i.e. 4185008000 and 3750000 at scale 5. Its
+	// pctToBase is NOT 50, so a port that hardcodes the seed's 50.00000 or takes
+	// a /2 shortcut cannot reproduce product 3's valuation.
+	product3 := collateral.CollateralProduct{
+		ID:           3,
+		Name:         "OHK-Collateral-Nonround",
+		Quality:      "Good",
+		BasePrice:    4185008000, // 41850.08000 at scale 5
+		UnitType:     "1",
+		PctToBase:    3750000, // 37.50000 at scale 5
+		CurrencyCode: "MNT",
+	}
 	return goEvaluator{
 		products: map[int64]collateral.CollateralProduct{
 			2: product2,
+			3: product3,
 		},
 		links: map[int64]collateral.LoanCollateral{
 			2: {ID: 2, TypeID: 24},
@@ -169,6 +184,17 @@ func NewGoEvaluator() CollateralEvaluator {
 				ClientID: 5,
 				Quantity: 150000, // 1.50000 at scale 5
 				Product:  product2,
+			},
+			// Holding 3 (client-collateral-single-nonround-raw.json): client 6
+			// holds quantity 2.50000 of product 3, so its computed valuation is
+			// total 104625.2000000000 and totalCollateral 39234.450000000000000
+			// (41850.08 * 2.5, then * 37.5/100) — exact at scale 5 with no
+			// sub-minor residue.
+			{clientID: 6, collateralID: 3}: {
+				ID:       3,
+				ClientID: 6,
+				Quantity: 250000, // 2.50000 at scale 5
+				Product:  product3,
 			},
 		},
 	}
@@ -306,6 +332,105 @@ func (w wrongValuationPctScaleEvaluator) Evaluate(req Request) (Expect, error) {
 	return e, nil
 }
 
+// wrongBasePriceHardcodedEvaluator is a DELIBERATELY WRONG implementation: on
+// the product read it writes the SEED base price 100000.00 (scale-5
+// 10000000000) for every product, ignoring the captured basePrice. The seed
+// corpus fixes base_price at 100000.00000 on its only product, so this defect
+// is invisible against every seed vector; only CL-05, which asserts product 3's
+// 41850.08000, goes red. It is a SINGLE defect: the other seams route through
+// the correct goEvaluator untouched.
+type wrongBasePriceHardcodedEvaluator struct{ goEvaluator }
+
+func (w wrongBasePriceHardcodedEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := w.goEvaluator.Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	if req.ProductID > 0 {
+		e.BasePrice = "10000000000" // the seed 100000.00000, hardcoded
+	}
+	return e, nil
+}
+
+// wrongPctHardcodedEvaluator is a DELIBERATELY WRONG implementation: on the
+// product read it writes the SEED pct_to_base 50.00000 (scale-5 5000000) for
+// every product, ignoring the captured pctToBase. The seed corpus fixes
+// pct_to_base at 50.00000 on its only product, so a hardcoded 50 — or an
+// integer-only per-cent rendering — is invisible against every seed vector;
+// only CL-05, which asserts product 3's 37.50000, goes red. It is a SINGLE
+// defect, distinct from the /2 SHORTCUT on the valuation (see
+// wrongValuationHalfEvaluator, which is likewise invisible on the seed's 50%).
+type wrongPctHardcodedEvaluator struct{ goEvaluator }
+
+func (w wrongPctHardcodedEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := w.goEvaluator.Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	if req.ProductID > 0 {
+		e.PctToBase = "5000000" // the seed 50.00000, hardcoded
+	}
+	return e, nil
+}
+
+// wrongValuationHalfEvaluator is a DELIBERATELY WRONG implementation: on the
+// single-row client-collateral read it halves the total instead of applying
+// pct_to_base, i.e. totalCollateral = total / 2. On the seed product
+// pctToBase = 50.00000, for which total/2 and total * 50/100 are EXACTLY equal,
+// so this defect computes the right answer on EVERY seed vector: no drive could
+// catch it. CL-06 asserts product 3's 37.5%, where total/2 is wrong, so only
+// CL-06 goes red. It is a SINGLE defect: the other seams route through the
+// correct goEvaluator untouched.
+type wrongValuationHalfEvaluator struct{ goEvaluator }
+
+func (w wrongValuationHalfEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := w.goEvaluator.Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	if req.ClientID <= 0 || req.CollateralID <= 0 {
+		return e, nil
+	}
+	cc := w.goEvaluator.holdings[clientCollateralKey{clientID: req.ClientID, collateralID: req.CollateralID}]
+	e.TotalCollateral = strconv.FormatInt(int64(cc.Total())/2, 10) // the /2 shortcut
+	return e, nil
+}
+
+// wrongQuantityTruncatedEvaluator is a DELIBERATELY WRONG implementation: on the
+// single-row client-collateral read it truncates the scale-5 quantity to a
+// whole major unit (2.50000 -> 2.00000) and recomputes the valuation from the
+// truncated count. The seed holding's quantity is 1.50000, so this drive is
+// already caught by CL-04; CL-06's 2.50000 catches it too. It is kept because
+// the defect is real and the capture discriminates it; the kill count is
+// reported honestly (not manufactured). It is a SINGLE defect: the other seams
+// route through the correct goEvaluator untouched.
+type wrongQuantityTruncatedEvaluator struct{ goEvaluator }
+
+func (w wrongQuantityTruncatedEvaluator) Evaluate(req Request) (Expect, error) {
+	e, err := w.goEvaluator.Evaluate(req)
+	if err != nil {
+		return e, err
+	}
+	if req.ClientID <= 0 || req.CollateralID <= 0 {
+		return e, nil
+	}
+	cc := w.goEvaluator.holdings[clientCollateralKey{clientID: req.ClientID, collateralID: req.CollateralID}]
+	unit := int64(1)
+	for i := 0; i < collateral.DecimalScale; i++ {
+		unit *= 10
+	}
+	q := int64(cc.Quantity) / unit * unit // truncate the fraction to a whole unit
+	total := q * int64(cc.Product.BasePrice) / unit
+	var tc int64
+	if total != 0 {
+		tc = total * int64(cc.Product.PctToBase) / (100 * unit)
+	}
+	e.Quantity = strconv.FormatInt(q, 10)
+	e.Total = strconv.FormatInt(total, 10)
+	e.TotalCollateral = strconv.FormatInt(tc, 10)
+	return e, nil
+}
+
 func init() {
 	Register("collateral-go", NewGoEvaluator())
 	RegisterWrong("collateral-wrong-blank-quality",
@@ -320,4 +445,16 @@ func init() {
 	RegisterWrong("collateral-wrong-valuation-pct-scale",
 		"on the single-row client-collateral read applies pct_to_base as an UNSCALED whole per-cent (total_collateral = total * pct_to_base / 100, forgetting the percentage's own 10^5 scale), so any vector that asserts the computed total_collateral cell goes red",
 		wrongValuationPctScaleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-base-price-hardcoded",
+		"on the product read writes the SEED base price 100000.00 (10000000000 at scale 5) for every product, ignoring the captured basePrice, so any vector that asserts a non-seed base_price goes red",
+		wrongBasePriceHardcodedEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-pct-hardcoded",
+		"on the product read writes the SEED pct_to_base 50.00000 (5000000 at scale 5) for every product, ignoring the captured pctToBase, so any vector that asserts a non-seed pct_to_base goes red",
+		wrongPctHardcodedEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-valuation-half",
+		"on the single-row client-collateral read takes the /2 shortcut (total_collateral = total / 2) instead of applying pct_to_base, which the seed's 50.00000 cannot distinguish, so only a vector whose product percentage is not 50 goes red",
+		wrongValuationHalfEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("collateral-wrong-quantity-truncated",
+		"on the single-row client-collateral read truncates the scale-5 quantity to a whole major unit (2.50000 -> 2.00000) and recomputes the valuation from the truncated count, so any vector whose quantity carries a fraction goes red",
+		wrongQuantityTruncatedEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

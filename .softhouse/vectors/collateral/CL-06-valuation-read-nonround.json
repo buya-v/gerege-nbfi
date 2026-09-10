@@ -1,0 +1,44 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-06-valuation-read-nonround",
+ "title": "valuation read for client 6 holding 3: 2.5 x 41850.08 at 37.5% = total 104625.20 / collateral 39234.45",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture client-collateral-single-nonround-raw.json (GET /clients/6/collaterals/3, tenant gerege): the oracle returned the SINGLE holding row WITH its computed valuation — quantity 2.50000, total 104625.2000000000, totalCollateral 39234.450000000000000. request.client_id=6 and request.collateral_id=3 are that read-back's \"clientId\" and \"id\". expect.quantity=\"250000\" is the scale-5 integer of quantity 2.50000; expect.total=\"10462520000\" is the scale-5 integer of total 104625.2000000000 (= basePrice 41850.08000 x quantity 2.50000); expect.total_collateral=\"3923445000\" is the scale-5 integer of totalCollateral 39234.450000000000000 (= total x pctToBase 37.50000 / 100). Every conversion is exact because the oracle's digits past scale 5 are zero, so the transcription carries NO sub-minor residue (G-19 / DEC-2 predicate G-08): in minor units total 10462520 and total_collateral 3923445 are whole. This is the corpus's first valuation whose percentage is NOT 50 and whose quantity is NOT 1.5: the seed product's pctToBase 50.00000 makes total/2 and total x 50/100 exactly equal, so a /2-shortcut port passes every seed valuation. Here 10462520000 / 2 = 5231260000, which is NOT the oracle's 3923445000, so the /2 shortcut goes red; and the non-round base price makes a hardcoded-100000 port go red on total. Money is integer minor units; no float in any path.",
+ "oracle": {
+  "seam": "collateral-valuation-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The graded cells — id, quantity, total and total_collateral — are transcribed from the committed capture client-collateral-single-nonround-raw.json (holding id 3); capture_case_id quotes the observed computed total display cell.",
+  "capture_ref": ".softhouse/capture/collateral-nonround-money/out/client-collateral-single-nonround-raw.json",
+  "capture_sha256": "2d8514322f68ac3ae790bbacb3d08a7235548db833b81f0dbed375c3b793438a",
+  "capture_case_id": "104625.2000000000",
+  "citation": "client-collateral-single-nonround-raw.json {\"name\":\"OHK-Collateral-Nonround\",\"quantity\":2.50000,\"total\":104625.2000000000,\"totalCollateral\":39234.450000000000000,\"clientId\":6,\"loanTransactionData\":[],\"id\":3} (GET /clients/6/collaterals/3): the oracle's single-row read-back returns computed total and totalCollateral (the column holds only quantity), so the valuation arithmetic IS observable and product 3's 37.5% breaks the /2 shortcut the seed's 50% hides"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "client_id": 6,
+  "collateral_id": 3
+ },
+ "expect": {
+  "id": 3,
+  "quantity": "250000",
+  "total": "10462520000",
+  "total_collateral": "3923445000"
+ },
+ "capabilities_required": [
+  "collateral-valuation"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}

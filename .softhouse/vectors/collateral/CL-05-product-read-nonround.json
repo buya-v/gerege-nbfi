@@ -1,0 +1,46 @@
+{
+ "schema": "gerege.collateral.vector/v1",
+ "case_id": "CL-05-product-read-nonround",
+ "title": "collateral product read (id 3): non-round basePrice 41850.08 and pctToBase 37.5",
+ "class": "parity",
+ "context": "collateral",
+ "_note": "Parity vector transcribed from capture collateral-product-nonround-readback-raw.json (GET /collateral-management/3, tenant gerege). request.product_id=3 is that read-back's \"id\"; expect.name=\"OHK-Collateral-Nonround\", expect.quality=\"Good\", expect.unit_type=\"1\", expect.currency=\"MNT\", expect.id=3 are that same row's \"name\", \"quality\", \"unitType\", \"currency\" and \"id\". expect.base_price=\"4185008000\" is the scale-5 integer of the row's \"basePrice\":41850.08000 (41850.08000 x 10^5); expect.pct_to_base=\"3750000\" is the scale-5 integer of \"pctToBase\":37.50000 (37.50000 x 10^5). The seed corpus has ONE product and fixes base_price at 100000.00000 and pct_to_base at 50.00000, so a port that hardcodes either, or that renders pct_to_base as an integer 50/37, is INVISIBLE against every other collateral vector. This capture varies both: the base price is not round (ends .08) and the percentage is NOT 50 (so the /2 shortcut the seed's 50 hides is graded on CL-06). Nothing was computed by this promotion; both money cells are the oracle's stored scale-5 values.",
+ "oracle": {
+  "seam": "collateral-product-read",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "All expect fields are transcribed from the committed capture collateral-product-nonround-readback-raw.json (product id 3); capture_case_id quotes the product's basePrice display cell.",
+  "capture_ref": ".softhouse/capture/collateral-nonround-money/out/collateral-product-nonround-readback-raw.json",
+  "capture_sha256": "aa8836dbd07598cd66c6957b38e22067f93b5e03c5daf8529a04e6c13c3c24cf",
+  "capture_case_id": "41850.08000",
+  "citation": "collateral-product-nonround-readback-raw.json {\"quality\":\"Good\",\"basePrice\":41850.08000,\"unitType\":\"1\",\"pctToBase\":37.50000,\"currency\":\"MNT\",\"name\":\"OHK-Collateral-Nonround\",\"id\":3}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "product_id": 3
+ },
+ "expect": {
+  "id": 3,
+  "name": "OHK-Collateral-Nonround",
+  "quality": "Good",
+  "unit_type": "1",
+  "currency": "MNT",
+  "base_price": "4185008000",
+  "pct_to_base": "3750000"
+ },
+ "capabilities_required": [
+  "product-aggregate-read"
+ ],
+ "graded_against": [
+  "collateral-go"
+ ]
+}
