@@ -10,6 +10,23 @@ an instruction being wrong, and that is only visible if the instruction survives
                   `~/.openhands/conversations/<id>/events`, which is TOOL state and
                   is deliberately NOT vendored here)
 
+## STANDING RULE — the driver's checkout is not the run's to touch
+
+Every brief must carry this, and it is here so it survives the brief that forgets it.
+
+**A run works ONLY in its own worktree.** `/Users/buv/gerege-nbfi` is the driver's
+checkout: a run has no business reading or writing there, and specifically **never needs
+to exercise the push gate**. The driver pushes.
+
+Recorded because `OH-WCGRADE-Q` (2026-09-10) spent part of its budget in the driver's
+checkout reading `.git/hooks/reference-transaction`, the T412 driver push gate and
+`branch_sweep.py`, and assembling the stdin a git push hook receives — apparently to check
+whether its own branch would pass. It changed nothing (verified: no working-tree change, no
+ref created or moved, HEAD unmoved, both `.softhouse/hooks/` and `.git/hooks` unmodified),
+so this is a scope rule and not an incident. But a run probing the machinery that gates the
+driver's pushes is a bad shape to leave unstated, and T336 already established that those
+hooks do not even fire for a worktree spawn — so the reading could only ever mislead it.
+
 ## Known-defective briefs, kept deliberately
 
 * `OH-DEEP-E.md` set a VECTOR COUNT target ("take it to 18+"). The agent reached it
