@@ -727,6 +727,26 @@ var mifosOrderNoPrincipal = []loan.PaymentAllocationType{
 	loan.PaymentDuePenalty, loan.PaymentDueFee, loan.PaymentDueInterest,
 }
 
+// mifosOrderNoFee is the repayment allocation order a port would produce by
+// transcribing the mifos-standard-strategy but dropping the FEE leg: penalties,
+// then interest, then principal. On a repayment whose fee bucket is zero it is
+// indistinguishable from the correct order; on the fee-bearing OHLGT-L03 (loan
+// 12) repayment the 100.00 fee is never allocated, so the allocation reports
+// fee=0 and the whole 100.00 instead falls through to principal.
+var mifosOrderNoFee = []loan.PaymentAllocationType{
+	loan.PaymentDuePenalty, loan.PaymentDueInterest, loan.PaymentDuePrincipal,
+}
+
+// mifosOrderNoPenalty is the repayment allocation order a port would produce by
+// transcribing the mifos-standard-strategy but dropping the PENALTY leg: fees,
+// then interest, then principal. On a repayment whose penalty bucket is zero it
+// is indistinguishable from the correct order; on the penalty-bearing OHLGT-L03
+// (loan 12) repayment the 57.00 penalty is never allocated, so the allocation
+// reports penalty=0 and the whole 57.00 instead falls through to principal.
+var mifosOrderNoPenalty = []loan.PaymentAllocationType{
+	loan.PaymentDueFee, loan.PaymentDueInterest, loan.PaymentDuePrincipal,
+}
+
 // wrongRepaymentEvaluator is a DELIBERATELY WRONG implementation of the
 // repayment-allocation seam: its allocation order omits the principal bucket, so
 // every repayment is recognised wholly against charges and interest and the loan
@@ -737,12 +757,45 @@ type wrongRepaymentEvaluator struct{ goEvaluator }
 
 func (w wrongRepaymentEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.Repayment != nil {
-		return wrongRepayment(*req.Repayment)
+		return wrongRepayment(*req.Repayment, mifosOrderNoPrincipal)
 	}
 	return w.goEvaluator.Evaluate(req)
 }
 
-func wrongRepayment(r RepaymentRequest) (Expect, error) {
+// wrongRepaymentDropsFeeEvaluator is a DELIBERATELY WRONG implementation of the
+// repayment-allocation seam: its allocation order omits the fee bucket, so a
+// repayment never pays a fee and the fee amount is recognised against interest
+// and principal instead. It is invisible to every repayment vector whose fee
+// bucket is zero (all of them before OHLGT-L03); on the fee-bearing OHLGT-L03
+// repayment the 100.00 fee reads 0 and principal reads 100.00 long.
+type wrongRepaymentDropsFeeEvaluator struct{ goEvaluator }
+
+func (w wrongRepaymentDropsFeeEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Repayment != nil {
+		return wrongRepayment(*req.Repayment, mifosOrderNoFee)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongRepaymentDropsPenaltyEvaluator is a DELIBERATELY WRONG implementation of
+// the repayment-allocation seam: its allocation order omits the penalty bucket,
+// so a repayment never pays a penalty and the penalty amount is recognised
+// against interest and principal instead. It is invisible to every repayment
+// vector whose penalty bucket is zero (all of them before OHLGT-L03); on the
+// penalty-bearing OHLGT-L03 repayment the 57.00 penalty reads 0 and principal
+// reads 57.00 long.
+type wrongRepaymentDropsPenaltyEvaluator struct{ goEvaluator }
+
+func (w wrongRepaymentDropsPenaltyEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Repayment != nil {
+		return wrongRepayment(*req.Repayment, mifosOrderNoPenalty)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongRepayment runs the greedy allocation with the given (deliberately
+// defective) bucket order and serialises the result as the seam's expectation.
+func wrongRepayment(r RepaymentRequest, order []loan.PaymentAllocationType) (Expect, error) {
 	penalty, err := parseMinorText(r.Outstanding.Penalty)
 	if err != nil {
 		return Expect{}, err
@@ -764,7 +817,7 @@ func wrongRepayment(r RepaymentRequest) (Expect, error) {
 		return Expect{}, err
 	}
 	outstanding := loan.Allocation{Penalty: penalty, Fee: fee, Interest: interest, Principal: principal}
-	alloc, leftover := loan.AllocatePayment(outstanding, amount, mifosOrderNoPrincipal)
+	alloc, leftover := loan.AllocatePayment(outstanding, amount, order)
 	return Expect{
 		Allocation: &AllocationMoney{
 			Penalty:   strconv.FormatInt(int64(alloc.Penalty), 10),
@@ -1109,6 +1162,18 @@ func init() {
 			"so the pinned SEED-L03 repayment reports principal=0 and the whole 7884.88 instalment "+
 			"principal falls through to the leftover, and the vector goes red on both cells",
 		wrongRepaymentEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-allocation-drops-fee",
+		"allocates a repayment across penalties, interest and principal but never the fee bucket, so a "+
+			"fee-bearing repayment reports fee=0 and the whole fee falls through to principal; invisible "+
+			"to every repayment vector whose fee bucket is zero, it goes red on the pinned OHLGT-L03 "+
+			"allocation (fee 100.00 reads 0)",
+		wrongRepaymentDropsFeeEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-allocation-drops-penalty",
+		"allocates a repayment across fees, interest and principal but never the penalty bucket, so a "+
+			"penalty-bearing repayment reports penalty=0 and the whole penalty falls through to principal; "+
+			"invisible to every repayment vector whose penalty bucket is zero, it goes red on the pinned "+
+			"OHLGT-L03 allocation (penalty 57.00 reads 0)",
+		wrongRepaymentDropsPenaltyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-transaction-balance-waiver-moves-principal",
 		"subtracts the full amount of an interest waiver from the outstanding balance, as if the "+
 			"waived interest settled principal, so the pinned post-waiver read-back (balance unmoved "+
