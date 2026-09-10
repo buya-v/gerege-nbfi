@@ -1,0 +1,81 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m187[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m OH-WCGRADE-Q is complete and verified.                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Summary                                                                   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m I graded the committed discount capture without touching the oracle (no      [36m│[0m
+[36m│[0m captures, no POST/PUT/DELETE), working only in                               [36m│[0m
+[36m│[0m `/Users/buv/oh-gerege-wcgrade` on `feat/OHWCGRADEq`.                         [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Deliverable commit `5c90c52e`** — "workingcapital: grade non-zero          [36m│[0m
+[36m│[0m total_discount_fee (WC-06) + dropped-discount drive" (7 files: vector,       [36m│[0m
+[36m│[0m finding, capability, `balance.go`, `impl.go`, test, related finding).        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **What was done:**                                                           [36m│[0m
+[36m│[0m 1. **Promoted WC-06**                                                        [36m│[0m
+[36m│[0m (`.softhouse/vectors/workingcapital/WC-06-detail-discount-nonzero.json`)     [36m│[0m
+[36m│[0m pinning `total_discount_fee` = 3753 minor and `principal` = 103753 (1000 +   [36m│[0m
+[36m│[0m 37.53), with `capture_ref`, `capture_sha256`, and `file:line` citations. All [36m│[0m
+[36m│[0m 12 balance cells were re-read from the committed raw file; the raw-file      [36m│[0m
+[36m│[0m sha256 equals the vector's `capture_sha256` (`65e67678…f967b9`).             [36m│[0m
+[36m│[0m 2. **Relaxed the `ErrNoGradedCapture` refusal for `TotalDiscountFee` only**  [36m│[0m
+[36m│[0m — exactly one entry removed; the eleven other stored terms remain refused,   [36m│[0m
+[36m│[0m and tests still assert each remaining refusal fires. The                     [36m│[0m
+[36m│[0m `UnrealizedIncomeFromDiscountFee` clamp stays refused/ungraded.              [36m│[0m
+[36m│[0m 3. **Registered `workingcapital-wrong-discount-dropped-from-principal`**     [36m│[0m
+[36m│[0m (drops the discount from principal, mirroring                                [36m│[0m
+[36m│[0m `WorkingCapitalLoanBalance.java:115-121`).                                   [36m│[0m
+[36m│[0m 4. **Proved the gap was real** by measuring with WC-06 temporarily removed   [36m│[0m
+[36m│[0m (hash-verified, restored byte-identically): the new drive kills **0 on the   [36m│[0m
+[36m│[0m old corpus** and **1 with WC-06**.                                           [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Kill counts (instrument proven live via the loanschedule control = 45):**  [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m | impl | kills |                                                             [36m│[0m
+[36m│[0m |---|---:|                                                                   [36m│[0m
+[36m│[0m | workingcapital-go (control) | 0 |                                          [36m│[0m
+[36m│[0m | workingcapital-wrong-total-outstanding | 3 |                               [36m│[0m
+[36m│[0m | workingcapital-wrong-tranche-dropped | 1 |                                 [36m│[0m
+[36m│[0m | workingcapital-wrong-status-ordinal | 1 |                                  [36m│[0m
+[36m│[0m | workingcapital-wrong-list-row-mapping | 1 |                                [36m│[0m
+[36m│[0m | workingcapital-wrong-discount-dropped-from-principal (new) | 1 (0 without  [36m│[0m
+[36m│[0m WC-06) |                                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m **Bar:** `go build ./...` and `go test ./...` clean; `bash                   [36m│[0m
+[36m│[0m .softhouse/conformance.sh` exits **2** as the §4.4.2 recorded decision, with [36m│[0m
+[36m│[0m ledger findings == baseline and census **17**. `workingcapital-go` loads 6   [36m│[0m
+[36m│[0m vectors, passes 6/6 (`graded_cells=62 money_cells=40                         [36m│[0m
+[36m│[0m invariant_violations=0`). `.softhouse/guards/ledger-invariants.baseline` and [36m│[0m
+[36m│[0m `.softhouse/conformance.sh` were not modified. The only untracked file is    [36m│[0m
+[36m│[0m the provided `TASK.md`, left as-is. The clamp `max(...,0)` and               [36m│[0m
+[36m│[0m `total_disbursement` are explicitly left ungraded with the required "what a  [36m│[0m
+[36m│[0m capture would need" rationale recorded in the finding.                       [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: f5ebedb0802a4009be583dac1dc70984
+Hint: run openhands --resume f5ebedb0-802a-4009-be58-3dac1dc70984 to resume this
+conversation.
