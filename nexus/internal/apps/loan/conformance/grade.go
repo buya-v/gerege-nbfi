@@ -150,6 +150,9 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpStoredValue("status_stored_value", v.Expect.StatusStoredValue, got.StatusStoredValue)
 	case SeamLoanTransactionBalance:
 		diffTransactionBalance(&s, v.Expect.TransactionRows, got.TransactionRows)
+	case SeamLoanJournalEntryBatchBalance:
+		s.cmpMoney("journal_entry_debits", v.Expect.JournalEntryDebitsMinor, got.JournalEntryDebitsMinor)
+		s.cmpMoney("journal_entry_credits", v.Expect.JournalEntryCreditsMinor, got.JournalEntryCreditsMinor)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

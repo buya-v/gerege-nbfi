@@ -139,8 +139,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goStatus(*req.Status)
 	case len(req.Transactions) > 0:
 		return goTransactionBalance(req.Transactions)
+	case len(req.JournalEntries) > 0:
+		return goJournalEntryBatch(req.JournalEntries)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries")
 	}
 }
 
@@ -202,6 +204,53 @@ func goTransactionBalance(rows []TransactionRow) (Expect, error) {
 		}
 	}
 	return Expect{TransactionRows: out}, nil
+}
+
+// journalEntrySide resolves a journal-entry leg's observed entry_type value code
+// to the loan side the batch derivation switches on. It is a pure switch, not a
+// lookup table, so no mutable package state exists to drift from the captures it
+// pins.
+func journalEntrySide(t string) (loan.JournalEntrySide, bool) {
+	switch t {
+	case "DEBIT":
+		return loan.JournalEntryDebit, true
+	case "CREDIT":
+		return loan.JournalEntryCredit, true
+	}
+	return loan.JournalEntrySideUnknown, false
+}
+
+// goJournalEntryBatch derives the debit and credit totals of a loan-produced
+// journal-entry batch by summing EVERY leg on its observed side, via
+// loan.SumJournalEntryBatch. The totals are independent sums, never a netting
+// of the two same-account legs and never a truncation after the first pair, so
+// the two cells pin the multi-pair batch balance a single-pair read-back cannot.
+func goJournalEntryBatch(legs []JournalEntryLeg) (Expect, error) {
+	parsed := make([]loan.JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		side, ok := journalEntrySide(leg.EntryType)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-journal-entry-batch: entry_type %q is not transcribed", leg.EntryType)
+		}
+		amount, err := parseMinorText(leg.AmountMinor)
+		if err != nil {
+			return Expect{}, err
+		}
+		parsed[i] = loan.JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			Side:          side,
+			Amount:        amount,
+		}
+	}
+	totals, err := loan.SumJournalEntryBatch(parsed)
+	if err != nil {
+		return Expect{}, err
+	}
+	return Expect{
+		JournalEntryDebitsMinor:  strconv.FormatInt(int64(totals.Debits), 10),
+		JournalEntryCreditsMinor: strconv.FormatInt(int64(totals.Credits), 10),
+	}, nil
 }
 
 func goRepayment(r RepaymentRequest) (Expect, error) {
@@ -665,6 +714,126 @@ func wrongTransactionBalance(rows []TransactionRow, mode txnBalanceWrongMode) (E
 	return Expect{TransactionRows: out}, nil
 }
 
+// journalBatchWrongMode selects which deliberately-wrong batch reconstruction
+// to run.
+type journalBatchWrongMode int
+
+const (
+	// wrongBatchFirstPairOnly sums only the legs of the FIRST transaction id, as
+	// if a batch were one pair. On the pinned two-pair OHLGR-L01 read-back the
+	// fee pair is never seen, so both totals read 100000.00 instead of 100100.00.
+	wrongBatchFirstPairOnly journalBatchWrongMode = iota
+	// wrongBatchDropsSecondPair sums every transaction id but the LAST, as if the
+	// fee pair were not part of the disbursement's batch. On the pinned read-back
+	// the dropped pair is the fee pair (L18), so both totals read 100000.00.
+	wrongBatchDropsSecondPair
+	// wrongBatchNetsAccount nets the two legs on each GL account before summing,
+	// so OHLGR-Fund-Source contributes 100000.00 - 100.00 = 99900.00 to one side.
+	// The two totals stay EQUAL (the difference is preserved) while the money
+	// actually posted moves, which only a per-side comparison can see.
+	wrongBatchNetsAccount
+)
+
+// wrongJournalEntryBatchEvaluator is a DELIBERATELY WRONG implementation of the
+// journal-entry-batch seam, parameterised by which reconstruction defect it
+// commits. On any request that is not a journal-entry batch it delegates to the
+// correct port, so each drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongJournalEntryBatchEvaluator struct {
+	goEvaluator
+	mode journalBatchWrongMode
+}
+
+func (w wrongJournalEntryBatchEvaluator) Evaluate(req Request) (Expect, error) {
+	if len(req.JournalEntries) > 0 {
+		return wrongJournalEntryBatch(req.JournalEntries, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongJournalEntryBatch runs the defective reconstruction. Each mode changes
+// exactly one leg of the correct "sum every leg on its side" derivation.
+func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) (Expect, error) {
+	type parsedLeg struct {
+		txn    string
+		acct   string
+		side   loan.JournalEntrySide
+		amount loan.MinorUnits
+	}
+	parsed := make([]parsedLeg, len(legs))
+	var order []string
+	seenTxn := map[string]bool{}
+	for i, l := range legs {
+		side, ok := journalEntrySide(l.EntryType)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-journal-entry-batch: entry_type %q is not transcribed", l.EntryType)
+		}
+		amount, err := parseMinorText(l.AmountMinor)
+		if err != nil {
+			return Expect{}, err
+		}
+		parsed[i] = parsedLeg{txn: l.TransactionID, acct: l.Account, side: side, amount: amount}
+		if !seenTxn[l.TransactionID] {
+			seenTxn[l.TransactionID] = true
+			order = append(order, l.TransactionID)
+		}
+	}
+
+	var debits, credits loan.MinorUnits
+	add := func(l parsedLeg) {
+		if l.side == loan.JournalEntryDebit {
+			debits += l.amount
+		} else {
+			credits += l.amount
+		}
+	}
+	switch mode {
+	case wrongBatchFirstPairOnly:
+		first := order[0]
+		for _, l := range parsed {
+			if l.txn == first {
+				add(l)
+			}
+		}
+	case wrongBatchDropsSecondPair:
+		last := order[len(order)-1]
+		for _, l := range parsed {
+			if l.txn != last {
+				add(l)
+			}
+		}
+	case wrongBatchNetsAccount:
+		type key struct {
+			acct string
+			side loan.JournalEntrySide
+		}
+		totals := map[key]loan.MinorUnits{}
+		var accounts []string
+		seenAcct := map[string]bool{}
+		for _, l := range parsed {
+			totals[key{l.acct, l.side}] += l.amount
+			if !seenAcct[l.acct] {
+				seenAcct[l.acct] = true
+				accounts = append(accounts, l.acct)
+			}
+		}
+		for _, acct := range accounts {
+			d := totals[key{acct, loan.JournalEntryDebit}]
+			c := totals[key{acct, loan.JournalEntryCredit}]
+			switch {
+			case d > c:
+				debits += d - c
+			case c > d:
+				credits += c - d
+			}
+		}
+	}
+	return Expect{
+		JournalEntryDebitsMinor:  strconv.FormatInt(int64(debits), 10),
+		JournalEntryCreditsMinor: strconv.FormatInt(int64(credits), 10),
+	}, nil
+}
+
 func init() {
 	Register("loan-go", NewGoEvaluator())
 	RegisterWrong("loan-wrong-half-even-schedule-interest",
@@ -715,4 +884,19 @@ func init() {
 			"portion into principal, so the pinned SEED-L03 post-repayment balance (92115.12) reads "+
 			"8884.88-portion short and the vector goes red",
 		wrongTransactionBalanceEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentSubtractsAmount})
+	RegisterWrong("loan-wrong-journal-entry-batch-first-pair-only",
+		"sums only the FIRST transaction id's legs of a loan-produced journal-entry batch, as if a "+
+			"batch were one pair, so the pinned two-pair OHLGR-L01 read-back reads 100000.00/100000.00 "+
+			"instead of 100100.00/100100.00 and both total cells go red",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchFirstPairOnly})
+	RegisterWrong("loan-wrong-journal-entry-batch-drops-fee-pair",
+		"sums every transaction id of a loan-produced journal-entry batch but the LAST, dropping the "+
+			"fee pair (L18) from the pinned two-pair OHLGR-L01 read-back, so both totals read 100000.00 "+
+			"instead of 100100.00 and both total cells go red",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchDropsSecondPair})
+	RegisterWrong("loan-wrong-journal-entry-batch-nets-account",
+		"nets the two legs on each GL account before summing, so the pinned OHLGR-Fund-Source legs "+
+			"(debit 100.00, credit 100000.00) contribute a single 99900.00 position; both totals stay "+
+			"EQUAL at 100000.00 but differ from the observed 100100.00, so the two per-side cells go red",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchNetsAccount})
 }

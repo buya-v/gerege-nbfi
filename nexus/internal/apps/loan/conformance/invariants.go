@@ -39,6 +39,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertStatusIdentity(v, got)}
 	case SeamLoanTransactionBalance:
 		return []InvariantResult{assertTransactionBalances(v, got)}
+	case SeamLoanJournalEntryBatchBalance:
+		return []InvariantResult{assertJournalEntryBatchBalances(got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -163,5 +165,33 @@ func assertTransactionBalances(v *Vector, got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = "all serialised balances are non-negative integer minor units; row count matches the request"
+	return r
+}
+
+// assertJournalEntryBatchBalances: the two derived totals of a loan-produced
+// journal-entry batch are non-negative integer minor-unit amounts and
+// sum(debits) == sum(credits) EXACTLY. This is the property the seam exists to
+// grade: a batch that pairs off within one transaction but not across the whole
+// read-back cannot be a transcription of the oracle's double-entry postings.
+func assertJournalEntryBatchBalances(got Expect) InvariantResult {
+	r := InvariantResult{Name: "journal_entry_batch_balances", Assertions: 3}
+	if !isIntegerMinorString(got.JournalEntryDebitsMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("debit total %q is not a non-negative integer minor amount", got.JournalEntryDebitsMinor)
+		return r
+	}
+	if !isIntegerMinorString(got.JournalEntryCreditsMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("credit total %q is not a non-negative integer minor amount", got.JournalEntryCreditsMinor)
+		return r
+	}
+	if got.JournalEntryDebitsMinor != got.JournalEntryCreditsMinor {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("batch does not balance: debits %s != credits %s",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("batch balances exactly: debits == credits == %s", got.JournalEntryDebitsMinor)
 	return r
 }

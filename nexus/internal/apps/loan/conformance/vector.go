@@ -62,6 +62,17 @@ const SeamLoanTransactionBalance = "loan-transaction-balance"
 // the wrong buckets, returns a total that disagrees with the observed read-back.
 const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
 
+// SeamLoanJournalEntryBatchBalance is the capture seam this schema grades: the
+// debit and credit totals of a loan-produced journal-entry BATCH read back from
+// the journal-entries endpoint. A loan disbursement GENERATES its postings, so
+// the observation is a read-back, not a posting command; the batch carries more
+// than one pair when a disbursement pair and a fee pair share one loan. The
+// property is sum(debits) == sum(credits), exactly, in integer minor units,
+// summed independently over EVERY leg: a port that sums only the first pair,
+// drops a pair, or nets the two legs on one account produces totals that a
+// single-pair batch cannot tell apart.
+const SeamLoanJournalEntryBatchBalance = "loan-journal-entry-batch-balance"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -176,15 +187,30 @@ type TransactionRow struct {
 	PrincipalMinor string `json:"principal_minor,omitempty"`
 }
 
+// JournalEntryLeg is one row of the journal-entry-batch-balance seam's input: a
+// journal-entry read-back row reduced to the cells the batch derivation reads.
+// TransactionID is the transaction the oracle grouped the leg under (a batch
+// with more than one distinct id holds more than one pair). Account is the GL
+// account the leg touched, and is what a port that nets same-account legs would
+// key on. EntryType is the observed side in code-suffix form — "DEBIT" or
+// "CREDIT". AmountMinor is the leg amount, an integer STRING in minor units.
+type JournalEntryLeg struct {
+	TransactionID string `json:"transaction_id"`
+	Account       string `json:"account"`
+	EntryType     string `json:"entry_type"`
+	AmountMinor   string `json:"amount_minor"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one of the sub-requests.
 type Request struct {
-	Repayment    *RepaymentRequest `json:"repayment,omitempty"`
-	Schedule     *ScheduleRequest  `json:"schedule,omitempty"`
-	Disburse     *DisburseRequest  `json:"disburse,omitempty"`
-	Summary      *SummaryRequest   `json:"summary,omitempty"`
-	Status       *StatusRequest    `json:"status,omitempty"`
-	Transactions []TransactionRow  `json:"transactions,omitempty"`
+	Repayment      *RepaymentRequest `json:"repayment,omitempty"`
+	Schedule       *ScheduleRequest  `json:"schedule,omitempty"`
+	Disburse       *DisburseRequest  `json:"disburse,omitempty"`
+	Summary        *SummaryRequest   `json:"summary,omitempty"`
+	Status         *StatusRequest    `json:"status,omitempty"`
+	Transactions   []TransactionRow  `json:"transactions,omitempty"`
+	JournalEntries []JournalEntryLeg `json:"journal_entries,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -211,6 +237,11 @@ type Expect struct {
 	// TransactionRows is the transaction-balance seam's per-row verdicts, one
 	// entry per request.transactions row in order.
 	TransactionRows []TransactionBalanceRow `json:"transaction_rows,omitempty"`
+	// JournalEntryDebitsMinor and JournalEntryCreditsMinor are the
+	// journal-entry-batch seam's two derived totals, each an integer STRING in
+	// minor units, summed independently over every leg of the batch.
+	JournalEntryDebitsMinor  string `json:"journal_entry_debits_minor,omitempty"`
+	JournalEntryCreditsMinor string `json:"journal_entry_credits_minor,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one
