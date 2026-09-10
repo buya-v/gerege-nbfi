@@ -70,19 +70,32 @@ func TestBalanceOutstandingDerivations(t *testing.T) {
 	}
 }
 
-func TestApplyDisbursementRefusesUngradedDiscount(t *testing.T) {
+func TestApplyDisbursementAdmitsGradedDiscount(t *testing.T) {
 	var b WorkingCapitalLoanBalance
-	if err := b.ApplyDisbursement(1_000_00, 50_00); !errors.Is(err, ErrNoGradedCapture) {
-		t.Fatalf("ApplyDisbursement(non-zero discount) error = %v, want ErrNoGradedCapture", err)
+	if err := b.ApplyDisbursement(1_000_00, 37_53); err != nil {
+		t.Fatalf("ApplyDisbursement(graded discount 3753) = %v, want nil", err)
 	}
-	if b != (WorkingCapitalLoanBalance{}) {
-		t.Fatalf("a refused disbursement mutated the balance: %+v", b)
+	if b.Principal != 1_037_53 || b.TotalDiscountFee != 37_53 {
+		t.Fatalf("discount disbursement = %+v, want principal 103753 and totalDiscountFee 3753", b)
+	}
+	if got, want := b.UnrealizedIncomeFromDiscountFee(), loan.MinorUnits(37_53); got != want {
+		t.Fatalf("UnrealizedIncomeFromDiscountFee = %d, want %d", got, want)
+	}
+	// The relaxation is for TotalDiscountFee ONLY: a disbursement over a balance
+	// that already carries a still-ungraded term is refused, and the refusal
+	// leaves the balance untouched.
+	dirty := WorkingCapitalLoanBalance{PrincipalPaid: 1}
+	if err := dirty.ApplyDisbursement(1_000_00, 37_53); !errors.Is(err, ErrNoGradedCapture) {
+		t.Fatalf("ApplyDisbursement over a non-zero ungraded term error = %v, want ErrNoGradedCapture", err)
+	}
+	if dirty != (WorkingCapitalLoanBalance{PrincipalPaid: 1}) {
+		t.Fatalf("a refused disbursement mutated the balance: %+v", dirty)
 	}
 	if err := b.ApplyDisbursement(1_000_00, 0); err != nil {
 		t.Fatalf("ApplyDisbursement(no discount) = %v, want nil", err)
 	}
 	if b.Principal != 1_000_00 || b.TotalDiscountFee != 0 {
-		t.Fatalf("admitted disbursement = %+v, want principal 100000 and no discount", b)
+		t.Fatalf("no-discount disbursement = %+v, want principal 100000 and no discount", b)
 	}
 }
 
@@ -93,6 +106,20 @@ func TestValidateGradedDomain(t *testing.T) {
 	}
 	if err := graded.ValidateGradedDomain(); err != nil {
 		t.Fatalf("the pinned capture's balance must be admitted: %v", err)
+	}
+
+	// The discount-nonzero capture is now graded: a balance carrying it (and the
+	// principal that includes it) is admitted, while its remaining clamp operand
+	// stays refused.
+	var discounted WorkingCapitalLoanBalance
+	if err := discounted.ApplyDisbursement(100000, 3753); err != nil {
+		t.Fatalf("the discount-nonzero capture's balance must be admitted: %v", err)
+	}
+	if err := discounted.ValidateGradedDomain(); err != nil {
+		t.Fatalf("the discount-nonzero capture's balance must be admitted: %v", err)
+	}
+	if discounted.Principal != 103753 || discounted.TotalDiscountFee != 3753 {
+		t.Fatalf("discount-nonzero balance = %+v, want principal 103753 and totalDiscountFee 3753", discounted)
 	}
 
 	cases := []struct {
@@ -108,7 +135,6 @@ func TestValidateGradedDomain(t *testing.T) {
 		{"RealizedIncomeFromDiscountFee", func(b *WorkingCapitalLoanBalance) { b.RealizedIncomeFromDiscountFee = 1 }},
 		{"OverpaymentAmount", func(b *WorkingCapitalLoanBalance) { b.OverpaymentAmount = 1 }},
 		{"TotalDisbursement", func(b *WorkingCapitalLoanBalance) { b.TotalDisbursement = 1 }},
-		{"TotalDiscountFee", func(b *WorkingCapitalLoanBalance) { b.TotalDiscountFee = 1 }},
 		{"TotalDiscountFeeAdjustment", func(b *WorkingCapitalLoanBalance) { b.TotalDiscountFeeAdjustment = 1 }},
 		{"BreachPastDueAmount", func(b *WorkingCapitalLoanBalance) { b.BreachPastDueAmount = 1 }},
 	}

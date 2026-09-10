@@ -11,11 +11,13 @@ import (
 )
 
 // WorkingCapitalEvaluator is what a working-capital implementation must be able
-// to do for this harness to grade it. The graded surface is the seeded
-// working-capital loan (m_wc_loan id 1) seen through two capture seams: the
-// loan list (GET /working-capital-loans) and the per-loan balance read-back
-// (GET /working-capital-loans/1). A loan-id request for a row that does not
-// exist is an error, exactly as the port reads it.
+// to do for this harness to grade it. Two committed captures are graded through
+// two seams: the loan list (GET /working-capital-loans) and the per-loan balance
+// read-back (GET /working-capital-loans/{id}). The rows are the no-discount seed
+// (m_wc_loan id 1, disbursed 1000.51) and the discount-nonzero facility (id 2,
+// disbursed 1000, product discount 37.53, so totalDiscountFee 3753 and principal
+// 103753). A loan-id request for a row that does not exist is an error, exactly
+// as the port reads it.
 type WorkingCapitalEvaluator interface {
 	Evaluate(req Request) (Expect, error)
 }
@@ -128,6 +130,59 @@ func seededLoan() workingcapital.WorkingCapitalLoan {
 	}
 }
 
+// seededDiscountBalance is the second committed m_wc_loan_balance state: the
+// discount-nonzero facility (capture wc-discount-nonzero, loan id 2), disbursed
+// 1000 on a product whose discount is 37.53 MNT. Derived through the port's own
+// ApplyDisbursement(100000, 3753), the oracle's applyDisbursement sets
+// totalDiscountFee = discount and principal = disbursed + discount
+// [WorkingCapitalLoanBalance.java:115-120], landing on totalDiscountFee 3753 and
+// principal 103753 exactly as the committed read-back records them.
+func seededDiscountBalance() workingcapital.WorkingCapitalLoanBalance {
+	var b workingcapital.WorkingCapitalLoanBalance
+	if err := b.ApplyDisbursement(loan.MinorUnits(100000), loan.MinorUnits(3753)); err != nil {
+		panic(fmt.Sprintf("workingcapital conformance: the discount-nonzero capture's disbursement (100000, discount 3753) must be admitted by the graded domain: %v", err))
+	}
+	return b
+}
+
+// seededDiscountLoan is the discount-nonzero facility row: m_wc_loan id 2,
+// account 000000002, external id OHWCCAP-DISCNONZERO-L01, client id 5, status
+// ACTIVE (stored 300), disbursed 1000 on 2026-09-03 with a product discount of
+// 37.53 so its balance carries totalDiscountFee 3753 and principal 103753. The
+// draw recorded one tranche of 1000.
+func seededDiscountLoan() workingcapital.WorkingCapitalLoan {
+	status, ok := loan.LoanStatusFromStoredValue(300)
+	if !ok {
+		panic("workingcapital conformance: discount-nonzero loan status 300 must decode to ACTIVE")
+	}
+	return workingcapital.WorkingCapitalLoan{
+		ID:            2,
+		AccountNumber: "000000002",
+		ExternalID:    "OHWCCAP-DISCNONZERO-L01",
+		ClientID:      5,
+		LoanStatus:    status,
+		Balance:       seededDiscountBalance(),
+		DisbursementDetails: []workingcapital.WorkingCapitalLoanDisbursementDetails{{
+			ExpectedAmount: loan.MinorUnits(100000),
+			ActualAmount:   loan.MinorUnits(100000),
+		}},
+	}
+}
+
+// seededLoanByID returns the committed balance state a loan-id request selects.
+// Ids 1 and 2 are the two captured rows; any other id is absent, which the
+// evaluator reports as an error.
+func seededLoanByID(id int64) (workingcapital.WorkingCapitalLoan, bool) {
+	switch id {
+	case 1:
+		return seededLoan(), true
+	case 2:
+		return seededDiscountLoan(), true
+	default:
+		return workingcapital.WorkingCapitalLoan{}, false
+	}
+}
+
 // loanRowReadBack renders the cells of the seeded loan's LIST row. The list
 // read serialises no money cell, so only the row identity cells are present:
 // the row id, the loan row's own account number, the borrowing client's id, the
@@ -197,31 +252,30 @@ func balanceReadBack(l workingcapital.WorkingCapitalLoan) *DetailExpect {
 	}
 }
 
-// goEvaluator is the port-backed working-capital loan read. The pinned capture
-// holds exactly one seeded working-capital loan — id 1, account 000000001,
-// external id SEED-WC-L01, client id 5, status ACTIVE (stored 300), disbursed
-// 1000.51 with no discount. The list read returns the row's list cells and the
-// detail read its balance read-back, both derived by running the port code over
-// the seeded state rather than restated constants.
+// goEvaluator is the port-backed working-capital loan read. The committed
+// captures hold two rows: the no-discount seed (id 1, account 000000001,
+// external id SEED-WC-L01, disbursed 1000.51) and the discount-nonzero facility
+// (id 2, account 000000002, external id OHWCCAP-DISCNONZERO-L01, disbursed 1000
+// with discount 3753, so principal 103753). The list read returns the seed's row
+// cells (the list capture holds only loan 1) and the detail read the selected
+// loan's balance read-back, both derived by running the port code over the
+// captured state rather than restated constants.
 type goEvaluator struct{}
 
 // NewGoEvaluator returns the port-backed implementation.
 func NewGoEvaluator() WorkingCapitalEvaluator { return goEvaluator{} }
 
 func (goEvaluator) Evaluate(req Request) (Expect, error) {
-	seed := seededLoan()
-	if req.LoanID > 0 {
-		if req.LoanID != seed.ID {
-			return Expect{}, fmt.Errorf(
-				"workingcapital: loan id %d is not present in the pinned capture store (only id %d is seeded)",
-				req.LoanID, seed.ID)
-		}
-		return Expect{Detail: balanceReadBack(seed)}, nil
+	if req.LoanID <= 0 {
+		return listRead(seededLoan()), nil
 	}
-	return Expect{
-		Loans:         []LoanExpect{loanRowReadBack(seed)},
-		TotalElements: 1,
-	}, nil
+	seed, ok := seededLoanByID(req.LoanID)
+	if !ok {
+		return Expect{}, fmt.Errorf(
+			"workingcapital: loan id %d is not present in the pinned capture store (seeded ids are 1 and 2)",
+			req.LoanID)
+	}
+	return Expect{Detail: balanceReadBack(seed)}, nil
 }
 
 // listRead renders the seeded loan's list read; the detail read is evaluated by
@@ -254,6 +308,12 @@ func requireSeedLoan(seed workingcapital.WorkingCapitalLoan, req Request) (worki
 type wrongEvaluator struct{}
 
 func (wrongEvaluator) Evaluate(req Request) (Expect, error) {
+	// The defect is scoped to the no-discount seed it was written against; the
+	// discount-nonzero row is delegated to the correct read so this drive stays a
+	// clean instrument over the whole store rather than a harness error.
+	if req.LoanID != 1 {
+		return goEvaluator{}.Evaluate(req)
+	}
 	seed, err := requireSeedLoan(seededLoan(), req)
 	if err != nil {
 		return Expect{}, err
@@ -274,6 +334,11 @@ func (wrongEvaluator) Evaluate(req Request) (Expect, error) {
 type wrongTrancheDroppedEvaluator struct{}
 
 func (wrongTrancheDroppedEvaluator) Evaluate(req Request) (Expect, error) {
+	// Scoped to the no-discount seed; the discount-nonzero row is delegated to
+	// the correct read (see wrongEvaluator).
+	if req.LoanID != 1 {
+		return goEvaluator{}.Evaluate(req)
+	}
 	seed, err := requireSeedLoan(seededLoan(), req)
 	if err != nil {
 		return Expect{}, err
@@ -293,6 +358,11 @@ func (wrongTrancheDroppedEvaluator) Evaluate(req Request) (Expect, error) {
 type wrongStatusOrdinalEvaluator struct{}
 
 func (wrongStatusOrdinalEvaluator) Evaluate(req Request) (Expect, error) {
+	// Scoped to the no-discount seed; the discount-nonzero row is delegated to
+	// the correct read (see wrongEvaluator).
+	if req.LoanID != 1 {
+		return goEvaluator{}.Evaluate(req)
+	}
 	seed, err := requireSeedLoan(seededLoan(), req)
 	if err != nil {
 		return Expect{}, err
@@ -313,12 +383,14 @@ func (wrongStatusOrdinalEvaluator) Evaluate(req Request) (Expect, error) {
 type wrongListRowMappingEvaluator struct{}
 
 func (wrongListRowMappingEvaluator) Evaluate(req Request) (Expect, error) {
+	// The defect lives on the list seam; every detail row is delegated to the
+	// correct read, including the discount-nonzero row.
+	if req.LoanID > 0 {
+		return goEvaluator{}.Evaluate(req)
+	}
 	seed, err := requireSeedLoan(seededLoan(), req)
 	if err != nil {
 		return Expect{}, err
-	}
-	if req.LoanID > 0 {
-		return Expect{Detail: balanceReadBack(seed)}, nil
 	}
 	row := loanRowReadBack(seed)
 	row.AccountNo = "000000005" // wrong: the borrowing client's account_no, not the loan row's
@@ -326,6 +398,33 @@ func (wrongListRowMappingEvaluator) Evaluate(req Request) (Expect, error) {
 		Loans:         []LoanExpect{row},
 		TotalElements: 1,
 	}, nil
+}
+
+// wrongDiscountDroppedFromPrincipalEvaluator is a DELIBERATELY WRONG
+// implementation of the disbursement arithmetic: it stores the product discount
+// in totalDiscountFee but sets principal to the DISBURSED AMOUNT ALONE, dropping
+// the discount the oracle ADDS to principal
+// [WorkingCapitalLoanBalance.java:115-120:
+// this.principal = disbursedAmount.add(discount)]. Every balance the earlier
+// captures held carried totalDiscountFee 0, so dropping the add changed nothing
+// and the defect was invisible; the discount-nonzero facility (WC-06) pins
+// principal 103753 and goes red on principal and on the outstanding/expected
+// aggregates derived from it. Its no-discount detail read and its list read stay
+// correct.
+type wrongDiscountDroppedFromPrincipalEvaluator struct{}
+
+func (wrongDiscountDroppedFromPrincipalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.LoanID <= 0 {
+		return listRead(seededLoan()), nil
+	}
+	seed, ok := seededLoanByID(req.LoanID)
+	if !ok {
+		return Expect{}, fmt.Errorf(
+			"workingcapital: loan id %d is not present in the pinned capture store (seeded ids are 1 and 2)",
+			req.LoanID)
+	}
+	seed.Balance.Principal -= seed.Balance.TotalDiscountFee // wrong: principal = disbursed, not disbursed + discount
+	return Expect{Detail: balanceReadBack(seed)}, nil
 }
 
 func init() {
@@ -346,4 +445,9 @@ func init() {
 		"emits the borrowing client's account_no (000000005) for the loan row's own account_no (000000001) on the list read; "+
 			"a list vector pinning account_no goes red",
 		wrongListRowMappingEvaluator{})
+	RegisterWrong("workingcapital-wrong-discount-dropped-from-principal",
+		"stores the product discount in totalDiscountFee but sets principal to the disbursed amount alone, dropping the discount "+
+			"the oracle adds (principal = disbursed + discount); invisible while every captured discount was 0, red on the "+
+			"discount-nonzero facility WC-06, which pins principal 103753",
+		wrongDiscountDroppedFromPrincipalEvaluator{})
 }

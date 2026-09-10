@@ -9,9 +9,9 @@
   },
   {
    "name": "wc-loan-balance-read",
-   "description": "Read one working-capital loan by id (GET /working-capital-loans/{loanId}) and serialise its m_wc_loan_balance row as the response balance block: the thirteen stored columns plus the derived outstanding/due figures. The pinned capture holds one seeded loan (id 1, external id SEED-WC-L01, status active, principal 1000.51, nothing repaid), so the balance read-back after the seeded disbursement is exercised and transcribed into a parity vector.",
+   "description": "Read one working-capital loan by id (GET /working-capital-loans/{loanId}) and serialise its m_wc_loan_balance row as the response balance block: the thirteen stored columns plus the derived outstanding/due figures. The pinned capture now holds two captured facilities: the no-discount seed (id 1, external id SEED-WC-L01, status active, principal 1000.51, nothing repaid) and the discount-nonzero facility (id 2, external id OHWCCAP-DISCNONZERO-L01, status active, principal 1037.53, discount 37.53, nothing repaid). Both balance read-backs are exercised and transcribed into parity vectors.",
    "in_graded_domain": true,
-   "evidence": "Capture wc-loan-detail-raw.json under tenant gerege: the running oracle returned the balance block {\"id\":1,\"principal\":1000.51,\"principalPaid\":0.0,\"principalAdjustment\":0.0,\"principalOutstanding\":1000.51,\"fee\":0.0,\"feePaid\":0.0,\"feeOutstanding\":0.0,\"penalty\":0.0,\"penaltyPaid\":0.0,\"penaltyOutstanding\":0.0,\"realizedIncomeFromDiscountFee\":0.0,\"unrealizedIncomeFromDiscountFee\":0.0,\"overpaymentAmount\":0.0,\"totalExpectedRepayment\":1000.51,\"totalRepayment\":0.0,\"totalOutstanding\":1000.51,\"totalDisbursement\":0.0,\"totalDiscountFee\":0.0,\"totalDiscountFeeAdjustment\":0.0,\"breachPastDueAmount\":0.0} on loan externalId SEED-WC-L01. The detail seam grades id, status and nine balance money cells (four stored, five derived), and one parity vector is promoted from it."
+   "evidence": "Capture wc-loan-detail-raw.json under tenant gerege: the running oracle returned the balance block {\"id\":1,\"principal\":1000.51,\"principalPaid\":0.0,\"principalAdjustment\":0.0,\"principalOutstanding\":1000.51,\"fee\":0.0,\"feePaid\":0.0,\"feeOutstanding\":0.0,\"penalty\":0.0,\"penaltyPaid\":0.0,\"penaltyOutstanding\":0.0,\"realizedIncomeFromDiscountFee\":0.0,\"unrealizedIncomeFromDiscountFee\":0.0,\"overpaymentAmount\":0.0,\"totalExpectedRepayment\":1000.51,\"totalRepayment\":0.0,\"totalOutstanding\":1000.51,\"totalDisbursement\":0.0,\"totalDiscountFee\":0.0,\"totalDiscountFeeAdjustment\":0.0,\"breachPastDueAmount\":0.0} on loan externalId SEED-WC-L01. Capture wc-loan-discount-detail-raw.json (sha256 65e67678218eda58aa1536726c98ef0ddd88ca962556adfe5ecd260f88f967b9) returned, on loan externalId OHWCCAP-DISCNONZERO-L01, principal 1037.53, totalDiscountFee 37.53 and unrealizedIncomeFromDiscountFee 37.53 with every other balance column 0.0, the first non-zero totalDiscountFee in the corpus. The detail seam grades id, status and the balance money cells (stored and derived), and two parity vectors are promoted from it."
   }
  ],
  "seams": [
@@ -24,7 +24,7 @@
   },
   {
    "name": "working-capital-loans-detail",
-   "description": "GET /working-capital-loans/{loanId} on the running Fineract server, tenant gerege: the per-loan balance read-back (one seeded loan in the pinned capture).",
+   "description": "GET /working-capital-loans/{loanId} on the running Fineract server, tenant gerege: the per-loan balance read-back (two captured facilities in the pinned capture: the no-discount seed loan 1 and the discount-nonzero loan 2).",
    "status": {
     "wc-loan-balance-read": "exercised"
    }

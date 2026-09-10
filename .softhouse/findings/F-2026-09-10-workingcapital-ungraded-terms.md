@@ -6,6 +6,19 @@ themselves (no capture grades them yet).
 **Scope:** one bounded context, `workingcapital`. No vector added, changed or
 deleted; `.softhouse/guards/ledger-invariants.baseline` untouched.
 
+> **UPDATE 2026-09-10 (`OH-WCGRADE-Q`):** one term in the table below is no
+> longer refused. `OH-WCCAP-P` captured a facility disbursed on a product whose
+> `discount` is 37.53 MNT (the first non-zero `totalDiscountFee`), and
+> `OH-WCGRADE-Q` promoted it as `WC-06-detail-discount-nonzero.json`, removed
+> the `TotalDiscountFee` refusal, and registered the
+> `workingcapital-wrong-discount-dropped-from-principal` drive (0 kills on the
+> old corpus, 1 on the new). `Principal` and `TotalDiscountFee` are now the only
+> admitted stored terms; the other eleven refusals stand. The
+> `max(…, 0)` clamp is **still** ungraded — the observation supplies a non-zero
+> first operand but both others remain 0, so the un-clamped expression stays
+> positive — and the capture that would grade it is recorded there. See
+> [`F-2026-09-10-workingcapital-discount-fee-graded.md`](F-2026-09-10-workingcapital-discount-fee-graded.md).
+
 ## What was measured before anything was changed
 
 Every number below was re-measured on the tree, with the instrument's own known
