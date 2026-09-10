@@ -451,4 +451,15 @@ func init() {
 			"the store, and the fee_requires_valid invariant cannot catch it because the produced validation list "+
 			"is empty",
 		validationSkippedEvaluator{})
+	RegisterWrong("charges-wrong-calculation-type-always-flat",
+		"prices every charge as FLAT: it reads the stored amount and never branches on calculation_type, so a "+
+			"percentage charge is returned at its (zero) flat amount instead of percentage-of-amount. "+
+			"charge_calculation_enum is what selects the arithmetic -- the flat branch returns the stored amount "+
+			"and the percentage branches compute percentageOf(base) [VERIFIED: ChargeCalculationType.java:25-31, "+
+			"Charge.java:76-77, LoanCharge.java:310-319] -- so a porter who ports getAmount()'s flat branch and "+
+			"drops the switch writes exactly this. The four percentage vectors price to 0 against their recorded "+
+			"amounts and die: FC-03-pctamount-disbursement (1481400), FC-09-pctamount-instalment-p2 (46056), "+
+			"OHCAPj-pctamount-disbursement-halfup-tie (1162503) and T46-CH-06-defvsreq-pctamount-disb (600000); "+
+			"the eight flat vectors and the validation-refused vector are byte-identical and survive",
+		ignoreFieldEvaluator{v: ignoreVariant{calculationTypeAsFlat: true}})
 }

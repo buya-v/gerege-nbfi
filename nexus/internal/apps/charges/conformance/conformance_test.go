@@ -243,6 +243,36 @@ func TestOneScaleShortWrongRunsRed(t *testing.T) {
 	wrongRunsRedOn(t, "charges-wrong-percent-one-scale-short", percentFeeProbe())
 }
 
+// TestCalculationTypeAlwaysFlatWrongRunsRed pins the shape of the
+// ignore-calculation_type drive: on a percentage probe the correct port answers
+// the percentage fee (12346) while a port that prices everything as FLAT answers
+// the stored amount (0). The kill is a MONEY kill, which is the point of grading
+// this field before any of the lower-impact ones.
+func TestCalculationTypeAlwaysFlatWrongRunsRed(t *testing.T) {
+	probe := percentFeeProbe()
+
+	correct := gradeOne(probe, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+
+	wrong, ok := Lookup("charges-wrong-calculation-type-always-flat")
+	if !ok {
+		t.Fatal("charges-wrong-calculation-type-always-flat not registered")
+	}
+	if _, bad := IsRegisteredWrong("charges-wrong-calculation-type-always-flat"); !bad {
+		t.Fatal("charges-wrong-calculation-type-always-flat not marked wrong")
+	}
+
+	red := gradeOne(probe, Options{Implementation: wrong})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("calculation-type-always-flat outcome = %s, want FAIL", red.Outcome)
+	}
+	if red.MoneyCells != 1 {
+		t.Fatalf("calculation-type-always-flat money cells = %d, want 1 (the kill must be a MONEY kill)", red.MoneyCells)
+	}
+}
+
 // TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red
 // drive: the two rounding modes agree on every non-tie product (so the driver
 // is byte-identical to the correct port on the stored corpus, whose one
