@@ -79,8 +79,33 @@ and `-1` appears on a genuine timeout.
 with `empty=2 exit-1=2`, while two concurrently healthy runs on the same machine are
 not flagged. An instrument that only ever reports "fine" has not been tested.
 
-When it fires: **kill the run, verify its tree against the bar, and commit its finished
-work on its behalf.** A stalled agent has usually done most of the work already.
+**Two trailing -1s is NOT a kill signal, and treating it as one cried wolf twice on
+2026-09-10.** A run at `trailing=2, idle=2s` had just issued a real command — it wedged and
+was already recovering, which is what two other runs did that day, one of them going on to
+close the fee/penalty finding. The instantaneous condition "cannot run a command right now"
+is TRUE for a healthy agent mid-recovery.
+
+The signature that matters is **SUSTAINED**, so a kill needs evidence of TIME or of
+REPETITION:
+
+    trailing >= 2                  -> wedged(recovering?)   visible, NOT a kill signal
+    trailing >= 4                  -> STALLED-NOW           dead terminal, regardless of idle
+    trailing >= 2 and idle >= 180s -> STALLED-NOW           wedged and not recovering
+
+Control-tested on four real conversations, both polarities, including two live runs:
+run K (`trailing=2`, idle 24h) fires by time; the run killed on 2026-09-10
+(`trailing=6`, 8 events in 5 minutes, all failed probes) fires by repetition; a live
+recovering run (`trailing=2, idle=35s`) does NOT fire; a healthy run does not fire.
+
+**What kills a terminal, in practice:** an **unterminated quote**. The 2026-09-10 kill was
+a `docker exec … psql -tAc "SELECT …` whose closing `"` was missing. The shell sat on stdin
+waiting for the rest of the string; it does not error, it hangs, and it takes the run with
+it. `C-c` does not rescue it either — the wrapper sends `C-c` as *input text* to a shell
+that is asking for more string.
+
+When STALLED-NOW fires: **kill the run, verify its tree against the bar, and commit its
+finished work on its behalf.** A stalled agent has usually done most of the work already —
+though the 2026-09-10 kill had none, having wedged at event 31.
 
 ## The three traps baked into these scripts
 

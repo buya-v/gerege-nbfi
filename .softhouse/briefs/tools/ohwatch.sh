@@ -59,9 +59,29 @@ for ec in reversed(obs):
     else: break
 recovered = sum(1 for ec in obs if ec == -1) - trailing
 
-# Two trailing -1s is the threshold: one alone is an ordinary timeout the agent is about
-# to handle, and the recovery path itself costs one probe.
-flag = 'STALLED-NOW' if trailing >= 2 else ''
+# TWO TRAILING -1s IS NOT ENOUGH, and firing on it alone cried wolf twice on 2026-09-10.
+# A run at trailing=2 with idle=2s had just issued a real command: it wedged, and it was
+# already recovering. Two other runs that day did exactly the same and went on to finish
+# (one of them closed the fee/penalty finding). The instantaneous condition -- "cannot run
+# a command right now" -- is TRUE for a healthy agent mid-recovery, so it cannot be the
+# kill signal on its own.
+#
+# The signature that matters is SUSTAINED. K sat wedged for TWELVE MINUTES. So a kill needs
+# either evidence of TIME (nothing written for a long while) or evidence of REPETITION (the
+# agent has burned four or more consecutive probes into a dead terminal -- the run killed on
+# 2026-09-10 reached six, having advanced 8 events in 5 minutes, all of them failed probes).
+#
+#   trailing >= 2                -> WEDGED, visible, NOT a kill signal
+#   trailing >= 4                -> STALLED-NOW (dead terminal, regardless of idle)
+#   trailing >= 2 and idle>=180s -> STALLED-NOW (wedged and not recovering)
+STALL_IDLE_S = 180
+STALL_PROBES = 4
+if trailing >= STALL_PROBES or (trailing >= 2 and idle >= STALL_IDLE_S):
+    flag = 'STALLED-NOW'
+elif trailing >= 2:
+    flag = 'wedged(recovering?)'
+else:
+    flag = ''
 note = '' if not recovered else '  (%d recovered -1)' % recovered
 print('%-34s events=%-5s idle=%4ds  trailing-1=%d%s  %s' %
       (os.path.basename(d.rstrip('/'))[:32], n, idle, trailing, note, flag))
