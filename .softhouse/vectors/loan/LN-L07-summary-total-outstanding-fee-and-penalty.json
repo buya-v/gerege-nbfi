@@ -1,0 +1,47 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L07-summary-total-outstanding-fee-and-penalty",
+    "title": "OHLGT-L03 read-back summary total outstanding with non-zero, differing fee and penalty",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the OHLGT-L03 (loan 12) loan-detail summary read-back. This is the capture F-2026-09-09 asked for: all FOUR outstanding buckets are non-zero, and the fee and penalty buckets DIFFER so a term-swap defect cannot survive. request.summary.principal_outstanding_minor=10000000 is the capture summary's \"principalOutstanding\":100000.0; interest_outstanding_minor=661853 is \"interestOutstanding\":6618.53; fee_outstanding_minor=10000 is \"feeChargesOutstanding\":100.0; penalty_outstanding_minor=5700 is \"penaltyChargesOutstanding\":57.0. expect.summary_total_minor=10677553 is the capture summary's \"totalOutstanding\":106775.53 in minor units, the total Fineract derived from those buckets (total_outstanding_derived). The five summary vectors that predate this one all carry fee = penalty = 0, where dropping either term is unobservable; here dropping the fee bucket reads 10000 short and dropping the penalty bucket reads 5700 short, so the vector kills loan-wrong-summary-drops-fee and loan-wrong-summary-drops-penalty. Nothing was computed by this promotion; the buckets and the total are transcriptions of the oracle's derived columns.",
+    "oracle": {
+        "seam": "loan-summary-outstanding",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-12-raw.json; capture_case_id names the externalId of the observed loan. The request that CREATED OHLGT-L03 is committed byte-stable alongside the response in the same capture directory (req/loan-OHLGT-L03-submit.json, amount tokens 100 and 57 written as integers so they survive the POST /charges binary-double round trip).",
+        "capture_ref": ".softhouse/capture/gl-accounting-surface/out/loan-12-raw.json",
+        "capture_sha256": "965b144c1d0b4346f66f1cbc71a9d253c6e874f7fa66af56ef3f3bfa9febd039",
+        "capture_case_id": "OHLGT-L03",
+        "citation": "loan-12-raw.json {\"externalId\":\"OHLGT-L03\",\"summary\":{\"principalOutstanding\":100000.0,\"interestOutstanding\":6618.53,\"feeChargesOutstanding\":100.0,\"penaltyChargesOutstanding\":57.0,\"totalOutstanding\":106775.53}}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "summary": {
+            "principal_outstanding_minor": "10000000",
+            "interest_outstanding_minor": "661853",
+            "fee_outstanding_minor": "10000",
+            "penalty_outstanding_minor": "5700"
+        }
+    },
+    "expect": {
+        "summary_total_minor": "10677553"
+    },
+    "capabilities_required": [
+        "summary-total-outstanding"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-summary-drops-fee",
+        "loan-wrong-summary-drops-penalty"
+    ]
+}

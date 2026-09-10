@@ -1,0 +1,46 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L08-summary-total-outstanding-penalty-only",
+    "title": "OHGLR-L01 read-back summary total outstanding with fee 0 and penalty 57.00 (penalty term alone)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the OHGLR-L01 (loan 10) loan-detail summary read-back, the complementary shape to LN-L07: the fee bucket is ZERO and the penalty bucket is NON-ZERO, so this vector discriminates the penalty term ALONE. request.summary.principal_outstanding_minor=10000000 is the capture summary's \"principalOutstanding\":100000.0; interest_outstanding_minor=661853 is \"interestOutstanding\":6618.53; fee_outstanding_minor=0 is \"feeChargesOutstanding\":0.0 (the loan's 100.00 fee was a due-at-disbursement charge, shown as feeChargesPaid=100.0, feeChargesOutstanding=0.0); penalty_outstanding_minor=5700 is \"penaltyChargesOutstanding\":57.0. expect.summary_total_minor=10667553 is \"totalOutstanding\":106675.53. Dropping the penalty term reads 5700 short and this vector goes red, while dropping the fee term is invisible here (fee is already zero) -- that asymmetry is exactly why a second, differently-shaped observation is needed. Nothing was computed by this promotion; the buckets and the total are transcriptions of the oracle's derived columns.",
+    "oracle": {
+        "seam": "loan-summary-outstanding",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.summary buckets and expect.summary_total_minor are transcribed from the \"summary\" block of the committed capture loan-10-raw.json; capture_case_id names the externalId of the observed loan. Loan 10 was created by the OH-GL-R run and is observed read-only here; no write of any kind touched it.",
+        "capture_ref": ".softhouse/capture/gl-accounting-surface/out/loan-10-raw.json",
+        "capture_sha256": "41870436e9b7345a42b8dfbc4b2b034215701ce36da9009b57552db3d021b899",
+        "capture_case_id": "OHGLR-L01",
+        "citation": "loan-10-raw.json {\"externalId\":\"OHGLR-L01\",\"summary\":{\"principalOutstanding\":100000.0,\"interestOutstanding\":6618.53,\"feeChargesOutstanding\":0.0,\"penaltyChargesOutstanding\":57.0,\"totalOutstanding\":106675.53}}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "summary": {
+            "principal_outstanding_minor": "10000000",
+            "interest_outstanding_minor": "661853",
+            "fee_outstanding_minor": "0",
+            "penalty_outstanding_minor": "5700"
+        }
+    },
+    "expect": {
+        "summary_total_minor": "10667553"
+    },
+    "capabilities_required": [
+        "summary-total-outstanding"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-summary-drops-penalty"
+    ]
+}
