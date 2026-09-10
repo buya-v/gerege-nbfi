@@ -990,6 +990,21 @@ const (
 	// total stay observed. It is the partial-debit defect the collapse and
 	// odd-count drives are blind to.
 	wrongBatchDebitFromFirstTwoCredits
+	// wrongBatchRoutesAccrualIncomeToFirstAccount routes every CREDIT leg of a
+	// single transaction that carries MORE THAN ONE PAIR to that transaction's
+	// FIRST income account, as an accrual port with one income account for all
+	// charge families does. It is the intra-transaction analogue of
+	// wrongBatchRoutesFeeThroughDisbursementAccounts: the disbursement mapping
+	// defect keys on the transaction BOUNDARY, so it is inert on a batch whose
+	// two families share one transaction id, and this drive is the only one that
+	// sees the accrual. On L25 the interest pair (interest-receivable debit /
+	// Interest-On-Loans credit, 92115) and the fee pair (fees-receivable debit /
+	// Income-From-Fees credit, 10000) keep every leg, side and both totals at
+	// the observed 102115, and only the fee credit's account moves; on L09 (each
+	// transaction a clean one-debit/one-credit pair) and on the five-leg L53
+	// repayment (one debit, four credits) it is inert, so each vector it reddens
+	// is the accrual shape alone.
+	wrongBatchRoutesAccrualIncomeToFirstAccount
 )
 
 // wrongJournalEntryBatchEvaluator is a DELIBERATELY WRONG implementation of the
@@ -1073,6 +1088,44 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 			}
 			if acct, ok := bySide[parsed[i].side]; ok {
 				parsed[i].acct = acct
+			}
+		}
+	}
+
+	// The accrual-income defect is the intra-transaction analogue of the account
+	// mapping above. Where a single transaction carries MORE THAN ONE PAIR — an
+	// accrual posting one receivable/income pair per charge family — a port with
+	// a single income account for all families routes EVERY credit of that
+	// transaction to the FIRST income account it saw. The ≥2 debits and ≥2
+	// credits that identify such a transaction are exactly what keeps this drive
+	// inert on a disbursement batch (each transaction is a one-debit/one-credit
+	// pair) and on the five-leg repayment (one debit, four credits), so it reddens
+	// the accrual shape and nothing else.
+	if mode == wrongBatchRoutesAccrualIncomeToFirstAccount {
+		for _, txn := range order {
+			debits, credits := 0, 0
+			firstCreditAcct := ""
+			for _, l := range parsed {
+				if l.txn != txn {
+					continue
+				}
+				switch l.side {
+				case loan.JournalEntryDebit:
+					debits++
+				case loan.JournalEntryCredit:
+					credits++
+					if firstCreditAcct == "" {
+						firstCreditAcct = l.acct
+					}
+				}
+			}
+			if debits < 2 || credits < 2 || firstCreditAcct == "" {
+				continue
+			}
+			for i := range parsed {
+				if parsed[i].txn == txn && parsed[i].side == loan.JournalEntryCredit {
+					parsed[i].acct = firstCreditAcct
+				}
 			}
 		}
 	}
@@ -1189,9 +1242,10 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 			}
 		}
 	default:
-		// wrongBatchSwapsFirstPairSides, wrongBatchRoutesFeeThroughDisbursementAccounts
-		// and the zero value sum every leg on its (possibly remapped/flipped)
-		// side: neither defect changes any amount, so both totals stay observed.
+		// wrongBatchSwapsFirstPairSides, wrongBatchRoutesFeeThroughDisbursementAccounts,
+		// wrongBatchRoutesAccrualIncomeToFirstAccount and the zero value sum every
+		// leg on its (possibly remapped/flipped) side: none of these defects
+		// changes any amount, so both totals stay observed.
 		for _, l := range posted {
 			add(l)
 		}
@@ -1321,6 +1375,18 @@ func init() {
 			"the credit total stay observed — a partial debit the collapse and odd-count drives "+
 			"are blind to",
 		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchDebitFromFirstTwoCredits})
+	RegisterWrong("loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account",
+		"routes every CREDIT leg of a single transaction carrying MORE THAN ONE PAIR to that "+
+			"transaction's FIRST income account, as an accrual port with one income account for "+
+			"all charge families does; on the pinned L25 accrual (interest pair 92115 + fee pair "+
+			"10000) and L30 accrual (interest pair 84151 + penalty pair 5700) every leg, every "+
+			"side and both totals stay exactly at the observed 102115/102115 and 89851/89851, so "+
+			"only the per-(transaction, account) side cells move — one charge family's income "+
+			"posted to another family's income account, and every total still balances. It is "+
+			"inert on the multi-pair LN-L09 batch (each transaction a one-debit/one-credit pair) "+
+			"and on the five-leg L53 repayment (one debit, four credits), which is why the "+
+			"transaction-boundary mapping drive cannot see the accrual",
+		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchRoutesAccrualIncomeToFirstAccount})
 	RegisterWrong("loan-wrong-schedule-amortization-drops-final-component",
 		"reconstructs the whole repayment schedule without the LAST period's principal "+
 			"component, as a port does when it reads only the pre-adjustment rows, so the pinned "+

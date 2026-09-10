@@ -1,0 +1,89 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L25-accrual-interest-fee-two-pair-posting",
+    "title": "GL read-back single-transaction FOUR-leg accrual (loan 12 L25: interest pair plus fee pair) posts one receivable/income pair per charge family",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the loan-produced journal-entry batch read back from the journal-entries endpoint for loan entityId 12, transactionId L25, an ACCRUAL carrying TWO CHARGE FAMILIES. This is a THIRD batch shape, distinct from the two vectors the seam already grades: LN-L09 is a disbursement (two pairs across TWO transaction ids) and LN-L12 is a repayment (five legs, ONE debit and four credits to distinct receivable accounts). L25 is four legs in ONE transaction id forming TWO BALANCED PAIRS, one per charge family, each family using its OWN account pair: DEBIT OHLGR-Interest-Receivable 921.15 / CREDIT OHLGR-Interest-On-Loans 921.15 (interest family) and DEBIT OHLGR-Fees-Receivable 100.00 / CREDIT OHLGR-Income-From-Fees 100.00 (fee family). request.journal_entries transcribes each leg's transactionId, glAccountName, entryType.value and amount; amounts are raised to integer minor units (921.15 -> 92115, 100.00 -> 10000) with no residue. expect.journal_entry_debits_minor and expect.journal_entry_credits_minor are the two independent side totals (102115 each), each transcribed as the sum over EVERY leg, never a netting. expect.journal_entry_account_sides is the third expected cell, transcribed from the same four legs: WHICH account takes WHICH side in WHICH transaction. The defect this vector exists to catch: a port that routes ALL accrual income to a single income account. Such a port keeps every leg, every side and both totals at the observed values — it still balances and still totals correctly — and moves only WHICH income account the fee family's credit names; because it carries two income credits, the per-(transaction, account) side list is the only cell that goes red, and the drive loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account is that defect. The accrual satisfies the seam's existing multiLegDistinctCredits admission predicate unchanged: ONE transaction id, FOUR legs (>=3) and TWO distinct credit accounts; admission was NOT widened for it. Nothing was computed by this promotion; every cell is a transcription of the oracle's generated postings.",
+    "oracle": {
+        "seam": "loan-journal-entry-batch-balance",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.journal_entries and both expected totals are transcribed from the four pageItems of the committed capture journalentries-loan-12-after-raw.json whose entityType.value is LOAN, entityId is 12 and transactionId is L25 (entry ids 32, 35, 39, 41). capture_case_id names the transaction the batch comprises, exactly as LN-L12 names L53 in the same capture. The capture is a filtered journal-entries page (totalFilteredRecords 29), so it is identified by the transaction id rather than an externalId. expect.journal_entry_account_sides is transcribed from the same four pageItems, keying each (transactionId, glAccountName) to its entryType.value; no side is inferred from an account's normal balance. Both families are observed, not derived: the interest pair is ids 32/35 and the fee pair is ids 39/41.",
+        "capture_ref": ".softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json",
+        "capture_sha256": "9024add5df2946c369719f7d83623d525ddc77df59ca3b457a586d0feed490c9",
+        "capture_case_id": "L25",
+        "citation": "journalentries-loan-12-after-raw.json:1 pageItems for entityId 12 (entityType LOAN), transactionId L25: {\"id\":32,\"transactionId\":\"L25\",\"glAccountName\":\"OHLGR-Interest-Receivable\",\"entryType\":{\"value\":\"DEBIT\"},\"amount\":921.15}, {\"id\":35,\"transactionId\":\"L25\",\"glAccountName\":\"OHLGR-Interest-On-Loans\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":921.15}, {\"id\":39,\"transactionId\":\"L25\",\"glAccountName\":\"OHLGR-Income-From-Fees\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":100.0}, {\"id\":41,\"transactionId\":\"L25\",\"glAccountName\":\"OHLGR-Fees-Receivable\",\"entryType\":{\"value\":\"DEBIT\"},\"amount\":100.0}"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "journal_entries": [
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Interest-Receivable",
+                "entry_type": "DEBIT",
+                "amount_minor": "92115"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Interest-On-Loans",
+                "entry_type": "CREDIT",
+                "amount_minor": "92115"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Income-From-Fees",
+                "entry_type": "CREDIT",
+                "amount_minor": "10000"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Fees-Receivable",
+                "entry_type": "DEBIT",
+                "amount_minor": "10000"
+            }
+        ]
+    },
+    "expect": {
+        "journal_entry_debits_minor": "102115",
+        "journal_entry_credits_minor": "102115",
+        "journal_entry_account_sides": [
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Interest-Receivable",
+                "entry_type": "DEBIT"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Interest-On-Loans",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Income-From-Fees",
+                "entry_type": "CREDIT"
+            },
+            {
+                "transaction_id": "L25",
+                "account": "OHLGR-Fees-Receivable",
+                "entry_type": "DEBIT"
+            }
+        ]
+    },
+    "capabilities_required": [
+        "journal-entry-batch-balance"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account"
+    ]
+}
