@@ -1,0 +1,97 @@
+# OH-INV-W live COB refusal for loan 12 (tenant gerege, loan product id 3 OHLGR-Accrual-Loan).
+# Captured 2026-09-10T04:06:46Z from docker logs gerege-oracle-app (block sliced at --since 6h).
+# Request: POST /jobs/34?command=executeJob -> HTTP 202, empty body (out/cob-execute-invw.status = 202).
+# Job 34 (Loan COB) lastRunHistory.status = success; the investor step failure is caught per-loan by
+# AbstractLoanItemListener, downgraded to WARN, then skipped (out/job34-status-invw.json).
+# First of five identical attempts (COB-Thread-21..25) is shown in full below.
+#
+# WHY THIS IS A NEW GATE, NOT THE LOAN-6 REFUSAL: product 3 has a full product->GL mapping set, so
+# ProductToGLAccountMappingNotFoundException (the loan-6 refusal on product 2, accountingRule NONE)
+# does NOT recur. The transfer advances to the ASSET_TRANSFER financial-activity account
+# (financial activity TYPE 100) and refuses there. See out/post-cob0902-db-state-invw.txt:
+# acc_gl_financial_activity_account holds only types 101 and 102; type 100 is absent.
+#
+# --- exact log block (COB-Thread-21), 2026-09-10 04:06:45.992Z ---
+2026-09-10 04:06:45.992 - WARN 1  [         gerege] --- [  COB-Thread-21] o.a.f.c.l.AbstractLoanItemListener       : Error was triggered during processing of Loan (id=12) due to: org.apache.fineract.cob.exceptions.BusinessStepException: Error happened during business step execution
+	at org.apache.fineract.cob.COBBusinessStepServiceImpl.run(COBBusinessStepServiceImpl.java:77)
+	at org.apache.fineract.cob.processor.AbstractItemProcessor.process(AbstractItemProcessor.java:60)
+	at org.apache.fineract.cob.loan.AbstractLoanItemProcessor.process(AbstractLoanItemProcessor.java:43)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.support.DelegatingIntroductionInterceptor.doProceed(DelegatingIntroductionInterceptor.java:137)
+	at org.springframework.aop.support.DelegatingIntroductionInterceptor.invoke(DelegatingIntroductionInterceptor.java:124)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.apache.fineract.cob.loan.LoanItemProcessor$$SpringCGLIB$$0.process(<generated>)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.doProcess(SimpleChunkProcessor.java:146)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.lambda$transform$0(FaultTolerantChunkProcessor.java:228)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:367)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:286)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:216)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.transform(FaultTolerantChunkProcessor.java:291)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:220)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:75)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:383)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:307)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:250)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:82)
+	at org.springframework.batch.repeat.support.TaskExecutorRepeatTemplate$ExecutingRunnable.run(TaskExecutorRepeatTemplate.java:261)
+	at org.apache.fineract.cob.loan.ContextAwareTaskDecorator.lambda$decorate$0(ContextAwareTaskDecorator.java:41)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.apache.fineract.accounting.financialactivityaccount.exception.FinancialActivityAccountNotFoundException: Financial Activity account with for the financial Activity with Id 100 does not exist
+	at org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccountRepositoryWrapper.findByFinancialActivityTypeWithNotFoundDetection(FinancialActivityAccountRepositoryWrapper.java:48)
+	at org.apache.fineract.investor.accounting.journalentry.service.InvestorAccountingHelper.getLinkedGLAccountForLoanProduct(InvestorAccountingHelper.java:120)
+	at org.apache.fineract.investor.accounting.journalentry.service.InvestorAccountingHelper.createDebitJournalEntryOrReversalForInvestor(InvestorAccountingHelper.java:72)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntries(AccountingServiceImpl.java:277)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntries(AccountingServiceImpl.java:115)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntriesForSaleAssetTransfer(AccountingServiceImpl.java:65)
+	at org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformServiceJpaRepositoryImpl.createJournalEntriesForExternalOwnerTransfer(JournalEntryWritePlatformServiceJpaRepositoryImpl.java:855)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformServiceJpaRepositoryImpl$$SpringCGLIB$$0.createJournalEntriesForExternalOwnerTransfer(<generated>)
+	at org.apache.fineract.portfolio.loanaccount.service.LoanJournalEntryPosterImpl.postJournalEntriesForExternalOwnerTransfer(LoanJournalEntryPosterImpl.java:48)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.sellAsset(LoanAccountOwnerTransferBusinessStep.java:189)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.sellAssetOrDecline(LoanAccountOwnerTransferBusinessStep.java:169)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.handleSale(LoanAccountOwnerTransferBusinessStep.java:119)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.execute(LoanAccountOwnerTransferBusinessStep.java:108)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.execute(LoanAccountOwnerTransferBusinessStep.java:55)
+	at org.apache.fineract.cob.COBBusinessStepServiceImpl.run(COBBusinessStepServiceImpl.java:75)
+	... 30 more
+
+# --- skip after the fifth attempt ---
+2026-09-10 04:06:46.142 - WARN 1  [         gerege] --- [  COB-Thread-21] o.a.f.c.l.AbstractLoanItemListener       : Skipping was triggered during processing of Loan (id=12)
+
+# Corroborating READ-ONLY DB evidence (out/post-cob0902-db-state-invw.txt):
+#   acc_gl_financial_activity_account financial_activity_type IN (101,102) only; type 100 ABSENT
+#   m_product_loan id 3 accounting_type=3 (ACCRUAL PERIODIC); acc_product_mapping product 3 = 12 rows
+#   acc_gl_account gl_code LIKE 'OHLGR%' = 12 rows (ids 5..16); note: the OH-GL-T brief says 11 -- ORACLE WINS
+#   m_loan 10,11,12 product_id=3 principal=100000.000000 loan_status_id=300; they DO post JEs (24/24/22 rows)
+#   m_external_asset_owner_transfer id 17 (loan 12) status stays PENDING; purchase_price_ratio=97.25
+#   m_external_asset_owner_transfer_details rows = 0
+#   acc_gl_journal_entry entity_id=17 rows = 0 (no journal entry posted by the transfer)
+#
+# CONCLUSION (observed, not inferred): the product-3 transfer passes the product-mapping gate that
+# refused loan 6, then refuses at the ASSET_TRANSFER organization-account lookup (financial activity
+# type 100). InvestorAccountingHelper.createDebitJournalEntryOrReversalForInvestor calls
+# getLinkedGLAccountForLoanProduct; because 100 is an ORGANIZATION activity (isOrganizationAccount ->
+# FinancialActivity.fromInt(100) != null), it calls
+# FinancialActivityAccountRepositoryWrapper.findByFinancialActivityTypeWithNotFoundDetection, which
+# throws FinancialActivityAccountNotFoundException for id 100 (wrapper line 48). No journal entry is
+# posted and the transfer stays PENDING.
+#
+# THE REFUSAL IS THE RESULT. No reference row was inserted, nothing was synthesised, and no SQL wrote
+# the tenant. This is a seed/reference-data gap (type 100 ASSET_TRANSFER is not configured in this
+# oracle tenant), not a code defect in the investor module.

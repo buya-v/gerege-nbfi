@@ -20,7 +20,8 @@
     }
   },
   "readBackQuirks": {
-    "transfers": "GET /external-asset-owners/transfers?loanId=6 returns the single transfer row above. GET /external-asset-owners/transfers WITHOUT the loanId query parameter returns HTTP 500 (Internal Server Error), not 400 — an oracle-refusal observation recorded as transfer-read-no-param-raw.json. The search endpoint POST /external-asset-owners/search returns the same row with a page size of 50 (transfer-search-raw.json)."
+    "transfers": "GET /external-asset-owners/transfers?loanId=6 returns the single transfer row above. GET /external-asset-owners/transfers WITHOUT the loanId query parameter returns HTTP 500 (Internal Server Error), not 400 — an oracle-refusal observation recorded as transfer-read-no-param-raw.json. The search endpoint POST /external-asset-owners/search returns the same row with a page size of 50 (transfer-search-raw.json).",
+    "transferJournalEntries": "GET /external-asset-owners/transfers/{id}/journal-entries?loanId=... returns HTTP 200 with body {} (an empty OBJECT, not an empty array []) when the transfer has posted no journal entries. Observed for transfer 1 (loan 6, out/transfer-1-je-invq.json) and transfer 17 (loan 12, out/transfer-17-journal-entries-post-cob0902-refused-invw.json); the sha256 of that body is 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a, the SHA-256 of the two bytes '{}'."
   },
   "findings": [
     {
@@ -89,6 +90,11 @@
       "journalEntryConfirmation": {
         "status": "BLOCKED",
         "reason": "COB refused at the GL-mapping step before posting any journal entry for transfer 1 (INVQ-COB-REFUSAL): acc_gl_journal_entry rows for entity_id=1 = 0 and GET /transfers/1/journal-entries returns an empty list. The proposed comparison (posted amount == outstanding, not 0.9725 x outstanding) therefore could not be observed. NO value is synthesised.",
+        "reattempt": {
+          "by": "OH-INV-W",
+          "route": "product-3 loan 12 (OHLGR-Accrual-Loan, ACCRUAL PERIODIC), transfer 17, purchasePriceRatio '97.25', settlementDate 2026-09-02",
+          "result": "STILL BLOCKED, for a NEW reason: the product-mapping gate is passed, then the ASSET_TRANSFER (100) financial-activity account is missing in tenant gerege and the same postJournalEntriesForExternalOwnerTransfer call refuses before posting. acc_gl_journal_entry rows for entity_id=17 = 0; GET /transfers/17/journal-entries returns {} (HTTP 200). See finding INVW-COB-REFUSAL-ASSET-TRANSFER-100. The comparison (posted == outstanding, NOT 97.25% x outstanding; 97.25% of 100000 = 97250 vs 100000) remains unobservable. NO value is synthesised."
+        },
         "endpointsChecked": [
           "GET /external-asset-owners/transfers/1?loanId=6",
           "GET /external-asset-owners/transfers/1/journal-entries?loanId=6",
@@ -125,6 +131,49 @@
         "evidence": {"ref": ".softhouse/capture/investor/out/inert-details-drives-invq.txt", "sha256": "ae265a61ee0a2e6118a598a63283ab44070346d01bbcfd4527da0536b64c17bc"}
       },
       "disposition": "Recorded as a seam gap; no drive merged inert. A capture that actually SEES a details cell (which requires a settled transfer) is the prerequisite to promote any of the four vectors."
+    },
+    {
+      "id": "INVW-COB-REFUSAL-ASSET-TRANSFER-100",
+      "kind": "refusal",
+      "title": "A product-3 (ACCRUAL PERIODIC) transfer clears the product->GL mapping gate and then refuses at the ASSET_TRANSFER financial-activity account (id 100), which is not configured in tenant gerege",
+      "supersedesAssumption": "The OH-INV-W brief's premise -- that OH-GL-R/OH-GL-T's product-3 accountingMappings set (12 rows) is sufficient to let the transfer settle -- is FALSE on this oracle. A SECOND reference row is required: the financial-activity account for ASSET_TRANSFER (100). The first gate (INVQ-COB-REFUSAL, product 2 LOAN PORTFOLIO mapping) is passed; the transfer then refuses at the next gate. This is the same class of seed/reference-data gap the brief warned can survive in a written record -- stated loudly here so it is not inherited as 'product 3 unblocks settlement'.",
+      "observed": [
+        "State verified live before the attempt: loan product 3 OHLGR-Accrual-Loan accountingRule = accountingRuleType.accrual.periodic (ACCRUAL PERIODIC); product 2 = accountingRuleType.none (NONE, INVQ-COB-REFUSAL root cause); loans 10 (OHGLR-L01), 11 (OHGLR-L02) and 12 (OHLGT-L03) are all product 3 and Active.",
+        "acc_product_mapping for product 3 = 12 rows (acc_gl_account gl_code LIKE 'OHLGR%' ids 5..16 = 12 rows). The OH-GL-T brief says 11 -- the ORACLE has 12. ORACLE WINS; the brief's 11 is stale.",
+        "GET /jobs/LOAN_CLOSE_OF_BUSINESS/steps still carries EXTERNAL_ASSET_OWNER_TRANSFER at order 7 (CHECK_LOAN_REPAYMENT_DUE=3, APPLY_CHARGE_TO_OVERDUE_LOANS=1, LOAN_DELINQUENCY_CLASSIFICATION=2, CHECK_LOAN_REPAYMENT_OVERDUE=4, UPDATE_LOAN_ARREARS_AGING=5, ADD_PERIODIC_ACCRUAL_ENTRIES=6).",
+        "Transfer 17 created on loan 12 (product 3), settlementDate 2026-09-02, purchasePriceRatio '97.25' (a JSON String), status PENDING. POST returned HTTP 200 {resourceId:17, subResourceId:12, resourceExternalId:'OHINVW-Tr-12', subResourceExternalId:'OHLGT-L03'}.",
+        "Business date advanced 2026-09-02 -> 2026-09-03 by job 32 (Increase Business Date by 1 day); the derived COB date advanced 2026-09-01 -> 2026-09-02. Transfer 17's settlementDate 2026-09-02 equals the job's COB date, so LoanAccountOwnerTransferBusinessStep.java:82-87 selects it.",
+        "POST /jobs/34?command=executeJob returned HTTP 202 with an EMPTY body; job 34 (Loan COB, LA_ECOB) job-level lastRunHistory.status = success. The investor step failure is caught per-loan by AbstractLoanItemListener and downgraded to WARN, then skipped -- so job-level success does NOT mean the step succeeded.",
+        "Application log (COB-Thread-21, 2026-09-10 04:06:45.992Z): BusinessStepException for Loan(id=12) on five attempts (COB-Thread-21..25), then 'Skipping was triggered during processing of Loan (id=12)'.",
+        "Root cause (source, pinned 426a23544): FinancialActivityAccountNotFoundException: Financial Activity account with for the financial Activity with Id 100 does not exist, thrown at FinancialActivityAccountRepositoryWrapper.java:48 from InvestorAccountingHelper.getLinkedGLAccountForLoanProduct (:120). ASSET_TRANSFER(100) is a non-null FinancialActivity (AccountingConstants.java:438; fromInt at :491), so isOrganizationAccount (InvestorAccountingHelper.java:135-137) takes the ORGANIZATION branch (InvestorAccountingHelper.java:118-121) instead of the product-mapping branch, and looks up a financial-activity row rather than a product mapping. Call path, in the order the captured stack prints it (out/loan-12-cob-refusal-invw.txt:66-70 then :49-54): LoanAccountOwnerTransferBusinessStep.java:189 -> :169 -> :119 -> :108 -> :55 -> JournalEntryWritePlatformServiceJpaRepositoryImpl.java:855 -> AccountingServiceImpl.java:65 -> :115 -> :277 -> InvestorAccountingHelper.java:72 -> :120 -> FinancialActivityAccountRepositoryWrapper.java:48.",
+        "DB after the refused COB: acc_gl_financial_activity_account holds only financial_activity_type 101 and 102; type 100 ASSET_TRANSFER is ABSENT (the tenant seeded only 101/102). Transfer 17 still PENDING, purchase_price_ratio 97.25. m_external_asset_owner_transfer_details rows = 0. acc_gl_journal_entry rows for entity_id=17 = 0 (no journal entry posted). Loans 10/11/12 post JEs (24/24/22 rows), so the product itself does post.",
+        "Read-back after the COB run: GET /external-asset-owners/transfers?loanId=12 still returns transfer 17 PENDING; GET /external-asset-owners/transfers/17/journal-entries?loanId=12 returns HTTP 200 with body {} (an empty OBJECT, not an empty array)."
+      ],
+      "evidence": {
+        "refusal": {"ref": ".softhouse/capture/investor/out/loan-12-cob-refusal-invw.txt", "sha256": "ae454c366260bf4a95a00e4d79fc30401945af94047447523a9fa8601126b825"},
+        "dbState": {"ref": ".softhouse/capture/investor/out/post-cob0902-db-state-invw.txt", "sha256": "8abc41afbae056dd6cc046899ef7dc7ecbf0f76bd5a11bde6c7e6dd448f0cac3"},
+        "jobRun": {"ref": ".softhouse/capture/investor/out/job34-status-invw.json", "sha256": "87e4a7572aac635ae3fd90208e2f9fc918c5ba119a05a8ce03224b28c428f9d3"},
+        "cobExecuteStatus": {"ref": ".softhouse/capture/investor/out/cob-execute-invw.status", "sha256": "c17edaae86e4016a583e098582f6dbf3eccade8ef83747df9ba617ded9d31309", "note": "observed 202; body at out/cob-execute-invw.json is empty (0 bytes)"},
+        "transferRead": {"ref": ".softhouse/capture/investor/out/transfers-loan-12-post-cob0902-refused-invw.json", "sha256": "6d0f5cb3a0801030b6444bf66765f0f330ba0f8833dce858890ccc83bd584f0b"},
+        "journalEntries": {"ref": ".softhouse/capture/investor/out/transfer-17-journal-entries-post-cob0902-refused-invw.json", "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"},
+        "transferCreateStatus": {"ref": ".softhouse/capture/investor/out/transfer-create-loan-12-response-invw.status", "sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf", "note": "observed 200"},
+        "journalEntriesStatus": {"ref": ".softhouse/capture/investor/out/transfer-17-journal-entries-post-cob0902-refused-invw.status", "sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf", "note": "observed 200"},
+        "financialActivityAccounts": {"ref": ".softhouse/capture/investor/out/financial-activity-accounts-invw.json", "sha256": "27fc6a63b67e8ac359cdfcd2d805403c63255af0edd7bc561f63b592715dbdd0"},
+        "loanProduct3": {"ref": ".softhouse/capture/investor/out/loanproduct-3-invw.json", "sha256": "3c9241a02f78706a576a0be1c2506a3784f47dbe37be090e23f9a5073d20aa3d"},
+        "loanProduct2": {"ref": ".softhouse/capture/investor/out/loanproduct-2-invw.json", "sha256": "60eb8f659ebd60f3fbfffe221ccf0d2fa55979e73ee29ee01600f2deafcd8dbb"},
+        "cobSteps": {"ref": ".softhouse/capture/investor/out/jobs-loan-close-of-business-steps-pre-settle-invw.json", "sha256": "3ae0093871ac5de88f6009c05e1deb7a90ae13da22ade1e2178ee85b058cb714"},
+        "transferCreateResponse": {"ref": ".softhouse/capture/investor/out/transfer-create-loan-12-response-invw.json", "sha256": "fb5380521a1d0c62463efbb4a5dbb26d66ecee5150f2a60913fbe3145eb84359"},
+        "transferCreateRequest": {"ref": ".softhouse/capture/investor/req/transfer-create-loan-12-invw.json", "sha256": "319683add2afc6fe38af43f27e1e278dac815a5e9a5062d054d9a904ab51b49f"},
+        "businessDateAfterJob32": {"ref": ".softhouse/capture/investor/out/businessdate-after-job32-invw.json", "sha256": "daa87d970de7b1ba05831632dd0ae95b03d35803663f018e60d89bead29178ff"},
+        "loan10": {"ref": ".softhouse/capture/investor/out/loan-10-product3-invw.json", "sha256": "7c85ab305143ad82c127b40f8a2525023fc7e8d630eb7089ead9bc53d04a78c5"},
+        "loan11": {"ref": ".softhouse/capture/investor/out/loan-11-product3-invw.json", "sha256": "a9d75bb7deca4e642684ff0f46bf8889bcb29eb57aea3930700a09016d32e70b"}
+      },
+      "killCountControls": {
+        "note": "No drive was run for this finding; it is a live oracle refusal, not a vector. The measurement instrument was shown live in the same worktree by INVQ-SEAM-DETAILS-UNOBSERVABLE's controls and re-run by OH-INV-W: investor-wrong-blank-status killed 1 and investor-wrong-fabricates-transfer killed 1 (existing investor drives that still kill)."
+      },
+      "disposition": "The refusal IS the result. Recorded, not worked around. Configuring the missing ASSET_TRANSFER (100) financial-activity account would be a reference-data write; the brief's line ('do not work around a refusal by SQL-inserting reference data') holds for an API write too, and NOTHING was inserted by SQL or by API. This is a seed/reference-data gap in the oracle tenant, not an investor-module code defect.",
+      "consequence": "The product-3 route does NOT unblock the transfer. INVQ-GAP-PURCHASE-PRICE's journal-entry confirmation stays BLOCKED: acc_gl_journal_entry rows for entity_id=17 = 0, so 'posted == outstanding, NOT ratio x outstanding' (97.25% of 100000 = 97250 vs 100000) is still unobservable. FINDING A remains UNCONFIRMED by the oracle and FINDING B's details seam stays unobservable (details rows = 0). No value was synthesised.",
+      "deletedInertCapture": "out/active-transfer-loan-12-pre-invw.json was a 0-byte failed capture (measurement failure, not an empty result) and was deleted with this argument. Its intended content is already carried by out/transfers-loan-12-pre-invw.json (empty content before creation) and out/transfers-loan-12-at-cob0902-start-invw.json (transfer 17 PENDING at COB start)."
     }
   ]
 }
