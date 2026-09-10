@@ -438,6 +438,11 @@ FROM m_wc_loan_balance WHERE wc_loan_id = $1`, []any{loanID}, func(s postgres.Ro
 	if err != nil {
 		return nil, fmt.Errorf("workingcapital: find balance: %w", err)
 	}
+	if out != nil {
+		if err := out.ValidateGradedDomain(); err != nil {
+			return nil, fmt.Errorf("workingcapital: find balance: %w", err)
+		}
+	}
 	return out, nil
 }
 

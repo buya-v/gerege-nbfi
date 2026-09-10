@@ -96,7 +96,9 @@ func CorrectImplementationNames() []string {
 // outstanding/due getters, never a transcribed constant.
 func seededBalance() workingcapital.WorkingCapitalLoanBalance {
 	var b workingcapital.WorkingCapitalLoanBalance
-	b.ApplyDisbursement(loan.MinorUnits(100051), 0)
+	if err := b.ApplyDisbursement(loan.MinorUnits(100051), 0); err != nil {
+		panic(fmt.Sprintf("workingcapital conformance: the pinned seed disbursement (100051, no discount) must be admitted by the graded domain: %v", err))
+	}
 	return b
 }
 

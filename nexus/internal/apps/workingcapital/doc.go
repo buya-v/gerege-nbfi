@@ -18,7 +18,7 @@
 //     [VERIFIED: WorkingCapitalLoanTransactionAllocation.java:24-60].
 //   - WorkingCapitalLoanBalance derives outstanding over the same three buckets
 //     (principal, fee, penalty), again with no interest [VERIFIED:
-//     WorkingCapitalLoanBalance.java:24-140].
+//     WorkingCapitalLoanBalance.java:45-156].
 //
 // The shared vocabulary — LoanStatus, LoanTransactionType, DueType,
 // AllocationType and MinorUnits — is imported from the loan package rather than

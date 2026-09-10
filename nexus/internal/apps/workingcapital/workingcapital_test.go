@@ -1,6 +1,8 @@
 package workingcapital
 
 import (
+	"errors"
+	"strings"
 	"testing"
 
 	"github.com/gerege/nexus/internal/apps/loan"
@@ -68,14 +70,58 @@ func TestBalanceOutstandingDerivations(t *testing.T) {
 	}
 }
 
-func TestApplyDisbursement(t *testing.T) {
+func TestApplyDisbursementRefusesUngradedDiscount(t *testing.T) {
 	var b WorkingCapitalLoanBalance
-	b.ApplyDisbursement(1_000_00, 50_00)
-	if b.TotalDiscountFee != 50_00 {
-		t.Fatalf("TotalDiscountFee = %d, want 5000", b.TotalDiscountFee)
+	if err := b.ApplyDisbursement(1_000_00, 50_00); !errors.Is(err, ErrNoGradedCapture) {
+		t.Fatalf("ApplyDisbursement(non-zero discount) error = %v, want ErrNoGradedCapture", err)
 	}
-	if b.Principal != 1_050_00 {
-		t.Fatalf("Principal = %d, want 105000", b.Principal)
+	if b != (WorkingCapitalLoanBalance{}) {
+		t.Fatalf("a refused disbursement mutated the balance: %+v", b)
+	}
+	if err := b.ApplyDisbursement(1_000_00, 0); err != nil {
+		t.Fatalf("ApplyDisbursement(no discount) = %v, want nil", err)
+	}
+	if b.Principal != 1_000_00 || b.TotalDiscountFee != 0 {
+		t.Fatalf("admitted disbursement = %+v, want principal 100000 and no discount", b)
+	}
+}
+
+func TestValidateGradedDomain(t *testing.T) {
+	var graded WorkingCapitalLoanBalance
+	if err := graded.ApplyDisbursement(100051, 0); err != nil {
+		t.Fatalf("the pinned capture's balance must be admitted: %v", err)
+	}
+	if err := graded.ValidateGradedDomain(); err != nil {
+		t.Fatalf("the pinned capture's balance must be admitted: %v", err)
+	}
+
+	cases := []struct {
+		name string
+		set  func(*WorkingCapitalLoanBalance)
+	}{
+		{"PrincipalPaid", func(b *WorkingCapitalLoanBalance) { b.PrincipalPaid = 1 }},
+		{"PrincipalAdjustment", func(b *WorkingCapitalLoanBalance) { b.PrincipalAdjustment = 1 }},
+		{"Fee", func(b *WorkingCapitalLoanBalance) { b.Fee = 1 }},
+		{"FeePaid", func(b *WorkingCapitalLoanBalance) { b.FeePaid = 1 }},
+		{"Penalty", func(b *WorkingCapitalLoanBalance) { b.Penalty = 1 }},
+		{"PenaltyPaid", func(b *WorkingCapitalLoanBalance) { b.PenaltyPaid = 1 }},
+		{"RealizedIncomeFromDiscountFee", func(b *WorkingCapitalLoanBalance) { b.RealizedIncomeFromDiscountFee = 1 }},
+		{"OverpaymentAmount", func(b *WorkingCapitalLoanBalance) { b.OverpaymentAmount = 1 }},
+		{"TotalDisbursement", func(b *WorkingCapitalLoanBalance) { b.TotalDisbursement = 1 }},
+		{"TotalDiscountFee", func(b *WorkingCapitalLoanBalance) { b.TotalDiscountFee = 1 }},
+		{"TotalDiscountFeeAdjustment", func(b *WorkingCapitalLoanBalance) { b.TotalDiscountFeeAdjustment = 1 }},
+		{"BreachPastDueAmount", func(b *WorkingCapitalLoanBalance) { b.BreachPastDueAmount = 1 }},
+	}
+	for _, tc := range cases {
+		var b WorkingCapitalLoanBalance
+		tc.set(&b)
+		err := b.ValidateGradedDomain()
+		if !errors.Is(err, ErrNoGradedCapture) {
+			t.Fatalf("%s: error = %v, want ErrNoGradedCapture", tc.name, err)
+		}
+		if !strings.Contains(err.Error(), tc.name) {
+			t.Fatalf("%s: refusal %q does not name the term", tc.name, err)
+		}
 	}
 }
 
