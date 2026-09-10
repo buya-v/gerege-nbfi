@@ -41,6 +41,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertTransactionBalances(v, got)}
 	case SeamLoanJournalEntryBatchBalance:
 		return []InvariantResult{assertJournalEntryBatchBalances(got)}
+	case SeamLoanScheduleAmortization:
+		return []InvariantResult{assertPrincipalAmortizesToZero(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -193,5 +195,42 @@ func assertJournalEntryBatchBalances(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("batch balances exactly: debits == credits == %s", got.JournalEntryDebitsMinor)
+	return r
+}
+
+// assertPrincipalAmortizesToZero: over a full repayment schedule the sum of the
+// per-period principal components equals the disbursed principal EXACTLY and the
+// final outstanding principal balance is EXACTLY zero, in integer minor units
+// with no residue. This is the property the whole-schedule seam exists to grade;
+// the assertions are on the implementation's RESULT, not re-derived from the
+// request, so a port that returns a sum that does not reconcile or a non-zero
+// final balance is VIOLATED even if its own arithmetic was self-consistent.
+func assertPrincipalAmortizesToZero(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "principal_amortizes_to_zero", Assertions: 4}
+	if !isIntegerMinorString(got.PrincipalSumMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("principal sum %q is not a non-negative integer minor amount", got.PrincipalSumMinor)
+		return r
+	}
+	if !isIntegerMinorString(got.FinalPrincipalBalanceMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("final principal balance %q is not a non-negative integer minor amount", got.FinalPrincipalBalanceMinor)
+		return r
+	}
+	if v.Request.ScheduleAmortization != nil {
+		want := v.Request.ScheduleAmortization.PrincipalDisbursedMinor
+		if got.PrincipalSumMinor != want {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("principal components sum to %s, not the disbursed principal %s", got.PrincipalSumMinor, want)
+			return r
+		}
+	}
+	if got.FinalPrincipalBalanceMinor != "0" {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("final outstanding principal balance is %s, not zero: principal does not amortize to zero", got.FinalPrincipalBalanceMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("principal components sum to the disbursed principal %s exactly and the final balance is zero", got.PrincipalSumMinor)
 	return r
 }

@@ -131,6 +131,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goRepayment(*req.Repayment)
 	case req.Schedule != nil:
 		return goSchedule(*req.Schedule, roundHalfUp)
+	case req.ScheduleAmortization != nil:
+		return goScheduleAmortization(*req.ScheduleAmortization)
 	case req.Disburse != nil:
 		return goDisburse(*req.Disburse)
 	case req.Summary != nil:
@@ -432,6 +434,133 @@ func roundHalfEven(num, den *big.Int) int64 {
 		q.Add(q, big.NewInt(1))
 	}
 	return q.Int64()
+}
+
+// parsePrincipalComponents parses a vector's per-period principal component
+// strings into integer minor units. A component carrying sub-minor significance
+// (a decimal point) is refused by ParseMinorInt, never rounded: G-19 / DEC-2
+// predicate G-08 refuse a residue rather than vector one.
+func parsePrincipalComponents(texts []string) ([]loan.MinorUnits, error) {
+	out := make([]loan.MinorUnits, len(texts))
+	for i, s := range texts {
+		v, err := parseMinorText(s)
+		if err != nil {
+			return nil, fmt.Errorf("principal_components_minor[%d]: %w", i, err)
+		}
+		out[i] = v
+	}
+	return out, nil
+}
+
+// goScheduleAmortization ports the whole-schedule principal-amortization seam:
+// it sums the observed per-period principal components and derives the final
+// outstanding principal balance by rolling the disbursed principal down by each
+// component in period order (derive-don't-store, I-3).
+func goScheduleAmortization(r ScheduleAmortizationRequest) (Expect, error) {
+	disbursed, err := parseMinorText(r.PrincipalDisbursedMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	components, err := parsePrincipalComponents(r.PrincipalComponentsMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	am := loan.DerivePrincipalAmortization(disbursed, components)
+	return Expect{
+		PrincipalSumMinor:          strconv.FormatInt(int64(am.PrincipalSum), 10),
+		FinalPrincipalBalanceMinor: strconv.FormatInt(int64(am.FinalBalance), 10),
+	}, nil
+}
+
+// amortizationWrongMode selects which deliberately-wrong whole-schedule
+// principal reconstruction to run. Each mode rebuilds the per-period components
+// from the disbursed principal or from a prefix of the observed components and
+// then runs the same derivation — exactly what a port does when it re-derives
+// the schedule instead of transcribing its per-period principal back.
+type amortizationWrongMode int
+
+const (
+	// wrongAmortizationDropsFinalComponent reconstructs the schedule without the
+	// LAST repayment period's principal component, as a port does when it reads
+	// only the pre-adjustment rows. On the pinned loan-5 schedule the sum falls
+	// 348748 minor units short and the final balance is left at exactly 348748.
+	wrongAmortizationDropsFinalComponent amortizationWrongMode = iota
+	// wrongAmortizationUniformTruncated recomputes every period as
+	// floor(disbursed/periods), so the sub-minor remainder of an uneven division
+	// is never placed anywhere. On the pinned loan-5 schedule (4185009 minor
+	// units over 12 periods) the remainder is 9 minor units: the sum reads
+	// 4185000 and the final balance is left at 9.
+	wrongAmortizationUniformTruncated
+	// wrongAmortizationUniformRoundedUp recomputes every period as
+	// ceil(disbursed/periods), over-amortising by the rounded-up excess. On the
+	// pinned loan-5 schedule the sum reads 4185012 and the final balance goes
+	// negative at -3.
+	wrongAmortizationUniformRoundedUp
+)
+
+// wrongScheduleAmortizationEvaluator is a DELIBERATELY WRONG implementation of
+// the whole-schedule principal-amortization seam, parameterised by which
+// reconstruction defect it commits. On any request that is not a schedule
+// amortization it delegates to the correct port, so each drive goes red ONLY on
+// this seam's vector and stays green everywhere else (vector isolation).
+type wrongScheduleAmortizationEvaluator struct {
+	goEvaluator
+	mode amortizationWrongMode
+}
+
+func (w wrongScheduleAmortizationEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ScheduleAmortization != nil {
+		return wrongScheduleAmortization(*req.ScheduleAmortization, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongScheduleAmortization rebuilds the per-period components with one defect
+// and derives the sum and final balance from the rebuilt sequence.
+func wrongScheduleAmortization(r ScheduleAmortizationRequest, mode amortizationWrongMode) (Expect, error) {
+	disbursed, err := parseMinorText(r.PrincipalDisbursedMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	components, err := parsePrincipalComponents(r.PrincipalComponentsMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	var rebuilt []loan.MinorUnits
+	switch mode {
+	case wrongAmortizationDropsFinalComponent:
+		if len(components) > 0 {
+			rebuilt = components[:len(components)-1]
+		}
+	case wrongAmortizationUniformTruncated:
+		rebuilt = uniformPrincipalComponents(disbursed, len(components), false)
+	case wrongAmortizationUniformRoundedUp:
+		rebuilt = uniformPrincipalComponents(disbursed, len(components), true)
+	}
+	am := loan.DerivePrincipalAmortization(disbursed, rebuilt)
+	return Expect{
+		PrincipalSumMinor:          strconv.FormatInt(int64(am.PrincipalSum), 10),
+		FinalPrincipalBalanceMinor: strconv.FormatInt(int64(am.FinalBalance), 10),
+	}, nil
+}
+
+// uniformPrincipalComponents returns n copies of a uniform per-period principal
+// derived from the disbursed amount: floor(disbursed/n), or ceil(disbursed/n)
+// when roundUp is set. Neither places the division remainder, so the derived
+// sum reconciles to the disbursed principal only when the division is exact.
+func uniformPrincipalComponents(disbursed loan.MinorUnits, n int, roundUp bool) []loan.MinorUnits {
+	if n <= 0 {
+		return nil
+	}
+	per := disbursed / loan.MinorUnits(n)
+	if roundUp && per*loan.MinorUnits(n) != disbursed {
+		per++
+	}
+	out := make([]loan.MinorUnits, n)
+	for i := range out {
+		out[i] = per
+	}
+	return out
 }
 
 // wrongEvaluator is a DELIBERATELY WRONG implementation: it rounds the
@@ -1023,4 +1152,21 @@ func init() {
 			"100100.00/100100.00, so only the per-(transaction, account) side cells move — a fee "+
 			"posted to the loan portfolio instead of to income, and every total still balances",
 		wrongJournalEntryBatchEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBatchRoutesFeeThroughDisbursementAccounts})
+	RegisterWrong("loan-wrong-schedule-amortization-drops-final-component",
+		"reconstructs the whole repayment schedule without the LAST period's principal "+
+			"component, as a port does when it reads only the pre-adjustment rows, so the pinned "+
+			"loan-5 schedule's sum falls 348748 minor units short and the final outstanding "+
+			"principal balance is left at 348748 instead of 0",
+		wrongScheduleAmortizationEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAmortizationDropsFinalComponent})
+	RegisterWrong("loan-wrong-schedule-amortization-uniform-truncated",
+		"recomputes every period's principal as floor(disbursed/periods) and never places the "+
+			"division remainder, so the pinned loan-5 schedule (4185009 minor units over 12 "+
+			"periods) sums to 4185000 and leaves a final balance of 9 rather than 0 — the "+
+			"truncation residue the whole-schedule property exists to catch",
+		wrongScheduleAmortizationEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAmortizationUniformTruncated})
+	RegisterWrong("loan-wrong-schedule-amortization-uniform-rounded-up",
+		"recomputes every period's principal as ceil(disbursed/periods), over-amortising by the "+
+			"rounded-up excess, so the pinned loan-5 schedule sums to 4185012 and the final "+
+			"outstanding principal balance goes negative at -3 instead of 0",
+		wrongScheduleAmortizationEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAmortizationUniformRoundedUp})
 }

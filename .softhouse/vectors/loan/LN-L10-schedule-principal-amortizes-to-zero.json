@@ -1,0 +1,60 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L10-schedule-principal-amortizes-to-zero",
+    "title": "Whole-schedule principal amortization (loan 5: 41850.09 disbursed over 12 non-even periods) sums exactly to the disbursed principal and ends at zero",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the WHOLE repayment schedule of the discriminating SEED-L05 loan, read back from the schedule endpoint under tenant gerege. This is the loan slice's first whole-schedule observation: no existing loan vector grades principal amortization across a full schedule, and the loanschedule context's vectors grade the schedule GENERATOR at a different seam. The capture's repaymentSchedule.periods has 13 rows: periods[0] is the disbursement row and carries NO principalDue, and periods[1..12] are the 12 repayment periods, each carrying principalDue and principalLoanBalanceOutstanding. request.schedule_amortization transcribes periods[0].principalDisbursed (41850.09 -> \"4185009\") and the 12 observed periods[1..12].principalDue values raised to integer minor units: eleven 348751 and a final 348748. expect.principal_sum_minor and expect.final_principal_balance_minor are TRANSCRIPTIONS of the capture, not recomputations: the components sum to 4185009 = the disbursed principal exactly (348751*11 + 348748), and periods[12].principalLoanBalanceOutstanding is 0.0, so the final balance is \"0\". Loan 5 is chosen because its disbursed principal is not round: the 12 observed components are near-uniform but not equal, so the schedule carries a residue (348751 - 348748 = 3) in its LAST period; a uniform port that floors (348750) leaves 9 minor units outstanding and one that rounds up (348751) overshoots to 4185012 and a final balance of -3. Loan 2 (100000.00 disbursed, 10000000 minor units, 12 varying components from 7884.88 to 8796.88) carries the SAME sum-equals-disbursed and final-zero fact and NOTHING loan 5 does not, so it is not vectored: the property is shape-agnostic and both captures satisfy it identically. The three drive defects this capture kills are: drops-final-component (sum short by 348748, final 348748); uniform-truncated (floor(4185009/12)=348750, sum 4185000, final 9); uniform-rounded-up (ceil=348751, sum 4185012, final -3). A fourth shape in the brief -- the remainder placed in the FIRST period instead of the LAST -- is NOT discriminated by this seam and no vector or drive claims it: the grader compares only expect.principal_sum_minor and expect.final_principal_balance_minor (grade.go:196-198), and the invariant asserts got.PrincipalSumMinor == request.principal_disbursed_minor and got.FinalPrincipalBalanceMinor == \"0\" (invariants.go:208-232). Both cells are invariant under any redistribution of the SAME components, so a port that keeps the sum and the final zero while moving the remainder to period 1 is INDISTINGUISHABLE at this read-back seam. Seeing it would require the vector to carry the per-period expected output and the grader to compare the implementation's per-period components positionally; that is a schedule-GENERATION observation, which the loanschedule context owns, not a loan read-back. Nothing was computed by this promotion: the components and both expected cells are transcriptions of the oracle's persisted schedule.",
+    "oracle": {
+        "seam": "loan-schedule-amortization",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.schedule_amortization and both expected cells are transcribed from the committed capture loan-5-schedule-raw.json, the SEED-L05 (entityId 5, clientExternalId SEED-C15) repayment schedule read back from the Fineract schedule endpoint. The capture is a single-line JSON document; the observation is cited at line 1. capture_case_id names the loan's externalId SEED-L05, which appears in the capture's top-level externalId. The disbursed principal is taken from periods[0], the disbursement row, which also fixes that the repayment components are periods[1..12]. No value was synthesised: the components and both expected cells are read directly from the file.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-5-schedule-raw.json",
+        "capture_sha256": "acd1bbb603883ad1c9e2306b837b49f9638dcf92a16a6d738269c0a6cc265acc",
+        "capture_case_id": "SEED-L05",
+        "citation": "loan-5-schedule-raw.json:1 (single-line committed capture) under tenant gerege: {\"repaymentSchedule\":{\"totalPrincipalDisbursed\":41850.09,\"periods\":[{\"periodNumber\":0,\"principalDisbursed\":41850.09,\"principalLoanBalanceOutstanding\":41850.09},{\"periodNumber\":1,\"principalDue\":3487.51,\"principalLoanBalanceOutstanding\":38362.58},...,{\"periodNumber\":12,\"principalDue\":3487.48,\"principalLoanBalanceOutstanding\":0.0}]}} transcribes to: 41850.09->4185009 minor units; principalDue 3487.51->348751 (x11), 3487.48->348748; sum 348751*11+348748 = 4185009 == principalDisbursed; final 0.0->0"
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "schedule_amortization": {
+            "principal_disbursed_minor": "4185009",
+            "principal_components_minor": [
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348751",
+                "348748"
+            ]
+        }
+    },
+    "expect": {
+        "principal_sum_minor": "4185009",
+        "final_principal_balance_minor": "0"
+    },
+    "capabilities_required": [
+        "schedule-principal-amortization"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-schedule-amortization-drops-final-component",
+        "loan-wrong-schedule-amortization-uniform-truncated",
+        "loan-wrong-schedule-amortization-uniform-rounded-up"
+    ]
+}
