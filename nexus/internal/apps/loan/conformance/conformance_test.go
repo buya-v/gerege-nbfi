@@ -581,6 +581,57 @@ func fiveLegBatchProbe() *Vector {
 	}
 }
 
+// accrualBatchProbe builds a valid journal-entry-batch-seam vector for the
+// SINGLE-transaction FOUR-leg accrual observed in
+// journalentries-loan-12-after-raw.json for loan entityId 12, transactionId L25:
+// the interest pair (DEBIT interest-receivable / CREDIT Interest-On-Loans, 921.15
+// each way) plus the fee pair (DEBIT Fees-Receivable / CREDIT Income-From-Fees,
+// 100.00 each way). It is the third batch shape — TWO BALANCED PAIRS in ONE
+// transaction id, one pair per charge family — which neither the two-transaction
+// disbursement probe nor the five-leg repayment probe has. It is admitted by the
+// EXISTING multiLegDistinctCredits predicate (one transaction id, four legs, two
+// distinct credit accounts); admission is not widened for it.
+func accrualBatchProbe() *Vector {
+	return &Vector{
+		Schema:  SchemaV1,
+		CaseID:  "probe-accrual-two-family-journal-entry-batch",
+		Title:   "probe single-transaction two-family accrual posting",
+		Class:   ClassParity,
+		Context: LoanContext,
+		Note:    "probe: transcribed from journalentries-loan-12-after-raw.json pageItems for entityId 12 transactionId L25, not an observation to promote",
+		Oracle:  OracleStamp{Seam: SeamLoanJournalEntryBatchBalance, FineractCommit: probeCommit},
+		Provenance: Provenance{
+			Kind:          ProvenanceKindOracleCapture,
+			Note:          "probe: the four loan-12 L25 legs and their sides",
+			CaptureRef:    ".softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json",
+			CaptureSHA256: "9024add5df2946c369719f7d83623d525ddc77df59ca3b457a586d0feed490c9",
+			CaptureCaseID: "L25",
+		},
+		TenantParams: probeTenant(),
+		Request: Request{JournalEntries: []JournalEntryLeg{
+			{TransactionID: "L25", Account: "OHLGR-Interest-Receivable", EntryType: "DEBIT", AmountMinor: "92115"},
+			{TransactionID: "L25", Account: "OHLGR-Interest-On-Loans", EntryType: "CREDIT", AmountMinor: "92115"},
+			{TransactionID: "L25", Account: "OHLGR-Income-From-Fees", EntryType: "CREDIT", AmountMinor: "10000"},
+			{TransactionID: "L25", Account: "OHLGR-Fees-Receivable", EntryType: "DEBIT", AmountMinor: "10000"},
+		}},
+		Expect: Expect{
+			JournalEntryDebitsMinor:  "102115",
+			JournalEntryCreditsMinor: "102115",
+			JournalEntryAccountSides: []JournalEntryAccountSideCell{
+				{TransactionID: "L25", Account: "OHLGR-Interest-Receivable", EntryType: "DEBIT"},
+				{TransactionID: "L25", Account: "OHLGR-Interest-On-Loans", EntryType: "CREDIT"},
+				{TransactionID: "L25", Account: "OHLGR-Income-From-Fees", EntryType: "CREDIT"},
+				{TransactionID: "L25", Account: "OHLGR-Fees-Receivable", EntryType: "DEBIT"},
+			},
+		},
+		CapabilitiesRequired: []string{"journal-entry-batch-balance"},
+		GradedAgainst: []string{
+			"loan-go",
+			"loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account",
+		},
+	}
+}
+
 // TestJournalEntryBatchSeamGrading grades the probe with the correct port and
 // with each registered wrong drive. The totals drive and the side drive are
 // asserted separately: the swap must FAIL on the side cells while its two money
@@ -855,6 +906,123 @@ func TestFiveLegDrivesAreInvisibleToTwoPairBatch(t *testing.T) {
 		res := gradeOne(journalBatchProbe(), Options{Implementation: impl})
 		if res.Outcome != OutcomePass {
 			t.Fatalf("%s reddened the two-pair LN-L09 batch (kill count would exceed 1): %v", name, res.Diffs)
+		}
+	}
+}
+
+// TestAccrualBatchSeamGrading grades the accrual probe with the correct port and
+// with the new drive. The correct grading is 2 money cells + 1 leg-count cell +
+// 4 legs x 3 side cells = 15 cells, the same cell count as the two-pair probe:
+// what changes is that all four legs share ONE transaction id and carry TWO
+// distinct income credits.
+func TestAccrualBatchSeamGrading(t *testing.T) {
+	v := accrualBatchProbe()
+	if p := Admit(v, Options{RepoRoot: repoRoot(t)}); len(p) > 0 {
+		t.Fatalf("accrual probe should be admissible by the EXISTING predicate: %v", p)
+	}
+	correct := gradeOne(v, Options{Implementation: NewGoEvaluator()})
+	if correct.Outcome != OutcomePass {
+		t.Fatalf("correct impl outcome = %s, want PASS; diffs=%v", correct.Outcome, correct.Diffs)
+	}
+	if correct.GradedCells != 15 || correct.MoneyCells != 2 {
+		t.Fatalf("graded cells = %d, money = %d; want 15/2", correct.GradedCells, correct.MoneyCells)
+	}
+	for _, name := range v.GradedAgainst[1:] {
+		impl, ok := Lookup(name)
+		if !ok {
+			t.Fatalf("wrong implementation %q not registered", name)
+		}
+		if _, bad := IsRegisteredWrong(name); !bad {
+			t.Fatalf("wrong implementation %q not marked wrong", name)
+		}
+		red := gradeOne(v, Options{Implementation: impl})
+		if red.Outcome != OutcomeFail {
+			t.Fatalf("%s outcome = %s, want FAIL; diffs=%v", name, red.Outcome, red.Diffs)
+		}
+		if len(red.Diffs) == 0 {
+			t.Fatalf("%s produced no diffs", name)
+		}
+	}
+}
+
+// TestAccrualIncomeDriveIsInvisibleToTotalsAndSides proves the accrual-income
+// defect is distinct from every total-based and side-based drive by asserting on
+// the real reconstruction path what it moves: routing every credit of the single
+// L25 transaction to its FIRST income account (Interest-On-Loans) leaves BOTH
+// totals at the observed 102115/102115 and EVERY side in place, moving only the
+// account the fee family's credit names. Through the grader, the failure is
+// confined to the per-(transaction, account) side list — a fee family's income
+// posted to the interest family's income account, still exactly balanced.
+func TestAccrualIncomeDriveIsInvisibleToTotalsAndSides(t *testing.T) {
+	impl, ok := Lookup("loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account")
+	if !ok {
+		t.Fatal("accrual-income drive not registered")
+	}
+	got, err := impl.Evaluate(accrualBatchProbe().Request)
+	if err != nil {
+		t.Fatalf("accrual-income Evaluate: %v", err)
+	}
+	if got.JournalEntryDebitsMinor != "102115" || got.JournalEntryCreditsMinor != "102115" {
+		t.Fatalf("accrual-income totals = %s/%s, want the observed 102115/102115",
+			got.JournalEntryDebitsMinor, got.JournalEntryCreditsMinor)
+	}
+	wantSides := []string{"DEBIT", "CREDIT", "CREDIT", "DEBIT"}
+	wantAccounts := []string{
+		"OHLGR-Interest-Receivable",
+		"OHLGR-Interest-On-Loans",
+		"OHLGR-Interest-On-Loans",
+		"OHLGR-Fees-Receivable",
+	}
+	if len(got.JournalEntryAccountSides) != len(wantSides) {
+		t.Fatalf("accrual-income sides has %d entries, want %d", len(got.JournalEntryAccountSides), len(wantSides))
+	}
+	for i, s := range got.JournalEntryAccountSides {
+		if s.EntryType != wantSides[i] {
+			t.Fatalf("accrual-income sides[%d] = %s, want %s (the defect must not move a side)",
+				i, s.EntryType, wantSides[i])
+		}
+		if s.Account != wantAccounts[i] {
+			t.Fatalf("accrual-income accounts[%d] = %s, want %s", i, s.Account, wantAccounts[i])
+		}
+	}
+	// The fee family's credit no longer names its own income account.
+	if got.JournalEntryAccountSides[2].Account == "OHLGR-Income-From-Fees" {
+		t.Fatal("the fee family's credit must no longer name OHLGR-Income-From-Fees")
+	}
+
+	red := gradeOne(accrualBatchProbe(), Options{Implementation: impl})
+	if red.Outcome != OutcomeFail {
+		t.Fatalf("accrual-income drive outcome = %s, want FAIL", red.Outcome)
+	}
+	if len(red.Diffs) == 0 {
+		t.Fatal("accrual-income drive produced no diffs")
+	}
+	for _, d := range red.Diffs {
+		if !strings.Contains(d, "journal_entry_account_sides[") {
+			t.Fatalf("accrual-income drive escaped the side list: %s", d)
+		}
+	}
+}
+
+// TestAccrualDriveIsInvisibleToDisbursementAndRepayment is the kill-count
+// isolation for the new property: the accrual-income drive keys on a transaction
+// with MORE THAN ONE PAIR, so it must leave the two-transaction disbursement
+// batch (each transaction a one-debit/one-credit pair) and the five-leg L53
+// repayment (one debit, four credits) PASSING. Its measured kill count is then
+// the accrual shapes alone, and the transaction-boundary mapping drive — which
+// it is the intra-transaction analogue of — remains the only drive the
+// two-transaction batch can measure.
+func TestAccrualDriveIsInvisibleToDisbursementAndRepayment(t *testing.T) {
+	const name = "loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account"
+	impl, ok := Lookup(name)
+	if !ok {
+		t.Fatal("accrual-income drive not registered")
+	}
+	for _, probe := range []*Vector{journalBatchProbe(), fiveLegBatchProbe()} {
+		res := gradeOne(probe, Options{Implementation: impl})
+		if res.Outcome != OutcomePass {
+			t.Fatalf("%s reddened %s (kill count would exceed the accrual shapes): %v",
+				name, probe.CaseID, res.Diffs)
 		}
 	}
 }
