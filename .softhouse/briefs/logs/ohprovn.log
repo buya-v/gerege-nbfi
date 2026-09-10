@@ -1,0 +1,81 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m141[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m Both gaps are closed, measured, and committed. Summary:                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## GAP 1 — order of operations (sum-then-round drive)                        [36m│[0m
+[36m│[0m Registered `provisioning-wrong-sum-then-round`, which sums the balances      [36m│[0m
+[36m│[0m sharing a `reserveKey` and applies the band percentage once, versus the      [36m│[0m
+[36m│[0m oracle's per-row `percentageOf` accumulation                                 [36m│[0m
+[36m│[0m (`ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.java:235`). It    [36m│[0m
+[36m│[0m kills **exactly PV-07** — 7423431 vs the observed 7423432. Proven by         [36m│[0m
+[36m│[0m isolating the store: PV-07 alone → FAIL, PV-09 alone → PASS under this       [36m│[0m
+[36m│[0m drive.                                                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## GAP 2 — distinct-key branch (new PV-09)                                   [36m│[0m
+[36m│[0m The committed capture **did** contain the needed observation: `ENT-04`       [36m│[0m
+[36m│[0m records four entries with different `(categoryId, overdueInDays)` keys from  [36m│[0m
+[36m│[0m one generation pass. I promoted two of its observed rows into                [36m│[0m
+[36m│[0m **`PV-09-DISTINCT-KEY-RESERVE.json`**:                                       [36m│[0m
+[36m│[0m - STANDARD, 0d, 1066.19 → `106619` minor                                     [36m│[0m
+[36m│[0m - LOSS, 92d, 106618.53 → `10661853` minor                                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Two differing keys must yield **two** entries. I added `expect_entries`      [36m│[0m
+[36m│[0m multi-entry grading (`compareReserveEntrySet`, count-mismatch first),        [36m│[0m
+[36m│[0m because no single-key shape can see the branch. Registered                   [36m│[0m
+[36m│[0m `provisioning-wrong-reserve-key-ignored`; it was **inert (0 kills)** against [36m│[0m
+[36m│[0m PV-05..08 and is now killed **exactly by PV-09 (0 → 1)**. Isolated proof:    [36m│[0m
+[36m│[0m PV-09 alone → FAIL under the key-ignorer, PASS under correct and             [36m│[0m
+[36m│[0m sum-then-round; PV-07 alone → PASS under the key-ignorer.                    [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Measurements (kills.sh provisioning)                                      [36m│[0m
+[36m│[0m | drive | kills |                                                            [36m│[0m
+[36m│[0m |---|---|                                                                    [36m│[0m
+[36m│[0m | blank-description | 4 |                                                    [36m│[0m
+[36m│[0m | category-by-definition-id | 4 |                                            [36m│[0m
+[36m│[0m | half-even-rounding | 1 |                                                   [36m│[0m
+[36m│[0m | truncating | 3 |                                                           [36m│[0m
+[36m│[0m | sum-then-round | **1** (PV-07 only) |                                      [36m│[0m
+[36m│[0m | reserve-key-ignored | **1** (PV-09 only) |                                 [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m No inert drive remains. `provisioning-go`: 9/9 vectors, 30 graded cells, 0   [36m│[0m
+[36m│[0m invariant violations, nofloat 0.                                             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Bar                                                                       [36m│[0m
+[36m│[0m - `go build ./...` OK; `go test ./...` all packages ok (added two unit tests [36m│[0m
+[36m│[0m locking both drives).                                                        [36m│[0m
+[36m│[0m - `bash .softhouse/conformance.sh` → exit 2 (§4.4.2 recorded decision),      [36m│[0m
+[36m│[0m census 17, all 17 wrong ledger implementations died.                         [36m│[0m
+[36m│[0m - Ledger guard: exact **12** `(class,file)` pairs,                           [36m│[0m
+[36m│[0m `ledger-invariants-compare.sh` exit 0.                                       [36m│[0m
+[36m│[0m - `ledger-invariants.baseline` and `conformance.sh` untouched; no float, no  [36m│[0m
+[36m│[0m POST/PUT/DELETE, PostgreSQL reference only, single `provisioning` context.   [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Committed as `9632aa6a` (TASK.md left untracked).                            [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 0eb65258461943b4888a76c5159d4bb0
+Hint: run openhands --resume 0eb65258-4619-43b4-888a-76c5159d4bb0 to resume this
+conversation.
