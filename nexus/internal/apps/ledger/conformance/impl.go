@@ -1238,6 +1238,63 @@ func (mappingKeyIgnoringPoster) PostEntry(req Request) (PostedEntry, *Refusal, e
 	return GoPoster{}.PostEntry(r)
 }
 
+// sideOrdinalsSwappedPoster transposes every leg's entry side before posting:
+// a request DEBIT is sent to the engine as EntryCredit (ordinal 1) and a
+// request CREDIT as EntryDebit (ordinal 2). [money.go:211-215]
+//
+// THE DEFECT, AND IT IS THE `parties-wrong-iota-ordinals` CLASS IN THIS
+// CONTEXT'S OWN TWO-MEMBER ENUM. `EntryCredit = 1`, `EntryDebit = 2` — the
+// ordinals are NOT zero-based, and they are NOT alphabetical either (CREDIT
+// precedes DEBIT in the stored numbering while DEBIT precedes CREDIT in the
+// double-entry phrase "debits equal credits"). A port that carries the axis as
+// an idiomatic Go enum declared in that phrase order and writes each leg with
+// the NEXT constant — or that copies the pair across a differently-ordered
+// switch, exactly as `parties-wrong-iota-ordinals` copies an iota index for a
+// stored code — writes 1 where the source stores 2. On this surface that is a
+// DIRECTION defect, not an off-by-one in a status name: the disbursement's
+// DEBIT leg lands on the CREDIT side and its CREDIT leg on the DEBIT side.
+//
+// WHY A BALANCE CHECK CANNOT CATCH IT, WHICH IS THE WHOLE REASON THIS DRIVE
+// EXISTS. It transposes BOTH sides of every entry together, so
+// sum(debits) == sum(credits) still holds exactly and I-1 stays green by
+// construction; only the LABEL on each leg and the two totals move. The corpus
+// already grades the BALANCE (ledger-wrong-netting-totals for I-1,
+// ledger-wrong-split-drift for I-2) but until this drive NO registered
+// implementation transposed a side, so `legs[].entry_side` and
+// total_debits_minor/total_credits_minor were cells that no wrong port could
+// turn red — the exact "a control that cannot fail is worse than none" shape
+// P-22 names.
+//
+// AND IT IS THE SIDE-ORDINAL OBSERVABLE, TOO. ExpectLeg carries the side as the
+// STRING entry_side and no separate numeric entryType.id cell, so an ordinal
+// swap that is internally consistent is invisible and an INCONSISTENT one is
+// exactly this transposition. The two properties the brief lists separately —
+// DIRECTION and THE SIDE ORDINALS — are therefore one cell in this schema, and
+// one drive kills both.
+//
+// KILLED BY: every parity vector that asserts a side (LDG-01..LDG-07 and
+// LDG-ACC-01..LDG-ACC-03) on legs[].entry_side and both totals. INERT on
+// LDG-DIV-01 (a sub-minor residue, refused during conversion before any side is
+// reached) and on all six oracle-refusal vectors (a transposed entry is still
+// unbalanced by the same minor unit, still manual-forbidden, still inside the
+// closure, still future-dated and still opening-balance-after-posted).
+type sideOrdinalsSwappedPoster struct{}
+
+func (sideOrdinalsSwappedPoster) PostEntry(req Request) (PostedEntry, *Refusal, error) {
+	swapped := req
+	swapped.Legs = make([]RequestLeg, len(req.Legs))
+	copy(swapped.Legs, req.Legs)
+	for i := range swapped.Legs {
+		switch swapped.Legs[i].Side {
+		case SideDebit:
+			swapped.Legs[i].Side = SideCredit
+		case SideCredit:
+			swapped.Legs[i].Side = SideDebit
+		}
+	}
+	return GoPoster{}.PostEntry(swapped)
+}
+
 func init() {
 	Register("ledger-go", NewGoPoster())
 	RegisterWrong("ledger-wrong-split-drift",
@@ -1355,6 +1412,19 @@ func init() {
 			"this cell graded by nothing and drove it with a throwaway probe; T421 registers the "+
 			"probe, because a throwaway probe is not a guard (P-45)",
 		mappingKeyIgnoringPoster{})
+	RegisterWrong("ledger-wrong-side-ordinals-swapped",
+		"transposes every leg's entry side before posting, writing DEBIT as EntryCredit (ordinal 1) and "+
+			"CREDIT as EntryDebit (ordinal 2) [money.go:211-215]. It is the `parties-wrong-iota-ordinals` "+
+			"class on this context's own two-member axis: the ordinals are not zero-based and not "+
+			"alphabetical, so a port that carries the pair in the declaration order of the double-entry "+
+			"phrase writes 1 for the leg the source stores as 2. It PASSES I-1 by construction -- both "+
+			"sides of every entry are transposed together, so sum(debits) == sum(credits) exactly and only "+
+			"the labels and the two totals move -- which is why a balance check alone cannot catch it. "+
+			"Until this drive no registered implementation transposed a side, so legs[].entry_side and "+
+			"total_debits_minor/total_credits_minor were cells no wrong port could turn red. Dies on every "+
+			"parity vector that asserts a side (LDG-01..LDG-07, LDG-ACC-01..LDG-ACC-03); inert on "+
+			"LDG-DIV-01 and on all six oracle-refusal vectors, whose sides are never reached",
+		sideOrdinalsSwappedPoster{})
 }
 
 // minorText renders minor units as the decimal-free integer STRING the schema
