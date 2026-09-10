@@ -10,3 +10,5 @@
 # committed into a tree as a defect (T355). Reversible: rm -rf **/__pycache__
 __pycache__/
 *.pyc
+.softhouse/capture/**/*.dump
+.softhouse/capture/**/*.err

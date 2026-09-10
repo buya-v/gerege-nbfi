@@ -1,0 +1,29 @@
+# OH-INV-Q Finding B — measured kill counts for the four candidate details drives
+# Captured 2026-09-10 against worktree /Users/buv/oh-gerege-invq, corpus = the two
+# admitted investor vectors (INV-01 transfer row, INV-02 empty page).
+#
+# Instrument control (same script, same run) — these MUST match or the instrument
+# is wrong, not the tree:
+#   kills.sh loanschedule loanschedule-wrong-days-in-year-365   -> 45
+#   kills.sh parties      parties-wrong-iota-ordinals           -> 12
+#   kills.sh charges      charges-wrong-rounding-half-even      -> 1
+#   kills.sh investor     investor-wrong-blank-status           -> 1
+#   kills.sh investor     investor-wrong-fabricates-transfer    -> 1
+#
+# To measure the details drives at all, a details channel was added TEMPORARILY to
+# conformance.Expect (total_outstanding_minor) with a comparator branch that fires
+# ONLY when a vector states an expectation for it. No investor vector states one,
+# because m_external_asset_owner_transfer_details has 0 rows and no capture
+# exposes a details cell. Measurements, then the instrument was reverted:
+#
+#   investor-wrong-details-overpaid-added                 -> 0
+#   investor-wrong-details-overpaid-subtracted            -> 0
+#   investor-wrong-details-total-independently-written    -> 0
+#   investor-wrong-details-null-refused                   -> 0
+#
+# Disposition per the inert-drive rule: NOT MERGED. Each is inert because the
+# graded surface is the nine transfer-row cells (grade.go:108-149, graded count
+# grade.go:77/:79) plus four row invariants (invariants.go:35-50); none is a
+# details cell. A drive that kills ZERO is not merged. Prerequisite to promote any
+# of the four: a capture that actually SEEES a details cell, which requires a
+# settled transfer — blocked by INVQ-COB-REFUSAL (no LOAN PORTFOLIO GL mapping).

@@ -21,5 +21,110 @@
   },
   "readBackQuirks": {
     "transfers": "GET /external-asset-owners/transfers?loanId=6 returns the single transfer row above. GET /external-asset-owners/transfers WITHOUT the loanId query parameter returns HTTP 500 (Internal Server Error), not 400 — an oracle-refusal observation recorded as transfer-read-no-param-raw.json. The search endpoint POST /external-asset-owners/search returns the same row with a page size of 50 (transfer-search-raw.json)."
-  }
+  },
+  "findings": [
+    {
+      "id": "INVQ-COB-REFUSAL",
+      "kind": "refusal",
+      "title": "Loan COB cannot settle transfer 1: LOAN product id 2 has no LOAN PORTFOLIO GL mapping, so the investor accounting helper throws before posting any journal entry",
+      "observed": [
+        "POST /jobs/34?command=executeJob returned HTTP 202 and job 34 reports success at job level; the investor step failure is WARN-level per-loan skip, not job failure.",
+        "Application log shows BusinessStepException for Loan(id=6) on five attempts (COB-Thread-11..15), then 'Skipping was triggered'.",
+        "Root cause ProductToGLAccountMappingNotFoundException: Mapping for product of type LOAN with Id 2 does not exist for an account of type LOAN PORTFOLIO, thrown at InvestorAccountingHelper.java:128 from AccountingServiceImpl.createJournalEntries (:209,:115) via createJournalEntriesForSaleAssetTransfer (:65) from LoanAccountOwnerTransferBusinessStep.sellAsset (:189) / sellAssetOrDecline (:169) / handleSale (:119) / execute (:108,:55).",
+        "DB: acc_product_mapping rows = 0; m_external_asset_owner_transfer_details rows = 0; transfer id 1 still status=PENDING, purchase_price_ratio=97.25; acc_gl_journal_entry rows for entity_id=1 = 0.",
+        "Business date 2026-09-02 (past settlement 2026-09-01); COB date 2026-09-01; rounding-mode enabled value=4 (HALF_UP); enable-business-date enabled=true value=null."
+      ],
+      "evidence": {
+        "refusal": {"ref": ".softhouse/capture/investor/out/cob-loan-6-refusal-invq.txt", "sha256": "66e17b73f4290179f5dbec58fa3418bfa8df89068bc05eb26c03021fd40f7931"},
+        "accountingState": {"ref": ".softhouse/capture/investor/out/business-date-and-accounting-state-invq.txt", "sha256": "5dd4659e4d1192f973816ab39ab640b98524ee37280aabc70ad48a5a429ce326"},
+        "jobRun": {"ref": ".softhouse/capture/investor/out/job-34-after-cob-invq.json", "sha256": "aa1a2ee5644fd772143e6ec31d4fdd1eab430cd861917dc9c3bcce41e853a39f"},
+        "transferRead": {"ref": ".softhouse/capture/investor/out/transfer-read-loan-6-invq.json", "sha256": "33c360bda77742b018a5bf35b278e28796f13a356ac948a99ffad1f2f90e4e8c"},
+        "journalEntries": {"ref": ".softhouse/capture/investor/out/transfer-1-je-invq.json", "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"},
+        "availableSteps": {"ref": ".softhouse/capture/investor/out/available-steps-invq.json", "sha256": "8f3aac783c150564689071a59e9edad32837013dd70b6f47e90626337d59c73f"},
+        "cobSteps": {"ref": ".softhouse/capture/investor/out/cob-steps-current-invq.json", "sha256": "3ae0093871ac5de88f6009c05e1deb7a90ae13da22ade1e2178ee85b058cb714"}
+      },
+      "disposition": "Recorded, not worked around. Inserting an acc_product_mapping row would synthesise reference data the oracle does not have and would be a fabricated observation. The refusal IS the finding; it is the reason the transfer has never settled."
+    },
+    {
+      "id": "INVQ-GAP-PURCHASE-PRICE",
+      "kind": "oracle-gap",
+      "title": "The transfer purchase price (0.9725 x outstanding) is never computed anywhere in fineract-investor",
+      "pinnedCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+      "status": "documented-from-source; journal-entry confirmation BLOCKED by INVQ-COB-REFUSAL",
+      "items": [
+        {
+          "n": 1,
+          "claim": "purchasePriceRatio is a String; the port performs no arithmetic on it",
+          "citation": "fineract-investor/src/main/java/org/apache/fineract/investor/data/ExternalTransferData.java:34",
+          "verified": true,
+          "correction": "The TASK brief cited data/ExternalTransferData.java:16. At pinned commit 426a23544 the declaration 'private String purchasePriceRatio;' is at line 34; line 16 is inside the Apache licence header. The TYPE claim (String) is CONFIRMED; the line citation was stale. The source wins and is recorded here."
+        },
+        {
+          "n": 2,
+          "claim": "All seven non-test getPurchasePriceRatio() call sites are setter-to-setter copies; not one is an operand",
+          "citations": [
+            "enricher/LoanAccountDataV1Enricher.java:49",
+            "service/LoanAccountOwnerTransferServiceImpl.java:128",
+            "service/LoanAccountOwnerTransferServiceImpl.java:144",
+            "service/ExternalAssetOwnersWriteServiceImpl.java:322",
+            "service/ExternalAssetOwnersWriteServiceImpl.java:348",
+            "service/serialization/serializer/investor/InvestorBusinessEventSerializer.java:102",
+            "cob/loan/LoanAccountOwnerTransferBusinessStep.java:327"
+          ],
+          "verified": true
+        },
+        {
+          "n": 3,
+          "claim": "fineract-investor/src/main/java has 99 Java files and ZERO multiply calls",
+          "evidence": "find . -name '*.java' | wc -l -> 99; grep -rn multiply . | wc -l -> 0",
+          "verified": true
+        },
+        {
+          "n": 4,
+          "claim": "AccountingServiceImpl, which creates the transfer journal entries, contains zero occurrences of 'urchasePrice'; its amounts are the outstanding components at face value, accumulated with .add and posted",
+          "evidence": "grep -c urchasePrice service/AccountingServiceImpl.java -> 0; .add at :193,:220,:235,:250,:261; posted at :273,:277",
+          "verified": true
+        }
+      ],
+      "journalEntryConfirmation": {
+        "status": "BLOCKED",
+        "reason": "COB refused at the GL-mapping step before posting any journal entry for transfer 1 (INVQ-COB-REFUSAL): acc_gl_journal_entry rows for entity_id=1 = 0 and GET /transfers/1/journal-entries returns an empty list. The proposed comparison (posted amount == outstanding, not 0.9725 x outstanding) therefore could not be observed. NO value is synthesised.",
+        "endpointsChecked": [
+          "GET /external-asset-owners/transfers/1?loanId=6",
+          "GET /external-asset-owners/transfers/1/journal-entries?loanId=6",
+          "GET /external-asset-owners/transfers?loanId=6",
+          "POST /jobs/34?command=executeJob",
+          "GET /jobs/34"
+        ]
+      }
+    },
+    {
+      "id": "INVQ-SEAM-DETAILS-UNOBSERVABLE",
+      "kind": "seam-not-observable",
+      "title": "ExternalAssetOwnerTransferDetails (totalOutstanding and its four buckets) is on no graded or captured surface",
+      "properties": [
+        {"n": 1, "property": "totalOverpaid is EXCLUDED from totalOutstanding", "citation": "domain/ExternalAssetOwnerTransferDetails.java:87-90 (setTotalOverpaid is the only component setter that does not call updateTotalOutstanding); updateTotalOutstanding at :83-88 sums only principal+interest+fee+penalty"},
+        {"n": 2, "property": "totalOutstanding is RECOMPUTED on every component setter, never independently written", "citation": "domain/ExternalAssetOwnerTransferDetails.java:63-81 (all four setters call updateTotalOutstanding at :66,:71,:76,:81)"},
+        {"n": 3, "property": "null coalesces to ZERO, not to a refusal", "citation": "domain/ExternalAssetOwnerTransferDetails.java:65,:70,:75,:80,:90 (Objects.requireNonNullElse(x, BigDecimal.ZERO))"},
+        {"n": 4, "property": "columns are scale = 6, precision = 19; sub-minor residue can appear and would be REFUSED, never vectorised", "citation": "domain/ExternalAssetOwnerTransferDetails.java:45-61"}
+      ],
+      "whyUnobservable": [
+        "m_external_asset_owner_transfer_details has 0 rows because COB refuses at the GL-mapping step (INVQ-COB-REFUSAL); no read-back exposes a details cell.",
+        "The graded surface compares nine transfer-row cells only: grade.go:108-149 (compareTransferExpect), graded cell count at grade.go:77 / :79. No details cell is compared.",
+        "The only invariants are row-level (transfer_id_positive, owner_external_id_non_empty, transfer_external_id_non_empty, status_non_empty): invariants.go:35-50. None touches a balance.",
+        "impl.go:18-24 states the details arithmetic is deliberately NOT graded because the details table is empty."
+      ],
+      "drives": [
+        {"property": 1, "name": "investor-wrong-details-overpaid-added", "killCount": 0, "disposition": "not merged INERT: no vector carries a details expectation and no graded cell exposes it. Deleted with this argument (inert-drive rule)."},
+        {"property": 1, "name": "investor-wrong-details-overpaid-subtracted", "killCount": 0, "disposition": "not merged INERT: same reason. Deleted with this argument."},
+        {"property": 2, "name": "investor-wrong-details-total-independently-written", "killCount": 0, "disposition": "not merged INERT: same reason. Deleted with this argument."},
+        {"property": 3, "name": "investor-wrong-details-null-refused", "killCount": 0, "disposition": "not merged INERT: same reason. Deleted with this argument."}
+      ],
+      "killCountInstrumentControl": {
+        "note": "To measure the four drives at all, a details channel was temporarily added to Expect with a comparator that fires only when a vector states an expectation. Measured, then reverted (no code diff remains). Instrument controls on the same run: loanschedule-wrong-days-in-year-365=45, parties-wrong-iota-ordinals=12, charges-wrong-rounding-half-even=1, investor-wrong-blank-status=1, investor-wrong-fabricates-transfer=1.",
+        "evidence": {"ref": ".softhouse/capture/investor/out/inert-details-drives-invq.txt", "sha256": "ae265a61ee0a2e6118a598a63283ab44070346d01bbcfd4527da0536b64c17bc"}
+      },
+      "disposition": "Recorded as a seam gap; no drive merged inert. A capture that actually SEES a details cell (which requires a settled transfer) is the prerequisite to promote any of the four vectors."
+    }
+  ]
 }

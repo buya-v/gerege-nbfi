@@ -1,0 +1,34 @@
+# OH-INV-Q live COB refusal for loan 6 (tenant gerege)
+# Captured 2026-09-10 from `docker logs gerege-oracle-app`, run at 00:48:07 UTC.
+# Request: POST /jobs/34?command=executeJob  -> HTTP 202, empty body.
+# Job 34 (Loan COB) reports success at the job level; the investor step failure is
+# caught per-loan by AbstractLoanItemListener and downgraded to WARN, then skipped.
+# Five processor attempts (COB-Thread-11..15), all identical, then the item is skipped:
+#   00:48:07.675 WARN COB-Thread-11 AbstractLoanItemListener: Skipping was triggered during processing of Loan (id=6)
+
+2026-09-10 00:48:07.638 - WARN 1 [gerege] --- [COB-Thread-11] o.a.f.c.l.AbstractLoanItemListener : Error was triggered during processing of Loan (id=6) due to: org.apache.fineract.cob.exceptions.BusinessStepException: Error happened during business step execution
+	at org.apache.fineract.cob.COBBusinessStepServiceImpl.run(COBBusinessStepServiceImpl.java:77)
+	at org.apache.fineract.cob.processor.AbstractItemProcessor.process(AbstractItemProcessor.java:60)
+	at org.apache.fineract.cob.loan.AbstractLoanItemProcessor.process(AbstractLoanItemProcessor.java:43)
+	at org.apache.fineract.cob.loan.LoanItemProcessor$$SpringCGLIB$$0.process(<generated>)
+
+Caused by: org.apache.fineract.accounting.producttoaccountmapping.exception.ProductToGLAccountMappingNotFoundException: Mapping for product of type LOAN with Id 2 does not exist for an account of type LOAN PORTFOLIO
+	at org.apache.fineract.investor.accounting.journalentry.service.InvestorAccountingHelper.getLinkedGLAccountForLoanProduct(InvestorAccountingHelper.java:128)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntries(AccountingServiceImpl.java:209)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntries(AccountingServiceImpl.java:115)
+	at org.apache.fineract.investor.service.AccountingServiceImpl.createJournalEntriesForSaleAssetTransfer(AccountingServiceImpl.java:65)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.sellAsset(LoanAccountOwnerTransferBusinessStep.java:189)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.sellAssetOrDecline(LoanAccountOwnerTransferBusinessStep.java:169)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.handleSale(LoanAccountOwnerTransferBusinessStep.java:119)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.execute(LoanAccountOwnerTransferBusinessStep.java:108)
+	at org.apache.fineract.investor.cob.loan.LoanAccountOwnerTransferBusinessStep.execute(LoanAccountOwnerTransferBusinessStep.java:55)
+
+# Corroborating DB evidence (READ-ONLY), same moment:
+#   acc_product_mapping_rows=0            (no LOAN product -> LOAN PORTFOLIO GL mapping for product id 2)
+#   transfer_details_rows=0              (m_external_asset_owner_transfer_details never written)
+#   m_external_asset_owner_transfer (id=1, loan 6) status stays PENDING
+#
+# CONCLUSION (observed, not inferred): COB refuses to settle the transfer because
+# InvestorAccountingHelper.getLinkedGLAccountForLoanProduct throws before any
+# journal entry can be posted. The transfer never advances PENDING -> ACTIVE and
+# the details row is never written. This is a refusal, not a silent no-op.
