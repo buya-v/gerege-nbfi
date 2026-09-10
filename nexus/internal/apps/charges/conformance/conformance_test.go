@@ -358,6 +358,13 @@ func TestPenaltyIgnoredWrongRunsRed(t *testing.T) {
 	}
 }
 
+// TestBaseAmountIgnoredWrongRunsRed pins the shape of the ignore-base drive: a
+// percentage fee computed against a zero base answers 0 where the probe's
+// recorded fee is 12346, a money kill.
+func TestBaseAmountIgnoredWrongRunsRed(t *testing.T) {
+	wrongRunsRedOn(t, "charges-wrong-base-amount-ignored", percentFeeProbe())
+}
+
 // TestHalfEvenDiffersOnlyOnAnExactHalf pins the shape of the half-even red
 // drive: the two rounding modes agree on every non-tie product (so the driver
 // is byte-identical to the correct port on the stored corpus, whose one

@@ -28,6 +28,10 @@ type ignoreVariant struct {
 	// penaltyAsFalse replaces penalty with the bool zero value, so every charge is
 	// treated as a fee. charges-wrong-penalty-ignored.
 	penaltyAsFalse bool
+	// baseAmountAsZero replaces base_amount_minor with "0" before decode, so every
+	// percentage charge is computed against a zero base.
+	// charges-wrong-base-amount-ignored.
+	baseAmountAsZero bool
 }
 
 // apply rewrites the request fields this drive never reads.
@@ -37,6 +41,9 @@ func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	}
 	if v.penaltyAsFalse {
 		req.Penalty = false
+	}
+	if v.baseAmountAsZero {
+		req.BaseAmountMinor = "0"
 	}
 	return req
 }

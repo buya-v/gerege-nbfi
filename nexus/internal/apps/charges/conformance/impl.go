@@ -476,4 +476,14 @@ func init() {
 			"dies and kills 1. Threading the flag is a prerequisite for the account mapping, and a port that "+
 			"drops it books penalties to the fee account with no failed total to notice",
 		ignoreFieldEvaluator{v: ignoreVariant{penaltyAsFalse: true}})
+	RegisterWrong("charges-wrong-base-amount-ignored",
+		"never threads the loan's balance/principal through to the charge evaluation: base_amount_minor is left "+
+			"at its zero value, so every percentage charge is computed as percentageOf(0) and answers 0. The base "+
+			"is the whole input to percentageOf -- the arithmetic is value * percent / 100 [VERIFIED: "+
+			"LoanCharge.java:310-319] -- and no other field reconstructs it, so a porter who ports the charge "+
+			"definition but drops the base the caller computes writes exactly this. The four percentage vectors "+
+			"die: FC-03-pctamount-disbursement (1481400), FC-09-pctamount-instalment-p2 (46056), "+
+			"OHCAPj-pctamount-disbursement-halfup-tie (1162503) and T46-CH-06-defvsreq-pctamount-disb (600000); "+
+			"the eight flat vectors and the validation-refused vector never read the base and survive",
+		ignoreFieldEvaluator{v: ignoreVariant{baseAmountAsZero: true}})
 }
