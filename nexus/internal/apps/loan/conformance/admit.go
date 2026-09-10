@@ -39,13 +39,13 @@ func Admit(v *Vector, opts Options) []string {
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-		SeamLoanJournalEntryBatchBalance:
+		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-			SeamLoanJournalEntryBatchBalance))
+			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -125,7 +125,7 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// requestShapeCount is how many of the seven request sub-shapes a vector sets.
+// requestShapeCount is how many of the eight request sub-shapes a vector sets.
 // Every seam requires exactly one.
 func requestShapeCount(v *Vector) int {
 	n := 0
@@ -148,6 +148,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if len(v.Request.JournalEntries) > 0 {
+		n++
+	}
+	if v.Request.ScheduleAmortization != nil {
 		n++
 	}
 	return n
@@ -307,6 +310,27 @@ func admitRequest(v *Vector) []string {
 		if !hasDebit || !hasCredit {
 			problems = append(problems, "request.journal_entries must carry at least one DEBIT and one CREDIT leg")
 		}
+	case SeamLoanScheduleAmortization:
+		if v.Request.ScheduleAmortization == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "schedule-amortization seam must set exactly request.schedule_amortization")
+			return problems
+		}
+		sa := v.Request.ScheduleAmortization
+		if !isIntegerMinorString(sa.PrincipalDisbursedMinor) {
+			problems = append(problems, fmt.Sprintf("request.principal_disbursed_minor %q is not a non-negative integer minor amount", sa.PrincipalDisbursedMinor))
+		}
+		// The whole-schedule property is asserted over the repayment periods
+		// only; period 0 is the disbursement row and carries no principalDue.
+		if len(sa.PrincipalComponentsMinor) == 0 {
+			problems = append(problems, "request.principal_components_minor is empty: the whole-schedule property needs at least one principal component")
+			return problems
+		}
+		for i, c := range sa.PrincipalComponentsMinor {
+			if !isIntegerMinorString(c) {
+				problems = append(problems, fmt.Sprintf(
+					"request.principal_components_minor[%d] %q is not a non-negative integer minor amount: a component with more than 2 decimal places of significance is a sub-minor residue and is REFUSED, never vectored", i, c))
+			}
+		}
 	}
 	return problems
 }
@@ -434,6 +458,32 @@ func admitExpect(v *Vector) []string {
 				continue
 			}
 			observed[k]--
+		}
+	case SeamLoanScheduleAmortization:
+		if !isIntegerMinorString(v.Expect.PrincipalSumMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.principal_sum_minor %q is not a non-negative integer minor amount", v.Expect.PrincipalSumMinor))
+		}
+		if !isIntegerMinorString(v.Expect.FinalPrincipalBalanceMinor) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.final_principal_balance_minor %q is not a non-negative integer minor amount", v.Expect.FinalPrincipalBalanceMinor))
+		}
+		// The expectation is a transcription of a capture that SATISFIES the
+		// property, so admission refuses a vector whose expected sum does not
+		// reconcile to the disbursed principal or whose expected final balance
+		// is not zero. No value is admitted that the capture did not show.
+		if v.Request.ScheduleAmortization != nil {
+			sa := v.Request.ScheduleAmortization
+			if v.Expect.PrincipalSumMinor != sa.PrincipalDisbursedMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.principal_sum_minor %q does not equal request.principal_disbursed_minor %q: the whole-schedule property requires the components to sum to the disbursed principal",
+					v.Expect.PrincipalSumMinor, sa.PrincipalDisbursedMinor))
+			}
+		}
+		if v.Expect.FinalPrincipalBalanceMinor != "0" {
+			problems = append(problems, fmt.Sprintf(
+				"expect.final_principal_balance_minor %q is not \"0\": the property is that principal amortizes to ZERO",
+				v.Expect.FinalPrincipalBalanceMinor))
 		}
 	}
 	return problems

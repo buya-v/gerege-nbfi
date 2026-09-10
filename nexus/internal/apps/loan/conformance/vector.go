@@ -84,6 +84,23 @@ const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
 // the fee transaction L18.
 const SeamLoanJournalEntryBatchBalance = "loan-journal-entry-batch-balance"
 
+// SeamLoanScheduleAmortization is the capture seam this schema grades: the
+// WHOLE-schedule principal amortization of a loan read-back, the property
+// "principal amortizes to zero" asserted over every repayment period at once.
+// No existing seam grades it: LN-L06 grades ONE period's INTEREST, and the
+// loanschedule context's vectors grade the schedule GENERATOR at a different
+// seam (they do not read a loan back). The request carries the disbursed
+// principal and the observed per-period principalDue components raised to
+// integer minor units; the expectation is the sum of every component and the
+// final outstanding principal balance. The property holds exactly when the sum
+// equals the disbursed principal and the final balance is zero. A port that
+// truncates a per-period principal, drops the final adjustment row, or
+// reconstructs a uniform per-period component leaves a residue and goes red.
+// A port that places the remainder in the wrong PERIOD preserves both the sum
+// and the final balance, so this seam does NOT grade placement; no committed
+// capture exposes per-period placement on a loan read-back.
+const SeamLoanScheduleAmortization = "loan-schedule-amortization"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -160,6 +177,19 @@ type ScheduleRequest struct {
 	DaysInMonth     int64  `json:"days_in_month"`
 }
 
+// ScheduleAmortizationRequest is the loan-schedule-amortization seam's input:
+// the principal the oracle disbursed and the observed per-period principalDue
+// components of a full repayment schedule, each an integer STRING in minor
+// units. Period 0 of the capture is the disbursement row and carries no
+// principalDue, so the components are exactly the repayment periods that do.
+// A component carrying more than 2 decimal places of significance is a
+// sub-minor residue: it is REFUSED by admission (G-19 / DEC-2 predicate G-08),
+// never rounded and never vectored.
+type ScheduleAmortizationRequest struct {
+	PrincipalDisbursedMinor  string   `json:"principal_disbursed_minor"`
+	PrincipalComponentsMinor []string `json:"principal_components_minor"`
+}
+
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
 // charges due at disbursement.
 type DisburseRequest struct {
@@ -232,6 +262,10 @@ type Request struct {
 	Status         *StatusRequest    `json:"status,omitempty"`
 	Transactions   []TransactionRow  `json:"transactions,omitempty"`
 	JournalEntries []JournalEntryLeg `json:"journal_entries,omitempty"`
+	// ScheduleAmortization is the whole-schedule principal-amortization seam's
+	// input: the disbursed principal and the observed per-period principalDue
+	// components.
+	ScheduleAmortization *ScheduleAmortizationRequest `json:"schedule_amortization,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -268,6 +302,14 @@ type Expect struct {
 	// takes WHICH side in WHICH transaction. It is required, and it is the cell
 	// a swapped-pair port moves while both totals stay equal.
 	JournalEntryAccountSides []JournalEntryAccountSideCell `json:"journal_entry_account_sides,omitempty"`
+	// PrincipalSumMinor is the loan-schedule-amortization seam's derived sum of
+	// the per-period principal components, an integer STRING in minor units.
+	PrincipalSumMinor string `json:"principal_sum_minor,omitempty"`
+	// FinalPrincipalBalanceMinor is the loan-schedule-amortization seam's final
+	// outstanding principal balance after the schedule is repaid, an integer
+	// STRING in minor units. The property "principal amortizes to zero" holds
+	// exactly when this is "0".
+	FinalPrincipalBalanceMinor string `json:"final_principal_balance_minor,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

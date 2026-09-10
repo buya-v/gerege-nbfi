@@ -193,6 +193,9 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpMoney("journal_entry_debits", v.Expect.JournalEntryDebitsMinor, got.JournalEntryDebitsMinor)
 		s.cmpMoney("journal_entry_credits", v.Expect.JournalEntryCreditsMinor, got.JournalEntryCreditsMinor)
 		diffJournalEntryAccountSides(&s, v.Expect.JournalEntryAccountSides, got.JournalEntryAccountSides)
+	case SeamLoanScheduleAmortization:
+		s.cmpMoney("principal_sum", v.Expect.PrincipalSumMinor, got.PrincipalSumMinor)
+		s.cmpMoney("final_principal_balance", v.Expect.FinalPrincipalBalanceMinor, got.FinalPrincipalBalanceMinor)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

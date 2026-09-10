@@ -1,6 +1,6 @@
 {
  "schema": "gerege.loan.capabilities/v1",
- "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Seven capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), the persisted loan-status ordinal read-back (loan-status seam), the derived per-row outstandingLoanBalance column of the transactions read-back (loan-transaction-balance seam), and the derived debit/credit totals AND per-(transaction, account) side of a loan-produced multi-pair journal-entry batch (loan-journal-entry-batch-balance seam). The SEED-L01 interest waiver arithmetic is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it. The waiver's read-back footprint — a posting that does NOT move the outstanding balance — IS graded, under the transaction-balance capability.",
+ "note": "Loan parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Eight capabilities are graded: the four-bucket repayment allocation (loan-repayment-allocation seam), the single-period schedule-interest rounding of the discriminating SEED-L06 loan (loan-schedule-interest seam), the net disbursal amount (loan-disbursement seam), the derived total-outstanding of the SEED-L03 post-repayment summary (loan-summary-outstanding seam), the persisted loan-status ordinal read-back (loan-status seam), the derived per-row outstandingLoanBalance column of the transactions read-back (loan-transaction-balance seam), the derived debit/credit totals AND per-(transaction, account) side of a loan-produced multi-pair journal-entry batch (loan-journal-entry-batch-balance seam), and the whole-schedule principal amortization read back from the discriminating SEED-L05 schedule (loan-schedule-amortization seam: the per-period principalDue components sum EXACTLY to the disbursed principal and the final outstanding principal balance is EXACTLY zero, in integer minor units with no residue). The SEED-L01 interest waiver arithmetic is captured but NOT in the graded domain: the loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so no vector may require it. The waiver's read-back footprint — a posting that does NOT move the outstanding balance — IS graded, under the transaction-balance capability.",
  "capabilities": [
   {
    "name": "repayment-allocation",
@@ -49,6 +49,12 @@
    "description": "The SEED-L01 interest waiver. The loan slice has no interest-waiver arithmetic (interest is not a LoanCharge; LoanCharge.Waive covers fee/penalty charges only), so promotion does not port new arithmetic for it.",
    "in_graded_domain": false,
    "evidence": "Capture loan-1-transactions-after-raw.json: the SEED-L01 waive-interest transaction exists, but no loan-slice arithmetic reproduces its interest amount."
+  },
+  {
+   "name": "schedule-principal-amortization",
+   "description": "The whole-schedule principal amortization read back from a full repayment schedule: the per-period principalDue components of the repayment periods (period 0 is the disbursement row and carries no principalDue) sum EXACTLY to the disbursed principal, and the final principalLoanBalanceOutstanding is EXACTLY zero, both in integer minor units with no residue. The SEED-L05 loan disburses 4185009 minor units over 12 repayment periods; the components are eleven 348751 plus a final 348748 whose remainder is placed in the LAST period, so a truncating port leaves a 9-minor-unit residue and a port that never places the remainder leaves 348748 outstanding.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-5-schedule-raw.json under tenant gerege (single-line JSON, line 1): repaymentSchedule.totalPrincipalDisbursed 41850.09 and repaymentSchedule.periods[0].principalDisbursed 41850.09 transcribe to 4185009 minor units; periods[1..12].principalDue are eleven 348751 and a final 348748, summing to 4185009; periods[12].principalLoanBalanceOutstanding is 0.0. The near-uniform components with a 3-minor-unit residue in the LAST period are what discriminate a truncating or rounding port. The loan-2 schedule (100000.00 disbursed, 10000000 minor units, 12 varying components from 7884.88 to 8796.88, final balance 0.0) carries the same sum-equals-disbursed and final-zero fact and nothing loan 5 does not, so it is not used to grade this capability."
   }
  ],
  "seams": [
@@ -99,6 +105,13 @@
    "description": "The journal-entries read-back on the running Fineract server, tenant gerege: the debit and credit totals of the multi-pair batch generated for loan entityId 10 (disbursement pair L17 plus fee pair L18), whose four legs sum to 100100.00 on each side.",
    "status": {
     "journal-entry-batch-balance": "exercised"
+   }
+  },
+  {
+   "name": "loan-schedule-amortization",
+   "description": "The schedule read-back on the running Fineract server, tenant gerege: the whole repayment schedule of the discriminating SEED-L05 loan (disbursed principal 41850.09 over 12 repayment periods), whose per-period principalDue components sum to the disbursed principal and whose final outstanding principal balance is zero.",
+   "status": {
+    "schedule-principal-amortization": "exercised"
    }
   }
  ]
