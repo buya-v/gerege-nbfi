@@ -78,6 +78,15 @@ for name,hx in re.findall(r'([\w.-]+\.(?:json|txt))[^"]{0,80}?sha256[ :]*([0-9a-
     mfull=re.search(r'([\w./-]*/'+re.escape(name)+')',cit)
     cand=[mfull.group(1), '.softhouse/capture/'+mfull.group(1)] if mfull else []
     cand=[c for c in cand if os.path.exists(c)]
+    # A citation relative to the CAPTURE's own root (Tier D: "product-mappings/create-request-X.json"
+    # cited from a capture_ref under journalentries/) is found by walking up from capture_ref, never
+    # above .softhouse/capture/ (OH-COJGRADE-BY .. OH-ACJGRADE-CH printed NOTE for every such file).
+    if not cand:
+        rel=mfull.group(1) if mfull else name
+        d=os.path.dirname(ref)
+        while d.startswith('.softhouse/capture/') and not cand:
+            cand=[c for c in (os.path.join(d,rel), os.path.join(d,name)) if os.path.exists(c)]
+            d=os.path.dirname(d)
     f=cand[0] if cand else os.path.join(os.path.dirname(ref),name)
     if not os.path.exists(f): print(f"  NOTE  cited {name} not found beside capture_ref"); continue
     if h(f)!=hx: print(f"  FAIL  cited {name} sha256 {h(f)[:12]} != claimed {hx[:12]}"); rc=1
