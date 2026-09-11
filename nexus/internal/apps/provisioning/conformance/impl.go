@@ -325,10 +325,12 @@ func halfOpenBandLower(c provisioning.Criteria, overdueInDays int64) (provisioni
 }
 
 // halfOpenBandUpper matches the band with MinimumAge <= overdueInDays <
-// MaximumAge: the upper edge is exclusive. It is not registered as a drive: none
-// of the four observed decisions (0, 31, 62, 92) sits on a definition's maxAge
-// (29, 59, 89, 36500), so this defect is INVISIBLE to the committed corpus and
-// would kill zero. A capture of an age of exactly 29, 59 or 89 would see it.
+// MaximumAge: the upper edge is exclusive. The lower-edge defects (0, 31, 62, 92)
+// all sit strictly inside their band's [minAge, maxAge], so this defect is
+// invisible to them; it is killed only by an observation exactly on a maxAge.
+// The provisioning-upper-edge capture supplies three such observations -- 29, 59
+// and 89, each the maxAge of STANDARD, SUB-STANDARD and DOUBTFUL respectively --
+// so the drive dies on those three and on nothing else.
 func halfOpenBandUpper(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool) {
 	for _, d := range c.Definitions {
 		if d.MinimumAge <= overdueInDays && overdueInDays < d.MaximumAge {
@@ -649,4 +651,13 @@ func init() {
 			"on the 0-day vector alone: none of 31/62/92 is on a boundary. Inert on the category and "+
 			"reserve seams.",
 		newWrongBandEvaluator(halfOpenBandLower))
+	RegisterWrong("provisioning-wrong-band-half-open-upper",
+		"matches the band with an EXCLUSIVE upper edge (minAge <= overdueInDays < maxAge) instead of the "+
+			"oracle's closed predicate pcd.min_age <= overdueInDays AND overdueInDays <= pcd.max_age "+
+			"[VERIFIED: ProvisioningEntriesReadPlatformServiceImpl.java:75-77]. The 29/59/89-day "+
+			"provisioning-upper-edge observations each sit exactly on a band's maxAge (STANDARD 29, "+
+			"SUB-STANDARD 59, DOUBTFUL 89), so the upper-open band is missed and the drive dies on all "+
+			"three; the lower-edge ages 0/31/62/92 sit strictly inside their bands and are unaffected. "+
+			"Inert on the category and reserve seams.",
+		newWrongBandEvaluator(halfOpenBandUpper))
 }
