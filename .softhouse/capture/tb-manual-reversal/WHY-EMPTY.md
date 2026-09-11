@@ -5,6 +5,15 @@ required answer. Nothing below is synthesised: every claim is tagged **[observed
 tenant, this run), **[source]** (pinned `/Users/buv/fineract` @ `426a23544`) or
 **[read-only SQL]** (the same fact read off the live tenant).
 
+> **CONFIRMED LIVE (steps 4-6, 2026-09-11 02:31 UTC).** The prediction below was exact.
+> Job 30 executed against `gerege` returned HTTP 202 but its run history recorded
+> `failed`, and `m_trial_balance` stayed at 0 rows. The exception is the `:80` cast:
+> `java.lang.ClassCastException: class java.time.OffsetDateTime cannot be cast to class
+> java.time.LocalDate`. See `step04-job30/runhistory-after.json`,
+> `step04-job30/job30-runhistory-sql.txt` (version 6, `failed`, `application`) and
+> `step06-reason/REASON.md`. A second reversal pair was **not** posted: the cast fires on
+> the first eligible date regardless of the entry, so a retry could not succeed.
+
 ## The baseline (this run, read-only)
 
 | fact | value | file |

@@ -1,0 +1,4 @@
+ office_id | account_id | amount | entry_date | created_date | closing_balance 
+-----------+------------+--------+------------+--------------+-----------------
+(0 rows)
+

@@ -1,0 +1,25 @@
+ job_instance_id |           job_name           
+-----------------+------------------------------
+           10046 | UPDATE_TRIAL_BALANCE_DETAILS
+(1 row)
+
+ job_execution_id | job_instance_id |        create_time         |         start_time         |          end_time          | status | exit_code 
+------------------+-----------------+----------------------------+----------------------------+----------------------------+--------+-----------
+            10046 |           10046 | 2026-09-11 02:31:02.922751 | 2026-09-11 02:31:02.923691 | 2026-09-11 02:31:02.937497 | FAILED | FAILED
+(1 row)
+
+ step_execution_id | job_execution_id |          step_name           | status | exit_code 
+-------------------+------------------+------------------------------+--------+-----------
+             10073 |            10046 | UPDATE_TRIAL_BALANCE_DETAILS | FAILED | FAILED
+(1 row)
+
+ job_execution_id | parameter_type | parameter_name | parameter_value | identifying 
+------------------+----------------+----------------+-----------------+-------------
+            10046 | java.lang.Long | run.id         | 6               | Y
+(1 row)
+
+ job_execution_id | length 
+------------------+--------
+            10046 |     54
+(1 row)
+
