@@ -11,6 +11,7 @@ Source: `.softhouse/capabilities-savings.json`
 * seam **savings-deposit** — The account read-back on the running Fineract server, tenant gerege: what a DEPOSIT posting does to the posted balance. The observed surface is the opening row 
 * seam **savings-transactions** — The append-only read-back of the captured savings accounts, tenant gerege: the per-row derived running balances a deposit and posted interest write into the bal
 * seam **savings-hold-release** — The hold/release command acknowledgements and account read-backs on the running Fineract server, tenant gerege, savings account 1 (accountNo 000000001): the pos
+* seam **savings-hold-net-running-balance** — The same savings account 1 hold/release read-back read at the STORED running_balance_derived column instead of the summary: the hold-NET, available-shaped per-r
 * capability `daily-balance-interest-rounding` — in_graded_domain: **True** — The single-period daily-balance interest of the discriminating savings account SEED-Savings-Product-Daily (balance 1000.
 * capability `account-status-stored-value` — in_graded_domain: **True** — The m_savings_account.status_enum stored value Fineract writes into the acknowledgement of a lifecycle command on the di
 * capability `deposit-credit-balance` — in_graded_domain: **True** — A DEPOSIT posting on a savings account CREDITS the posted balance by its full amount, and the fold starts from a zero op
@@ -19,7 +20,7 @@ Source: `.softhouse/capabilities-savings.json`
 * capability `hold-release-available-only` — in_graded_domain: **True** — An AMOUNT_HOLD posting posts a transaction, reduces summary.availableBalance by the held amount and leaves summary.accou
 
 ## Vectors (what is graded today)
-8 files in `.softhouse/vectors/savings/`
+9 files in `.softhouse/vectors/savings/`
 
 * `SV-01-daily-interest-rounding.json` — request `daily_interest` — capture `.softhouse/capture/savings/out/savings-account-daily-raw.json`
 * `SV-02-approve-status-200.json` — request `account_status` — capture `.softhouse/capture/savings/out/savings-daily-approve-raw.json`
@@ -29,26 +30,31 @@ Source: `.softhouse/capabilities-savings.json`
 * `SV-06-monthly-stream-100000-100015-100031.json` — request `transaction_stream` — capture `.softhouse/capture/savings/out/savings-account-monthly-raw.json`
 * `SV-07-hold-reduces-available-not-balance.json` — request `hold_release` — capture `.softhouse/capture/savings-hold-release/out/savings-hold-after-hold-account-raw.json`
 * `SV-08-release-restores-available-not-balance.json` — request `hold_release` — capture `.softhouse/capture/savings-hold-release/out/savings-hold-after-release-account-raw.json`
+* `SV-09-hold-net-chain-down-then-up-balance-unmoved.json` — request `hold_net_running_balance` — capture `.softhouse/capture/savings-hold-release/out/savings-hold-after-release-account-raw.json`
 
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/savings/conformance/impl.go:37` — `func Register(name string, e SavingsEvaluator) {`
 * `nexus/internal/apps/savings/conformance/impl.go:47` — `func RegisterWrong(name, defect string, e SavingsEvaluator) {`
-* `nexus/internal/apps/savings/conformance/impl.go:507` — `Register("savings-go", NewGoEvaluator())`
+* `nexus/internal/apps/savings/conformance/impl.go:625` — `Register("savings-go", NewGoEvaluator())`
 * conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/savings/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations.
 
-* `savings-wrong-deposit-not-credited` — `nexus/internal/apps/savings/conformance/impl.go:516`
-* `savings-wrong-half-even-daily-interest` — `nexus/internal/apps/savings/conformance/impl.go:508`
-* `savings-wrong-hold-folded-into-balance` — `nexus/internal/apps/savings/conformance/impl.go:527`
-* `savings-wrong-hold-ignored` — `nexus/internal/apps/savings/conformance/impl.go:532`
-* `savings-wrong-interest-posting-debits` — `nexus/internal/apps/savings/conformance/impl.go:520`
-* `savings-wrong-iota-status-ordinal` — `nexus/internal/apps/savings/conformance/impl.go:512`
-* `savings-wrong-running-balance-before` — `nexus/internal/apps/savings/conformance/impl.go:524`
+* `savings-wrong-deposit-not-credited` — `nexus/internal/apps/savings/conformance/impl.go:634`
+* `savings-wrong-half-even-daily-interest` — `nexus/internal/apps/savings/conformance/impl.go:626`
+* `savings-wrong-hold-folded-into-balance` — `nexus/internal/apps/savings/conformance/impl.go:645`
+* `savings-wrong-hold-ignored` — `nexus/internal/apps/savings/conformance/impl.go:650`
+* `savings-wrong-hold-net-hold-is-credit` — `nexus/internal/apps/savings/conformance/impl.go:670`
+* `savings-wrong-hold-net-id-order` — `nexus/internal/apps/savings/conformance/impl.go:677`
+* `savings-wrong-hold-net-ignores-holds` — `nexus/internal/apps/savings/conformance/impl.go:655`
+* `savings-wrong-hold-net-ignores-releases` — `nexus/internal/apps/savings/conformance/impl.go:663`
+* `savings-wrong-interest-posting-debits` — `nexus/internal/apps/savings/conformance/impl.go:638`
+* `savings-wrong-iota-status-ordinal` — `nexus/internal/apps/savings/conformance/impl.go:630`
+* `savings-wrong-running-balance-before` — `nexus/internal/apps/savings/conformance/impl.go:642`
 
-7 drives.
+11 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/savings/account.go`: `IsDisabled`:45, `NewSavingsAccount`:49
@@ -65,7 +71,7 @@ Source: the binary's own -list-implementations.
 
 ## Captures this context's vectors already cite
 * `.softhouse/capture/savings/` — 6 vector(s) — (no OWNER.md)
-* `.softhouse/capture/savings-hold-release/` — 2 vector(s) — OWNER — savings-hold-release
+* `.softhouse/capture/savings-hold-release/` — 3 vector(s) — OWNER — savings-hold-release
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name

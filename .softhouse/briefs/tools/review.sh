@@ -21,6 +21,11 @@
 #   7. corpus     — <impl> fails 0 vectors; redcount of the context.
 #   8. coverage   — every function in a CHANGED non-test port file, from the graded
 #                   corpus (committed-store test, -count=1).
+#   9. the bar    — bash .softhouse/conformance.sh on the committed tree: exit 2 ONLY by
+#                   the §4.4.2 recorded decision; any failed HARD guard is a FAIL. Added
+#                   after review.sh PASSED OH-SAVRB-AB and the bar then refused it (SV-09
+#                   cited a psql dump the wire-float guard cannot parse). A run's own
+#                   reading of its exit 2 is not evidence.
 #
 # Exit 0 = every check PASS. Exit 1 = a check FAILED (listed). Exit 2 = a measurement
 # could not be taken (the silent-zero rule: never read an absence as a zero).
@@ -111,6 +116,16 @@ if [ -z "$FILES" ]; then say "  --    no port file changed"; else
   cov=$(mktemp); (cd nexus && go test -count=1 -coverpkg=./internal/apps/$CTX -coverprofile="$cov" ./internal/apps/$CTX/conformance/... >/dev/null 2>&1) || { say "  UNMEASURED coverage: go test failed"; unmeasured=1; }
   for f in $FILES; do (cd nexus && go tool cover -func="$cov" 2>/dev/null | grep "/${f#nexus/}:" | sed 's/^/  info  /; s/github.com\/[^ ]*\/internal/internal/'); done
   rm -f "$cov"
+fi
+
+say "-- 9 the full bar (conformance.sh) on the committed tree"
+if [ "${REVIEW_SKIP_BAR:-0}" = 1 ]; then say "  UNMEASURED bar skipped by REVIEW_SKIP_BAR=1"; unmeasured=1; else
+  bl=$(mktemp); (cd "$WT" && bash .softhouse/conformance.sh >"$bl" 2>&1); brc=$?
+  if grep -q 'a HARD guard failed' "$bl"; then bad "the bar: a HARD guard failed —"; grep -A3 -E 'REFUSED' "$bl" | grep -v 'NAMED, NOT REFUSED' | head -8 | sed 's/^/          /'
+  elif [ $brc -eq 2 ] && grep -q '§4.4.2-RECORDED-DECISION-EXIT' "$bl"; then ok "exit 2 by the §4.4.2 recorded decision (ledger findings == baseline)"
+  elif [ $brc -eq 0 ]; then ok "exit 0"
+  else bad "the bar exited $brc without the recorded-decision line — read $bl"; bl=; fi
+  [ -n "$bl" ] && rm -f "$bl"
 fi
 
 say "== verdict: $([ $fail -ne 0 ] && echo FAIL || { [ $unmeasured -ne 0 ] && echo 'INCOMPLETE (a measurement did not happen)' || echo PASS; })"
