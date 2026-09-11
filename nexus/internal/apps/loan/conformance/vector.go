@@ -855,6 +855,78 @@ type InterestPaymentWaiverJournalRequest struct {
 	Accounts      InterestPaymentWaiverSlotAccounts  `json:"accounts"`
 }
 
+// SeamLoanCapitalizedIncomeAmortizationJournalEntries is the capture seam this
+// schema grades: the journal entry a CAPITALIZED_INCOME_AMORTIZATION transaction
+// posts. It ports AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForCapitalizedIncomeAmortization, dispatching on the
+// loan's charged-off state to
+// createJournalEntriesForLoanCapitalizedIncomeAmortization or
+// createJournalEntriesForChargeOffLoanCapitalizedIncomeAmortization [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:308-502, pinned commit 426a23544].
+// For each positive portion (interest, fees) it DEBITS
+// DEFERRED_INCOME_LIABILITY and CREDITS ONE income account: INCOME_FROM_CAPITALIZATION
+// while the loan is neither charged off nor written off, LOSSES_WRITTEN_OFF once
+// it is written off, CHARGE_OFF_EXPENSE once it is charged off (non-fraud), or
+// CHARGE_OFF_FRAUD_EXPENSE once it is charged off and fraud. The two portions
+// resolve to the SAME credit account and the SAME deferred-income-liability
+// account, so the processor MERGES them into ONE credit and ONE debit (its
+// accountMap is a LinkedHashMap); credits come first, the debit last.
+//
+// On the pinned observations L5 (loan 1, neither) credits income from
+// capitalization (account 6) 10000 and debits deferred income liability (23)
+// 10000; L131 (loan 21, WRITTEN OFF) credits losses written off (13) 10000 and
+// debits 23 10000; L784 (loan 30, CHARGED OFF, no charge-off reason) credits
+// charge-off expense (14) 1648 and debits 23 1648; L332 (loan 25, CHARGED OFF
+// and FRAUD, no charge-off reason) credits charge-off fraud expense (12) 1667
+// and debits 23 1667. The capitalized-income
+// CLASSIFICATION branch and the charge-off-REASON branch share the Java method
+// but are NOT observed, and the request carries no input for them.
+const SeamLoanCapitalizedIncomeAmortizationJournalEntries = "loan-capitalized-income-amortization-journal-entries"
+
+// CapitalizedIncomeAmortizationPortionsMoney is the money a
+// CAPITALIZED_INCOME_AMORTIZATION transaction amortizes, each slot an integer
+// STRING in minor units. It is the request-side reduction of the transaction's
+// interestPortion and feeChargesPortion. Fee is optional (absent when the
+// observed read-back omits it).
+type CapitalizedIncomeAmortizationPortionsMoney struct {
+	Interest string `json:"interest"`
+	Fee      string `json:"fee,omitempty"`
+}
+
+// CapitalizedIncomeAmortizationSlotAccounts is the product's
+// capitalized-income-amortization slot->account mapping, each account the GL code
+// the oracle's GET /loanproducts/{id}.accountingMappings returns for that slot.
+// DeferredIncomeLiability is DEBITed ONCE with the sum of both portions.
+// IncomeFromCapitalization is CREDITED when the loan is neither charged off nor
+// written off, WriteOff (LOSSES_WRITTEN_OFF) when it is written off,
+// ChargeOffExpense when it is charged off (non-fraud) and ChargeOffFraudExpense
+// when it is charged off and fraud.
+type CapitalizedIncomeAmortizationSlotAccounts struct {
+	IncomeFromCapitalization string `json:"income_from_capitalization"`
+	DeferredIncomeLiability  string `json:"deferred_income_liability"`
+	ChargeOffExpense         string `json:"charge_off_expense,omitempty"`
+	ChargeOffFraudExpense    string `json:"charge_off_fraud_expense,omitempty"`
+	WriteOff                 string `json:"write_off,omitempty"`
+}
+
+// CapitalizedIncomeAmortizationJournalRequest is the
+// loan-capitalized-income-amortization-journal-entries seam's input: the
+// observed interest and fee portions of a CAPITALIZED_INCOME_AMORTIZATION
+// transaction, the loan's charged-off / fraud / written-off state and the
+// product's slot->account mapping, plus the transaction id the legs are posted
+// under. The mapping is the product's accountingMappings read back from the
+// reference server, never invented; a positive portion with no mapped credit or
+// deferred-income-liability account is refused by the port, as is the impossible
+// charged_off && written_off state.
+type CapitalizedIncomeAmortizationJournalRequest struct {
+	TransactionID string                                     `json:"transaction_id"`
+	Portions      CapitalizedIncomeAmortizationPortionsMoney `json:"portions"`
+	ChargedOff    bool                                       `json:"charged_off,omitempty"`
+	Fraud         bool                                       `json:"fraud,omitempty"`
+	WrittenOff    bool                                       `json:"written_off,omitempty"`
+	Accounts      CapitalizedIncomeAmortizationSlotAccounts  `json:"accounts"`
+}
+
 // ChargedOffMerchantRefundSlotAccounts is the slot->account mapping of a
 // MERCHANT-ISSUED REFUND or a PAYOUT REFUND on a loan MARKED CHARGED OFF. Each
 // positive portion CREDITS its own charge-off slot: principal
@@ -1218,6 +1290,12 @@ type Request struct {
 	// INTEREST_PAYMENT_WAIVER transaction's five portions, the loan's charged-off
 	// state and the product's slot->account mapping.
 	InterestPaymentWaiverJournal *InterestPaymentWaiverJournalRequest `json:"interest_payment_waiver_journal,omitempty"`
+	// CapitalizedIncomeAmortizationJournal is the
+	// loan-capitalized-income-amortization-journal-entries seam's input: a
+	// CAPITALIZED_INCOME_AMORTIZATION transaction's interest and fee portions, the
+	// loan's charged-off / fraud / written-off state and the product's
+	// slot->account mapping.
+	CapitalizedIncomeAmortizationJournal *CapitalizedIncomeAmortizationJournalRequest `json:"capitalized_income_amortization_journal,omitempty"`
 	// ChargedOffMerchantRefundJournal is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's input: a
 	// MERCHANT-ISSUED REFUND transaction's five portions on a loan already marked
@@ -1365,6 +1443,15 @@ type Expect struct {
 	// onto one charge-off income account) and the credit/debit split are what
 	// discriminate an ignore-charge-off or debit-per-portion port.
 	InterestPaymentWaiverJournalLegs []JournalEntryLeg `json:"interest_payment_waiver_journal_legs,omitempty"`
+	// CapitalizedIncomeAmortizationJournalLegs is the
+	// loan-capitalized-income-amortization-journal-entries seam's ordered leg list
+	// a capitalized-income amortization posted: ONE credit of the interest+fee
+	// total to the dispatch's income account (income from capitalization, losses
+	// written off, charge-off expense or charge-off fraud expense), then ONE debit
+	// of the same total to deferred income liability. Every leg is graded on its
+	// transaction id, account, side and amount; the loan-state account switch is
+	// what discriminates a port that ignores the loan's state.
+	CapitalizedIncomeAmortizationJournalLegs []JournalEntryLeg `json:"capitalized_income_amortization_journal_legs,omitempty"`
 	// ChargedOffMerchantRefundJournalLegs is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's ordered leg list a
 	// merchant-issued refund posted on a charged-off loan: one credit per positive

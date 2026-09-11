@@ -74,6 +74,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertCreditBalanceRefundJournalBalanced(got)}
 	case SeamLoanInterestPaymentWaiverJournalEntries:
 		return []InvariantResult{assertInterestPaymentWaiverJournalBalanced(got)}
+	case SeamLoanCapitalizedIncomeAmortizationJournalEntries:
+		return []InvariantResult{assertCapitalizedIncomeAmortizationJournalBalanced(got)}
 	case SeamLoanChargeLifecycle:
 		return []InvariantResult{assertChargeStatesConserved(v, got)}
 	case SeamLoanStatusTransition:
@@ -922,6 +924,56 @@ func assertInterestPaymentWaiverJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("one debit of %d equals the %d credit portion(s)", debits, creditLegs)
+	return r
+}
+
+// assertCapitalizedIncomeAmortizationJournalBalanced: the amortization result
+// carries non-negative integer minor-unit amounts, EXACTLY ONE CREDIT leg (the
+// interest and fee portions merge onto a single income account) and EXACTLY ONE
+// DEBIT leg (the same total to DEFERRED_INCOME_LIABILITY), and the debit equals
+// the credit. The account cells are checked by the leg diff; this is the money
+// shape that a dropped-merge or dropped-debit port cannot satisfy.
+func assertCapitalizedIncomeAmortizationJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "capitalized_income_amortization_journal_balances", Assertions: 4}
+	if len(got.CapitalizedIncomeAmortizationJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range got.CapitalizedIncomeAmortizationJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs != 1 || debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d credit leg(s) and %d debit leg(s): an amortization merges both portions into one income credit and then one total deferred-income-liability debit", creditLegs, debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credit sums to %d but the debit sums to %d: an amortization batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("one credit of %d equals the one debit", credits)
 	return r
 }
 

@@ -1,0 +1,68 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CIA-loan-30-charged-off",
+ "title": "A CHARGED-OFF loan credits CHARGE_OFF_EXPENSE and debits DEFERRED_INCOME_LIABILITY for a capitalized-income amortization (loan 30 L784: CREDIT account 14 16.48, DEBIT account 23 16.48)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a CAPITALIZED_INCOME_AMORTIZATION transaction posts on a loan that IS CHARGED OFF and NOT fraud, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME) at the amortization transaction L784. request.capitalized_income_amortization_journal.portions transcribes the loan read-back's amortization transaction id 784 (externalId babc97d4-8028-48c2-9e58-a95cc41ad7f0, type loanTransactionType.capitalizedIncomeAmortization): interestPortion 16.48 -> \"1648\" and feeChargesPortion 0 -> \"0\" minor units. The loan read-back carries a NON-REVERSED chargeOff transaction id 783 (externalId 7f43c40c-b9cf-4569-959c-aac470cc5651) with a LOWER id and NO charge-off reason, so request...charged_off is true and request...fraud is false; the loan is NOT written off. request...accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME.json: incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13. expect...legs is a TRANSCRIPTION of the two L784 legs in id order from the journal-entries sweep: id 1647 entryType CREDIT glAccountId 14 amount 16.48 and id 1648 DEBIT glAccountId 23 amount 16.48. THIS VECTOR GRADES ONE PROPERTY: a charged-off non-fraud loan's amortization credits CHARGE_OFF_EXPENSE (14), not income from capitalization (6), and debits the same total to deferred income liability. It is the account cell that discriminates the ignore-loan-state drive. WHAT THIS VECTOR DOES NOT GRADE: a positive fee portion (zero here), the fraud arm (this loan is not fraud), the written-off arm, and the classification / charge-off-reason branches (not observed, no input). Nothing was computed by this promotion: every portion, account and expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-capitalized-income-amortization-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.capitalized_income_amortization_journal.portions and the loan state are transcribed from the committed loan read-back loans/loan-30/loan-30-detail-associations-transactions-6.json (sha256 10c6da760b0f9e727d0b451f21349b0e08929795d70a338d678548fa13b4f56a): fraud false, chargedOff true, a non-reversed chargeOff transaction id 783 (externalId 7f43c40c-b9cf-4569-959c-aac470cc5651) with no charge-off reason before transaction id 784 (externalId babc97d4-8028-48c2-9e58-a95cc41ad7f0) type loanTransactionType.capitalizedIncomeAmortization with interestPortion 16.48 and feeChargesPortion 0. expect.capitalized_income_amortization_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-30.json (sha256 073c2ac195523d66c18ce912dfd63a75d2f9ef11c35da5863e74e862008c5866), transactionId L784 pageItems ids 1647-1648. request.capitalized_income_amortization_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME.json (sha256 c709513ca7502722a993906c83612bbffe8b14706e5ee0a9d09eff4bb7177b38): incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanCapitalizedIncome-Part1.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/capitalized-income-p1-mnt/journalentries-sweep/loan-30.json",
+  "capture_sha256": "073c2ac195523d66c18ce912dfd63a75d2f9ef11c35da5863e74e862008c5866",
+  "capture_case_id": "L784",
+  "citation": "journalentries-sweep/loan-30.json:1 (sha256 073c2ac195523d66c18ce912dfd63a75d2f9ef11c35da5863e74e862008c5866, committed sweep read-back, tenant tierd): transactionId L784 carries two legs in id order -- id 1647 entryType.value CREDIT glAccountId 14 amount 16.48; id 1648 DEBIT glAccountId 23 amount 16.48. Portions and state are in loans/loan-30/loan-30-detail-associations-transactions-6.json:1 (sha256 10c6da760b0f9e727d0b451f21349b0e08929795d70a338d678548fa13b4f56a): fraud false, chargedOff true, a non-reversed chargeOff transaction id 783 with no reason before transactions[id 784 externalId babc97d4-8028-48c2-9e58-a95cc41ad7f0] type loanTransactionType.capitalizedIncomeAmortization, interestPortion 16.48, feeChargesPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME.json:1 (sha256 c709513ca7502722a993906c83612bbffe8b14706e5ee0a9d09eff4bb7177b38): incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "capitalized_income_amortization_journal": {
+   "transaction_id": "L784",
+   "portions": {
+    "interest": "1648",
+    "fee": "0"
+   },
+   "charged_off": true,
+   "accounts": {
+    "income_from_capitalization": "6",
+    "deferred_income_liability": "23",
+    "charge_off_expense": "14",
+    "charge_off_fraud_expense": "12",
+    "write_off": "13"
+   }
+  }
+ },
+ "expect": {
+  "capitalized_income_amortization_journal_legs": [
+   {
+    "transaction_id": "L784",
+    "account": "14",
+    "entry_type": "CREDIT",
+    "amount_minor": "1648"
+   },
+   {
+    "transaction_id": "L784",
+    "account": "23",
+    "entry_type": "DEBIT",
+    "amount_minor": "1648"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "capitalized-income-amortization-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-cia-ignores-loan-state"
+ ]
+}

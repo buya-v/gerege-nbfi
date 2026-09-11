@@ -170,6 +170,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal)
 	case req.InterestPaymentWaiverJournal != nil:
 		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
+	case req.CapitalizedIncomeAmortizationJournal != nil:
+		return goCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
@@ -1406,6 +1408,54 @@ func interestPaymentWaiverJournalLegsExpect(legs []loan.JournalEntryLeg) Expect 
 	return Expect{InterestPaymentWaiverJournalLegs: out}
 }
 
+// goCapitalizedIncomeAmortizationJournal ports the
+// loan-capitalized-income-amortization-journal-entries seam: it reduces the
+// request's interest and fee integer-minor portions, runs the port's
+// CreateCapitalizedIncomeAmortizationJournalEntryLegs with the loan's
+// charged-off / fraud / written-off state and the product's slot->account
+// mapping, and renders the ordered legs. Nothing is parsed as a float.
+func goCapitalizedIncomeAmortizationJournal(r CapitalizedIncomeAmortizationJournalRequest) (Expect, error) {
+	interest, err := parseMinorText(minorTextOrZero(r.Portions.Interest))
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateCapitalizedIncomeAmortizationJournalEntryLegs(r.TransactionID, interest, fee, r.ChargedOff, r.Fraud, r.WrittenOff, loan.CapitalizedIncomeAmortizationAccountMapping{
+		IncomeFromCapitalization: r.Accounts.IncomeFromCapitalization,
+		DeferredIncomeLiability:  r.Accounts.DeferredIncomeLiability,
+		ChargeOffExpense:         r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:    r.Accounts.ChargeOffFraudExpense,
+		WriteOff:                 r.Accounts.WriteOff,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return capitalizedIncomeAmortizationJournalLegsExpect(legs), nil
+}
+
+// capitalizedIncomeAmortizationJournalLegsExpect renders the port's ordered legs
+// as the seam's ordered leg cells. Every money cell is an integer STRING in
+// minor units; a leg whose side is somehow unknown renders an empty entry_type
+// rather than defaulting to a side the capture never showed.
+func capitalizedIncomeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{CapitalizedIncomeAmortizationJournalLegs: out}
+}
+
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
 // LoanCharge of the observed amount and penalty flag, applies the ordered
 // operations through the port's own money mutations, and captures the state
@@ -1787,6 +1837,52 @@ func wrongInterestPaymentWaiverJournal(r InterestPaymentWaiverJournalRequest, mo
 		r.ChargedOff = false
 	}
 	return goInterestPaymentWaiverJournal(r)
+}
+
+// capitalizedIncomeAmortizationJournalWrongMode selects which deliberately-wrong
+// capitalized-income-amortization posting to run. Each is a port a reasonable
+// reader might write, and it is discriminated by the committed observations.
+type capitalizedIncomeAmortizationJournalWrongMode int
+
+const (
+	// wrongCIAIgnoresLoanState always credits INCOME_FROM_CAPITALIZATION,
+	// ignoring the loan's charged-off, fraud and written-off state, as a port
+	// that never reads the loan state does; on the written-off loan-21 and the
+	// charged-off loan-30 and loan-25 observations the single credit moves from
+	// the state's account (13/14/12) to income from capitalization (6) while the
+	// normal loan-1 observation is unaffected.
+	wrongCIAIgnoresLoanState capitalizedIncomeAmortizationJournalWrongMode = iota
+)
+
+// wrongCapitalizedIncomeAmortizationJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-capitalized-income-amortization-journal-entries
+// seam, parameterised by which posting defect it commits. On any request that is
+// not a capitalized-income amortization journal it delegates to the correct
+// port, so the drive goes red ONLY on this seam's vectors and stays green
+// everywhere else (vector isolation).
+type wrongCapitalizedIncomeAmortizationJournalEvaluator struct {
+	goEvaluator
+	mode capitalizedIncomeAmortizationJournalWrongMode
+}
+
+func (w wrongCapitalizedIncomeAmortizationJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.CapitalizedIncomeAmortizationJournal != nil {
+		return wrongCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongCapitalizedIncomeAmortizationJournal runs the correct posting and then
+// applies exactly one defect, so the drive differs from the port on exactly the
+// cells its defect moves.
+func wrongCapitalizedIncomeAmortizationJournal(r CapitalizedIncomeAmortizationJournalRequest, mode capitalizedIncomeAmortizationJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongCIAIgnoresLoanState:
+		r.ChargedOff = false
+		r.Fraud = false
+		r.WrittenOff = false
+	}
+	return goCapitalizedIncomeAmortizationJournal(r)
 }
 
 // chargedOffWriteOffJournalWrongMode selects which deliberately-wrong
@@ -3498,6 +3594,15 @@ func init() {
 			"move while every side and amount stays observed — and the not-charged-off observations "+
 			"(loans 2 and 7) are unaffected",
 		wrongInterestPaymentWaiverJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongIPWIgnoresChargeOff})
+	RegisterWrong("loan-wrong-cia-ignores-loan-state",
+		"always credits INCOME_FROM_CAPITALIZATION for a capitalized-income amortization, as a port "+
+			"that never reads the loan's charged-off / fraud / written-off state does; on the "+
+			"written-off observation loan-21 L131 the merged credit moves from LOSSES_WRITTEN_OFF (13) "+
+			"to income from capitalization (6), on the charged-off loan-30 L784 it moves from "+
+			"CHARGE_OFF_EXPENSE (14) to 6, and on the fraud loan-25 L332 it moves from "+
+			"CHARGE_OFF_FRAUD_EXPENSE (12) to 6, so the account cell moves while every side and amount "+
+			"stays observed — and the not-charged-off loan-1 L5 observation is unaffected",
+		wrongCapitalizedIncomeAmortizationJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongCIAIgnoresLoanState})
 	RegisterWrong("loan-wrong-chargedoff-writeoff-debits-fund-source",
 		"posts the per-portion FUND_SOURCE debits populateCreditDebitMaps accumulates instead of the "+
 			"one LOSSES_WRITTEN_OFF debit the oracle posts, as a port that iterates the debit map too "+

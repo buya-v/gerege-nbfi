@@ -1,0 +1,69 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CIA-loan-25-charged-off-fraud",
+ "title": "A CHARGED-OFF AND FRAUD loan with NO charge-off reason credits CHARGE_OFF_FRAUD_EXPENSE and debits DEFERRED_INCOME_LIABILITY, not the product's reason-mapped account (loan 25 L332: CREDIT account 12 16.67, DEBIT account 23 16.67)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a CAPITALIZED_INCOME_AMORTIZATION transaction posts on a loan that IS CHARGED OFF AND FRAUD, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC_CAPITALIZED_INCOME) at the amortization transaction L332. request.capitalized_income_amortization_journal.portions transcribes the loan read-back's amortization transaction id 332 (externalId 730673f5-a408-4596-af21-ea40f52fb598, type loanTransactionType.capitalizedIncomeAmortization): interestPortion 16.67 -> \"1667\" and feeChargesPortion 0 -> \"0\" minor units. The loan read-back carries a NON-REVERSED chargeOff transaction id 331 (externalId 84737143-95a6-4721-978e-69aefca57c4b) with a LOWER id and NO charge-off reason, and the loan's fraud flag is true, so request...charged_off and request...fraud are both true; the loan is NOT written off. request...accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC_CAPITALIZED_INCOME.json: incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13. THIS PRODUCT ALSO CARRIES a chargeOffReasonToExpenseAccountMappings entry (code 34 -> account 14), but the observed charge-off request carries NO reason, so the FRAUD branch applies and the amortization credits 12. A port that used the product's reason mapping would post 14 and fail this vector. expect...legs is a TRANSCRIPTION of the two L332 legs in id order from the journal-entries sweep: id 724 entryType CREDIT glAccountId 12 amount 16.67 and id 725 DEBIT glAccountId 23 amount 16.67. THIS VECTOR GRADES ONE PROPERTY: a charged-off fraud loan's amortization credits CHARGE_OFF_FRAUD_EXPENSE (12), not income from capitalization (6) and not the reason-mapped 14, and debits the same total to deferred income liability. It is the account cell that discriminates both the ignore-loan-state drive and a reason-mapping port. WHAT THIS VECTOR DOES NOT GRADE: a positive fee portion (zero here), the written-off arm, and the capitalized-income CLASSIFICATION branch (not observed, no input). Nothing was computed by this promotion: every portion, account and expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-capitalized-income-amortization-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.capitalized_income_amortization_journal.portions and the loan state are transcribed from the committed loan read-back loans/loan-25/loan-25-detail-associations-transactions-4.json (sha256 7a12cb27892396032ca01574b76f4aa814f8b0d5a903584fd88c05fb76bbf027): fraud true, chargedOff true, a non-reversed chargeOff transaction id 331 (externalId 84737143-95a6-4721-978e-69aefca57c4b) carrying no charge-off reason before transaction id 332 (externalId 730673f5-a408-4596-af21-ea40f52fb598) type loanTransactionType.capitalizedIncomeAmortization with interestPortion 16.67 and feeChargesPortion 0. expect.capitalized_income_amortization_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-25.json (sha256 47b53fd33f7aaa42221f773ab051d3475ce0b701094fdcc9aafbfcb418bfd195), transactionId L332 pageItems ids 724-725. request.capitalized_income_amortization_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC_CAPITALIZED_INCOME.json (sha256 2e380265bc81c0e9a61795fad9ecacf39fff317678433cfa004a15c78ded27a5): incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13, and chargeOffReasonToExpenseAccountMappings [{\"chargeOffReasonCodeValueId\": 34, \"expenseAccountId\": 14}]. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanCapitalizedIncome-Part1.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/capitalized-income-p1-mnt/journalentries-sweep/loan-25.json",
+  "capture_sha256": "47b53fd33f7aaa42221f773ab051d3475ce0b701094fdcc9aafbfcb418bfd195",
+  "capture_case_id": "L332",
+  "citation": "journalentries-sweep/loan-25.json:1 (sha256 47b53fd33f7aaa42221f773ab051d3475ce0b701094fdcc9aafbfcb418bfd195, committed sweep read-back, tenant tierd): transactionId L332 carries two legs in id order -- id 724 entryType.value CREDIT glAccountId 12 amount 16.67; id 725 DEBIT glAccountId 23 amount 16.67. Portions and state are in loans/loan-25/loan-25-detail-associations-transactions-4.json:1 (sha256 7a12cb27892396032ca01574b76f4aa814f8b0d5a903584fd88c05fb76bbf027): fraud true, chargedOff true, a non-reversed chargeOff transaction id 331 with NO reason before transactions[id 332 externalId 730673f5-a408-4596-af21-ea40f52fb598] type loanTransactionType.capitalizedIncomeAmortization, interestPortion 16.67, feeChargesPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC_CAPITALIZED_INCOME.json:1 (sha256 2e380265bc81c0e9a61795fad9ecacf39fff317678433cfa004a15c78ded27a5): incomeFromCapitalizationAccountId 6, deferredIncomeLiabilityAccountId 23, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 12, writeOffAccountId 13, and a reason mapping code 34 -> account 14 that the observed reason-less charge-off does NOT select."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "capitalized_income_amortization_journal": {
+   "transaction_id": "L332",
+   "portions": {
+    "interest": "1667",
+    "fee": "0"
+   },
+   "charged_off": true,
+   "fraud": true,
+   "accounts": {
+    "income_from_capitalization": "6",
+    "deferred_income_liability": "23",
+    "charge_off_expense": "14",
+    "charge_off_fraud_expense": "12",
+    "write_off": "13"
+   }
+  }
+ },
+ "expect": {
+  "capitalized_income_amortization_journal_legs": [
+   {
+    "transaction_id": "L332",
+    "account": "12",
+    "entry_type": "CREDIT",
+    "amount_minor": "1667"
+   },
+   {
+    "transaction_id": "L332",
+    "account": "23",
+    "entry_type": "DEBIT",
+    "amount_minor": "1667"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "capitalized-income-amortization-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-cia-ignores-loan-state"
+ ]
+}
