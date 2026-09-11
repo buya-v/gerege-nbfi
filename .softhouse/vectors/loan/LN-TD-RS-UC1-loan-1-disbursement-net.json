@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RS-UC1-loan-1-disbursement-net",
+ "title": "UC1 loan 1 net disbursal amount (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the net disbursal amount of UC1 loan 1 from the Tier-D MNT replay of LoanRepaymentSchedule.feature (throwaway tenant `tierd`, currency MNT, 2 minor digits; product LP2_ADV_PYMNT_INTEREST_DECL_BAL_SARP_EMI_360_30_INT_RECALC_DAILY_MULTIDISB_PARTIAL_PERIOD). request.disburse transcribes the observed approvedPrincipal 2000.00 -> \"200000\" minor units and feeChargesAtDisbursementCharged 0.00 -> \"0\". expect.net_disbursal_minor transcribes the observed netDisbursalAmount 2000.00 -> \"200000\" minor units, equal to the approved principal because no charge is due at disbursement. The vector is on an EXISTING seam (loan-disbursement); no drive exists for it, so it is cross-validation only. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-disbursement",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.disburse and expect.net_disbursal_minor are transcribed from the committed MNT capture loan-1-detail-associations-all-1.json, the UC1 loan 1 read-back while status was loanStatusType.submitted.and.pending.approval, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId 78c84a40-a70f-49f4-ac13-aefc9e5b0f0a, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanRepaymentSchedule.feature UC1; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-all-1.json",
+  "capture_sha256": "e29806a5a18540927f5853911310bd41fd29fc7687303773b0b74de00a50cafd",
+  "capture_case_id": "78c84a40-a70f-49f4-ac13-aefc9e5b0f0a",
+  "citation": "loan-1-detail-associations-all-1.json (tenant tierd, currency MNT) externalId 78c84a40-a70f-49f4-ac13-aefc9e5b0f0a: approvedPrincipal 2000.00 -> 200000 minor units; feeChargesAtDisbursementCharged 0.00 -> 0; netDisbursalAmount 2000.00 -> 200000 minor units"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "disburse": {
+   "approved_principal_minor": "200000",
+   "charges_due_at_disbursement_minor": "0"
+  }
+ },
+ "expect": {
+  "net_disbursal_minor": "200000"
+ },
+ "capabilities_required": [
+  "disbursement-net"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
