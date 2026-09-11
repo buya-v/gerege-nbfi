@@ -1,0 +1,133 @@
+/Users/buv/.local/share/uv/tools/openhands/lib/python3.12/site-packages/openhands/sdk/llm/auth/openai.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey, jwt
++----------------------------------------------------------------------+
+|  OpenHands SDK v1.21.0                                               |
+|                                                                      |
+|  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+|  Get help: openhands.dev/joinslack                                   |
+|  Scale up: openhands.dev/product/sdk                                 |
+|                                                                      |
+|  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
++----------------------------------------------------------------------+
+
+[09/11/26 08:58:39] ERROR    PTY reader thread error: subprocess_terminal.py:281
+                             [Errno 9] Bad file                                 
+                             descriptor                                         
+                             ╭─ Traceback (most rec─╮                           
+                             │ /Users/buv/.local/sh │                           
+                             │ are/uv/tools/openhan │                           
+                             │ ds/lib/python3.12/si │                           
+                             │ te-packages/openhand │                           
+                             │ s/tools/terminal/ter │                           
+                             │ minal/subprocess_ter │                           
+                             │ minal.py:261 in      │                           
+                             │ _read_output_continu │                           
+                             │ ously_pty            │                           
+                             │                      │                           
+                             │   258 │   │   │   │  │                           
+                             │   259 │   │   │   │  │                           
+                             │   260 │   │   │   │  │                           
+                             │ ❱ 261 │   │   │   │  │                           
+                             │   262 │   │   │   │  │                           
+                             │   263 │   │   │   │  │                           
+                             │   264                │                           
+                             ╰──────────────────────╯                           
+                             OSError: [Errno 9] Bad                             
+                             file descriptor                                    
+OpenHands CLI terminal UI may not work correctly in this environment: Rich detected a non-interactive or unsupported terminal; interactive UI may not render correctly
+To override Rich's detection, you can set TTY_INTERACTIVE=1 (and optionally TTY_COMPATIBLE=1).
+[37mInitializing agent[0m[33m...[0m
+[32m✓ Agent initialized with model: deepseek/deepseek-v4-flash[0m
+Agent is working
+Agent finished
+
+[92m───────────────────────────── [0mCONVERSATION SUMMARY[92m ─────────────────────────────[0m
+[1mNumber of agent messages:[0m [1;36m179[0m
+[1mLast message sent by the agent:[0m
+[36m╭─[0m[36m Agent [0m[36m─────────────────────────────────────────────────────────────────────[0m[36m─╮[0m
+[36m│[0m [1;36mSummary: [0mLoan committed-store test, coverage measurement, and triage         [36m│[0m
+[36m│[0m complete                                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1mReasoning:[0m                                                                   [36m│[0m
+[36m│[0m Everything verified:                                                         [36m│[0m
+[36m│[0m - Test commit touches only the test file.                                    [36m│[0m
+[36m│[0m - Finding commit touches only the finding.                                   [36m│[0m
+[36m│[0m - Vectors/guards baseline/conformance.sh untouched.                          [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Now I can finish. Let me give a concise summary.                             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Actually, one thing: the TASK_TRACKING said "Committed loan corpus           [36m│[0m
+[36m│[0m reference-implementation check — PENDING (triage in progress)". I verified   [36m│[0m
+[36m│[0m it: 20/20. Done.                                                             [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Let me finish with a summary.                                                [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1mThought:[0m                                                                     [36m│[0m
+[36m│[0m Everything is verified and committed. Let me summarize.                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m [1;34mFinish with message:[0m                                                         [36m│[0m
+[36m│[0m OH-LOANCOV-T complete. The loan corpus is now measurable from `go test`, and [36m│[0m
+[36m│[0m the triage is written and committed. No capture taken; no POST/PUT/DELETE    [36m│[0m
+[36m│[0m issued; `.softhouse/vectors/`, `ledger-invariants.baseline` (12 pairs) and   [36m│[0m
+[36m│[0m `conformance.sh` (census 17) untouched.                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## What was delivered                                                        [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m 1. **Committed-store conformance test** —                                    [36m│[0m
+[36m│[0m `nexus/internal/apps/loan/conformance/committed_store_test.go` (commit       [36m│[0m
+[36m│[0m `a176a95f`), modelled on the savings template. It drives the real corpus     [36m│[0m
+[36m│[0m through `LoadStore` → `Admit` → `Run` against `loan-go`, with an             [36m│[0m
+[36m│[0m anti-vacuity guard (zero vectors fails), per-vector admissibility, and a     [36m│[0m
+[36m│[0m seam-coverage pin. It calls **no port function directly**, so its coverage   [36m│[0m
+[36m│[0m is reached only through the vectors                                          [36m│[0m
+[36m│[0m (`TestCommittedCorpusPassesTheReferenceImplementation` PASS, fresh).         [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m 2. **Before/after measurement** (reproducibly regenerated):                  [36m│[0m
+[36m│[0m    | | statements | coverage | functions at 0.0% |                           [36m│[0m
+[36m│[0m    |---|---:|---:|---:|                                                      [36m│[0m
+[36m│[0m    | before (test absent) | 1,395 | 13.9% | 123 |                            [36m│[0m
+[36m│[0m    | after (test present) | 1,395 | **17.5%** | **118** |                    [36m│[0m
+[36m│[0m    The five-function delta is exactly `DerivePrincipalAmortization`          [36m│[0m
+[36m│[0m (scheduleamortization.go:31),                                                [36m│[0m
+[36m│[0m `StoredValue`/`Code`/`LoanStatusFromStoredValue` (status.go:81/90/102), and  [36m│[0m
+[36m│[0m `TotalOutstanding` (summary.go:45) — confirmed by diffing before/after zero  [36m│[0m
+[36m│[0m lists.                                                                       [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m 3. **Triage** — `.softhouse/findings/F-2026-09-11-loan-graded-coverage.md`   [36m│[0m
+[36m│[0m (commit `ce118e3e`), with `file:line` citations spot-checked against the     [36m│[0m
+[36m│[0m source. Key findings:                                                        [36m│[0m
+[36m│[0m    - `WriteOffOutstanding` (writeoff.go:36) and the `charge.go` lifecycle —  [36m│[0m
+[36m│[0m **implemented, never observed** (no write-off transaction anywhere;          [36m│[0m
+[36m│[0m `charges: null` in every graded capture; charge data exists only in uncited, [36m│[0m
+[36m│[0m fully-paid `tierA-a2` reads).                                                [36m│[0m
+[36m│[0m    - `OverdueDays`/`DelinquentDays` (delinquency.go:96/109) and the status   [36m│[0m
+[36m│[0m machine (lifecycle.go:37/171) — **observed but ungraded** (holds-shaped,     [36m│[0m
+[36m│[0m gradeable without a capture).                                                [36m│[0m
+[36m│[0m    - `AggregateInstallmentDelinquency` (delinquency.go:47) and the           [36m│[0m
+[36m│[0m disbursement charge-list functions — observation absent / seam does not call [36m│[0m
+[36m│[0m them.                                                                        [36m│[0m
+[36m│[0m    - No candidate is asserted to be a defect; no vector or drive was         [36m│[0m
+[36m│[0m written.                                                                     [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m ## Controls (all verified on this tree)                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m - `go build ./...` clean; `go test ./...` all packages pass.                 [36m│[0m
+[36m│[0m - `bash .softhouse/conformance.sh` → **exit 2** as the §4.4.2 recorded       [36m│[0m
+[36m│[0m decision; ledger findings **12 pairs**; guard census **17**; verdict PASS    [36m│[0m
+[36m│[0m over 46 parity vectors (1 recorded divergence excluded).                     [36m│[0m
+[36m│[0m - `kills.sh loan loan-wrong-summary-drops-penalty` → **2**; `kills.sh        [36m│[0m
+[36m│[0m savings savings-wrong-hold-folded-into-balance` → **1**; `kills.sh           [36m│[0m
+[36m│[0m loanschedule loanschedule-wrong-days-in-year-365` → **45**.                  [36m│[0m
+[36m│[0m - **All 24 loan drives still kill** (non-killing count = 0).                 [36m│[0m
+[36m│[0m - `loan-go` on the committed store: `vectors_loaded=20 parity_pass=20`,      [36m│[0m
+[36m│[0m invariant violations 0.                                                      [36m│[0m
+[36m│[0m                                                                              [36m│[0m
+[36m│[0m Commits are local only; no push was performed (the driver pushes). `TASK.md` [36m│[0m
+[36m│[0m was left untracked as provided.                                              [36m│[0m
+[36m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+[92m────────────────────────────────────────────────────────────────────────────────[0m
+Goodbye! 👋
+Conversation ID: 5f344ad6d9424cc8b7e7fe46a2668225
+Hint: run openhands --resume 5f344ad6-d942-4cc8-b7e7-fe46a2668225 to resume this
+conversation.
