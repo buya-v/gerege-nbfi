@@ -1,0 +1,15 @@
+{
+  "officeId": 1,
+  "transactionDate": "2026-06-15",
+  "dateFormat": "yyyy-MM-dd",
+  "locale": "en",
+  "currencyCode": "MNT",
+  "comments": "OH-TBCAP-Y manual entry for reversal probe",
+  "referenceNumber": "OHTBCAPY-1",
+  "debits": [
+    { "glAccountId": 6, "amount": 12345.67 }
+  ],
+  "credits": [
+    { "glAccountId": 10, "amount": 12345.67 }
+  ]
+}

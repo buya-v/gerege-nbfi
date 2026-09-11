@@ -1,0 +1,16 @@
+1|SEED-Provisioning-Asset|SEED-10001|t|f|1
+2|SEED-Provisioning-Liability|SEED-20001|t|f|2
+3|SEED-Provisioning-Income|SEED-40001|t|f|4
+4|SEED-Provisioning-Expense|SEED-50001|t|f|5
+5|OHLGR-Loan-Portfolio|OHLGR-10010|t|f|1
+6|OHLGR-Transfers-Suspense|OHLGR-10011|t|f|1
+7|OHLGR-Interest-Receivable|OHLGR-10012|t|f|1
+8|OHLGR-Fees-Receivable|OHLGR-10013|t|f|1
+9|OHLGR-Penalties-Receivable|OHLGR-10014|t|f|1
+10|OHLGR-Fund-Source|OHLGR-20010|t|f|2
+11|OHLGR-Overpayment-Liability|OHLGR-20011|t|f|2
+12|OHLGR-Interest-On-Loans|OHLGR-40010|t|f|4
+13|OHLGR-Income-From-Fees|OHLGR-40011|t|f|4
+14|OHLGR-Income-From-Penalties|OHLGR-40012|t|f|4
+15|OHLGR-Income-From-Recovery|OHLGR-40013|t|f|4
+16|OHLGR-Losses-Written-Off|OHLGR-50010|t|f|5

@@ -1,0 +1,78 @@
+# Extracted from docker logs gerege-oracle-app, read-only.
+# Every UPDATE_TRIAL_BALANCE_DETAILS run in the container log, tenant+status.
+5176:2026-09-01 18:31:00.023 - INFO 1  [        default] --- [duler1_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=1, type=class java.lang.Long, identifying=true}'}]
+5184:2026-09-01 18:31:00.031 - INFO 1  [        default] --- [duler1_Worker-6] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+5213:2026-09-01 18:31:00.045 - INFO 1  [        default] --- [duler1_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=1, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 19ms
+12554:2026-09-02 18:31:00.028 - INFO 1  [        default] --- [duler1_Worker-7] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=2, type=class java.lang.Long, identifying=true}'}]
+12561:2026-09-02 18:31:00.032 - INFO 1  [        default] --- [duler1_Worker-7] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+12573:2026-09-02 18:31:00.040 - INFO 1  [        default] --- [duler1_Worker-7] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=2, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 11ms
+22445:2026-09-03 18:31:00.032 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=3, type=class java.lang.Long, identifying=true}'}]
+22453:2026-09-03 18:31:00.036 - INFO 1  [        default] --- [duler1_Worker-4] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+22515:2026-09-03 18:31:00.062 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=3, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 29ms
+29749:2026-09-04 18:31:00.025 - INFO 1  [        default] --- [duler1_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=4, type=class java.lang.Long, identifying=true}'}]
+29755:2026-09-04 18:31:00.030 - INFO 1  [        default] --- [duler1_Worker-6] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+29816:2026-09-04 18:31:00.042 - INFO 1  [        default] --- [duler1_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=4, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 16ms
+41713:2026-09-05 16:01:00.022 - INFO 1  [         gerege] --- [duler2_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=1, type=class java.lang.Long, identifying=true}'}]
+41721:2026-09-05 16:01:00.026 - INFO 1  [         gerege] --- [duler2_Worker-4] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+41750:2026-09-05 16:01:00.033 - INFO 1  [         gerege] --- [duler2_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=1, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 10ms
+43439:2026-09-05 18:31:00.020 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=5, type=class java.lang.Long, identifying=true}'}]
+43445:2026-09-05 18:31:00.024 - INFO 1  [        default] --- [duler1_Worker-4] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+43507:2026-09-05 18:31:00.038 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=5, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 16ms
+86140:2026-09-06 16:01:00.022 - INFO 1  [         gerege] --- [duler2_Worker-7] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=2, type=class java.lang.Long, identifying=true}'}]
+86147:2026-09-06 16:01:00.025 - INFO 1  [         gerege] --- [duler2_Worker-7] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+86160:2026-09-06 16:01:00.034 - INFO 1  [         gerege] --- [duler2_Worker-7] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=2, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 12ms
+87700:2026-09-06 18:31:00.031 - INFO 1  [        default] --- [duler1_Worker-5] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=6, type=class java.lang.Long, identifying=true}'}]
+87708:2026-09-06 18:31:00.035 - INFO 1  [        default] --- [duler1_Worker-5] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+87770:2026-09-06 18:31:00.050 - INFO 1  [        default] --- [duler1_Worker-5] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=6, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 18ms
+103422:2026-09-07 16:01:00.027 - INFO 1  [         gerege] --- [duler2_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=3, type=class java.lang.Long, identifying=true}'}]
+103429:2026-09-07 16:01:00.032 - INFO 1  [         gerege] --- [duler2_Worker-6] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+103450:2026-09-07 16:01:00.042 - INFO 1  [         gerege] --- [duler2_Worker-6] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=3, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 13ms
+104992:2026-09-07 18:31:00.030 - INFO 1  [        default] --- [duler1_Worker-1] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=7, type=class java.lang.Long, identifying=true}'}]
+105000:2026-09-07 18:31:00.033 - INFO 1  [        default] --- [duler1_Worker-1] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+105058:2026-09-07 18:31:00.043 - INFO 1  [        default] --- [duler1_Worker-1] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=7, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 13ms
+117974:2026-09-08 16:01:00.033 - INFO 1  [         gerege] --- [duler2_Worker-3] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=4, type=class java.lang.Long, identifying=true}'}]
+117982:2026-09-08 16:01:00.037 - INFO 1  [         gerege] --- [duler2_Worker-3] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+117997:2026-09-08 16:01:00.047 - INFO 1  [         gerege] --- [duler2_Worker-3] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=4, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 12ms
+119536:2026-09-08 18:31:00.032 - INFO 1  [        default] --- [duler1_Worker-2] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=8, type=class java.lang.Long, identifying=true}'}]
+119543:2026-09-08 18:31:00.036 - INFO 1  [        default] --- [duler1_Worker-2] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+119606:2026-09-08 18:31:00.052 - INFO 1  [        default] --- [duler1_Worker-2] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=8, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 19ms
+136451:2026-09-09 16:01:00.033 - INFO 1  [         gerege] --- [duler2_Worker-5] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=5, type=class java.lang.Long, identifying=true}'}]
+136457:2026-09-09 16:01:00.036 - INFO 1  [         gerege] --- [duler2_Worker-5] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+136473:2026-09-09 16:01:00.046 - INFO 1  [         gerege] --- [duler2_Worker-5] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=5, type=class java.lang.Long, identifying=true}'}] and the following status: [COMPLETED] in 11ms
+138014:2026-09-09 18:31:00.024 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] launched with the following parameters: [{'run.id':'{value=9, type=class java.lang.Long, identifying=true}'}]
+138022:2026-09-09 18:31:00.030 - INFO 1  [        default] --- [duler1_Worker-4] o.s.batch.core.job.SimpleStepHandler     : Executing step: [UPDATE_TRIAL_BALANCE_DETAILS]
+138080:2026-09-09 18:31:00.039 - INFO 1  [        default] --- [duler1_Worker-4] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=UPDATE_TRIAL_BALANCE_DETAILS]] completed with the following parameters: [{'run.id':'{value=9, type=class java.lang.Long, identifying=true}'}] and the following status: [FAILED] in 12ms
+
+# The ClassCastException proof (default tenant runs; same tasklet code path).
+2026-09-08 18:31:00.049 -ERROR 1  [        default] --- [duler1_Worker-2] o.s.batch.core.step.AbstractStep         : Encountered an error executing step UPDATE_TRIAL_BALANCE_DETAILS in job UPDATE_TRIAL_BALANCE_DETAILS
+
+java.lang.ClassCastException: class java.time.OffsetDateTime cannot be cast to class java.time.LocalDate (java.time.OffsetDateTime and java.time.LocalDate are in module java.base of loader 'bootstrap')
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.lambda$insertTrialBalanceForDate$0(UpdateTrialBalanceDetailsTasklet.java:80)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Vector$VectorSpliterator.forEachRemaining(Vector.java:1464)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622)
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627)
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.insertTrialBalanceForDate(UpdateTrialBalanceDetailsTasklet.java:83)
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.processTrialBalanceGaps(UpdateTrialBalanceDetailsTasklet.java:67)
+
+2026-09-09 18:31:00.035 -ERROR 1  [        default] --- [duler1_Worker-4] o.s.batch.core.step.AbstractStep         : Encountered an error executing step UPDATE_TRIAL_BALANCE_DETAILS in job UPDATE_TRIAL_BALANCE_DETAILS
+
+java.lang.ClassCastException: class java.time.OffsetDateTime cannot be cast to class java.time.LocalDate (java.time.OffsetDateTime and java.time.LocalDate are in module java.base of loader 'bootstrap')
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.lambda$insertTrialBalanceForDate$0(UpdateTrialBalanceDetailsTasklet.java:80)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Vector$VectorSpliterator.forEachRemaining(Vector.java:1464)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:622)
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:627)
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.insertTrialBalanceForDate(UpdateTrialBalanceDetailsTasklet.java:83)
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.processTrialBalanceGaps(UpdateTrialBalanceDetailsTasklet.java:67)
+	at org.apache.fineract.accounting.glaccount.jobs.updatetrialbalancedetails.UpdateTrialBalanceDetailsTasklet.execute(UpdateTrialBalanceDetailsTasklet.java:53)

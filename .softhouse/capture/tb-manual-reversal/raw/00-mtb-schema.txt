@@ -1,0 +1,6 @@
+office_id|bigint||not null|
+account_id|bigint||not null|
+amount|numeric(19,6)||not null|
+entry_date|date||not null|
+created_date|date|||
+closing_balance|numeric(19,6)||not null|

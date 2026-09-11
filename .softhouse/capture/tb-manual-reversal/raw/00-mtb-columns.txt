@@ -1,0 +1,6 @@
+office_id|bigint
+account_id|bigint
+amount|numeric
+entry_date|date
+created_date|date
+closing_balance|numeric
