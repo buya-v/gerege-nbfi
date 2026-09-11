@@ -37,11 +37,11 @@ func Admit(v *Vector, opts Options) []string {
 		problems = append(problems, fmt.Sprintf("class %q: only %q vectors may be graded by this harness", v.Class, ClassParity))
 	}
 	switch v.Oracle.Seam {
-	case SeamProvisioningCategoryRead, SeamProvisioningEntryReserve:
+	case SeamProvisioningCategoryRead, SeamProvisioningEntryReserve, SeamProvisioningCriteriaBand:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q and %q",
-			v.Oracle.Seam, SeamProvisioningCategoryRead, SeamProvisioningEntryReserve))
+			"oracle.seam %q: this harness grades only seams %q, %q and %q",
+			v.Oracle.Seam, SeamProvisioningCategoryRead, SeamProvisioningEntryReserve, SeamProvisioningCriteriaBand))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -152,6 +152,26 @@ func Admit(v *Vector, opts Options) []string {
 				problems = append(problems, fmt.Sprintf("expect.overdue_in_days %d is negative", v.Expect.OverdueInDays))
 			}
 		}
+	case SeamProvisioningCriteriaBand:
+		problems = append(problems, validateCriteriaDefinitions(v.Request.Definitions)...)
+		if v.Request.OverdueInDays < 0 {
+			problems = append(problems, fmt.Sprintf("request.overdue_in_days %d is negative", v.Request.OverdueInDays))
+		}
+		if v.Expect.CategoryID <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.category_id %d is not positive", v.Expect.CategoryID))
+		}
+		if v.Expect.Name == "" {
+			problems = append(problems, "expect.name is empty")
+		}
+		if v.Expect.Percentage <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.percentage %d is not a positive micro-per-cent", v.Expect.Percentage))
+		}
+		if v.Expect.LiabilityAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.liability_account %d is not positive", v.Expect.LiabilityAccount))
+		}
+		if v.Expect.ExpenseAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("expect.expense_account %d is not positive", v.Expect.ExpenseAccount))
+		}
 	}
 
 	problems = append(problems, checkGradedAgainst(v)...)
@@ -254,6 +274,46 @@ func validateReserveInputs(rows []ReserveInputRow) []string {
 		}
 		if !isIntegerMinorString(r.BalanceMinor) {
 			problems = append(problems, fmt.Sprintf("%s.balance_minor %q is not a non-negative integer minor-unit amount", at, r.BalanceMinor))
+		}
+	}
+	return problems
+}
+
+// validateCriteriaDefinitions admits a criteria-band request's age bands. Each
+// band must be a real definition: positive ids, a closed [min_age, max_age] with
+// max_age >= min_age, and the money-affecting members (percentage in integer
+// micro-per-cent, liability and expense accounts) present and positive. A
+// percentage is not money, so it is checked positive rather than minor-unit.
+func validateCriteriaDefinitions(defs []CriteriaDefinitionRow) []string {
+	if len(defs) == 0 {
+		return []string{"request.definitions is empty: a criteria-band vector must carry the criteria's age bands"}
+	}
+	var problems []string
+	for i, d := range defs {
+		at := fmt.Sprintf("request.definitions[%d]", i)
+		if d.ID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.id %d is not positive", at, d.ID))
+		}
+		if d.CategoryID <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.category_id %d is not positive", at, d.CategoryID))
+		}
+		if d.CategoryName == "" {
+			problems = append(problems, fmt.Sprintf("%s.category_name is empty", at))
+		}
+		if d.MinimumAge < 0 {
+			problems = append(problems, fmt.Sprintf("%s.min_age %d is negative", at, d.MinimumAge))
+		}
+		if d.MaximumAge < d.MinimumAge {
+			problems = append(problems, fmt.Sprintf("%s.max_age %d is less than min_age %d", at, d.MaximumAge, d.MinimumAge))
+		}
+		if d.Percentage <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.percentage %d is not a positive micro-per-cent", at, d.Percentage))
+		}
+		if d.LiabilityAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.liability_account %d is not positive", at, d.LiabilityAccount))
+		}
+		if d.ExpenseAccount <= 0 {
+			problems = append(problems, fmt.Sprintf("%s.expense_account %d is not positive", at, d.ExpenseAccount))
 		}
 	}
 	return problems

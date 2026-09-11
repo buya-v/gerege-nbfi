@@ -1,0 +1,86 @@
+{
+ "schema": "gerege.provisioning.vector/v1",
+ "case_id": "PV-11-BAND-SUB-STANDARD",
+ "title": "criteria age band selects SUB-STANDARD (overdue 31)",
+ "class": "parity",
+ "context": "provisioning",
+ "_note": "Parity vector transcribed from the criteria definitions capture CRI-02 (GET /v1/provisioningcriteria/1, tenant gerege, criteriaId 1 SEED-Probe-Criteria, loan product 2). request.definitions carries that capture's four definitions verbatim in capture order: id 3 STANDARD [0,29] percentage 1.00 -> 1000000 micro-per-cent liability 2 expense 4; id 4 SUB-STANDARD [30,59] 25.00 -> 25000000; id 2 DOUBTFUL [60,89] 50.00 -> 50000000; id 1 LOSS [90,36500] 100.00 -> 100000000. request.overdue_in_days=31 and expect.category_id/name/percentage/accounts are the observed decision recorded in capture ENT-04 for the overdueInDays 31 row (categoryId 2 SUB-STANDARD, liablityAccount 2, expenseAccount 4). No value was computed by this promotion: 31 is transcribed as an observed decision, and no band was selected by a formula.",
+ "oracle": {
+  "seam": "provisioning-criteria-band",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.definitions are transcribed from the committed capture CRI-02; the selected category, percentage and GL accounts are the observed ENT-04 decision for overdueInDays 31. capture_case_id names the categoryName both captures agree on.",
+  "capture_ref": ".softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json",
+  "capture_sha256": "fe372a96d8f358a1fc34999e3f76691dd5e133f8968d3637785db43e2a007c43",
+  "capture_case_id": "SUB-STANDARD",
+  "citation": "CRI-02 definitions[1] {\"id\":4,\"categoryId\":2,\"categoryName\":\"SUB-STANDARD\",\"minAge\":30,\"maxAge\":59,\"provisioningPercentage\":25.00,\"liabilityAccount\":2,\"expenseAccount\":4}; observed decision ENT-04 (.softhouse/capture/provisioning/out/ENT-04-entry-loan-products-raw.json, sha256 96d596c24df85684c8d8fb1d204adddd9423f3ab101aedcaa890dd757b447ddb) row {\"categoryId\":2,\"categoryName\":\"SUB-STANDARD\",\"overdueInDays\":31,\"liablityAccount\":2,\"expenseAccount\":4}"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "overdue_in_days": 31,
+  "definitions": [
+   {
+    "id": 3,
+    "category_id": 1,
+    "category_name": "STANDARD",
+    "min_age": 0,
+    "max_age": 29,
+    "percentage": 1000000,
+    "liability_account": 2,
+    "expense_account": 4
+   },
+   {
+    "id": 4,
+    "category_id": 2,
+    "category_name": "SUB-STANDARD",
+    "min_age": 30,
+    "max_age": 59,
+    "percentage": 25000000,
+    "liability_account": 2,
+    "expense_account": 4
+   },
+   {
+    "id": 2,
+    "category_id": 3,
+    "category_name": "DOUBTFUL",
+    "min_age": 60,
+    "max_age": 89,
+    "percentage": 50000000,
+    "liability_account": 2,
+    "expense_account": 4
+   },
+   {
+    "id": 1,
+    "category_id": 4,
+    "category_name": "LOSS",
+    "min_age": 90,
+    "max_age": 36500,
+    "percentage": 100000000,
+    "liability_account": 2,
+    "expense_account": 4
+   }
+  ]
+ },
+ "expect": {
+  "category_id": 2,
+  "name": "SUB-STANDARD",
+  "percentage": 25000000,
+  "liability_account": 2,
+  "expense_account": 4
+ },
+ "capabilities_required": [
+  "criteria-band"
+ ],
+ "graded_against": [
+  "provisioning-go"
+ ]
+}

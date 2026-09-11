@@ -40,6 +40,13 @@ func AssertInvariants(v *Vector, got []Expect) []InvariantResult {
 		}
 		return out
 	}
+	if v != nil && v.Oracle.Seam == SeamProvisioningCriteriaBand {
+		var out []InvariantResult
+		for _, e := range got {
+			out = append(out, assertBandCategoryIDPositive(e), assertBandPercentagePositive(e), assertBandAccountsPositive(e))
+		}
+		return out
+	}
 	if len(got) == 0 {
 		return []InvariantResult{
 			assertCategoryIDPositive(Expect{}),
@@ -109,5 +116,50 @@ func assertReservedAmountInteger(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("reserved amount %q is a non-negative integer minor-unit amount", got.ReservedAmountMinor)
+	return r
+}
+
+// assertBandCategoryIDPositive: the selected band's category id is the
+// m_provision_category primary key, a positive integer.
+func assertBandCategoryIDPositive(got Expect) InvariantResult {
+	r := InvariantResult{Name: "band_category_id_positive", Assertions: 1}
+	if got.CategoryID <= 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("band category id %d is not positive", got.CategoryID)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("band category id %d is positive", got.CategoryID)
+	return r
+}
+
+// assertBandPercentagePositive: the selected band's reserve percentage is the
+// oracle's provisioningPercentage, an integer micro-per-cent. Every observed band
+// carries a positive percentage (1 % .. 100 %); a non-positive selection cannot
+// be a transcription of a real criteria definition.
+func assertBandPercentagePositive(got Expect) InvariantResult {
+	r := InvariantResult{Name: "band_percentage_positive", Assertions: 1}
+	if got.Percentage <= 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("band percentage %d is not a positive micro-per-cent", got.Percentage)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("band percentage %d is a positive micro-per-cent", got.Percentage)
+	return r
+}
+
+// assertBandAccountsPositive: the selected band's liability and expense GL
+// account ids are positive integers (the oracle's provisioningLiabilityAccount
+// and provisioningExpenseAccount).
+func assertBandAccountsPositive(got Expect) InvariantResult {
+	r := InvariantResult{Name: "band_accounts_positive", Assertions: 2}
+	if got.LiabilityAccount <= 0 || got.ExpenseAccount <= 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("band accounts liability %d, expense %d: both must be positive", got.LiabilityAccount, got.ExpenseAccount)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("band accounts liability %d, expense %d are positive", got.LiabilityAccount, got.ExpenseAccount)
 	return r
 }

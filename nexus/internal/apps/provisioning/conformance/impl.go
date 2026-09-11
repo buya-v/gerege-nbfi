@@ -98,13 +98,20 @@ func CorrectImplementationNames() []string {
 	return out
 }
 
-// goEvaluator is the port-backed category aggregate. The four categories are the
-// port's model of the m_provision_category rows the running oracle returned to
-// GET /v1/provisioningcategory (capture CAT-00); each field is a faithful
-// transcription of that capture, not a computed value. The oracle's
+// goEvaluator is the port-backed evaluator for the three graded seams. The
+// categories are the port's model of the m_provision_category rows the running
+// oracle returned to GET /v1/provisioningcategory (capture CAT-00); each field
+// is a faithful transcription of that capture, not a computed value. The oracle's
 // categoryName maps to the port's Name and categoryDescription to Description.
+//
+// selectBand is the age->band selector the criteria-band seam applies. The
+// correct evaluator leaves it nil and the dispatch uses the port's own
+// Criteria.ReserveRate (which calls CriteriaDefinition.Matches); the
+// conformance wrong drives substitute a defective selector through
+// newWrongBandEvaluator without re-implementing the request/expect adaptation.
 type goEvaluator struct {
 	categories map[int64]provisioning.ProvisioningCategory
+	selectBand bandSelector
 }
 
 // NewGoEvaluator returns the port-backed implementation.
@@ -119,8 +126,15 @@ func NewGoEvaluator() ProvisioningEvaluator {
 }
 
 func (g goEvaluator) Evaluate(req Request) ([]Expect, error) {
-	if len(req.Inputs) > 0 {
+	switch {
+	case len(req.Inputs) > 0:
 		return evaluateReserveEntries(req)
+	case len(req.Definitions) > 0:
+		sel := g.selectBand
+		if sel == nil {
+			sel = correctBandSelector
+		}
+		return evaluateCriteriaBand(req, sel)
 	}
 	c, ok := g.categories[req.CategoryID]
 	if !ok {
@@ -193,6 +207,135 @@ func evaluateReserveEntriesWith(req Request, gen func([]provisioning.ReserveInpu
 // each row).
 func evaluateReserveEntries(req Request) ([]Expect, error) {
 	return evaluateReserveEntriesWith(req, provisioning.GenerateReserveEntries)
+}
+
+// bandSelector selects the ONE criteria definition whose closed age band
+// contains overdueInDays. The correct selector is the port's own
+// Criteria.ReserveRate (which calls CriteriaDefinition.Matches for the oracle's
+// join predicate); the conformance wrong drives substitute a defective selector
+// so the property "an overdue age selects the ONE definition whose closed band
+// [minAge, maxAge] contains it" is graded by the four committed band decisions
+// (0, 31, 62, 92).
+type bandSelector func(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool)
+
+// correctBandSelector is the port's own age->band rule. It reaches
+// Criteria.ReserveRate -> CriteriaDefinition.Matches.
+func correctBandSelector(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool) {
+	return c.ReserveRate(overdueInDays)
+}
+
+// criteriaFromRequest adapts a criteria-band request's definition rows to the
+// port's Criteria. The definition id is carried so the selected band's category
+// name can be read back from the request transcription.
+func criteriaFromRequest(req Request) provisioning.Criteria {
+	defs := make([]provisioning.CriteriaDefinition, 0, len(req.Definitions))
+	for _, d := range req.Definitions {
+		defs = append(defs, provisioning.CriteriaDefinition{
+			ID:               d.ID,
+			CategoryID:       d.CategoryID,
+			MinimumAge:       d.MinimumAge,
+			MaximumAge:       d.MaximumAge,
+			Percentage:       provisioning.Percent(d.Percentage),
+			LiabilityAccount: d.LiabilityAccount,
+			ExpenseAccount:   d.ExpenseAccount,
+		})
+	}
+	return provisioning.Criteria{Definitions: defs}
+}
+
+// evaluateCriteriaBand adapts one criteria-band request, applies the supplied
+// selector and renders the selected band as the seam's Expect. A selector that
+// finds no band (the oracle's join would drop the row) yields the zero selection,
+// which the comparator reports as a mismatch rather than as a harness error.
+func evaluateCriteriaBand(req Request, sel bandSelector) ([]Expect, error) {
+	crit := criteriaFromRequest(req)
+	def, _ := sel(crit, req.OverdueInDays)
+	if def.ID == 0 {
+		return []Expect{{}}, nil
+	}
+	names := make(map[int64]string, len(req.Definitions))
+	for _, d := range req.Definitions {
+		names[d.ID] = d.CategoryName
+	}
+	return []Expect{{
+		CategoryID:       def.CategoryID,
+		Name:             names[def.ID],
+		Percentage:       int64(def.Percentage),
+		LiabilityAccount: def.LiabilityAccount,
+		ExpenseAccount:   def.ExpenseAccount,
+	}}, nil
+}
+
+// newWrongBandEvaluator returns the correct evaluator with the age->band
+// selector replaced. The category read and reserve seams are untouched, so each
+// wrong band drive is inert on every non-band vector and dies only on the
+// criteria-band observations the defect mis-selects.
+func newWrongBandEvaluator(sel bandSelector) ProvisioningEvaluator {
+	g := NewGoEvaluator().(goEvaluator)
+	g.selectBand = sel
+	return g
+}
+
+// firstBandAlways ignores the overdue age and always selects the first
+// definition: a porter that read only the criteria's first band.
+func firstBandAlways(c provisioning.Criteria, _ int64) (provisioning.CriteriaDefinition, bool) {
+	if len(c.Definitions) == 0 {
+		return provisioning.CriteriaDefinition{}, false
+	}
+	return c.Definitions[0], true
+}
+
+// lastBandAlways ignores the overdue age and always selects the last
+// definition: a porter that read only the final LOSS band.
+func lastBandAlways(c provisioning.Criteria, _ int64) (provisioning.CriteriaDefinition, bool) {
+	if len(c.Definitions) == 0 {
+		return provisioning.CriteriaDefinition{}, false
+	}
+	return c.Definitions[len(c.Definitions)-1], true
+}
+
+// nextBandUp selects the definition AFTER the one whose closed band contains the
+// age: an off-by-one porter whose band lookup is shifted one band too far (and
+// walks off the end for the last band, finding nothing).
+func nextBandUp(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool) {
+	for i, d := range c.Definitions {
+		if d.Matches(overdueInDays) {
+			if i+1 < len(c.Definitions) {
+				return c.Definitions[i+1], true
+			}
+			return provisioning.CriteriaDefinition{}, true
+		}
+	}
+	return provisioning.CriteriaDefinition{}, true
+}
+
+// halfOpenBandLower matches the band with MinimumAge < overdueInDays <=
+// MaximumAge instead of the oracle's closed [MinimumAge, MaximumAge]: the lower
+// edge is exclusive. An age that sits exactly on a definition's minAge (0 on the
+// STANDARD band) is missed; that is the ONLY boundary among the four committed
+// decisions (none is on a maxAge), so the 0-day observation alone discriminates
+// this drive.
+func halfOpenBandLower(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool) {
+	for _, d := range c.Definitions {
+		if d.MinimumAge < overdueInDays && overdueInDays <= d.MaximumAge {
+			return d, true
+		}
+	}
+	return provisioning.CriteriaDefinition{}, true
+}
+
+// halfOpenBandUpper matches the band with MinimumAge <= overdueInDays <
+// MaximumAge: the upper edge is exclusive. It is not registered as a drive: none
+// of the four observed decisions (0, 31, 62, 92) sits on a definition's maxAge
+// (29, 59, 89, 36500), so this defect is INVISIBLE to the committed corpus and
+// would kill zero. A capture of an age of exactly 29, 59 or 89 would see it.
+func halfOpenBandUpper(c provisioning.Criteria, overdueInDays int64) (provisioning.CriteriaDefinition, bool) {
+	for _, d := range c.Definitions {
+		if d.MinimumAge <= overdueInDays && overdueInDays < d.MaximumAge {
+			return d, true
+		}
+	}
+	return provisioning.CriteriaDefinition{}, true
 }
 
 // wrongCategoryEvaluator is a DELIBERATELY WRONG implementation: it returns a
@@ -476,4 +619,34 @@ func init() {
 			"definition row id is 1 as LOSS, 2 as DOUBTFUL, 3 as STANDARD and 4 as SUB-STANDARD, so every "+
 			"category-name vector goes red while reserve amounts stay correct.",
 		wrongDefinitionIDEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("provisioning-wrong-band-first-always",
+		"ignores the loan's overdue age and always selects the criteria's FIRST definition (STANDARD). "+
+			"The oracle selects the definition whose closed [minAge, maxAge] contains the age "+
+			"[VERIFIED: ProvisioningEntriesReadPlatformServiceImpl.java:75-77]; a porter that read only the "+
+			"first band matches the 0-day observation (STANDARD) but mis-selects 31 (SUB-STANDARD), 62 "+
+			"(DOUBTFUL) and 92 (LOSS). Inert on the category and reserve seams.",
+		newWrongBandEvaluator(firstBandAlways))
+	RegisterWrong("provisioning-wrong-band-last-always",
+		"ignores the loan's overdue age and always selects the criteria's LAST definition (LOSS). The "+
+			"oracle selects the definition whose closed [minAge, maxAge] contains the age "+
+			"[VERIFIED: ProvisioningEntriesReadPlatformServiceImpl.java:75-77]; a porter that read only the "+
+			"final band matches the 92-day observation (LOSS) but mis-selects 0 (STANDARD), 31 "+
+			"(SUB-STANDARD) and 62 (DOUBTFUL). Inert on the category and reserve seams.",
+		newWrongBandEvaluator(lastBandAlways))
+	RegisterWrong("provisioning-wrong-band-off-by-one",
+		"selects the definition AFTER the one whose closed band contains the overdue age: the band lookup "+
+			"is shifted one band too far and walks off the end for the final band. The oracle selects the "+
+			"definition whose closed [minAge, maxAge] contains the age "+
+			"[VERIFIED: ProvisioningEntriesReadPlatformServiceImpl.java:75-77]; the shift mis-selects 0 "+
+			"(SUB-STANDARD), 31 (DOUBTFUL) and 62 (LOSS) and finds no band for 92. Inert on the category "+
+			"and reserve seams.",
+		newWrongBandEvaluator(nextBandUp))
+	RegisterWrong("provisioning-wrong-band-half-open",
+		"matches the band with an EXCLUSIVE lower edge (minAge < overdueInDays <= maxAge) instead of the "+
+			"oracle's closed predicate pcd.min_age <= overdueInDays AND overdueInDays <= pcd.max_age "+
+			"[VERIFIED: ProvisioningEntriesReadPlatformServiceImpl.java:75-77]. The 0-day STANDARD "+
+			"observation sits exactly on that minAge, so the lower-open band is missed and the drive dies "+
+			"on the 0-day vector alone: none of 31/62/92 is on a boundary. Inert on the category and "+
+			"reserve seams.",
+		newWrongBandEvaluator(halfOpenBandLower))
 }
