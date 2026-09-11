@@ -295,6 +295,42 @@ const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 // resolves to the product fund source 1.
 const SeamLoanChargedOffRepaymentJournalEntries = "loan-chargedoff-repayment-journal-entries"
 
+// SeamLoanChargedOffMerchantRefundJournalEntries is the capture seam this schema
+// grades: the journal entry a MERCHANT-ISSUED REFUND posts on a loan ALREADY
+// MARKED CHARGED OFF and NOT fraud. It ports
+// AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForRepaymentWhenLoanIsChargedOff [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:1388-1615, dispatch :1369-1377,
+// pinned commit 426a23544]. The merchant-issued-refund arm CREDITS the
+// charge-off slots the earlier charge-off DEBITED: principal to
+// CHARGE_OFF_EXPENSE, interest to INCOME_FROM_CHARGE_OFF_INTEREST, fees to
+// INCOME_FROM_CHARGE_OFF_FEES, penalties to INCOME_FROM_CHARGE_OFF_PENALTY, and
+// overpayment to OVERPAYMENT. Portions that resolve to the SAME account MERGE
+// into one credit at the first slot's position. It then posts ONE debit of the
+// total to the RESOLVED fund source (the transaction paymentTypeId's
+// payment-channel account when the product maps that channel, else the product
+// FUND_SOURCE): every portion debits that same account, so the debit map merges
+// them too. Credits come first, the single debit last.
+//
+// The method's FRAUD split (principal to CHARGE_OFF_FRAUD_EXPENSE), its
+// payout-refund and goodwill-credit arms and its else branch are NOT observed on
+// a charged-off loan and are not expressible here: the port REFUSES a fraud loan
+// rather than guessing the split.
+//
+// On the pinned observations transaction L475 (loan 48, product
+// LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL) credits
+// the charge-off expense 18 800, the charge-off interest 16 18.49 and the
+// overpayment 13 81.51, then debits the fund source 7 900; L477 (same loan)
+// credits 18 883.10 and 16 16.90 then debits 7 900; L498 (loan 50, product
+// LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ACCELERATE_MATURITY_CHARGE_OFF)
+// credits 18 900 then debits 7 900. The account ids are THIS replay's product
+// mapping, both products mapping fundSource 7, chargeOffExpense 18,
+// incomeFromChargeOffInterest 16, incomeFromChargeOffFees 12,
+// incomeFromChargeOffPenalty 12 and overpayment 13; the only channel mapping is
+// paymentTypeId 1 -> 19, so the observed paymentType 4 (AUTOPAY) resolves to the
+// product fund source 7.
+const SeamLoanChargedOffMerchantRefundJournalEntries = "loan-chargedoff-merchant-refund-journal-entries"
+
 // SeamLoanAccrualJournalEntries is the capture seam this schema grades: the
 // journal entry an ACCRUAL or ACCRUAL_ADJUSTMENT transaction posts, the
 // tax-free observed shape of AccrualBasedAccountingProcessorForLoan
@@ -719,6 +755,47 @@ type ChargedOffRepaymentJournalRequest struct {
 	Accounts      ChargedOffRepaymentSlotAccounts `json:"accounts"`
 }
 
+// ChargedOffMerchantRefundSlotAccounts is the slot->account mapping of a
+// MERCHANT-ISSUED REFUND on a loan MARKED CHARGED OFF and not fraud. Each
+// positive portion CREDITS its own charge-off slot: principal
+// ChargeOffExpense, interest IncomeFromChargeOffInterest, fees
+// IncomeFromChargeOffFees, penalties IncomeFromChargeOffPenalty, overpayment
+// Overpayment. FundSource is the RESOLVED account the single total debit posts
+// to (the transaction paymentTypeId's payment-channel account when the product
+// maps that channel, else the product FUND_SOURCE).
+//
+// IncomeFromRecovery is carried too, not because the merchant-refund port reads
+// it — it never does — but because the registered wrong implementation expresses
+// the wrong-as-repayment defect by reposting the same portions through the
+// charged-off REPAYMENT layout, which credits every principal, interest, fee and
+// penalty portion to income_from_recovery. A correct merchant-refund port reads
+// only the five slots, overpayment and fund_source.
+type ChargedOffMerchantRefundSlotAccounts struct {
+	ChargeOffExpense            string `json:"charge_off_expense"`
+	IncomeFromChargeOffInterest string `json:"income_from_charge_off_interest"`
+	IncomeFromChargeOffFees     string `json:"income_from_charge_off_fees"`
+	IncomeFromChargeOffPenalty  string `json:"income_from_charge_off_penalty"`
+	Overpayment                 string `json:"overpayment,omitempty"`
+	IncomeFromRecovery          string `json:"income_from_recovery"`
+	FundSource                  string `json:"fund_source"`
+}
+
+// ChargedOffMerchantRefundJournalRequest is the
+// loan-chargedoff-merchant-refund-journal-entries seam's input: the observed
+// portions of a MERCHANT-ISSUED REFUND on a loan already marked charged off, the
+// loan's fraud flag (which this seam pins false) and the resolved slot->account
+// mapping, plus the transaction id the legs are posted under. The mapping is the
+// product's accountingMappings (with the fund source resolved through the
+// payment channel) read back from the reference server, never invented; a slot
+// with a positive portion and no mapped account is refused by the port, and a
+// fraud loan is refused rather than guessed.
+type ChargedOffMerchantRefundJournalRequest struct {
+	TransactionID string                               `json:"transaction_id"`
+	Portions      RepaymentPortionsMoney               `json:"portions"`
+	Fraud         bool                                 `json:"fraud"`
+	Accounts      ChargedOffMerchantRefundSlotAccounts `json:"accounts"`
+}
+
 // AccrualPortionsMoney is the per-slot money an accrual or accrual-adjustment
 // transaction accrues, each slot an integer STRING in minor units. It is the
 // request-side reduction of loan.AccrualPortions: the three fields
@@ -973,6 +1050,13 @@ type Request struct {
 	// resolved slot->account mapping (the fund source already resolved through
 	// the payment channel). There is no transaction-type field.
 	ChargedOffRepaymentJournal *ChargedOffRepaymentJournalRequest `json:"charged_off_repayment_journal,omitempty"`
+	// ChargedOffMerchantRefundJournal is the
+	// loan-chargedoff-merchant-refund-journal-entries seam's input: a
+	// MERCHANT-ISSUED REFUND transaction's five portions on a loan already marked
+	// charged off and NOT fraud, the fraud flag (which this seam pins false) and
+	// the resolved slot->account mapping (the fund source already resolved through
+	// the payment channel).
+	ChargedOffMerchantRefundJournal *ChargedOffMerchantRefundJournalRequest `json:"charged_off_merchant_refund_journal,omitempty"`
 	// AccrualJournal is the loan-accrual-journal-entries seam's input: an
 	// ACCRUAL or ACCRUAL_ADJUSTMENT transaction's three portions and the
 	// product's resolved slot->account mapping, with the adjustment flag.
@@ -1099,6 +1183,16 @@ type Expect struct {
 	// and, when two portions merged into one recovery credit, splits them back
 	// apart — the account, count and order cells.
 	ChargedOffRepaymentJournalLegs []JournalEntryLeg `json:"charged_off_repayment_journal_legs,omitempty"`
+	// ChargedOffMerchantRefundJournalLegs is the
+	// loan-chargedoff-merchant-refund-journal-entries seam's ordered leg list a
+	// merchant-issued refund posted on a charged-off loan: one credit per positive
+	// portion to its OWN charge-off slot, MERGING portions that resolve to the
+	// same account, then ONE debit of the total to the resolved fund source. Every
+	// leg is graded on its transaction id, account, side and amount; a port that
+	// posts the refund like a charged-off REPAYMENT moves every principal,
+	// interest, fee and penalty credit to INCOME_FROM_RECOVERY — the account and
+	// count cells.
+	ChargedOffMerchantRefundJournalLegs []JournalEntryLeg `json:"charged_off_merchant_refund_journal_legs,omitempty"`
 	// AccrualJournalLegs is the loan-accrual-journal-entries seam's ordered leg
 	// list an accrual or accrual-adjustment transaction posted: the interest
 	// pair (debit first), then the fee pair and the penalty pair (credit first),

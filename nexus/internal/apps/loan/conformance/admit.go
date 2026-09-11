@@ -45,17 +45,19 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 		SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
 		SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
+		SeamLoanChargedOffMerchantRefundJournalEntries,
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 			SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
 			SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
+			SeamLoanChargedOffMerchantRefundJournalEntries,
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
@@ -187,6 +189,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ChargedOffRepaymentJournal != nil {
+		n++
+	}
+	if v.Request.ChargedOffMerchantRefundJournal != nil {
 		n++
 	}
 	if v.Request.AccrualJournal != nil {
@@ -736,6 +741,56 @@ func admitRequest(v *Vector) []string {
 		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
 			problems = append(problems,
 				"request.charged_off_repayment_journal.accounts.overpayment is empty but the overpayment portion is positive")
+		}
+	case SeamLoanChargedOffMerchantRefundJournalEntries:
+		if v.Request.ChargedOffMerchantRefundJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "charged-off-merchant-refund-journal seam must set exactly request.charged_off_merchant_refund_journal")
+			return problems
+		}
+		j := v.Request.ChargedOffMerchantRefundJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.charged_off_merchant_refund_journal.transaction_id is empty")
+		}
+		if j.Fraud {
+			problems = append(problems, "request.charged_off_merchant_refund_journal.fraud is true: the merchant-refund fraud split is not observed and the port refuses it")
+		}
+		for name, val := range map[string]string{
+			"portions.principal":   j.Portions.Principal,
+			"portions.interest":    j.Portions.Interest,
+			"portions.fee":         j.Portions.Fee,
+			"portions.penalty":     j.Portions.Penalty,
+			"portions.overpayment": j.Portions.Overpayment,
+		} {
+			if name == "portions.overpayment" && val == "" {
+				continue
+			}
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.charged_off_merchant_refund_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// Every slot account that a positive portion CREDITS and the resolved
+		// fund-source account the single debit posts to are read back from the
+		// product, never invented. The overpayment account is required only when
+		// the overpayment portion is positive. The income-from-recovery account is
+		// required because the registered wrong implementation reposts through
+		// the charged-off repayment layout; the correct port ignores it.
+		for name, val := range map[string]string{
+			"accounts.charge_off_expense":              j.Accounts.ChargeOffExpense,
+			"accounts.income_from_charge_off_interest": j.Accounts.IncomeFromChargeOffInterest,
+			"accounts.income_from_charge_off_fees":     j.Accounts.IncomeFromChargeOffFees,
+			"accounts.income_from_charge_off_penalty":  j.Accounts.IncomeFromChargeOffPenalty,
+			"accounts.income_from_recovery":            j.Accounts.IncomeFromRecovery,
+			"accounts.fund_source":                     j.Accounts.FundSource,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.charged_off_merchant_refund_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
+			problems = append(problems,
+				"request.charged_off_merchant_refund_journal.accounts.overpayment is empty but the overpayment portion is positive")
 		}
 	case SeamLoanAccrualJournalEntries:
 		if v.Request.AccrualJournal == nil || requestShapeCount(v) != 1 {
@@ -1406,6 +1461,60 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanChargedOffMerchantRefundJournalEntries:
+		if v.Request.ChargedOffMerchantRefundJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.ChargedOffMerchantRefundJournal
+		if len(v.Expect.ChargedOffMerchantRefundJournalLegs) == 0 {
+			problems = append(problems, "expect.charged_off_merchant_refund_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.ChargedOffMerchantRefundJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.charged_off_merchant_refund_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.charged_off_merchant_refund_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.charged_off_merchant_refund_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.charged_off_merchant_refund_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: one credit per positive portion to its OWN charge-off
+		// slot (merging portions that resolve to the same account, at the first
+		// slot's position), then ONE debit of the total to the resolved fund
+		// source. This reconciliation is INDEPENDENT of the port under test, so a
+		// wrong port cannot make its own output "admissible".
+		expected, probs := reconstructChargedOffMerchantRefundJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.ChargedOffMerchantRefundJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.charged_off_merchant_refund_journal_legs has %d legs but the per-slot charge-off credits plus ONE total debit need %d: each positive portion credits its own charge-off slot (merged by account) and the debit is exactly one",
+				len(v.Expect.ChargedOffMerchantRefundJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.ChargedOffMerchantRefundJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.charged_off_merchant_refund_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): a charged-off merchant-issued refund credits each positive portion to its own charge-off slot then debits the total ONCE to the resolved fund source",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanAccrualJournalEntries:
 		if v.Request.AccrualJournal == nil {
 			// admitRequest already refused the missing request shape.
@@ -1899,6 +2008,79 @@ func reconstructChargedOffRepaymentJournalLegs(j ChargedOffRepaymentJournalReque
 		if j.Accounts.FundSource == "" {
 			return nil, []string{fmt.Sprintf(
 				"request.charged_off_repayment_journal total %s has no fund-source account", total)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "DEBIT", AmountMinor: total,
+		})
+	}
+	return legs, nil
+}
+
+// reconstructChargedOffMerchantRefundJournalLegs derives the leg list the
+// observed charged-off merchant-issued-refund property requires from the request
+// alone, independently of the port, in the processor's posting order: every
+// non-zero principal, interest, fee and penalty portion CREDITS its OWN
+// charge-off slot (portions that resolve to the same account MERGE at the first
+// slot's position), a positive overpayment portion credits its account, then ONE
+// debit of the total to the RESOLVED fund source. Each money value stays an
+// integer minor-unit string. It returns the legs and any admission problem: a
+// positive portion with no mapped credit account, or a positive total with no
+// fund-source account.
+func reconstructChargedOffMerchantRefundJournalLegs(j ChargedOffMerchantRefundJournalRequest) ([]JournalEntryLeg, []string) {
+	overpayment := j.Portions.Overpayment
+	if overpayment == "" {
+		overpayment = "0"
+	}
+	slots := []struct {
+		name    string
+		amount  string
+		account string
+	}{
+		{"principal", j.Portions.Principal, j.Accounts.ChargeOffExpense},
+		{"interest", j.Portions.Interest, j.Accounts.IncomeFromChargeOffInterest},
+		{"fee", j.Portions.Fee, j.Accounts.IncomeFromChargeOffFees},
+		{"penalty", j.Portions.Penalty, j.Accounts.IncomeFromChargeOffPenalty},
+		{"overpayment", overpayment, j.Accounts.Overpayment},
+	}
+	var order []string
+	byAccount := map[string]string{}
+	total := "0"
+	for _, s := range slots {
+		if !isIntegerMinorString(s.amount) {
+			return nil, []string{"request.charged_off_merchant_refund_journal portions are not integer minor amounts"}
+		}
+		if s.amount == "0" {
+			continue
+		}
+		if s.account == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.charged_off_merchant_refund_journal slot %s portion %s has no mapped credit account", s.name, s.amount)}
+		}
+		if _, seen := byAccount[s.account]; !seen {
+			order = append(order, s.account)
+			byAccount[s.account] = "0"
+		}
+		merged, ok := sumMinorStrings(byAccount[s.account], s.amount)
+		if !ok {
+			return nil, []string{"request.charged_off_merchant_refund_journal portions are not integer minor amounts"}
+		}
+		byAccount[s.account] = merged
+		sum, ok := sumMinorStrings(total, s.amount)
+		if !ok {
+			return nil, []string{"request.charged_off_merchant_refund_journal portions are not integer minor amounts"}
+		}
+		total = sum
+	}
+	legs := make([]JournalEntryLeg, 0, len(order)+1)
+	for _, account := range order {
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "CREDIT", AmountMinor: byAccount[account],
+		})
+	}
+	if total != "0" {
+		if j.Accounts.FundSource == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.charged_off_merchant_refund_journal total %s has no fund-source account", total)}
 		}
 		legs = append(legs, JournalEntryLeg{
 			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "DEBIT", AmountMinor: total,
