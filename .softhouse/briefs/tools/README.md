@@ -174,3 +174,21 @@ psql -U postgres -d fineract_gerege -At -c '…'` — read-only, and never `fine
 
 A committed capture is also not the live tenant: `tierA-a2/` (A2-3xx) came from an earlier
 instance — its journal-entry ids name different rows on today's `gerege`.
+
+## review.sh — the merge review as one command (2026-09-11)
+
+    bash .softhouse/briefs/tools/review.sh <worktree> <context> [impl]
+
+Reads the run's COMMITTED diff against main and checks: scope, guards untouched, float on
+added lines, every added vector's capture hashes, the four standing controls, every added
+drive WITH the store and WITHOUT the added vectors, the corpus (impl fails 0), and coverage
+of every changed port function from the graded corpus. Exit 0 PASS / 1 FAIL / 2 a
+measurement did not happen. It never merges or pushes — the driver still reads the diff.
+
+Control-tested on OH-REVERSAL-X (`REVIEW_BASE=aa19ef6e^`, worktree at `aa19ef6e`): it
+reproduced every figure the driver had measured by hand — 4 drives 1/0, both hashes, 35
+drives, 87.5% / 75.0% coverage. Its first run also caught a wrong control name in itself
+(`…-rounding-half-even` does not exist; the impl is `loanschedule-wrong-half-even` = 5) and
+reported it as UNMEASURED rather than 0.
+
+`ledger` drives are not measured here (no conformance binary): read the CENSUS block.
