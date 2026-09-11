@@ -1,0 +1,31 @@
+TierD accrual-activity EUR control -- MNT restore verification
+date: 2026-09-11T23:45Z (post replay + teardown)
+
+Command:
+  git -C /Users/buv/fineract-tierd apply \
+    /Users/buv/oh-gerege-accctl/.softhouse/capture/tierd-feasibility/accrual-activity-eur-control/mnt-currency-restore.diff
+  -> `git apply --check` OK; then APPLIED; rc=0 (EUR -> MNT).
+
+Proof 1 -- status set restored:
+  `git -C /Users/buv/fineract-tierd status --short` after restore is byte-identical to the
+  status recorded in pre-state.txt (taken before the EUR revert): the same 8 modified
+  (build.gradle, the five currency sources, logback.xml, gradle.properties) + 2 untracked
+  (.tierd-run.sh, fineract-client-feign/.../client/models/).
+
+Proof 2 -- five currency files byte-identical to the recorded MNT seed patch:
+  The five currency `diff --git` blocks inside post-restore-seed-diff.txt were extracted and
+  compared to mnt-currency-restore.diff:
+    kept blocks: 5
+    currency-only bytes: 6024 == mnt-currency-restore.diff bytes: 6024 -> IDENTICAL
+
+Proof 3 -- five currency constants read MNT on the restored copy:
+  .../factory/LoanProductsRequestFactory.java:99      CURRENCY_CODE = "MNT"
+  .../factory/SavingsProductRequestFactory.java:33    DEFAULT_SAVINGS_PRODUCT_CURRENCY_CODE = "MNT"
+  .../factory/WorkingCapitalChargeRequestFactory.java:31 DEFAULT_CURRENCY_CODE = "MNT"
+  .../initializer/global/ChargeGlobalInitializerStep.java:49 CURRENCY_CODE = "MNT"
+  .../initializer/global/CurrencyGlobalInitializerStep.java:40 CURRENCIES = Arrays.asList("MNT", "USD")
+
+INCIDENT: a later path-limited `git diff -- <5 paths>` did not return within 60 s (index
+refresh over the large untracked .../client/models/ dir). It was interrupted with Ctrl-C
+(exit 1). The proof above was carried out from the already-saved full `git diff`
+(post-restore-seed-diff.txt); no capture command was affected.
