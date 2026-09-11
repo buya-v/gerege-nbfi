@@ -1,0 +1,25 @@
+# OH-WOCAP-V read-only DB evidence — phase=after
+# captured at 2026-09-11T01:11:44Z
+--- m_loan (id=11) ---
+id|account_no|loan_status_id|principal_outstanding_derived|interest_outstanding_derived|fee_charges_outstanding_derived|penalty_charges_outstanding_derived|total_outstanding_derived|principal_writtenoff_derived|interest_writtenoff_derived|fee_charges_writtenoff_derived|penalty_charges_writtenoff_derived|total_writtenoff_derived|writtenoffon_date
+11|000000011|601|0.000000|0.000000|0.000000|0.000000|0.000000|100000.000000|6618.530000|100.000000|57.000000|106775.530000|2026-09-03
+(1 row)
+--- m_loan_charge (loan_id=11) ---
+id|charge_id|is_penalty|amount|amount_paid_derived|amount_waived_derived|amount_writtenoff_derived|amount_outstanding_derived|is_paid_derived|waived
+5|4|t|57.000000|57.000000|||0.000000|t|f
+6|5|f|100.000000|100.000000|||0.000000|t|f
+(2 rows)
+--- m_loan_transaction (loan_id=11) ---
+id|transaction_type_enum|transaction_date|amount|principal_portion_derived|interest_portion_derived|fee_charges_portion_derived|penalty_charges_portion_derived|outstanding_loan_balance_derived|is_reversed
+19|1|2026-01-01|100000.000000|||||100000.000000|f
+21|10|2026-02-01|1000.000000||1000.000000|0.000000|0.000000||f
+26|10|2026-03-01|1021.150000||921.150000|100.000000|0.000000||f
+28|10|2026-04-01|898.510000||841.510000|0.000000|57.000000||f
+31|10|2026-05-01|761.080000||761.080000|0.000000|0.000000||f
+34|10|2026-06-01|679.840000||679.840000|0.000000|0.000000||f
+38|10|2026-07-01|597.790000||597.790000|0.000000|0.000000||f
+41|10|2026-08-01|514.920000||514.920000|0.000000|0.000000||f
+44|10|2026-09-01|431.220000||431.220000|0.000000|0.000000||f
+46|10|2026-09-02|11.560000||11.560000|0.000000|0.000000||t
+54|6|2026-09-03|106775.530000|100000.000000|6618.530000|100.000000|57.000000|0.000000|f
+(11 rows)
