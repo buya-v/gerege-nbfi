@@ -1,0 +1,2125 @@
+{
+ "currency": "MNT",
+ "legs": 64,
+ "loan_ids": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12
+ ],
+ "tenant": "tierd",
+ "types": {
+  "loanTransactionType.chargeOff": {
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-2.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      2,
+      22
+     ],
+     "transaction_id": "L15",
+     "transaction_id_num": 15,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "14300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-2.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      2,
+      22
+     ],
+     "transaction_id": "L15",
+     "transaction_id_num": 15,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-2.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      2,
+      22
+     ],
+     "transaction_id": "L15",
+     "transaction_id_num": 15,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "3000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-2.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      2,
+      22
+     ],
+     "transaction_id": "L15",
+     "transaction_id_num": 15,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "11300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404008",
+     "gl_account_name": "Fee Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-2.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      2,
+      22
+     ],
+     "transaction_id": "L15",
+     "transaction_id_num": 15,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-1.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      9
+     ],
+     "transaction_id": "L21",
+     "transaction_id_num": 21,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "1222",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-1.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      9
+     ],
+     "transaction_id": "L21",
+     "transaction_id_num": 21,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-1.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      9
+     ],
+     "transaction_id": "L21",
+     "transaction_id_num": 21,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "1222",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-1.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      9
+     ],
+     "transaction_id": "L21",
+     "transaction_id_num": 21,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "8357",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-1.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L26",
+     "transaction_id_num": 26,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "49",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-1.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L26",
+     "transaction_id_num": 26,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "8357",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-1.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L26",
+     "transaction_id_num": 26,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "49",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-1.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L26",
+     "transaction_id_num": 26,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-1.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-1.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-1.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-1.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "DEBIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "DEBIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "61",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-2.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L30",
+     "transaction_id_num": 30,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-1.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-1.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-3.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-3.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-3.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "65000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-3.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L35",
+     "transaction_id_num": 35,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-2.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L36",
+     "transaction_id_num": 36,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-2.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L36",
+     "transaction_id_num": 36,
+     "type_code": "loanTransactionType.chargeOff",
+     "type_value": "Charge-off"
+    }
+   ],
+   "loans": [
+    4,
+    6,
+    7,
+    8,
+    9
+   ],
+   "transactions": [
+    "L15",
+    "L21",
+    "L26",
+    "L30",
+    "L35",
+    "L36"
+   ],
+   "type_code": "loanTransactionType.chargeOff",
+   "type_value": "Charge-off"
+  },
+  "loanTransactionType.disbursement": {
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-1.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      1,
+      1
+     ],
+     "transaction_id": "L13",
+     "transaction_id_num": 13,
+     "type_code": "loanTransactionType.disbursement",
+     "type_value": "Disbursement"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "145023",
+     "gl_account_name": "Suspense/Clearing account",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-1.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      1,
+      1
+     ],
+     "transaction_id": "L13",
+     "transaction_id_num": 13,
+     "type_code": "loanTransactionType.disbursement",
+     "type_value": "Disbursement"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-1.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      1,
+      1
+     ],
+     "transaction_id": "L17",
+     "transaction_id_num": 17,
+     "type_code": "loanTransactionType.disbursement",
+     "type_value": "Disbursement"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "145023",
+     "gl_account_name": "Suspense/Clearing account",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-1.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      1,
+      1
+     ],
+     "transaction_id": "L17",
+     "transaction_id_num": 17,
+     "type_code": "loanTransactionType.disbursement",
+     "type_value": "Disbursement"
+    }
+   ],
+   "loans": [
+    4,
+    5
+   ],
+   "transactions": [
+    "L13",
+    "L17"
+   ],
+   "type_code": "loanTransactionType.disbursement",
+   "type_value": "Disbursement"
+  },
+  "loanTransactionType.writeOff": {
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "3000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "11300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404008",
+     "gl_account_name": "Fee Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "114300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "14300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "114300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "1222",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "101222",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "8357",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "147",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "8504",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "10000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "205",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "10205",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loans": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "transactions": [
+    "L16",
+    "L18",
+    "L22",
+    "L27",
+    "L31",
+    "L37",
+    "L39",
+    "L41",
+    "L43"
+   ],
+   "type_code": "loanTransactionType.writeOff",
+   "type_value": "Close (as written-off)"
+  }
+ },
+ "unmatched_legs": [],
+ "writeoff_on_charged_off_loan": [
+  {
+   "amount_minor": "114300",
+   "charged_off_loan": true,
+   "date": [
+    2023,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "3000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "11300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404008",
+     "gl_account_name": "Fee Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "114300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 4,
+   "transaction_id": "L16",
+   "transaction_id_num": 16
+  },
+  {
+   "amount_minor": "101222",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "1222",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "101222",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 6,
+   "transaction_id": "L22",
+   "transaction_id_num": 22
+  },
+  {
+   "amount_minor": "8504",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "8357",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "147",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "8504",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 7,
+   "transaction_id": "L27",
+   "transaction_id_num": 27
+  },
+  {
+   "amount_minor": "75000",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    2,
+    3
+   ],
+   "legs": [
+    {
+     "amount_minor": "75000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 9,
+   "transaction_id": "L37",
+   "transaction_id_num": 37
+  }
+ ],
+ "writeoff_transactions": [
+  {
+   "amount_minor": "114300",
+   "charged_off_loan": true,
+   "date": [
+    2023,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "3000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "11300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404008",
+     "gl_account_name": "Fee Charge Off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "114300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-4/loan-4-journalentries-3.json",
+     "loan": 4,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L16",
+     "transaction_id_num": 16,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 4,
+   "transaction_id": "L16",
+   "transaction_id_num": 16
+  },
+  {
+   "amount_minor": "114300",
+   "charged_off_loan": false,
+   "date": [
+    2023,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "14300",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "114300",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-5/loan-5-journalentries-2.json",
+     "loan": 5,
+     "reversed": false,
+     "transaction_date": [
+      2023,
+      3,
+      1
+     ],
+     "transaction_id": "L18",
+     "transaction_id_num": 18,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 5,
+   "transaction_id": "L18",
+   "transaction_id_num": 18
+  },
+  {
+   "amount_minor": "101222",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "1222",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "101222",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-6/loan-6-journalentries-2.json",
+     "loan": 6,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L22",
+     "transaction_id_num": 22,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 6,
+   "transaction_id": "L22",
+   "transaction_id_num": 22
+  },
+  {
+   "amount_minor": "8504",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    3,
+    1
+   ],
+   "legs": [
+    {
+     "amount_minor": "8357",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "147",
+     "entry_type": "CREDIT",
+     "gl_account_code": "404001",
+     "gl_account_name": "Interest Income Charge Off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "8504",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-7/loan-7-journalentries-2.json",
+     "loan": 7,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      3,
+      1
+     ],
+     "transaction_id": "L27",
+     "transaction_id_num": 27,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 7,
+   "transaction_id": "L27",
+   "transaction_id_num": 27
+  },
+  {
+   "amount_minor": "10205",
+   "charged_off_loan": false,
+   "date": [
+    2024,
+    2,
+    3
+   ],
+   "legs": [
+    {
+     "amount_minor": "10000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "205",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "10205",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-8/loan-8-journalentries-3.json",
+     "loan": 8,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L31",
+     "transaction_id_num": 31,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 8,
+   "transaction_id": "L31",
+   "transaction_id_num": 31
+  },
+  {
+   "amount_minor": "75000",
+   "charged_off_loan": true,
+   "date": [
+    2024,
+    2,
+    3
+   ],
+   "legs": [
+    {
+     "amount_minor": "75000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "744037",
+     "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "75000",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-9/loan-9-journalentries-4.json",
+     "loan": 9,
+     "reversed": false,
+     "transaction_date": [
+      2024,
+      2,
+      3
+     ],
+     "transaction_id": "L37",
+     "transaction_id_num": 37,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 9,
+   "transaction_id": "L37",
+   "transaction_id_num": 37
+  },
+  {
+   "amount_minor": "102513",
+   "charged_off_loan": false,
+   "date": [
+    2025,
+    1,
+    2
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-10/loan-10-journalentries-1.json",
+     "loan": 10,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L39",
+     "transaction_id_num": 39,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 10,
+   "transaction_id": "L39",
+   "transaction_id_num": 39
+  },
+  {
+   "amount_minor": "102513",
+   "charged_off_loan": false,
+   "date": [
+    2025,
+    1,
+    2
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "744007",
+     "gl_account_name": "Credit Loss/Bad Debt",
+     "journalentries_file": "journalentries/loan-11/loan-11-journalentries-1.json",
+     "loan": 11,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L41",
+     "transaction_id_num": 41,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 11,
+   "transaction_id": "L41",
+   "transaction_id_num": 41
+  },
+  {
+   "amount_minor": "102513",
+   "charged_off_loan": false,
+   "date": [
+    2025,
+    1,
+    2
+   ],
+   "legs": [
+    {
+     "amount_minor": "100000",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112601",
+     "gl_account_name": "Loans Receivable",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "2513",
+     "entry_type": "CREDIT",
+     "gl_account_code": "112603",
+     "gl_account_name": "Interest/Fee Receivable",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    },
+    {
+     "amount_minor": "102513",
+     "entry_type": "DEBIT",
+     "gl_account_code": "e4",
+     "gl_account_name": "Written off",
+     "journalentries_file": "journalentries/loan-12/loan-12-journalentries-1.json",
+     "loan": 12,
+     "reversed": false,
+     "transaction_date": [
+      2025,
+      1,
+      2
+     ],
+     "transaction_id": "L43",
+     "transaction_id_num": 43,
+     "type_code": "loanTransactionType.writeOff",
+     "type_value": "Close (as written-off)"
+    }
+   ],
+   "loan": 12,
+   "transaction_id": "L43",
+   "transaction_id_num": 43
+  }
+ ]
+}
