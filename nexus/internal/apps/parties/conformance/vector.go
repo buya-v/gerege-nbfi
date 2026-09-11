@@ -22,9 +22,9 @@ const CapabilitySchemaV1 = "gerege.parties.capabilities/v1"
 // anything about, and it is the directory name that context's vectors live in.
 const PartiesContext = "parties"
 
-// Vocabulary is the identity of one of the three enum vocabularies this context
-// owns. Each is graded by its own capture seam because each is observed from a
-// different place.
+// Vocabulary is the identity of one of the four graded dimensions this context
+// owns: three enum vocabularies and the derived display name. Each is graded by
+// its own capture seam because each is observed from a different place.
 type Vocabulary string
 
 const (
@@ -34,12 +34,15 @@ const (
 	VocabularyLegalForm Vocabulary = "legal-form"
 	// VocabularyGroupingStatus is m_group.status_enum — GroupingTypeStatus.java.
 	VocabularyGroupingStatus Vocabulary = "grouping-status"
+	// VocabularyDisplayName is the derived display name of Client.deriveDisplayName
+	// [Client.java:457-481] — the code behind CLAUDE.md's "Names are three fields".
+	VocabularyDisplayName Vocabulary = "display-name"
 )
 
-// IsVocabulary reports whether v names one of the three graded vocabularies.
+// IsVocabulary reports whether v names one of the four graded vocabularies.
 func IsVocabulary(v string) bool {
 	switch Vocabulary(v) {
-	case VocabularyClientStatus, VocabularyLegalForm, VocabularyGroupingStatus:
+	case VocabularyClientStatus, VocabularyLegalForm, VocabularyGroupingStatus, VocabularyDisplayName:
 		return true
 	}
 	return false
@@ -47,18 +50,20 @@ func IsVocabulary(v string) bool {
 
 // Seam names — one capture seam per vocabulary, because each vocabulary is
 // observed from a different place: the m_client.status_enum read-back, the
-// clientLegalFormOptions template, and (Java-source-only) GroupingTypeStatus.
+// clientLegalFormOptions template, (Java-source-only) GroupingTypeStatus, and
+// the display-name captures under .softhouse/capture/parties-display-name/.
 const (
 	SeamClientStatus   = "client-status-ordinal"
 	SeamLegalForm      = "legal-form-ordinal"
 	SeamGroupingStatus = "grouping-status-ordinal"
+	SeamDisplayName    = "parties-display-name"
 )
 
-// IsSchemaSeam reports whether s is one of the three capture seams this harness
+// IsSchemaSeam reports whether s is one of the four capture seams this harness
 // grades.
 func IsSchemaSeam(s string) bool {
 	switch s {
-	case SeamClientStatus, SeamLegalForm, SeamGroupingStatus:
+	case SeamClientStatus, SeamLegalForm, SeamGroupingStatus, SeamDisplayName:
 		return true
 	}
 	return false
@@ -73,6 +78,8 @@ func seamForVocabulary(vocab string) string {
 		return SeamLegalForm
 	case VocabularyGroupingStatus:
 		return SeamGroupingStatus
+	case VocabularyDisplayName:
+		return SeamDisplayName
 	}
 	return ""
 }
@@ -121,19 +128,47 @@ type Provenance struct {
 // money contexts even though this context grades no money.
 type TenantParams = shared.TenantParams
 
-// Request is the input the implementation is graded on: one enum NAME within a
-// named vocabulary.
+// Request is the input the implementation is graded on. For the three ordinal
+// vocabularies it is one enum NAME within a named vocabulary. For the
+// display-name seam it is the party's legal form plus the four name fields the
+// derivation reads.
+//
+// NAMING. The three name-part keys are deliberately NOT Fineract's wire keys and
+// are NOT first_name/last_name: per CLAUDE.md ("Names are three fields — ovog,
+// patronymic, given name") they are named for what they carry — given_name,
+// patronymic, ovog — and the vector transcribes the captured wire values into
+// them. The mapping the captures used, and therefore this seam's: given_name ->
+// Fineract `firstname`, patronymic -> Fineract `middlename`, ovog -> Fineract
+// `lastname`. `fullname` IS Fineract's wire key verbatim, because it carries the
+// whole name and the capture transcribes it unchanged. legal_form carries the
+// LegalForm enum NAME (PERSON/ENTITY) — the same stable vocabulary identity the
+// legal-form seam grades — not the persisted integer ordinal.
 type Request struct {
 	Vocabulary string `json:"vocabulary"`
 	Name       string `json:"name"`
+
+	// Display-name seam inputs. The three ordinal vocabularies leave them unset.
+	LegalForm  string `json:"legal_form,omitempty"`
+	Fullname   string `json:"fullname,omitempty"`
+	GivenName  string `json:"given_name,omitempty"`
+	Patronymic string `json:"patronymic,omitempty"`
+	Ovog       string `json:"ovog,omitempty"`
 }
 
-// Expect is the integer ordinal Fineract persists for that enum name. Fineract
-// stores these enums as ORDINALS (m_client.status_enum, m_client.legal_form_enum,
-// m_group.status_enum); a wrong ordinal is silent data corruption, not a crash —
-// the same class of defect as the HALF_UP/HALF_EVEN rounding ordinal.
+// Expect is the graded output cell. For the three ordinal vocabularies it is the
+// integer ordinal Fineract persists for that enum name. For the display-name
+// seam it is the display-name string the oracle returned.
+//
+// EMPTY vs ABSENT, entity arm. The E1 observation has two faces: the wire
+// GET /clients/15 OMITS the displayName key entirely, and m_client.display_name
+// holds the empty string. Go decodes an absent JSON key and an explicit "" to
+// the same zero value, so this seam grades the entity arm as the EMPTY STRING,
+// with display_name written present-and-empty in the vector so the intent is
+// explicit. It does not distinguish absent from empty, and nothing in the
+// observation asks it to.
 type Expect struct {
-	Ordinal int32 `json:"ordinal"`
+	Ordinal     int32  `json:"ordinal"`
+	DisplayName string `json:"display_name"`
 }
 
 // Vector is one parties golden vector.

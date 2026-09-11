@@ -3,6 +3,7 @@ package conformance
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/gerege/nexus/internal/apps/parties"
@@ -112,8 +113,9 @@ var groupingStatusByName = map[string]parties.GroupingTypeStatus{
 	"CLOSED":               parties.GroupingClosed,
 }
 
-// goEvaluator grades the port's own enum vocabularies: it derives the stored
-// ordinal directly from each constant's StoredValue(). No value is invented here.
+// goEvaluator grades the port's own vocabularies: it derives the stored ordinal
+// directly from each constant's StoredValue(), and — for the display-name seam —
+// it runs the port's own name derivation. No value is invented here.
 type goEvaluator struct{}
 
 // NewGoEvaluator returns the port-backed implementation.
@@ -139,6 +141,13 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 			return Expect{}, fmt.Errorf("parties: %q is not in the GroupingTypeStatus vocabulary", req.Name)
 		}
 		return Expect{Ordinal: g.StoredValue()}, nil
+	case VocabularyDisplayName:
+		lf, ok := legalFormByName[req.LegalForm]
+		if !ok {
+			return Expect{}, fmt.Errorf("parties: %q is not in the LegalForm vocabulary", req.LegalForm)
+		}
+		c := parties.NewClient(0, req.GivenName, req.Patronymic, req.Ovog, req.Fullname, lf)
+		return Expect{DisplayName: c.DisplayName}, nil
 	default:
 		return Expect{}, fmt.Errorf("parties: unknown vocabulary %q", req.Vocabulary)
 	}
@@ -240,6 +249,111 @@ func (legalFormPersonAsUnsetEvaluator) Evaluate(req Request) (Expect, error) {
 	return goEvaluator{}.Evaluate(req)
 }
 
+// joinNonBlank joins the present parts with single spaces, skipping blank ones —
+// Fineract's StringBuilder logic [Client.java:464-479] applied to the request's
+// three semantic slots in wire order.
+func joinNonBlank(parts ...string) string {
+	var kept []string
+	for _, p := range parts {
+		if strings.TrimSpace(p) != "" {
+			kept = append(kept, p)
+		}
+	}
+	return strings.Join(kept, " ")
+}
+
+// ovogFirstDisplayEvaluator is a DELIBERATELY WRONG implementation: for a PERSON
+// with no fullname it joins the three parts in ovog -> given -> patronymic order
+// (Fineract's lastname -> firstname -> middlename) instead of Fineract's
+// firstname -> middlename -> lastname. Blanks are still skipped, the fullname
+// arm still wins, and an entity still yields no name, so only the two person
+// vectors move: DN-02 (P1, three parts) and DN-03 (P2, blank middle). DN-01
+// (fullname) and DN-04 (entity) stay green. This is the shape a port adopts when
+// it reads CLAUDE.md's canonical "ovog, patronymic, given name" ordering as the
+// join order instead of Fineract's physical column order.
+type ovogFirstDisplayEvaluator struct{}
+
+func (ovogFirstDisplayEvaluator) Evaluate(req Request) (Expect, error) {
+	if Vocabulary(req.Vocabulary) == VocabularyDisplayName {
+		lf, ok := legalFormByName[req.LegalForm]
+		if !ok {
+			return Expect{}, fmt.Errorf("parties: %q is not in the LegalForm vocabulary", req.LegalForm)
+		}
+		if strings.TrimSpace(req.Fullname) != "" {
+			return Expect{DisplayName: req.Fullname}, nil
+		}
+		if lf.IsEntity() {
+			return Expect{DisplayName: ""}, nil
+		}
+		return Expect{DisplayName: joinNonBlank(req.Ovog, req.GivenName, req.Patronymic)}, nil
+	}
+	return goEvaluator{}.Evaluate(req)
+}
+
+// noBlankSkipDisplayEvaluator is a DELIBERATELY WRONG implementation: it keeps
+// Fineract's part order and both outer arms but joins all three slots
+// unconditionally, so an absent middlename leaves the double space
+// "Синтетик  Давхардалгүй". Only DN-03 (P2) moves; DN-02's three present parts
+// join identically.
+type noBlankSkipDisplayEvaluator struct{}
+
+func (noBlankSkipDisplayEvaluator) Evaluate(req Request) (Expect, error) {
+	if Vocabulary(req.Vocabulary) == VocabularyDisplayName {
+		lf, ok := legalFormByName[req.LegalForm]
+		if !ok {
+			return Expect{}, fmt.Errorf("parties: %q is not in the LegalForm vocabulary", req.LegalForm)
+		}
+		if strings.TrimSpace(req.Fullname) != "" {
+			return Expect{DisplayName: req.Fullname}, nil
+		}
+		if lf.IsEntity() {
+			return Expect{DisplayName: ""}, nil
+		}
+		return Expect{DisplayName: strings.Join([]string{req.GivenName, req.Patronymic, req.Ovog}, " ")}, nil
+	}
+	return goEvaluator{}.Evaluate(req)
+}
+
+// entityJoinsPartsDisplayEvaluator is a DELIBERATELY WRONG implementation: it
+// derives persons correctly but joins an ENTITY's present parts instead of
+// yielding no name. Only DN-04 (E1) moves; the two persons and the fullname
+// vector stay green.
+type entityJoinsPartsDisplayEvaluator struct{}
+
+func (entityJoinsPartsDisplayEvaluator) Evaluate(req Request) (Expect, error) {
+	if Vocabulary(req.Vocabulary) == VocabularyDisplayName {
+		if _, ok := legalFormByName[req.LegalForm]; !ok {
+			return Expect{}, fmt.Errorf("parties: %q is not in the LegalForm vocabulary", req.LegalForm)
+		}
+		if strings.TrimSpace(req.Fullname) != "" {
+			return Expect{DisplayName: req.Fullname}, nil
+		}
+		return Expect{DisplayName: joinNonBlank(req.GivenName, req.Patronymic, req.Ovog)}, nil
+	}
+	return goEvaluator{}.Evaluate(req)
+}
+
+// partsOverFullnameDisplayEvaluator is a DELIBERATELY WRONG implementation: the
+// three-field port drops Fineract's fullname-wins arm and derives every person
+// from the parts alone. Only DN-01 (arm 1, a person whose only name is fullname)
+// moves; its three parts are empty, so the join yields "". Persons with parts
+// and the entity are unaffected.
+type partsOverFullnameDisplayEvaluator struct{}
+
+func (partsOverFullnameDisplayEvaluator) Evaluate(req Request) (Expect, error) {
+	if Vocabulary(req.Vocabulary) == VocabularyDisplayName {
+		lf, ok := legalFormByName[req.LegalForm]
+		if !ok {
+			return Expect{}, fmt.Errorf("parties: %q is not in the LegalForm vocabulary", req.LegalForm)
+		}
+		if lf.IsEntity() {
+			return Expect{DisplayName: ""}, nil
+		}
+		return Expect{DisplayName: joinNonBlank(req.GivenName, req.Patronymic, req.Ovog)}, nil
+	}
+	return goEvaluator{}.Evaluate(req)
+}
+
 func init() {
 	Register("parties-go", NewGoEvaluator())
 	RegisterWrong("parties-wrong-swap-active-pending",
@@ -267,4 +381,21 @@ func init() {
 			"the port reads that fallback as the persistence rule and never writes PERSON(1). Dies on LF-01 (PERSON -> 1) "+
 			"alone, where the returned 0 is also outside the declared legal-form ordinal set {1,2}",
 		legalFormPersonAsUnsetEvaluator{})
+	RegisterWrong("parties-wrong-display-ovog-first",
+		"joins the three name parts ovog -> given -> patronymic instead of Fineract's firstname -> middlename -> lastname, "+
+			"so a PERSON without a fullname gets the parts in the reverse family order. Dies on DN-02 and DN-03 only; the "+
+			"fullname arm (DN-01) and the entity arm (DN-04) are untouched",
+		ovogFirstDisplayEvaluator{})
+	RegisterWrong("parties-wrong-display-no-blank-skip",
+		"joins all three name slots without skipping blanks, so an absent middlename leaves a double space "+
+			"(\"Синтетик  Давхардалгүй\" instead of \"Синтетик Давхардалгүй\"). Dies on DN-03 only; DN-02's three present "+
+			"parts join identically",
+		noBlankSkipDisplayEvaluator{})
+	RegisterWrong("parties-wrong-display-entity-joins-parts",
+		"joins an ENTITY's present name parts instead of yielding no display name. Dies on DN-04 only",
+		entityJoinsPartsDisplayEvaluator{})
+	RegisterWrong("parties-wrong-display-parts-over-fullname",
+		"drops Fineract's fullname-wins arm and derives a person from the three parts alone, so a client whose only name "+
+			"is fullname (DN-01) gets the empty string. Dies on DN-01 only",
+		partsOverFullnameDisplayEvaluator{})
 }

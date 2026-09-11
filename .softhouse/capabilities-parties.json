@@ -20,6 +20,12 @@
    "evidence": "Capture grouping-status-source.txt (GroupingTypeStatus.java:23-32). The grouping-status ordinal is NOT observable on the running oracle: m_group is empty (m-group-readback-raw.json) and GET /groups/template exposes no status options, so the pinned Java source is the only truth."
   },
   {
+   "name": "display-name",
+   "description": "Derive a party's display name from Client.deriveDisplayName [Client.java:457-481]: a non-blank fullname wins; otherwise, for a PERSON (or an unset legal form), the present parts of firstname, middlename, lastname are space-joined in that order with blanks skipped; an ENTITY yields the empty display name.",
+   "in_graded_domain": true,
+   "evidence": "Capture .softhouse/capture/parties-display-name/out/OHNAMECAP-P{1,2}-raw.json (GET /clients/13,14, tenant gerege) and OHNAMECAP-E1-m-client.json (read-only SELECT of m_client id 15): P1 (person, three parts) displayName \"Синтетик Туршилтын Жишээ\"; P2 (person, middle absent) \"Синтетик Давхардалгүй\"; E1 (entity, three parts) m_client.display_name \"\" with the displayName wire key omitted. Arm 1 (fullname wins) is already observed by capture/parties/out/clients-1-raw.json."
+  },
+  {
    "name": "national-id",
    "description": "Validate a Mongolian national ID structurally: exactly 10 runes, two uppercase Mongolian Cyrillic letters (А-Я, Ё, Ө, Ү) followed by eight ASCII digits, with the birth date carried in the first six digits under the +20 month rule.",
    "in_graded_domain": false,
@@ -47,7 +53,14 @@
    "status": {
     "grouping-status": "exercised"
    }
+  },
+  {
+   "name": "parties-display-name",
+   "description": "The display-name seam: GET /clients/{id} displayName and the m_client.display_name read-back for the three observed arms under tenant gerege (capture/parties-display-name), plus the pre-existing fullname arm in capture/parties/out/clients-1-raw.json.",
+   "status": {
+    "display-name": "exercised"
+   }
   }
  ],
- "note": "Parties parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded, one per enum vocabulary: client-status (client-status-ordinal seam), legal-form (legal-form-ordinal seam), grouping-status (grouping-status-ordinal seam). No money, minor-unit, or rounding surface exists in this context; the only graded integer is the enum ordinal."
+ "note": "Parties parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Four capabilities are graded: client-status (client-status-ordinal seam), legal-form (legal-form-ordinal seam), grouping-status (grouping-status-ordinal seam) and display-name (parties-display-name seam). No money, minor-unit, or rounding surface exists in this context; the graded integer is the enum ordinal and the graded string is the derived display name."
 }

@@ -1,0 +1,44 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "DN-02-person-three-parts",
+ "title": "display name: a person's three present parts, Fineract order",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Arm 2 of Client.deriveDisplayName [Client.java:457-481]: with no fullname, a person's present parts are space-joined in Fineract's physical column order firstname -> middlename -> lastname, blanks skipped. Transcribed from capture .softhouse/capture/parties-display-name/out/OHNAMECAP-P1-raw.json (GET /clients/13, tenant gerege): firstname=Синтетик, middlename=Туршилтын, lastname=Жишээ and displayName=Синтетик Туршилтын Жишээ. The semantic request keys carry the captured wire values: given_name=firstname, patronymic=middlename, ovog=lastname (the field mapping the capture used). The vector expects the observed displayName verbatim.",
+ "oracle": {
+  "seam": "parties-display-name",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties-display-name/out/OHNAMECAP-P1-raw.json; capture_case_id is the exact displayName field of the observed client row.",
+  "capture_ref": ".softhouse/capture/parties-display-name/out/OHNAMECAP-P1-raw.json",
+  "capture_sha256": "1bc4a2d1b1c4799216090dec404c6c657951f5d266329440b051195da8a170f6",
+  "capture_case_id": "\"displayName\":\"Синтетик Туршилтын Жишээ\"",
+  "citation": "OHNAMECAP-P1-raw.json id=13 firstname=Синтетик middlename=Туршилтын lastname=Жишээ displayName=\"Синтетик Туршилтын Жишээ\", legalForm code legalFormType.person"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "display-name",
+  "legal_form": "PERSON",
+  "given_name": "Синтетик",
+  "patronymic": "Туршилтын",
+  "ovog": "Жишээ"
+ },
+ "expect": {
+  "display_name": "Синтетик Туршилтын Жишээ"
+ },
+ "capabilities_required": [
+  "display-name"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}
