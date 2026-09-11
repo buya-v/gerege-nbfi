@@ -150,6 +150,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
