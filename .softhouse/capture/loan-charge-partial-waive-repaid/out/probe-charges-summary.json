@@ -1,0 +1,65 @@
+{
+  "count": 6,
+  "charges": [
+    {
+      "id": 1,
+      "name": "OHCAP-J percent of amount at disbursement 1pct",
+      "penalty": false,
+      "chargeTimeType": "chargeTimeType.disbursement",
+      "chargeCalculationType": "chargeCalculationType.percent.of.amount",
+      "amount": 1.0,
+      "currency": "MNT",
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "OHLGR-Fee-Flat-100",
+      "penalty": false,
+      "chargeTimeType": "chargeTimeType.disbursement",
+      "chargeCalculationType": "chargeCalculationType.flat",
+      "amount": 100.0,
+      "currency": "MNT",
+      "active": true
+    },
+    {
+      "id": 5,
+      "name": "OHLGR-Fee-SDD-100",
+      "penalty": false,
+      "chargeTimeType": "chargeTimeType.specifiedDueDate",
+      "chargeCalculationType": "chargeCalculationType.flat",
+      "amount": 100.0,
+      "currency": "MNT",
+      "active": true
+    },
+    {
+      "id": 4,
+      "name": "OHLGR-Penalty-Flat-57",
+      "penalty": true,
+      "chargeTimeType": "chargeTimeType.specifiedDueDate",
+      "chargeCalculationType": "chargeCalculationType.flat",
+      "amount": 57.0,
+      "currency": "MNT",
+      "active": true
+    },
+    {
+      "id": 6,
+      "name": "OHLGT-Fee-SDD-100",
+      "penalty": false,
+      "chargeTimeType": "chargeTimeType.specifiedDueDate",
+      "chargeCalculationType": "chargeCalculationType.flat",
+      "amount": 100.0,
+      "currency": "MNT",
+      "active": true
+    },
+    {
+      "id": 7,
+      "name": "OHLGT-Penalty-SDD-57",
+      "penalty": true,
+      "chargeTimeType": "chargeTimeType.specifiedDueDate",
+      "chargeCalculationType": "chargeCalculationType.flat",
+      "amount": 57.0,
+      "currency": "MNT",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# OH-CHGCAP-BD business date (read-only, tenant gerege)
+type|date
+BUSINESS_DATE|2026-09-03
+COB_DATE|2026-09-02
+(2 rows)
