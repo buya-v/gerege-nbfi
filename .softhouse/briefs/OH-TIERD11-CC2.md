@@ -17,7 +17,7 @@ Already on disk, UNCOMMITTED, in `.softhouse/capture/tierd-feasibility/accrual-a
 1. Re-hash both loan manifests and the journal-entry manifest against the files; fix nothing by hand — if a hash does
    not match, re-run the extractor/organizer that wrote it. Commit `loans/`, the manifests, the summary, `journalentries/`.
 2. `extract-product-mappings.py <log> <product name>...` for every product the committed loans use (names from the
-   loan read-backs; log `/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-accrualactivity-mnt.log`).
+   loan read-backs; log `/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-accrual-activity-mnt.log`).
    Commit `product-mappings/`. Run every command in the FOREGROUND; never `&`, never `jobs`, never wait on a job.
 3. The type join (`build-type-join.py`): every journal-entry leg → its transaction TYPE through the loan read-backs.
    Table in OWNER.md: type → legs → loans. The point is the accrual postings (`createJournalEntriesForAccruals`
