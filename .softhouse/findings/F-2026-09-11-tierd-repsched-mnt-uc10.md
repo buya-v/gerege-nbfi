@@ -90,3 +90,39 @@ scenarios reproduce their `.feature` expected values under MNT and yield MNT rea
 for future promotion. The single UC10 divergence is a 1-minor-unit period-2 split on the
 complex-transaction/recalculation path and is recorded here, with the exact step and values, as
 the one MNT replay finding.
+
+## 6. Follow-up control — **OH-UC10CTL-BQ**: UC10 in EUR fails identically (2026-09-11)
+
+The MNT replay left one open question in §3: whether the 1-minor-unit period-2 split was a
+currency artefact. A control replay of **UC10 alone** (feature line 824) was run on the same
+disposable copy with the five currency constants of `uc6-mnt/currency-seed-mnt.diff` reverted to
+`EUR` (and only those; the Feign/build plumbing untouched), against the same throwaway reference
+oracle, tenant `tierd`. Evidence:
+`.softhouse/capture/tierd-feasibility/uc10-eur-control/` (`replay-uc10-eur.log`,
+`result-uc10-eur.md`, `teardown-isolation.txt`, `post-restore-mnt-git-diff.txt`,
+`feign-uc10-eur.sha256`).
+
+**Result: FAILED, identically.** Same step (`LoanRepaymentSchedule.feature:841`,
+`LoanStepDef.loanRepaymentSchedulePeriodsCheck`), same period-2 cells, same delta:
+
+| cell | expected | actual (EUR) | actual (MNT, §3) | delta |
+| --- | --- | --- | --- | --- |
+| Balance of loan | 43476 | 43477 | 43477 | +1 |
+| Principal due | 42974 | 42973 | 42973 | −1 |
+| Interest | 1128 | 1129 | 1129 | +1 |
+| Due | 44102 | 44102 | 44102 | 0 |
+
+The Feign capture is currency-clean EUR (`"code":"EUR"` × 198, `"currencyCode":"EUR"` × 214,
+`MNT` currency objects × 0). Only the resource id differs (`resource 1` here vs `resource 10` in
+the whole-file replay), a consequence of UC10 running alone. The five currency files were then
+restored and verified byte-identical to the recorded MNT diff, and `logback.xml` to the recorded
+plumbing hunk.
+
+**Meaning.** The split is **not** caused by the MNT re-seed. The pinned build disagrees with its
+own upstream `.feature` expectation on the complex-transaction / interest-recalculation path in
+`EUR` as well. At this pin the program's oracle output — not the feature table — is the graded
+expectation, so `LoanRepaymentSchedule.feature`'s UC10 period-2 value is **not a trustworthy
+expectation** until the build and the feature file are reconciled upstream. This removes the last
+currency-attributable doubt from §3 and leaves the divergence as a pin-vs-test disagreement, not a
+Tier D defect.
+
