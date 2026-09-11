@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""OH-TIERD15-CM step 6: write OWNER.md from the chargeback type join.
+"""OH-TIERD17-CR step 6: write OWNER.md from the buy-down-fee type join.
 
 Reads journalentry-type-join.json (built by build-type-join.py) plus the
-replay/extraction/sweep/product manifests, and emits the type x charged-off join,
-every `chargeback` leg, and each chargeback transaction's read-back portions.
-Money is integer minor units throughout.
+replay/extraction/sweep/product manifests, and emits the type x charged-off
+join, every buy-down-fee leg, and each buy-down-fee transaction's read-back
+amount and portions.  Money is integer minor units throughout.
 """
 import json
 import os
@@ -25,14 +25,14 @@ def date_str(seq):
 def main():
     J = load('journalentry-type-join.json')
     R = load('scenario-results.json')
-    S = load('summary-chargeback-p2.json')
+    S = load('summary-buydown-fees.json')
     W = load('journalentries-sweep-manifest.json')
     PM = load('product-mappings/manifest.json')
 
     legs = J['legs']
     unmatched = len(J['unmatched_legs'])
     types = J['types']
-    cb = J['chargeback']
+    bd = J['buydown']
     currencies = J['currencies']
     loan_co = J['loan_chargeoff']
     loan_ids = sorted((int(x) for x in currencies))
@@ -40,38 +40,36 @@ def main():
     sweep_ok = sum(1 for x in W if x['http_status'] == '200')
     sweep_bad_json = sum(1 for x in W if not x['json_valid'])
     sweep_bad_curl = sum(1 for x in W if x['curl_returncode'] != 0)
+    bd_types = bd['by_type']
 
     out = []
     w = out.append
 
-    w('# OWNER — Tier D `LoanChargeback-Part2.feature` MNT capture **plus a full '
-      'journal-entry sweep** (OH-TIERD15-CM)')
+    w('# OWNER — Tier D `LoanBuyDownFees.feature` MNT capture **plus a full '
+      'journal-entry sweep** (OH-TIERD17-CR)')
     w('')
-    w('Whole-file replay of `LoanChargeback-Part2.feature` (%d scenarios) against the throwaway '
+    w('Whole-file replay of `LoanBuyDownFees.feature` (%d scenarios) against the throwaway '
       'reference oracle, tenant `tierd` (Asia/Ulaanbaatar, rounding mode 4 HALF_UP, currency MNT), '
       'with the Feign capture on, **and then — while the throwaway was still up — one bounded '
       '`GET /journalentries?loanId=<id>&limit=-1` for every one of the %d loans the replay created.** '
-      'Capture only: no vector, no drive, no `.go`. Money in this file, in the join and in the TSVs '
+      'Capture only: no vector, no drive, no `.go`. Money in this file, in the join and in the TSV '
       'is integer minor units (MNT, 2 ISO 4217 digits); the raw oracle bodies under '
       '`journalentries-sweep/` and `loans/` keep the decimal major units the oracle emitted, unchanged.'
       % (R['scenario_count'], len(loan_ids)))
     w('')
-    w('The target is `createJournalEntriesForChargeback` '
-      '[`AccrualBasedAccountingProcessorForLoan.java:1215-1308`], which was previously graded only '
-      'for a loan that is NOT charged off. On a CHARGED-OFF loan its `getPrincipalAccount` / '
-      '`getFeeAccount` / `getPenaltyAccount` switch to `CHARGE_OFF_EXPENSE` (or the fraud expense) '
-      'and the charge-off income accounts. Part2 charges loans off, so this capture is the first '
-      'look at those charged-off chargeback legs. It also lists every chargeback portion split '
-      '(principal / fee / penalty / overpayment) from the loan read-backs.')
-    w('')
-    w('This capture joins every swept leg to its transaction TYPE and to the loan\'s CHARGED-OFF '
-      'state at the transaction date, and lists every `chargeback` leg and every chargeback '
-      'transaction\'s portions.')
+    w('The target is the BUY-DOWN-FEE posting family of '
+      '`AccrualBasedAccountingProcessorForLoan.java` :530-792 — `createJournalEntriesForBuyDownFee`, '
+      '`...BuyDownFeeAdjustment`, `...BuyDownFeeAmortization`, '
+      '`...ChargeOffLoanBuyDownFeeAmortization` and `...BuyDownFeeAmortizationAdjustment` — which had '
+      'never been observed at the GL level. `LoanBuyDownFees.feature` exercises all of them, with '
+      'charge-offs on part of the file. This capture joins every swept leg to its transaction TYPE '
+      'and to the loan\'s CHARGED-OFF state at the transaction date, and lists every buy-down-fee leg, '
+      'each buy-down-fee transaction\'s amount and its read-back portions.')
     w('')
 
     w('## Provenance')
     w('')
-    w('OH-TIERD15-CM ran the rig, the replay (%d/%d), the extraction, the sweep, the product '
+    w('OH-TIERD17-CR ran the rig, the replay (%d/%d), the extraction, the sweep, the product '
       'mappings, the teardown and the type join. Every command ran in the FOREGROUND with a bound '
       '(curl `--max-time 30`; the copied run script for Gradle). No background job, no `&`, no '
       '`jobs`, no `wait`, no `sleep > 60`. The throwaway is DOWN (`teardown-isolation.txt`); the '
@@ -86,12 +84,12 @@ def main():
     w('| --- | --- |')
     w('| `OWNER.md` | this file |')
     w('| `replay-result-table.md` / `scenario-results.json` | per-scenario PASSED/FAILED, loan mapping, steps |')
-    w('| `run-chargeback-p2-mnt.sh` | the exact replay driver (only FEATURE / LOG / container changed from the OH-TIERD14-CL copy) |')
-    w('| `replay-chargeback-p2-mnt.log` | raw cucumber/Gradle replay log |')
+    w('| `run-buydown-fees-mnt.sh` | the exact replay driver (only FEATURE / LOG / container changed from the OH-TIERD15-CM copy) |')
+    w('| `replay-buydown-fees-mnt.log` | raw cucumber/Gradle replay log |')
     w('| `loans/loan-<id>/` | per-loan read-backs of the %d PASSED scenarios (%d bodies) |'
       % (R['passed'], S['files_written']))
-    w('| `manifest-chargeback-p2.json` / `-passed.json` | all extracted bodies with sha256 and `committed` flag |')
-    w('| `summary-chargeback-p2.json` | extractor totals and per-loan counts |')
+    w('| `manifest-buydown-fees.json` / `-passed.json` | all extracted bodies with sha256 and `committed` flag |')
+    w('| `summary-buydown-fees.json` | extractor totals and per-loan counts |')
     w('| `journalentries-sweep/loan-<id>.json` | verbatim `GET /journalentries?loanId=<id>&limit=-1` bodies, %d/%d HTTP 200 |'
       % (sweep_ok, len(W)))
     w('| `journalentries-sweep-manifest.json` | sha256 + exact URL + http status + json validity per sweep body |')
@@ -101,8 +99,7 @@ def main():
       % len(PM))
     w('| `journalentry-type-join.json` | every swept leg joined to its transaction type and charged-off/fraud state |')
     w('| `journalentry-type-join.md` | the same, human-readable, per-type leg listing |')
-    w('| `chargeback-legs.tsv` | flat listing of every chargeback leg (required columns) |')
-    w('| `accrual-legs.tsv` | flat listing of every accrual-type leg |')
+    w('| `buydown-fees-legs.tsv` | flat listing of every buy-down-fee leg (required columns) |')
     w('| `build-type-join.py` / `build-owner.py` | the join builder and this OWNER writer |')
     w('| `organize.py, build-results.py, extract-journalentries.py, extract-product-mappings.py` | the other copied extractors |')
     w('| `preflight.txt, up.txt, teardown-isolation.txt` | isolation proof (12/12 standing counters == baseline) |')
@@ -126,8 +123,8 @@ def main():
     w('## Extraction (step 2)')
     w('')
     w('Extracted with `bin/extract.py` and the copied `organize.py`: %d loans, %d bodies kept '
-      'under `loans/`, each body sha256-pinned in `manifest-chargeback-p2.json`; the FAILED '
-      'scenarios\' loans are not committed (`manifest-chargeback-p2-passed.json`).'
+      'under `loans/`, each body sha256-pinned in `manifest-buydown-fees.json`; the FAILED '
+      'scenarios\' loans are not committed (`manifest-buydown-fees-passed.json`).'
       % (len(loan_ids), S['files_written']))
     w('')
 
@@ -180,14 +177,14 @@ def main():
             ', '.join(str(x) for x in loans_co) or '–'))
     w('')
 
-    w('### The chargeback arm `createJournalEntriesForChargeback` (step 6)')
+    w('### The buy-down-fee arms (step 6)')
     w('')
-    w('Charged-off rule: %s.' % cb['charged_off_rule'])
+    w('Charged-off rule: %s.' % bd['charged_off_rule'])
     w('')
     w('| type | present | legs | transactions | loans | legs on charged-off loan | loans on charged-off | legs on not-charged-off | loans on not-charged-off |')
     w('| --- | --- | ---: | ---: | --- | ---: | --- | ---: | --- |')
-    for code in cb['target_types']:
-        t = cb['by_type'][code]
+    for code in bd['target_types']:
+        t = bd_types[code]
         w('| `%s` | %s | %d | %d | %s | %d | %s | %d | %s |' % (
             code, t['present'], t['total_legs'], len(t['total_transactions']),
             ', '.join(str(x) for x in t['total_loans']) or '–',
@@ -196,51 +193,54 @@ def main():
             t['legs_on_not_charged_off_loan'],
             ', '.join(str(x) for x in t['loans_on_not_charged_off']) or '–'))
     w('')
-    if cb['no_legs_finding']:
-        w('**FINDING:** %s' % cb['no_legs_finding'])
+    for f in bd['findings']:
+        w('**FINDING:** %s' % f)
         w('')
 
-    w('### Every `chargeback` leg — required listing')
+    w('### Every buy-down-fee leg — required listing')
+    w('')
+    w('Every leg of every buy-down-fee transaction type, with the leg\'s GL account (id + name), '
+      'entry side, amount in minor units, the loan fraud flag and whether the loan was charged off '
+      'at the transaction date.')
     w('')
     w('| type | loan | tx | entry | account id | account code | account name | amount (minor) | fraud | charged_off | currency | tx date | charge-off tx |')
     w('| --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- |')
     any_leg = False
-    for tx in cb['transactions']:
+    for tx in bd['transactions']:
         for r in tx['legs']:
             any_leg = True
             w('| `%s` | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
-                r['type_code'] or 'loanTransactionType.chargeback', r['loan'],
-                r['transaction_id'], r['entry_type'], r['gl_account_id'],
-                r['gl_account_code'], r['gl_account_name'], r['amount_minor'],
-                r['fraud'], r['charged_off'], r['currency'],
+                r['type_code'], r['loan'], r['transaction_id'], r['entry_type'],
+                r['gl_account_id'], r['gl_account_code'], r['gl_account_name'],
+                r['amount_minor'], r['fraud'], r['charged_off'], r['currency'],
                 date_str(r['transaction_date']),
                 ', '.join(r['chargeoff_tx_ids']) or '-'))
     if not any_leg:
         w('| _none_ | | | | | | | | | | | | |')
     w('')
 
-    w('### Every chargeback loan transaction and its read-back portions')
+    w('### Every buy-down-fee transaction and its read-back amount / portions')
     w('')
     w('Portions are integer minor units; `-` means the read-back did not carry that field. The '
-      'amount is the transaction `amount`; portions are the oracle\'s `principalPortion`, '
+      '`amount` is the transaction `amount`; portions are the oracle\'s `principalPortion`, '
       '`interestPortion`, `feeChargesPortion`, `penaltyChargesPortion`, `overpaymentPortion` and '
       '`unrecognizedIncomePortion`.')
     w('')
-    w('| loan | tx | date | amount (minor) | principal | interest | fee | penalty | overpayment | unrecognized income | reversed | charged_off | fraud | currency | legs |')
-    w('| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | --- | ---: |')
-    for t in cb['transactions']:
+    w('| loan | tx | type | date | amount (minor) | principal | interest | fee | penalty | overpayment | unrecognized income | reversed | charged_off | fraud | currency | legs |')
+    w('| ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | --- | ---: |')
+    for t in bd['transactions']:
         p = t['portions'] or {}
 
         def _m(k):
             v = p.get(k)
             return '-' if v is None else v
-        w('| %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d |' % (
-            t['loan'], t['transaction_id'], date_str(t['date']),
+        w('| %d | %s | `%s` | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d |' % (
+            t['loan'], t['transaction_id'], t['type_code'], date_str(t['date']),
             t['amount_minor'], _m('principal_minor'), _m('interest_minor'), _m('fee_minor'),
             _m('penalty_minor'), _m('overpayment_minor'), _m('unrecognized_income_minor'),
             t['reversed'], t['charged_off'], t['fraud'], t['currency'], len(t['legs'])))
-    if not cb['transactions']:
-        w('| _no chargeback transactions_ | | | | | | | | | | | | | | |')
+    if not bd['transactions']:
+        w('| _no buy-down-fee transactions_ | | | | | | | | | | | | | | |')
     w('')
 
     w('### Per-loan currency, charge-off and fraud state')
@@ -255,49 +255,38 @@ def main():
             lid, currencies[str(lid)], li['fraud'], cos))
     w('')
     w('Every loan in this capture is **MNT**.')
-
     w('')
+
     w('## Findings — what the sweep observed and did not')
     w('')
-    if cb['total_legs']:
-        w('* **Observed — `createJournalEntriesForChargeback` at the GL level:** %d legs on %d '
-          'loan transaction(s) across loans %s; %d leg(s) on a charged-off loan (loans %s). See '
-          'the listing above for each leg and its account.' % (
-              cb['total_legs'], cb['total_transactions'],
-              ', '.join(str(x) for x in cb['total_loans']) or '-',
-              cb['by_type'][cb['target_types'][0]]['legs_on_charged_off_loan'],
-              ', '.join(str(x) for x in cb['by_type'][cb['target_types'][0]]['loans_on_charged_off']) or '-'))
-    else:
-        w('* **FINDING — the chargeback arm has NO legs:** %s' % cb['no_legs_finding'])
-    if cb['transactions_without_legs']:
-        w('* **FINDING — chargeback transaction(s) without journal-entry legs:** %s. '
-          '`createJournalEntriesForChargeback` is expected to post for every chargeback, so a '
-          'leg-less transaction is a shape worth checking.' % (
+    for code in bd['target_types']:
+        t = bd_types[code]
+        if t['total_legs']:
+            w('* **Observed — `%s` at the GL level:** %d leg(s) on %d loan transaction(s) across '
+              'loans %s; %d leg(s) on a charged-off loan (loans %s). The per-leg listing above '
+              'gives each leg and its account; the per-transaction table gives the amount and '
+              'portions.' % (
+                  code, t['total_legs'], len(t['total_transactions']),
+                  ', '.join(str(x) for x in t['total_loans']) or '-',
+                  t['legs_on_charged_off_loan'],
+                  ', '.join(str(x) for x in t['loans_on_charged_off']) or '-'))
+        else:
+            w('* **FINDING — `%s` has NO legs:** the type is absent from every swept body. The '
+              'buy-down-fee arm it names was not exercised at the GL level by this replay (or its '
+              'loan was not extracted). This is a finding, not a silent gap.' % code)
+    if bd['transactions_without_legs']:
+        w('* **FINDING — buy-down-fee transaction(s) without journal-entry legs:** %s. The '
+          'buy-down-fee arms should post for every such transaction, so a leg-less transaction is '
+          'a shape worth checking.' % (
               ', '.join('loan %d tx %s' % (t['loan'], t['transaction_id'])
-                        for t in cb['transactions_without_legs'])))
+                        for t in bd['transactions_without_legs'])))
     if unmatched:
         ua = J['unmatched_analysis']
         w('* **Unmatched / not type-confirmable:** %d legs (%d transaction%s) carry no entry in any '
           '`transactions` read-back; see `journalentry-type-join.md`.' % (
               ua['legs'], ua['count'], '' if ua['count'] == 1 else 's'))
-    arms = J['portion_arms']
-    w('* **Portion arms (step 6) — FEE: %s, PENALTY: %s.** Chargeback transactions carry a '
-      'non-zero FEE portion on loan(s) %s and a non-zero PENALTY portion on loan(s) %s; the '
-      'column listing above gives each amount. `interest`, `overpayment` and `unrecognized '
-      'income` arms are %s/%s/%s respectively.' % (
-          'OBSERVED' if arms['fee'] else 'not observed',
-          'OBSERVED' if arms['penalty'] else 'not observed',
-          ', '.join(str(x) for x in sorted({h['loan'] for h in arms['fee']})) or '-',
-          ', '.join(str(x) for x in sorted({h['loan'] for h in arms['penalty']})) or '-',
-          'observed' if arms['interest'] else 'not observed',
-          'observed' if arms['overpayment'] else 'not observed',
-          'observed' if arms['unrecognized_income'] else 'not observed'))
-    pgc = J['paid_gt_credited']
-    w('* **`paid > credited` leg — %s** %s' % (
-        'OBSERVED.' if pgc['genuine_paid_gt_credited'] else 'FINDING.',
-        pgc['finding']))
     w('* **Fraud:** no loan in this feature is fraud-flagged, so the `isMarkedFraud` / '
-      '`chargeOffFraudExpense` variants are not exercised (every `fraud` above is `false`).')
+      'charge-off-fraud variants are not exercised (every `fraud` above is `false`).')
     w('')
 
     path = os.path.join(HERE, 'OWNER.md')
