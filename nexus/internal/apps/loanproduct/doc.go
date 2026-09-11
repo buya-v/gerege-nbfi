@@ -11,6 +11,39 @@
 // deliberately thin where the generator is already authoritative — it declares
 // the enums the generator consumes, and nothing here recomputes an EMI.
 //
+// # The progressive-recomputation kernel was REMOVED (OH-LPDEL-BF, 2026-09-11)
+//
+// This package used to carry a second copy of the progressive-schedule
+// arithmetic — the port of Fineract's progressive EMI / rate-factor
+// recomputation. On 2026-09-11, on Buyan's recorded decision OH-LPDEL-BF, it was
+// DELETED. The files removed were calculator.go, dates.go, interestperiod.go,
+// interestrate.go, money.go, repaymentperiod.go and schedulemodel.go, together
+// with their _test.go files (calculator_test.go, interestperiod_test.go).
+//
+// WHY. The kernel was unwired and ungraded: no application imports it, no
+// conformance vector reaches it, and it duplicates arithmetic that
+// nexus/internal/apps/loanschedule already owns and grades under DEC-1. Dead
+// duplicate money code is a divergence risk the next reader would have to rule
+// out, so it was removed rather than left beside the authoritative copy.
+//
+// WHERE THE ARITHMETIC LIVES. In nexus/internal/apps/loanschedule, which owns
+// the schedule generator and its money rules under DEC-1. This package remains
+// the CONFIGURATION MODEL: the stored-value <-> enum tables (frequency.go,
+// method.go) and the LoanProductRelatedDetail aggregate (relateddetail.go) that
+// the scheduler and the loan account read. It adds no second derivation.
+//
+// ONE MOVE, UNCHANGED. money.go's Currency type and its pow10 helper were the
+// only kernel symbols a KEPT file used; they were relocated verbatim into
+// relateddetail.go, which was their sole remaining consumer. Nothing was
+// rewritten in the move. Every other kernel symbol is gone.
+//
+// The sections below that discuss interestperiod.go, repaymentperiod.go and the
+// four ledger-guard-refused write sites are HISTORICAL: they describe files that
+// no longer exist and are retained as the record of why the deletion was
+// decided. The ledgerguard baseline rows for those two files no longer have a
+// source to point at; the driver that lands this change reconciles them, not
+// this package.
+//
 // The reference oracle is Apache Fineract, pinned at commit
 // 426a23544e8426a38ae43ae404670a0a7e85b9eb. The COMMIT is the identity of the
 // oracle; the checkout path is not, and differs per environment — currently
@@ -27,6 +60,12 @@
 //
 // A citation being present is not a citation being resolved, and the audit is
 // PARTIAL. Do not read the paragraph above as a warrant for the whole package.
+//
+// NOTE (OH-LPDEL-BF): two of the files this section graded, repaymentperiod.go
+// and interestperiod.go, were DELETED on 2026-09-11 (see "The
+// progressive-recomputation kernel was REMOVED", above). Their records below are
+// retained as history; no file present in the package today carries a swept
+// [VERIFIED:] range, and every file that remains is UNSWEPT.
 //
 //   - repaymentperiod.go — SWEPT. Every [VERIFIED: RepaymentPeriod.java:a-b]
 //     was re-derived mechanically against the pinned commit by T530 and
@@ -93,6 +132,15 @@
 // Classification and Usage.
 //
 // # The two "balance"-named cells in this package are NOT ledger balances
+//
+// OBSOLETE, RETAINED AS HISTORY (OH-LPDEL-BF, 2026-09-11): this section and the
+// evidence, retired-argument and "bar is red on purpose" sections that follow all
+// concern interestperiod.go and repaymentperiod.go, which were DELETED when the
+// progressive-recomputation kernel was removed (see above). Nothing in the
+// package now writes a balance-named field, so the four sites described below no
+// longer exist and the ledger guard no longer flags loanproduct. The argument is
+// kept because it records why the sites were argued and not renamed before the
+// files were deleted.
 //
 // This is stated at package level because a source guard over the Go tree
 // (.softhouse/guards/ledgerguard) refuses four writes in this package under
