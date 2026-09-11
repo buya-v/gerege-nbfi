@@ -1,0 +1,91 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L11-writeoff-journal-five-legs",
+    "title": "A write-off credits each non-zero portion to its own receivable slot and debits the total ONCE to losses-written-off (loan 11 L54: four credits 100000.00 / 6618.53 / 100.00 / 57.00, one debit 106775.53)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the FIVE-LEG journal entry the first observed loan write-off posted, on the running Fineract server under tenant gerege (loan 11, externalId OHGLR-L02, product 3 OHGLR-Accrual-Loan, ACCRUAL PERIODIC) at business date 2026-09-03. request.write_off_journal.portions transcribes the write-off transaction's four portions in integer minor units from out/loan-11-after-transactions-raw.json content[id 54] (type loanTransactionType.writeOff): principalPortion 100000.0, interestPortion 6618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0, overpaymentPortion absent. request.write_off_journal.accounts is the product's slot->account mapping read back from GET /loanproducts/3 accountingMappings on TODAY's oracle instance (capture investor-asset-transfer-100/out/loanproduct-3-raw.json): loanPortfolioAccount OHLGR-10010, receivableInterestAccount OHLGR-10012, receivableFeeAccount OHLGR-10013, receivablePenaltyAccount OHLGR-10014, overpaymentLiabilityAccount OHLGR-20011, writeOffAccount OHLGR-50010. expect.write_off_journal_legs is a TRANSCRIPTION of the five L54 legs in id order from out/loan-11-after-journalentries-raw.json: JE 136 CREDIT OHLGR-10010 100000.00, JE 137 CREDIT OHLGR-10012 6618.53, JE 138 CREDIT OHLGR-10013 100.00, JE 139 CREDIT OHLGR-10014 57.00, JE 140 DEBIT OHLGR-50010 106775.53. THIS VECTOR GRADES ONE PROPERTY: a write-off credits each non-zero portion to its own receivable slot and debits the total ONCE to the losses-written-off slot. The four NON-ZERO portions land in four DISTINCT accounts and the fee (10000) differs from the penalty (5700), so the defects worth a drive are all discriminated: one debit per portion (the leg count and sides move while the batch still balances); debits the principal only (the debit is 10000000 and the batch no longer balances); debits loan portfolio instead of losses-written-off (the account cell moves and every total still balances); and swaps the fee and penalty receivable slots (fee 10000 != penalty 5700, so it cannot hide). WHAT THIS VECTOR DOES NOT GRADE: the same-account merge (accountMap) — product 3 maps the four slots to four DIFFERENT accounts, so a port that never merges posts the SAME five legs and no drive is registered; the zero-portion skip — every portion here is > 0; overpayment and the write-off-reason mapping — absent here; and the charged-off branch — loan 11 was not charged off. A capture of a write-off whose slots share one GL account, or one carrying a zero portion, an overpayment portion, a write-off reason or a charged-off loan would be needed to grade those. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+    "oracle": {
+        "seam": "loan-writeoff-journal-entries",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "expect.write_off_journal_legs is transcribed from the committed AFTER-state journal-entries read-back in out/loan-11-after-journalentries-raw.json (GET /loans/11/journalentries, HTTP 200), transactionId L54, pageItems ids 136-140. request.write_off_journal.portions is transcribed from the write-off transaction id 54 in out/loan-11-after-transactions-raw.json (HTTP 200), cross-checked against the four-bucket vector LN-L11-writeoff-four-bucket-discharge (same four portions). request.write_off_journal.accounts is transcribed from capture investor-asset-transfer-100/out/loanproduct-3-raw.json (GET /loanproducts/3, HTTP 200), accountingMappings. The captures are single-line JSON documents, so each observation is cited at line 1. capture_case_id names the write-off transaction id L54, which appears in the referenced journal-entries capture. .softhouse/capture/tierA-a2/ was NOT used: it came from an EARLIER oracle instance whose product ids name different products. No value was synthesised.",
+        "capture_ref": ".softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-after-journalentries-raw.json",
+        "capture_sha256": "28d073c3735cc226d2852586018390c26529536cfb6da15921c099a63506aa4c",
+        "capture_case_id": "L54",
+        "citation": "loan-11-after-journalentries-raw.json:1 (sha256 28d073c3735cc226d2852586018390c26529536cfb6da15921c099a63506aa4c, 31 pageItems, single-line committed read-back, tenant gerege): transactionId L54 carries five legs in id order — id 136 entryType.value CREDIT glAccountCode OHLGR-10010 amount 100000.0 transactionDate [2026,9,3]; id 137 CREDIT OHLGR-10012 6618.53 [2026,9,3]; id 138 CREDIT OHLGR-10013 100.0 [2026,9,3]; id 139 CREDIT OHLGR-10014 57.0 [2026,9,3]; id 140 DEBIT OHLGR-50010 106775.53 [2026,9,3]. The four credits sum EXACTLY to the one debit (10000000 + 661853 + 10000 + 5700 = 10677553 minor units). The request portions are in out/loan-11-after-transactions-raw.json:1 (sha256 76a86a88f4efe020145ba376a1b1a30e5c9ec3a63651cb1610b3b09948d0c53a): content[id 54] type.code loanTransactionType.writeOff, date 2026-09-03, principalPortion 100000.0, interestPortion 6618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0, overpaymentPortion absent. The slot->account mapping is in .softhouse/capture/investor-asset-transfer-100/out/loanproduct-3-raw.json:1 (sha256 3c9241a02f78706a576a0be1c2506a3784f47dbe37be090e23f9a5073d20aa3d, GET /loanproducts/3 on TODAY's oracle instance): product id 3 name OHLGR-Accrual-Loan, accountingMappings loanPortfolioAccount.glCode OHLGR-10010, receivableInterestAccount.glCode OHLGR-10012, receivableFeeAccount.glCode OHLGR-10013, receivablePenaltyAccount.glCode OHLGR-10014, overpaymentLiabilityAccount.glCode OHLGR-20011, writeOffAccount.glCode OHLGR-50010."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "write_off_journal": {
+            "transaction_id": "L54",
+            "portions": {
+                "principal": "10000000",
+                "interest": "661853",
+                "fee": "10000",
+                "penalty": "5700"
+            },
+            "accounts": {
+                "loan_portfolio": "OHLGR-10010",
+                "interest_receivable": "OHLGR-10012",
+                "fees_receivable": "OHLGR-10013",
+                "penalties_receivable": "OHLGR-10014",
+                "overpayment": "OHLGR-20011",
+                "losses_written_off": "OHLGR-50010"
+            }
+        }
+    },
+    "expect": {
+        "write_off_journal_legs": [
+            {
+                "transaction_id": "L54",
+                "account": "OHLGR-10010",
+                "entry_type": "CREDIT",
+                "amount_minor": "10000000"
+            },
+            {
+                "transaction_id": "L54",
+                "account": "OHLGR-10012",
+                "entry_type": "CREDIT",
+                "amount_minor": "661853"
+            },
+            {
+                "transaction_id": "L54",
+                "account": "OHLGR-10013",
+                "entry_type": "CREDIT",
+                "amount_minor": "10000"
+            },
+            {
+                "transaction_id": "L54",
+                "account": "OHLGR-10014",
+                "entry_type": "CREDIT",
+                "amount_minor": "5700"
+            },
+            {
+                "transaction_id": "L54",
+                "account": "OHLGR-50010",
+                "entry_type": "DEBIT",
+                "amount_minor": "10677553"
+            }
+        ]
+    },
+    "capabilities_required": [
+        "writeoff-journal-entry"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-writeoff-journal-one-debit-per-portion",
+        "loan-wrong-writeoff-journal-debits-principal-only",
+        "loan-wrong-writeoff-journal-debits-loan-portfolio",
+        "loan-wrong-writeoff-journal-swaps-fee-and-penalty"
+    ]
+}

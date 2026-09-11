@@ -52,6 +52,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertWriteOffFourBucketsSum(got)}
 	case SeamLoanTransactionReversal:
 		return []InvariantResult{assertReversalAppendOnly(v, got)}
+	case SeamLoanWriteOffJournalEntries:
+		return []InvariantResult{assertWriteOffJournalBalanced(got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -382,5 +384,56 @@ func assertReversalAppendOnly(v *Vector, got Expect) InvariantResult {
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("the %d originals are unchanged and unflagged, each mirrored by one counter-leg dated %s",
 		len(in), v.Request.Reversal.TransactionDate)
+	return r
+}
+
+// assertWriteOffJournalBalanced: the write-off result carries non-negative
+// integer minor-unit amounts, exactly ONE debit leg, and the debits sum to the
+// credits. It is asserted on the implementation's RESULT, so a port that posts
+// a debit per portion (four debits, still balanced) fails the one-debit
+// assertion, and a port that debits only the principal fails the balance
+// assertion. The loan-portfolio-debit and fee/penalty-swap defects still
+// balance here; those are caught by the account cells in
+// diffWriteOffJournalLegs, not by this money shape.
+func assertWriteOffJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "write_off_journal_one_debit_balances", Assertions: 3}
+	if len(got.WriteOffJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	debitLegs := 0
+	for i, leg := range got.WriteOffJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d debit leg(s): the write-off debits the total exactly ONCE", debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credits sum to %d but the single debit is %d: a write-off batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("one debit of %d equals the %d credit portion(s)", debits, len(got.WriteOffJournalLegs)-1)
 	return r
 }

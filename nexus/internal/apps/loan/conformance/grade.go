@@ -176,6 +176,30 @@ func diffReversalLegs(s *cellSink, want, got []ReversalLegCell) {
 	}
 }
 
+// diffWriteOffJournalLegs compares the ordered leg list of a loan write-off's
+// journal entry. The count is compared first, so a port that posts a debit per
+// portion (more legs) or drops a leg is a visible difference rather than a
+// silent truncation. Every leg grades four cells: the amount is the one money
+// cell, and the transaction id, account and side are structural. The account
+// cells see a port that debits loan portfolio instead of losses-written-off or
+// swaps the fee and penalty receivables; the side cells see one debit per
+// portion; the count cell sees a dropped portion. The list is positional
+// because the property is a fixed "credits in slot order, then one debit"
+// layout, not a set.
+func diffWriteOffJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	s.cmpText("write_off_journal_legs.count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
+	n := len(want)
+	if len(got) < n {
+		n = len(got)
+	}
+	for i := 0; i < n; i++ {
+		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].transaction_id", i), want[i].TransactionID, got[i].TransactionID)
+		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].account", i), want[i].Account, got[i].Account)
+		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].entry_type", i), want[i].EntryType, got[i].EntryType)
+		s.cmpMoney(fmt.Sprintf("write_off_journal_legs[%d].amount", i), want[i].AmountMinor, got[i].AmountMinor)
+	}
+}
+
 // canonicalJournalEntryAccountSides returns a copy of in sorted by
 // (transaction_id, account, entry_type) so the side comparison is
 // order-insensitive.
@@ -249,6 +273,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffWriteOffAllocation(&s, *v.Expect.WriteOffAllocation, v.Expect.WriteOffTotalMinor, got.WriteOffAllocation, got.WriteOffTotalMinor)
 	case SeamLoanTransactionReversal:
 		diffReversalLegs(&s, v.Expect.ReversalLegs, got.ReversalLegs)
+	case SeamLoanWriteOffJournalEntries:
+		diffWriteOffJournalLegs(&s, v.Expect.WriteOffJournalLegs, got.WriteOffJournalLegs)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money
