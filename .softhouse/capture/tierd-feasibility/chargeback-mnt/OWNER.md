@@ -81,3 +81,31 @@ are captured alongside so a copy is self-contained. Exact names are in the manif
 
 Total: 50 scenarios / 50 loans / 1830 bodies, 100%% committed.
 
+
+## `/journalentries` and product mappings (added by the driver, 2026-09-11, after merge cbc2ebb8)
+
+`journalentries/loan-<id>/` holds the runner's `GET /journalentries?transactionId=L<id>` responses,
+extracted from the raw Feign log (`feign-chargeback-mnt.log` in the disposable copy) by
+`extract-journalentries.py` (the chargeoff-mnt extractor, logic unchanged): **114** responses over
+**20** loans, sha256 in `journalentries-manifest.json` (re-hashed 114/114). Every leg's `entityId`
+is its directory's loan.
+
+Legs joined to their transaction TYPE through the read-backs under `loans/` (not inferred from GL
+names): repayment 162 legs / 19 loans, **chargeback 46 / 20**, disbursement 42 / 20, payoutRefund 6,
+accrual 4, downPayment 4. The chargeback legs are `createJournalEntriesForChargeback`
+[AccrualBasedAccountingProcessorForLoan.java:1215] on loans NOT charged off, in three shapes:
+
+| shape (leg id order) | chargebacks | example |
+| --- | --- | --- |
+| C fund source, D loan portfolio | 12 | loan 14 `L69`: principal 250 |
+| C fund source, D overpayment | 5 | loan 19 `L99`: overpayment 250 |
+| C fund source, D overpayment, D loan portfolio | 4 | loan 21 `L109`: 350 = overpayment 250 + principal 100 |
+
+NOT observed: the fee and penalty legs, the "paid > credited" credit legs, and chargebacks on a
+charged-off loan (the CHARGE_OFF_EXPENSE / INCOME_FROM_CHARGE_OFF_* account switch).
+
+`product-mappings/create-request-LP1.json` is the accepted create request of product 6 (`LP1`, the
+chargeback loans' product) from THIS replay's log (`extract-product-mappings.py`; ids differ between
+replays): fundSource 4, loanPortfolio 10, overpayment 18, the one channel mapping paymentTypeId 1 → 17.
+The chargebacks were posted with paymentTypeId 2 (`loans/loan-<id>/loan-<id>-chargeback-request.json`),
+so the default fund source applies — and the observed legs carry exactly glAccountId 4, 10, 18.
