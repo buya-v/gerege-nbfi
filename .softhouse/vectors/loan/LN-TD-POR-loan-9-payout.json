@@ -1,0 +1,87 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-POR-loan-9-payout",
+ "title": "A PAYOUT REFUND on a NON-fraud charged-off loan credits CHARGE_OFF_EXPENSE 367.00, INCOME_FROM_CHARGE_OFF_INTEREST 20.00 and INCOME_FROM_CHARGE_OFF_FEES 113.00 (fee 103.00 + penalty 10.00 merged), then debits the resolved fund source 1 500.00 exactly ONCE (loan 9 L27)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a PAYOUT REFUND posted on a loan ALREADY MARKED CHARGED OFF and NOT fraud, the payout-refund arm of createJournalEntriesForRepaymentWhenLoanIsChargedOff, on the ChargeOff-Part1 MNT capture (tenant tierd, currency MNT, 2 minor digits, loan 9, loanProductId 3, chargedOff true, fraud false) at refund transaction L27. request.charged_off_merchant_refund_journal.transaction_id is L27, kind is payout_refund and fraud is false. request.charged_off_merchant_refund_journal.portions transcribes the loan read-back's payoutRefund transaction id 27 (externalId 0b1ccc5e-4fe5-4c6d-865f-a712773bc992, type Payout Refund id 22, paymentDetailData.paymentType.id 5 AUTOPAY, manuallyReversed false): principalPortion 367.0 -> \"36700\", interestPortion 20.0 -> \"2000\", feeChargesPortion 103.0 -> \"10300\", penaltyChargesPortion 10.0 -> \"1000\", overpaymentPortion 0 -> \"0\". request.charged_off_merchant_refund_journal.accounts is the product's accountingMappings with the fund source RESOLVED through the payment channel, read from product-mappings/create-request-LP1_INTEREST_FLAT.json (sha256 d799095b...) and the oracle's echo product-mappings/product-20-retrieve-one-response.json (sha256 c01fa811...): chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 11, incomeFromChargeOffPenaltyAccountId 11, overpaymentLiabilityAccountId 16, incomeFromRecoveryAccountId 17, fundSourceAccountId 1; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 18, so paymentType 5 (AUTOPAY) has no channel mapping and resolves to the product fund source 1. expect.charged_off_merchant_refund_journal_legs is a TRANSCRIPTION of the four L27 legs in id order from journalentries/loan-9/loan-9-journalentries-3.json: JE 75 CREDIT glAccountId 14 367.0 (Credit Loss/Bad Debt), JE 76 CREDIT glAccountId 20 20.0 (Interest Income Charge Off), JE 77 CREDIT glAccountId 11 113.0 (Fee Charge Off; the 103.0 fee and 10.0 penalty portions MERGE into one credit), JE 78 DEBIT glAccountId 1 500.0 (Suspense/Clearing account). THIS VECTOR GRADES THE NON-FRAUD HALF OF THE SPLIT, and it is the control that shows the fraud account is selected by the flag and not by the arm or by the product: a payout refund on a charged-off NON-fraud loan credits the principal portion to CHARGE_OFF_EXPENSE 14 (NOT the fraud account 13), the interest to 20, the fee and penalty portions MERGED into one 113.00 credit to 11, and debits the total 500.00 exactly ONCE to the resolved fund source 1. A port that always uses the fraud account fails here even though it passes the loan-16 and loan-17 fraud observations; read with LN-TD-POR-loan-17-payout-fraud it pins the fraud flag's effect on the principal account cell. WHAT THIS VECTOR DOES NOT GRADE: a positive overpayment portion (zero here), the goodwill-credit arm, or a zero-total case. Nothing was computed by this promotion: every portion, account and leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargedoff-merchant-refund-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charged_off_merchant_refund_journal.portions is transcribed from the committed loan read-back .softhouse/capture/tierd-feasibility/chargeoff-mnt/loans/loan-9/loan-9-detail-associations-transactions-2.json (sha256 94d186fcdb453940b2572beff80df345fd9780553cc318c72a826cf6bebe62a1): loan 9, chargedOff true, fraud false, loanProductId 3, transactions[id 27 externalId 0b1ccc5e-4fe5-4c6d-865f-a712773bc992] type Payout Refund (id 22), paymentDetailData.paymentType.id 5, principalPortion 367.0, interestPortion 20.0, feeChargesPortion 103.0, penaltyChargesPortion 10.0, overpaymentPortion 0, manuallyReversed false. expect.charged_off_merchant_refund_journal_legs is transcribed from the committed journal entries .softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-9/loan-9-journalentries-3.json (sha256 f4d0eef3862a31a834b47aac4c40dc9a2a20f561ce6f9f172d52a2ed56070c3e): transactionId L27 carries four legs in id order -- id 75 CREDIT glAccountId 14 amount 367.0, id 76 CREDIT glAccountId 20 amount 20.0, id 77 CREDIT glAccountId 11 amount 113.0 and id 78 DEBIT glAccountId 1 amount 500.0. request.charged_off_merchant_refund_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeoff-mnt/product-mappings/create-request-LP1_INTEREST_FLAT.json (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759) and its accepted read-back echo product-mappings/product-20-retrieve-one-response.json (sha256 c01fa811be9439f205b546bf29e2205fa8687ffdb4586e76313cb53ec26c44f1), which agree on the relevant slots: chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 11, incomeFromChargeOffPenaltyAccountId 11, overpaymentLiabilityAccountId 16, incomeFromRecoveryAccountId 17, fundSourceAccountId 1; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 18, so paymentType 5 resolves to the product fund source 1. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (367.0 -> 36700, 20.0 -> 2000, 103.0 -> 10300, 10.0 -> 1000, 113.0 -> 11300, 500.0 -> 50000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-9/loan-9-journalentries-3.json",
+  "capture_sha256": "f4d0eef3862a31a834b47aac4c40dc9a2a20f561ce6f9f172d52a2ed56070c3e",
+  "capture_case_id": "L27",
+  "citation": "journalentries/loan-9/loan-9-journalentries-3.json:1 (sha256 f4d0eef3862a31a834b47aac4c40dc9a2a20f561ce6f9f172d52a2ed56070c3e): transactionId L27 carries four legs in id order -- id 75 entryType.value CREDIT glAccountId 14 amount 367.0 (Credit Loss/Bad Debt); id 76 CREDIT glAccountId 20 amount 20.0 (Interest Income Charge Off); id 77 CREDIT glAccountId 11 amount 113.0 (Fee Charge Off); id 78 DEBIT glAccountId 1 amount 500.0 (Suspense/Clearing account). The three credits sum to the one debit (50000 minor units). Portions are in loans/loan-9/loan-9-detail-associations-transactions-2.json:1 (sha256 94d186fcdb453940b2572beff80df345fd9780553cc318c72a826cf6bebe62a1): loan 9 chargedOff true, fraud false, loanProductId 3, transactions[id 27 externalId 0b1ccc5e-4fe5-4c6d-865f-a712773bc992] type Payout Refund, paymentDetailData.paymentType.id 5, principalPortion 367.0, interestPortion 20.0, feeChargesPortion 103.0, penaltyChargesPortion 10.0, overpaymentPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP1_INTEREST_FLAT.json:1 (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759) and product-mappings/product-20-retrieve-one-response.json:1 (sha256 c01fa811be9439f205b546bf29e2205fa8687ffdb4586e76313cb53ec26c44f1): chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 11, incomeFromChargeOffPenaltyAccountId 11, overpaymentLiabilityAccountId 16, incomeFromRecoveryAccountId 17, fundSourceAccountId 1, with the only channel mapping paymentTypeId 1 -> 18, so paymentType 5 resolves to the product fund source 1."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charged_off_merchant_refund_journal": {
+   "transaction_id": "L27",
+   "kind": "payout_refund",
+   "fraud": false,
+   "portions": {
+    "principal": "36700",
+    "interest": "2000",
+    "fee": "10300",
+    "penalty": "1000",
+    "overpayment": "0"
+   },
+   "accounts": {
+    "charge_off_expense": "14",
+    "charge_off_fraud_expense": "13",
+    "income_from_charge_off_interest": "20",
+    "income_from_charge_off_fees": "11",
+    "income_from_charge_off_penalty": "11",
+    "overpayment": "16",
+    "income_from_recovery": "17",
+    "fund_source": "1"
+   }
+  }
+ },
+ "expect": {
+  "charged_off_merchant_refund_journal_legs": [
+   {
+    "transaction_id": "L27",
+    "account": "14",
+    "entry_type": "CREDIT",
+    "amount_minor": "36700"
+   },
+   {
+    "transaction_id": "L27",
+    "account": "20",
+    "entry_type": "CREDIT",
+    "amount_minor": "2000"
+   },
+   {
+    "transaction_id": "L27",
+    "account": "11",
+    "entry_type": "CREDIT",
+    "amount_minor": "11300"
+   },
+   {
+    "transaction_id": "L27",
+    "account": "1",
+    "entry_type": "DEBIT",
+    "amount_minor": "50000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargedoff-merchant-refund-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargedoff-refund-fraud-ignored"
+ ]
+}

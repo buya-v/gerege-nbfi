@@ -756,22 +756,24 @@ type ChargedOffRepaymentJournalRequest struct {
 }
 
 // ChargedOffMerchantRefundSlotAccounts is the slot->account mapping of a
-// MERCHANT-ISSUED REFUND on a loan MARKED CHARGED OFF and not fraud. Each
+// MERCHANT-ISSUED REFUND or a PAYOUT REFUND on a loan MARKED CHARGED OFF. Each
 // positive portion CREDITS its own charge-off slot: principal
-// ChargeOffExpense, interest IncomeFromChargeOffInterest, fees
-// IncomeFromChargeOffFees, penalties IncomeFromChargeOffPenalty, overpayment
-// Overpayment. FundSource is the RESOLVED account the single total debit posts
-// to (the transaction paymentTypeId's payment-channel account when the product
-// maps that channel, else the product FUND_SOURCE).
+// ChargeOffFraudExpense when the loan is fraud else ChargeOffExpense, interest
+// IncomeFromChargeOffInterest, fees IncomeFromChargeOffFees, penalties
+// IncomeFromChargeOffPenalty, overpayment Overpayment. FundSource is the RESOLVED
+// account the single total debit posts to (the transaction paymentTypeId's
+// payment-channel account when the product maps that channel, else the product
+// FUND_SOURCE).
 //
-// IncomeFromRecovery is carried too, not because the merchant-refund port reads
-// it — it never does — but because the registered wrong implementation expresses
-// the wrong-as-repayment defect by reposting the same portions through the
+// IncomeFromRecovery is carried too, not because the refund port reads it — it
+// never does — but because the registered wrong implementation expresses the
+// wrong-as-repayment defect by reposting the same portions through the
 // charged-off REPAYMENT layout, which credits every principal, interest, fee and
-// penalty portion to income_from_recovery. A correct merchant-refund port reads
-// only the five slots, overpayment and fund_source.
+// penalty portion to income_from_recovery. A correct refund port reads only the
+// principal slot selected by fraud, overpayment and fund_source.
 type ChargedOffMerchantRefundSlotAccounts struct {
 	ChargeOffExpense            string `json:"charge_off_expense"`
+	ChargeOffFraudExpense       string `json:"charge_off_fraud_expense,omitempty"`
 	IncomeFromChargeOffInterest string `json:"income_from_charge_off_interest"`
 	IncomeFromChargeOffFees     string `json:"income_from_charge_off_fees"`
 	IncomeFromChargeOffPenalty  string `json:"income_from_charge_off_penalty"`
@@ -782,15 +784,19 @@ type ChargedOffMerchantRefundSlotAccounts struct {
 
 // ChargedOffMerchantRefundJournalRequest is the
 // loan-chargedoff-merchant-refund-journal-entries seam's input: the observed
-// portions of a MERCHANT-ISSUED REFUND on a loan already marked charged off, the
-// loan's fraud flag (which this seam pins false) and the resolved slot->account
-// mapping, plus the transaction id the legs are posted under. The mapping is the
-// product's accountingMappings (with the fund source resolved through the
-// payment channel) read back from the reference server, never invented; a slot
-// with a positive portion and no mapped account is refused by the port, and a
-// fraud loan is refused rather than guessed.
+// portions of a MERCHANT-ISSUED REFUND or a PAYOUT REFUND on a loan already
+// marked charged off, the loan's fraud flag and the resolved slot->account
+// mapping, plus the transaction kind and the transaction id the legs are posted
+// under. Kind selects which refund arm the request is, "merchant_issued_refund"
+// or "payout_refund"; an empty Kind defaults to "merchant_issued_refund" so the
+// pre-existing merchant-issued-refund vectors stay valid. The two arms post
+// identical legs. The mapping is the product's accountingMappings (with the fund
+// source resolved through the payment channel) read back from the reference
+// server, never invented; a slot with a positive portion and no mapped account
+// is refused by the port, and an unknown kind is refused rather than guessed.
 type ChargedOffMerchantRefundJournalRequest struct {
 	TransactionID string                               `json:"transaction_id"`
+	Kind          string                               `json:"kind,omitempty"`
 	Portions      RepaymentPortionsMoney               `json:"portions"`
 	Fraud         bool                                 `json:"fraud"`
 	Accounts      ChargedOffMerchantRefundSlotAccounts `json:"accounts"`

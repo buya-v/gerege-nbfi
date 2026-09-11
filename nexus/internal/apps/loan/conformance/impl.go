@@ -1116,19 +1116,27 @@ func chargedOffRepaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 
 // goChargedOffMerchantRefundJournal ports the
 // loan-chargedoff-merchant-refund-journal-entries seam: it reduces the request's
-// five portions, the loan's fraud flag and resolved slot->account mapping to
-// loan.RepaymentPortions and loan.ChargedOffMerchantRefundAccountMapping and
-// runs the port's own loan.CreateChargedOffMerchantRefundJournalEntryLegs. Every
-// monetary cell is an integer minor unit; the mapping is the product's observed
-// accountingMappings with the fund source resolved through the payment channel,
-// never invented.
+// five portions, the loan's fraud flag, the transaction kind and resolved
+// slot->account mapping to loan.RepaymentPortions and
+// loan.ChargedOffMerchantRefundAccountMapping and runs the port's own
+// loan.CreateChargedOffMerchantRefundJournalEntryLegs. Every monetary cell is an
+// integer minor unit; the mapping is the product's observed accountingMappings
+// with the fund source resolved through the payment channel, never invented. The
+// kind maps "merchant_issued_refund" (and an empty kind, the pre-existing
+// default) to TransactionMerchantIssuedRefund and "payout_refund" to
+// TransactionPayoutRefund; anything else is refused by the port.
 func goChargedOffMerchantRefundJournal(r ChargedOffMerchantRefundJournalRequest) (Expect, error) {
+	transactionType, err := chargedOffRefundTransactionType(r.Kind)
+	if err != nil {
+		return Expect{}, err
+	}
 	portions, err := repaymentPortionsFromRequest(r.Portions)
 	if err != nil {
 		return Expect{}, err
 	}
-	legs, err := loan.CreateChargedOffMerchantRefundJournalEntryLegs(r.TransactionID, portions, r.Fraud, loan.ChargedOffMerchantRefundAccountMapping{
+	legs, err := loan.CreateChargedOffMerchantRefundJournalEntryLegs(r.TransactionID, transactionType, portions, r.Fraud, loan.ChargedOffMerchantRefundAccountMapping{
 		ChargeOffExpense:            r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:       r.Accounts.ChargeOffFraudExpense,
 		IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
 		IncomeFromChargeOffFees:     r.Accounts.IncomeFromChargeOffFees,
 		IncomeFromChargeOffPenalty:  r.Accounts.IncomeFromChargeOffPenalty,
@@ -1139,6 +1147,23 @@ func goChargedOffMerchantRefundJournal(r ChargedOffMerchantRefundJournalRequest)
 		return Expect{}, err
 	}
 	return chargedOffMerchantRefundJournalLegsExpect(legs), nil
+}
+
+// chargedOffRefundTransactionType maps the seam's request kind to the port's
+// transaction type: an empty kind defaults to a merchant-issued refund so the
+// pre-existing vectors stay valid, "payout_refund" names the payout arm, and
+// every other kind is refused because the method's goodwill-credit arm has a
+// different account table and is out of this seam.
+func chargedOffRefundTransactionType(kind string) (loan.LoanTransactionType, error) {
+	switch kind {
+	case "", "merchant_issued_refund":
+		return loan.TransactionMerchantIssuedRefund, nil
+	case "payout_refund":
+		return loan.TransactionPayoutRefund, nil
+	default:
+		return loan.TransactionInvalid, fmt.Errorf(
+			"loan: charged-off refund journal entries accept only the kind merchant_issued_refund or payout_refund, got %q", kind)
+	}
 }
 
 // chargedOffMerchantRefundJournalLegsExpect renders the port's ordered legs as
@@ -1759,6 +1784,12 @@ const (
 	// fund-source debit stay observed. On the principal-only observation the
 	// single principal credit's account moves.
 	wrongMerchantRefundJournalAsRecovery merchantRefundJournalWrongMode = iota
+	// wrongMerchantRefundJournalFraudIgnored posts a refund on a FRAUD loan as
+	// if the loan were not fraud: the principal credit lands on
+	// CHARGE_OFF_EXPENSE instead of CHARGE_OFF_FRAUD_EXPENSE while every other
+	// leg stays observed. It is correct on a non-fraud observation, so the drive
+	// goes red ONLY on a fraud vector and stays green on the non-fraud ones.
+	wrongMerchantRefundJournalFraudIgnored
 )
 
 // wrongMerchantRefundJournalEvaluator is a DELIBERATELY WRONG implementation of
@@ -1796,6 +1827,28 @@ func wrongMerchantRefundJournal(r ChargedOffMerchantRefundJournalRequest, mode m
 			IncomeFromRecovery: r.Accounts.IncomeFromRecovery,
 			Overpayment:        r.Accounts.Overpayment,
 			FundSource:         r.Accounts.FundSource,
+		})
+		if err != nil {
+			return Expect{}, err
+		}
+		return chargedOffMerchantRefundJournalLegsExpect(legs), nil
+	case wrongMerchantRefundJournalFraudIgnored:
+		// Post the same portions through the correct refund port but with the
+		// fraud flag forced false: the principal credit lands on the ordinary
+		// charge-off expense account, so on a fraud observation the principal
+		// leg's account moves and every other leg stays observed.
+		portions, err := repaymentPortionsFromRequest(r.Portions)
+		if err != nil {
+			return Expect{}, err
+		}
+		legs, err := loan.CreateChargedOffMerchantRefundJournalEntryLegs(r.TransactionID, loan.TransactionMerchantIssuedRefund, portions, false, loan.ChargedOffMerchantRefundAccountMapping{
+			ChargeOffExpense:            r.Accounts.ChargeOffExpense,
+			ChargeOffFraudExpense:       r.Accounts.ChargeOffFraudExpense,
+			IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
+			IncomeFromChargeOffFees:     r.Accounts.IncomeFromChargeOffFees,
+			IncomeFromChargeOffPenalty:  r.Accounts.IncomeFromChargeOffPenalty,
+			Overpayment:                 r.Accounts.Overpayment,
+			FundSource:                  r.Accounts.FundSource,
 		})
 		if err != nil {
 			return Expect{}, err
@@ -3255,6 +3308,15 @@ func init() {
 			"loan-50 L498 (principal only) the one principal credit's account moves — while the "+
 			"overpayment credit, every side, every amount and the single fund-source debit stay observed",
 		wrongMerchantRefundJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongMerchantRefundJournalAsRecovery})
+	RegisterWrong("loan-wrong-chargedoff-refund-fraud-ignored",
+		"credits the principal portion of a charged-off refund to the ordinary charge-off expense "+
+			"account even when the loan is marked fraud, as a port that never reads the fraud flag "+
+			"does; on the pinned fraud observations loan-16 L48 (merchant-issued) and loan-17 L52 "+
+			"(payout) the principal credit moves from the fraud charge-off expense account (13) to "+
+			"the ordinary charge-off expense account (14) while every other leg, side, amount and "+
+			"the single fund-source debit stay observed, and the non-fraud observations (loan-9 "+
+			"payout and the existing merchant-issued vectors) are unaffected",
+		wrongMerchantRefundJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongMerchantRefundJournalFraudIgnored})
 	RegisterWrong("loan-wrong-accrual-journal-adjustment-not-reversed",
 		"posts an ACCRUAL_ADJUSTMENT transaction through the accrual branch, as a port that forgets to "+
 			"swap the two sides for an adjustment does; on the pinned loan-15 L107 observation (interest "+
