@@ -1,0 +1,17 @@
+{
+ "responses": 8,
+ "loans": 2,
+ "loan_ids": [
+  34,
+  35
+ ],
+ "page_items": 18,
+ "responses_with_writeoff_leg": 0,
+ "gl_leg_counts": {
+  "Loans Receivable": 4,
+  "Suspense/Clearing account": 6,
+  "Interest/Fee Receivable": 2,
+  "Overpayment account": 4,
+  "Interest Income": 2
+ }
+}
