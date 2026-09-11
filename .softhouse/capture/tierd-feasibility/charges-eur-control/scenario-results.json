@@ -1,0 +1,60 @@
+{
+  "capture": "charges-eur-control",
+  "task": "OH-CHGCTL-BV",
+  "question": "Are the LoanChargesInstallmentFee MNT failures caused by the MNT re-seed, or does the pinned build disagree with its own test in EUR too?",
+  "feature": "fineract-e2e-tests-runner/src/test/resources/features/LoanChargesInstallmentFee.feature",
+  "currency": "EUR",
+  "scenario_filter": [
+    "^Progressive loan - Verify the loan creation with installment fee charge: percentage interest charge type, interestRecalculation = false$",
+    "^Progressive loan - Verify the loan creation with installment fee charge: all charge types, interestRecalculation = false$",
+    "^Cumulative loan - Verify final income accrual with multiple fee charges created successfully$"
+  ],
+  "summary": {
+    "scenarios": 3,
+    "passed": 0,
+    "failed": 3,
+    "steps": 90,
+    "steps_passed": 38,
+    "steps_skipped": 49,
+    "steps_failed": 3
+  },
+  "scenarios": [
+    {
+      "scenario": 4,
+      "testrail": "C3786",
+      "feature_line": 257,
+      "failing_step_line": 265,
+      "resource": 1,
+      "result": "FAILED",
+      "tab_line": 7,
+      "actual": [6, 30, "01 July 2024", null, 0.0, 16.94, 0.1, 0.01, 0.0, 17.05, 0.0, 0.0, 0.0, 17.05],
+      "expected": [6, 30, "01 July 2024", null, 0.0, 16.94, 0.1, 0.0, 0.0, 17.04, 0.0, 0.0, 0.0, 17.04],
+      "delta_minor": {"fees": 1, "due": 1, "outstanding": 1}
+    },
+    {
+      "scenario": 7,
+      "testrail": "C3788",
+      "feature_line": 509,
+      "failing_step_line": 517,
+      "resource": 2,
+      "result": "FAILED",
+      "tab_line": 7,
+      "actual": [6, 30, "01 July 2024", null, 0.0, 16.94, 0.1, 10.35, 0.0, 27.39, 0.0, 0.0, 0.0, 27.39],
+      "expected": [6, 30, "01 July 2024", null, 0.0, 16.94, 0.1, 10.34, 0.0, 27.38, 0.0, 0.0, 0.0, 27.38],
+      "delta_minor": {"fees": 1, "due": 1, "outstanding": 1}
+    },
+    {
+      "scenario": 26,
+      "testrail": "C3890",
+      "feature_line": 2026,
+      "failing_step_line": 2039,
+      "resource": 3,
+      "result": "FAILED",
+      "tab_line": 3,
+      "actual": [2, 31, "01 February 2024", null, 62.0, 13.0, 0.0, 10.0, 0.0, 23.0, 0.0, 0.0, 0.0, 23.0],
+      "expected": [2, 31, "01 February 2024", null, 63.0, 12.0, 0.0, 10.0, 0.0, 22.0, 0.0, 0.0, 0.0, 22.0],
+      "delta_minor": {"balance": -100, "principal_due": 100, "due": 100, "outstanding": 100}
+    }
+  ],
+  "verdict": "same failures in EUR"
+}
