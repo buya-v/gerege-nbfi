@@ -427,8 +427,8 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		if s.ExitCode() != 0 {
 			t.Fatalf("exit %d, want 0\n%s", s.ExitCode(), render(s))
 		}
-		if s.ParityPass != 46 {
-			t.Errorf("parity vectors PASS %d, want 46 — the vector was dropped from the corpus",
+		if s.ParityPass != 49 {
+			t.Errorf("parity vectors PASS %d, want 49 — the vector was dropped from the corpus",
 				s.ParityPass)
 		}
 		if s.InvariantViolations != 0 {
@@ -581,7 +581,7 @@ func TestExemptionGroundingStatesItsPopulation(t *testing.T) {
 
 	t.Run("a_populated_corpus_states_the_population_it_inspected", func(t *testing.T) {
 		out := render(selfTestRun(t, pristine))
-		want := "INSPECTED 51 loaded vector(s); 2 of them exempt at least one invariant; " +
+		want := "INSPECTED 54 loaded vector(s); 2 of them exempt at least one invariant; " +
 			"4 exemption declaration(s) examined."
 		if !strings.Contains(out, want) {
 			t.Errorf("the report must state the inspected population as %q; the section reads:\n%s",
@@ -621,7 +621,7 @@ func TestExemptionGroundingStatesItsPopulation(t *testing.T) {
 			t.Errorf("an empty population did not produce the NIL-COVERAGE notice:\n%s",
 				grepLines(out, "EXEMPTION GROUNDING"))
 		}
-		if !strings.Contains(out, "It inspected 51 loaded vector(s) to find that out.") {
+		if !strings.Contains(out, "It inspected 54 loaded vector(s) to find that out.") {
 			t.Errorf("the NIL-COVERAGE notice does not say how many vectors it opened to find out:\n%s",
 				grepLines(out, "NIL-COVERAGE"))
 		}
@@ -645,7 +645,7 @@ func TestExemptionGroundingStatesItsPopulation(t *testing.T) {
 //
 // TODAY'S TRUTH, MEASURED IN THE LIVE ARTEFACT AND NOT INHERITED (P-63, P-69 — a
 // measured claim has a shelf life shorter than one fire): 4 invariant assertions
-// EXEMPTED BY A VECTOR, on 46 parity vectors, two exemptions each on the two T116
+// EXEMPTED BY A VECTOR, on 49 parity vectors, two exemptions each on the two T116
 // family-B vectors. Re-derived here from the run rather than quoted from a
 // handoff, and re-derived again from the store by a second route
 // (InspectExemptions) so that a defect in the grading loop cannot move both.
@@ -674,8 +674,8 @@ func TestExemptionCountIsPinnedCorpusWide(t *testing.T) {
 			"which vector exempts what and why the oracle violates it there.\n%s",
 			s.InvariantsExempted, grepLines(render(s), "EXEMPTED"))
 	}
-	if s.ParityPass != 46 {
-		t.Errorf("the exemption pin above is quoted as \"4 on 46 parity vectors\"; parity vectors read %d",
+	if s.ParityPass != 49 {
+		t.Errorf("the exemption pin above is quoted as \"4 on 49 parity vectors\"; parity vectors read %d",
 			s.ParityPass)
 	}
 	// The second route: counted from the STORE, not from the grading loop.
