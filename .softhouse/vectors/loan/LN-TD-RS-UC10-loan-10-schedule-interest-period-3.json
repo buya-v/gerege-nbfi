@@ -1,0 +1,45 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RS-UC10-loan-10-schedule-interest-period-3",
+ "title": "UC10 loan 10 period-3 schedule interest (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing ONE period's interest of UC10 loan 10 from the Tier-D MNT replay of LoanRepaymentSchedule.feature (throwaway tenant `tierd`, currency MNT, 2 minor digits; product LP2_ADV_PYMNT_INTEREST_DECL_BAL_SARP_EMI_360_30_INT_RECALC_DAILY_MULTIDISB_PARTIAL_PERIOD). request.schedule transcribes the outstanding principal the period accrues on, periods[2].principalLoanBalanceOutstanding 434.77 -> \"43477\" minor units, annualInterestRate 12.0 -> 12, and the terms' declared day basis daysInYearType.id 360 / daysInMonthType.id 30. expect.interest_minor transcribes the period's observed interestDue 4.35 -> \"435\" minor units. The observed 4.35 is NOT a HALF_UP/HALF_EVEN tie (434.77*12*30/(100*360) = 435), so this vector corroborates the interest cell but does not discriminate the rounding mode (the pinned LN-L06 cell does). period 1 accrues on 1000.00 for only half a month before the 200.00 tranche dated 2025-02-15 and period 2 straddles that tranche, so their observed interestDue 4.52 and 11.29 are BLENDS and are REFUSED. Period 3 accrues on the constant 434.77 and is transcribed. Nothing was computed by this promotion.  UC10 is the scenario whose pinned build returns a period-2 split one minor unit off its own feature table (F-2026-09-11-tierd-repsched-mnt-uc10): the feature expects principal 429.74 / interest 11.28 / balance 434.76, the oracle read back 429.73 / 11.29 / 434.77; the oracle's output IS the observation. Period 1 (observed interestDue 4.52, obligationsMetOnDate 2025-01-15, complete true) is a PARTIAL-PERIOD accrual that does not equal the single-principal 360/30 formula on 1000.00 and is REFUSED; period 2 (observed 11.29) straddles the 200.00 tranche dated 2025-02-15 and is the disputed blend, also REFUSED; period 3 accrues on the constant 434.77 and its observed 4.35 equals the 360/30 formula, so it is transcribed. The UC10 loan-10 read-back was not among the PASSED read-backs; it was extracted from the MNT replay log with .softhouse/capture/tierd-feasibility/bin/extract.py and committed under loans/loan-10/loan-10-detail-associations-repaymentSchedule.json (sha256 c184624a...), with its manifest line set committed.",
+ "oracle": {
+  "seam": "loan-schedule-interest",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request and expect are transcribed from the committed MNT capture loan-10-detail-associations-repaymentSchedule.json, the UC10 loan 10 read-back via associations=repaymentSchedule, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId cdb65e44-b864-4187-a899-9c15041ebfe0, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanRepaymentSchedule.feature UC10; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised. UC10 is the scenario whose pinned build returns a period-2 split one minor unit off its own feature table (F-2026-09-11-tierd-repsched-mnt-uc10): the feature expects principal 429.74 / interest 11.28 / balance 434.76, the oracle read back 429.73 / 11.29 / 434.77; the oracle's output IS the observation. Period 1 (observed interestDue 4.52, obligationsMetOnDate 2025-01-15, complete true) is a PARTIAL-PERIOD accrual that does not equal the single-principal 360/30 formula on 1000.00 and is REFUSED; period 2 (observed 11.29) straddles the 200.00 tranche dated 2025-02-15 and is the disputed blend, also REFUSED; period 3 accrues on the constant 434.77 and its observed 4.35 equals the 360/30 formula, so it is transcribed. The UC10 loan-10 read-back was not among the PASSED read-backs; it was extracted from the MNT replay log with .softhouse/capture/tierd-feasibility/bin/extract.py and committed under loans/loan-10/loan-10-detail-associations-repaymentSchedule.json (sha256 c184624a...), with its manifest line set committed.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-10/loan-10-detail-associations-repaymentSchedule.json",
+  "capture_sha256": "c184624a8790ea943492f3a7bbeef3ee17586e5a580a15288f24f0adeb62c35a",
+  "capture_case_id": "cdb65e44-b864-4187-a899-9c15041ebfe0",
+  "citation": "loan-10-detail-associations-repaymentSchedule.json (tenant tierd, currency MNT) externalId cdb65e44-b864-4187-a899-9c15041ebfe0: periods[2].principalLoanBalanceOutstanding 434.77 -> 43477 minor units; annualInterestRate 12.0 -> 12; daysInYearType.id 360; daysInMonthType.id 30; periods[period 3].interestDue 4.35 -> 435 minor units"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "schedule": {
+   "principal_minor": "43477",
+   "rate_per_annum_pct": 12,
+   "days_in_year": 360,
+   "days_in_month": 30
+  }
+ },
+ "expect": {
+  "interest_minor": "435"
+ },
+ "capabilities_required": [
+  "schedule-interest-rounding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}

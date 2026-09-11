@@ -3497,7 +3497,7 @@
   "sha256": "c184624a8790ea943492f3a7bbeef3ee17586e5a580a15288f24f0adeb62c35a",
   "source_line": 36444,
   "url": "https://localhost:8443/fineract-provider/api/v1/loans/10?associations=repaymentSchedule&staffInSelectedOfficeOnly=false",
-  "committed": false
+  "committed": true
  },
  {
   "api": "LoansApi#calculateOrSubmitLoanApplication",

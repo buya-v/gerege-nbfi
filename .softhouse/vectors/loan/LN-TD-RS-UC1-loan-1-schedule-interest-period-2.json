@@ -1,0 +1,45 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RS-UC1-loan-1-schedule-interest-period-2",
+ "title": "UC1 loan 1 period-2 schedule interest (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing ONE period's interest of UC1 loan 1 from the Tier-D MNT replay of LoanRepaymentSchedule.feature (throwaway tenant `tierd`, currency MNT, 2 minor digits; product LP2_ADV_PYMNT_INTEREST_DECL_BAL_SARP_EMI_360_30_INT_RECALC_DAILY_MULTIDISB_PARTIAL_PERIOD). request.schedule transcribes the outstanding principal the period accrues on, periods[1].principalLoanBalanceOutstanding 669.98 -> \"66998\" minor units, annualInterestRate 12.0 -> 12, and the terms' declared day basis daysInYearType.id 360 / daysInMonthType.id 30. expect.interest_minor transcribes the period's observed interestDue 6.70 -> \"670\" minor units. The observed 6.70 is NOT a HALF_UP/HALF_EVEN tie (669.98*12*30/(100*360) = 670), so this vector corroborates the interest cell but does not discriminate the rounding mode (the pinned LN-L06 cell does).  Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-schedule-interest",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request and expect are transcribed from the committed MNT capture loan-1-detail-associations-repaymentSchedule-1.json, the UC1 loan 1 read-back via associations=repaymentSchedule, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId 78c84a40-a70f-49f4-ac13-aefc9e5b0f0a, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanRepaymentSchedule.feature UC1; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-repaymentSchedule-1.json",
+  "capture_sha256": "5cb03a1cb95b14346bf68c60f571629e0247f7115038ee51aa53f867edb70545",
+  "capture_case_id": "78c84a40-a70f-49f4-ac13-aefc9e5b0f0a",
+  "citation": "loan-1-detail-associations-repaymentSchedule-1.json (tenant tierd, currency MNT) externalId 78c84a40-a70f-49f4-ac13-aefc9e5b0f0a: periods[1].principalLoanBalanceOutstanding 669.98 -> 66998 minor units; annualInterestRate 12.0 -> 12; daysInYearType.id 360; daysInMonthType.id 30; periods[period 2].interestDue 6.70 -> 670 minor units"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "schedule": {
+   "principal_minor": "66998",
+   "rate_per_annum_pct": 12,
+   "days_in_year": 360,
+   "days_in_month": 30
+  }
+ },
+ "expect": {
+  "interest_minor": "670"
+ },
+ "capabilities_required": [
+  "schedule-interest-rounding"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
