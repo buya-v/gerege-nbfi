@@ -1,0 +1,238 @@
+[
+ {
+  "file": "journalentries/loan-34/loan-34-journalentries-1.json",
+  "loan_id": 34,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L693",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 89267,
+  "bytes": 1640,
+  "sha256": "d2e5da385f0c6acdec5c9184032af7501cc2dce6f9bb1004be9e4e90269d1499",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-34/loan-34-journalentries-2.json",
+  "loan_id": 34,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L695",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 89597,
+  "bytes": 2447,
+  "sha256": "de711015945f003cfff760d63dcd9ac52696d5b064d785b869a33f2c6bb03f4b",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "282"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "DEBIT",
+    "amount_minor": "28281"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-34/loan-34-journalentries-3.json",
+  "loan_id": 34,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L698",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 89878,
+  "bytes": 1654,
+  "sha256": "a3ecfb65ea02166a779ff35190898d4430413973f640c451939c02e448d5dea2",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Overpayment account",
+    "gl_account_code": "l1",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "DEBIT",
+    "amount_minor": "27999"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-34/loan-34-journalentries-4.json",
+  "loan_id": 34,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L699",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 89928,
+  "bytes": 1634,
+  "sha256": "0441ff9717ef2c3f3d6aca36b771784fbc5954ebb48abe46216cf201b6a8e1bb",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Overpayment account",
+    "gl_account_code": "l1",
+    "entry_type": "CREDIT",
+    "amount_minor": "282"
+   },
+   {
+    "gl_account_name": "Interest Income",
+    "gl_account_code": "404000",
+    "entry_type": "DEBIT",
+    "amount_minor": "282"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-35/loan-35-journalentries-1.json",
+  "loan_id": 35,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L709",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 91706,
+  "bytes": 1640,
+  "sha256": "87c0583f41de3a96644e4956248c8436c6d37f3fa2823f77c12dbc1b038767cc",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-35/loan-35-journalentries-2.json",
+  "loan_id": 35,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L711",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 92013,
+  "bytes": 2447,
+  "sha256": "6fc73a03f1419024f2782a1d63f08233ca366bc9d206fb593f05fc86fc2e6a99",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "282"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "DEBIT",
+    "amount_minor": "28281"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-35/loan-35-journalentries-3.json",
+  "loan_id": 35,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L715",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 92294,
+  "bytes": 1654,
+  "sha256": "aa58a07de6e90ce8c3f866f26879ce825d299be542a21736f032984bea55ea4c",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Overpayment account",
+    "gl_account_code": "l1",
+    "entry_type": "CREDIT",
+    "amount_minor": "27999"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "DEBIT",
+    "amount_minor": "27999"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-35/loan-35-journalentries-4.json",
+  "loan_id": 35,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L714",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 92344,
+  "bytes": 1634,
+  "sha256": "14c3d83a682ce218aa3f3d4e942ab687d3b0f138068473bfd7c4e473a169b863",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Overpayment account",
+    "gl_account_code": "l1",
+    "entry_type": "CREDIT",
+    "amount_minor": "282"
+   },
+   {
+    "gl_account_name": "Interest Income",
+    "gl_account_code": "404000",
+    "entry_type": "DEBIT",
+    "amount_minor": "282"
+   }
+  ],
+  "writeoff_leg": false
+ }
+]

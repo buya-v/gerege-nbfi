@@ -1,0 +1,274 @@
+{
+ "legs": [
+  {
+   "loan": 34,
+   "transaction_id": "L693",
+   "leg_id": 1523,
+   "type": "disbursement",
+   "entry": "DEBIT",
+   "gl_account_id": 5,
+   "gl_account": "Loans Receivable",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-1.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L693",
+   "leg_id": 1524,
+   "type": "disbursement",
+   "entry": "CREDIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-1.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L695",
+   "leg_id": 1527,
+   "type": "repayment",
+   "entry": "CREDIT",
+   "gl_account_id": 5,
+   "gl_account": "Loans Receivable",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-2.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L695",
+   "leg_id": 1528,
+   "type": "repayment",
+   "entry": "CREDIT",
+   "gl_account_id": 10,
+   "gl_account": "Interest/Fee Receivable",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-2.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L695",
+   "leg_id": 1529,
+   "type": "repayment",
+   "entry": "DEBIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "28281",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-2.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L698",
+   "leg_id": 1532,
+   "type": "merchantIssuedRefund",
+   "entry": "CREDIT",
+   "gl_account_id": 17,
+   "gl_account": "Overpayment account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-3.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L698",
+   "leg_id": 1533,
+   "type": "merchantIssuedRefund",
+   "entry": "DEBIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-3.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L699",
+   "leg_id": 1534,
+   "type": "interestRefund",
+   "entry": "CREDIT",
+   "gl_account_id": 17,
+   "gl_account": "Overpayment account",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-4.json"
+  },
+  {
+   "loan": 34,
+   "transaction_id": "L699",
+   "leg_id": 1535,
+   "type": "interestRefund",
+   "entry": "DEBIT",
+   "gl_account_id": 9,
+   "gl_account": "Interest Income",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-34/loan-34-journalentries-4.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L709",
+   "leg_id": 1568,
+   "type": "disbursement",
+   "entry": "DEBIT",
+   "gl_account_id": 5,
+   "gl_account": "Loans Receivable",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-1.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L709",
+   "leg_id": 1569,
+   "type": "disbursement",
+   "entry": "CREDIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-1.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L711",
+   "leg_id": 1572,
+   "type": "repayment",
+   "entry": "CREDIT",
+   "gl_account_id": 5,
+   "gl_account": "Loans Receivable",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-2.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L711",
+   "leg_id": 1573,
+   "type": "repayment",
+   "entry": "CREDIT",
+   "gl_account_id": 10,
+   "gl_account": "Interest/Fee Receivable",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-2.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L711",
+   "leg_id": 1574,
+   "type": "repayment",
+   "entry": "DEBIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "28281",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-2.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L715",
+   "leg_id": 1577,
+   "type": "merchantIssuedRefund",
+   "entry": "CREDIT",
+   "gl_account_id": 17,
+   "gl_account": "Overpayment account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-3.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L715",
+   "leg_id": 1578,
+   "type": "merchantIssuedRefund",
+   "entry": "DEBIT",
+   "gl_account_id": 6,
+   "gl_account": "Suspense/Clearing account",
+   "amount_minor": "27999",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-3.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L714",
+   "leg_id": 1579,
+   "type": "interestRefund",
+   "entry": "CREDIT",
+   "gl_account_id": 17,
+   "gl_account": "Overpayment account",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-4.json"
+  },
+  {
+   "loan": 35,
+   "transaction_id": "L714",
+   "leg_id": 1580,
+   "type": "interestRefund",
+   "entry": "DEBIT",
+   "gl_account_id": 9,
+   "gl_account": "Interest Income",
+   "amount_minor": "282",
+   "reversed": false,
+   "file": "journalentries/loan-35/loan-35-journalentries-4.json"
+  }
+ ],
+ "transactions_by_type": {
+  "disbursement": {
+   "transactions": 35,
+   "loans": 34
+  },
+  "downPayment": {
+   "transactions": 9,
+   "loans": 9
+  },
+  "merchantIssuedRefund": {
+   "transactions": 37,
+   "loans": 17
+  },
+  "interestRefund": {
+   "transactions": 26,
+   "loans": 12
+  },
+  "goodwillCredit": {
+   "transactions": 3,
+   "loans": 3
+  },
+  "accrualActivity": {
+   "transactions": 95,
+   "loans": 26
+  },
+  "accrual": {
+   "transactions": 406,
+   "loans": 34
+  },
+  "payoutRefund": {
+   "transactions": 5,
+   "loans": 3
+  },
+  "interestPaymentWaiver": {
+   "transactions": 1,
+   "loans": 1
+  },
+  "repayment": {
+   "transactions": 59,
+   "loans": 34
+  },
+  "chargeOff": {
+   "transactions": 1,
+   "loans": 1
+  },
+  "accrualAdjustment": {
+   "transactions": 8,
+   "loans": 8
+  },
+  "creditBalanceRefund": {
+   "transactions": 27,
+   "loans": 15
+  }
+ }
+}
