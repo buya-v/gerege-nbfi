@@ -1,0 +1,68 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CBR-loan-27-chargedoff-fraud",
+ "title": "a CHARGED OFF and FRAUD loan's credit balance refund posts principal 250.0 -> DEBIT 11 250.0, CREDIT 4 250.0 (loan 27 L169)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a loan CREDIT BALANCE REFUND posted, ported from createJournalEntriesForLoanCreditBalanceRefund (AccrualBasedAccountingProcessorForLoan.java:2113-2170, pinned 426a23544), on the Tier-D `LoanCBR.feature` MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits). request.credit_balance_refund_journal.transaction_id is L169, the sweep transactionId of the read-back's transaction id 169 (type loanTransactionType.creditBalanceRefund, amount 250.0). The portions transcribe principalPortion 25000 and overpaymentPortion 0 of that read-back transaction, converted from the decimal major units to integer minor units by exact decimal parsing (never a float); the observed identity amount = principal + overpayment holds (25000 = 25000 + 0). The loan is CHARGED OFF and FRAUD (read-back chargedOff true, fraud true), so determineAccrualAccountForCBR sends the principal debit to LOAN_PORTFOLIO 5 / CHARGE_OFF_FRAUD_EXPENSE 11. The refund was posted with paymentDetailData.paymentType.id 6 (AUTOPAY), which has NO channel mapping (the only channel mapping in the product is paymentTypeId 1 -> 19), so the default product FUND_SOURCE 4 is credited, exactly the account the observed credit names. request.credit_balance_refund_journal.accounts transcribes the accepted product mapping .softhouse/capture/tierd-feasibility/cbr-mnt/product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION.json (sha256 c5166cc79a8c5ca33c1ae36f5ce898be42fcf92d5cd61df602edf52c35a85b94): fundSourceAccountId 4, loanPortfolioAccountId 5, overpaymentLiabilityAccountId 16, chargeOffExpenseAccountId 15, chargeOffFraudExpenseAccountId 11. expect.credit_balance_refund_journal_legs is a TRANSCRIPTION of the posting legs under L169 in id order: DEBIT account 11 250.0; CREDIT account 4 250.0. This vector grades ONE property: the principal portion switches from LOAN_PORTFOLIO 5 to CHARGE_OFF_EXPENSE 15 once the loan is charged off, and to CHARGE_OFF_FRAUD_EXPENSE 11 when it is also fraud, while the overpayment debit and the single total credit to the fund source are unchanged. Nothing was computed by this promotion: every amount, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-credit-balance-refund-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.credit_balance_refund_journal.portions, charged_off and fraud are transcribed from the committed credit-balance-refund loan read-back .softhouse/capture/tierd-feasibility/cbr-mnt/loans/loan-27/loan-27-detail-associations-transactions-4.json (sha256 128cc57d2ec852670e60d461766aa36db60a6f3d55cea2f8dc236cd319729062): transactions id 169 type loanTransactionType.creditBalanceRefund, principalPortion 250.0, overpaymentPortion 0.0, paymentDetailData.paymentType.id 6 (AUTOPAY, no channel mapping); the read-back's top-level chargedOff true, fraud true. expect.credit_balance_refund_journal_legs is transcribed from the committed journal-entries sweep .softhouse/capture/tierd-feasibility/cbr-mnt/journalentries-sweep/loan-27.json (sha256 0e58e97e8f31ef15d41b94fe16eb668a7ddfa0f2bab2d5b3ba1581f530948270), transactionId L169. request.credit_balance_refund_journal.accounts is transcribed from the committed accepted product mapping .softhouse/capture/tierd-feasibility/cbr-mnt/product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION.json (sha256 c5166cc79a8c5ca33c1ae36f5ce898be42fcf92d5cd61df602edf52c35a85b94): fundSourceAccountId 4, loanPortfolioAccountId 5, overpaymentLiabilityAccountId 16, chargeOffExpenseAccountId 15, chargeOffFraudExpenseAccountId 11, the only channel mapping paymentTypeId 1 -> 19. TENANT `tierd` -- NOT tenant `gerege`; the instance was destroyed. Every amount is an exact decimal parsed to integer minor units (250.0 -> 25000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/cbr-mnt/journalentries-sweep/loan-27.json",
+  "capture_sha256": "0e58e97e8f31ef15d41b94fe16eb668a7ddfa0f2bab2d5b3ba1581f530948270",
+  "capture_case_id": "L169",
+  "citation": ".softhouse/capture/tierd-feasibility/cbr-mnt/journalentries-sweep/loan-27.json:1 (sha256 0e58e97e8f31ef15d41b94fe16eb668a7ddfa0f2bab2d5b3ba1581f530948270, committed sweep, tenant tierd): transactionId L169 carries 2 leg(s) in id order -- id 493 entryType.value DEBIT glAccountId 11 amount 250.0; id 494 entryType.value CREDIT glAccountId 4 amount 250.0. Portions and charged-off state are in .softhouse/capture/tierd-feasibility/cbr-mnt/loans/loan-27/loan-27-detail-associations-transactions-4.json:1 (sha256 128cc57d2ec852670e60d461766aa36db60a6f3d55cea2f8dc236cd319729062): transactions id 169 type loanTransactionType.creditBalanceRefund, principalPortion 250.0, overpaymentPortion 0.0, paymentDetailData.paymentType.id 6 (AUTOPAY); the read-back's top-level chargedOff true, fraud true. The slot->account-id mapping is in .softhouse/capture/tierd-feasibility/cbr-mnt/product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION.json:1 (sha256 c5166cc79a8c5ca33c1ae36f5ce898be42fcf92d5cd61df602edf52c35a85b94)."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "credit_balance_refund_journal": {
+   "transaction_id": "L169",
+   "portions": {
+    "principal": "25000",
+    "overpayment": "0"
+   },
+   "charged_off": true,
+   "fraud": true,
+   "accounts": {
+    "fund_source": "4",
+    "loan_portfolio": "5",
+    "overpayment": "16",
+    "charge_off_fraud_expense": "11"
+   }
+  }
+ },
+ "expect": {
+  "credit_balance_refund_journal_legs": [
+   {
+    "transaction_id": "L169",
+    "account": "11",
+    "entry_type": "DEBIT",
+    "amount_minor": "25000"
+   },
+   {
+    "transaction_id": "L169",
+    "account": "4",
+    "entry_type": "CREDIT",
+    "amount_minor": "25000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "credit-balance-refund-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-cbr-ignores-charge-off"
+ ]
+}

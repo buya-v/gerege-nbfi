@@ -386,6 +386,34 @@ const SeamLoanAccrualJournalEntries = "loan-accrual-journal-entries"
 // account 4 applies.
 const SeamLoanChargebackJournalEntries = "loan-chargeback-journal-entries"
 
+// SeamLoanCreditBalanceRefundJournalEntries is the capture seam this schema
+// grades: the journal entry a CREDIT BALANCE REFUND posts, the refund sibling of
+// the chargeback seam. It ports
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForLoanCreditBalanceRefund
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:2120-2155, dispatched
+// from createJournalEntriesForCreditBalanceRefund :2113-2118, pinned commit
+// 426a23544], in posting order: when the principal portion is > 0 DEBIT the
+// account determineAccrualAccountForCBR selects — LOAN_PORTFOLIO while the loan
+// is not charged off, CHARGE_OFF_EXPENSE once it is, and CHARGE_OFF_FRAUD_EXPENSE
+// when it is also fraud; when the overpayment portion is > 0 DEBIT OVERPAYMENT
+// (the charged-off and fraud flags never reach this slot); then ONE CREDIT of
+// the total to the RESOLVED fund source (the transaction paymentTypeId's
+// payment-channel account when the product maps that channel, else the product
+// FUND_SOURCE). Unlike a repayment or chargeback the debits come first and the
+// single credit is last.
+//
+// On the pinned observations transaction L5 (loan 1) carries overpayment 200 and
+// no principal (DEBIT overpayment 16 200, CREDIT fund-source 4 200; the later
+// ids 21-22 are a separate reversal pair and are not graded); L112 (loan 19)
+// carries principal 10 and overpayment 190 (DEBIT 5 10, DEBIT 16 190, CREDIT 4
+// 200); L175 (loan 28, CHARGED OFF, not fraud) carries principal 250 (DEBIT
+// charge-off expense 15 250, CREDIT 4 250); L169 (loan 27, CHARGED OFF AND
+// FRAUD) carries principal 250 (DEBIT charge-off fraud expense 11 250, CREDIT 4
+// 250). The refunds were posted with paymentTypeId 6, which has no channel
+// mapping (the only mapping is paymentTypeId 1 -> 19), so the product FUND_SOURCE
+// account 4 applies.
+const SeamLoanCreditBalanceRefundJournalEntries = "loan-credit-balance-refund-journal-entries"
+
 // SeamLoanChargeLifecycle is the capture seam this schema grades: the
 // money-mutation lifecycle of a single LoanCharge on loan 18. The fee
 // (charge 14, amount 123.45) is created, partly paid 100.00, then fully paid;
@@ -896,6 +924,46 @@ type ChargebackJournalRequest struct {
 	Accounts      ChargebackSlotAccounts  `json:"accounts"`
 }
 
+// CreditBalanceRefundPortionsMoney is the two money portions a credit-balance
+// refund posts, each an integer STRING in minor units: the principal debited to
+// the portfolio or charge-off account and the overpayment debited to
+// OVERPAYMENT. The refund has no fee, penalty or interest portion in the
+// observed domain, so the port has no field for one.
+type CreditBalanceRefundPortionsMoney struct {
+	Principal   string `json:"principal"`
+	Overpayment string `json:"overpayment"`
+}
+
+// CreditBalanceRefundSlotAccounts is the resolved slot->account mapping for a
+// credit-balance refund, each an integer STRING account id. FundSource is
+// already resolved through the transaction's payment channel (the product
+// FUND_SOURCE when the channel map has no entry); ChargeOffExpense and
+// ChargeOffFraudExpense are read only when the loan is charged off (and, for
+// the latter, also fraud).
+type CreditBalanceRefundSlotAccounts struct {
+	FundSource            string `json:"fund_source"`
+	LoanPortfolio         string `json:"loan_portfolio"`
+	Overpayment           string `json:"overpayment"`
+	ChargeOffExpense      string `json:"charge_off_expense,omitempty"`
+	ChargeOffFraudExpense string `json:"charge_off_fraud_expense,omitempty"`
+}
+
+// CreditBalanceRefundJournalRequest is the
+// loan-credit-balance-refund-journal-entries seam's input: the refund
+// transaction's principal and overpayment portions, the loan's charged-off and
+// fraud facts (both select the principal debit account), and the resolved
+// slot->account mapping, plus the transaction id the legs are posted under. The
+// port refuses a negative portion and a positive portion whose slot maps to no
+// account; there is no field for a fee, penalty or interest portion because no
+// observation carries one.
+type CreditBalanceRefundJournalRequest struct {
+	TransactionID string                           `json:"transaction_id"`
+	Portions      CreditBalanceRefundPortionsMoney `json:"portions"`
+	ChargedOff    bool                             `json:"charged_off,omitempty"`
+	Fraud         bool                             `json:"fraud,omitempty"`
+	Accounts      CreditBalanceRefundSlotAccounts  `json:"accounts"`
+}
+
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
 // charges due at disbursement.
 type DisburseRequest struct {
@@ -1088,6 +1156,11 @@ type Request struct {
 	// chargeback transaction's amount and four portions, the loan's charged-off
 	// and fraud facts, and the resolved slot->account mapping.
 	ChargebackJournal *ChargebackJournalRequest `json:"chargeback_journal,omitempty"`
+	// CreditBalanceRefundJournal is the
+	// loan-credit-balance-refund-journal-entries seam's input: the refund
+	// transaction's principal and overpayment portions, the loan's charged-off
+	// and fraud facts, and the resolved slot->account mapping.
+	CreditBalanceRefundJournal *CreditBalanceRefundJournalRequest `json:"credit_balance_refund_journal,omitempty"`
 	// ChargeLifecycle is the loan-charge-lifecycle seam's input: the charge's
 	// amount, penalty flag, and the ordered operations observed.
 	ChargeLifecycle *ChargeLifecycleRequest `json:"charge_lifecycle,omitempty"`
@@ -1233,6 +1306,15 @@ type Expect struct {
 	// and amount; the overpayment debit's account, the two-debit order and the
 	// charge-off account switch are what discriminate a wrong port.
 	ChargebackJournalLegs []JournalEntryLeg `json:"chargeback_journal_legs,omitempty"`
+	// CreditBalanceRefundJournalLegs is the
+	// loan-credit-balance-refund-journal-entries seam's ordered leg list the
+	// refund posted: the principal debit (to the portfolio account, or the
+	// charge-off / charge-off-fraud account as the loan's facts select), then the
+	// overpayment debit, then the single total credit to the fund source. Every
+	// leg is graded on its transaction id, account, side and amount; the
+	// principal account switch and the single total credit are what discriminate
+	// a wrong port.
+	CreditBalanceRefundJournalLegs []JournalEntryLeg `json:"credit_balance_refund_journal_legs,omitempty"`
 	// ChargeStates is the loan-charge-lifecycle seam's ordered list of expected
 	// states: the created state at index 0, then one state per operation in
 	// request.charge_lifecycle.operations, in order.
