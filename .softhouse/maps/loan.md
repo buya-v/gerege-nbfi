@@ -19,6 +19,7 @@ Source: `.softhouse/capabilities-loan.json`
 * seam **loan-transaction-reversal** — The journal-entry side of the first observed loan-transaction reversal, on the running Fineract server, tenant gerege: loan 11's write-off at business date 2026
 * seam **loan-writeoff-journal-entries** — The five-leg journal entry of the first observed loan write-off, on TODAY's oracle instance, tenant gerege: loan 11 (product 3, ACCRUAL PERIODIC) written off at
 * seam **loan-charge-lifecycle** — The money-mutation lifecycle of a single LoanCharge observed on loan 18: a charge's outstanding is amount minus paid minus waived; a payment increments paid up 
+* seam **loan-status-transition** — The observed loan lifecycle status transitions on TODAY's oracle instance, tenant gerege: SEED-L06 submit->approve->disburse (status ids 100/200/300), loan 18 r
 * capability `repayment-allocation` — in_graded_domain: **True** — The four-bucket greedy allocation of a repayment across penalty/fee/interest/principal of one instalment, as written bac
 * capability `transaction-balance` — in_graded_domain: **True** — The running outstandingLoanBalance column of the transactions read-back, DERIVED row by row from principal portions (I-3
 * capability `journal-entry-batch-balance` — in_graded_domain: **True** — TWO properties of a loan-produced journal-entry batch read back from the journal-entries endpoint. First, the derived de
@@ -33,9 +34,10 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `writeoff-journal-entry` — in_graded_domain: **True** — The five-leg journal entry a loan write-off posts in the NOT-charged-off branch of createJournalEntriesForLoanWriteOffs:
 * capability `charge-lifecycle` — in_graded_domain: **True** — The money-mutation lifecycle of a single LoanCharge observed on loan 18, tenant gerege: a charge's outstanding is amount
 * capability `reversal-entry` — in_graded_domain: **True** — The append-only journal-entry side of the FIRST observed loan-transaction reversal: the loan-11 write-off reversed the 2
+* capability `loan-status-transition` — in_graded_domain: **True** — The loan lifecycle state machine as observed on tenant gerege: NextStatus(from, event, facts) dispatches an event and De
 
 ## Vectors (what is graded today)
-32 files in `.softhouse/vectors/loan/`
+37 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -52,6 +54,9 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-L06-disbursement-net.json` — request `disburse` — capture `.softhouse/capture/loan/out/loan-L06-detail-raw.json`
 * `LN-L06-schedule-interest-period-1.json` — request `schedule` — capture `.softhouse/capture/loan/out/loan-L06-schedule-raw.json`
 * `LN-L06-status-approved.json` — request `status` — capture `.softhouse/capture/loan/out/loan-L06-approve-raw.json`
+* `LN-L06-status-transition-approved.json` — request `status_transition` — capture `.softhouse/capture/loan/out/loan-L06-approve-raw.json`
+* `LN-L06-status-transition-disbursed.json` — request `status_transition` — capture `.softhouse/capture/loan/out/loan-L06-disburse-raw.json`
+* `LN-L06-status-transition-submitted.json` — request `status_transition` — capture `.softhouse/capture/loan/out/loan-L06-submit-raw.json`
 * `LN-L06-summary-total-outstanding.json` — request `summary` — capture `.softhouse/capture/loan/out/loan-L06-detail-raw.json`
 * `LN-L07-summary-total-outstanding-fee-and-penalty.json` — request `summary` — capture `.softhouse/capture/gl-accounting-surface/out/loan-12-raw.json`
 * `LN-L08-summary-total-outstanding-penalty-only.json` — request `summary` — capture `.softhouse/capture/gl-accounting-surface/out/loan-10-raw.json`
@@ -59,6 +64,7 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-L10-schedule-principal-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/loan/out/loan-5-schedule-raw.json`
 * `LN-L11-accrual-reversal-appends-counter-legs.json` — request `reversal` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-before-journalentries-raw.json`
 * `LN-L11-repayment-allocation-fee-and-penalty.json` — request `repayment` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/loan-12-transactions-after-raw.json`
+* `LN-L11-status-transition-written-off.json` — request `status_transition` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-after-detail-raw.json`
 * `LN-L11-writeoff-four-bucket-discharge.json` — request `write_off` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-before-detail-raw.json`
 * `LN-L11-writeoff-journal-five-legs.json` — request `write_off_journal` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-after-journalentries-raw.json`
 * `LN-L12-repayment-five-leg-journal-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
@@ -66,6 +72,7 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-L13-writeoff-journal-five-legs.json` — request `write_off_journal` — capture `.softhouse/capture/loan-writeoff-paid-instalment/out/loan-13-after-journalentries-raw.json`
 * `LN-L18-charge-fee-partial-then-repaid.json` — request `charge_lifecycle` — capture `.softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-after-partial-detail-raw.json`
 * `LN-L18-charge-penalty-waived.json` — request `charge_lifecycle` — capture `.softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-after-waive-detail-raw.json`
+* `LN-L18-status-transition-repaid-in-full.json` — request `status_transition` — capture `.softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-final-detail-raw.json`
 * `LN-L25-accrual-interest-fee-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
 * `LN-L30-accrual-interest-penalty-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
 * `LN-TD-L10-loan-1-pending-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json`
@@ -73,58 +80,61 @@ Source: `.softhouse/capabilities-loan.json`
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/loan/conformance/impl.go:44` — `func Register(name string, e LoanEvaluator) {`
 * `nexus/internal/apps/loan/conformance/impl.go:54` — `func RegisterWrong(name, defect string, e LoanEvaluator) {`
-* `nexus/internal/apps/loan/conformance/impl.go:2006` — `Register("loan-go", NewGoEvaluator())`
+* `nexus/internal/apps/loan/conformance/impl.go:2143` — `Register("loan-go", NewGoEvaluator())`
 * conformance package files (`nexus/internal/apps/loan/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loan/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `loan-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
-* `loan-wrong-allocation-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2041`
-* `loan-wrong-allocation-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2047`
-* `loan-wrong-charge-outstanding-ignores-waived` — `nexus/internal/apps/loan/conformance/impl.go:2241`
-* `loan-wrong-charge-partial-marks-paid` — `nexus/internal/apps/loan/conformance/impl.go:2226`
-* `loan-wrong-charge-waiver-counts-as-paid` — `nexus/internal/apps/loan/conformance/impl.go:2236`
-* `loan-wrong-charge-waiver-leaves-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:2231`
-* `loan-wrong-delinquency-absent-nonzero` — `nexus/internal/apps/loan/conformance/impl.go:2149`
-* `loan-wrong-delinquency-thirty-day-month` — `nexus/internal/apps/loan/conformance/impl.go:2143`
-* `loan-wrong-half-even-schedule-interest` — `nexus/internal/apps/loan/conformance/impl.go:2007`
-* `loan-wrong-journal-entry-batch-collapses-credits-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:2096`
-* `loan-wrong-journal-entry-batch-debit-from-first-two-credits` — `nexus/internal/apps/loan/conformance/impl.go:2108`
-* `loan-wrong-journal-entry-batch-drops-fee-pair` — `nexus/internal/apps/loan/conformance/impl.go:2072`
-* `loan-wrong-journal-entry-batch-first-pair-only` — `nexus/internal/apps/loan/conformance/impl.go:2067`
-* `loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts` — `nexus/internal/apps/loan/conformance/impl.go:2088`
-* `loan-wrong-journal-entry-batch-nets-account` — `nexus/internal/apps/loan/conformance/impl.go:2077`
-* `loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time` — `nexus/internal/apps/loan/conformance/impl.go:2102`
-* `loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:2114`
-* `loan-wrong-journal-entry-batch-swaps-first-pair-sides` — `nexus/internal/apps/loan/conformance/impl.go:2082`
-* `loan-wrong-repayment-omits-principal` — `nexus/internal/apps/loan/conformance/impl.go:2036`
-* `loan-wrong-reversal-business-date` — `nexus/internal/apps/loan/conformance/impl.go:2199`
-* `loan-wrong-reversal-duplicates-instead-of-reverses` — `nexus/internal/apps/loan/conformance/impl.go:2182`
-* `loan-wrong-reversal-flags-originals` — `nexus/internal/apps/loan/conformance/impl.go:2188`
-* `loan-wrong-reversal-fresh-transaction-id` — `nexus/internal/apps/loan/conformance/impl.go:2194`
-* `loan-wrong-schedule-amortization-drops-final-component` — `nexus/internal/apps/loan/conformance/impl.go:2126`
-* `loan-wrong-schedule-amortization-uniform-rounded-up` — `nexus/internal/apps/loan/conformance/impl.go:2138`
-* `loan-wrong-schedule-amortization-uniform-truncated` — `nexus/internal/apps/loan/conformance/impl.go:2132`
-* `loan-wrong-status-iota-ordinal` — `nexus/internal/apps/loan/conformance/impl.go:2016`
-* `loan-wrong-summary-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2026`
-* `loan-wrong-summary-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2031`
-* `loan-wrong-summary-drops-principal` — `nexus/internal/apps/loan/conformance/impl.go:2021`
-* `loan-wrong-summary-interest-not-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:2011`
-* `loan-wrong-transaction-balance-accrual-zero` — `nexus/internal/apps/loan/conformance/impl.go:2058`
-* `loan-wrong-transaction-balance-folds-repayment-interest` — `nexus/internal/apps/loan/conformance/impl.go:2062`
-* `loan-wrong-transaction-balance-waiver-moves-principal` — `nexus/internal/apps/loan/conformance/impl.go:2053`
-* `loan-wrong-writeoff-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2166`
-* `loan-wrong-writeoff-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2171`
-* `loan-wrong-writeoff-journal-debits-loan-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:2215`
-* `loan-wrong-writeoff-journal-debits-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:2210`
-* `loan-wrong-writeoff-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:2204`
-* `loan-wrong-writeoff-journal-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2221`
-* `loan-wrong-writeoff-principal-and-interest` — `nexus/internal/apps/loan/conformance/impl.go:2160`
-* `loan-wrong-writeoff-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:2154`
-* `loan-wrong-writeoff-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2176`
+* `loan-wrong-allocation-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2178`
+* `loan-wrong-allocation-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2184`
+* `loan-wrong-charge-outstanding-ignores-waived` — `nexus/internal/apps/loan/conformance/impl.go:2378`
+* `loan-wrong-charge-partial-marks-paid` — `nexus/internal/apps/loan/conformance/impl.go:2363`
+* `loan-wrong-charge-waiver-counts-as-paid` — `nexus/internal/apps/loan/conformance/impl.go:2373`
+* `loan-wrong-charge-waiver-leaves-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:2368`
+* `loan-wrong-delinquency-absent-nonzero` — `nexus/internal/apps/loan/conformance/impl.go:2286`
+* `loan-wrong-delinquency-thirty-day-month` — `nexus/internal/apps/loan/conformance/impl.go:2280`
+* `loan-wrong-half-even-schedule-interest` — `nexus/internal/apps/loan/conformance/impl.go:2144`
+* `loan-wrong-journal-entry-batch-collapses-credits-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:2233`
+* `loan-wrong-journal-entry-batch-debit-from-first-two-credits` — `nexus/internal/apps/loan/conformance/impl.go:2245`
+* `loan-wrong-journal-entry-batch-drops-fee-pair` — `nexus/internal/apps/loan/conformance/impl.go:2209`
+* `loan-wrong-journal-entry-batch-first-pair-only` — `nexus/internal/apps/loan/conformance/impl.go:2204`
+* `loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts` — `nexus/internal/apps/loan/conformance/impl.go:2225`
+* `loan-wrong-journal-entry-batch-nets-account` — `nexus/internal/apps/loan/conformance/impl.go:2214`
+* `loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time` — `nexus/internal/apps/loan/conformance/impl.go:2239`
+* `loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:2251`
+* `loan-wrong-journal-entry-batch-swaps-first-pair-sides` — `nexus/internal/apps/loan/conformance/impl.go:2219`
+* `loan-wrong-repayment-omits-principal` — `nexus/internal/apps/loan/conformance/impl.go:2173`
+* `loan-wrong-reversal-business-date` — `nexus/internal/apps/loan/conformance/impl.go:2336`
+* `loan-wrong-reversal-duplicates-instead-of-reverses` — `nexus/internal/apps/loan/conformance/impl.go:2319`
+* `loan-wrong-reversal-flags-originals` — `nexus/internal/apps/loan/conformance/impl.go:2325`
+* `loan-wrong-reversal-fresh-transaction-id` — `nexus/internal/apps/loan/conformance/impl.go:2331`
+* `loan-wrong-schedule-amortization-drops-final-component` — `nexus/internal/apps/loan/conformance/impl.go:2263`
+* `loan-wrong-schedule-amortization-uniform-rounded-up` — `nexus/internal/apps/loan/conformance/impl.go:2275`
+* `loan-wrong-schedule-amortization-uniform-truncated` — `nexus/internal/apps/loan/conformance/impl.go:2269`
+* `loan-wrong-status-iota-ordinal` — `nexus/internal/apps/loan/conformance/impl.go:2153`
+* `loan-wrong-status-transition-approve-skips-to-active` — `nexus/internal/apps/loan/conformance/impl.go:2394`
+* `loan-wrong-status-transition-ignores-repaid-in-full` — `nexus/internal/apps/loan/conformance/impl.go:2383`
+* `loan-wrong-status-transition-writeoff-closes-obligations-met` — `nexus/internal/apps/loan/conformance/impl.go:2389`
+* `loan-wrong-summary-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2163`
+* `loan-wrong-summary-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2168`
+* `loan-wrong-summary-drops-principal` — `nexus/internal/apps/loan/conformance/impl.go:2158`
+* `loan-wrong-summary-interest-not-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:2148`
+* `loan-wrong-transaction-balance-accrual-zero` — `nexus/internal/apps/loan/conformance/impl.go:2195`
+* `loan-wrong-transaction-balance-folds-repayment-interest` — `nexus/internal/apps/loan/conformance/impl.go:2199`
+* `loan-wrong-transaction-balance-waiver-moves-principal` — `nexus/internal/apps/loan/conformance/impl.go:2190`
+* `loan-wrong-writeoff-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:2303`
+* `loan-wrong-writeoff-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2308`
+* `loan-wrong-writeoff-journal-debits-loan-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:2352`
+* `loan-wrong-writeoff-journal-debits-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:2347`
+* `loan-wrong-writeoff-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:2341`
+* `loan-wrong-writeoff-journal-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2358`
+* `loan-wrong-writeoff-principal-and-interest` — `nexus/internal/apps/loan/conformance/impl.go:2297`
+* `loan-wrong-writeoff-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:2291`
+* `loan-wrong-writeoff-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:2313`
 
-43 drives.
+46 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/loan/allocation.go`: `Total`:25, `For`:30, `Set`:45, `Add`:59, `AllocateInOrder`:81, `AllocateCredit`:108, `AllocatePayment`:125
@@ -150,10 +160,10 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 
 ## Captures this context's vectors already cite
 * `.softhouse/capture/gl-accounting-surface/` — 3 vector(s) — OWNER — capture/gl-accounting-surface
-* `.softhouse/capture/loan/` — 17 vector(s) — (no OWNER.md)
-* `.softhouse/capture/loan-charge-partial-waive-repaid/` — 2 vector(s) — OWNER — loan-charge-partial-waive-repaid
+* `.softhouse/capture/loan/` — 20 vector(s) — (no OWNER.md)
+* `.softhouse/capture/loan-charge-partial-waive-repaid/` — 3 vector(s) — OWNER — loan-charge-partial-waive-repaid
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — 2 vector(s) — OWNER — loan-writeoff-paid-instalment
-* `.softhouse/capture/loan11-writeoff-four-bucket/` — 3 vector(s) — OWNER — loan11-writeoff-four-bucket
+* `.softhouse/capture/loan11-writeoff-four-bucket/` — 4 vector(s) — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — 4 vector(s) — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json/` — 1 vector(s) — (no OWNER.md)
 
