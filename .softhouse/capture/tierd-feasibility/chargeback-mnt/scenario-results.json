@@ -1,0 +1,352 @@
+[
+ {
+  "feature_line": 5,
+  "loan": 1,
+  "name": "As an admin I would like to check chargeback function is working properly on a closed loan in case of payment type: REPAYMENT_ADJUSTMENT_CHARGEBACK",
+  "result": "PASSED",
+  "scenario": "S1"
+ },
+ {
+  "feature_line": 21,
+  "loan": 2,
+  "name": "As an admin I would like to check chargeback function is working properly on a closed loan in case of payment type: REPAYMENT_ADJUSTMENT_REFUND",
+  "result": "PASSED",
+  "scenario": "S2"
+ },
+ {
+  "feature_line": 37,
+  "loan": 3,
+  "name": "As an admin I would like to check chargeback function is working properly when chargeback comes after the loan was fully repaid and closed",
+  "result": "PASSED",
+  "scenario": "S3"
+ },
+ {
+  "feature_line": 57,
+  "loan": 4,
+  "name": "As an admin I would like to check chargeback function is working properly when repayment happens again after chargeback",
+  "result": "PASSED",
+  "scenario": "S4"
+ },
+ {
+  "feature_line": 78,
+  "loan": 5,
+  "name": "As an admin I would like to check chargeback function is working properly when a second chargeback happens after the repayment",
+  "result": "PASSED",
+  "scenario": "S5"
+ },
+ {
+  "feature_line": 103,
+  "loan": 6,
+  "name": "As an admin I would like to check chargeback function is working properly when chargeback happens after NSF fee was added to the loan then was repaid",
+  "result": "PASSED",
+  "scenario": "S6"
+ },
+ {
+  "feature_line": 133,
+  "loan": 7,
+  "name": "As an admin I would like to check that the loan goes to ACTIVE when the loan is OVERPAID but the chargeback amount is HIGHER than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S7"
+ },
+ {
+  "feature_line": 149,
+  "loan": 8,
+  "name": "As an admin I would like to check that the loan remains OVERPAID when the loan is OVERPAID but the chargeback amount is LOWER than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S8"
+ },
+ {
+  "feature_line": 165,
+  "loan": 9,
+  "name": "As an admin I would like to check that the loan goes to CLOSED when the loan is OVERPAID but the chargeback amount is EQUALS than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S9"
+ },
+ {
+  "feature_line": 181,
+  "loan": 10,
+  "name": "As an admin I would like to check that delinquency and overdue treatment of chargeback works properly",
+  "result": "PASSED",
+  "scenario": "S10"
+ },
+ {
+  "feature_line": 203,
+  "loan": 11,
+  "name": "As an admin I would like to check that delinquency and overdue treatment of chargeback works properly when all the chargeback transactions are fully paid",
+  "result": "PASSED",
+  "scenario": "S11"
+ },
+ {
+  "feature_line": 223,
+  "loan": 12,
+  "name": "As an admin I would like to check that delinquency and overdue treatment of chargeback works properly when all the instalments are fully paid",
+  "result": "PASSED",
+  "scenario": "S12"
+ },
+ {
+  "feature_line": 246,
+  "loan": 13,
+  "name": "As an admin I would like to check that Goodwill credit, Payout refund, Merchant Issued refund works properly with chargeback for a fully paid loan",
+  "result": "PASSED",
+  "scenario": "S13"
+ },
+ {
+  "feature_line": 276,
+  "loan": 14,
+  "name": "When charge backs comes in after the loan is closed, before the maturity date",
+  "result": "PASSED",
+  "scenario": "S14"
+ },
+ {
+  "feature_line": 321,
+  "loan": 15,
+  "name": "When repayment happens again on the charge backs",
+  "result": "PASSED",
+  "scenario": "S15"
+ },
+ {
+  "feature_line": 373,
+  "loan": 16,
+  "name": "When repayment 1 is reversed",
+  "result": "PASSED",
+  "scenario": "S16"
+ },
+ {
+  "feature_line": 428,
+  "loan": 17,
+  "name": "When 2 repayments are reversed (repayment 1 & 3)",
+  "result": "PASSED",
+  "scenario": "S17"
+ },
+ {
+  "feature_line": 486,
+  "loan": 18,
+  "name": "When chargeback happens after the charge addition on maturity date for repayment 01-03-2022",
+  "result": "PASSED",
+  "scenario": "S18"
+ },
+ {
+  "feature_line": 555,
+  "loan": 19,
+  "name": "When chargeback comes in after the loan overpayment-1",
+  "result": "PASSED",
+  "scenario": "S19"
+ },
+ {
+  "feature_line": 603,
+  "loan": 20,
+  "name": "When chargeback comes in after the loan overpayment-2",
+  "result": "PASSED",
+  "scenario": "S20"
+ },
+ {
+  "feature_line": 651,
+  "loan": 21,
+  "name": "When chargeback comes in after the loan overpayment-3",
+  "result": "PASSED",
+  "scenario": "S21"
+ },
+ {
+  "feature_line": 700,
+  "loan": 22,
+  "name": "When chargeback comes in after the loan overpayment-4 with reverse and replay",
+  "result": "PASSED",
+  "scenario": "S22"
+ },
+ {
+  "feature_line": 753,
+  "loan": 23,
+  "name": "When charge backs comes in after the loan is closed for the repayment 01-03-2022 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S23"
+ },
+ {
+  "feature_line": 800,
+  "loan": 24,
+  "name": "When repayment happens again on the charge backs (after maturity)",
+  "result": "PASSED",
+  "scenario": "S24"
+ },
+ {
+  "feature_line": 853,
+  "loan": 25,
+  "name": "When repayment 1 is reversed (after maturity)",
+  "result": "PASSED",
+  "scenario": "S25"
+ },
+ {
+  "feature_line": 909,
+  "loan": 26,
+  "name": "When 2 repayments are reversed (repayment 1 & 3) (after maturity)",
+  "result": "PASSED",
+  "scenario": "S26"
+ },
+ {
+  "feature_line": 968,
+  "loan": 27,
+  "name": "When second charge back happens for the repayment 01-04-2022 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S27"
+ },
+ {
+  "feature_line": 1027,
+  "loan": 28,
+  "name": "When chargeback happens after the charge addition on maturity date for repayment 01-03-2022 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S28"
+ },
+ {
+  "feature_line": 1093,
+  "loan": 29,
+  "name": "When chargeback comes in after the loan overpayment-1 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S29"
+ },
+ {
+  "feature_line": 1141,
+  "loan": 30,
+  "name": "When chargeback comes in after the loan overpayment-2 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S30"
+ },
+ {
+  "feature_line": 1189,
+  "loan": 31,
+  "name": "When chargeback comes in after the loan overpayment-3 (after maturity)",
+  "result": "PASSED",
+  "scenario": "S31"
+ },
+ {
+  "feature_line": 1239,
+  "loan": 32,
+  "name": "When chargeback comes in after the loan overpayment-4 with reverse and replay (after maturity)",
+  "result": "PASSED",
+  "scenario": "S32"
+ },
+ {
+  "feature_line": 1293,
+  "loan": 33,
+  "name": "As an admin I would like to verify principal portion for partial chargeback for OVERPAID loan",
+  "result": "PASSED",
+  "scenario": "S33"
+ },
+ {
+  "feature_line": 1324,
+  "loan": 34,
+  "name": "Verify chargeback function for advanced payment allocation on a closed loan in case of payment type: REPAYMENT_ADJUSTMENT_CHARGEBACK",
+  "result": "PASSED",
+  "scenario": "S34"
+ },
+ {
+  "feature_line": 1366,
+  "loan": 35,
+  "name": "Verify chargeback function for advanced payment allocation on a closed loan in case of payment type: REPAYMENT_ADJUSTMENT_REFUND",
+  "result": "PASSED",
+  "scenario": "S35"
+ },
+ {
+  "feature_line": 1408,
+  "loan": 36,
+  "name": "Verify chargeback function for advanced payment allocation when full repayment happens after chargeback, on the same business date",
+  "result": "PASSED",
+  "scenario": "S36"
+ },
+ {
+  "feature_line": 1452,
+  "loan": 37,
+  "name": "Verify chargeback function for advanced payment allocation when partial repayment happens after chargeback, on the same business date",
+  "result": "PASSED",
+  "scenario": "S37"
+ },
+ {
+  "feature_line": 1496,
+  "loan": 38,
+  "name": "Verify chargeback function for advanced payment allocation when full repayment happens after chargeback, on a future business date",
+  "result": "PASSED",
+  "scenario": "S38"
+ },
+ {
+  "feature_line": 1541,
+  "loan": 39,
+  "name": "Verify chargeback function for advanced payment allocation when partial repayment happens after chargeback, on a future business date",
+  "result": "PASSED",
+  "scenario": "S39"
+ },
+ {
+  "feature_line": 1586,
+  "loan": 40,
+  "name": "Verify chargeback function for advanced payment allocation when a second chargeback happens after the repayment",
+  "result": "PASSED",
+  "scenario": "S40"
+ },
+ {
+  "feature_line": 1634,
+  "loan": 41,
+  "name": "Verify chargeback function for advanced payment allocation -loan goes to ACTIVE when the it is OVERPAID but the chargeback amount is HIGHER than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S41"
+ },
+ {
+  "feature_line": 1676,
+  "loan": 42,
+  "name": "Verify chargeback function for advanced payment allocation -loan remains OVERPAID when the it is OVERPAID but the chargeback amount is LOWER than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S42"
+ },
+ {
+  "feature_line": 1717,
+  "loan": 43,
+  "name": "Verify chargeback function for advanced payment allocation -loan goes to CLOSED when the loan is OVERPAID but the chargeback amount is EQUALS than the overpaid amount",
+  "result": "PASSED",
+  "scenario": "S43"
+ },
+ {
+  "feature_line": 1758,
+  "loan": 44,
+  "name": "Verify chargeback function for advanced payment allocation - chargeback after the loan is closed, before the maturity date",
+  "result": "PASSED",
+  "scenario": "S44"
+ },
+ {
+  "feature_line": 1796,
+  "loan": 45,
+  "name": "Verify chargeback function for advanced payment allocation - repayment 1 is reversed",
+  "result": "PASSED",
+  "scenario": "S45"
+ },
+ {
+  "feature_line": 1846,
+  "loan": 46,
+  "name": "Verify chargeback function for advanced payment allocation - overpayment handling",
+  "result": "PASSED",
+  "scenario": "S46"
+ },
+ {
+  "feature_line": 1875,
+  "loan": 47,
+  "name": "Verify chargeback function for advanced payment allocation - chargeback on downpayment",
+  "result": "PASSED",
+  "scenario": "S47"
+ },
+ {
+  "feature_line": 1902,
+  "loan": 48,
+  "name": "Verify chargeback function for advanced payment allocation - partial chargeback on downpayment",
+  "result": "PASSED",
+  "scenario": "S48"
+ },
+ {
+  "feature_line": 1929,
+  "loan": 49,
+  "name": "Verify chargeback function for advanced payment allocation - credit allocation UC1",
+  "result": "PASSED",
+  "scenario": "S49"
+ },
+ {
+  "feature_line": 1946,
+  "loan": 50,
+  "name": "Verify chargeback function for advanced payment allocation - full chargeback on overpaid loan",
+  "result": "PASSED",
+  "scenario": "S50"
+ }
+]
