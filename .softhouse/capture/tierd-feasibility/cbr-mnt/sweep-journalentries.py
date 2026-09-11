@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""OH-TIERD15-CM step 3 (THE NEW STEP): read every loan's journal entries from the
+"""OH-TIERD16-CO step 3 (THE NEW STEP): read every loan's journal entries from the
 still-running throwaway oracle and save each body verbatim.
 
-Copy of OH-TIERD14-CL `interest-payment-waiver-mnt/sweep-journalentries.py`, itself a
-copy of OH-TIERD13-CI `chargeoff-p3-mnt/sweep-journalentries.py`; the port (8444) and
+Copy of OH-TIERD15-CM `chargeback-p2-mnt/sweep-journalentries.py`, itself a copy of
+OH-TIERD13-CI `chargeoff-p3-mnt/sweep-journalentries.py`; the port (8444) and
 tenant (`tierd`) are already the throwaway's, so only the task header changed.
 
 For every loan id the replay created, this runs exactly one bounded GET:
