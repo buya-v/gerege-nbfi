@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
 
 // Admit returns the ordered list of reasons a vector is INADMISSIBLE, empty if
@@ -39,13 +40,13 @@ func Admit(v *Vector, opts Options) []string {
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization:
+		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization))
+			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -151,6 +152,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ScheduleAmortization != nil {
+		n++
+	}
+	if v.Request.Delinquency != nil {
 		n++
 	}
 	return n
@@ -354,6 +358,28 @@ func admitRequest(v *Vector) []string {
 					"request.principal_components_minor[%d] %q is not a non-negative integer minor amount: a component with more than 2 decimal places of significance is a sub-minor residue and is REFUSED, never vectored", i, c))
 			}
 		}
+	case SeamLoanDelinquentDays:
+		if v.Request.Delinquency == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "delinquent-days seam must set exactly request.delinquency")
+			return problems
+		}
+		d := v.Request.Delinquency
+		if !isCivilDate(d.BusinessDate) {
+			problems = append(problems, fmt.Sprintf(
+				"request.delinquency.business_date %q is not a civil date in YYYY-MM-DD form", d.BusinessDate))
+			return problems
+		}
+		if d.OverdueSinceDate != "" {
+			if !isCivilDate(d.OverdueSinceDate) {
+				problems = append(problems, fmt.Sprintf(
+					"request.delinquency.overdue_since_date %q is not a civil date in YYYY-MM-DD form", d.OverdueSinceDate))
+				return problems
+			}
+			if d.OverdueSinceDate > d.BusinessDate {
+				problems = append(problems, fmt.Sprintf(
+					"request.delinquency.overdue_since_date %q is after business_date %q: no committed capture observes an overdue date after the business date, and the negative clamp is NOT part of the graded surface", d.OverdueSinceDate, d.BusinessDate))
+			}
+		}
 	}
 	return problems
 }
@@ -508,6 +534,15 @@ func admitExpect(v *Vector) []string {
 				"expect.final_principal_balance_minor %q is not \"0\": the property is that principal amortizes to ZERO",
 				v.Expect.FinalPrincipalBalanceMinor))
 		}
+	case SeamLoanDelinquentDays:
+		if !isIntegerMinorString(v.Expect.OverdueDays) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.overdue_days %q is not a non-negative integer day count", v.Expect.OverdueDays))
+		}
+		if !isIntegerMinorString(v.Expect.DelinquentDays) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.delinquent_days %q is not a non-negative integer day count", v.Expect.DelinquentDays))
+		}
 	}
 	return problems
 }
@@ -573,4 +608,18 @@ func isIntegerMinorString(s string) bool {
 		}
 	}
 	return true
+}
+
+// isCivilDate reports whether s is a zero-padded calendar date in YYYY-MM-DD
+// form that round-trips through time.Parse. A bare calendar date carries no
+// clock and no offset, so nothing in this path hard-codes a time-zone offset.
+func isCivilDate(s string) bool {
+	if len(s) != len("2006-01-02") {
+		return false
+	}
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		return false
+	}
+	return t.Format("2006-01-02") == s
 }

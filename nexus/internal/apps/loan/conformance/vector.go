@@ -62,6 +62,21 @@ const SeamLoanTransactionBalance = "loan-transaction-balance"
 // the wrong buckets, returns a total that disagrees with the observed read-back.
 const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
 
+// SeamLoanDelinquentDays is the capture seam this schema grades: the
+// calendar-day delinquency derivation of a loan read-back. Fineract derives
+// overdueDays as the day difference between the summary's overdueSinceDate and
+// the business date (DateUtils.getDifferenceInDays == DAYS.between), and
+// delinquentDays as overdueDays minus paused and grace days, floored at zero
+// [delinquency.go:96,109]. The committed loan details pin both the overdue
+// dates and the resulting counts at the business date 2026-09-01, so the seam
+// is gradeable with no capture. The request carries the observed overdue-since
+// date (ABSENT on a loan the read-back shows no overdue date for) and the
+// business date; the expectation transcribes the observed pastDueDays /
+// delinquentDays. A port that approximates a month as 30 days, or that errors
+// on an absent overdue date instead of returning zero, disagrees with the
+// read-back.
+const SeamLoanDelinquentDays = "loan-delinquent-days"
+
 // SeamLoanJournalEntryBatchBalance is the capture seam this schema grades: the
 // debit and credit totals of a loan-produced journal-entry BATCH read back from
 // the journal-entries endpoint. A loan disbursement GENERATES its postings, so
@@ -207,6 +222,18 @@ type SummaryRequest struct {
 	PenaltyOutstanding   string `json:"penalty_outstanding_minor"`
 }
 
+// DelinquencyRequest is the loan-delinquent-days seam's input: the summary's
+// overdueSinceDate and the business date the read-back was taken at, both civil
+// dates in "YYYY-MM-DD" form. OverdueSinceDate is OMITTED when the read-back
+// carries no overdue date for the loan (the oracle then reports zero overdue
+// days, not an error). BusinessDate is required: without it the day difference
+// is undefined. The dates are plain calendar dates with no clock and no offset,
+// so no time-zone offset is hard-coded anywhere in the path.
+type DelinquencyRequest struct {
+	OverdueSinceDate string `json:"overdue_since_date,omitempty"`
+	BusinessDate     string `json:"business_date"`
+}
+
 // StatusRequest is the loan-status seam's input: the persisted
 // m_loan.loan_status_id value (Fineract's status.id) whose read-back the vector
 // pins.
@@ -266,6 +293,9 @@ type Request struct {
 	// input: the disbursed principal and the observed per-period principalDue
 	// components.
 	ScheduleAmortization *ScheduleAmortizationRequest `json:"schedule_amortization,omitempty"`
+	// Delinquency is the loan-delinquent-days seam's input: the observed
+	// overdue-since date and the business date.
+	Delinquency *DelinquencyRequest `json:"delinquency,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -310,6 +340,16 @@ type Expect struct {
 	// STRING in minor units. The property "principal amortizes to zero" holds
 	// exactly when this is "0".
 	FinalPrincipalBalanceMinor string `json:"final_principal_balance_minor,omitempty"`
+	// OverdueDays is the loan-delinquent-days seam's derived calendar-day
+	// difference between the overdue-since date and the business date, floored
+	// at zero, as an integer STRING. It is "0" when the request omits the
+	// overdue-since date.
+	OverdueDays string `json:"overdue_days,omitempty"`
+	// DelinquentDays is the loan-delinquent-days seam's derived delinquent-day
+	// count (overdueDays minus paused and grace days, floored at zero), as an
+	// integer STRING. The committed corpus observes pause 0 / grace 0, so it
+	// equals OverdueDays on every row transcribed.
+	DelinquentDays string `json:"delinquent_days,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

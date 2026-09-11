@@ -196,6 +196,11 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 	case SeamLoanScheduleAmortization:
 		s.cmpMoney("principal_sum", v.Expect.PrincipalSumMinor, got.PrincipalSumMinor)
 		s.cmpMoney("final_principal_balance", v.Expect.FinalPrincipalBalanceMinor, got.FinalPrincipalBalanceMinor)
+	case SeamLoanDelinquentDays:
+		// Day counts are integer calendar-day differences, not money: they are
+		// compared as text so they never enter the money-cell count.
+		s.cmpText("overdue_days", v.Expect.OverdueDays, got.OverdueDays)
+		s.cmpText("delinquent_days", v.Expect.DelinquentDays, got.DelinquentDays)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money
