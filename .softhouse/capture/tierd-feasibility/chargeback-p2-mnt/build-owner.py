@@ -280,6 +280,22 @@ def main():
         w('* **Unmatched / not type-confirmable:** %d legs (%d transaction%s) carry no entry in any '
           '`transactions` read-back; see `journalentry-type-join.md`.' % (
               ua['legs'], ua['count'], '' if ua['count'] == 1 else 's'))
+    arms = J['portion_arms']
+    w('* **Portion arms (step 6) — FEE: %s, PENALTY: %s.** Chargeback transactions carry a '
+      'non-zero FEE portion on loan(s) %s and a non-zero PENALTY portion on loan(s) %s; the '
+      'column listing above gives each amount. `interest`, `overpayment` and `unrecognized '
+      'income` arms are %s/%s/%s respectively.' % (
+          'OBSERVED' if arms['fee'] else 'not observed',
+          'OBSERVED' if arms['penalty'] else 'not observed',
+          ', '.join(str(x) for x in sorted({h['loan'] for h in arms['fee']})) or '-',
+          ', '.join(str(x) for x in sorted({h['loan'] for h in arms['penalty']})) or '-',
+          'observed' if arms['interest'] else 'not observed',
+          'observed' if arms['overpayment'] else 'not observed',
+          'observed' if arms['unrecognized_income'] else 'not observed'))
+    pgc = J['paid_gt_credited']
+    w('* **`paid > credited` leg — %s** %s' % (
+        'OBSERVED.' if pgc['genuine_paid_gt_credited'] else 'FINDING.',
+        pgc['finding']))
     w('* **Fraud:** no loan in this feature is fraud-flagged, so the `isMarkedFraud` / '
       '`chargeOffFraudExpense` variants are not exercised (every `fraud` above is `false`).')
     w('')

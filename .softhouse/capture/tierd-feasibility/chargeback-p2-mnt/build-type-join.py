@@ -262,6 +262,8 @@ def main():
         t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
 
     cb = build_chargeback(types, loan_chargeoff, currencies, txmaps, chargeoffs)
+    paid_gt_credited = analyze_paid_gt_credited(cb['transactions'])
+    portion_arms = analyze_portions(cb['transactions'])
     obj = {
         'tenant': 'tierd',
         'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
@@ -272,6 +274,8 @@ def main():
         'unmatched_analysis': unmatched_analysis,
         'loan_chargeoff': loan_chargeoff,
         'chargeback': cb,
+        'paid_gt_credited': paid_gt_credited,
+        'portion_arms': portion_arms,
         'types': types,
     }
     with open(os.path.join(HERE, 'journalentry-type-join.json'), 'w') as fh:
@@ -384,6 +388,109 @@ def build_chargeback(types, loan_chargeoff, currencies, txmaps, chargeoffs):
     }
 
 
+# `createJournalEntriesForChargeback` credits the fund source with `amount` before the
+# principal / fee / penalty comparisons [AccrualBasedAccountingProcessorForLoan.java:1241-1273].
+FUND_SOURCE_NAMES = ('Suspense/Clearing account',)
+
+
+def analyze_paid_gt_credited(cb_transactions):
+    """The `credited < paid` arm of `createJournalEntriesForChargeback`
+    [AccrualBasedAccountingProcessorForLoan.java:1251-1273].
+
+    When `principalCredited < principalPaid` (and the fee / penalty analogues), the
+    processor CREDITs `getPrincipalAccount` / `getFeeAccount` / `getPenaltyAccount` with
+    the small difference.  On a charged-off loan those resolve to the charge-off
+    expense / charge-off income accounts.  The normal `credited > paid` arm DEBITs the
+    same accounts, and the fund source (Suspense/Clearing) is CREDITed with `amount`;
+    the overpayment account is only ever DEBITed.  So a candidate is any chargeback
+    CREDIT leg whose account is not the fund source.
+
+    A candidate that has a DEBIT leg with the SAME account and amount under the SAME
+    `transactionId` is self-offsetting: a chargeback reversal/replay posts the exact
+    opposite under the original id (neither marked `reversed` in the read-back), so it
+    is NOT a `credited < paid` difference posting.  Only candidate legs with no such
+    matching debit are genuine `paid > credited` legs.
+    """
+    candidates = []
+    genuine = []
+    self_offsetting = []
+    for tx in cb_transactions:
+        legs = tx['legs']
+        for r in legs:
+            if r['entry_type'] != 'CREDIT' or (r['gl_account_name'] or '') in FUND_SOURCE_NAMES:
+                continue
+            matching = any(d['entry_type'] == 'DEBIT'
+                           and d['gl_account_id'] == r['gl_account_id']
+                           and d['amount_minor'] == r['amount_minor']
+                           for d in legs)
+            rec = {
+                'loan': tx['loan'], 'transaction_id': tx['transaction_id'],
+                'account_id': r['gl_account_id'], 'account_code': r['gl_account_code'],
+                'account_name': r['gl_account_name'], 'amount_minor': r['amount_minor'],
+                'charged_off': r['charged_off'], 'fraud': r['fraud'],
+                'currency': r['currency'], 'self_offsetting': matching,
+            }
+            candidates.append(rec)
+            (self_offsetting if matching else genuine).append(rec)
+    if genuine:
+        finding = ('OBSERVED: %d genuine `paid > credited` leg(s) -- a CREDIT to a '
+                   'principal/fee/penalty account with no matching debit under the same '
+                   'transactionId.' % len(genuine))
+    elif candidates:
+        pairs = []
+        for c in candidates:
+            p = (c['loan'], c['transaction_id'])
+            if p not in pairs:
+                pairs.append(p)
+        finding = ('FINDING -- no genuine `paid > credited` leg: the only CREDIT(s) to a '
+                   'principal/fee/penalty account (%d leg(s) on %s) each have an equal '
+                   'DEBIT under the same transactionId, i.e. a chargeback reversal/replay '
+                   'pair, not the `credited < paid` difference posting.  The `paid > '
+                   'credited` arm is NOT exercised in this replay.'
+                   % (len(candidates),
+                      ', '.join('loan %d tx %s' % (l, t) for l, t in pairs)))
+    else:
+        finding = ('FINDING -- no `paid > credited` leg at all: no chargeback CREDIT to a '
+                   'principal/fee/penalty account appears in the sweep.')
+    return {
+        'rule': ('credited < paid -> CREDIT getPrincipalAccount/getFeeAccount/'
+                 'getPenaltyAccount [AccrualBasedAccountingProcessorForLoan.java:1251-1273]'),
+        'fund_source_account_names': list(FUND_SOURCE_NAMES),
+        'candidates': candidates,
+        'self_offsetting': self_offsetting,
+        'genuine_paid_gt_credited': genuine,
+        'finding': finding,
+    }
+
+
+def analyze_portions(cb_transactions):
+    """FEE / PENALTY / overpayment / interest / unrecognized-income portion arms.
+
+    Reports which read-back portion fields are non-zero on any chargeback transaction,
+    with the loans and transactions that carry each, so the capture states explicitly
+    whether `FEE` and `PENALTY` chargeback portions were exercised."""
+    arms = {'principal': [], 'interest': [], 'fee': [], 'penalty': [],
+            'overpayment': [], 'unrecognized_income': []}
+    keymap = {'principal': 'principal_minor', 'interest': 'interest_minor',
+              'fee': 'fee_minor', 'penalty': 'penalty_minor',
+              'overpayment': 'overpayment_minor',
+              'unrecognized_income': 'unrecognized_income_minor'}
+    for t in cb_transactions:
+        p = t['portions'] or {}
+        for arm, key in keymap.items():
+            v = p.get(key)
+            if v is None:
+                continue
+            try:
+                nonzero = int(v) != 0
+            except (TypeError, ValueError):
+                nonzero = False
+            if nonzero:
+                arms[arm].append({'loan': t['loan'], 'transaction_id': t['transaction_id'],
+                                  'amount_minor': v})
+    return arms
+
+
 def write_chargeback_tsv(obj):
     """Flat listing of every chargeback leg (the required columns)."""
     cols = ['type', 'loan', 'tx', 'entry', 'gl_account_id', 'gl_account_code',
@@ -493,6 +600,49 @@ def write_chargeback_md(obj, w):
             t['reversed'], t['charged_off'], t['fraud'], t['currency'], len(t['legs'])))
     if not cb['transactions']:
         w('| _no chargeback transactions_ | | | | | | | | | | | | | | |')
+    w('')
+    pgc = obj['paid_gt_credited']
+    arms = obj['portion_arms']
+    w('### Chargeback portion arms and the `paid > credited` branch')
+    w('')
+    w('Portion arms observed non-zero on a chargeback transaction (integer minor units):')
+    w('')
+    w('| portion arm | observed? | count | loans | transactions |')
+    w('| --- | --- | ---: | --- | --- |')
+    for arm in ('principal', 'interest', 'fee', 'penalty', 'overpayment', 'unrecognized_income'):
+        hits = arms[arm]
+        w('| %s | %s | %d | %s | %s |' % (
+            arm, bool(hits), len(hits),
+            ', '.join(str(x) for x in sorted({h['loan'] for h in hits})) or '-',
+            ', '.join(h['transaction_id'] for h in hits) or '-'))
+    w('')
+    w('**FEE portions observed: %s. PENALTY portions observed: %s.**' % (
+        bool(arms['fee']), bool(arms['penalty'])))
+    w('')
+    w('`paid > credited` rule: %s.' % pgc['rule'])
+    w('')
+    if pgc['genuine_paid_gt_credited']:
+        w('Genuine `paid > credited` legs:')
+        w('')
+        w('| loan | tx | entry | account id | account code | account name | amount (minor) | charged_off | fraud | currency |')
+        w('| ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- |')
+        for c in pgc['genuine_paid_gt_credited']:
+            w('| %d | %s | CREDIT | %s | %s | %s | %s | %s | %s | %s |' % (
+                c['loan'], c['transaction_id'], c['account_id'], c['account_code'],
+                c['account_name'], c['amount_minor'], c['charged_off'], c['fraud'], c['currency']))
+        w('')
+    if pgc['self_offsetting']:
+        w('Self-offsetting CREDIT legs (equal DEBIT under the same `transactionId` -- '
+          'chargeback reversal/replay, NOT a `credited < paid` difference posting):')
+        w('')
+        w('| loan | tx | entry | account id | account code | account name | amount (minor) | charged_off | currency |')
+        w('| ---: | --- | --- | ---: | --- | --- | ---: | --- | --- |')
+        for c in pgc['self_offsetting']:
+            w('| %d | %s | CREDIT | %s | %s | %s | %s | %s | %s |' % (
+                c['loan'], c['transaction_id'], c['account_id'], c['account_code'],
+                c['account_name'], c['amount_minor'], c['charged_off'], c['currency']))
+        w('')
+    w('**%s**' % pgc['finding'])
     w('')
     w('### Per-loan charge-off / fraud / currency state')
     w('')
