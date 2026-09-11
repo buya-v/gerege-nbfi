@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gerege/nexus/internal/apps/loan"
 	shared "github.com/gerege/nexus/internal/conformance"
@@ -143,8 +144,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goTransactionBalance(req.Transactions)
 	case len(req.JournalEntries) > 0:
 		return goJournalEntryBatch(req.JournalEntries)
+	case req.Delinquency != nil:
+		return goDelinquency(*req.Delinquency)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency")
 	}
 }
 
@@ -472,6 +475,39 @@ func goScheduleAmortization(r ScheduleAmortizationRequest) (Expect, error) {
 	}, nil
 }
 
+// civilDateLayout is the calendar-date wire form every delinquency request
+// carries. A bare calendar date has no clock and no offset, so parsing it never
+// hard-codes a time-zone offset: the day-count is taken over the civil dates
+// themselves.
+const civilDateLayout = "2006-01-02"
+
+// goDelinquency ports the loan-delinquent-days seam through the port's own
+// arithmetic: loan.OverdueDays derives the calendar-day difference between the
+// overdue-since date and the business date (floored at zero), and
+// loan.DelinquentDays subtracts the paused and grace days (zero on every
+// committed row, so the two cells agree here). An ABSENT overdue-since date
+// means the read-back showed no overdue date, and both counts are zero — never
+// an error and never a days-since-epoch value.
+func goDelinquency(r DelinquencyRequest) (Expect, error) {
+	business, err := time.Parse(civilDateLayout, r.BusinessDate)
+	if err != nil {
+		return Expect{}, fmt.Errorf("loan-delinquent-days: business_date %q is not a civil date: %w", r.BusinessDate, err)
+	}
+	var overdue int64
+	if r.OverdueSinceDate != "" {
+		since, err := time.Parse(civilDateLayout, r.OverdueSinceDate)
+		if err != nil {
+			return Expect{}, fmt.Errorf("loan-delinquent-days: overdue_since_date %q is not a civil date: %w", r.OverdueSinceDate, err)
+		}
+		overdue = loan.OverdueDays(since, business)
+	}
+	delinquent := loan.DelinquentDays(overdue, 0, 0)
+	return Expect{
+		OverdueDays:    strconv.FormatInt(overdue, 10),
+		DelinquentDays: strconv.FormatInt(delinquent, 10),
+	}, nil
+}
+
 // amortizationWrongMode selects which deliberately-wrong whole-schedule
 // principal reconstruction to run. Each mode rebuilds the per-period components
 // from the disbursed principal or from a prefix of the observed components and
@@ -561,6 +597,78 @@ func uniformPrincipalComponents(disbursed loan.MinorUnits, n int, roundUp bool) 
 		out[i] = per
 	}
 	return out
+}
+
+// delinquencyWrongMode selects which deliberately-wrong day-count to run. Both
+// modes delegate every non-delinquency request to the correct port, so each
+// drive goes red ONLY on the delinquent-days seam (vector isolation).
+type delinquencyWrongMode int
+
+const (
+	// wrongDelinquencyThirtyDayMonth approximates every month as 30 days: it
+	// counts whole calendar months between the overdue-since date and the
+	// business date and multiplies by 30. The committed rows are the 1st of
+	// June, July and August 2026 read at 2026-09-01, so this shortcut reads
+	// 90 / 60 / 30 where the oracle read 92 / 62 / 31 — it treats months of
+	// unequal length as interchangeable.
+	wrongDelinquencyThirtyDayMonth delinquencyWrongMode = iota
+	// wrongDelinquencyAbsentNonZero treats an ABSENT overdue-since date as an
+	// elapsed-since-epoch day count instead of zero, the port that serialises a
+	// number where the oracle returns zero. The present-date rows are
+	// unaffected.
+	wrongDelinquencyAbsentNonZero
+)
+
+// wrongDelinquencyEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-delinquent-days seam, parameterised by which day-count defect it commits.
+type wrongDelinquencyEvaluator struct {
+	goEvaluator
+	mode delinquencyWrongMode
+}
+
+func (w wrongDelinquencyEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Delinquency != nil {
+		return wrongDelinquency(*req.Delinquency, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongDelinquency computes the two day-count cells with one defect and returns
+// them, so the drive differs from the port on exactly the cells the committed
+// rows pin.
+func wrongDelinquency(r DelinquencyRequest, mode delinquencyWrongMode) (Expect, error) {
+	business, err := time.Parse(civilDateLayout, r.BusinessDate)
+	if err != nil {
+		return Expect{}, fmt.Errorf("loan-delinquent-days: business_date %q is not a civil date: %w", r.BusinessDate, err)
+	}
+	if r.OverdueSinceDate == "" {
+		switch mode {
+		case wrongDelinquencyAbsentNonZero:
+			// Days since the Unix epoch, the value a port that falls back to a
+			// zero time.Time (or a raw epoch) would emit where the oracle
+			// returns zero.
+			days := loan.OverdueDays(time.Unix(0, 0).UTC(), business)
+			s := strconv.FormatInt(days, 10)
+			return Expect{OverdueDays: s, DelinquentDays: s}, nil
+		default:
+			return goDelinquency(r)
+		}
+	}
+	since, err := time.Parse(civilDateLayout, r.OverdueSinceDate)
+	if err != nil {
+		return Expect{}, fmt.Errorf("loan-delinquent-days: overdue_since_date %q is not a civil date: %w", r.OverdueSinceDate, err)
+	}
+	if mode == wrongDelinquencyThirtyDayMonth {
+		months := int64(business.Year()*12+int(business.Month())) -
+			int64(since.Year()*12+int(since.Month()))
+		days := months * 30
+		if days < 0 {
+			days = 0
+		}
+		s := strconv.FormatInt(days, 10)
+		return Expect{OverdueDays: s, DelinquentDays: s}, nil
+	}
+	return goDelinquency(r)
 }
 
 // wrongEvaluator is a DELIBERATELY WRONG implementation: it rounds the
@@ -1404,4 +1512,15 @@ func init() {
 			"rounded-up excess, so the pinned loan-5 schedule sums to 4185012 and the final "+
 			"outstanding principal balance goes negative at -3 instead of 0",
 		wrongScheduleAmortizationEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAmortizationUniformRoundedUp})
+	RegisterWrong("loan-wrong-delinquency-thirty-day-month",
+		"approximates every month as 30 days, counting whole calendar months between the "+
+			"overdue-since date and the business date, so the pinned rows (June/July/August 1 -> "+
+			"2026-09-01) read 90/60/30 where the oracle read 92/62/31; it treats months of unequal "+
+			"length as interchangeable and goes red on every non-zero delinquent-days vector",
+		wrongDelinquencyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongDelinquencyThirtyDayMonth})
+	RegisterWrong("loan-wrong-delinquency-absent-nonzero",
+		"treats an ABSENT overdue-since date as an elapsed-since-epoch day count instead of "+
+			"zero, so the pinned absent-date read-backs (loan 3 and loan L06 at 2026-09-01) read a "+
+			"non-zero day count where the oracle read 0 and the vector goes red",
+		wrongDelinquencyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongDelinquencyAbsentNonZero})
 }

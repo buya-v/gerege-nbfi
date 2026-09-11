@@ -1,0 +1,44 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L03-delinquent-days-absent-zero",
+    "title": "Absent overdue-since date yields delinquent day-count zero, not an error or epoch value (loan 3)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the ABSENT-date row of the delinquency block read back for SEED-L03 at business date 2026-09-01 under tenant gerege. The read-back carries no summary.overdueSinceDate and no delinquent.pastDueDate / delinquent.delinquentDate, and the delinquent block reads pastDueDays 0 and delinquentDays 0. request.delinquency therefore OMITS overdue_since_date (omitempty) and carries only the business date; expect.overdue_days and expect.delinquent_days are \"0\". This vector exists to discriminate a port that treats a missing overdue-since date as fatal, or as the zero time (1970-01-01) and so reports a days-since-epoch value, instead of returning zero [delinquency.go:96,101-103]. It is kept in preference to the OTHER absent row (SEED-L06, same absent date and same zero counts) because the two carry one fact: loan L06 is NOT cloned here. WHAT THIS ROW DOES NOT GRADE: the paused/grace subtraction and the negative clamp, for the same reasons as the non-zero rows. TIME ZONE: the absent row takes no date at all, so it cannot exercise the zone resolution; the non-zero rows use bare midnight-aligned civil dates, so none of the committed rows discriminates a UTC-vs-Asia/Ulaanbaatar parse defect. Say that rather than claim the zone is covered.",
+    "oracle": {
+        "seam": "loan-delinquent-days",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "Both expected cells are transcribed from the committed SEED-L03 loan detail read-back loan-3-detail-raw.json, whose delinquent.pastDueDays and delinquent.delinquentDays are both 0. The same file has NO summary.overdueSinceDate key and no delinquent.pastDueDate / delinquent.delinquentDate key, which is why request.delinquency omits overdue_since_date; the absence is the observed fact, not a synthesised one. The business date 2026-09-01 is the corpus BUSINESS_DATE pinned separately in the seed businessdate capture, cited below. The capture is a single-line JSON document (wc -l = 0), so every observation is at line 1.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-3-detail-raw.json",
+        "capture_sha256": "84de8b87dfe14a9d453a1d41df93eca327841fabb639b23e08c659986d4c4b6b",
+        "capture_case_id": "SEED-L03",
+        "citation": "loan-3-detail-raw.json:1 (single-line committed read-back, tenant gerege): summary has NO overdueSinceDate key, and delinquent {\"pastDueDays\":0,\"nextPaymentDueDate\":[2026,7,1],...,\"delinquentDays\":0,\"delinquentAmount\":0,...,\"delinquencyPausePeriods\":[]} has NO pastDueDate and NO delinquentDate. Business date 2026-09-01: .softhouse/capture/seed/out/businessdate-get-raw.json:1 \"type\":\"BUSINESS_DATE\",\"date\":[2026,9,1]. With no overdue-since date there are 0 overdue days, hence 0 delinquent days, and the oracle reports zero rather than refusing or returning a days-since-epoch value."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "delinquency": {
+            "business_date": "2026-09-01"
+        }
+    },
+    "expect": {
+        "overdue_days": "0",
+        "delinquent_days": "0"
+    },
+    "capabilities_required": [
+        "delinquent-days"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-delinquency-absent-nonzero"
+    ]
+}

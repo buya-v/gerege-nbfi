@@ -1,0 +1,45 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L04-delinquent-days-june-92",
+    "title": "Delinquent day-count 92 from overdue-since 2026-06-01 to business date 2026-09-01 (loan 4)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing one non-zero row of the delinquency block read back for SEED-L04 at business date 2026-09-01 under tenant gerege. request.delinquency carries the observed overdue-since civil date 2026-06-01 and the pinned business date 2026-09-01; expect.overdue_days and expect.delinquent_days are TRANSCRIPTIONS of the read-back's delinquent.pastDueDays and delinquent.delinquentDays, both 92. This is the JUNE row: 2026-06-01 -> 2026-09-01 spans June (30) + July (31) + August (31) = 92. It is kept in preference to the other non-zero rows because a 30-day-month approximation (whole months x 30) reads exactly 90 here and disagrees by 2, a port that assumes all three months are 31 reads 93 and disagrees by 1, and a port that stops at the first month boundary reads 30. The 2026-07-01 -> 2026-09-01 = 62 and 2026-08-01 -> 2026-09-01 = 31 rows are separate vectors because each pins a DIFFERENT month-length combination (62 = 31+31, 31 = 31); the duplicate 62 row (loan 5) and the duplicate absent row (loan L06) are NOT cloned. WHAT THIS ROW DOES NOT GRADE: every observed row has delinquencyPausePeriods empty and delinquentDays == pastDueDays, so paused/grace are both 0 and a port that ignores the subtraction passes; no observed overdue date is after the business date, so the negative clamp in OverdueDays is not exercised either. A capture of a loan with a pause period or a grace setting would be needed. TIME ZONE: the request carries bare calendar dates; loan.OverdueDays resolves them through dateOnly [delinquency.go:96,123], which takes the year/month/day IN THE VALUE'S OWN LOCATION and re-anchors to UTC midnight before subtracting, so no offset is hard-coded. These rows are all midnight-aligned first-of-month civil dates, so they cannot discriminate a UTC-vs-Asia/Ulaanbaatar parse defect; the day difference between two civil dates is zone-independent. Say that rather than claim the zone is covered.",
+    "oracle": {
+        "seam": "loan-delinquent-days",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.delinquency and both expected cells are transcribed from the committed SEED-L04 loan detail read-back loan-4-detail-raw.json. The overdue-since date is the top-level summary.overdueSinceDate array [2026,6,1] -> \"2026-06-01\"; the expected cells are the delinquent.pastDueDays 92 and delinquent.delinquentDays 92 in the same file (delinquent.delinquentDate is [2026,6,1]). The business date 2026-09-01 is not carried by the detail file; it is the corpus BUSINESS_DATE pinned separately in the seed businessdate capture, cited below. The capture is a single-line JSON document (wc -l = 0), so every observation is at line 1. No value was synthesised: the date and both counts are read directly from the file.",
+        "capture_ref": ".softhouse/capture/loan/out/loan-4-detail-raw.json",
+        "capture_sha256": "859daf3461276d4a2db094f8e4b435d5826a25cd84cfd00cf15ef55524961739",
+        "capture_case_id": "SEED-L04",
+        "citation": "loan-4-detail-raw.json:1 (single-line committed read-back, tenant gerege): summary.overdueSinceDate [2026,6,1] and delinquent {...,\"pastDueDays\":92,\"pastDueDate\":[2026,6,1],\"delinquentDays\":92,\"delinquentDate\":[2026,6,1],\"delinquencyPausePeriods\":[]}. Business date 2026-09-01: .softhouse/capture/seed/out/businessdate-get-raw.json:1 \"type\":\"BUSINESS_DATE\",\"date\":[2026,9,1]. Arithmetic: 2026-06-01 -> 2026-09-01 = 30 (June) + 31 (July) + 31 (August) = 92."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "delinquency": {
+            "overdue_since_date": "2026-06-01",
+            "business_date": "2026-09-01"
+        }
+    },
+    "expect": {
+        "overdue_days": "92",
+        "delinquent_days": "92"
+    },
+    "capabilities_required": [
+        "delinquent-days"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-delinquency-thirty-day-month"
+    ]
+}

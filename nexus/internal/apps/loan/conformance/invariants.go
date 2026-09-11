@@ -1,6 +1,9 @@
 package conformance
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // The property invariants this context can grade. The loan slice's gradeable
 // invariants are structural money-integrity properties of the allocation and
@@ -43,6 +46,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertJournalEntryBatchBalances(got)}
 	case SeamLoanScheduleAmortization:
 		return []InvariantResult{assertPrincipalAmortizesToZero(v, got)}
+	case SeamLoanDelinquentDays:
+		return []InvariantResult{assertDelinquentDaysConsistent(got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -232,5 +237,37 @@ func assertPrincipalAmortizesToZero(v *Vector, got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("principal components sum to the disbursed principal %s exactly and the final balance is zero", got.PrincipalSumMinor)
+	return r
+}
+
+// assertDelinquentDaysConsistent: both day-count cells are non-negative integer
+// day counts and the delinquent count never exceeds the overdue count. Fineract
+// derives delinquentDays as overdueDays minus paused and grace days, floored at
+// zero [delinquency.go:109], so delinquent <= overdue always holds; on every
+// observed row pause and grace are zero, so the two are equal. The assertion is
+// on the implementation's RESULT, not re-derived from the request, so a port
+// whose independent arithmetic is self-consistent but violates the relation is
+// still VIOLATED.
+func assertDelinquentDaysConsistent(got Expect) InvariantResult {
+	r := InvariantResult{Name: "delinquent_days_consistent", Assertions: 2}
+	if !isIntegerMinorString(got.OverdueDays) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("overdue days %q is not a non-negative integer day count", got.OverdueDays)
+		return r
+	}
+	if !isIntegerMinorString(got.DelinquentDays) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("delinquent days %q is not a non-negative integer day count", got.DelinquentDays)
+		return r
+	}
+	overdue, _ := strconv.ParseInt(got.OverdueDays, 10, 64)
+	delinquent, _ := strconv.ParseInt(got.DelinquentDays, 10, 64)
+	if delinquent > overdue {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("delinquent days %d exceed overdue days %d", delinquent, overdue)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("overdue days %s and delinquent days %s are non-negative integer day counts with delinquent <= overdue", got.OverdueDays, got.DelinquentDays)
 	return r
 }

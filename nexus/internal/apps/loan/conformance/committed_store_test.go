@@ -127,4 +127,5 @@ var committedLoanSeams = []string{
 	SeamLoanSummaryOutstanding,
 	SeamLoanJournalEntryBatchBalance,
 	SeamLoanScheduleAmortization,
+	SeamLoanDelinquentDays,
 }
