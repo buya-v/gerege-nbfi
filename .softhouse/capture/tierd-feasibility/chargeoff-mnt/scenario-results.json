@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanChargeOff-Part1.feature",
@@ -12,7 +12,7 @@
    "feature_product": null,
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "As a user I want to do a Charge-off for non-fraud loan after disbursement",
    "result": "PASSED",
    "tag": "C2565"
@@ -23,7 +23,7 @@
    "feature_product": null,
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "As a user I want to do a Charge-off for non-fraud loan after repayment",
    "result": "PASSED",
    "tag": "C2566"
@@ -34,7 +34,7 @@
    "feature_product": null,
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "As a user I want to do a Repayment undo after Charge-off for non-fraud",
    "result": "PASSED",
    "tag": "C2567"
@@ -45,7 +45,7 @@
    "feature_product": null,
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "As a user I want to do Charge-off for fraud loan when FEE is added",
    "result": "PASSED",
    "tag": "C2568"
@@ -56,7 +56,7 @@
    "feature_product": null,
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "As a user I want to do a Merchant Refund after charge-off (fee portion)",
    "result": "PASSED",
    "tag": "C2569"
@@ -67,7 +67,7 @@
    "feature_product": null,
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "As a user I want to do a Charge-off for non-fraud loan when FEE and PENALTY added",
    "result": "PASSED",
    "tag": "C2570"
@@ -78,7 +78,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "As a user I want to do Charge-off for non-fraud loan when FEE and PENALTY added (interest portion)",
    "result": "PASSED",
    "tag": "C2571"
@@ -89,7 +89,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "As a user I want to do a Merchant Refund after charge-off for non fraud loan (interest portion)",
    "result": "PASSED",
    "tag": "C2572"
@@ -100,7 +100,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "As a user I want to do a Payout refund after charge-off for non fraud loan (interest portion)",
    "result": "PASSED",
    "tag": "C2573"
@@ -111,7 +111,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "As a user I want to do a Repayment after Charge-off for fraud loan when FEE and PENALTY added (product with interest)",
    "result": "PASSED",
    "tag": "C2574"
@@ -122,7 +122,7 @@
    "feature_product": null,
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "As a user I want to do a Charge-off for fraud loan after disbursement",
    "result": "PASSED",
    "tag": "C2575"
@@ -133,7 +133,7 @@
    "feature_product": null,
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "As a user I want to do a Repayment undo after Charge-off for fraud loan",
    "result": "PASSED",
    "tag": "C2576"
@@ -144,7 +144,7 @@
    "feature_product": null,
    "index": 13,
    "loan": 13,
-   "loan_client_id": null,
+   "loan_client_id": 13,
    "name": "As a user I want to do a Charge-off for fraud loan when FEE is added",
    "result": "PASSED",
    "tag": "C2577"
@@ -155,7 +155,7 @@
    "feature_product": null,
    "index": 14,
    "loan": 14,
-   "loan_client_id": null,
+   "loan_client_id": 14,
    "name": "As a user I want to do a Charge-off for fraud loan when FEE and PENALTY added",
    "result": "PASSED",
    "tag": "C2578"
@@ -166,7 +166,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 15,
    "loan": 15,
-   "loan_client_id": null,
+   "loan_client_id": 15,
    "name": "As a user I want to do a Charge-off for fraud loan when FEE and PENALTY added (interest portion)",
    "result": "PASSED",
    "tag": "C2579"
@@ -177,7 +177,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 16,
    "loan": 16,
-   "loan_client_id": null,
+   "loan_client_id": 16,
    "name": "As a user I want to do a Merchant issue refund for fraud loan when FEE and PENALTY added (interest portion)",
    "result": "PASSED",
    "tag": "C2580"
@@ -188,7 +188,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 17,
    "loan": 17,
-   "loan_client_id": null,
+   "loan_client_id": 17,
    "name": "As a user I want to do Payout refund for fraud loan when FEE and PENALTY added (interest portion)",
    "result": "PASSED",
    "tag": "C2581"
@@ -199,7 +199,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 18,
    "loan": 18,
-   "loan_client_id": null,
+   "loan_client_id": 18,
    "name": "As a user I want to do a Repayment after Charge-off for fraud loan when FEE and PENALTY added",
    "result": "PASSED",
    "tag": "C2582"
@@ -210,7 +210,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 19,
    "loan": 19,
-   "loan_client_id": null,
+   "loan_client_id": 19,
    "name": "As a user I want to repay a loan which was charged-off",
    "result": "PASSED",
    "tag": "C2591"
@@ -221,7 +221,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 20,
    "loan": 20,
-   "loan_client_id": null,
+   "loan_client_id": 20,
    "name": "As a user I want to do a charge-off undo before any other transactions on the loan",
    "result": "PASSED",
    "tag": "C2592"
@@ -232,7 +232,7 @@
    "feature_product": null,
    "index": 21,
    "loan": 21,
-   "loan_client_id": null,
+   "loan_client_id": 21,
    "name": "As a user I want to do a Charge-off before the last repayment",
    "result": "PASSED",
    "tag": "C2593"
@@ -243,7 +243,7 @@
    "feature_product": null,
    "index": 22,
    "loan": 22,
-   "loan_client_id": null,
+   "loan_client_id": 22,
    "name": "As a user I want to do a Charge-off between 2 repayments",
    "result": "PASSED",
    "tag": "C2594"
@@ -254,7 +254,7 @@
    "feature_product": null,
    "index": 23,
    "loan": 23,
-   "loan_client_id": null,
+   "loan_client_id": 23,
    "name": "As a user I want to do a backdated Charge-off when only disbursement transaction happened",
    "result": "PASSED",
    "tag": "C2595"
@@ -265,7 +265,7 @@
    "feature_product": null,
    "index": 24,
    "loan": 24,
-   "loan_client_id": null,
+   "loan_client_id": 24,
    "name": "As a user I want to do an undo on a transaction which was created before the Charge-off",
    "result": "PASSED",
    "tag": "C2596"
@@ -276,7 +276,7 @@
    "feature_product": null,
    "index": 25,
    "loan": 25,
-   "loan_client_id": null,
+   "loan_client_id": 25,
    "name": "As a user I want to do an undo on a transaction which was created on the Charge-off day",
    "result": "PASSED",
    "tag": "C2597"
@@ -287,7 +287,7 @@
    "feature_product": null,
    "index": 26,
    "loan": 26,
-   "loan_client_id": null,
+   "loan_client_id": 26,
    "name": "As a user I want to do a second Charge-off",
    "result": "PASSED",
    "tag": "C2598"
@@ -298,7 +298,7 @@
    "feature_product": null,
    "index": 27,
    "loan": 27,
-   "loan_client_id": null,
+   "loan_client_id": 27,
    "name": "As a user I want to do a second Charge-off undo",
    "result": "PASSED",
    "tag": "C2599"
@@ -309,7 +309,7 @@
    "feature_product": null,
    "index": 28,
    "loan": 28,
-   "loan_client_id": null,
+   "loan_client_id": 28,
    "name": "As a user I want to add charge after Charge-off",
    "result": "PASSED",
    "tag": "C2600"
@@ -320,7 +320,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 29,
    "loan": 29,
-   "loan_client_id": null,
+   "loan_client_id": 29,
    "name": "Verify that Charge-off NOT results an error anymore when to be applied on a loan with an interest",
    "result": "PASSED",
    "tag": "C2706"
@@ -331,7 +331,7 @@
    "feature_product": null,
    "index": 30,
    "loan": 30,
-   "loan_client_id": null,
+   "loan_client_id": 30,
    "name": "Verify that charge-off is reversed/replayed if Scheduled repayment which was placed on a date before the charge-off is reversed after the charge-off",
    "result": "PASSED",
    "tag": "C2761"
@@ -342,7 +342,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_ACCRUAL_ACTIVITY_POSTING",
    "index": 31,
    "loan": 31,
-   "loan_client_id": null,
+   "loan_client_id": 31,
    "name": "Verify that charge-off is reversed/replayed if repayment is reversed after the charge-off with COB process",
    "result": "PASSED",
    "tag": "C3568"
@@ -353,7 +353,7 @@
    "feature_product": null,
    "index": 32,
    "loan": 32,
-   "loan_client_id": null,
+   "loan_client_id": 32,
    "name": "Verify that charge-off is reversed/replayed if Real time repayment which was placed on a date before the charge-off is reversed after the charge-off",
    "result": "PASSED",
    "tag": "C2762"
@@ -364,7 +364,7 @@
    "feature_product": null,
    "index": 33,
    "loan": 33,
-   "loan_client_id": null,
+   "loan_client_id": 33,
    "name": "Verify that charge-off is reversed/replayed if Autopay repayment which was placed on a date before the charge-off is reversed after the charge-off",
    "result": "PASSED",
    "tag": "C2763"
@@ -375,7 +375,7 @@
    "feature_product": null,
    "index": 34,
    "loan": 34,
-   "loan_client_id": null,
+   "loan_client_id": 34,
    "name": "Verify that charge-off is NOT reversed/replayed if OCA repayment which was placed and reversed on a date after the charge-off",
    "result": "PASSED",
    "tag": "C2764"
@@ -386,7 +386,7 @@
    "feature_product": null,
    "index": 35,
    "loan": 35,
-   "loan_client_id": null,
+   "loan_client_id": 35,
    "name": "Verify that charge-off is reversed/replayed if Goodwill credit transaction is placed on a date before the charge-off on business date after the charge-off",
    "result": "PASSED",
    "tag": "C2765"
@@ -397,7 +397,7 @@
    "feature_product": null,
    "index": 36,
    "loan": 36,
-   "loan_client_id": null,
+   "loan_client_id": 36,
    "name": "As a user I want to do a undo Charge-off with reversal external Id",
    "result": "PASSED",
    "tag": "C2766"
@@ -408,7 +408,7 @@
    "feature_product": null,
    "index": 37,
    "loan": 37,
-   "loan_client_id": null,
+   "loan_client_id": 37,
    "name": "Verify that charge-off is reversed/replayed in case of partial payment, charge-off, second part of payment, reverse 1st payment",
    "result": "PASSED",
    "tag": "C2767"
@@ -419,7 +419,7 @@
    "feature_product": null,
    "index": 38,
    "loan": 38,
-   "loan_client_id": null,
+   "loan_client_id": 38,
    "name": "Verify that charge-off is results an error in case of partial payment, charge-off, fee added after charge-off",
    "result": "PASSED",
    "tag": "C2768"
@@ -430,7 +430,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY",
    "index": 39,
    "loan": 39,
-   "loan_client_id": null,
+   "loan_client_id": 39,
    "name": "Verify that on interest bearing loans the accrual of interest is stopped when the loan is charged-off",
    "result": "PASSED",
    "tag": "C2779"
@@ -441,7 +441,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY",
    "index": 40,
    "loan": 40,
-   "loan_client_id": null,
+   "loan_client_id": 40,
    "name": "Verify that on interest bearing loans the accrual of interest is resumed and aggregated when the charge-off is reverted",
    "result": "PASSED",
    "tag": "C2780"
@@ -452,7 +452,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY",
    "index": 41,
    "loan": 41,
-   "loan_client_id": null,
+   "loan_client_id": 41,
    "name": "Verify that on interest bearing loans the accrual of interest is stopped when the loan is charged-off even if fully paid after the charge-off",
    "result": "PASSED",
    "tag": "C2781"
@@ -463,7 +463,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY_INT_RECALC",
    "index": 42,
    "loan": 42,
-   "loan_client_id": null,
+   "loan_client_id": 42,
    "name": "Accrual handling in case of charged-off loan when charge-off behavior is regular, interestRecalculation = true, cumulative loan",
    "result": "PASSED",
    "tag": "C3545"
@@ -474,7 +474,7 @@
    "feature_product": null,
    "index": 43,
    "loan": 43,
-   "loan_client_id": null,
+   "loan_client_id": 43,
    "name": "Verify that the accrual of charges is not happened when the loan is charged-off on charge's due date but resumed when the charge-off is reverted",
    "result": "PASSED",
    "tag": "C2782"
@@ -485,7 +485,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 44,
    "loan": 44,
-   "loan_client_id": null,
+   "loan_client_id": 44,
    "name": "Verify that the user is able to do a Charge-off for fraud loan when FEE and PENALTY added - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2891"
@@ -496,7 +496,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 45,
    "loan": 45,
-   "loan_client_id": null,
+   "loan_client_id": 45,
    "name": "Verify that the user is able to do a Charge-off for non-fraud loan after disbursement - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2892"
@@ -507,7 +507,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 46,
    "loan": 46,
-   "loan_client_id": null,
+   "loan_client_id": 46,
    "name": "Verify that the user is able to do a Charge-off for non-fraud loan after repayment - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2893"
@@ -518,7 +518,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 47,
    "loan": 47,
-   "loan_client_id": null,
+   "loan_client_id": 47,
    "name": "Verify that the user is able to do a Repayment undo after Charge-off for non-fraud - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2894"
@@ -529,7 +529,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 48,
    "loan": 48,
-   "loan_client_id": null,
+   "loan_client_id": 48,
    "name": "Verify that the user is able to do a backdated Charge-off when only disbursement transaction happened - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2895"
@@ -540,7 +540,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 49,
    "loan": 49,
-   "loan_client_id": null,
+   "loan_client_id": 49,
    "name": "Verify that charge-off is reversed/replayed if Goodwill credit transaction is placed on a date before the charge-off on business date after the charge-off - - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION product",
    "result": "PASSED",
    "tag": "C2896"
@@ -551,7 +551,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 50,
    "loan": 50,
-   "loan_client_id": null,
+   "loan_client_id": 50,
    "name": "Verify charge-off GL entries in case of reverse-replay on fraud loan",
    "result": "PASSED",
    "tag": "C3067"
