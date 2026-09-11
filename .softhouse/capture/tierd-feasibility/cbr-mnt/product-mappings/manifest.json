@@ -1,0 +1,37 @@
+[
+ {
+  "file": "product-mappings/create-request-LP1.json",
+  "log_line": 10153,
+  "sha256": "6d0a6fe543f26cb9733156c82697e4fd3603f266bfcba851424ccfa6558f9471"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACCRUAL_ACTIVITY.json",
+  "log_line": 19494,
+  "sha256": "31fde84bdf196f9fe05750f155ce9d151ff93544ab034980a3ebdf1e76eae35d"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACC_LAST_INSTALLMENT.json",
+  "log_line": 19584,
+  "sha256": "22274022e7127cf5f1215451c9a5538c28ea7a3c317a5cc6638349a202ffe775"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF.json",
+  "log_line": 15670,
+  "sha256": "d09843cf472d5c4017645d88c3245b64d38fb98ddb924cea88e0c13745d4da41"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_DOWNPAYMENT_ADVANCED_PAYMENT_ALLOCATION.json",
+  "log_line": 11107,
+  "sha256": "2f8acfca5f4cde04aaa78057d2f754be9f9030efacf4c2d725e192ba251f4526"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_CUSTOM_PAYMENT_ALLOCATION.json",
+  "log_line": 16508,
+  "sha256": "1d6234aba733d8a7eb414c3bf65aec3a02bcf21e8a729c76d8d4c0bae194b6aa"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION.json",
+  "log_line": 11054,
+  "sha256": "c5166cc79a8c5ca33c1ae36f5ce898be42fcf92d5cd61df602edf52c35a85b94"
+ }
+]
