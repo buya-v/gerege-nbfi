@@ -80,6 +80,24 @@ func (s *cellSink) cmpStoredValue(name string, want, got int32) {
 	}
 }
 
+// diffWriteOffAllocation compares the four write-off portions and the
+// write-off amount. Each portion is a money cell; a port that drops a bucket,
+// writes off only principal (or principal + interest), or swaps fee and penalty
+// moves at least one of them while leaving the others intact. The total is
+// graded too, so a port that returns four buckets that do not reconcile to the
+// observed amount is a visible money difference.
+func diffWriteOffAllocation(s *cellSink, want AllocationMoney, wantTotal string, got *AllocationMoney, gotTotal string) {
+	var g AllocationMoney
+	if got != nil {
+		g = *got
+	}
+	s.cmpMoney("write_off.principal", want.Principal, g.Principal)
+	s.cmpMoney("write_off.interest", want.Interest, g.Interest)
+	s.cmpMoney("write_off.fee", want.Fee, g.Fee)
+	s.cmpMoney("write_off.penalty", want.Penalty, g.Penalty)
+	s.cmpMoney("write_off.total", wantTotal, gotTotal)
+}
+
 // diffAllocation compares the four-bucket allocation and the leftover.
 func diffAllocation(s *cellSink, want AllocationMoney, wantLeftover string, got AllocationMoney, gotLeftover string) {
 	s.cmpMoney("allocation.penalty", want.Penalty, got.Penalty)
@@ -201,6 +219,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		// compared as text so they never enter the money-cell count.
 		s.cmpText("overdue_days", v.Expect.OverdueDays, got.OverdueDays)
 		s.cmpText("delinquent_days", v.Expect.DelinquentDays, got.DelinquentDays)
+	case SeamLoanWriteOffFourBucket:
+		diffWriteOffAllocation(&s, *v.Expect.WriteOffAllocation, v.Expect.WriteOffTotalMinor, got.WriteOffAllocation, got.WriteOffTotalMinor)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

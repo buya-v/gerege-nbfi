@@ -116,6 +116,25 @@ const SeamLoanJournalEntryBatchBalance = "loan-journal-entry-batch-balance"
 // capture exposes per-period placement on a loan read-back.
 const SeamLoanScheduleAmortization = "loan-schedule-amortization"
 
+// SeamLoanWriteOffFourBucket is the capture seam this schema grades: the
+// four-bucket discharge a write-off posts. WriteOffOutstanding
+// [writeoff.go:36] reads the per-instalment outstanding of every instalment
+// whose obligations are NOT met and sums each of the four buckets
+// (principal/interest/fee/penalty) across the schedule; the four returned
+// buckets are the write-off transaction's portions, and they sum to its
+// amount. The request carries the observed per-instalment schedule reduced to
+// the four outstanding cells plus the obligationsMet flag; the expectation is
+// the four portions the oracle wrote onto the write-off transaction and their
+// total. A port that writes off only principal (or principal and interest),
+// drops the fee or the penalty bucket, or swaps fee and penalty moves at least
+// one portion. On the pinned loan-11 observation fee (10000) and penalty
+// (5700) are both non-zero and DIFFERENT, so a swap cannot hide. The
+// obligationsMet skip is NOT graded here: loan 11 has no instalment with
+// obligations met, so a port that forgets the skip sums the same numbers and a
+// drive for it would kill zero. A capture would need a loan with at least one
+// fully-paid instalment, then written off.
+const SeamLoanWriteOffFourBucket = "loan-writeoff-four-bucket"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -203,6 +222,28 @@ type ScheduleRequest struct {
 type ScheduleAmortizationRequest struct {
 	PrincipalDisbursedMinor  string   `json:"principal_disbursed_minor"`
 	PrincipalComponentsMinor []string `json:"principal_components_minor"`
+}
+
+// WriteOffInstallmentInput is one repayment-schedule instalment reduced to the
+// cells loan.WriteOffOutstanding reads: its four outstanding buckets, each an
+// integer STRING in minor units, and its obligationsMet flag. The flag is
+// omitted when false (the committed loan-11 schedule has no fully-paid
+// instalment), so a request with every obligationsMet false carries no flag
+// token — the port's zero value is false and the instalment is written off.
+type WriteOffInstallmentInput struct {
+	PrincipalOutstandingMinor string `json:"principal_outstanding_minor"`
+	InterestOutstandingMinor  string `json:"interest_outstanding_minor"`
+	FeeOutstandingMinor       string `json:"fee_outstanding_minor"`
+	PenaltyOutstandingMinor   string `json:"penalty_outstanding_minor"`
+	ObligationsMet            bool   `json:"obligations_met,omitempty"`
+}
+
+// WriteOffRequest is the loan-writeoff-four-bucket seam's input: the observed
+// repayment schedule as the per-instalment outstanding loan.WriteOffOutstanding
+// consumes. Period 0 of a loan read-back is the disbursement row and carries no
+// outstanding buckets, so the instalments are exactly the repayment periods.
+type WriteOffRequest struct {
+	Installments []WriteOffInstallmentInput `json:"installments"`
 }
 
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
@@ -296,6 +337,9 @@ type Request struct {
 	// Delinquency is the loan-delinquent-days seam's input: the observed
 	// overdue-since date and the business date.
 	Delinquency *DelinquencyRequest `json:"delinquency,omitempty"`
+	// WriteOff is the loan-writeoff-four-bucket seam's input: the observed
+	// per-instalment schedule write-off arithmetic consumes.
+	WriteOff *WriteOffRequest `json:"write_off,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -350,6 +394,15 @@ type Expect struct {
 	// integer STRING. The committed corpus observes pause 0 / grace 0, so it
 	// equals OverdueDays on every row transcribed.
 	DelinquentDays string `json:"delinquent_days,omitempty"`
+	// WriteOffAllocation is the loan-writeoff-four-bucket seam's four discharged
+	// portions — the write-off transaction's principalPortion, interestPortion,
+	// feeChargesPortion and penaltyChargesPortion — each an integer STRING in
+	// minor units.
+	WriteOffAllocation *AllocationMoney `json:"write_off_allocation,omitempty"`
+	// WriteOffTotalMinor is the write-off transaction's amount, an integer
+	// STRING in minor units. The four portions sum to it exactly; the sum is
+	// the invariant this seam exists to grade.
+	WriteOffTotalMinor string `json:"write_off_total_minor,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

@@ -48,6 +48,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertPrincipalAmortizesToZero(v, got)}
 	case SeamLoanDelinquentDays:
 		return []InvariantResult{assertDelinquentDaysConsistent(got)}
+	case SeamLoanWriteOffFourBucket:
+		return []InvariantResult{assertWriteOffFourBucketsSum(got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -269,5 +271,48 @@ func assertDelinquentDaysConsistent(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("overdue days %s and delinquent days %s are non-negative integer day counts with delinquent <= overdue", got.OverdueDays, got.DelinquentDays)
+	return r
+}
+
+// assertWriteOffFourBucketsSum: a write-off result's four portions are
+// non-negative integer minor-unit amounts and they sum EXACTLY to the write-off
+// amount. This is the property the seam exists to grade: a discharge is not a
+// transcription of the oracle's write-off transaction unless every one of the
+// four buckets is present and the four reconcile to the amount the processor
+// posted. The assertion is on the implementation's RESULT, so a port that
+// returns four self-consistent buckets summing to the wrong total is VIOLATED.
+func assertWriteOffFourBucketsSum(got Expect) InvariantResult {
+	r := InvariantResult{Name: "writeoff_four_buckets_sum_to_amount", Assertions: 5}
+	if got.WriteOffAllocation == nil {
+		r.Status = InvariantViolated
+		r.Detail = "write_off_allocation is nil"
+		return r
+	}
+	if !isIntegerMinorString(got.WriteOffTotalMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("write-off total %q is not a non-negative integer minor amount", got.WriteOffTotalMinor)
+		return r
+	}
+	a := got.WriteOffAllocation
+	for name, val := range map[string]string{
+		"principal": a.Principal,
+		"interest":  a.Interest,
+		"fee":       a.Fee,
+		"penalty":   a.Penalty,
+	} {
+		if !isIntegerMinorString(val) {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("write-off %s portion %q is not a non-negative integer minor amount", name, val)
+			return r
+		}
+	}
+	sum, ok := sumMinorStrings(a.Principal, a.Interest, a.Fee, a.Penalty)
+	if !ok || sum != got.WriteOffTotalMinor {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("write-off portions sum to %s, not the write-off amount %s", sum, got.WriteOffTotalMinor)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("write-off portions sum to the amount %s exactly across all four buckets", got.WriteOffTotalMinor)
 	return r
 }

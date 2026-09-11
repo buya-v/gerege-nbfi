@@ -146,8 +146,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goJournalEntryBatch(req.JournalEntries)
 	case req.Delinquency != nil:
 		return goDelinquency(*req.Delinquency)
+	case req.WriteOff != nil:
+		return goWriteOff(*req.WriteOff)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off")
 	}
 }
 
@@ -506,6 +508,136 @@ func goDelinquency(r DelinquencyRequest) (Expect, error) {
 		OverdueDays:    strconv.FormatInt(overdue, 10),
 		DelinquentDays: strconv.FormatInt(delinquent, 10),
 	}, nil
+}
+
+// goWriteOff ports the loan-writeoff-four-bucket seam: it reduces the observed
+// repayment schedule to loan.WriteOffInstallment rows and runs the port's own
+// loan.WriteOffOutstanding, which sums each of the four outstanding buckets
+// across every instalment whose obligations are NOT met. The four returned
+// buckets are the write-off transaction's portions; their sum is its amount.
+// Every cell is an integer STRING in minor units — no float enters the path.
+func goWriteOff(r WriteOffRequest) (Expect, error) {
+	installments, err := writeOffInstallmentsFromRequest(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	return writeOffExpect(loan.WriteOffOutstanding(installments)), nil
+}
+
+// writeOffInstallmentsFromRequest reduces the observed per-instalment schedule
+// to the port's input rows. Every monetary cell is an integer STRING in minor
+// units, so no float enters the path.
+func writeOffInstallmentsFromRequest(r WriteOffRequest) ([]loan.WriteOffInstallment, error) {
+	installments := make([]loan.WriteOffInstallment, len(r.Installments))
+	for i, in := range r.Installments {
+		principal, err := parseMinorText(in.PrincipalOutstandingMinor)
+		if err != nil {
+			return nil, err
+		}
+		interest, err := parseMinorText(in.InterestOutstandingMinor)
+		if err != nil {
+			return nil, err
+		}
+		fee, err := parseMinorText(in.FeeOutstandingMinor)
+		if err != nil {
+			return nil, err
+		}
+		penalty, err := parseMinorText(in.PenaltyOutstandingMinor)
+		if err != nil {
+			return nil, err
+		}
+		installments[i] = loan.WriteOffInstallment{
+			PrincipalOutstanding: principal,
+			InterestOutstanding:  interest,
+			FeeOutstanding:       fee,
+			PenaltyOutstanding:   penalty,
+			ObligationsMet:       in.ObligationsMet,
+		}
+	}
+	return installments, nil
+}
+
+// writeOffExpect renders a write-off allocation as the seam's expected cells:
+// the four discharged portions and their sum, the write-off amount.
+func writeOffExpect(alloc loan.Allocation) Expect {
+	return Expect{
+		WriteOffAllocation: &AllocationMoney{
+			Principal: strconv.FormatInt(int64(alloc.Principal), 10),
+			Interest:  strconv.FormatInt(int64(alloc.Interest), 10),
+			Fee:       strconv.FormatInt(int64(alloc.Fee), 10),
+			Penalty:   strconv.FormatInt(int64(alloc.Penalty), 10),
+		},
+		WriteOffTotalMinor: strconv.FormatInt(int64(alloc.Total()), 10),
+	}
+}
+
+// writeOffWrongMode selects which deliberately-wrong discharge to run. Every
+// mode delegates every non-write-off request to the correct port, so each drive
+// goes red ONLY on the write-off vector (vector isolation).
+type writeOffWrongMode int
+
+const (
+	// wrongWriteOffPrincipalOnly discharges only the principal bucket, as a
+	// port that reads the write-off as a pure principal charge-off does. On the
+	// pinned loan-11 schedule it reads 10000000/0/0/0 and 6618553 short.
+	wrongWriteOffPrincipalOnly writeOffWrongMode = iota
+	// wrongWriteOffPrincipalAndInterest discharges the principal and interest
+	// buckets but drops both charge buckets, the fee/penalty blind spot.
+	wrongWriteOffPrincipalAndInterest
+	// wrongWriteOffDropsFee discharges principal, interest and penalty but not
+	// the fee bucket, so the pinned fee 10000 falls out of the total.
+	wrongWriteOffDropsFee
+	// wrongWriteOffDropsPenalty discharges principal, interest and fee but not
+	// the penalty bucket, so the pinned penalty 5700 falls out of the total.
+	wrongWriteOffDropsPenalty
+	// wrongWriteOffSwapsFeeAndPenalty discharges all four buckets but assigns
+	// the fee outstanding to the penalty portion and vice versa. The total is
+	// unchanged (10000000+661853+10000+5700 = 10677553), so only the two
+	// bucket cells move — the swap the distinct fee (10000) and penalty (5700)
+	// exist to catch.
+	wrongWriteOffSwapsFeeAndPenalty
+)
+
+// wrongWriteOffEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-writeoff-four-bucket seam, parameterised by which discharge defect it
+// commits.
+type wrongWriteOffEvaluator struct {
+	goEvaluator
+	mode writeOffWrongMode
+}
+
+func (w wrongWriteOffEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.WriteOff != nil {
+		return wrongWriteOff(*req.WriteOff, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongWriteOff runs the correct discharge and then applies one defect, so each
+// drive differs from the port on exactly the cells its defect moves.
+func wrongWriteOff(r WriteOffRequest, mode writeOffWrongMode) (Expect, error) {
+	installments, err := writeOffInstallmentsFromRequest(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	return writeOffExpect(defectWriteOff(loan.WriteOffOutstanding(installments), mode)), nil
+}
+
+// defectWriteOff applies a write-off discharge defect to a correct allocation.
+func defectWriteOff(a loan.Allocation, mode writeOffWrongMode) loan.Allocation {
+	switch mode {
+	case wrongWriteOffPrincipalOnly:
+		return loan.Allocation{Principal: a.Principal}
+	case wrongWriteOffPrincipalAndInterest:
+		return loan.Allocation{Principal: a.Principal, Interest: a.Interest}
+	case wrongWriteOffDropsFee:
+		return loan.Allocation{Principal: a.Principal, Interest: a.Interest, Penalty: a.Penalty}
+	case wrongWriteOffDropsPenalty:
+		return loan.Allocation{Principal: a.Principal, Interest: a.Interest, Fee: a.Fee}
+	case wrongWriteOffSwapsFeeAndPenalty:
+		return loan.Allocation{Principal: a.Principal, Interest: a.Interest, Fee: a.Penalty, Penalty: a.Fee}
+	}
+	return a
 }
 
 // amortizationWrongMode selects which deliberately-wrong whole-schedule
@@ -1523,4 +1655,32 @@ func init() {
 			"zero, so the pinned absent-date read-backs (loan 3 and loan L06 at 2026-09-01) read a "+
 			"non-zero day count where the oracle read 0 and the vector goes red",
 		wrongDelinquencyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongDelinquencyAbsentNonZero})
+	RegisterWrong("loan-wrong-writeoff-principal-only",
+		"discharges only the principal bucket of a write-off, as a port that reads the write-off "+
+			"as a pure principal charge-off does, so the pinned loan-11 write-off reports "+
+			"interest/fee/penalty 0 and a total of 10000000 where the oracle discharged all four "+
+			"buckets to 10677553; it goes red on the three dropped buckets and the amount",
+		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffPrincipalOnly})
+	RegisterWrong("loan-wrong-writeoff-principal-and-interest",
+		"discharges the principal and interest buckets of a write-off but drops both charge "+
+			"buckets, so the pinned loan-11 write-off reports fee 0 and penalty 0 and a total of "+
+			"10661853 instead of the observed 10677553 — the blind spot that lets the two "+
+			"non-zero, distinct charge buckets fall out",
+		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffPrincipalAndInterest})
+	RegisterWrong("loan-wrong-writeoff-drops-fee",
+		"discharges principal, interest and penalty of a write-off but not the fee bucket, so the "+
+			"pinned loan-11 write-off reports fee 0 and a total 10000 minor units short of the "+
+			"observed 10677553 while the penalty bucket stays right",
+		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffDropsFee})
+	RegisterWrong("loan-wrong-writeoff-drops-penalty",
+		"discharges principal, interest and fee of a write-off but not the penalty bucket, so the "+
+			"pinned loan-11 write-off reports penalty 0 and a total 5700 minor units short of the "+
+			"observed 10677553 while the fee bucket stays right",
+		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffDropsPenalty})
+	RegisterWrong("loan-wrong-writeoff-swaps-fee-and-penalty",
+		"discharges all four buckets of a write-off but posts the fee outstanding into the penalty "+
+			"portion and the penalty outstanding into the fee portion; the total stays exactly the "+
+			"observed 10677553, so only the fee and penalty bucket cells move — the swap the "+
+			"observed distinct fee (10000) and penalty (5700) exist to catch",
+		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffSwapsFeeAndPenalty})
 }
