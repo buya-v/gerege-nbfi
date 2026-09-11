@@ -1,0 +1,26 @@
+{
+  "clientId": 20,
+  "productId": 3,
+  "externalId": "OHCHGCAP-L01",
+  "principal": "100000",
+  "loanTermFrequency": 12,
+  "loanTermFrequencyType": 2,
+  "numberOfRepayments": 12,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": 2,
+  "interestRatePerPeriod": 12,
+  "interestRateFrequencyType": 3,
+  "amortizationType": 1,
+  "interestType": 0,
+  "interestCalculationPeriodType": 1,
+  "transactionProcessingStrategyCode": "mifos-standard-strategy",
+  "loanType": "individual",
+  "submittedOnDate": "01 January 2026",
+  "expectedDisbursementDate": "01 January 2026",
+  "charges": [
+    {"chargeId": 5, "amount": "123.45", "dueDate": "15 January 2026"},
+    {"chargeId": 4, "amount": "67.89", "dueDate": "15 February 2026"}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

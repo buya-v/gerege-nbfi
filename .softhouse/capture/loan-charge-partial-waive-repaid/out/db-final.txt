@@ -1,0 +1,38 @@
+# OH-CHGCAP-BD DB evidence: loan 18 [final] (read-only, tenant gerege)
+## m_business_date
+type|date
+BUSINESS_DATE|2026-09-03
+COB_DATE|2026-09-02
+(2 rows)
+## m_loan
+id|account_no|external_id|client_id|product_id|loan_status_id|principal_amount|disbursedon_date|principal_outstanding_derived|interest_outstanding_derived|fee_charges_outstanding_derived|penalty_charges_outstanding_derived|total_outstanding_derived|closedon_date
+18|000000018|OHCHGCAP-L01|20|3|600|100000.000000|2026-01-01|0.000000|0.000000|0.000000|0.000000|0.000000|2026-09-03
+(1 row)
+## m_loan_repayment_schedule (amount / completed / obligations_met_on_date)
+installment|duedate|principal_amount|principal_completed_derived|interest_amount|interest_completed_derived|fee_charges_amount|fee_charges_completed_derived|penalty_charges_amount|penalty_charges_completed_derived|obligations_met_on_date
+1|2026-02-01|7884.880000|7884.880000|1000.000000|1000.000000|123.450000|123.450000|||2026-09-03
+2|2026-03-01|7963.730000|7963.730000|921.150000|921.150000|||67.890000||2026-09-03
+3|2026-04-01|8043.370000|8043.370000|841.510000|841.510000|||||2026-09-03
+4|2026-05-01|8123.800000|8123.800000|761.080000|761.080000|||||2026-09-03
+5|2026-06-01|8205.040000|8205.040000|679.840000|679.840000|||||2026-09-03
+6|2026-07-01|8287.090000|8287.090000|597.790000|597.790000|||||2026-09-03
+7|2026-08-01|8369.960000|8369.960000|514.920000|514.920000|||||2026-09-03
+8|2026-09-01|8453.660000|8453.660000|431.220000|431.220000|||||2026-09-03
+9|2026-10-01|8538.200000|8538.200000|346.680000|346.680000|||||2026-09-03
+10|2026-11-01|8623.580000|8623.580000|261.300000|261.300000|||||2026-09-03
+11|2026-12-01|8709.810000|8709.810000|175.070000|175.070000|||||2026-09-03
+12|2027-01-01|8796.880000|8796.880000|87.970000|87.970000|||||2026-09-03
+(12 rows)
+## m_loan_charge
+id|charge_id|is_penalty|amount|amount_paid_derived|amount_waived_derived|amount_writtenoff_derived|amount_outstanding_derived|is_paid_derived|waived|due_for_collection_as_of_date
+13|4|t|67.890000|0.000000|67.890000||0.000000|f|t|2026-02-15
+14|5|f|123.450000|123.450000|||0.000000|t|f|2026-01-15
+(2 rows)
+## m_loan_transaction
+id|transaction_type_enum|transaction_date|amount|principal_portion_derived|interest_portion_derived|fee_charges_portion_derived|penalty_charges_portion_derived|outstanding_loan_balance_derived|is_reversed
+69|1|2026-01-01|100000.000000|||||100000.000000|f
+70|2|2026-01-15|100.000000|||100.000000||100000.000000|f
+71|9|2026-02-15|67.890000|||||100000.000000|f
+72|2|2026-09-03|106641.980000|100000.000000|6618.530000|23.450000||0.000000|f
+73|10|2026-09-03|6741.980000||6618.530000|123.450000|||f
+(5 rows)
