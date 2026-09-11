@@ -42,6 +42,12 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 			assertHoldReleaseAvailableRelation(got),
 			assertHoldReleaseIsObserved(v, got),
 		}
+	case SeamSavingsHoldNetRunningBalance:
+		return []InvariantResult{
+			assertHoldNetRunningBalanceRowCount(v, got),
+			assertHoldNetRunningBalanceMoneyIntegrity(got),
+			assertHoldNetHoldDepressesReleaseRestores(v, got),
+		}
 	default:
 		return nil
 	}
@@ -187,5 +193,115 @@ func assertHoldReleaseIsObserved(v *Vector, got Expect) InvariantResult {
 	} else {
 		r.Detail = fmt.Sprintf("outstanding hold reported as held %d", held)
 	}
+	return r
+}
+
+// assertHoldNetRunningBalanceRowCount: the stored chain must carry exactly one
+// running balance per observed row, the shape the oracle's read-back records.
+func assertHoldNetRunningBalanceRowCount(v *Vector, got Expect) InvariantResult {
+	want := 0
+	if v != nil && v.Request.HoldNetRunningBalance != nil {
+		want = len(v.Request.HoldNetRunningBalance.Transactions)
+	}
+	r := InvariantResult{Name: "hold_net_running_balances_per_row", Assertions: 1}
+	if len(got.HoldNetRunningBalances) != want {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("hold_net_running_balances has %d cells for a %d-row stream", len(got.HoldNetRunningBalances), want)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("hold_net_running_balances has %d cells for a %d-row stream", len(got.HoldNetRunningBalances), want)
+	return r
+}
+
+// assertHoldNetRunningBalanceMoneyIntegrity: every stored chain cell and the
+// posted balance are non-negative integer minor-unit amounts. This is the G-19
+// money-integrity property at this seam; a float or a negative is refused here.
+func assertHoldNetRunningBalanceMoneyIntegrity(got Expect) InvariantResult {
+	r := InvariantResult{Name: "hold_net_running_balance_money_is_integer_minor", Assertions: len(got.HoldNetRunningBalances) + 1}
+	if !isIntegerMinorString(got.AccountBalanceMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("account_balance %q is not a non-negative integer minor amount", got.AccountBalanceMinor)
+		return r
+	}
+	for i, b := range got.HoldNetRunningBalances {
+		if !isIntegerMinorString(b) {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("hold_net_running_balances[%d] %q is not a non-negative integer minor amount", i, b)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("all %d chain cells and account_balance are non-negative integer minor units", len(got.HoldNetRunningBalances))
+	return r
+}
+
+// assertHoldNetHoldDepressesReleaseRestores encodes the one property this seam
+// grades, structurally: over the request's own stream, the chain cell on the
+// AMOUNT_HOLD row is exactly the cell before it less the held amount, the
+// release row (when present) restores the chain to that pre-hold value, and the
+// posted balance AccountBalanceOf equals that pre-hold value — the hold moves
+// the stored chain and NOT the posted balance. The relation is checked on the
+// implementation's own result, so it cannot certify a specific oracle value (the
+// cell comparison does that); it catches the structural mistakes — a hold
+// ignored, a hold credited, a release not added back — even if their magnitudes
+// happened to land somewhere plausible.
+func assertHoldNetHoldDepressesReleaseRestores(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "hold_net_hold_depresses_release_restores_balance_unmoved", Assertions: 3}
+	if v == nil || v.Request.HoldNetRunningBalance == nil {
+		r.Status = InvariantNotApplicable
+		r.Detail = "no hold_net_running_balance request"
+		return r
+	}
+	rows := v.Request.HoldNetRunningBalance.Transactions
+	chain := got.HoldNetRunningBalances
+	if len(chain) != len(rows) || len(rows) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("chain has %d cells for %d rows", len(chain), len(rows))
+		return r
+	}
+	holdIdx := -1
+	for i, row := range rows {
+		if row.TypeStoredValue == 20 {
+			holdIdx = i
+		}
+	}
+	if holdIdx <= 0 {
+		r.Status = InvariantViolated
+		r.Detail = "stream carries no AMOUNT_HOLD row preceded by an opening chain value"
+		return r
+	}
+	pre, errPre := parseMinorText(chain[holdIdx-1])
+	holdVal, errHold := parseMinorText(chain[holdIdx])
+	held, errHeld := parseMinorText(rows[holdIdx].AmountMinor)
+	posted, errPosted := parseMinorText(got.AccountBalanceMinor)
+	if errPre != nil || errHold != nil || errHeld != nil || errPosted != nil {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("cannot evaluate the hold algebra over (%q, %q, %q)", chain[holdIdx-1], chain[holdIdx], got.AccountBalanceMinor)
+		return r
+	}
+	if want := pre - held; holdVal != want {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("hold row chain %d != pre-hold %d - held %d = %d: the hold did not depress the stored chain", holdVal, pre, held, want)
+		return r
+	}
+	if posted != pre {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("posted balance %d != pre-hold chain %d: the hold moved the posted balance", posted, pre)
+		return r
+	}
+	for i, row := range rows {
+		if row.TypeStoredValue != 21 {
+			continue
+		}
+		releaseVal, err := parseMinorText(chain[i])
+		if err != nil || releaseVal != pre {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("release row chain %q != pre-hold %d: the release did not restore the stored chain", chain[i], pre)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("hold row %d = pre-hold %d - held %d; release restores %d; posted balance unmoved at %d", holdVal, pre, held, pre, posted)
 	return r
 }

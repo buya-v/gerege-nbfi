@@ -80,6 +80,39 @@ const SeamSavingsTransactions = "savings-transactions"
 // after-release state is the one that pins restoration; both are on this seam.
 const SeamSavingsHoldRelease = "savings-hold-release"
 
+// SeamSavingsHoldNetRunningBalance is the running-balance-chain capture seam: the
+// oracle's stored `running_balance_derived` column, the hold-NET, available-shaped
+// per-row chain SavingsAccount.recalculateDailyBalances writes
+// [VERIFIED: SavingsAccount.java:895-919; the port is summary.go
+// HoldNetRunningBalancesOf]. It is NOT the posted balance: the posted balance is
+// AccountBalanceOf (account_balance_derived), which excludes holds, while this
+// column subtracts an AMOUNT_HOLD and its AMOUNT_RELEASE adds back. The port's own
+// doc comment settles why grading this column does not breach "holds alter
+// available only, never posted balance" — the two columns answer different
+// questions and the vector keeps them apart.
+//
+// THE OBSERVATION, on savings account 1 (id 1, accountNo 000000001) in
+// savings-hold-release/: the full stream row by row is
+//
+//	id 1 DEPOSIT         1000.00  2026-07-02   -> 1000.00
+//	id 3 INTEREST_POSTING   0.15  2026-08-01   -> 1000.15
+//	id 2 INTEREST_POSTING   0.16  2026-09-01   -> 1000.31
+//	id 6 AMOUNT_HOLD      137.29  2026-09-03   ->  863.02  (release_id 7)
+//	id 7 AMOUNT_RELEASE   137.29  2026-09-03   -> 1000.31
+//
+// so the chain moves DOWN only on the hold and back UP only on its release,
+// while accountBalance stays 1000.31 at every point. Ids 2 and 3 are INVERTED
+// against the chain: 1000.00 + 0.15 = 1000.15 (id 3) precedes the 0.16 posting
+// (id 2). THE ORDER IS THE ORACLE'S TRANSACTION ORDER — transaction date
+// ascending, then id ascending — never raw id order and never the read-back
+// array order (the read-back lists rows date-descending), and a port that folds
+// in id order reads 1000.16/1000.31 where the chain has 1000.15/1000.31.
+//
+// The three cells the port derives and this seam pins: the per-row chain
+// HoldNetRunningBalancesOf, one integer minor-unit cell per observed row, and the
+// posted AccountBalanceOf, which the hold does NOT move.
+const SeamSavingsHoldNetRunningBalance = "savings-hold-net-running-balance"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{SavingsContext} }
@@ -214,13 +247,29 @@ type HoldReleaseRequest struct {
 	Transactions []HoldReleaseRow `json:"transactions"`
 }
 
+// HoldNetRunningBalanceRequest is the savings-hold-net-running-balance seam's
+// input: the observed append-only stream of savings account 1 in the ORACLE'S
+// TRANSACTION ORDER — transaction date ascending, then id ascending — which is
+// (1, 3, 2, 6) after the hold and (1, 3, 2, 6, 7) after the release. The order
+// is NOT id order and NOT the read-back's array order; both are observations that
+// would fold a different chain. OWNER.md records the dates: id 1 DEPOSIT
+// 2026-07-02, id 3 INTEREST_POSTING 2026-08-01, id 2 INTEREST_POSTING
+// 2026-09-01, id 6 AMOUNT_HOLD 2026-09-03, id 7 AMOUNT_RELEASE 2026-09-03 — so
+// 1000.00 + 0.15 (id 3) precedes the 0.16 posting (id 2), and the hold and its
+// release share a date and are ordered by id. The request carries the order
+// because it is the observation; admission cannot reconstruct it.
+type HoldNetRunningBalanceRequest struct {
+	Transactions []HoldReleaseRow `json:"transactions"`
+}
+
 // Request is the input the implementation is graded on. It is the union of the
 // seams; a vector sets exactly one sub-request.
 type Request struct {
-	DailyInterest *DailyInterestRequest     `json:"daily_interest,omitempty"`
-	AccountStatus *AccountStatusRequest     `json:"account_status,omitempty"`
-	Stream        *TransactionStreamRequest `json:"transaction_stream,omitempty"`
-	HoldRelease   *HoldReleaseRequest       `json:"hold_release,omitempty"`
+	DailyInterest         *DailyInterestRequest         `json:"daily_interest,omitempty"`
+	AccountStatus         *AccountStatusRequest         `json:"account_status,omitempty"`
+	Stream                *TransactionStreamRequest     `json:"transaction_stream,omitempty"`
+	HoldRelease           *HoldReleaseRequest           `json:"hold_release,omitempty"`
+	HoldNetRunningBalance *HoldNetRunningBalanceRequest `json:"hold_net_running_balance,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the daily-interest
@@ -234,14 +283,20 @@ type Request struct {
 // balance), HeldMinor (the transaction-stream hold derived from the AMOUNT_HOLD
 // rows, which the read-back exposes only on the row and in
 // total_savings_amount_on_hold) and AvailableMinor (summary.availableBalance,
-// which the oracle derives as balance less held).
+// which the oracle derives as balance less held); for the
+// savings-hold-net-running-balance seam it is HoldNetRunningBalances — one
+// integer STRING in minor units per observed row, the oracle's stored
+// running_balance_derived chain (HoldNetRunningBalancesOf) — graded ALONGSIDE
+// AccountBalanceMinor, the posted balance the hold never moves, so the one
+// vector states both halves of the property.
 type Expect struct {
-	InterestMinor       string   `json:"interest_minor,omitempty"`
-	StatusID            int32    `json:"status_id,omitempty"`
-	RunningBalances     []string `json:"running_balances,omitempty"`
-	AccountBalanceMinor string   `json:"account_balance_minor,omitempty"`
-	HeldMinor           string   `json:"held_minor,omitempty"`
-	AvailableMinor      string   `json:"available_minor,omitempty"`
+	InterestMinor          string   `json:"interest_minor,omitempty"`
+	StatusID               int32    `json:"status_id,omitempty"`
+	RunningBalances        []string `json:"running_balances,omitempty"`
+	AccountBalanceMinor    string   `json:"account_balance_minor,omitempty"`
+	HeldMinor              string   `json:"held_minor,omitempty"`
+	AvailableMinor         string   `json:"available_minor,omitempty"`
+	HoldNetRunningBalances []string `json:"hold_net_running_balances,omitempty"`
 }
 
 // Vector is one savings golden vector.

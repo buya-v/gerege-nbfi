@@ -115,6 +115,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goTransactionStream(*req.Stream)
 	case req.HoldRelease != nil:
 		return goHoldRelease(*req.HoldRelease)
+	case req.HoldNetRunningBalance != nil:
+		return goHoldNetRunningBalance(*req.HoldNetRunningBalance)
 	default:
 		return Expect{}, fmt.Errorf("savings: request must set exactly one seam sub-request")
 	}
@@ -357,9 +359,9 @@ func (w runningBalanceBeforeEvaluator) Evaluate(req Request) (Expect, error) {
 // stored-value mapping the implementation under test applies; the correct
 // evaluator uses savingsDecode, and the deliberately wrong evaluators pass a
 // corrupt mapping in its place.
-func buildHoldReleaseRows(r HoldReleaseRequest, decode func(stored int32) (savingspkg.SavingsAccountTransactionType, bool)) ([]savingspkg.SavingsAccountTransaction, error) {
-	rows := make([]savingspkg.SavingsAccountTransaction, 0, len(r.Transactions))
-	for i, row := range r.Transactions {
+func buildHoldReleaseRows(stream []HoldReleaseRow, decode func(stored int32) (savingspkg.SavingsAccountTransactionType, bool)) ([]savingspkg.SavingsAccountTransaction, error) {
+	rows := make([]savingspkg.SavingsAccountTransaction, 0, len(stream))
+	for i, row := range stream {
 		t, ok := decode(row.TypeStoredValue)
 		if !ok {
 			return nil, fmt.Errorf("savings: hold row %d: transaction type stored value %d is not a savings transaction type", i, row.TypeStoredValue)
@@ -390,7 +392,7 @@ func buildHoldReleaseRows(r HoldReleaseRequest, decode func(stored int32) (savin
 // and 725.73 as available on the after-hold stream, against the oracle's
 // 1000.31 and 863.02.
 func goHoldRelease(r HoldReleaseRequest) (Expect, error) {
-	rows, err := buildHoldReleaseRows(r, savingsDecode)
+	rows, err := buildHoldReleaseRows(r.Transactions, savingsDecode)
 	if err != nil {
 		return Expect{}, err
 	}
@@ -408,6 +410,122 @@ func goHoldRelease(r HoldReleaseRequest) (Expect, error) {
 		HeldMinor:           strconv.FormatInt(int64(held), 10),
 		AvailableMinor:      strconv.FormatInt(int64(available), 10),
 	}, nil
+}
+
+// goHoldNetRunningBalance evaluates the savings-hold-net-running-balance seam
+// with the port's own derivations, from the same observed append-only stream
+// the request carries IN THE ORACLE'S TRANSACTION ORDER:
+//
+//	hold_net_running_balances = HoldNetRunningBalancesOf(0, rows)  // the stored
+//	                                                               // running_balance_derived chain
+//	account_balance           = AccountBalanceOf(rows)             // the posted balance
+//
+// The two are graded in the SAME vector because they are the two halves of the
+// one property: the stored chain moves DOWN by the hold and back UP by its
+// release, while the posted balance does not move at all. The chain starts from
+// a zero opening balance, as the oracle's full recompute does.
+//
+// The request's row order is the observation. HoldNetRunningBalancesOf folds in
+// the order given, and the capture's chain is transaction-date order
+// (1, 3, 2, 6, 7), not id order, so a request that listed the rows in id order
+// would fold a different chain (1000.16 then 1000.31) and read the 0.16 posting
+// before the 0.15 one. Nothing here re-sorts: re-sorting would be a guess that
+// discards the observation.
+//
+// The void-row branch is NOT reachable from this seam's observation: the
+// captured account has no void row, so every RunningBalance is Valid. A
+// non-valid cell would mean a request carried a reversed/reversal row, which
+// admission (admitHoldReleaseStream) refuses because the capture has none; the
+// evaluator reports it rather than inventing a value.
+func goHoldNetRunningBalance(r HoldNetRunningBalanceRequest) (Expect, error) {
+	rows, err := buildHoldReleaseRows(r.Transactions, savingsDecode)
+	if err != nil {
+		return Expect{}, err
+	}
+	chain := savingspkg.HoldNetRunningBalancesOf(0, rows)
+	out := make([]string, 0, len(chain))
+	for i, rb := range chain {
+		if !rb.Valid {
+			return Expect{}, fmt.Errorf(
+				"savings: hold-net running balance row %d states NO balance (a void row); this seam's capture has no void row", i)
+		}
+		out = append(out, strconv.FormatInt(int64(rb.Value), 10))
+	}
+	balance := savingspkg.AccountBalanceOf(rows)
+	return Expect{
+		HoldNetRunningBalances: out,
+		AccountBalanceMinor:    strconv.FormatInt(int64(balance), 10),
+	}, nil
+}
+
+// holdNetEvaluator is a DELIBERATELY WRONG hold-net evaluator: it derives the
+// stored chain from rows its decode has corrupted, while keeping the posted
+// balance correct. Each concrete defect lives in the decode or the row order,
+// so the SAME vector kills every one of them; the four drives are separated
+// because a port can make any one of them without making the others.
+type holdNetEvaluator struct {
+	goEvaluator
+	decode func(stored int32) (savingspkg.SavingsAccountTransactionType, bool)
+	// sortByID folds the chain in id order instead of the observed transaction
+	// order, the inverse of the transposition the capture records.
+	sortByID bool
+}
+
+func (w holdNetEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.HoldNetRunningBalance != nil {
+		stream := req.HoldNetRunningBalance.Transactions
+		if w.sortByID {
+			stream = append([]HoldReleaseRow(nil), stream...)
+			sort.SliceStable(stream, func(i, j int) bool { return stream[i].ID < stream[j].ID })
+		}
+		rows, err := buildHoldReleaseRows(stream, w.decode)
+		if err != nil {
+			return Expect{}, err
+		}
+		chain := savingspkg.HoldNetRunningBalancesOf(0, rows)
+		out := make([]string, 0, len(chain))
+		for i, rb := range chain {
+			if !rb.Valid {
+				return Expect{}, fmt.Errorf("savings: wrong hold-net implementation: row %d has no balance", i)
+			}
+			out = append(out, strconv.FormatInt(int64(rb.Value), 10))
+		}
+		balance := savingspkg.AccountBalanceOf(rows)
+		return Expect{
+			HoldNetRunningBalances: out,
+			AccountBalanceMinor:    strconv.FormatInt(int64(balance), 10),
+		}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// holdNetBalanceNeutral maps the given stored values to a balance-neutral type,
+// so a row of that type is folded but moves nothing.
+func holdNetBalanceNeutral(storeds ...int32) func(int32) (savingspkg.SavingsAccountTransactionType, bool) {
+	set := make(map[int32]bool, len(storeds))
+	for _, s := range storeds {
+		set[s] = true
+	}
+	return func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+		if set[stored] {
+			return savingspkg.TxnAccrual, true
+		}
+		return savingsDecode(stored)
+	}
+}
+
+// holdNetHoldIsCredit maps AMOUNT_HOLD to a CREDIT type, so the chain ADDS the
+// held amount instead of subtracting it — the sign error of a port that reads
+// "a hold is a posting" as "the hold credits the running balance". On this
+// vector the hold row reads 100031 + 13729 = 113760 minor units where the
+// oracle stores 86302.
+func holdNetHoldIsCredit() func(int32) (savingspkg.SavingsAccountTransactionType, bool) {
+	return func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+		if stored == savingspkg.TxnAmountHold.StoredValue() {
+			return savingspkg.TxnDeposit, true
+		}
+		return savingsDecode(stored)
+	}
 }
 
 // holdFoldRawBalance is the posted-balance fold of the NATURAL MISTAKE: it
@@ -446,7 +564,7 @@ type holdFoldedIntoBalanceEvaluator struct{ goEvaluator }
 
 func (w holdFoldedIntoBalanceEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.HoldRelease != nil {
-		rows, err := buildHoldReleaseRows(*req.HoldRelease, savingsDecode)
+		rows, err := buildHoldReleaseRows(req.HoldRelease.Transactions, savingsDecode)
 		if err != nil {
 			return Expect{}, err
 		}
@@ -475,7 +593,7 @@ type holdIgnoredEvaluator struct{ goEvaluator }
 
 func (w holdIgnoredEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.HoldRelease != nil {
-		rows, err := buildHoldReleaseRows(*req.HoldRelease, func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+		rows, err := buildHoldReleaseRows(req.HoldRelease.Transactions, func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
 			switch stored {
 			case savingspkg.TxnAmountHold.StoredValue(), savingspkg.TxnAmountRelease.StoredValue():
 				return savingspkg.TxnAccrual, true
@@ -534,4 +652,35 @@ func init() {
 			"invisible: the balance is right by accident but held stays 0 and available never "+
 			"falls by the held amount",
 		holdIgnoredEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-hold-net-ignores-holds",
+		"folds the stored running_balance_derived chain as if the hold were balance-neutral, "+
+			"the careful porter's reading of \"holds alter available only\": the hold row reads "+
+			"the posted balance 100031 where the oracle stores 86302",
+		holdNetEvaluator{
+			goEvaluator: NewGoEvaluator().(goEvaluator),
+			decode:      holdNetBalanceNeutral(savingspkg.TxnAmountHold.StoredValue(), savingspkg.TxnAmountRelease.StoredValue()),
+		})
+	RegisterWrong("savings-wrong-hold-net-ignores-releases",
+		"folds the hold DOWN but never ADDS the release back, so the release row stays at "+
+			"86302 where the oracle restores 100031",
+		holdNetEvaluator{
+			goEvaluator: NewGoEvaluator().(goEvaluator),
+			decode:      holdNetBalanceNeutral(savingspkg.TxnAmountRelease.StoredValue()),
+		})
+	RegisterWrong("savings-wrong-hold-net-hold-is-credit",
+		"decodes AMOUNT_HOLD to a CREDIT type, so the chain ADDS the held amount (113760) "+
+			"where the oracle subtracts it (86302)",
+		holdNetEvaluator{
+			goEvaluator: NewGoEvaluator().(goEvaluator),
+			decode:      holdNetHoldIsCredit(),
+		})
+	RegisterWrong("savings-wrong-hold-net-id-order",
+		"folds the chain in id order instead of the capture's transaction-date order, so the "+
+			"0.16 posting (id 2) precedes the 0.15 posting (id 3): the row after id 2 reads "+
+			"100016 where the chain has 100015",
+		holdNetEvaluator{
+			goEvaluator: NewGoEvaluator().(goEvaluator),
+			decode:      savingsDecode,
+			sortByID:    true,
+		})
 }
