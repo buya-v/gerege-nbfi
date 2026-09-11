@@ -259,7 +259,7 @@ a508e0792f7c287c9f3394dc75381ab50b61cd7f891d7159320a66704369c586  ./step05-trial
 4831db41189927cad1bf8a4475e7b4ad2ba35104ce9186b5f10ec23cad29f5bb  ./step05-trial-balance/mtb-all-rows.txt
 476644ee500dc3208ea4e262ba245efd2eeb5187e1377e19da97fa26bea70934  ./step05-trial-balance/mtb-columns.txt
 9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./step05-trial-balance/mtb-count.txt
-e7a34d647949cdc8d4a288d0ddb94d4c9e2b9583ab4f0bf4ab4bf7a8984f104e  ./step06-reason/REASON.md
+c95534cdac39ee91e1afe0d906cc27dd44ec5dd54e927322e59152c14dc393dd  ./step06-reason/REASON.md
 ff56ec5abc20c2adab46e92197e0293635d158a542b9267a8a6d630811577f88  ./step06-reason/batch-rows-10046.txt
 4ed8f00fad77aef0dbb839ca1cf57cddf826de840ec8fd2c1007b4c5f16b0a18  ./step06-reason/row4-type.txt
 ```

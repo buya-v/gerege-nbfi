@@ -30,7 +30,12 @@ class java.time.LocalDate
 
 ## The code path, with `file:line`
 
-Pinned `/Users/buv/fineract` @ `426a23544`.
+Pinned `/Users/buv/fineract` @ `426a23544`. Paths abbreviated below; full paths:
+
+* tasklet: `fineract-accounting/src/main/java/org/apache/fineract/accounting/glaccount/jobs/updatetrialbalancedetails/UpdateTrialBalanceDetailsTasklet.java`
+* repository: `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryRepository.java`
+* model: `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntry.java`
+* audit base: `fineract-core/src/main/java/org/apache/fineract/infrastructure/core/domain/AbstractAuditableWithUTCDateTimeCustom.java`
 
 1. `UpdateTrialBalanceDetailsTasklet.java:53` → `processTrialBalanceGaps(jdbcTemplate)`.
 2. `UpdateTrialBalanceDetailsTasklet.java:62`
