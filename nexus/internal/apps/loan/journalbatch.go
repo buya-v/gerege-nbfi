@@ -20,17 +20,34 @@ const (
 
 // JournalEntryLeg is one observed leg of a loan-produced journal-entry batch:
 // the transaction id the oracle grouped it under, the GL account it touched,
-// its side, and its amount in integer minor units.
+// its side, its amount in integer minor units, the transaction date it was
+// posted under, and whether the oracle has flagged the leg reversed.
 //
 // The transaction id is READ-BACK metadata, not command input: a loan
 // disbursement GENERATES the legs; nobody submits them. A batch carries more
 // than one pair when more than one transaction id appears, which is exactly the
 // shape a single-pair read-back cannot discriminate.
+//
+// TransactionDate and Reversed are the two read-back cells a loan-transaction
+// REVERSAL is graded on beyond the batch sums: the reversal dates its counter
+// legs at the reversed transaction's date (not the business date that triggered
+// the reversal) and must leave every original leg unflagged, so a port that
+// sets Reversed on an original or stamps a wrong date diverges where the side
+// and amount cells cannot see it. Both are carried through unchanged by
+// SumJournalEntryBatch and JournalEntryAccountSides, which read only Side and
+// Amount.
 type JournalEntryLeg struct {
 	TransactionID string
 	Account       string
 	Side          JournalEntrySide
 	Amount        MinorUnits
+	// TransactionDate is the leg's transaction date as a civil YYYY-MM-DD
+	// string (no clock, no offset). It is empty for legs a caller did not read a
+	// date for; the batch derivations never read it.
+	TransactionDate string
+	// Reversed is the persisted reversed flag the read-back serialises. A loan
+	// reversal ADDS counter-legs and leaves this false on every original.
+	Reversed bool
 }
 
 // JournalEntryBatchTotals is the derived debit and credit totals of a batch,

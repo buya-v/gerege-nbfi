@@ -148,8 +148,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goDelinquency(*req.Delinquency)
 	case req.WriteOff != nil:
 		return goWriteOff(*req.WriteOff)
+	case req.Reversal != nil:
+		return goReversal(*req.Reversal)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal")
 	}
 }
 
@@ -295,6 +297,51 @@ func goJournalEntryBatch(legs []JournalEntryLeg) (Expect, error) {
 		JournalEntryCreditsMinor: strconv.FormatInt(int64(totals.Credits), 10),
 		JournalEntryAccountSides: cells,
 	}, nil
+}
+
+// goReversal ports the loan-transaction-reversal seam: it parses the before
+// read-back legs of ONE loan transaction, runs the append-only reversal rule
+// (loan.ReverseLoanTransactionJournalEntries), and renders the full
+// after-read-back leg list — originals as they were, then the counter-legs.
+// Every original is parsed from the request (its date is the reversed
+// transaction's date) and every counter-leg comes from the port, so a defect in
+// the rule is visible here and nowhere else.
+func goReversal(r ReversalRequest) (Expect, error) {
+	legs := make([]loan.JournalEntryLeg, len(r.JournalEntries))
+	for i, leg := range r.JournalEntries {
+		side, ok := journalEntrySide(leg.EntryType)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-transaction-reversal: entry_type %q is not transcribed", leg.EntryType)
+		}
+		amount, err := parseMinorText(leg.AmountMinor)
+		if err != nil {
+			return Expect{}, err
+		}
+		legs[i] = loan.JournalEntryLeg{
+			TransactionID:   leg.TransactionID,
+			Account:         leg.Account,
+			Side:            side,
+			Amount:          amount,
+			TransactionDate: r.TransactionDate,
+			Reversed:        false,
+		}
+	}
+	out, err := loan.ReverseLoanTransactionJournalEntries(legs, r.TransactionDate)
+	if err != nil {
+		return Expect{}, err
+	}
+	cells := make([]ReversalLegCell, len(out))
+	for i, leg := range out {
+		cells[i] = ReversalLegCell{
+			TransactionID:   leg.TransactionID,
+			Account:         leg.Account,
+			EntryType:       journalEntrySideCode(leg.Side),
+			AmountMinor:     strconv.FormatInt(int64(leg.Amount), 10),
+			TransactionDate: leg.TransactionDate,
+			Reversed:        leg.Reversed,
+		}
+	}
+	return Expect{ReversalLegs: cells}, nil
 }
 
 func goRepayment(r RepaymentRequest) (Expect, error) {
@@ -1506,6 +1553,86 @@ func wrongJournalEntryBatch(legs []JournalEntryLeg, mode journalBatchWrongMode) 
 	}, nil
 }
 
+// writeOffBusinessDateText is the write-off's business date (2026-09-03), the
+// date a port that reads the reversal as "post the mirror at today's business
+// date" stamps on the counter-legs. It is deliberately NOT the reversed
+// transaction's own date (2026-09-02). Only the business-date drive uses it.
+const writeOffBusinessDateText = "2026-09-03"
+
+// reversalWrongMode selects which deliberately-wrong loan-transaction-reversal
+// a drive commits. Each is a port a reasonable reader might write, and each is
+// discriminated by the committed L46 vector.
+type reversalWrongMode int
+
+const (
+	// wrongReversalDuplicatesInsteadOfReverses APPENDS a second copy of each leg
+	// on the SAME side instead of the opposite side. The transaction still has
+	// equal debit and credit totals (1156 = 1156), so a batch-sum port cannot
+	// see it; only the per-leg side cells can.
+	wrongReversalDuplicatesInsteadOfReverses reversalWrongMode = iota
+	// wrongReversalFlagsOriginalsReversed posts the mirrors correctly but also
+	// flags each ORIGINAL reversed = true — the manual-reversal semantics
+	// applied to the loan path. Only a vector that grades each original's
+	// `reversed` flag can see it.
+	wrongReversalFlagsOriginalsReversed
+	// wrongReversalFreshTransactionID posts the mirrors on a FRESH transaction
+	// id (the manual path's other behaviour) instead of on the reversed
+	// transaction's own id.
+	wrongReversalFreshTransactionID
+	// wrongReversalBusinessDate dates the counter-legs at the business date the
+	// reversal was requested (2026-09-03) instead of the reversed transaction's
+	// date (2026-09-02).
+	wrongReversalBusinessDate
+)
+
+// wrongReversalEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-transaction-reversal seam, parameterised by which reversal defect it
+// commits. On any request that is not a reversal it delegates to the correct
+// port, so each drive goes red ONLY on this seam's vector and stays green
+// everywhere else (vector isolation).
+type wrongReversalEvaluator struct {
+	goEvaluator
+	mode reversalWrongMode
+}
+
+func (w wrongReversalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.Reversal != nil {
+		return wrongReversal(*req.Reversal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongReversal runs the correct append-only reversal and then applies exactly
+// one defect to the result, so each drive differs from the port on exactly the
+// cells its defect moves.
+func wrongReversal(r ReversalRequest, mode reversalWrongMode) (Expect, error) {
+	got, err := goReversal(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs := got.ReversalLegs
+	n := len(r.JournalEntries)
+	switch mode {
+	case wrongReversalDuplicatesInsteadOfReverses:
+		for i := 0; i < n; i++ {
+			legs[n+i].EntryType = legs[i].EntryType
+		}
+	case wrongReversalFlagsOriginalsReversed:
+		for i := 0; i < n; i++ {
+			legs[i].Reversed = true
+		}
+	case wrongReversalFreshTransactionID:
+		for i := 0; i < n; i++ {
+			legs[n+i].TransactionID = legs[i].TransactionID + "-REV"
+		}
+	case wrongReversalBusinessDate:
+		for i := 0; i < n; i++ {
+			legs[n+i].TransactionDate = writeOffBusinessDateText
+		}
+	}
+	return Expect{ReversalLegs: legs}, nil
+}
+
 func init() {
 	Register("loan-go", NewGoEvaluator())
 	RegisterWrong("loan-wrong-half-even-schedule-interest",
@@ -1683,4 +1810,26 @@ func init() {
 			"observed 10677553, so only the fee and penalty bucket cells move — the swap the "+
 			"observed distinct fee (10000) and penalty (5700) exist to catch",
 		wrongWriteOffEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffSwapsFeeAndPenalty})
+	RegisterWrong("loan-wrong-reversal-duplicates-instead-of-reverses",
+		"appends a second copy of every L46 leg on the SAME side instead of the opposite side, "+
+			"as a port that reads a reversal as a re-post does; the transaction's debit and credit "+
+			"totals still both read 1156, so only the per-leg side cells see the duplicate where a "+
+			"batch sum cannot",
+		wrongReversalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongReversalDuplicatesInsteadOfReverses})
+	RegisterWrong("loan-wrong-reversal-flags-originals",
+		"posts the two L46 counter-legs correctly but also flags each ORIGINAL reversed = true, "+
+			"borrowing the manual revertJournalEntry semantics (which flags the originals); the "+
+			"loan reversal changes no original, so only a vector grading each original's reversed "+
+			"flag sees it",
+		wrongReversalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongReversalFlagsOriginalsReversed})
+	RegisterWrong("loan-wrong-reversal-fresh-transaction-id",
+		"posts the two L46 counter-legs on a FRESH transaction id (L46-REV) instead of the "+
+			"reversed transaction's own id, the manual revertJournalEntry path's other semantics; "+
+			"every side, account, amount and date stays right and only the transaction-id cells move",
+		wrongReversalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongReversalFreshTransactionID})
+	RegisterWrong("loan-wrong-reversal-business-date",
+		"dates the two L46 counter-legs at the business date the reversal was requested "+
+			"(2026-09-03) instead of the reversed transaction's own date (2026-09-02); every side, "+
+			"account, amount and transaction id stays right and only the counter-leg date cells move",
+		wrongReversalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongReversalBusinessDate})
 }

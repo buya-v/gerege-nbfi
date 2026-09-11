@@ -1,0 +1,93 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L11-accrual-reversal-appends-counter-legs",
+    "title": "Loan-transaction reversal ADDS one counter-leg per original leg (L46 accrual: JE 134 CREDIT OHLGR-10012 11.56, JE 135 DEBIT OHLGR-40010 11.56) with the OPPOSITE side, same transaction date 2026-09-02 and originals JE 84/86 unchanged and unflagged",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the journal-entry side of the FIRST observed loan-transaction reversal, on the running Fineract server under tenant gerege (loan 11, product 3 OHGLR-Accrual-Loan, ACCRUAL PERIODIC). The loan-11 write-off at business date 2026-09-03 reversed the 2026-09-02 interest accrual transaction L46 as a side effect. request.reversal.journal_entries transcribes the two L46 legs read back BEFORE the reversal: out/loan-11-before-journalentries-raw.json JE 84 DEBIT OHLGR-Interest-Receivable (OHLGR-10012) 11.56 and JE 86 CREDIT OHLGR-Interest-On-Loans (OHLGR-40010) 11.56, both transactionId L46 and transactionDate 2026-09-02, both reversed false; amounts are raised to integer minor units (11.56 -> 1156) with no residue. request.reversal.transaction_date is the reversed transaction's own date 2026-09-02, NOT the write-off business date 2026-09-03. expect.reversal_legs is the FULL after-read-back leg list for L46, transcribed from out/loan-11-after-journalentries-raw.json: the two originals JE 84/86 byte-identical and in order, then the two counter-legs the reversal ADDED, JE 134 CREDIT OHLGR-10012 11.56 and JE 135 DEBIT OHLGR-40010 11.56, both transactionId L46 and transactionDate 2026-09-02 and reversed false. THIS VECTOR GRADES ONE PROPERTY: a loan-transaction reversal ADDS exactly one counter-leg per original leg — same transaction id, same account, same amount, same transaction date, OPPOSITE side — and changes no original. The rule is Fineract createJournalEntryForReversedLoanTransaction (pinned commit 426a23544, lines 359-378), reached from AccrualBasedAccountingProcessorForLoan when loanTransactionDTO.isReversed(); it does not modify, flag or delete any original. WHAT THIS VECTOR DOES NOT GRADE: the write-off's own five-leg L54 posting (JE 136-140), which is a separate observation (see LN-L11-writeoff-four-bucket-discharge). The manual reversal path revertJournalEntry (lines 380-429) is DIFFERENT and NOT ported here — it posts counter-entries on a FRESH transaction id AND flags each original reversed = true; the two drives that borrow those semantics are exactly why this vector grades each original's reversed flag and each counter-leg's transaction id. Nothing was computed by this promotion: every leg cell is read directly from the committed files.",
+    "oracle": {
+        "seam": "loan-transaction-reversal",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.reversal.journal_entries is transcribed from the two pageItems of the committed BEFORE-state read-back out/loan-11-before-journalentries-raw.json whose transactionId is L46 (entry ids 84 and 86); expect.reversal_legs is transcribed from the four pageItems of the committed AFTER-state read-back out/loan-11-after-journalentries-raw.json whose transactionId is L46 (entry ids 84, 86, 134, 135), preserving order. Both captures are single-line JSON documents, so each observation is cited at line 1. capture_case_id names the reversed transaction id L46, which appears in both referenced journal-entries captures. The driver verified that all 24 before-entries are byte-identical in the after read-back; this vector carries only the two L46 legs. No value was synthesised: the side, account, amount, transaction date and reversed flag of every leg are read directly from the files.",
+        "capture_ref": ".softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-before-journalentries-raw.json",
+        "capture_sha256": "75c41762c927bb383a9af13ded104477ca8d921994b779257a365bdb45309933",
+        "capture_case_id": "L46",
+        "citation": "loan-11-before-journalentries-raw.json:1 (single-line committed read-back, tenant gerege, pageItems 24): {\"id\":84,\"transactionId\":\"L46\",\"glAccountCode\":\"OHLGR-10012\",\"entryType\":{\"value\":\"DEBIT\"},\"amount\":11.56,\"transactionDate\":[2026,9,2],\"manualEntry\":false,\"reversed\":false}, {\"id\":86,\"transactionId\":\"L46\",\"glAccountCode\":\"OHLGR-40010\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":11.56,\"transactionDate\":[2026,9,2],\"manualEntry\":false,\"reversed\":false}. loan-11-after-journalentries-raw.json:1 (sha256 28d073c3735cc226d2852586018390c26529536cfb6da15921c099a63506aa4c, pageItems 31): JE 84 and 86 unchanged; ADDED {\"id\":134,\"transactionId\":\"L46\",\"glAccountCode\":\"OHLGR-10012\",\"entryType\":{\"value\":\"CREDIT\"},\"amount\":11.56,\"transactionDate\":[2026,9,2],\"manualEntry\":false,\"reversed\":false} and {\"id\":135,\"transactionId\":\"L46\",\"glAccountCode\":\"OHLGR-40010\",\"entryType\":{\"value\":\"DEBIT\"},\"amount\":11.56,\"transactionDate\":[2026,9,2],\"manualEntry\":false,\"reversed\":false}."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "reversal": {
+            "transaction_date": "2026-09-02",
+            "journal_entries": [
+                {
+                    "transaction_id": "L46",
+                    "account": "OHLGR-10012",
+                    "entry_type": "DEBIT",
+                    "amount_minor": "1156"
+                },
+                {
+                    "transaction_id": "L46",
+                    "account": "OHLGR-40010",
+                    "entry_type": "CREDIT",
+                    "amount_minor": "1156"
+                }
+            ]
+        }
+    },
+    "expect": {
+        "reversal_legs": [
+            {
+                "transaction_id": "L46",
+                "account": "OHLGR-10012",
+                "entry_type": "DEBIT",
+                "amount_minor": "1156",
+                "transaction_date": "2026-09-02",
+                "reversed": false
+            },
+            {
+                "transaction_id": "L46",
+                "account": "OHLGR-40010",
+                "entry_type": "CREDIT",
+                "amount_minor": "1156",
+                "transaction_date": "2026-09-02",
+                "reversed": false
+            },
+            {
+                "transaction_id": "L46",
+                "account": "OHLGR-10012",
+                "entry_type": "CREDIT",
+                "amount_minor": "1156",
+                "transaction_date": "2026-09-02",
+                "reversed": false
+            },
+            {
+                "transaction_id": "L46",
+                "account": "OHLGR-40010",
+                "entry_type": "DEBIT",
+                "amount_minor": "1156",
+                "transaction_date": "2026-09-02",
+                "reversed": false
+            }
+        ]
+    },
+    "capabilities_required": [
+        "reversal-entry"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-reversal-duplicates-instead-of-reverses",
+        "loan-wrong-reversal-flags-originals",
+        "loan-wrong-reversal-fresh-transaction-id",
+        "loan-wrong-reversal-business-date"
+    ]
+}
