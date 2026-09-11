@@ -122,6 +122,20 @@ def loan_facts():
     return facts
 
 
+def parse_step_summary():
+    """Cucumber's final `N steps (a passed, b skipped, c failed)` line."""
+    pat = re.compile(r'(\d+) steps \('
+                     r'\x1b\[\d+m(\d+) passed\x1b\[\d+m, '
+                     r'\x1b\[\d+m(\d+) skipped\x1b\[\d+m, '
+                     r'\x1b\[\d+m(\d+) failed\x1b\[\d+m\)')
+    for line in open(LOG, errors='replace'):
+        m = pat.search(line)
+        if m:
+            return {'total': int(m.group(1)), 'passed': int(m.group(2)),
+                    'skipped': int(m.group(3)), 'failed': int(m.group(4))}
+    raise SystemExit('could not find cucumber step summary in %s' % LOG)
+
+
 def main():
     feature = parse_feature()
     replay = parse_replay()
@@ -154,7 +168,7 @@ def main():
     npass = sum(1 for s in scenarios if s['result'] == 'PASSED')
     obj = {'feature': os.path.basename(FEATURE), 'scenario_count': len(scenarios),
            'passed': npass, 'failed': len(scenarios) - npass,
-           'currency': 'MNT', 'tenant': 'tierd', 'scenarios': scenarios}
+           'steps': parse_step_summary(), 'currency': 'MNT', 'tenant': 'tierd', 'scenarios': scenarios}
     with open(os.path.join(HERE, 'scenario-results.json'), 'w') as fh:
         json.dump(obj, fh, indent=1, sort_keys=True)
         fh.write('\n')
@@ -193,8 +207,10 @@ def write_table(obj):
     w('minor units (MNT, 2 ISO 4217 digits). Feature line numbers are from')
     w('`fineract-e2e-tests-runner/src/test/resources/features/LoanChargesInstallmentFee.feature`.')
     w('')
-    w('Result: **%d scenarios (%d passed, %d failed)**; 856 steps (584 passed, 259 skipped, 13 failed).'
-      % (obj['scenario_count'], obj['passed'], obj['failed']))
+    w('Result: **%d scenarios (%d passed, %d failed)**; %d steps (%d passed, %d skipped, %d failed).'
+      % (obj['scenario_count'], obj['passed'], obj['failed'],
+         obj['steps']['total'], obj['steps']['passed'], obj['steps']['skipped'],
+         obj['steps']['failed']))
     w('')
     w('| # | TestRailId | feature line | result | loan | product |')
     w('| --- | --- | --- | --- | --- | --- |')

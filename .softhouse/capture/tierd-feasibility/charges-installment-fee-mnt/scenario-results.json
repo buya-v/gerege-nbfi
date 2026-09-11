@@ -459,5 +459,11 @@
    "tag": "C3892"
   }
  ],
+ "steps": {
+  "failed": 13,
+  "passed": 584,
+  "skipped": 259,
+  "total": 856
+ },
  "tenant": "tierd"
 }
