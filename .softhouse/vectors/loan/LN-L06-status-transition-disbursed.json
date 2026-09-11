@@ -1,0 +1,45 @@
+{
+  "schema": "gerege.loan.vector/v1",
+  "case_id": "LN-L06-status-transition-disbursed",
+  "title": "SEED-L06 disburse dispatches LOAN_DISBURSED onto active",
+  "class": "parity",
+  "context": "loan",
+  "_note": "The SEED-L06 disbursal's read-back carries changes.status id 300, code loanStatusType.active, active true, waitingForDisbursal false. Dispatched from the approved status 200 on LOAN_DISBURSED. Nothing was computed by this promotion.",
+  "oracle": {
+    "seam": "loan-status-transition",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+  },
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "request.status_transition and expect.next_status_code/next_status_stored_value are transcribed from the changes.status block of the committed disbursal capture.",
+    "capture_ref": ".softhouse/capture/loan/out/loan-L06-disburse-raw.json",
+    "capture_sha256": "bb4de651c7fcf8b543c90acb537d178be474fc92fa2f63da556631c2770ca480",
+    "capture_case_id": "SEED-L06",
+    "citation": "loan-L06-disburse-raw.json {\"resourceExternalId\":\"SEED-L06\",\"changes\":{\"status\":{\"id\":300,\"code\":\"loanStatusType.active\"}}}"
+  },
+  "tenant_params": {
+    "rounding_mode": "HALF_UP",
+    "rounding_ordinal": 4,
+    "precision": 19,
+    "currency": "MNT",
+    "minor_units": 2,
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "request": {
+    "status_transition": {
+      "mode": "event",
+      "from_stored_value": 200,
+      "event": "LOAN_DISBURSED"
+    }
+  },
+  "expect": {
+    "next_status_code": "loanStatusType.active",
+    "next_status_stored_value": 300
+  },
+  "capabilities_required": [
+    "loan-status-transition"
+  ],
+  "graded_against": [
+    "loan-go"
+  ]
+}

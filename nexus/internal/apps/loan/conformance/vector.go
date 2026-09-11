@@ -202,6 +202,17 @@ const SeamLoanWriteOffJournalEntries = "loan-writeoff-journal-entries"
 // loan.UpdateWaivedAmount.
 const SeamLoanChargeLifecycle = "loan-charge-lifecycle"
 
+// SeamLoanStatusTransition is the capture seam this schema grades: the loan
+// lifecycle state machine the observed status transitions read back. Fineract's
+// DefaultLoanLifecycleStateMachine answers two questions: NextStatus(from,
+// event, facts) dispatches an event, and DetermineTransition(from, facts)
+// recomputes the status from the balance facts for a loan already active or
+// terminal. The committed captures observe submit->approve->disburse (SEED-L06),
+// a loan repaid in full -> CLOSED_OBLIGATIONS_MET (loan 18) and a loan written
+// off -> CLOSED_WRITTEN_OFF (loan 11). Each is graded through loan.NextStatus or
+// loan.DetermineTransition.
+const SeamLoanStatusTransition = "loan-status-transition"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -413,6 +424,28 @@ type StatusRequest struct {
 	StoredValue int32 `json:"stored_value"`
 }
 
+// StatusTransitionRequest is the loan-status-transition seam's input: the status
+// the loan is observed in, the event or balance snapshot the state machine is
+// asked to act on, and the outstanding facts the snapshot carries. Mode "event"
+// dispatches through loan.NextStatus(from, event, facts); mode "balance"
+// recomputes through loan.DetermineTransition(from, facts). Event is the
+// Fineract LoanEvent constant name the oracle dispatches (e.g.
+// "WRITE_OFF_OUTSTANDING"); it is required for mode "event" and must be empty
+// for mode "balance". The five fact fields are the loan.Facts snapshot — the
+// observed state of the loan's balances, never a balance value — and are the
+// input DetermineTransition branches on; an event-mode request reads none of
+// them.
+type StatusTransitionRequest struct {
+	Mode                    string `json:"mode"`
+	FromStoredValue         int32  `json:"from_stored_value"`
+	Event                   string `json:"event,omitempty"`
+	HasOutstanding          bool   `json:"has_outstanding,omitempty"`
+	RepaidInFull            bool   `json:"repaid_in_full,omitempty"`
+	TotalOverpaidIsPositive bool   `json:"total_overpaid_is_positive,omitempty"`
+	TotalOverpaidIsZero     bool   `json:"total_overpaid_is_zero,omitempty"`
+	AllChargesPaid          bool   `json:"all_charges_paid,omitempty"`
+}
+
 // ChargeLifecycleOperation is one operation applied to a LoanCharge in the
 // charge-lifecycle seam. Op is "pay" or "waive". For "pay", AmountMinor is
 // the integer minor-unit amount to pay; for "waive" it is ignored.
@@ -508,6 +541,9 @@ type Request struct {
 	// ChargeLifecycle is the loan-charge-lifecycle seam's input: the charge's
 	// amount, penalty flag, and the ordered operations observed.
 	ChargeLifecycle *ChargeLifecycleRequest `json:"charge_lifecycle,omitempty"`
+	// StatusTransition is the loan-status-transition seam's input: the observed
+	// status, the event or balance snapshot, and the fact snapshot.
+	StatusTransition *StatusTransitionRequest `json:"status_transition,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -589,6 +625,14 @@ type Expect struct {
 	// states: the created state at index 0, then one state per operation in
 	// request.charge_lifecycle.operations, in order.
 	ChargeStates []ChargeLifecycleState `json:"charge_states,omitempty"`
+	// NextStatusCode is the loan-status-transition seam's expected read-back
+	// code for the status the state machine returned (e.g.
+	// "loanStatusType.closed.obligations.met").
+	NextStatusCode string `json:"next_status_code,omitempty"`
+	// NextStatusStoredValue is the stored value the decoded next status
+	// round-trips back to (m_loan.loan_status_id), so a port that returns a
+	// right-looking code off a wrong ordinal is still caught.
+	NextStatusStoredValue int32 `json:"next_status_stored_value,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

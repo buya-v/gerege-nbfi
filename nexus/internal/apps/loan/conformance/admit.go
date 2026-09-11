@@ -43,15 +43,15 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
-		SeamLoanChargeLifecycle:
+		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
-			SeamLoanChargeLifecycle))
+			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -174,6 +174,9 @@ func requestShapeCount(v *Vector) int {
 	if v.Request.ChargeLifecycle != nil {
 		n++
 	}
+	if v.Request.StatusTransition != nil {
+		n++
+	}
 	return n
 }
 
@@ -184,6 +187,19 @@ func requestShapeCount(v *Vector) int {
 func transactionTypeCodeAdmitted(t string) bool {
 	switch t {
 	case "disbursement", "accrual", "repayment", "waiver":
+		return true
+	}
+	return false
+}
+
+// statusTransitionEventAdmitted reports whether name is one of the four
+// Fineract LoanEvent constants the committed lifecycle captures dispatch
+// (LOAN_CREATED on submit, LOAN_APPROVED on approve, LOAN_DISBURSED on
+// disburse, WRITE_OFF_OUTSTANDING on write-off). It is a predicate, not a
+// lookup table, so the admitted vocabulary cannot drift from the captures.
+func statusTransitionEventAdmitted(name string) bool {
+	switch name {
+	case "LOAN_CREATED", "LOAN_APPROVED", "LOAN_DISBURSED", "WRITE_OFF_OUTSTANDING":
 		return true
 	}
 	return false
@@ -907,6 +923,42 @@ func admitExpect(v *Vector) []string {
 					"expect.charge_states has %d entries but request.charge_lifecycle.operations has %d (need %d)",
 					len(v.Expect.ChargeStates), len(c.Operations), wantStates))
 			}
+		}
+	case SeamLoanStatusTransition:
+		if v.Request.StatusTransition == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "loan-status-transition seam must set exactly request.status_transition")
+			return problems
+		}
+		s := v.Request.StatusTransition
+		// FromStoredValue may be 0 (LOAN_STATUS INVALID): the submit transition
+		// dispatches LOAN_CREATED from the oracle's null/INVALID status onto
+		// SUBMITTED_AND_PENDING_APPROVAL, exactly as NextStatus special-cases.
+		// Every other observed transition starts from a positive ordinal; the
+		// identity invariant rejects an ordinal outside the legal table.
+		if s.FromStoredValue < 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.status_transition.from_stored_value %d is not a loan status ordinal", s.FromStoredValue))
+		}
+		switch s.Mode {
+		case statusTransitionModeEvent:
+			if !statusTransitionEventAdmitted(s.Event) {
+				problems = append(problems, fmt.Sprintf(
+					"request.status_transition.event %q is not an observed loan event (LOAN_CREATED, LOAN_APPROVED, LOAN_DISBURSED, WRITE_OFF_OUTSTANDING)", s.Event))
+			}
+		case statusTransitionModeBalance:
+			if s.Event != "" {
+				problems = append(problems, "request.status_transition.event must be empty in balance mode: DetermineTransition reads the facts, not an event")
+			}
+		default:
+			problems = append(problems, fmt.Sprintf(
+				"request.status_transition.mode %q is neither %q nor %q", s.Mode, statusTransitionModeEvent, statusTransitionModeBalance))
+		}
+		if v.Expect.NextStatusCode == "" {
+			problems = append(problems, "expect.next_status_code is empty: the decoded next status is the observable this seam grades")
+		}
+		if v.Expect.NextStatusStoredValue <= 0 {
+			problems = append(problems, fmt.Sprintf(
+				"expect.next_status_stored_value %d is not a positive loan status ordinal", v.Expect.NextStatusStoredValue))
 		}
 	}
 	return problems

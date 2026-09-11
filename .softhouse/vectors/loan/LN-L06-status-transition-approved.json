@@ -1,0 +1,46 @@
+{
+  "schema": "gerege.loan.vector/v1",
+  "case_id": "LN-L06-status-transition-approved",
+  "title": "SEED-L06 approve dispatches LOAN_APPROVED onto approved",
+  "class": "parity",
+  "context": "loan",
+  "_note": "The SEED-L06 approve command's read-back carries changes.status id 200, code loanStatusType.approved, pendingApproval false, waitingForDisbursal true. Dispatched from the submitted status 100 on LOAN_APPROVED. Nothing was computed by this promotion.",
+  "oracle": {
+    "seam": "loan-status-transition",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+  },
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "request.status_transition and expect.next_status_code/next_status_stored_value are transcribed from the changes.status block of the committed approve capture.",
+    "capture_ref": ".softhouse/capture/loan/out/loan-L06-approve-raw.json",
+    "capture_sha256": "51feed08c991fd57e3c7bbfa49c7f31bc531e6188839e2c54a022811655b4411",
+    "capture_case_id": "SEED-L06",
+    "citation": "loan-L06-approve-raw.json {\"resourceExternalId\":\"SEED-L06\",\"changes\":{\"status\":{\"id\":200,\"code\":\"loanStatusType.approved\"}}}"
+  },
+  "tenant_params": {
+    "rounding_mode": "HALF_UP",
+    "rounding_ordinal": 4,
+    "precision": 19,
+    "currency": "MNT",
+    "minor_units": 2,
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "request": {
+    "status_transition": {
+      "mode": "event",
+      "from_stored_value": 100,
+      "event": "LOAN_APPROVED"
+    }
+  },
+  "expect": {
+    "next_status_code": "loanStatusType.approved",
+    "next_status_stored_value": 200
+  },
+  "capabilities_required": [
+    "loan-status-transition"
+  ],
+  "graded_against": [
+    "loan-go",
+    "loan-wrong-status-transition-approve-skips-to-active"
+  ]
+}
