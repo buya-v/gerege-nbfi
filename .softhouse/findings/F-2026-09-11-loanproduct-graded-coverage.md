@@ -158,6 +158,20 @@ schema, and grading the arithmetic here would duplicate `loanschedule`'s DEC-1 o
 scope/ownership decision (drop/relocate the duplicate, or keep it as a private reference
 that coverage accounting excludes).
 
+*Resolution (OH-LPDEL-BF, 2026-09-11).* Buyan decided to **delete** the duplicate rather
+than exclude it. The kernel — `calculator.go`, `dates.go`, `interestperiod.go`,
+`interestrate.go`, `money.go`, `repaymentperiod.go`, `schedulemodel.go` and their
+`_test.go` files — was removed from `nexus/internal/apps/loanproduct/`. The kept
+configuration files (`relateddetail.go`, `frequency.go`, `method.go`, `doc.go`), their
+tests and the whole `conformance/` package are unchanged, except that `money.go`'s
+`Currency`/`pow10` were moved verbatim into `relateddetail.go`, their sole remaining
+consumer. The arithmetic lives in `nexus/internal/apps/loanschedule` under DEC-1. **This
+removes the whole §5.1 `0.0%` block from the package** — the coverage inventory above
+(§5, Appendix A) is the BEFORE measurement and is retained as such. The four
+`ledgerguard` baseline rows for `interestperiod.go`/`repaymentperiod.go`
+(`I3-COMPOSITE-BALANCE`, `I3-FIELD-WRITE`) no longer have a source file to point at;
+the driver reconciles the baseline, not this finding.
+
 ### 5.2 `relateddetail.go` — value-object accessors/mutations; observations exist for 3 of 5 but the schema cannot carry them
 
 `conformance/doc.go:10-12` does include the `LoanProductRelatedDetail` value object in
@@ -240,7 +254,7 @@ because it is what the corpus actually never reaches.
 
 | candidate | `file:line` | money rule? | observation in corpus? | action |
 |---|---|---|---|---|
-| progressive recomputation kernel | `calculator.go` (23), `money.go` (22), `dates.go` (15), `interestperiod.go` (32), `interestrate.go:22`, `repaymentperiod.go` (62), `schedulemodel.go` (41) — Appendix A | **yes** | **yes, but `loanschedule`'s** (`t39-*`, `t48-*`, `t37-binding*`, `capture-prod3d-raw`; 50 loanschedule vectors) | **out of context** — DEC-1 owner is `loanschedule`; duplicate/unwired port |
+| progressive recomputation kernel | `calculator.go` (23), `money.go` (22), `dates.go` (15), `interestperiod.go` (32), `interestrate.go:22`, `repaymentperiod.go` (62), `schedulemodel.go` (41) — Appendix A | **yes** | **yes, but `loanschedule`'s** (`t39-*`, `t48-*`, `t37-binding*`, `capture-prod3d-raw`; 50 loanschedule vectors) | **REMOVED (OH-LPDEL-BF, 2026-09-11)** — on Buyan's decision the duplicate/unwired port was deleted; DEC-1 owner `loanschedule` holds the arithmetic |
 | `AnnualNominalInterestRateMajor` | `relateddetail.go:111` | rate derivation | yes (`loanproduct-1-raw` 21.6, `loanproduct-2-raw` 12.0) | schema can't carry it; DEC-1-owned → not this corpus |
 | `GetInterestPeriodFrequencyType` | `relateddetail.go:120` | no (accessor) | yes (both product captures, freq id 3/2) | needs `Request` extension |
 | `GetDaysInYearType` | `relateddetail.go:129` | no (accessor) | partial (ACTUAL only) | needs a capture for the invalid arm |

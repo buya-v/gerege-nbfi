@@ -2,6 +2,29 @@ package loanproduct
 
 import "math/big"
 
+// Currency and pow10 were relocated here unchanged from the deleted money.go
+// (OH-LPDEL-BF, Buyan's 2026-09-11 decision): this file is their only remaining
+// user in the package.
+//
+// Currency is the minimal monetary metadata the schedule recomputation reads
+// from Fineract's MonetaryCurrency. The oracle also carries a code and an
+// in-multiples-of rounding; the recomputation arithmetic only ever reads the
+// number of digits after the decimal point, so this port carries that fact and
+// nothing else.
+type Currency struct {
+	// Code is the ISO 4217 code, carried for diagnostics and so that two money
+	// values from different currencies refuse to combine rather than silently
+	// mixing minor-unit scales.
+	Code string
+	// MinorDigits is currency.getDecimalPlaces(): the number of digits after
+	// the decimal point at which Money.of normalises every amount.
+	MinorDigits int32
+}
+
+func pow10(n int32) *big.Int {
+	return new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(n)), nil)
+}
+
 // DaysInYearCustomStrategy is Fineract's DaysInYearCustomStrategyType, the leap
 // year convention applied when DaysInYearType is ACTUAL. [VERIFIED:
 // DaysInYearCustomStrategyType.java:57-70 — FULL_LEAP_YEAR always considers 366
