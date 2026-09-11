@@ -1,0 +1,33 @@
+TierD throwaway teardown -- 2026-09-11T19:11:38Z
+   Container tierd-oracle-app Stopping 
+   Container tierd-oracle-app Stopped 
+   Container tierd-oracle-app Removing 
+   Container tierd-oracle-app Removed 
+   Container tierd-oracle-db Stopping 
+   Container tierd-oracle-db Stopped 
+   Container tierd-oracle-db Removing 
+   Container tierd-oracle-db Removed 
+   Network tierd-oracle_default Removing 
+   Network tierd-oracle_default Removed 
+
+containers matching tierd after teardown:
+  (none)
+networks matching tierd after teardown:
+  (none)
+volumes matching tierd after teardown:
+  (none)
+
+STANDING reference oracle after teardown (must equal the baseline this capture opened with):
+  standing health = 200
+  ok  fineract-db-1 acc_gl_journal_entry = 109/113 (== baseline)
+  ok  fineract-db-1 acc_gl_closure = 0/null (== baseline)
+  ok  fineract-db-1 distinct_transaction_id = 38 (== baseline)
+  ok  fineract-db-1 m_portfolio_command_source = 379/379 (== baseline)
+  ok  fineract-db-1 m_client = 3/3 (== baseline)
+  ok  fineract-db-1 m_loan = 8/8 (== baseline)
+  ok  gerege-oracle-db acc_gl_journal_entry = 154/184 (== baseline)
+  ok  gerege-oracle-db acc_gl_closure = 0/null (== baseline)
+  ok  gerege-oracle-db distinct_transaction_id = 57 (== baseline)
+  ok  gerege-oracle-db m_portfolio_command_source = 235/235 (== baseline)
+  ok  gerege-oracle-db m_client = 20/20 (== baseline)
+  ok  gerege-oracle-db m_loan = 18/18 (== baseline)

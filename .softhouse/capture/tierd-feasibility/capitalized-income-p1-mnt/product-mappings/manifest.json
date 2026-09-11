@@ -1,0 +1,52 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME.json",
+  "log_line": 15755,
+  "sha256": "c709513ca7502722a993906c83612bbffe8b14706e5ee0a9d09eff4bb7177b38"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json",
+  "log_line": 16089,
+  "sha256": "94890bd9d7b4efedb1c5337749144b9809f71eada79aaece6df47a1e3046d2cd"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_FEE.json",
+  "log_line": 15979,
+  "sha256": "8985584edf2dd5a13ab3cb2f9427fce0e91dfe8e431922615828de41609afa5c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_MULTIDISBURSAL_CAPITALIZED_INCOME.json",
+  "log_line": 15966,
+  "sha256": "0b4f59f3a9a343e0aeb07997d139439a67d1a98dbcec052d3949489d2a059b55"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_RECALC_EMI_360_30_APPROVED_OVER_APPLIED_FLAT_CAPITALIZED_INCOME.json",
+  "log_line": 16626,
+  "sha256": "50892f85bfc9784fe1a8657e1e7c0262e6a2d49cc4d823af2a4295bb65d9b8de"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_RECALC_EMI_360_30_APPROVED_OVER_APPLIED_PERCENTAGE_CAPITALIZED_INCOME.json",
+  "log_line": 16499,
+  "sha256": "9cbd7419cf5a63e6c540d4af7fa32a27030eb150bafd413b6369cd79c71fd710"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_RECALC_EMI_360_30_MULTIDISB_OVER_APPLIED_FLAT_CAPITALIZED_INCOME.json",
+  "log_line": 16546,
+  "sha256": "2a78b9c0bab627dd76802b21a26b90d265796f16be2e338f3e4e2e1c8d3959d1"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_RECALC_EMI_360_30_MULTIDISB_OVER_APPLIED_PERCENTAGE_CAPITALIZED_INCOME.json",
+  "log_line": 16115,
+  "sha256": "6bcc644ff09845b5960e324ee910f3401e4248356213da6d14c1fede5f507792"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC_CAPITALIZED_INCOME.json",
+  "log_line": 16028,
+  "sha256": "2e380265bc81c0e9a61795fad9ecacf39fff317678433cfa004a15c78ded27a5"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_CAPITALIZED_INCOME.json",
+  "log_line": 15699,
+  "sha256": "fe1e63b839823a3543e978ea7023d3799860abf31d80d42848fe39b7533cb175"
+ }
+]
