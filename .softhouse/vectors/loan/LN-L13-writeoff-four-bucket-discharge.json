@@ -1,0 +1,127 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L13-writeoff-four-bucket-discharge",
+    "title": "Write-off discharges all four outstanding buckets over the eleven UNPAID instalments (loan 13: 92115.12 principal / 5618.53 interest / 100.00 fee / 57.00 penalty) and the four portions sum to the amount 97890.65, while the fully paid period 1 contributes 0",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing a SECOND observed loan write-off, on the running Fineract server under tenant gerege (loan 13, externalId OHWOPAID-L01, product 3 OHLGR-Accrual-Loan, ACCRUAL PERIODIC) at business date 2026-09-03. Unlike loan 11, loan 13's schedule has ONE fully paid instalment (period 1, complete true, obligationsMetOnDate 2026-02-01) and eleven unpaid ones. request.write_off.installments transcribes the loan's repayment schedule read back AFTER the single repayment, in out/loan-13-after-repay-detail-raw.json repaymentSchedule.periods[1..12], each period's principalOutstanding / interestOutstanding / feeChargesOutstanding / penaltyChargesOutstanding, raised to integer minor units; period 1 carries obligations_met true and its OBSERVED post-repayment cells 0/0/0/0. expect.write_off_allocation and expect.write_off_total_minor are TRANSCRIPTIONS of the write-off transaction's four portions and its amount in out/loan-13-after-transactions-raw.json content[id 57] (type.code loanTransactionType.writeOff, date 2026-09-03): principalPortion 92115.12, interestPortion 5618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0, amount 97890.65. The four portions sum EXACTLY to the amount (9211512 + 561853 + 10000 + 5700 = 9789065), and the after-state out/loan-13-after-detail-raw.json sets all four *_outstanding buckets to 0.00 and all four *_writtenOff derived buckets to those same amounts (status loanStatusType.closed.written.off, id 601). THIS VECTOR GRADES ONE PROPERTY: a write-off discharges the outstanding of EVERY unpaid instalment into ALL FOUR buckets, and the four portions sum to the write-off amount. The observed fee (100.00) and penalty (57.00) are NON-ZERO and DIFFERENT, so the same drives as the loan-11 vector are discriminated: writes off only principal; writes off principal + interest; drops the fee bucket; drops the penalty bucket; and swaps fee and penalty. WHAT THIS VECTOR DOES NOT GRADE: the obligationsMet skip itself. The input is the OBSERVED post-repayment state: the fully paid period 1 has all four outstanding cells 0, so a port that skips paid-off instalments and a port that forgets the skip sum the SAME twelve rows and both return 9789065 — the skip is a mathematical no-op on this observed input and NO skip drive is registered. The vector deliberately does NOT pair the pre-repayment outstanding of period 1 (P 788488 + I 100000 in out/loan-13-before-detail-raw.json) with its post-repayment obligations_met flag: that combination is a synthesised input, not an observation, and this vector transcribes what the oracle actually read back. OUT OF SCOPE for this capture seam: the five-leg write-off journal entry L57 (one DEBIT OHLGR-Losses-Written-Off, four credits) and the write-off transaction's own read-back; each is a separate observation and neither is touched here. Nothing was computed by this promotion: every instalment cell and every expected cell is read directly from the committed files.",
+    "oracle": {
+        "seam": "loan-writeoff-four-bucket",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.write_off.installments is transcribed from the committed AFTER-REPAYMENT repayment schedule in out/loan-13-after-repay-detail-raw.json (GET /loans/13?associations=all, HTTP 200); expect.write_off_allocation and expect.write_off_total_minor are transcribed from the write-off transaction id 57 in out/loan-13-after-transactions-raw.json (HTTP 200), cross-checked against the after-state out/loan-13-after-detail-raw.json (HTTP 200). The write itself is req/loan-13-writeoff.json (POST /loans/13/transactions?command=writeoff). The captures are single-line JSON documents, so the observation is cited at line 1. capture_case_id names the loan's externalId OHWOPAID-L01, which appears in the referenced after-repay-detail capture. No value was synthesised: the instalment cells and the four portions are read directly from the files.",
+        "capture_ref": ".softhouse/capture/loan-writeoff-paid-instalment/out/loan-13-after-repay-detail-raw.json",
+        "capture_sha256": "722de3ad4de4906d03ecdbac890ccffb4077dfcd4df9dac741c3c3e1ab2b3b43",
+        "capture_case_id": "OHWOPAID-L01",
+        "citation": "loan-13-after-repay-detail-raw.json:1 (sha256 722de3ad4de4906d03ecdbac890ccffb4077dfcd4df9dac741c3c3e1ab2b3b43, single-line committed read-back, tenant gerege): externalId \"OHWOPAID-L01\", id 13, repaymentSchedule.periods[1] complete true, obligationsMetOnDate [2026,2,1], principalOutstanding/interestOutstanding/feeChargesOutstanding/penaltyChargesOutstanding all 0.000000/0; periods[2..12] complete false with principalOutstanding 7963.73,8043.37,8123.8,8205.04,8287.09,8369.96,8453.66,8538.2,8623.58,8709.81,8796.88 (sum 92115.12 -> 9211512); interestOutstanding 921.15,841.51,761.08,679.84,597.79,514.92,431.22,346.68,261.3,175.07,87.97 (sum 5618.53 -> 561853); feeChargesOutstanding 100.0 at period 2, 0 elsewhere (sum 100.00 -> 10000); penaltyChargesOutstanding 57.0 at period 3, 0 elsewhere (sum 57.00 -> 5700). loan-13-after-transactions-raw.json:1 (sha256 ef06fae1413a7b8d47514b3574c822842a771d0fa94f29fe23f62d4e15431b21): content[id 57] type.code loanTransactionType.writeOff, date 2026-09-03, amount 97890.65, principalPortion 92115.12, interestPortion 5618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0. loan-13-after-detail-raw.json:1 (sha256 ef1c34753994f76d70486b0a16deaa22a6af9da85d1285bdc11efda34240b6ab): summary principalOutstanding/interestOutstanding/feeChargesOutstanding/penaltyChargesOutstanding all 0.0 and principalWrittenOff 92115.12, interestWrittenOff 5618.53, feeChargesWrittenOff 100.0, penaltyChargesWrittenOff 57.0, totalWrittenOff 97890.65; status.code loanStatusType.closed.written.off."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "write_off": {
+            "installments": [
+                {
+                    "principal_outstanding_minor": "0",
+                    "interest_outstanding_minor": "0",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0",
+                    "obligations_met": true
+                },
+                {
+                    "principal_outstanding_minor": "796373",
+                    "interest_outstanding_minor": "92115",
+                    "fee_outstanding_minor": "10000",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "804337",
+                    "interest_outstanding_minor": "84151",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "5700"
+                },
+                {
+                    "principal_outstanding_minor": "812380",
+                    "interest_outstanding_minor": "76108",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "820504",
+                    "interest_outstanding_minor": "67984",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "828709",
+                    "interest_outstanding_minor": "59779",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "836996",
+                    "interest_outstanding_minor": "51492",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "845366",
+                    "interest_outstanding_minor": "43122",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "853820",
+                    "interest_outstanding_minor": "34668",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "862358",
+                    "interest_outstanding_minor": "26130",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "870981",
+                    "interest_outstanding_minor": "17507",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                },
+                {
+                    "principal_outstanding_minor": "879688",
+                    "interest_outstanding_minor": "8797",
+                    "fee_outstanding_minor": "0",
+                    "penalty_outstanding_minor": "0"
+                }
+            ]
+        }
+    },
+    "expect": {
+        "write_off_allocation": {
+            "principal": "9211512",
+            "interest": "561853",
+            "fee": "10000",
+            "penalty": "5700"
+        },
+        "write_off_total_minor": "9789065"
+    },
+    "capabilities_required": [
+        "writeoff-four-bucket"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-writeoff-principal-only",
+        "loan-wrong-writeoff-principal-and-interest",
+        "loan-wrong-writeoff-drops-fee",
+        "loan-wrong-writeoff-drops-penalty",
+        "loan-wrong-writeoff-swaps-fee-and-penalty"
+    ]
+}
