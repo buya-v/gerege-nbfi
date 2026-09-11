@@ -1,0 +1,51 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-L10-loan-10-multi-disbursement-amortizes-to-zero",
+ "title": "UC6 loan 10 multi-disbursement schedule: the six observed principal components sum to the total disbursed across three tranches and amortize to zero (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the WHOLE repayment schedule of UC6 loan 10 from the Tier-D MNT replay of LoanUpdateApprovedAmount.feature. Unlike the single-disbursement vectors on this seam (LN-L10, LN-TD-L10-loan-1-pending-amortizes-to-zero), loan 10 is a MULTI-DISBURSEMENT loan: its schedule opens with THREE disbursement rows (300/200/500 minor-major tranches) and then six repayment rows. request.schedule_amortization transcribes repaymentSchedule.totalPrincipalDisbursed 1000.000000 -> \"100000\" minor units and the six observed repayment-period principalDue values 169.90/170.05/170.05/170.05/170.05/149.90 -> 16990/17005/17005/17005/17005/14990. The three disbursement rows carry NO principalDue and are NOT components, exactly as period 0 is excluded on the single-disbursement captures. expect.principal_sum_minor and expect.final_principal_balance_minor are TRANSCRIPTIONS, not recomputations: the six components sum to 100000 = totalPrincipalDisbursed, and the final period's principalLoanBalanceOutstanding is 0.000000, so the final balance is \"0\". The multi-tranche disbursement structure itself (300/200/500) is not representable at this seam, whose request carries a single disbursed-principal scalar and a component list; the total is the observed scalar the seam admits. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-schedule-amortization",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.schedule_amortization and both expected cells are transcribed from the committed MNT capture loan-10-detail-associations-repaymentSchedule.json, the UC6 loan 10 read-back via associations=repaymentSchedule, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId c4ee58dc-312a-4d60-8553-cfccc1c3b133, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bf...; scenario LoanUpdateApprovedAmount.feature UC6; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/uc6-mnt/loan-10-detail-associations-repaymentSchedule.json",
+  "capture_sha256": "3c33a47305a73f277f93d3bef51985e2a8c06db6e451fe4745c0d46e9ef2553b",
+  "capture_case_id": "c4ee58dc-312a-4d60-8553-cfccc1c3b133",
+  "citation": "loan-10-detail-associations-repaymentSchedule.json (tenant tierd, currency MNT) externalId c4ee58dc-312a-4d60-8553-cfccc1c3b133: repaymentSchedule.totalPrincipalDisbursed 1000.000000 -> 100000 minor units, matching the three observed disbursementDetails principals 300.000000/200.000000/500.000000 (all disbursed); the six repayment periods[3..8].principalDue 169.900000,170.050000,170.050000,170.050000,170.050000,149.900000 -> 16990,17005,17005,17005,17005,14990; sum = 100000 == totalPrincipalDisbursed; periods[8].principalLoanBalanceOutstanding 0.000000 -> 0"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "schedule_amortization": {
+   "principal_disbursed_minor": "100000",
+   "principal_components_minor": [
+    "16990",
+    "17005",
+    "17005",
+    "17005",
+    "17005",
+    "14990"
+   ]
+  }
+ },
+ "expect": {
+  "principal_sum_minor": "100000",
+  "final_principal_balance_minor": "0"
+ },
+ "capabilities_required": [
+  "schedule-principal-amortization"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
