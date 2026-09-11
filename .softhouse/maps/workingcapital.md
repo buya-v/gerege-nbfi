@@ -12,7 +12,7 @@ Source: `.softhouse/capabilities-workingcapital.json`
 * capability `wc-loan-balance-read` — in_graded_domain: **True** — Read one working-capital loan by id (GET /working-capital-loans/{loanId}) and serialise its m_wc_loan_balance row as the
 
 ## Vectors (what is graded today)
-6 files in `.softhouse/vectors/workingcapital/`
+7 files in `.softhouse/vectors/workingcapital/`
 
 * `WC-01-loans-list.json` — request `loan_id` — capture `.softhouse/capture/workingcapital/out/loans-list-raw.json`
 * `WC-02-balance-detail.json` — request `loan_id` — capture `.softhouse/capture/workingcapital/out/wc-loan-detail-raw.json`
@@ -20,24 +20,28 @@ Source: `.softhouse/capabilities-workingcapital.json`
 * `WC-04-detail-status-ordinal.json` — request `loan_id` — capture `.softhouse/capture/workingcapital/out/wc-loan-detail-raw.json`
 * `WC-05-loans-list-row-identity.json` — request `loan_id` — capture `.softhouse/capture/workingcapital/out/loans-list-raw.json`
 * `WC-06-detail-discount-nonzero.json` — request `loan_id` — capture `.softhouse/capture/wc-discount-nonzero/out/wc-loan-discount-detail-raw.json`
+* `WC-07-payment-allocation-decode.json` — request `loan_id` — capture `.softhouse/capture/workingcapital/out/wc-loan-detail-raw.json`
 
 ## Registration — where to add a seam / implementation / drive
-* `nexus/internal/apps/workingcapital/conformance/impl.go:32` — `func Register(name string, e WorkingCapitalEvaluator) {`
-* `nexus/internal/apps/workingcapital/conformance/impl.go:42` — `func RegisterWrong(name, defect string, e WorkingCapitalEvaluator) {`
-* `nexus/internal/apps/workingcapital/conformance/impl.go:431` — `Register("workingcapital-go", NewGoEvaluator())`
+* `nexus/internal/apps/workingcapital/conformance/impl.go:33` — `func Register(name string, e WorkingCapitalEvaluator) {`
+* `nexus/internal/apps/workingcapital/conformance/impl.go:43` — `func RegisterWrong(name, defect string, e WorkingCapitalEvaluator) {`
+* `nexus/internal/apps/workingcapital/conformance/impl.go:564` — `Register("workingcapital-go", NewGoEvaluator())`
 * conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/workingcapital/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations.
 
-* `workingcapital-wrong-discount-dropped-from-principal` — `nexus/internal/apps/workingcapital/conformance/impl.go:448`
-* `workingcapital-wrong-list-row-mapping` — `nexus/internal/apps/workingcapital/conformance/impl.go:444`
-* `workingcapital-wrong-status-ordinal` — `nexus/internal/apps/workingcapital/conformance/impl.go:440`
-* `workingcapital-wrong-total-outstanding` — `nexus/internal/apps/workingcapital/conformance/impl.go:432`
-* `workingcapital-wrong-tranche-dropped` — `nexus/internal/apps/workingcapital/conformance/impl.go:436`
+* `workingcapital-wrong-allocation-in-advance-as-due` — `nexus/internal/apps/workingcapital/conformance/impl.go:590`
+* `workingcapital-wrong-allocation-order-fee-before-penalty` — `nexus/internal/apps/workingcapital/conformance/impl.go:586`
+* `workingcapital-wrong-allocation-round-trip-drops-name` — `nexus/internal/apps/workingcapital/conformance/impl.go:594`
+* `workingcapital-wrong-discount-dropped-from-principal` — `nexus/internal/apps/workingcapital/conformance/impl.go:581`
+* `workingcapital-wrong-list-row-mapping` — `nexus/internal/apps/workingcapital/conformance/impl.go:577`
+* `workingcapital-wrong-status-ordinal` — `nexus/internal/apps/workingcapital/conformance/impl.go:573`
+* `workingcapital-wrong-total-outstanding` — `nexus/internal/apps/workingcapital/conformance/impl.go:565`
+* `workingcapital-wrong-tranche-dropped` — `nexus/internal/apps/workingcapital/conformance/impl.go:569`
 
-5 drives.
+8 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/workingcapital/allocationtype.go`: `String`:86, `Code`:94, `HumanReadableName`:97, `DueType`:102, `AllocationType`:108
@@ -49,7 +53,7 @@ Source: the binary's own -list-implementations.
 
 ## Captures this context's vectors already cite
 * `.softhouse/capture/wc-discount-nonzero/` — 1 vector(s) — OWNER — wc-discount-nonzero
-* `.softhouse/capture/workingcapital/` — 5 vector(s) — (no OWNER.md)
+* `.softhouse/capture/workingcapital/` — 6 vector(s) — (no OWNER.md)
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
