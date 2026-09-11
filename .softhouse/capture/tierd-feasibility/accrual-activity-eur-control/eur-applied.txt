@@ -1,0 +1,33 @@
+TierD accrual-activity EUR control -- post-EUR-revert state (copy now on EUR)
+date applied: 2026-09-11T23:37Z
+
+Command:
+  cd /Users/buv/fineract-tierd
+  git apply -R --verbose <OUT>/mnt-currency-restore.diff
+  -> "Applied patch ... cleanly." for all five files; rc=0
+
+After the reverse apply the five currency-bearing test sources hold EUR and therefore
+MATCH HEAD (upstream EUR), so `git diff` for them is empty. Only capture/build plumbing
+remains modified:
+
+  M fineract-client-feign/build.gradle
+  M fineract-e2e-tests-runner/src/test/resources/logback.xml
+  M gradle.properties
+  ?? .tierd-run.sh
+  ?? fineract-client-feign/src/main/java/org/apache/fineract/client/models/
+
+== five currency-bearing test sources NOW read EUR ==
+fineract-e2e-tests-core/.../factory/LoanProductsRequestFactory.java:99
+    public static final String CURRENCY_CODE = "EUR";
+fineract-e2e-tests-core/.../factory/SavingsProductRequestFactory.java:33
+    public static final String DEFAULT_SAVINGS_PRODUCT_CURRENCY_CODE = "EUR";
+fineract-e2e-tests-core/.../factory/WorkingCapitalChargeRequestFactory.java:31
+    public static final String DEFAULT_CURRENCY_CODE = "EUR";
+fineract-e2e-tests-runner/.../initializer/global/ChargeGlobalInitializerStep.java:50
+    public static final String CURRENCY_CODE = CurrencyOptions.EUR.value;
+fineract-e2e-tests-runner/.../initializer/global/CurrencyGlobalInitializerStep.java:40
+    public static final List<String> CURRENCIES = Arrays.asList("EUR", "USD");
+
+== exact commands (for reproduction) ==
+revert : git -C /Users/buv/fineract-tierd apply -R <OUT>/mnt-currency-restore.diff
+restore: git -C /Users/buv/fineract-tierd apply    <OUT>/mnt-currency-restore.diff

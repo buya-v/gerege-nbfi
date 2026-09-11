@@ -30,5 +30,6 @@ fineract-e2e-tests-runner/.../initializer/global/CurrencyGlobalInitializerStep.j
     public static final List<String> CURRENCIES = Arrays.asList("MNT", "USD");
 
 == revert patch ==
-eur-currency-seed.diff  (applied in reverse, git apply -R: MNT -> EUR)
-mnt-currency-restore.diff  (applied forward after the replay: EUR -> MNT)
+mnt-currency-restore.diff  (the MNT seed as a diff over upstream EUR HEAD)
+  revert  = git apply -R  (MNT -> EUR)
+  restore = git apply     (EUR -> MNT)
