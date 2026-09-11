@@ -1,0 +1,72 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY.json",
+  "log_line": 18880,
+  "sha256": "7d774f83848188a25eb92fc9f48ef419a722555285500a5d40d35353f8f4d8a0"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_360_30_USD.json",
+  "log_line": 19513,
+  "sha256": "f2213b12b6db14aff8d736d15f62ab0304c250831df8cbfddfc255ea67569c36"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_360_30_INTEREST_RECALC_AUTO_DOWNPAYMENT_ZERO_INTEREST_CHARGE_OFF_ACCRUAL_ACTIVITY.json",
+  "log_line": 16710,
+  "sha256": "19c24bd2cbf350e72e465aa0c9296aebd8de4175bd0b2aecf064440a96778f68"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_ACCRUAL_ACTIVITY.json",
+  "log_line": 14264,
+  "sha256": "fbab8fd411e8090b3718f7e7cdfd691cbb812f55a7722ba4876b67d240f9b58b"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE.json",
+  "log_line": 12283,
+  "sha256": "89b3b9c54dd7583490a6f853264bbca6017e197e0341439955f99351ab9c5f1c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_MULTIDISBURSE.json",
+  "log_line": 15142,
+  "sha256": "0c8d97c371481608da213ec85b230a71adc656ded3329eb3133b25ccaa04a98c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_REFUND_INTEREST_RECALC_ACCRUAL_ACTIVITY.json",
+  "log_line": 15990,
+  "sha256": "822f6108fc8dfc94441cd3c9ccf5dc9315712295fc34189d11c5c22bd57e47a1"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_REFUND_INTEREST_RECALC_DOWNPAYMENT_ACCRUAL_ACTIVITY.json",
+  "log_line": 16073,
+  "sha256": "2201825754f4df420ae1aee6f94bbfb18b5a2fef2e5fa67799f8cac5c80d73a8"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_IR_DAILY_TILL_PRECLOSE_LAST_INSTALLMENT_STRATEGY.json",
+  "log_line": 12813,
+  "sha256": "031227032a21b26196608104ce3849fe1e63e3686b8bd5d239243fe1c2946c98"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL.json",
+  "log_line": 12651,
+  "sha256": "9223ff7e27b889663736e5f632b8f45687bfb7efbd09a432436dce91a8a798d9"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_AUTO_DOWNPAYMENT.json",
+  "log_line": 12920,
+  "sha256": "30dea9421e7e90aee38b6aa107cb13e6cf734efda6ccc53b98caa5ed1c853692"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_DOWNPAYMENT.json",
+  "log_line": 12909,
+  "sha256": "d048f48ecde850974462af18facb44baa1d142e838c2adbf29c9af3d4444970d"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECOGNITION_DISBURSEMENT_DAILY_EMI_360_30_ACCRUAL_ACTIVITY.json",
+  "log_line": 14158,
+  "sha256": "dccfb7b3156c9eb2dce51e46ef9817fe6146b1602c297f71ed7f8abc4b64a555"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACCRUAL_ACTIVITY.json",
+  "log_line": 19544,
+  "sha256": "28ea1e8c6f5ce7a5b2c8c9482275a54a808faefb5c503d0d5453e3f2d766c431"
+ }
+]
