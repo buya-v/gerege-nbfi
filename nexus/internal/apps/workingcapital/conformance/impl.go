@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/gerege/nexus/internal/apps/loan"
@@ -104,6 +105,41 @@ func seededBalance() workingcapital.WorkingCapitalLoanBalance {
 	return b
 }
 
+// observedAllocationNames is the payment-allocation order the committed
+// wc-loan-detail-raw.json records for the seeded loan, in the exact order the
+// capture lists it under paymentAllocation[0].paymentAllocationOrder. It is a
+// transcription of the observed names, not a computation: nothing here is
+// derived from the port yet.
+var observedAllocationNames = []string{
+	"DUE_PENALTY",
+	"DUE_FEE",
+	"DUE_PRINCIPAL",
+	"IN_ADVANCE_PENALTY",
+	"IN_ADVANCE_FEE",
+	"IN_ADVANCE_PRINCIPAL",
+}
+
+// seedAllocationRules turns the observed payment-allocation order into the
+// typed rule the loan carries by decoding it through the port's OWN list
+// converter. SplitAllocationTypes is the persistence read
+// (GenericEnumListConverter.convertToEntityAttribute), so the sequence
+// name -> converter -> typed order is the port's, not a restated table; the
+// observed names are joined into the comma-separated stored form the converter
+// consumes. A decode failure is fatal: the observed rule is known-good, so an
+// error here is a port defect, not a data variant.
+func seedAllocationRules() []workingcapital.WorkingCapitalLoanPaymentAllocationRule {
+	types, err := workingcapital.SplitAllocationTypes(strings.Join(observedAllocationNames, ","))
+	if err != nil {
+		panic(fmt.Sprintf("workingcapital conformance: the observed payment-allocation order must decode: %v", err))
+	}
+	return []workingcapital.WorkingCapitalLoanPaymentAllocationRule{{
+		ID:              1,
+		LoanID:          1,
+		TransactionType: "DEFAULT",
+		AllocationTypes: types,
+	}}
+}
+
 // seededLoan is the working-capital loan row of the pinned capture: id 1,
 // account 000000001 (the borrowing client's account is 000000005), client id 5,
 // external id SEED-WC-L01, status ACTIVE. The status is set by decoding the
@@ -117,12 +153,13 @@ func seededLoan() workingcapital.WorkingCapitalLoan {
 		panic("workingcapital conformance: seeded loan status 300 must decode to ACTIVE")
 	}
 	return workingcapital.WorkingCapitalLoan{
-		ID:            1,
-		AccountNumber: "000000001",
-		ExternalID:    "SEED-WC-L01",
-		ClientID:      5,
-		LoanStatus:    status,
-		Balance:       seededBalance(),
+		ID:                     1,
+		AccountNumber:          "000000001",
+		ExternalID:             "SEED-WC-L01",
+		ClientID:               5,
+		LoanStatus:             status,
+		Balance:                seededBalance(),
+		PaymentAllocationRules: seedAllocationRules(),
 		DisbursementDetails: []workingcapital.WorkingCapitalLoanDisbursementDetails{{
 			ExpectedAmount: loan.MinorUnits(100051),
 			ActualAmount:   loan.MinorUnits(100051),
@@ -249,7 +286,31 @@ func balanceReadBack(l workingcapital.WorkingCapitalLoan) *DetailExpect {
 			UnrealizedIncomeFromDiscountFee: strconv.FormatInt(int64(b.UnrealizedIncomeFromDiscountFee()), 10),
 		},
 		Disbursement: disbursementReadBack(l),
+		Allocation:   allocationReadBack(l),
 	}
+}
+
+// allocationReadBack renders a loan's payment-allocation rule as the detail
+// read-back serialises it: the transaction type and the ORDERED decode of its
+// allocation buckets, each bucket carrying the name the read-back shows and the
+// DueType/AllocationType the port classifies that name to. This is a
+// decode/classification render — it moves no money. A loan carrying no rule
+// renders no allocation block, exactly as the read-back omits it.
+func allocationReadBack(l workingcapital.WorkingCapitalLoan) *PaymentAllocationExpect {
+	if len(l.PaymentAllocationRules) == 0 {
+		return nil
+	}
+	r := l.PaymentAllocationRules[0]
+	out := &PaymentAllocationExpect{TransactionType: r.TransactionType}
+	for _, t := range r.AllocationTypes {
+		out.Rules = append(out.Rules, AllocationRuleExpect{
+			Name:           t.String(),
+			Code:           t.Code(),
+			DueType:        t.DueType().String(),
+			AllocationType: t.AllocationType().String(),
+		})
+	}
+	return out
 }
 
 // goEvaluator is the port-backed working-capital loan read. The committed
@@ -427,6 +488,78 @@ func (wrongDiscountDroppedFromPrincipalEvaluator) Evaluate(req Request) (Expect,
 	return Expect{Detail: balanceReadBack(seed)}, nil
 }
 
+// allocationRulesOf returns the mutable allocation rule slice of a detail
+// read-back, or nil when the read-back carries no payment-allocation block. The
+// slice aliases the read-back, so a caller mutating an element changes the
+// graded result.
+func allocationRulesOf(got Expect) []AllocationRuleExpect {
+	if got.Detail == nil || got.Detail.Allocation == nil {
+		return nil
+	}
+	return got.Detail.Allocation.Rules
+}
+
+// wrongAllocationOrderFeeBeforePenaltyEvaluator is a DELIBERATELY WRONG
+// implementation of the payment-allocation ORDER: it decodes the observed rule
+// correctly but fills the DUE band fee-first, swapping DUE_FEE ahead of
+// DUE_PENALTY. The bucket set is unchanged and the money read-back is untouched;
+// WC-07 grades the rule positionally and goes red on rules[0].name and
+// rules[1].name. This is the classic "order swapped within DUE" defect.
+type wrongAllocationOrderFeeBeforePenaltyEvaluator struct{}
+
+func (wrongAllocationOrderFeeBeforePenaltyEvaluator) Evaluate(req Request) (Expect, error) {
+	got, err := goEvaluator{}.Evaluate(req)
+	if err != nil {
+		return got, err
+	}
+	if rules := allocationRulesOf(got); len(rules) >= 2 {
+		rules[0], rules[1] = rules[1], rules[0] // wrong: DUE_FEE before DUE_PENALTY
+	}
+	return got, nil
+}
+
+// wrongAllocationInAdvanceAsDueEvaluator is a DELIBERATELY WRONG
+// implementation of the allocation classification: it decodes the observed
+// names but classifies every IN_ADVANCE_* bucket as DUE, collapsing the
+// past-due/in-advance distinction. The names and order are untouched; WC-07
+// grades each bucket's DueType and goes red on rules[3..5].due_type.
+type wrongAllocationInAdvanceAsDueEvaluator struct{}
+
+func (wrongAllocationInAdvanceAsDueEvaluator) Evaluate(req Request) (Expect, error) {
+	got, err := goEvaluator{}.Evaluate(req)
+	if err != nil {
+		return got, err
+	}
+	for i, r := range allocationRulesOf(got) {
+		if strings.HasPrefix(r.Name, "IN_ADVANCE") {
+			allocationRulesOf(got)[i].DueType = "DUE" // wrong: in-advance decoded as due
+		}
+	}
+	return got, nil
+}
+
+// wrongAllocationRoundTripDropsNameEvaluator is a DELIBERATELY WRONG
+// implementation of the list converter: the name -> stored -> name round trip
+// loses the last allocation name, so the decoded rule is one bucket short. On
+// the graded read-back the converter's output is the decoded list, so the loss
+// shows as a short list (five names, not six) and WC-07 grades
+// allocation.rules.length and goes red. The de-dup variant is NOT expressed
+// here: the observed rule carries six DISTINCT names, so the observation cannot
+// discriminate a de-duplicating converter, and a drive that modelled one would
+// kill zero.
+type wrongAllocationRoundTripDropsNameEvaluator struct{}
+
+func (wrongAllocationRoundTripDropsNameEvaluator) Evaluate(req Request) (Expect, error) {
+	got, err := goEvaluator{}.Evaluate(req)
+	if err != nil {
+		return got, err
+	}
+	if rules := allocationRulesOf(got); len(rules) > 0 {
+		got.Detail.Allocation.Rules = rules[:len(rules)-1] // wrong: the round trip dropped a name
+	}
+	return got, nil
+}
+
 func init() {
 	Register("workingcapital-go", NewGoEvaluator())
 	RegisterWrong("workingcapital-wrong-total-outstanding",
@@ -450,4 +583,17 @@ func init() {
 			"the oracle adds (principal = disbursed + discount); invisible while every captured discount was 0, red on the "+
 			"discount-nonzero facility WC-06, which pins principal 103753",
 		wrongDiscountDroppedFromPrincipalEvaluator{})
+	RegisterWrong("workingcapital-wrong-allocation-order-fee-before-penalty",
+		"decodes the observed payment-allocation rule but fills the DUE band fee-first (DUE_FEE before DUE_PENALTY), swapping "+
+			"the first two buckets; WC-07 grades the rule positionally and goes red on rules[0].name and rules[1].name",
+		wrongAllocationOrderFeeBeforePenaltyEvaluator{})
+	RegisterWrong("workingcapital-wrong-allocation-in-advance-as-due",
+		"decodes the observed payment-allocation rule but classifies every IN_ADVANCE_* bucket as DUE, collapsing the "+
+			"past-due/in-advance distinction; WC-07 grades each bucket's due_type and goes red on rules[3..5].due_type",
+		wrongAllocationInAdvanceAsDueEvaluator{})
+	RegisterWrong("workingcapital-wrong-allocation-round-trip-drops-name",
+		"loses the last allocation name across the name -> stored -> name conversion, so the decoded rule is one bucket short; "+
+			"WC-07 grades allocation.rules.length and goes red on five names instead of six (the de-dup variant is not modelled: "+
+			"the observed names are distinct, so the observation cannot discriminate it)",
+		wrongAllocationRoundTripDropsNameEvaluator{})
 }

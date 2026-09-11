@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"strconv"
 
 	shared "github.com/gerege/nexus/internal/conformance"
 )
@@ -259,7 +260,40 @@ func compareDetail(want Expect, got Expect) (int, int, []string) {
 			}
 		}
 	}
+
+	// Optional payment-allocation decode: when the vector pins it, the loan's
+	// allocation rule must decode to the ordered, classified buckets. Graded as
+	// STRUCTURAL cells — a decode/classification, never a money cell.
+	if w.Allocation != nil {
+		compareAllocation(w.Allocation, g.Allocation, cmp)
+	}
 	return graded, money, diffs
+}
+
+// compareAllocation grades a loan's decoded payment-allocation rule: the
+// transaction type and, in order, each bucket's name plus the DueType and
+// AllocationType the port classifies that name to. It is a DECODE/
+// CLASSIFICATION check, not arithmetic — no money is allocated, summed or
+// rounded — and every cell it grades is STRUCTURAL. A length mismatch is graded
+// and stops the walk, so a converter that drops or de-duplicates a name is
+// caught rather than silently compared element-by-element.
+func compareAllocation(want, got *PaymentAllocationExpect, cmp func(name string, isMoney bool, wantVal, gotVal string)) {
+	if got == nil {
+		cmp("allocation", false, "present", "absent (the read-back rendered no payment-allocation rule)")
+		return
+	}
+	cmp("allocation.transaction_type", false, want.TransactionType, got.TransactionType)
+	if len(want.Rules) != len(got.Rules) {
+		cmp("allocation.rules.length", false, strconv.Itoa(len(want.Rules)), strconv.Itoa(len(got.Rules)))
+		return
+	}
+	for i := range want.Rules {
+		wr, gr := want.Rules[i], got.Rules[i]
+		cmp(fmt.Sprintf("allocation.rules[%d].name", i), false, wr.Name, gr.Name)
+		cmp(fmt.Sprintf("allocation.rules[%d].code", i), false, wr.Code, gr.Code)
+		cmp(fmt.Sprintf("allocation.rules[%d].due_type", i), false, wr.DueType, gr.DueType)
+		cmp(fmt.Sprintf("allocation.rules[%d].allocation_type", i), false, wr.AllocationType, gr.AllocationType)
+	}
 }
 
 // Run loads the store, runs the no-float census and grades every vector.
