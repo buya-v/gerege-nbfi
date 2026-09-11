@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanCBR.feature",
@@ -12,7 +12,7 @@
    "feature_product": null,
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "Verify that Loan status goes from overpaid to active in case of CBR transaction (with replaying when CBR>new balance \u2192 clears overpaid, remaining increasing loan balance)",
    "result": "PASSED",
    "tag": "C2505"
@@ -23,7 +23,7 @@
    "feature_product": null,
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "Verify that Loan status goes from overpaid to closed in case of CBR transaction when transaction amount equals overpaid amount",
    "result": "PASSED",
    "tag": "C2511"
@@ -34,7 +34,7 @@
    "feature_product": null,
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "Single repayment reversal",
    "result": "PASSED",
    "tag": "C2515"
@@ -45,7 +45,7 @@
    "feature_product": null,
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "Multi repayment reversal",
    "result": "PASSED",
    "tag": "C2516"
@@ -56,7 +56,7 @@
    "feature_product": null,
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "Overpaid paid portion",
    "result": "PASSED",
    "tag": "C2517"
@@ -67,7 +67,7 @@
    "feature_product": null,
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "Repayment reversal",
    "result": "PASSED",
    "tag": "C2518"
@@ -78,7 +78,7 @@
    "feature_product": null,
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "Refund reversal",
    "result": "PASSED",
    "tag": "C2519"
@@ -89,7 +89,7 @@
    "feature_product": null,
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "Partial refund reversal",
    "result": "PASSED",
    "tag": "C2520"
@@ -100,7 +100,7 @@
    "feature_product": null,
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "Chargeback after CBR",
    "result": "PASSED",
    "tag": "C2521"
@@ -111,7 +111,7 @@
    "feature_product": null,
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "Refund after CBR scenario",
    "result": "PASSED",
    "tag": "C2522"
@@ -122,7 +122,7 @@
    "feature_product": null,
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "Single repayment reversal (after maturity)",
    "result": "PASSED",
    "tag": "C2523"
@@ -133,7 +133,7 @@
    "feature_product": null,
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "Multi repayment reversal (after maturity)",
    "result": "PASSED",
    "tag": "C2524"
@@ -144,7 +144,7 @@
    "feature_product": null,
    "index": 13,
    "loan": 13,
-   "loan_client_id": null,
+   "loan_client_id": 13,
    "name": "Overpaid paid portion (after maturity)",
    "result": "PASSED",
    "tag": "C2525"
@@ -155,7 +155,7 @@
    "feature_product": null,
    "index": 14,
    "loan": 14,
-   "loan_client_id": null,
+   "loan_client_id": 14,
    "name": "Repayment reversal (after maturity)",
    "result": "PASSED",
    "tag": "C2526"
@@ -166,7 +166,7 @@
    "feature_product": null,
    "index": 15,
    "loan": 15,
-   "loan_client_id": null,
+   "loan_client_id": 15,
    "name": "Refund reversal (after maturity)",
    "result": "PASSED",
    "tag": "C2527"
@@ -177,7 +177,7 @@
    "feature_product": null,
    "index": 16,
    "loan": 16,
-   "loan_client_id": null,
+   "loan_client_id": 16,
    "name": "Partial refund reversal (after maturity)",
    "result": "PASSED",
    "tag": "C2528"
@@ -188,7 +188,7 @@
    "feature_product": null,
    "index": 17,
    "loan": 17,
-   "loan_client_id": null,
+   "loan_client_id": 17,
    "name": "Chargeback after CBR (after maturity)",
    "result": "PASSED",
    "tag": "C2529"
@@ -199,7 +199,7 @@
    "feature_product": null,
    "index": 18,
    "loan": 18,
-   "loan_client_id": null,
+   "loan_client_id": 18,
    "name": "Refund after CBR scenario (after maturity)",
    "result": "PASSED",
    "tag": "C2530"
@@ -210,7 +210,7 @@
    "feature_product": null,
    "index": 19,
    "loan": 19,
-   "loan_client_id": null,
+   "loan_client_id": 19,
    "name": "Verify that accruals created for charges after CBR post-maturity",
    "result": "PASSED",
    "tag": "C2841"
@@ -221,7 +221,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 20,
    "loan": 20,
-   "loan_client_id": null,
+   "loan_client_id": 20,
    "name": "Verify that Loan status goes from overpaid to active in case of CBR transaction (with replaying when CBR>new balance \u2192 clears overpaid, remaining increasing loan balance) - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2885"
@@ -232,7 +232,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 21,
    "loan": 21,
-   "loan_client_id": null,
+   "loan_client_id": 21,
    "name": "Verify that Loan status goes from overpaid to closed in case of CBR transaction when transaction amount equals overpaid amount - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2886"
@@ -243,7 +243,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 22,
    "loan": 22,
-   "loan_client_id": null,
+   "loan_client_id": 22,
    "name": "Verify that Loan status goes from overpaid to active in case of Refund transaction was reverted - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2887"
@@ -254,7 +254,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 23,
    "loan": 23,
-   "loan_client_id": null,
+   "loan_client_id": 23,
    "name": "Multi repayment reversal (after maturity) - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2888"
@@ -265,7 +265,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 24,
    "loan": 24,
-   "loan_client_id": null,
+   "loan_client_id": 24,
    "name": "Verify that Loan status goes from overpaid to active in case of CBR transaction (after maturity) - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2889"
@@ -276,7 +276,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 25,
    "loan": 25,
-   "loan_client_id": null,
+   "loan_client_id": 25,
    "name": "Verify that accruals created for charges after CBR post-maturity - LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION loan product",
    "result": "PASSED",
    "tag": "C2890"
@@ -287,7 +287,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 26,
    "loan": 26,
-   "loan_client_id": null,
+   "loan_client_id": 26,
    "name": "Verify that CBR transaction date cannot be in the future",
    "result": "PASSED",
    "tag": "C2989"
@@ -298,7 +298,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 27,
    "loan": 27,
-   "loan_client_id": null,
+   "loan_client_id": 27,
    "name": "Verify that Charge-off and CBR transaction GL entries are correct in case of repayment reversal after CBR and Fraud flagged loan",
    "result": "PASSED",
    "tag": "C3020"
@@ -309,7 +309,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 28,
    "loan": 28,
-   "loan_client_id": null,
+   "loan_client_id": 28,
    "name": "Verify that Charge-off and CBR transaction GL entries are correct in case of repayment reversal after CBR and Non-Fraud loan",
    "result": "PASSED",
    "tag": "C3021"
@@ -320,7 +320,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 29,
    "loan": 29,
-   "loan_client_id": null,
+   "loan_client_id": 29,
    "name": "Verify that Charge-off and CBR transaction GL entries are correct before and after a repayment reversal taken place after CBR - UC1",
    "result": "PASSED",
    "tag": "C3040"
@@ -331,7 +331,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 30,
    "loan": 30,
-   "loan_client_id": null,
+   "loan_client_id": 30,
    "name": "Verify that Charge-off and CBR transaction GL entries are correct before and after a repayment reversal taken place after CBR - UC2",
    "result": "PASSED",
    "tag": "C3041"
@@ -342,7 +342,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADVANCED_PAYMENT_ALLOCATION",
    "index": 31,
    "loan": 31,
-   "loan_client_id": null,
+   "loan_client_id": 31,
    "name": "Verify that overpayment portion calculated properly in case of CBR reverse-replay",
    "result": "PASSED",
    "tag": "C3092"
@@ -353,7 +353,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 32,
    "loan": 32,
-   "loan_client_id": null,
+   "loan_client_id": 32,
    "name": "Verify that the journal entries are correct in case of merchant issued refund (chargeoff, backdated transaction, undo repayment, downpayment)",
    "result": "PASSED",
    "tag": "C3140"
@@ -364,7 +364,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 33,
    "loan": 33,
-   "loan_client_id": null,
+   "loan_client_id": 33,
    "name": "Verify that loan status is correct when CBR is reversed on an overpaid loan",
    "result": "PASSED",
    "tag": "C3203"
@@ -375,7 +375,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_CUSTOM_PAYMENT_ALLOCATION",
    "index": 34,
    "loan": 34,
-   "loan_client_id": null,
+   "loan_client_id": 34,
    "name": "Verify that 2nd disbursement is allowed after MIR, Payout Refund and Credit Balance Refund closes the loan",
    "result": "PASSED",
    "tag": "C3734"
@@ -386,7 +386,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACC_LAST_INSTALLMENT",
    "index": 35,
    "loan": 35,
-   "loan_client_id": null,
+   "loan_client_id": 35,
    "name": "Verify that Loan ends in correct state after CBR + backdated GoodwillCredit cocktail (LAST_INSTALLMENT future-installment rule)",
    "result": "PASSED",
    "tag": "C78812"
@@ -397,7 +397,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACCRUAL_ACTIVITY",
    "index": 36,
    "loan": 36,
-   "loan_client_id": null,
+   "loan_client_id": 36,
    "name": "Verify that Loan ends in correct state after CBR + backdated GoodwillCredit cocktail (NEXT_INSTALLMENT future-installment rule)",
    "result": "PASSED",
    "tag": "C78853"
@@ -408,7 +408,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACC_LAST_INSTALLMENT",
    "index": 37,
    "loan": 37,
-   "loan_client_id": null,
+   "loan_client_id": 37,
    "name": "Verify that backdated GoodwillCredit on fully paid loan followed by CBR closes the loan",
    "result": "PASSED",
    "tag": "C78851"
@@ -419,7 +419,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACC_LAST_INSTALLMENT",
    "index": 38,
    "loan": 38,
-   "loan_client_id": null,
+   "loan_client_id": 38,
    "name": "Verify that Reverse-replay reduces overpayment so an earlier CBR re-runs with principalPortion > 0",
    "result": "PASSED",
    "tag": "C78852"
@@ -430,7 +430,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF",
    "index": 39,
    "loan": 39,
-   "loan_client_id": null,
+   "loan_client_id": 39,
    "name": "Verify Adjust schedule with CBR on non-interest-recalculation loan - UC1: CBR credit preserved after repeated repayment reversals trigger reverse-replay",
    "result": "PASSED",
    "tag": "C85446"
@@ -441,7 +441,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF",
    "index": 40,
    "loan": 40,
-   "loan_client_id": null,
+   "loan_client_id": 40,
    "name": "Verify Adjust schedule with CBR on non-interest-recalculation loan - UC2: simplified repro without MIR",
    "result": "PASSED",
    "tag": "C85447"
@@ -452,7 +452,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF",
    "index": 41,
    "loan": 41,
-   "loan_client_id": null,
+   "loan_client_id": 41,
    "name": "Verify Adjust schedule with CBR on non-interest-recalculation loan - UC3: multiple reschedules before CBR reverse-replay",
    "result": "PASSED",
    "tag": "C85448"
