@@ -20,8 +20,8 @@ Source: `.softhouse/capabilities-origination.json`
 * `nexus/internal/apps/origination/conformance/impl.go:25` — `func Register(name string, e OriginationEvaluator) {`
 * `nexus/internal/apps/origination/conformance/impl.go:35` — `func RegisterWrong(name, defect string, e OriginationEvaluator) {`
 * `nexus/internal/apps/origination/conformance/impl.go:149` — `Register("origination-go", NewGoEvaluator())`
-* conformance package files (`nexus/internal/apps/origination/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
-* committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
+* conformance package files (`nexus/internal/apps/origination/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* committed-store test (the only valid coverage instrument): `nexus/internal/apps/origination/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `origination-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
