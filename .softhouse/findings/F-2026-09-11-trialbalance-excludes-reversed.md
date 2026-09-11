@@ -57,3 +57,18 @@ drive (`ledger-wrong-trialbalance-skips-reversed`) that the vector kills. **This
 ledger drive census pin (17 → 18) in `.softhouse/conformance.sh`** — a guard every brief so
 far has told runs not to touch. The driver must authorise that one edit explicitly in the
 brief, with this finding as the argument, and verify it is the ONLY change to the file.
+
+## Addendum (same day) — the expected value has never been observed
+
+Checked read-only on the live oracle (`gerege-oracle-db`, tenant `gerege`):
+`m_trial_balance` has **0 rows**, although job 30 "Update Trial Balance Details" is active and
+its run history reports five cron runs with status `success`. So no trial balance computed
+by the oracle exists anywhere, and **an expected net derived by applying
+`findTrialBalanceLinesForDate` by hand would be a synthesised value** — refused.
+
+Also: A2-350 came from an EARLIER oracle instance. On today's tenant ids 45-52 are unrelated
+loan accruals, and the tenant holds no manual reversal at all.
+
+So closing this is a split: a CAPTURE (post a manual entry, reverse it, execute job 30, read
+`m_trial_balance` read-only — and if it stays empty, find out why from the pinned source),
+then a GRADING run with the ledger census pin authorised to move 17 → 18.

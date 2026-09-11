@@ -159,3 +159,18 @@ Also, from the same session: zsh does NOT word-split unquoted variables, so
 `for w in $ws` passes the whole list as one argument. Use `while IFS= read -r`.
 And macOS has no `timeout(1)` — a liveness check built on it reports "hung" when the
 binary is merely absent.
+
+## The oracle's database is `gerege-oracle-db` — NOT `fineract-db-1` (2026-09-11)
+
+Two PostgreSQL 18.3 containers on this host both carry a `fineract_gerege` database.
+**Only `gerege-oracle-db` (host port 55432) backs the live reference oracle
+(`gerege-oracle-app`, :8443).** `fineract-db-1` (host port 5432) is a stale, older instance:
+it answers every query convincingly and wrongly (on 2026-09-11 it held 109 journal entries
+with max id 113 while the live oracle's REST returned ids up to 140).
+
+Control before trusting any SQL read: the row count / max id of the table you read must
+agree with what the REST API returns for the same tenant. `docker exec gerege-oracle-db
+psql -U postgres -d fineract_gerege -At -c '…'` — read-only, and never `fineract_default`.
+
+A committed capture is also not the live tenant: `tierA-a2/` (A2-3xx) came from an earlier
+instance — its journal-entry ids name different rows on today's `gerege`.
