@@ -68,7 +68,7 @@ func Admit(v *Vector, opts Options) []string {
 	if !appliesToOK {
 		problems = append(problems, fmt.Sprintf("request.applies_to %d is not a known stored value", v.Request.AppliesTo))
 	}
-	_, timeTypeOK := charges.ChargeTimeTypeFromStoredValue(v.Request.TimeType)
+	timeType, timeTypeOK := charges.ChargeTimeTypeFromStoredValue(v.Request.TimeType)
 	if !timeTypeOK {
 		problems = append(problems, fmt.Sprintf("request.time_type %d is not a known stored value", v.Request.TimeType))
 	}
@@ -115,6 +115,16 @@ func Admit(v *Vector, opts Options) []string {
 		}
 	}
 
+	// An interest amount is meaningful only for PERCENT_OF_AMOUNT_AND_INTEREST
+	// (type 3); when present it must still be a non-negative minor-unit integer.
+	if v.Request.InterestAmountMinor != "" {
+		if interest, err := parseMinorText(v.Request.InterestAmountMinor); err != nil {
+			problems = append(problems, fmt.Sprintf("request.interest_amount_minor: %v", err))
+		} else if interest < 0 {
+			problems = append(problems, fmt.Sprintf("request.interest_amount_minor %d is negative", interest))
+		}
+	}
+
 	switch v.Expect.Kind {
 	case ExpectValidation:
 		if len(v.Expect.ValidationCodes) == 0 {
@@ -126,7 +136,19 @@ func Admit(v *Vector, opts Options) []string {
 				"the fee is asserted only by a \"fee\" vector")
 		}
 	case ExpectFee:
-		if !calcType.IsFlat() && !calcType.IsPercentageOfAmount() && !calcType.IsPercentageOfDisbursementAmount() {
+		// The fee of an interest-based charge is not computable from a base amount
+		// alone, with ONE exception: PERCENT_OF_AMOUNT_AND_INTEREST (type 3) on an
+		// INSTALMENT_FEE (time_type 8), whose base is the period's principal plus the
+		// period's interest, both carried by the request. PERCENT_OF_INTEREST (type 4)
+		// stays refused: no observation has fixed its (daily-compounded) base.
+		instalmentInterest := timeTypeOK && timeType.IsInstalmentFee() && calcType.IsPercentageOfAmountAndInterest()
+		switch {
+		case calcType.IsFlat(),
+			calcType.IsPercentageOfAmount(),
+			calcType.IsPercentageOfDisbursementAmount(),
+			instalmentInterest:
+			// Admissible: computable from the request alone.
+		default:
 			problems = append(problems, fmt.Sprintf(
 				"expect.kind \"fee\" with calculation type %d: the fee of an interest-based charge is not "+
 					"computable from a base amount alone and cannot be graded here", v.Request.CalculationType))
@@ -134,6 +156,16 @@ func Admit(v *Vector, opts Options) []string {
 		if !calcType.IsFlat() && v.Request.BaseAmountMinor == "" {
 			problems = append(problems, "expect.kind \"fee\" with a percentage calculation type "+
 				"requires request.base_amount_minor")
+		}
+		if instalmentInterest {
+			if v.Request.InterestAmountMinor == "" {
+				problems = append(problems, "expect.kind \"fee\" with calculation type 3 on an INSTALMENT_FEE "+
+					"requires request.interest_amount_minor (the period's interest)")
+			}
+			if v.Request.MinCapMinor != nil || v.Request.MaxCapMinor != nil {
+				problems = append(problems, "expect.kind \"fee\" with calculation type 3 on an INSTALMENT_FEE "+
+					"applies no min/max cap: request.min_cap_minor and request.max_cap_minor must be absent")
+			}
 		}
 		if fee, err := parseMinorText(v.Expect.FeeMinor); err != nil {
 			problems = append(problems, fmt.Sprintf("expect.fee_minor: %v", err))

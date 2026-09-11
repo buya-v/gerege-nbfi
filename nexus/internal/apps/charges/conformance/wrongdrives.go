@@ -32,6 +32,11 @@ type ignoreVariant struct {
 	// percentage charge is computed against a zero base.
 	// charges-wrong-base-amount-ignored.
 	baseAmountAsZero bool
+	// interestAmountAsZero replaces interest_amount_minor with "0" before decode,
+	// so a PERCENT_OF_AMOUNT_AND_INTEREST instalment fee is computed from the
+	// period's principal alone, as a port that reads principalDue but never
+	// interestDue would. charges-wrong-instalment-interest-ignored.
+	interestAmountAsZero bool
 	// timeTypeAsInvalid replaces time_type with the enum zero value (INVALID), as a
 	// port that never decodes charge_time_enum would leave it.
 	// charges-wrong-time-type-ignored.
@@ -57,6 +62,9 @@ func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	}
 	if v.baseAmountAsZero {
 		req.BaseAmountMinor = "0"
+	}
+	if v.interestAmountAsZero {
+		req.InterestAmountMinor = "0"
 	}
 	if v.timeTypeAsInvalid {
 		req.TimeType = 0

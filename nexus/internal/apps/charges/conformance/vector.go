@@ -112,6 +112,13 @@ type ChargeRequest struct {
 	Active          bool    `json:"active"`
 	Deleted         bool    `json:"deleted"`
 	BaseAmountMinor string  `json:"base_amount_minor"`
+	// InterestAmountMinor is the PERIOD's interest, paired with BaseAmountMinor
+	// (the PERIOD's principal) for calculation type 3
+	// (PERCENT_OF_AMOUNT_AND_INTEREST) on an INSTALMENT_FEE charge. It mirrors
+	// LoanRepaymentScheduleProcessingWrapper.getInstallmentFee, whose base is the
+	// period's principal plus its interest. It is empty (and unread) for every
+	// other calculation type.
+	InterestAmountMinor string `json:"interest_amount_minor"`
 }
 
 // ChargeExpect is what the oracle produced for the request.

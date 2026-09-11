@@ -216,8 +216,13 @@ func chargeFromRequest(req ChargeRequest) (charges.Charge, error) {
 }
 
 // feeFor computes the fee the oracle would for a VALID charge. ok is false for
-// an interest-based calculation type, whose fee needs the loan's interest
-// component and is not computable from a base amount alone.
+// an interest-based calculation type whose base this seam cannot reconstruct:
+// PERCENT_OF_INTEREST needs the loan's daily-compounded interest, which is not
+// carried per period. PERCENT_OF_AMOUNT_AND_INTEREST on an INSTALMENT_FEE is
+// computable: its base is the period's principal (base_amount_minor) plus the
+// period's interest (interest_amount_minor), and the fee is that base times the
+// percentage with no min/max cap [VERIFIED:
+// LoanRepaymentScheduleProcessingWrapper.java:212-234].
 func feeFor(c charges.Charge, req ChargeRequest) (charges.MinorUnits, bool, error) {
 	switch {
 	case c.CalculationType.IsFlat():
@@ -225,6 +230,20 @@ func feeFor(c charges.Charge, req ChargeRequest) (charges.MinorUnits, bool, erro
 		// is the charge's stored amount [Charge.java:76-77], returned unmodified
 		// by getAmount [LoanCharge.java:405-406].
 		return c.Amount, true, nil
+	case c.CalculationType.IsPercentageOfAmountAndInterest():
+		base, err := parseMinorText(req.BaseAmountMinor)
+		if err != nil {
+			return 0, false, fmt.Errorf("request.base_amount_minor: %w", err)
+		}
+		interest, err := parseMinorText(req.InterestAmountMinor)
+		if err != nil {
+			return 0, false, fmt.Errorf("request.interest_amount_minor: %w", err)
+		}
+		p, err := charges.PercentageOf(base+interest, c.Percentage)
+		if err != nil {
+			return 0, false, err
+		}
+		return p, true, nil
 	case c.CalculationType.IsPercentageOfAmount(), c.CalculationType.IsPercentageOfDisbursementAmount():
 		base, err := parseMinorText(req.BaseAmountMinor)
 		if err != nil {
@@ -564,4 +583,14 @@ func init() {
 			"OHCHCAPaf-pctamount-mincap (max bound 800000 does not raise it), killing 2; the twelve cap-free "+
 			"vectors have no bound to transpose and survive",
 		capsSwappedEvaluator{})
+	RegisterWrong("charges-wrong-instalment-interest-ignored",
+		"computes the PERCENT_OF_AMOUNT_AND_INTEREST instalment fee from the period's principal alone: "+
+			"interest_amount_minor is left at its zero value, as a porter who reads the period's principalDue but "+
+			"never its interestDue would have it. Fineract's instalment-fee base is the period's principal PLUS its "+
+			"interest, and the fee is that base times the percentage with no cap [VERIFIED: "+
+			"LoanRepaymentScheduleProcessingWrapper.java:212-234]. TD-CHG-loan-6-pct-amount-interest-p1 records "+
+			"feeChargesDue 0.17 from 16.41 + 0.59 = 17.00 at 1%; this drive drops the 0.59 and prices 16.41, "+
+			"answering 0.16, so it kills 1. p6 (16.94 + 0.10 = 17.04 and 16.94 both round HALF_UP to 0.17) and the "+
+			"percent-of-amount vector are byte-identical",
+		ignoreFieldEvaluator{v: ignoreVariant{interestAmountAsZero: true}})
 }

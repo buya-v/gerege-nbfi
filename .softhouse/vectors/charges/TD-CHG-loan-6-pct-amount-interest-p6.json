@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "TD-CHG-loan-6-pct-amount-interest-p6",
+ "title": "PERCENT_OF_AMOUNT_AND_INTEREST instalment fee, period 6: 1% of (16.94 principal + 0.10 interest) = 0.17 MNT (HALF_UP from 0.1704).",
+ "class": "parity",
+ "context": "charges",
+ "_note": "A NON-ZERO PERCENT_OF_AMOUNT_AND_INTEREST (calculation_type 3) fee at charge_time_enum 8 INSTALMENT_FEE. The base is the period-6 principal due 16.94 PLUS the period-6 interest due 0.10; 1% of their 17.04 sum is 0.1704, which rounds HALF_UP to the observed feeChargesDue 0.17. The fraction exercises the rounding branch on the combined base.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the tierd-feasibility LoanChargesInstallmentFee.feature replay, loan-6 read-back loans/loan-6/loan-6-detail-associations-all-1.json. fee_minor 17 is the exact major->minor scaling of the observed period-6 feeChargesDue 0.17; base_amount_minor 1694 and interest_amount_minor 10 are the exact scalings of the observed principalDue 16.94 and interestDue 0.10; percentage 1000000 is 1.0% in micro-per-cent. Captured by the throwaway tenant tierd on image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a, currency MNT (2 minor units), rounding HALF_UP (ordinal 4), precision 19, timezone Asia/Ulaanbaatar.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-6/loan-6-detail-associations-all-1.json",
+  "capture_sha256": "be58734998afc89f945db0703a7b74991592811820df15f88561e23b9d6dca37",
+  "capture_case_id": "TD-CHG-loan-6-pct-amount-interest-p6",
+  "citation": ""
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "Tier D percent of amount and interest per instalment",
+  "currency_code": "MNT",
+  "amount_minor": "0",
+  "percentage": 1000000,
+  "applies_to": 1,
+  "time_type": 8,
+  "calculation_type": 3,
+  "payment_mode": 0,
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": "1694",
+  "interest_amount_minor": "10"
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "17"
+ },
+ "capabilities_required": [
+  "percent-amount-interest-instalment-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}
