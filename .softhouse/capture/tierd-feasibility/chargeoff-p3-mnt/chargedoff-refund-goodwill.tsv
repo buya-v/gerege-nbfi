@@ -1,0 +1,33 @@
+type	loan	tx	entry	gl_account_id	gl_account_name	amount_minor	fraud	currency	transaction_date	chargeoff_tx_id
+loanTransactionType.merchantIssuedRefund	48	L475	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	DEBIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	DEBIT	16	Interest Income Charge Off	1849	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	DEBIT	13	Overpayment account	8151	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	CREDIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	CREDIT	16	Interest Income Charge Off	1849	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	CREDIT	13	Overpayment account	8151	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L475	CREDIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L477	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L477	CREDIT	18	Credit Loss/Bad Debt	88310	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	48	L477	CREDIT	16	Interest Income Charge Off	1690	False	MNT	2025-04-15	L474,L479
+loanTransactionType.merchantIssuedRefund	49	L485	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	DEBIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	DEBIT	16	Interest Income Charge Off	732	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	DEBIT	13	Overpayment account	9268	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	CREDIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	CREDIT	16	Interest Income Charge Off	732	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	CREDIT	13	Overpayment account	9268	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L485	CREDIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L488	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L488	CREDIT	18	Credit Loss/Bad Debt	89243	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	49	L488	CREDIT	16	Interest Income Charge Off	757	False	MNT	2025-04-15	L484,L487
+loanTransactionType.merchantIssuedRefund	50	L495	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	DEBIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	DEBIT	16	Interest Income Charge Off	732	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	DEBIT	13	Overpayment account	9268	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	CREDIT	18	Credit Loss/Bad Debt	80000	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	CREDIT	16	Interest Income Charge Off	732	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	CREDIT	13	Overpayment account	9268	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L495	CREDIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L498	DEBIT	7	Suspense/Clearing account	90000	False	MNT	2025-04-15	L494,L497
+loanTransactionType.merchantIssuedRefund	50	L498	CREDIT	18	Credit Loss/Bad Debt	90000	False	MNT	2025-04-15	L494,L497
