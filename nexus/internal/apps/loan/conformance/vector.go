@@ -844,38 +844,55 @@ type AccrualJournalRequest struct {
 
 // ChargebackPortionsMoney is the money a chargeback transaction credited, per
 // ledger slot, each an integer STRING in minor units. The observed domain has
-// two slots only: principal and overpayment. There is no field for a fee or
-// penalty portion or a paid portion, so a caller cannot express the unobserved
-// branches of createJournalEntriesForChargeback to this seam.
+// four credited slots: principal, fee, penalty and overpayment. There is no
+// field for a paid portion, so a caller cannot express the unobserved
+// "paid > credited" credit branches of createJournalEntriesForChargeback to this
+// seam.
 type ChargebackPortionsMoney struct {
 	Principal   string `json:"principal"`
+	Fee         string `json:"fee,omitempty"`
+	Penalty     string `json:"penalty,omitempty"`
 	Overpayment string `json:"overpayment"`
 }
 
 // ChargebackSlotAccounts is the RESOLVED slot->account mapping a chargeback's
-// three postings use: the fund source that the amount credits (the transaction
-// paymentTypeId's payment-channel account when it has one, else the product
-// FUND_SOURCE), the loan-portfolio account the principal difference debits, and
-// the overpayment account the overpayment portion debits. The accounts are the
+// postings use. Three slots are unconditional: the fund source that the amount
+// credits (the transaction paymentTypeId's payment-channel account when it has
+// one, else the product FUND_SOURCE), the overpayment account the overpayment
+// portion debits, and the loan-portfolio account the principal difference
+// debits while the loan is NOT charged off. The charged-off slots are the
+// principal CHARGE_OFF_EXPENSE, fee INCOME_FROM_CHARGE_OFF_FEES and penalty
+// INCOME_FROM_CHARGE_OFF_PENALTY accounts, and the not-charged-off receivable
+// slots are FEES_RECEIVABLE and PENALTIES_RECEIVABLE. Every account is the
 // product's accountingMappings read back from the reference server (or the
 // channel mapping), never invented; a positive slot with no account is refused
 // by the port.
 type ChargebackSlotAccounts struct {
-	FundSource    string `json:"fund_source"`
-	LoanPortfolio string `json:"loan_portfolio"`
-	Overpayment   string `json:"overpayment"`
+	FundSource                 string `json:"fund_source"`
+	LoanPortfolio              string `json:"loan_portfolio"`
+	Overpayment                string `json:"overpayment"`
+	FeesReceivable             string `json:"fees_receivable,omitempty"`
+	PenaltiesReceivable        string `json:"penalties_receivable,omitempty"`
+	ChargeOffExpense           string `json:"charge_off_expense,omitempty"`
+	IncomeFromChargeOffFees    string `json:"income_from_charge_off_fees,omitempty"`
+	IncomeFromChargeOffPenalty string `json:"income_from_charge_off_penalty,omitempty"`
 }
 
 // ChargebackJournalRequest is the loan-chargeback-journal-entries seam's input:
-// the chargeback transaction's amount, its principal and overpayment portions,
-// and the resolved slot->account mapping, plus the transaction id the legs are
-// posted under. The observed identity amount = principal + overpayment is
+// the chargeback transaction's amount, its principal, fee, penalty and
+// overpayment portions, the loan's charged-off flag (a charged-off loan debits
+// the charge-off expense / charge-off income accounts), and the resolved
+// slot->account mapping, plus the transaction id the legs are posted under. The
+// observed identity amount = principal + fee + penalty + overpayment is
 // enforced by the port: a mismatch is an unported portion, refused rather than
-// posted.
+// posted. The unobserved paid portions and the charged-off-and-fraud
+// combination have no input, so the port cannot express them.
 type ChargebackJournalRequest struct {
 	TransactionID string                  `json:"transaction_id"`
 	Amount        string                  `json:"amount"`
 	Portions      ChargebackPortionsMoney `json:"portions"`
+	ChargedOff    bool                    `json:"charged_off,omitempty"`
+	Fraud         bool                    `json:"fraud,omitempty"`
 	Accounts      ChargebackSlotAccounts  `json:"accounts"`
 }
 
@@ -1068,8 +1085,8 @@ type Request struct {
 	// product's resolved slot->account mapping, with the adjustment flag.
 	AccrualJournal *AccrualJournalRequest `json:"accrual_journal,omitempty"`
 	// ChargebackJournal is the loan-chargeback-journal-entries seam's input: the
-	// chargeback transaction's amount and two portions and the resolved
-	// slot->account mapping.
+	// chargeback transaction's amount and four portions, the loan's charged-off
+	// and fraud facts, and the resolved slot->account mapping.
 	ChargebackJournal *ChargebackJournalRequest `json:"chargeback_journal,omitempty"`
 	// ChargeLifecycle is the loan-charge-lifecycle seam's input: the charge's
 	// amount, penalty flag, and the ordered operations observed.
@@ -1209,10 +1226,12 @@ type Expect struct {
 	AccrualJournalLegs []JournalEntryLeg `json:"accrual_journal_legs,omitempty"`
 	// ChargebackJournalLegs is the loan-chargeback-journal-entries seam's ordered
 	// leg list the chargeback posted: the amount credit to the fund source, then
-	// the overpayment debit, then the principal debit, in posting order. Every
-	// leg is graded on its transaction id, account, side and amount; the
-	// overpayment debit's account and the two-debit order are what discriminate
-	// an overpayment-to-portfolio port or a reordered port.
+	// the overpayment debit, then the principal debit, then the fee debit, then
+	// the penalty debit, in posting order; a charged-off loan debits the
+	// charge-off expense and charge-off income accounts instead of the portfolio
+	// and receivables. Every leg is graded on its transaction id, account, side
+	// and amount; the overpayment debit's account, the two-debit order and the
+	// charge-off account switch are what discriminate a wrong port.
 	ChargebackJournalLegs []JournalEntryLeg `json:"chargeback_journal_legs,omitempty"`
 	// ChargeStates is the loan-charge-lifecycle seam's ordered list of expected
 	// states: the created state at index 0, then one state per operation in
