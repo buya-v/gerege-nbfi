@@ -228,6 +228,17 @@ plus the eleven observed unpaid rows would make a no-skip port over-count by exa
 instalment: **9789065 + 888488 = 10677553** (= the loan's full scheduled total). The correct
 port must return **9789065**.
 
+Schema note for the grader: `WriteOffInstallmentInput.ObligationsMet` is
+`json:"obligations_met,omitempty"` (`conformance/vector.go:297`), so the committed `LN-L11`
+write-off vector omits the field entirely — every one of loan 11's rows is `complete:false`.
+A discriminating vector must emit `"obligations_met": true` on exactly the paid row; the
+eleven unpaid rows keep it absent. The eleven unpaid rows' four cells are shared by both
+candidate inputs (they are identical to the after-repay outstanding); only the paid row
+differs: the faithful single-state citation is `0/0/0/0` + `obligations_met:true` (which does
+not discriminate), and the discriminating construction is the paid row's pre-repayment
+`788488/100000/0/0` + `obligations_met:true`. Both underlying states are committed, so the
+grader can cite either; this OWNER does not choose for it.
+
 ## Money / units
 
 MNT = ISO 496, minor unit 2. Every cell is a whole number of minor units:
