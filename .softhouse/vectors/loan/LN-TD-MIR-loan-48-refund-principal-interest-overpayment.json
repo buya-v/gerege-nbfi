@@ -1,0 +1,85 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-MIR-loan-48-refund-principal-interest-overpayment",
+ "title": "A MERCHANT-ISSUED REFUND on a loan marked charged off and not fraud credits CHARGE_OFF_EXPENSE 800.00, INCOME_FROM_CHARGE_OFF_INTEREST 18.49 and OVERPAYMENT 81.51, then debits the resolved fund source 7 900.00 exactly ONCE (loan 48 L475)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a MERCHANT-ISSUED REFUND posted on a loan ALREADY MARKED CHARGED OFF under createJournalEntriesForRepaymentWhenLoanIsChargedOff, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL / loanProductId 48, loan 48 chargedOff true, fraud false) at refund transaction L475. request.charged_off_merchant_refund_journal.portions transcribes the loan read-back's merchantIssuedRefund transaction id 475 (externalId a5fa2326-c4a3-42ab-94e5-aab15dceef46, type Merchant Issued Refund, paymentDetailData.paymentType.id 4): principalPortion 800.0 -> \"80000\", interestPortion 18.49 -> \"1849\", feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 81.51 -> \"8151\". The port REFUSES a fraud loan, so request.charged_off_merchant_refund_journal.fraud is false, matching the read-back's fraud false. request.charged_off_merchant_refund_journal.accounts is the accepted create request product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL.json's accountingMappings with the fund source RESOLVED through the payment channel: chargeOffExpenseAccountId 18, incomeFromChargeOffInterestAccountId 16, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, overpaymentLiabilityAccountId 13, incomeFromRecoveryAccountId 17, fundSourceAccountId 7; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 19, so paymentType 4 (AUTOPAY) has no channel mapping and resolves to the product fund source 7. expect.charged_off_merchant_refund_journal_legs is a TRANSCRIPTION of the four ORIGINAL L475 legs in id order from the journal-entries sweep: JE 1240 CREDIT glAccountId 18 800.00, JE 1241 CREDIT glAccountId 16 18.49, JE 1242 CREDIT glAccountId 13 81.51, JE 1243 DEBIT glAccountId 7 900.00. THE LATER REPLAY-ADDED MIRROR LEGS JE 1259-1262 under the same transactionId L475 (a DEBIT 18 800.00, a DEBIT 16 18.49, a DEBIT 13 81.51 and a CREDIT 7 900.00) are EXCLUDED: this vector grades the original posting ids 1240-1243 only. THIS VECTOR GRADES ONE PROPERTY: a merchant-issued refund on a charged-off, non-fraud loan CREDITS every positive principal, interest, fee and penalty portion to its OWN charge-off slot, MERGING portions that resolve to the same account at the first slot's position, credits a positive overpayment portion to OVERPAYMENT, and DEBITs the total exactly ONCE to the resolved fund source. The 80000 principal and 1849 interest name DIFFERENT accounts (18 and 16), so they stay two credits; the 8151 overpayment is a third credit; the three credits sum to the single 90000 debit. A port that posts the refund through the charged-off REPAYMENT layout instead routes the principal and interest to INCOME_FROM_RECOVERY 17, MERGING them into one 81849 credit and dropping the leg count from four to three — the account and count cells move while every side, amount, the overpayment credit and the single fund-source debit stay observed. WHAT THIS VECTOR DOES NOT GRADE: a positive fee or penalty portion (both are zero here), a merged positive fee/penalty credit, the fraud split (this loan is not fraud and the port refuses a fraud loan), the method's unobserved payout-refund and goodwill-credit arms (no transaction-type input exists), or a zero-total case. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargedoff-merchant-refund-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charged_off_merchant_refund_journal.portions is transcribed from the committed loan read-back .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/loans/loan-48/loan-48-detail-associations-transactions-6.json (sha256 3a37faf96dfd17763cc8031dea7bff79e2b00b1cda80bf7e59273bc089ec6fd1): loan 48, chargedOff true, fraud false, loanProductId 48, transactions[id 475 externalId a5fa2326-c4a3-42ab-94e5-aab15dceef46] type Merchant Issued Refund, paymentDetailData.paymentType.id 4, principalPortion 800.0, interestPortion 18.49, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 81.51, manuallyReversed false. expect.charged_off_merchant_refund_journal_legs is transcribed from the committed journal-entries sweep .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/journalentries-sweep/loan-48.json (sha256 a699195a2cf16d9b5f4583f77500b27bff30f01c826afdc93e723cc4043a6e99): transactionId L475 carries the ORIGINAL pageItems ids 1240 (CREDIT glAccountId 18 amount 800.0), 1241 (CREDIT glAccountId 16 amount 18.49), 1242 (CREDIT glAccountId 13 amount 81.51) and 1243 (DEBIT glAccountId 7 amount 900.0); the same transactionId also carries the later replay-added MIRROR pageItems ids 1259-1262, which are EXCLUDED from this vector. request.charged_off_merchant_refund_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL.json (sha256 064fcd211b2105926e8fa830086d2b7b4d4cda3003b7ee841ec8f83c37c724e8): chargeOffExpenseAccountId 18, incomeFromChargeOffInterestAccountId 16, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, overpaymentLiabilityAccountId 13, incomeFromRecoveryAccountId 17, fundSourceAccountId 7, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 19}] -- the only channel mapping, so paymentType 4 resolves to the product fund source 7. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (800.0 -> 80000, 18.49 -> 1849, 81.51 -> 8151, 900.0 -> 90000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/journalentries-sweep/loan-48.json",
+  "capture_sha256": "a699195a2cf16d9b5f4583f77500b27bff30f01c826afdc93e723cc4043a6e99",
+  "capture_case_id": "L475",
+  "citation": "journalentries-sweep/loan-48.json:1 (sha256 a699195a2cf16d9b5f4583f77500b27bff30f01c826afdc93e723cc4043a6e99): transactionId L475 carries four ORIGINAL legs in id order -- id 1240 entryType.value CREDIT glAccountId 18 amount 800.0 (glAccountName Credit Loss/Bad Debt); id 1241 CREDIT glAccountId 16 amount 18.49 (Interest Income Charge Off); id 1242 CREDIT glAccountId 13 amount 81.51 (Overpayment account); id 1243 DEBIT glAccountId 7 amount 900.0 (Suspense/Clearing account). The three credits sum to the one debit (90000 minor units). The later mirror legs ids 1259-1262 under the same transactionId are a replay artifact and are excluded. Portions are in loans/loan-48/loan-48-detail-associations-transactions-6.json:1 (sha256 3a37faf96dfd17763cc8031dea7bff79e2b00b1cda80bf7e59273bc089ec6fd1): loan 48 chargedOff true, fraud false, loanProductId 48, transactions[id 475 externalId a5fa2326-c4a3-42ab-94e5-aab15dceef46] type Merchant Issued Refund, paymentDetailData.paymentType.id 4, principalPortion 800.0, interestPortion 18.49, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 81.51. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL.json:1 (sha256 064fcd211b2105926e8fa830086d2b7b4d4cda3003b7ee841ec8f83c37c724e8): chargeOffExpenseAccountId 18, incomeFromChargeOffInterestAccountId 16, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, overpaymentLiabilityAccountId 13, incomeFromRecoveryAccountId 17, fundSourceAccountId 7, with the only channel mapping paymentTypeId 1 -> 19, so paymentType 4 resolves to the product fund source 7."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charged_off_merchant_refund_journal": {
+   "transaction_id": "L475",
+   "fraud": false,
+   "portions": {
+    "principal": "80000",
+    "interest": "1849",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "8151"
+   },
+   "accounts": {
+    "charge_off_expense": "18",
+    "income_from_charge_off_interest": "16",
+    "income_from_charge_off_fees": "12",
+    "income_from_charge_off_penalty": "12",
+    "overpayment": "13",
+    "income_from_recovery": "17",
+    "fund_source": "7"
+   }
+  }
+ },
+ "expect": {
+  "charged_off_merchant_refund_journal_legs": [
+   {
+    "transaction_id": "L475",
+    "account": "18",
+    "entry_type": "CREDIT",
+    "amount_minor": "80000"
+   },
+   {
+    "transaction_id": "L475",
+    "account": "16",
+    "entry_type": "CREDIT",
+    "amount_minor": "1849"
+   },
+   {
+    "transaction_id": "L475",
+    "account": "13",
+    "entry_type": "CREDIT",
+    "amount_minor": "8151"
+   },
+   {
+    "transaction_id": "L475",
+    "account": "7",
+    "entry_type": "DEBIT",
+    "amount_minor": "90000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargedoff-merchant-refund-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargedoff-merchant-refund-as-recovery"
+ ]
+}

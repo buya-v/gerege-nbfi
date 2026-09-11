@@ -160,6 +160,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goRepaymentJournal(*req.RepaymentJournal)
 	case req.ChargedOffRepaymentJournal != nil:
 		return goChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal)
+	case req.ChargedOffMerchantRefundJournal != nil:
+		return goChargedOffMerchantRefundJournal(*req.ChargedOffMerchantRefundJournal)
 	case req.AccrualJournal != nil:
 		return goAccrualJournal(*req.AccrualJournal)
 	case req.ChargebackJournal != nil:
@@ -169,7 +171,7 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, accrual_journal, chargeback_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, charged_off_merchant_refund_journal, accrual_journal, chargeback_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -1112,6 +1114,53 @@ func chargedOffRepaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{ChargedOffRepaymentJournalLegs: out}
 }
 
+// goChargedOffMerchantRefundJournal ports the
+// loan-chargedoff-merchant-refund-journal-entries seam: it reduces the request's
+// five portions, the loan's fraud flag and resolved slot->account mapping to
+// loan.RepaymentPortions and loan.ChargedOffMerchantRefundAccountMapping and
+// runs the port's own loan.CreateChargedOffMerchantRefundJournalEntryLegs. Every
+// monetary cell is an integer minor unit; the mapping is the product's observed
+// accountingMappings with the fund source resolved through the payment channel,
+// never invented.
+func goChargedOffMerchantRefundJournal(r ChargedOffMerchantRefundJournalRequest) (Expect, error) {
+	portions, err := repaymentPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargedOffMerchantRefundJournalEntryLegs(r.TransactionID, portions, r.Fraud, loan.ChargedOffMerchantRefundAccountMapping{
+		ChargeOffExpense:            r.Accounts.ChargeOffExpense,
+		IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
+		IncomeFromChargeOffFees:     r.Accounts.IncomeFromChargeOffFees,
+		IncomeFromChargeOffPenalty:  r.Accounts.IncomeFromChargeOffPenalty,
+		Overpayment:                 r.Accounts.Overpayment,
+		FundSource:                  r.Accounts.FundSource,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return chargedOffMerchantRefundJournalLegsExpect(legs), nil
+}
+
+// chargedOffMerchantRefundJournalLegsExpect renders the port's ordered legs as
+// the seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func chargedOffMerchantRefundJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{ChargedOffMerchantRefundJournalLegs: out}
+}
+
 // goAccrualJournal ports the loan-accrual-journal-entries seam: it reduces the
 // request's three portions and resolved slot->account mapping to
 // loan.AccrualPortions and loan.AccrualAccountMapping and runs the port's own
@@ -1692,6 +1741,68 @@ func wrongChargedOffRepaymentJournal(r ChargedOffRepaymentJournalRequest, mode c
 		return Expect{ChargedOffRepaymentJournalLegs: out}, nil
 	default:
 		return Expect{}, fmt.Errorf("loan: unknown charged-off repayment wrong mode %d", mode)
+	}
+}
+
+// merchantRefundJournalWrongMode selects which deliberately-wrong
+// merchant-issued-refund posting to run.
+type merchantRefundJournalWrongMode int
+
+const (
+	// wrongMerchantRefundJournalAsRecovery posts the merchant-issued refund
+	// through the charged-off REPAYMENT layout instead of the merchant-refund
+	// arm, as a port that reuses the repayment branch for every refund does: the
+	// principal credit moves from CHARGE_OFF_EXPENSE to INCOME_FROM_RECOVERY and
+	// the interest credit from INCOME_FROM_CHARGE_OFF_INTEREST to
+	// INCOME_FROM_RECOVERY, so two credits collapse into ONE on the
+	// principal+interest observation while the overpayment credit and the single
+	// fund-source debit stay observed. On the principal-only observation the
+	// single principal credit's account moves.
+	wrongMerchantRefundJournalAsRecovery merchantRefundJournalWrongMode = iota
+)
+
+// wrongMerchantRefundJournalEvaluator is a DELIBERATELY WRONG implementation of
+// the loan-chargedoff-merchant-refund-journal-entries seam. On any request that
+// is not a charged-off merchant refund it delegates to the correct port, so the
+// drive goes red ONLY on this seam's vectors and stays green everywhere else
+// (vector isolation).
+type wrongMerchantRefundJournalEvaluator struct {
+	goEvaluator
+	mode merchantRefundJournalWrongMode
+}
+
+func (w wrongMerchantRefundJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargedOffMerchantRefundJournal != nil {
+		return wrongMerchantRefundJournal(*req.ChargedOffMerchantRefundJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongMerchantRefundJournal runs the deliberately-wrong posting selected by
+// mode. It never calls the correct merchant-refund port, so the drive differs
+// from the port on exactly the cells its defect moves.
+func wrongMerchantRefundJournal(r ChargedOffMerchantRefundJournalRequest, mode merchantRefundJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongMerchantRefundJournalAsRecovery:
+		// Post the same portions through the charged-off repayment port: every
+		// principal, interest, fee and penalty portion credits
+		// income-from-recovery (merged), the overpayment credits its own account
+		// and the total debits the fund source once.
+		portions, err := repaymentPortionsFromRequest(r.Portions)
+		if err != nil {
+			return Expect{}, err
+		}
+		legs, err := loan.CreateChargedOffRepaymentJournalEntryLegs(r.TransactionID, portions, loan.ChargedOffRepaymentAccountMapping{
+			IncomeFromRecovery: r.Accounts.IncomeFromRecovery,
+			Overpayment:        r.Accounts.Overpayment,
+			FundSource:         r.Accounts.FundSource,
+		})
+		if err != nil {
+			return Expect{}, err
+		}
+		return chargedOffMerchantRefundJournalLegsExpect(legs), nil
+	default:
+		return Expect{}, fmt.Errorf("loan: unknown charged-off merchant refund wrong mode %d", mode)
 	}
 }
 
@@ -3134,6 +3245,16 @@ func init() {
 			"fund-source debit stay observed — on loan-37 (principal only) only the account moves, on "+
 			"loan-19 (principal+interest) the merged recovery credit becomes two",
 		wrongChargedOffRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargedOffRepaymentJournalsOrdinary})
+	RegisterWrong("loan-wrong-chargedoff-merchant-refund-as-recovery",
+		"posts a MERCHANT-ISSUED REFUND on a loan marked charged off through the charged-off "+
+			"REPAYMENT layout instead of the merchant-refund arm, as a port that reuses the repayment "+
+			"branch for every refund does; the principal credit moves from charge-off expense (18) to "+
+			"income-from-recovery (17) and the interest credit from income-from-charge-off-interest (16) "+
+			"to income-from-recovery (17), so on loan-48 L475 (principal+interest+overpayment) the two "+
+			"move credits COLLAPSE into ONE recovery credit and the leg count drops by one, and on "+
+			"loan-50 L498 (principal only) the one principal credit's account moves — while the "+
+			"overpayment credit, every side, every amount and the single fund-source debit stay observed",
+		wrongMerchantRefundJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongMerchantRefundJournalAsRecovery})
 	RegisterWrong("loan-wrong-accrual-journal-adjustment-not-reversed",
 		"posts an ACCRUAL_ADJUSTMENT transaction through the accrual branch, as a port that forgets to "+
 			"swap the two sides for an adjustment does; on the pinned loan-15 L107 observation (interest "+
