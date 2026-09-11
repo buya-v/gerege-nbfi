@@ -79,6 +79,28 @@ for ctx in ctxs:
     cst = f"{APPS}/{ctx}/conformance/committed_store_test.go"
     w(f"* committed-store test (the only valid coverage instrument): " + (f"`{cst}`" if os.path.exists(cst) else "**ABSENT — coverage from conformance is NOT meaningful for this context**"))
 
+    w("\n## Seam entry points (every file:line that names each seam constant)")
+    w("Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its")
+    w("evaluator switch, its grading case. An evaluator that dispatches on the REQUEST FIELD (e.g. loan: `case req.Delinquency != nil`)\")
+    w("does not name the constant — find it by the request type listed here. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586")
+    w("events finding four of these lines by hand).\n")
+    seam_consts = {}
+    for f in conf:
+        if f.endswith("_test.go"): continue
+        for i, l in enumerate(open(f), 1):
+            m = re.match(r'\s*(?:const\s+)?(Seam[A-Za-z0-9_]+)\s*(?:string\s*)?=\s*"([a-z0-9_-]+)"', l)
+            if m: seam_consts[m.group(1)] = (m.group(2), f"{rel(f)}:{i}")
+    for const, (val, decl) in sorted(seam_consts.items(), key=lambda kv: kv[1][0]):
+        uses = []
+        for f in conf:
+            if f.endswith("_test.go"): continue
+            for i, l in enumerate(open(f), 1):
+                if re.search(r"\b" + re.escape(const) + r"\b", l) and f"{rel(f)}:{i}" != decl:
+                    uses.append(f"`{os.path.relpath(f, f'{APPS}/{ctx}/conformance/')}:{i}`")
+        w(f"* **`{val}`** — `{const}` declared `{decl}`; used at " + (", ".join(uses[:14]) + (" …" if len(uses) > 14 else "") if uses else "(nowhere else)"))
+    if not seam_consts:
+        w("(no `Seam… = \"…\"` constants found in this conformance package)")
+
     w("\n## Drives registered (name — file:line)")
     where = {}
     for f in conf:

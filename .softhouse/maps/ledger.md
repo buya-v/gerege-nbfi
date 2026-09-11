@@ -53,6 +53,13 @@ Source: `.softhouse/vectors/capabilities-ledger.json`
 * conformance package files (`nexus/internal/apps/ledger/conformance/`): `admit.go`, `admit_widening_test.go`, `capability.go`, `conformance_test.go`, `daterefusals_test.go`, `daterules_mutation_test.go`, `divergence_test.go`, `grade.go`, `impl.go`, `invariants.go`, `notgraded.go`, `notgraded_test.go`, `openingbalance_accept_test.go`, `openingbalance_test.go`, `oraclederived.go`, `oraclederived_test.go`, `refusalargs_test.go`, `slotadmission_test.go`, `vector.go`, `verbatimallowlist_test.go`, `verbatimboundary_test.go`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+(no `Seam… = "…"` constants found in this conformance package)
+
 ## Drives registered (name — file:line)
 Source: source grep (binary unavailable).
 
@@ -112,6 +119,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-charge-partial-waive-repaid/` — OWNER — loan-charge-partial-waive-repaid
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation

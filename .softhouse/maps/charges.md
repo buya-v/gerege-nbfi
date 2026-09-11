@@ -37,6 +37,13 @@ Source: `.softhouse/capabilities-charges.json`
 * conformance package files (`nexus/internal/apps/charges/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `money.go`, `nofloat.go`, `report.go`, `vector.go`, `wrongdrives.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/charges/conformance/committed_store_test.go`
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+* **`charge-evaluate`** — `SeamChargeEvaluate` declared `nexus/internal/apps/charges/conformance/vector.go:21`; used at `admit.go:37`, `admit.go:38`, `vector.go:19`
+
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `charges-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
@@ -72,10 +79,12 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-charge-partial-waive-repaid/` — OWNER — loan-charge-partial-waive-repaid
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
+* `.softhouse/capture/provisioning-upper-edge/` — Provisioning upper-edge capture — OWNER
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal

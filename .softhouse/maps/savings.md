@@ -39,6 +39,18 @@ Source: `.softhouse/capabilities-savings.json`
 * conformance package files (`nexus/internal/apps/savings/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/savings/conformance/committed_store_test.go`
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+* **`savings-account-status`** — `SeamSavingsAccountStatus` declared `nexus/internal/apps/savings/conformance/vector.go:30`; used at `admit.go:40`, `admit.go:44`, `admit.go:155`, `admit.go:404`, `grade.go:122`, `vector.go:24`
+* **`savings-daily-interest`** — `SeamSavingsDailyInterest` declared `nexus/internal/apps/savings/conformance/vector.go:22`; used at `admit.go:40`, `admit.go:44`, `admit.go:130`, `admit.go:400`, `grade.go:120`, `invariants.go:32`, `vector.go:19`
+* **`savings-deposit`** — `SeamSavingsDeposit` declared `nexus/internal/apps/savings/conformance/vector.go:40`; used at `admit.go:40`, `admit.go:44`, `admit.go:174`, `admit.go:408`, `grade.go:124`, `invariants.go:34`, `vector.go:32`
+* **`savings-hold-net-running-balance`** — `SeamSavingsHoldNetRunningBalance` declared `nexus/internal/apps/savings/conformance/vector.go:114`; used at `admit.go:40`, `admit.go:44`, `admit.go:227`, `admit.go:438`, `grade.go:135`, `invariants.go:45`, `vector.go:83`
+* **`savings-hold-release`** — `SeamSavingsHoldRelease` declared `nexus/internal/apps/savings/conformance/vector.go:81`; used at `admit.go:40`, `admit.go:44`, `admit.go:209`, `admit.go:424`, `grade.go:126`, `invariants.go:39`, `vector.go:61`
+* **`savings-transactions`** — `SeamSavingsTransactions` declared `nexus/internal/apps/savings/conformance/vector.go:59`; used at `admit.go:40`, `admit.go:44`, `admit.go:197`, `admit.go:408`, `grade.go:124`, `invariants.go:34`, `vector.go:42`
+
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `savings-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
@@ -80,10 +92,12 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-charge-partial-waive-repaid/` — OWNER — loan-charge-partial-waive-repaid
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
+* `.softhouse/capture/provisioning-upper-edge/` — Provisioning upper-edge capture — OWNER
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal

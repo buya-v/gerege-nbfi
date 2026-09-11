@@ -42,6 +42,13 @@ Source: `.softhouse/capabilities-loanproduct.json`
 * conformance package files (`nexus/internal/apps/loanproduct/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loanproduct/conformance/committed_store_test.go`
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+* **`loanproduct-config`** — `SeamLoanProductConfig` declared `nexus/internal/apps/loanproduct/conformance/vector.go:61`; used at `admit.go:41`, `vector.go:58`, `vector.go:64`
+
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `loanproduct-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 

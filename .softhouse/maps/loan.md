@@ -102,6 +102,26 @@ Source: `.softhouse/capabilities-loan.json`
 * conformance package files (`nexus/internal/apps/loan/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loan/conformance/committed_store_test.go`
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+* **`loan-charge-lifecycle`** — `SeamLoanChargeLifecycle` declared `nexus/internal/apps/loan/conformance/vector.go:203`; used at `admit.go:46`, `admit.go:54`, `admit.go:521`, `admit.go:902`, `grade.go:313`, `invariants.go:59`, `vector.go:197`
+* **`loan-delinquent-days`** — `SeamLoanDelinquentDays` declared `nexus/internal/apps/loan/conformance/vector.go:78`; used at `admit.go:44`, `admit.go:52`, `admit.go:394`, `admit.go:715`, `grade.go:302`, `invariants.go:51`, `vector.go:65`
+* **`loan-disbursement`** — `SeamLoanDisbursement` declared `nexus/internal/apps/loan/conformance/vector.go:31`; used at `admit.go:42`, `admit.go:50`, `admit.go:259`, `admit.go:591`, `grade.go:286`, `vector.go:29`
+* **`loan-journal-entry-batch-balance`** — `SeamLoanJournalEntryBatchBalance` declared `nexus/internal/apps/loan/conformance/vector.go:100`; used at `admit.go:44`, `admit.go:52`, `admit.go:311`, `admit.go:636`, `grade.go:295`, `invariants.go:47`, `vector.go:80`
+* **`loan-repayment-allocation`** — `SeamLoanRepaymentAllocation` declared `nexus/internal/apps/loan/conformance/vector.go:22`; used at `admit.go:42`, `admit.go:50`, `admit.go:224`, `admit.go:570`, `grade.go:282`, `invariants.go:37`, `vector.go:19`
+* **`loan-schedule-amortization`** — `SeamLoanScheduleAmortization` declared `nexus/internal/apps/loan/conformance/vector.go:117`; used at `admit.go:44`, `admit.go:52`, `admit.go:373`, `admit.go:689`, `grade.go:299`, `invariants.go:49`, `vector.go:102`
+* **`loan-schedule-interest`** — `SeamLoanScheduleInterest` declared `nexus/internal/apps/loan/conformance/vector.go:27`; used at `admit.go:42`, `admit.go:50`, `admit.go:241`, `admit.go:587`, `grade.go:284`, `invariants.go:39`, `vector.go:24`
+* **`loan-status`** — `SeamLoanStatus` declared `nexus/internal/apps/loan/conformance/vector.go:42`; used at `admit.go:43`, `admit.go:51`, `admit.go:287`, `admit.go:599`, `grade.go:290`, `invariants.go:43`, `vector.go:33`
+* **`loan-status-transition`** — `SeamLoanStatusTransition` declared `nexus/internal/apps/loan/conformance/vector.go:214`; used at `admit.go:46`, `admit.go:54`, `admit.go:927`, `grade.go:315`, `invariants.go:61`, `vector.go:205`
+* **`loan-summary-outstanding`** — `SeamLoanSummaryOutstanding` declared `nexus/internal/apps/loan/conformance/vector.go:63`; used at `admit.go:43`, `admit.go:51`, `admit.go:271`, `admit.go:595`, `grade.go:288`, `invariants.go:41`, `vector.go:57`
+* **`loan-transaction-balance`** — `SeamLoanTransactionBalance` declared `nexus/internal/apps/loan/conformance/vector.go:55`; used at `admit.go:43`, `admit.go:51`, `admit.go:295`, `admit.go:612`, `grade.go:293`, `invariants.go:45`, `vector.go:44`
+* **`loan-transaction-reversal`** — `SeamLoanTransactionReversal` declared `nexus/internal/apps/loan/conformance/vector.go:164`; used at `admit.go:45`, `admit.go:53`, `admit.go:439`, `admit.go:759`, `grade.go:309`, `invariants.go:55`, `vector.go:138`
+* **`loan-writeoff-four-bucket`** — `SeamLoanWriteOffFourBucket` declared `nexus/internal/apps/loan/conformance/vector.go:136`; used at `admit.go:45`, `admit.go:53`, `admit.go:416`, `admit.go:724`, `grade.go:307`, `invariants.go:53`, `vector.go:119`
+* **`loan-writeoff-journal-entries`** — `SeamLoanWriteOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:195`; used at `admit.go:45`, `admit.go:53`, `admit.go:477`, `admit.go:848`, `grade.go:311`, `invariants.go:57`, `vector.go:166`
+
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `loan-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 

@@ -30,6 +30,15 @@ Source: `.softhouse/capabilities-branch.json`
 * conformance package files (`nexus/internal/apps/branch/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/branch/conformance/committed_store_test.go`
 
+## Seam entry points (every file:line that names each seam constant)
+Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
+evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+events finding four of these lines by hand).
+
+* **`cashier-summary`** — `SeamCashierSummary` declared `nexus/internal/apps/branch/conformance/vector.go:30`; used at `admit.go:46`, `admit.go:93`, `grade.go:121`, `impl.go:102`, `impl.go:191`, `invariants.go:32`, `vector.go:24`
+* **`cashier-txn-amount`** — `SeamCashierTxnAmount` declared `nexus/internal/apps/branch/conformance/vector.go:22`; used at `admit.go:50`, `admit.go:101`, `grade.go:127`, `impl.go:106`, `impl.go:198`, `invariants.go:39`, `vector.go:19`
+* **`teller-status`** — `SeamTellerStatus` declared `nexus/internal/apps/branch/conformance/vector.go:36`; used at `admit.go:48`, `admit.go:96`, `grade.go:125`, `impl.go:104`, `impl.go:196`, `invariants.go:37`, `vector.go:32`
+
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `branch-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
@@ -59,10 +68,12 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-charge-partial-waive-repaid/` — OWNER — loan-charge-partial-waive-repaid
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
+* `.softhouse/capture/provisioning-upper-edge/` — Provisioning upper-edge capture — OWNER
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal
