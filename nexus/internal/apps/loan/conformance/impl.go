@@ -613,10 +613,11 @@ const civilDateLayout = "2006-01-02"
 // goDelinquency ports the loan-delinquent-days seam through the port's own
 // arithmetic: loan.OverdueDays derives the calendar-day difference between the
 // overdue-since date and the business date (floored at zero), and
-// loan.DelinquentDays subtracts the paused and grace days (zero on every
-// committed row, so the two cells agree here). An ABSENT overdue-since date
-// means the read-back showed no overdue date, and both counts are zero — never
-// an error and never a days-since-epoch value.
+// loan.DelinquentDays subtracts the requested paused and grace days (both zero
+// on every committed row that carries no pause and no grace, so the two cells
+// agree there). An ABSENT overdue-since date means the read-back showed no
+// overdue date, and both counts are zero — never an error and never a
+// days-since-epoch value.
 func goDelinquency(r DelinquencyRequest) (Expect, error) {
 	business, err := time.Parse(civilDateLayout, r.BusinessDate)
 	if err != nil {
@@ -630,7 +631,7 @@ func goDelinquency(r DelinquencyRequest) (Expect, error) {
 		}
 		overdue = loan.OverdueDays(since, business)
 	}
-	delinquent := loan.DelinquentDays(overdue, 0, 0)
+	delinquent := loan.DelinquentDays(overdue, r.PausedDays, r.GraceDays)
 	return Expect{
 		OverdueDays:    strconv.FormatInt(overdue, 10),
 		DelinquentDays: strconv.FormatInt(delinquent, 10),
@@ -1241,6 +1242,12 @@ const (
 	// number where the oracle returns zero. The present-date rows are
 	// unaffected.
 	wrongDelinquencyAbsentNonZero
+	// wrongDelinquencyPauseIgnored ignores the delinquency pause and counts the
+	// days inside it as delinquent: it calls DelinquentDays with zero paused
+	// days, so a row whose pause covers days between the overdue-since date and
+	// the business date reads a larger count than the oracle. A row whose pause
+	// starts ON the business date has zero paused days and is unaffected.
+	wrongDelinquencyPauseIgnored
 )
 
 // wrongDelinquencyEvaluator is a DELIBERATELY WRONG implementation of the
@@ -1291,6 +1298,16 @@ func wrongDelinquency(r DelinquencyRequest, mode delinquencyWrongMode) (Expect, 
 		}
 		s := strconv.FormatInt(days, 10)
 		return Expect{OverdueDays: s, DelinquentDays: s}, nil
+	}
+	if mode == wrongDelinquencyPauseIgnored {
+		// The pause is dropped: DelinquentDays is called with zero paused days,
+		// so the days a resumed loan spent paused are counted as delinquent.
+		overdue := loan.OverdueDays(since, business)
+		delinquent := loan.DelinquentDays(overdue, 0, r.GraceDays)
+		return Expect{
+			OverdueDays:    strconv.FormatInt(overdue, 10),
+			DelinquentDays: strconv.FormatInt(delinquent, 10),
+		}, nil
 	}
 	return goDelinquency(r)
 }
@@ -2288,6 +2305,12 @@ func init() {
 			"zero, so the pinned absent-date read-backs (loan 3 and loan L06 at 2026-09-01) read a "+
 			"non-zero day count where the oracle read 0 and the vector goes red",
 		wrongDelinquencyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongDelinquencyAbsentNonZero})
+	RegisterWrong("loan-wrong-delinquency-pause-ignored",
+		"ignores the delinquency pause and counts the days inside it as delinquent, calling "+
+			"DelinquentDays with zero paused days, so the pinned paused rows read 61-3=58 and "+
+			"4-3=1 where the oracle read 44 and 0; a pause that starts ON the business date has "+
+			"zero paused days and is unaffected",
+		wrongDelinquencyEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongDelinquencyPauseIgnored})
 	RegisterWrong("loan-wrong-writeoff-principal-only",
 		"discharges only the principal bucket of a write-off, as a port that reads the write-off "+
 			"as a pure principal charge-off does, so the pinned loan-11 write-off reports "+
