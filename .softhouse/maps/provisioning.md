@@ -68,8 +68,10 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
+* `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal
@@ -80,7 +82,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
     bash .softhouse/briefs/tools/capcount.sh <worktree> provisioning provisioning-go   # vectors the reference FAILS (want 0)
     bash .softhouse/briefs/tools/redcount.sh <worktree> provisioning            # drives that kill
     go test -count=1 -coverpkg=./internal/apps/provisioning -coverprofile=/tmp/c.cov ./internal/apps/provisioning/conformance/...   # from nexus/
-    Controls: loanschedule-wrong-days-in-year-365 = 45, loanschedule-wrong-half-even = 5,
+    Controls: loanschedule-wrong-days-in-year-365 = 48 (45 before OH-LSGRADE-AX), loanschedule-wrong-half-even = 5,
               parties-wrong-iota-ordinals = 12, charges-wrong-rounding-half-even = 1
 
 ## The oracle, if a brief allows it

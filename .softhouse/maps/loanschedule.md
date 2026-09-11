@@ -7,8 +7,11 @@ that is a defect in the map, and the driver fixes the generator.
 (no capabilities file)
 
 ## Vectors (what is graded today)
-50 files in `.softhouse/vectors/loanschedule/`
+53 files in `.softhouse/vectors/loanschedule/`
 
+* `LSCAP-DISB-BND-later-period-disbursement-on-second-due-date.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3j-raw.json`
+* `LSCAP-DISB-P1-later-period-disbursement-inside-period-1.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3j-raw.json`
+* `LSCAP-DISB-P3-later-period-disbursement-inside-period-3.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3j-raw.json`
 * `P-00-baseline-6x7pct.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3b-raw.json`
 * `P-01-18x18pt5pct-principal-87654321.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3b-raw.json`
 * `P-02-monthend-seed-day-31.json` — request `time_zone,currency,rounding,schedule_start_date,disbursements,number_of_repayments,repayment_every,repayment_frequency_unit,annual_nominal_interest_rate,interest_method,day_count,down_payment_percentage,installment_rounding_multiple_minor` — capture `.softhouse/capture/out/capture-prod3b-raw.json`
@@ -88,7 +91,7 @@ Source: the binary's own -list-implementations (names prefixed `loanschedule-wro
 * `nexus/internal/apps/loanschedule/wrongdrives.go`: `applyRequest`:86, `dueDateSeed`:108, `Generate`:122, `NewWrongHalfEven`:144, `NewWrongDaysInYear365`:162, `NewWrongFrequencyUnitIgnored`:177, `NewWrongRepaymentsFixedOne`:190, `NewWrongRateZero`:202, `NewWrongScheduleStartIgnored`:214, `NewWrongDisbursementSeedIgnored`:226, `NewWrongDisbursementAmountIgnored`:239
 
 ## Captures this context's vectors already cite
-* `.softhouse/capture/` — 42 vector(s) — (no OWNER.md)
+* `.softhouse/capture/` — 45 vector(s) — (no OWNER.md)
 * `.softhouse/capture/pathb/t149/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/t116-familyb-promotion/` — 3 vector(s) — (no OWNER.md)
 
@@ -99,8 +102,10 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/collateral-nonround-money/` — OWNER — collateral-nonround-money
 * `.softhouse/capture/gl-accounting-surface/` — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/investor-asset-transfer-100/` — Capture owner — investor / ASSET_TRANSFER settlement
+* `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
+* `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal
@@ -111,7 +116,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
     bash .softhouse/briefs/tools/capcount.sh <worktree> loanschedule loanschedule-go   # vectors the reference FAILS (want 0)
     bash .softhouse/briefs/tools/redcount.sh <worktree> loanschedule            # drives that kill
     go test -count=1 -coverpkg=./internal/apps/loanschedule -coverprofile=/tmp/c.cov ./internal/apps/loanschedule/conformance/...   # from nexus/
-    Controls: loanschedule-wrong-days-in-year-365 = 45, loanschedule-wrong-half-even = 5,
+    Controls: loanschedule-wrong-days-in-year-365 = 48 (45 before OH-LSGRADE-AX), loanschedule-wrong-half-even = 5,
               parties-wrong-iota-ordinals = 12, charges-wrong-rounding-half-even = 1
 
 ## The oracle, if a brief allows it

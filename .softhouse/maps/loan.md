@@ -153,6 +153,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
+* `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal
@@ -163,7 +164,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
     bash .softhouse/briefs/tools/capcount.sh <worktree> loan loan-go   # vectors the reference FAILS (want 0)
     bash .softhouse/briefs/tools/redcount.sh <worktree> loan            # drives that kill
     go test -count=1 -coverpkg=./internal/apps/loan -coverprofile=/tmp/c.cov ./internal/apps/loan/conformance/...   # from nexus/
-    Controls: loanschedule-wrong-days-in-year-365 = 45, loanschedule-wrong-half-even = 5,
+    Controls: loanschedule-wrong-days-in-year-365 = 48 (45 before OH-LSGRADE-AX), loanschedule-wrong-half-even = 5,
               parties-wrong-iota-ordinals = 12, charges-wrong-rounding-half-even = 1
 
 ## The oracle, if a brief allows it

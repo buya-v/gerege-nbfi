@@ -225,3 +225,12 @@ same word-splitting trap recorded above, this time in the control, not the tool.
    passes the oracle's ACTUAL health (a down oracle still yields exit 2), and `m_extract`
    reads `VERDICT: PASS (exit 0)` with no mismatch line as 0. Controls after: 45 / 5 / 1,
    capcount loanschedule-go 0, savings-go 0.
+
+## Controls are counts over the corpus — they move when the corpus grows (2026-09-11)
+
+`loanschedule-wrong-days-in-year-365` is **48** from OH-LSGRADE-AX on (was 45). review.sh
+flagged 48 as "THE INSTRUMENT IS WRONG"; the driver measured it WITHOUT the three new
+loanschedule vectors on a scratch copy — exactly 45 — and WITH them — 48. So when a control
+disagrees, first measure it without the run's new vectors: equal to the pinned value means
+the corpus moved (update the pin); different means the instrument moved (stop).
+Current controls: 365 = 48, half-even = 5, parties iota = 12, charges half-even = 1.

@@ -9,13 +9,15 @@ Source: `.softhouse/capabilities-parties.json`
 * seam **client-status-ordinal** — The ClientStatus ordinal seam: m_client.status_enum read-back for ACTIVE, and ClientStatus.java for the seven ordinals the seed data never writes.
 * seam **legal-form-ordinal** — The LegalForm ordinal seam: GET /clients/template clientLegalFormOptions on the running Fineract server, tenant gerege.
 * seam **grouping-status-ordinal** — The GroupingTypeStatus ordinal seam: the pinned GroupingTypeStatus.java source (Java-source-only; not observable via API or SQL).
+* seam **parties-display-name** — The display-name seam: GET /clients/{id} displayName and the m_client.display_name read-back for the three observed arms under tenant gerege (capture/parties-di
 * capability `client-status` — in_graded_domain: **True** — Map a ClientStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED/REJECTED/WITHDRAWN) to
 * capability `legal-form` — in_graded_domain: **True** — Map a LegalForm enum NAME (PERSON/ENTITY) to the integer ordinal Fineract persists in m_client.legal_form_enum.
 * capability `grouping-status` — in_graded_domain: **True** — Map a GroupingTypeStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED) to the integer 
+* capability `display-name` — in_graded_domain: **True** — Derive a party's display name from Client.deriveDisplayName [Client.java:457-481]: a non-blank fullname wins; otherwise,
 * capability `national-id` — in_graded_domain: **False** — Validate a Mongolian national ID structurally: exactly 10 runes, two uppercase Mongolian Cyrillic letters (А-Я, Ё, Ө, Ү)
 
 ## Vectors (what is graded today)
-16 files in `.softhouse/vectors/parties/`
+20 files in `.softhouse/vectors/parties/`
 
 * `CS-01-invalid.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/client-status-source.json`
 * `CS-02-pending.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/client-status-source.json`
@@ -25,6 +27,10 @@ Source: `.softhouse/capabilities-parties.json`
 * `CS-06-closed.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/client-status-source.json`
 * `CS-07-rejected.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/client-status-source.json`
 * `CS-08-withdrawn.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/client-status-source.json`
+* `DN-01-fullname-wins.json` — request `vocabulary,legal_form,fullname` — capture `.softhouse/capture/parties/out/clients-1-raw.json`
+* `DN-02-person-three-parts.json` — request `vocabulary,legal_form,given_name,patronymic,ovog` — capture `.softhouse/capture/parties-display-name/out/OHNAMECAP-P1-raw.json`
+* `DN-03-person-blank-skip.json` — request `vocabulary,legal_form,given_name,ovog` — capture `.softhouse/capture/parties-display-name/out/OHNAMECAP-P2-raw.json`
+* `DN-04-entity-no-name.json` — request `vocabulary,legal_form,given_name,patronymic,ovog` — capture `.softhouse/capture/parties-display-name/out/OHNAMECAP-E1-m-client.json`
 * `GS-01-invalid.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/grouping-status-source.json`
 * `GS-02-pending.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/grouping-status-source.json`
 * `GS-03-active.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/grouping-status-source.json`
@@ -35,21 +41,25 @@ Source: `.softhouse/capabilities-parties.json`
 * `LF-02-entity.json` — request `vocabulary,name` — capture `.softhouse/capture/parties/out/clients-template-raw.json`
 
 ## Registration — where to add a seam / implementation / drive
-* `nexus/internal/apps/parties/conformance/impl.go:25` — `func Register(name string, e PartiesEvaluator) {`
-* `nexus/internal/apps/parties/conformance/impl.go:35` — `func RegisterWrong(name, defect string, e PartiesEvaluator) {`
-* `nexus/internal/apps/parties/conformance/impl.go:244` — `Register("parties-go", NewGoEvaluator())`
+* `nexus/internal/apps/parties/conformance/impl.go:26` — `func Register(name string, e PartiesEvaluator) {`
+* `nexus/internal/apps/parties/conformance/impl.go:36` — `func RegisterWrong(name, defect string, e PartiesEvaluator) {`
+* `nexus/internal/apps/parties/conformance/impl.go:358` — `Register("parties-go", NewGoEvaluator())`
 * conformance package files (`nexus/internal/apps/parties/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/parties/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `parties-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
-* `parties-wrong-iota-ordinals` — `nexus/internal/apps/parties/conformance/impl.go:248`
-* `parties-wrong-legalform-person-as-unset` — `nexus/internal/apps/parties/conformance/impl.go:264`
-* `parties-wrong-swap-active-pending` — `nexus/internal/apps/parties/conformance/impl.go:245`
-* `parties-wrong-transfer-states-swapped` — `nexus/internal/apps/parties/conformance/impl.go:257`
+* `parties-wrong-display-entity-joins-parts` — `nexus/internal/apps/parties/conformance/impl.go:394`
+* `parties-wrong-display-no-blank-skip` — `nexus/internal/apps/parties/conformance/impl.go:389`
+* `parties-wrong-display-ovog-first` — `nexus/internal/apps/parties/conformance/impl.go:384`
+* `parties-wrong-display-parts-over-fullname` — `nexus/internal/apps/parties/conformance/impl.go:397`
+* `parties-wrong-iota-ordinals` — `nexus/internal/apps/parties/conformance/impl.go:362`
+* `parties-wrong-legalform-person-as-unset` — `nexus/internal/apps/parties/conformance/impl.go:378`
+* `parties-wrong-swap-active-pending` — `nexus/internal/apps/parties/conformance/impl.go:359`
+* `parties-wrong-transfer-states-swapped` — `nexus/internal/apps/parties/conformance/impl.go:371`
 
-4 drives.
+8 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/parties/client.go`: `NewClient`:54, `DeriveDisplayName`:75, `IsActive`:94, `IsClosed`:97, `IsNotActive`:100
@@ -60,7 +70,8 @@ Source: the binary's own -list-implementations (names prefixed `parties-wrong-` 
 * `nexus/internal/apps/parties/postgres.go`: `NewPostgresClientRepository`:30, `Insert`:46, `FindByID`:78, `FindByAccountNumber`:83, `FindByExternalID`:88, `findOne`:92, `UpdateStatus`:109, `scanClient`:116, `NewPostgresGroupRepository`:180, `Insert`:185, `FindByID`:202, `FindByAccountNumber`:210, `findOne`:217, `UpdateStatus`:250, `NewPostgresGroupLevelRepository`:268, `List`:273, `nullInt`:294, `nullStr`:301, `nullTime`:308, `valInt`:315, `valTime`:322
 
 ## Captures this context's vectors already cite
-* `.softhouse/capture/parties/` — 16 vector(s) — (no OWNER.md)
+* `.softhouse/capture/parties/` — 17 vector(s) — (no OWNER.md)
+* `.softhouse/capture/parties-display-name/` — 3 vector(s) — parties-display-name — capture owner notes
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
@@ -83,7 +94,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
     bash .softhouse/briefs/tools/capcount.sh <worktree> parties parties-go   # vectors the reference FAILS (want 0)
     bash .softhouse/briefs/tools/redcount.sh <worktree> parties            # drives that kill
     go test -count=1 -coverpkg=./internal/apps/parties -coverprofile=/tmp/c.cov ./internal/apps/parties/conformance/...   # from nexus/
-    Controls: loanschedule-wrong-days-in-year-365 = 45, loanschedule-wrong-half-even = 5,
+    Controls: loanschedule-wrong-days-in-year-365 = 48 (45 before OH-LSGRADE-AX), loanschedule-wrong-half-even = 5,
               parties-wrong-iota-ordinals = 12, charges-wrong-rounding-half-even = 1
 
 ## The oracle, if a brief allows it

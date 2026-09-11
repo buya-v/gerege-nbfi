@@ -83,7 +83,7 @@ fi
 
 say "-- 5 controls (the instrument)"
 ctl(){ local c="$1" i="$2" want="$3" got; got=$(bash "$T/kills.sh" "$c" "$i" "$WT" 2>/dev/null); if [ -z "$got" ]; then say "  UNMEASURED $c/$i"; unmeasured=1; elif [ "$got" = "$want" ]; then ok "$i = $got"; else bad "$i = $got, want $want — THE INSTRUMENT IS WRONG"; fi; }
-ctl loanschedule loanschedule-wrong-days-in-year-365 45
+ctl loanschedule loanschedule-wrong-days-in-year-365 48
 ctl loanschedule loanschedule-wrong-half-even 5
 ctl parties parties-wrong-iota-ordinals 12
 ctl charges charges-wrong-rounding-half-even 1

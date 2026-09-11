@@ -131,7 +131,7 @@ for ctx in ctxs:
         w(f"    `{ctx}` has NO cmd/conformance binary: its drives are measured by the CENSUS block of")
         w(f"    `bash .softhouse/conformance.sh`. kills.sh fails loudly here — that is NOT a zero.")
     w(f"    go test -count=1 -coverpkg=./internal/apps/{ctx} -coverprofile=/tmp/c.cov ./internal/apps/{ctx}/conformance/...   # from nexus/")
-    w("    Controls: loanschedule-wrong-days-in-year-365 = 45, loanschedule-wrong-half-even = 5,")
+    w("    Controls: loanschedule-wrong-days-in-year-365 = 48 (45 before OH-LSGRADE-AX), loanschedule-wrong-half-even = 5,")
     w("              parties-wrong-iota-ordinals = 12, charges-wrong-rounding-half-even = 1")
     w("\n## The oracle, if a brief allows it")
     w("REST `https://localhost:8443/fineract-provider/api/v1` (`curl -k -u mifos:password -H 'Fineract-Platform-TenantId: gerege'`).")
