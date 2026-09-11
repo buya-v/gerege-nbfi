@@ -1,0 +1,34 @@
+TierD accrual-activity EUR control -- pre-EUR-seed state (copy on MNT seed)
+date: 2026-09-11T23:35Z (session start)
+
+== git -C /Users/buv/fineract-tierd status --short ==
+ M fineract-client-feign/build.gradle
+ M fineract-e2e-tests-core/src/test/java/org/apache/fineract/test/factory/LoanProductsRequestFactory.java
+ M fineract-e2e-tests-core/src/test/java/org/apache/fineract/test/factory/SavingsProductRequestFactory.java
+ M fineract-e2e-tests-core/src/test/java/org/apache/fineract/test/factory/WorkingCapitalChargeRequestFactory.java
+ M fineract-e2e-tests-runner/src/test/java/org/apache/fineract/test/initializer/global/ChargeGlobalInitializerStep.java
+ M fineract-e2e-tests-runner/src/test/java/org/apache/fineract/test/initializer/global/CurrencyGlobalInitializerStep.java
+ M fineract-e2e-tests-runner/src/test/resources/logback.xml
+ M gradle.properties
+?? .tierd-run.sh
+?? fineract-client-feign/src/main/java/org/apache/fineract/client/models/
+
+NOTE: the last two (logback.xml, .tierd-run.sh) plus gradle.properties, feign build.gradle
+      and the untracked models dir are capture/build plumbing, NOT currency. Only the five
+      currency-bearing test sources below are reverted to EUR, and only they are restored.
+
+== five currency-bearing test sources (all read MNT on the seed) ==
+fineract-e2e-tests-core/.../factory/LoanProductsRequestFactory.java:99
+    public static final String CURRENCY_CODE = "MNT";
+fineract-e2e-tests-core/.../factory/SavingsProductRequestFactory.java:33
+    public static final String DEFAULT_SAVINGS_PRODUCT_CURRENCY_CODE = "MNT";
+fineract-e2e-tests-core/.../factory/WorkingCapitalChargeRequestFactory.java:31
+    public static final String DEFAULT_CURRENCY_CODE = "MNT";
+fineract-e2e-tests-runner/.../initializer/global/ChargeGlobalInitializerStep.java:49
+    public static final String CURRENCY_CODE = "MNT";
+fineract-e2e-tests-runner/.../initializer/global/CurrencyGlobalInitializerStep.java:40
+    public static final List<String> CURRENCIES = Arrays.asList("MNT", "USD");
+
+== revert patch ==
+eur-currency-seed.diff  (applied in reverse, git apply -R: MNT -> EUR)
+mnt-currency-restore.diff  (applied forward after the replay: EUR -> MNT)
