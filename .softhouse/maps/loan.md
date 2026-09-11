@@ -37,7 +37,7 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `loan-status-transition` — in_graded_domain: **True** — The loan lifecycle state machine as observed on tenant gerege: NextStatus(from, event, facts) dispatches an event and De
 
 ## Vectors (what is graded today)
-40 files in `.softhouse/vectors/loan/`
+55 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -79,6 +79,21 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-TD-L06-loan-1-schedule-interest-period-1.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json`
 * `LN-TD-L10-loan-1-pending-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json`
 * `LN-TD-L10-loan-10-multi-disbursement-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-10-detail-associations-repaymentSchedule.json`
+* `LN-TD-RS-UC1-loan-1-disbursement-net.json` — request `disburse` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-all-1.json`
+* `LN-TD-RS-UC1-loan-1-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-repaymentSchedule-1.json`
+* `LN-TD-RS-UC1-loan-1-schedule-interest-period-2.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-repaymentSchedule-1.json`
+* `LN-TD-RS-UC10-loan-10-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-10/loan-10-detail-associations-repaymentSchedule.json`
+* `LN-TD-RS-UC10-loan-10-schedule-interest-period-3.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-10/loan-10-detail-associations-repaymentSchedule.json`
+* `LN-TD-RS-UC12-loan-12-schedule-interest-period-2.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-12/loan-12-detail-associations-repaymentSchedule-2.json`
+* `LN-TD-RS-UC3-loan-3-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-3/loan-3-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC4-loan-4-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-4/loan-4-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC4-loan-4-schedule-interest-period-2.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-4/loan-4-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC6-loan-6-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-6/loan-6-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC6-loan-6-schedule-interest-period-2.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-6/loan-6-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC7-loan-7-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-7/loan-7-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC7-loan-7-schedule-interest-period-3.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-7/loan-7-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC8-loan-8-schedule-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-8/loan-8-detail-associations-repaymentSchedule-3.json`
+* `LN-TD-RS-UC8-loan-8-schedule-interest-period-3.json` — request `schedule` — capture `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-8/loan-8-detail-associations-repaymentSchedule-3.json`
 
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/loan/conformance/impl.go:44` — `func Register(name string, e LoanEvaluator) {`
@@ -168,6 +183,15 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — 2 vector(s) — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — 4 vector(s) — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — 4 vector(s) — OWNER — loan12-four-bucket-allocation
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-all-1.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-1/loan-1-detail-associations-repaymentSchedule-1.json/` — 2 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-10/loan-10-detail-associations-repaymentSchedule.json/` — 2 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-12/loan-12-detail-associations-repaymentSchedule-2.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-3/loan-3-detail-associations-repaymentSchedule-3.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-4/loan-4-detail-associations-repaymentSchedule-3.json/` — 2 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-6/loan-6-detail-associations-repaymentSchedule-3.json/` — 2 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-7/loan-7-detail-associations-repaymentSchedule-3.json/` — 2 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-8/loan-8-detail-associations-repaymentSchedule-3.json/` — 2 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json/` — 3 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-10-detail-associations-repaymentSchedule.json/` — 1 vector(s) — (no OWNER.md)
 
