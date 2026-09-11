@@ -1,0 +1,57 @@
+[
+ {
+  "file": "product-mappings/create-request-LP1_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json",
+  "log_line": 11892,
+  "sha256": "ab61ac1851e54420cfe7fd7a3eb14fe69f31f6ca9ca1fc2bfa549839c6217d94"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE_ACCRUAL_ACTIVITY.json",
+  "log_line": 11704,
+  "sha256": "46a39d083f56457811ea3f4020982dbd0219f48ca7c922be35eb1293fc764571"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY_ACCRUAL_ACTIVITY.json",
+  "log_line": 11288,
+  "sha256": "a4fba0993ada42e0f11a05568951ae14da41de99fdff23fea919803755c153a6"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PAYMENT_ALLOC_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE.json",
+  "log_line": 12314,
+  "sha256": "0b28c214b5d599a0230ad37257702bfe3306b32c67ea9c065b6f941027423e0e"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json",
+  "log_line": 11843,
+  "sha256": "505728d5f366a25b934e918044f57cfac0be84ac24295f06def3989ca59d1da4"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_ACCRUAL_ACTIVITY.json",
+  "log_line": 13774,
+  "sha256": "15ff86f4477815f96aa0bbf76dac53b193cb4cc1b87376ffefd979533238902c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_ACCRUAL_ACTIVITY_POSTING.json",
+  "log_line": 13233,
+  "sha256": "60b2f5fac894c42ba8bbaab9b9b4b0518549f2770ebd247d50a5e497664378ce"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE.json",
+  "log_line": 12147,
+  "sha256": "8f338e14bb1bc208245074431c11bee9a98f4555b02bbc7a395da182f0cebc93"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY.json",
+  "log_line": 11622,
+  "sha256": "666ace910cd27fc7cef6c8d3b523fd03c723cac37a1ae91d4f4fdb72fafeb402"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECOGNITION_DISBURSEMENT_DAILY_EMI_360_30_ACCRUAL_ACTIVITY.json",
+  "log_line": 14105,
+  "sha256": "e7b2b062fe1923a708b701dcf13ba5e3c9d289751800eadd66585f2f32e2f0d5"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECOGNITION_DISBURSEMENT_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY.json",
+  "log_line": 14501,
+  "sha256": "9e75d8a9f8a920df27652374f2266444107f62e1e9560a0627b1ca56a0a186a4"
+ }
+]
