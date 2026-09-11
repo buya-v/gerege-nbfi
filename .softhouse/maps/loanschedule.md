@@ -65,7 +65,7 @@ that is a defect in the map, and the driver fixes the generator.
 * `nexus/internal/apps/loanschedule/conformance/registry.go:35` — `func Register(name string, g contract.ScheduleGenerator) {`
 * `nexus/internal/apps/loanschedule/conformance/registry.go:51` — `func RegisterWrong(name, defect string, g contract.ScheduleGenerator) {`
 * conformance package files: `admit.go`, `capability.go`, `census.go`, `impl_hook.go`, `main.go`, `enums.go`, `exemption.go`, `grade.go`, `invariants.go`, `money.go`, `nofloat.go`, `registry.go`, `reporoot.go`, `report.go`, `structural.go`, `vector.go`
-* committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
+* committed-store test (the only valid coverage instrument): `nexus/internal/apps/loanschedule/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations.
