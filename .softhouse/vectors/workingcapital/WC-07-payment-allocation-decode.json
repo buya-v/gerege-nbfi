@@ -1,0 +1,95 @@
+{
+ "schema": "gerege.workingcapital.vector/v1",
+ "case_id": "WC-07-payment-allocation-decode",
+ "title": "working-capital payment-allocation rule decodes to its six ordered, classified buckets",
+ "class": "parity",
+ "context": "workingcapital",
+ "_note": "Parity vector transcribed from the committed capture wc-loan-detail-raw.json (GET /working-capital-loans/1, tenant gerege), cited by WC-02/03/04 and graded by none of them. The capture's paymentAllocation[0] records transactionType \"DEFAULT\" with paymentAllocationOrder carrying six names IN ORDER: DUE_PENALTY, DUE_FEE, DUE_PRINCIPAL, IN_ADVANCE_PENALTY, IN_ADVANCE_FEE, IN_ADVANCE_PRINCIPAL. This vector pins the DECODE of that observed list: for each name, the name itself, the ApiFacingEnum code, and the two classifications the port derives from the name \u2014 due_type (DUE / IN_ADVANCE) and allocation_type (PENALTY / FEE / PRINCIPAL). For this enum the code literal is identical to the name [WorkingCapitalPaymentAllocationType.java: DUE_PENALTY(DUE, PENALTY, \"DUE_PENALTY\", \"Due Penalty\")], so code is read from the same observed token; the mapper serialises type.name() [WorkingCapitalLoanPaymentAllocationMapper.java:46], so the wire carries the name, not a separate code. This grades a DECODE/CLASSIFICATION, NOT arithmetic: no money is allocated, summed, rounded or clamped, and the allocation cell carries no money unit. The balance cells are pinned exactly as WC-02 (transcribed from the same capture, not recomputed) so the decode rides the same detail read-back WC-02/03/04 already cite. The rule is graded POSITIONALLY: a port that fills the same six buckets in a different order, or classifies IN_ADVANCE as DUE, or drops a name, fails. The remaining named functions are NOT covered here and that is a property of the observation, not an omission: HumanReadableName (\"Due Penalty\") is a display string the wire never carries, so grading it would require a synthesised value; JoinAllocationTypes is the write-direction converter and no read-only vector (no POST/PUT) can reach it through Run; unknownAllocationTypeError.Error is the unknown-name arm a known-good observation cannot reach. Six distinct names are observed, so a de-duplicating converter is NOT discriminated and no de-dup drive is promoted.",
+ "oracle": {
+  "seam": "working-capital-loans-detail",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Every allocation cell is transcribed from the paymentAllocation block of the committed capture wc-loan-detail-raw.json; due_type and allocation_type are the port's classification of the observed name, not invented values. The balance cells are transcribed from the same capture as WC-02.",
+  "capture_ref": ".softhouse/capture/workingcapital/out/wc-loan-detail-raw.json",
+  "capture_sha256": "33ee14f87682497189494a5685f8479ea54262b2ff498db06634882e6ab0efb9",
+  "capture_case_id": "SEED-WC-L01",
+  "citation": "wc-loan-detail-raw.json paymentAllocation[0] = {\"transactionType\":\"DEFAULT\",\"paymentAllocationOrder\":[{\"paymentAllocationRule\":\"DUE_PENALTY\",\"order\":1},{\"paymentAllocationRule\":\"DUE_FEE\",\"order\":2},{\"paymentAllocationRule\":\"DUE_PRINCIPAL\",\"order\":3},{\"paymentAllocationRule\":\"IN_ADVANCE_PENALTY\",\"order\":4},{\"paymentAllocationRule\":\"IN_ADVANCE_FEE\",\"order\":5},{\"paymentAllocationRule\":\"IN_ADVANCE_PRINCIPAL\",\"order\":6}]} on loan externalId SEED-WC-L01; balance block as WC-02"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "loan_id": 1
+ },
+ "expect": {
+  "detail": {
+   "id": "1",
+   "status": "loanStatusType.active",
+   "balance": {
+    "principal": "100051",
+    "principal_paid": "0",
+    "total_disbursement": "0",
+    "total_discount_fee": "0",
+    "principal_outstanding": "100051",
+    "total_expected_repayment": "100051",
+    "total_repayment": "0",
+    "total_outstanding": "100051",
+    "unrealized_income_from_discount_fee": "0"
+   },
+   "allocation": {
+    "transaction_type": "DEFAULT",
+    "rules": [
+     {
+      "name": "DUE_PENALTY",
+      "code": "DUE_PENALTY",
+      "due_type": "DUE",
+      "allocation_type": "PENALTY"
+     },
+     {
+      "name": "DUE_FEE",
+      "code": "DUE_FEE",
+      "due_type": "DUE",
+      "allocation_type": "FEE"
+     },
+     {
+      "name": "DUE_PRINCIPAL",
+      "code": "DUE_PRINCIPAL",
+      "due_type": "DUE",
+      "allocation_type": "PRINCIPAL"
+     },
+     {
+      "name": "IN_ADVANCE_PENALTY",
+      "code": "IN_ADVANCE_PENALTY",
+      "due_type": "IN_ADVANCE",
+      "allocation_type": "PENALTY"
+     },
+     {
+      "name": "IN_ADVANCE_FEE",
+      "code": "IN_ADVANCE_FEE",
+      "due_type": "IN_ADVANCE",
+      "allocation_type": "FEE"
+     },
+     {
+      "name": "IN_ADVANCE_PRINCIPAL",
+      "code": "IN_ADVANCE_PRINCIPAL",
+      "due_type": "IN_ADVANCE",
+      "allocation_type": "PRINCIPAL"
+     }
+    ]
+   }
+  }
+ },
+ "capabilities_required": [
+  "wc-loan-balance-read"
+ ],
+ "graded_against": [
+  "workingcapital-go"
+ ]
+}

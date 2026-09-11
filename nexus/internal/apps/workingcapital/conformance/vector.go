@@ -132,6 +132,33 @@ type DisbursementExpect struct {
 	ActualAmount string `json:"actual_amount,omitempty"` // tranche actualAmount, integer minor
 }
 
+// AllocationRuleExpect is one decoded entry of a loan's payment-allocation
+// order. Name is the observed value the read-back serialises (the
+// WorkingCapitalPaymentAllocationType's persisted name, via the oracle mapper's
+// type.name()); Code is the ApiFacingEnum code, which for this enum carries the
+// SAME literal as the name [VERIFIED:
+// WorkingCapitalPaymentAllocationType.java: DUE_PENALTY(DUE, PENALTY,
+// "DUE_PENALTY", "Due Penalty")], so it is graded from the same observed token.
+// DueType and AllocationType are the two classifications the port derives FROM
+// that name — which instalment the bucket applies to (DUE / IN_ADVANCE) and
+// which money bucket it fills (PENALTY / FEE / PRINCIPAL). This is a
+// decode/classification cell: no money moves through it.
+type AllocationRuleExpect struct {
+	Name           string `json:"name"`            // observed: e.g. "DUE_PENALTY"
+	Code           string `json:"code"`            // observed-equal: ApiFacingEnum code (== name for this enum)
+	DueType        string `json:"due_type"`        // derived: "DUE" / "IN_ADVANCE"
+	AllocationType string `json:"allocation_type"` // derived: "PENALTY" / "FEE" / "PRINCIPAL"
+}
+
+// PaymentAllocationExpect is a loan's payment-allocation rule as the detail
+// read-back serialises it: the transaction type and the ordered decode of its
+// allocation buckets. The rules are positional — the order the observation
+// records is the order graded.
+type PaymentAllocationExpect struct {
+	TransactionType string                 `json:"transaction_type"` // observed: e.g. "DEFAULT"
+	Rules           []AllocationRuleExpect `json:"rules"`
+}
+
 // DetailExpect is the working-capital-loans-detail seam's expected cells: the
 // row id, its loan-status code, the balance read-back above, and the OPTIONAL
 // cells a vector may pin — the stored status ordinal (status_id) and active flag
@@ -139,12 +166,13 @@ type DisbursementExpect struct {
 // seeded draw recorded. An optional cell is graded only when the vector pins it,
 // so WC-02 keeps grading id/status/balance alone.
 type DetailExpect struct {
-	ID            string              `json:"id"`
-	Status        string              `json:"status"`
-	StatusOrdinal string              `json:"status_id,omitempty"`     // stored status ordinal (300 = active), integer
-	StatusActive  string              `json:"status_active,omitempty"` // "true"/"false" active flag
-	Balance       BalanceExpect       `json:"balance"`
-	Disbursement  *DisbursementExpect `json:"disbursement,omitempty"` // the tranche the seeded draw recorded
+	ID            string                   `json:"id"`
+	Status        string                   `json:"status"`
+	StatusOrdinal string                   `json:"status_id,omitempty"`     // stored status ordinal (300 = active), integer
+	StatusActive  string                   `json:"status_active,omitempty"` // "true"/"false" active flag
+	Balance       BalanceExpect            `json:"balance"`
+	Disbursement  *DisbursementExpect      `json:"disbursement,omitempty"` // the tranche the seeded draw recorded
+	Allocation    *PaymentAllocationExpect `json:"allocation,omitempty"`   // the loan's payment-allocation rule decode
 }
 
 // Expect is what the oracle produced for the request. For a list request it is
