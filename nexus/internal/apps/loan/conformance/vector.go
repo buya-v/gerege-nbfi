@@ -135,6 +135,34 @@ const SeamLoanScheduleAmortization = "loan-schedule-amortization"
 // fully-paid instalment, then written off.
 const SeamLoanWriteOffFourBucket = "loan-writeoff-four-bucket"
 
+// SeamLoanTransactionReversal is the capture seam this schema grades: the
+// journal-entry side of the FIRST observed loan-transaction reversal. When the
+// loan write-off reversed the loan's last accrual (transaction L46, the
+// 2026-09-02 interest accrual on loan 11), Fineract ADDED one counter-leg per
+// original leg with the same transaction id, account, amount and transaction
+// date but the OPPOSITE side, and changed no original:
+//
+//	JournalEntryWritePlatformServiceJpaRepositoryImpl
+//	  .createJournalEntryForReversedLoanTransaction (:359-378)
+//
+// The manual reversal path is DIFFERENT and must not be ported here
+// (revertJournalEntry, :380-429): it posts its counter-entries on a FRESH
+// generated transaction id and flags each original reversed = true, as the
+// committed tierA-a2 observation shows (originals 45/46/47 flagged,
+// counter-entries 50/51/52 on a fresh id). A porter who has read that path
+// first will write the wrong loan reversal, which is exactly why this seam
+// carries its own vector.
+//
+// request = the before-read-back legs of ONE loan transaction plus the reversed
+// transaction's transaction date; expect = the full after-read-back leg list
+// (the originals as they were, then the counter-legs), every leg graded on its
+// transaction id, account, side, amount, transaction date and reversed flag. A
+// port that DUPLICATES instead of reverses (same side), FLAGS and rewrites the
+// originals, posts on a FRESH transaction id, or dates the counter-legs at the
+// business date moves at least one graded cell, and the side cells see the
+// duplication that the batch totals (both still 1156) cannot.
+const SeamLoanTransactionReversal = "loan-transaction-reversal"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -246,6 +274,30 @@ type WriteOffRequest struct {
 	Installments []WriteOffInstallmentInput `json:"installments"`
 }
 
+// ReversalRequest is the loan-transaction-reversal seam's input: the journal
+// entries of ONE loan transaction as read back BEFORE it was reversed, reduced
+// to the (transaction_id, account, entry_type, amount_minor) cells the reversal
+// reads, plus the reversed transaction's transaction date. Every leg must share
+// the one transaction id — the reversal operates on one transaction's entries.
+type ReversalRequest struct {
+	TransactionDate string            `json:"transaction_date"`
+	JournalEntries  []JournalEntryLeg `json:"journal_entries"`
+}
+
+// ReversalLegCell is one leg of the loan-transaction-reversal seam's expected
+// after-read-back list: the before legs as they were, then the counter-legs the
+// reversal ADDED. TransactionDate and Reversed are the two cells the batch
+// sum cannot see — a port that dates a counter-leg at the business date, or
+// flags an original reversed, moves them while every side and amount stays put.
+type ReversalLegCell struct {
+	TransactionID   string `json:"transaction_id"`
+	Account         string `json:"account"`
+	EntryType       string `json:"entry_type"`
+	AmountMinor     string `json:"amount_minor"`
+	TransactionDate string `json:"transaction_date"`
+	Reversed        bool   `json:"reversed"`
+}
+
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
 // charges due at disbursement.
 type DisburseRequest struct {
@@ -340,6 +392,9 @@ type Request struct {
 	// WriteOff is the loan-writeoff-four-bucket seam's input: the observed
 	// per-instalment schedule write-off arithmetic consumes.
 	WriteOff *WriteOffRequest `json:"write_off,omitempty"`
+	// Reversal is the loan-transaction-reversal seam's input: the before
+	// read-back legs of one loan transaction and its transaction date.
+	Reversal *ReversalRequest `json:"reversal,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -403,6 +458,13 @@ type Expect struct {
 	// STRING in minor units. The four portions sum to it exactly; the sum is
 	// the invariant this seam exists to grade.
 	WriteOffTotalMinor string `json:"write_off_total_minor,omitempty"`
+	// ReversalLegs is the loan-transaction-reversal seam's full after-read-back
+	// leg list: the request's original legs unchanged and in order, then one
+	// counter-leg per original with the same transaction id, account, amount
+	// and transaction date but the OPPOSITE side. Every leg is graded on all
+	// six cells; the originals' Reversed flag and the counter-legs' transaction
+	// date are the cells the batch totals cannot see.
+	ReversalLegs []ReversalLegCell `json:"reversal_legs,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

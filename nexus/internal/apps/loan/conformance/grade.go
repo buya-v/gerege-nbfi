@@ -150,6 +150,32 @@ func diffJournalEntryAccountSides(s *cellSink, want, got []JournalEntryAccountSi
 	}
 }
 
+// diffReversalLegs compares the full after-read-back leg list of a
+// loan-transaction reversal IN ORDER: the originals as they were, then the
+// counter-legs. The count is compared first, so a port that drops or adds a leg
+// is a visible difference rather than a silent truncation. Every leg grades six
+// cells; the amount is the one money cell, and the side, transaction id,
+// account, transaction date and reversed flag are structural. The side cells
+// see a port that duplicates instead of reverses (both totals still balance);
+// the date and reversed cells see a port that dates counters at the business
+// date or flags the originals. The lists are compared positionally because the
+// property is a fixed "originals, then mirrors" layout, not a set.
+func diffReversalLegs(s *cellSink, want, got []ReversalLegCell) {
+	s.cmpText("reversal_legs.count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
+	n := len(want)
+	if len(got) < n {
+		n = len(got)
+	}
+	for i := 0; i < n; i++ {
+		s.cmpText(fmt.Sprintf("reversal_legs[%d].transaction_id", i), want[i].TransactionID, got[i].TransactionID)
+		s.cmpText(fmt.Sprintf("reversal_legs[%d].account", i), want[i].Account, got[i].Account)
+		s.cmpText(fmt.Sprintf("reversal_legs[%d].entry_type", i), want[i].EntryType, got[i].EntryType)
+		s.cmpMoney(fmt.Sprintf("reversal_legs[%d].amount", i), want[i].AmountMinor, got[i].AmountMinor)
+		s.cmpText(fmt.Sprintf("reversal_legs[%d].transaction_date", i), want[i].TransactionDate, got[i].TransactionDate)
+		s.cmpText(fmt.Sprintf("reversal_legs[%d].reversed", i), fmt.Sprintf("%t", want[i].Reversed), fmt.Sprintf("%t", got[i].Reversed))
+	}
+}
+
 // canonicalJournalEntryAccountSides returns a copy of in sorted by
 // (transaction_id, account, entry_type) so the side comparison is
 // order-insensitive.
@@ -221,6 +247,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpText("delinquent_days", v.Expect.DelinquentDays, got.DelinquentDays)
 	case SeamLoanWriteOffFourBucket:
 		diffWriteOffAllocation(&s, *v.Expect.WriteOffAllocation, v.Expect.WriteOffTotalMinor, got.WriteOffAllocation, got.WriteOffTotalMinor)
+	case SeamLoanTransactionReversal:
+		diffReversalLegs(&s, v.Expect.ReversalLegs, got.ReversalLegs)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

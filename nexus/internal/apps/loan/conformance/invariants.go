@@ -50,6 +50,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertDelinquentDaysConsistent(got)}
 	case SeamLoanWriteOffFourBucket:
 		return []InvariantResult{assertWriteOffFourBucketsSum(got)}
+	case SeamLoanTransactionReversal:
+		return []InvariantResult{assertReversalAppendOnly(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -314,5 +316,71 @@ func assertWriteOffFourBucketsSum(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("write-off portions sum to the amount %s exactly across all four buckets", got.WriteOffTotalMinor)
+	return r
+}
+
+// assertReversalAppendOnly: a loan-transaction reversal ADDS exactly one
+// counter-leg per original leg and changes no original. The assertion is on the
+// implementation's RESULT: the first half must be the request's originals
+// unchanged and in place (same transaction id, account, side and amount, and
+// NOT flagged reversed), and the second half must be their mirrors (same
+// transaction id, account and amount, the OPPOSITE side, the reversed
+// transaction's date, and not flagged). This is the append-only property: a
+// port that marks the originals reversed, dates a counter at the business date,
+// duplicates instead of reversing, or drops/adds a leg is VIOLATED here even
+// when every side and amount cell happens to line up.
+func assertReversalAppendOnly(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "reversal_appends_mirrors_only", Assertions: 3}
+	if v.Request.Reversal == nil {
+		r.Status = InvariantNotApplicable
+		r.Detail = "the vector carries no reversal request"
+		return r
+	}
+	in := v.Request.Reversal.JournalEntries
+	if len(got.ReversalLegs) != 2*len(in) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("result has %d legs, want 2x%d: a reversal ADDS exactly one counter-leg per original leg",
+			len(got.ReversalLegs), len(in))
+		return r
+	}
+	for i, leg := range in {
+		o := got.ReversalLegs[i]
+		if o.TransactionID != leg.TransactionID || o.Account != leg.Account ||
+			o.EntryType != leg.EntryType || o.AmountMinor != leg.AmountMinor {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("original leg %d was rewritten: %+v", i, o)
+			return r
+		}
+		if o.Reversed {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("original leg %d is flagged reversed: the loan reversal changes no original", i)
+			return r
+		}
+	}
+	for i := range in {
+		leg := in[i]
+		c := got.ReversalLegs[len(in)+i]
+		opp, ok := oppositeEntryType(leg.EntryType)
+		if !ok || c.EntryType != opp || c.TransactionID != leg.TransactionID ||
+			c.Account != leg.Account || c.AmountMinor != leg.AmountMinor {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("appended leg %d is not the mirror of original leg %d: %+v", len(in)+i, i, c)
+			return r
+		}
+		if c.Reversed {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("appended counter-leg %d is flagged reversed", len(in)+i)
+			return r
+		}
+		if c.TransactionDate != v.Request.Reversal.TransactionDate {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("counter-leg %d date %q is not the reversed transaction date %q",
+				len(in)+i, c.TransactionDate, v.Request.Reversal.TransactionDate)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("the %d originals are unchanged and unflagged, each mirrored by one counter-leg dated %s",
+		len(in), v.Request.Reversal.TransactionDate)
 	return r
 }

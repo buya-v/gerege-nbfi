@@ -42,14 +42,14 @@ func Admit(v *Vector, opts Options) []string {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-		SeamLoanWriteOffFourBucket:
+		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-			SeamLoanWriteOffFourBucket))
+			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -161,6 +161,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.WriteOff != nil {
+		n++
+	}
+	if v.Request.Reversal != nil {
 		n++
 	}
 	return n
@@ -409,6 +412,44 @@ func admitRequest(v *Vector) []string {
 				}
 			}
 		}
+	case SeamLoanTransactionReversal:
+		if v.Request.Reversal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "loan-transaction-reversal seam must set exactly request.reversal")
+			return problems
+		}
+		r := v.Request.Reversal
+		if !isCivilDate(r.TransactionDate) {
+			problems = append(problems, fmt.Sprintf(
+				"request.reversal.transaction_date %q is not a civil date in YYYY-MM-DD form", r.TransactionDate))
+			return problems
+		}
+		if len(r.JournalEntries) == 0 {
+			problems = append(problems, "request.reversal.journal_entries is empty: a reversal needs at least one original leg to mirror")
+			return problems
+		}
+		txn := ""
+		for i, leg := range r.JournalEntries {
+			if leg.TransactionID == "" {
+				problems = append(problems, fmt.Sprintf("request.reversal.journal_entries[%d].transaction_id is empty", i))
+			} else if txn == "" {
+				txn = leg.TransactionID
+			} else if leg.TransactionID != txn {
+				problems = append(problems, fmt.Sprintf(
+					"request.reversal.journal_entries[%d].transaction_id %q differs from %q: a reversal mirrors the entries of exactly ONE loan transaction",
+					i, leg.TransactionID, txn))
+			}
+			if leg.Account == "" {
+				problems = append(problems, fmt.Sprintf("request.reversal.journal_entries[%d].account is empty", i))
+			}
+			if !journalEntryTypeAdmitted(leg.EntryType) {
+				problems = append(problems, fmt.Sprintf(
+					"request.reversal.journal_entries[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			}
+			if !isIntegerMinorString(leg.AmountMinor) {
+				problems = append(problems, fmt.Sprintf(
+					"request.reversal.journal_entries[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
 	}
 	return problems
 }
@@ -607,8 +648,111 @@ func admitExpect(v *Vector) []string {
 				problems = append(problems, "expect.write_off_allocation is all zeros: a zero discharge exercises no bucket")
 			}
 		}
+	case SeamLoanTransactionReversal:
+		if v.Request.Reversal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		r := v.Request.Reversal
+		if len(v.Expect.ReversalLegs) == 0 {
+			problems = append(problems, "expect.reversal_legs is empty: the after-read-back leg list is the observable this seam grades")
+			return problems
+		}
+		if len(v.Expect.ReversalLegs) != 2*len(r.JournalEntries) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.reversal_legs has %d legs but request.reversal.journal_entries has %d: a reversal appends exactly ONE counter-leg per original leg",
+				len(v.Expect.ReversalLegs), len(r.JournalEntries)))
+			return problems
+		}
+		for i, c := range v.Expect.ReversalLegs {
+			switch {
+			case c.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.reversal_legs[%d].transaction_id is empty", i))
+				continue
+			case c.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.reversal_legs[%d].account is empty", i))
+				continue
+			case !journalEntryTypeAdmitted(c.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, c.EntryType))
+				continue
+			case !isIntegerMinorString(c.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, c.AmountMinor))
+				continue
+			case !isCivilDate(c.TransactionDate):
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].transaction_date %q is not a civil date in YYYY-MM-DD form", i, c.TransactionDate))
+				continue
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// The expectation is a transcription of ONE after-read-back that
+		// SATISFIES the property, so admission refuses a vector whose expected
+		// list does not reconcile to the request. No value is admitted that the
+		// capture did not show: the first half must be the request's originals
+		// unchanged (each unflagged and dated at the reversed transaction's
+		// date), and the second half must be exactly their mirrors.
+		for i, leg := range r.JournalEntries {
+			orig := v.Expect.ReversalLegs[i]
+			if orig.TransactionID != leg.TransactionID || orig.Account != leg.Account ||
+				orig.EntryType != leg.EntryType || orig.AmountMinor != leg.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d] does not transcribe request leg %d unchanged: an appended counter-leg never rewrites an original",
+					i, i))
+				continue
+			}
+			if orig.TransactionDate != r.TransactionDate {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].transaction_date %q is not the reversed transaction date %q",
+					i, orig.TransactionDate, r.TransactionDate))
+			}
+			if orig.Reversed {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].reversed is true: the loan reversal leaves every original unflagged (the manual path is the one that flags)",
+					i))
+			}
+			counter := v.Expect.ReversalLegs[len(r.JournalEntries)+i]
+			opp, ok := oppositeEntryType(leg.EntryType)
+			if !ok || counter.EntryType != opp {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].entry_type %q is not the opposite side of request leg %d's %q",
+					len(r.JournalEntries)+i, counter.EntryType, i, leg.EntryType))
+			}
+			if counter.TransactionID != leg.TransactionID || counter.Account != leg.Account ||
+				counter.AmountMinor != leg.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d] is not a mirror of request leg %d: a counter-leg keeps the same transaction id, account and amount",
+					len(r.JournalEntries)+i, i))
+			}
+			if counter.TransactionDate != r.TransactionDate {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].transaction_date %q is not the reversed transaction date %q (the business date is a different observation)",
+					len(r.JournalEntries)+i, counter.TransactionDate, r.TransactionDate))
+			}
+			if counter.Reversed {
+				problems = append(problems, fmt.Sprintf(
+					"expect.reversal_legs[%d].reversed is true: an appended counter-leg is never flagged reversed", len(r.JournalEntries)+i))
+			}
+		}
 	}
 	return problems
+}
+
+// oppositeEntryType returns the opposite journal-entry side label for the two
+// admitted sides, with ok false for anything else. It mirrors
+// oppositeJournalEntrySide in the loan package at the string boundary the
+// conformance layer validates at.
+func oppositeEntryType(t string) (string, bool) {
+	switch t {
+	case "DEBIT":
+		return "CREDIT", true
+	case "CREDIT":
+		return "DEBIT", true
+	}
+	return "", false
 }
 
 // validateTenantParams is the tenant context check. The loan captures were taken
