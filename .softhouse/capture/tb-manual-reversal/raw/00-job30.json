@@ -1,0 +1,1 @@
+{"jobId":30,"displayName":"Update Trial Balance Details","shortName":"TBL_UDET","nextRunTime":"2026-09-11T16:01:00Z","cronExpression":"0 1 0 1/1 * ? *","active":true,"currentlyRunning":false,"lastRunHistory":{"version":5,"jobRunStartTime":"2026-09-09T16:01:00.011Z","jobRunEndTime":"2026-09-09T16:01:00.047Z","status":"success","triggerType":"cron"}}
