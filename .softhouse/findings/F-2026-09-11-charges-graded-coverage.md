@@ -1,9 +1,13 @@
 # F-2026-09-11 — the `charges` graded corpus is now measurable, and what it never reaches
 
-**Status:** **OPEN — triage only.** No capture was taken, no vector and no drive was
-written. This run makes the `charges` corpus *measurable* and triages the result.
-Grading anything it finds is a later run's work. **No candidate here is a defect.**
-**Task:** `OH-CHCOV-AD`, bounded context `charges`, branch `feat/OHCHCOVad`.
+**Status:** **RESOLVED 2026-09-11 by `OH-CHCAP-AF`.** The cap clamp this finding
+triaged in §5 is now graded: two vectors promoted from the committed T51 captures and
+two drives live and proven to kill (0 without them, 2 with them). `MinimumAndMaximumCap`
+reads `60.0%` without the new vectors and `100.0%` with them, and its two cap-branch
+blocks go `0 → 1`. The triage below stands unchanged as the record of how the target
+was found. **No capture was taken by the grading run; no POST/PUT/DELETE issued.**
+**Task:** `OH-CHCOV-AD` (triage), bounded context `charges`, branch `feat/OHCHCOVad`;
+graded by `OH-CHCAP-AF`, branch `feat/OHCHCAPaf`.
 **Found by:** Go coverage of the `charges` port, measured with the port as `-coverpkg`
 and the **conformance package** as the test target — the instrument the driver
 validated on the savings-holds case (`F-2026-09-10-savings-holds-ungraded.md`) and the
@@ -252,6 +256,131 @@ capture.
 * The new test passes on the current tree; its coverage is vector-driven (measured with
   the control file temporarily withdrawn: 41.2% vector-only, and every number above is
   unchanged by the probes' manufactured reach except as noted).
+
+---
+
+## RESOLVED — the cap clamp is graded, from the committed capture, with no new capture
+
+`OH-CHCAP-AF` graded the §5 target. One bounded context, `charges`; **no capture was
+taken and no `POST`/`PUT`/`DELETE` was issued**. `.softhouse/guards/` (12 pairs) and
+`.softhouse/conformance.sh` (census 17) are untouched. The worktree is the only place a
+run happens; the driver pushes.
+
+### The observations, re-read and re-hashed
+
+Every figure was transcribed from the committed T51 JSON, never computed into the
+vector. The hashes were re-verified against the committed files after the vectors were
+written:
+
+    sha256(.../t51/T51-TR-10-c2-maxcap-raw.json)
+      = e72d8f14bbf7ebaecc02d5cb95b90d1d401e5891d07bf1803c475ba1b8f958c7  == capture_sha256
+    sha256(.../t51/T51-TR-12-c2-mincap-raw.json)
+      = 6340a095d2dad70bb74b412fde18c77921170fff37ea984f5c90fad3e14ae86b  == capture_sha256
+
+`preconditions-T51.txt` re-read: tenant `gerege`, jar `git.commit.id
+426a23544e8426a38ae43ae404670a0a7e85b9eb`, `git.dirty=false`, `rounding-mode 4`
+(HALF_UP), `MoneyHelper.PRECISION = 19`, PostgreSQL 18.3, MNT minor unit 2.
+
+    T51-TR-10-c2-maxcap  percentage 1.2345%  product 1481400 (14,814.00)  maxCap 5000  -> 5000.00
+    T51-TR-12-c2-mincap  percentage 0.1%     product  120000 ( 1,200.00)  minCap 8000  -> 8000.00
+
+`PercentageOf(120000000, 1234500) = 1481400` and `PercentageOf(120000000, 100000) =
+120000`, each exact (no sub-minor residue); `MinimumAndMaximumCap` lowers the first to
+`500000` and raises the second to `800000`. The `type-2` capture is the whole-loan
+clamp, which is why it maps onto the slice's single-base `feeFor`.
+
+### What was promoted
+
+* `.softhouse/vectors/charges/OHCHCAPaf-pctamount-maxcap.json` — `calculation_type 2`,
+  `time_type 1`, `amount_minor "0"`, `percentage 1234500`, `base_amount_minor
+  "120000000"`, `max_cap_minor "500000"`, `fee_minor "500000"`.
+* `.softhouse/vectors/charges/OHCHCAPaf-pctamount-mincap.json` — same shape,
+  `percentage 100000`, `min_cap_minor "800000"`, `fee_minor "800000"`.
+
+Both carry `provenance.capture_ref` (the raw JSON), `capture_sha256`, `capture_case_id`
+and a `citation`; both are `parity` against `charges-go`.
+
+### The drives, and every kill count
+
+Two drives registered. `charges-wrong-caps-ignored` drops both optional caps before
+decode (the percentage arithmetic is ported, the clamp is not); `charges-wrong-caps-
+swapped` computes the fee correctly and calls `MinimumAndMaximumCap` with the two caps
+in the wrong roles. Both are `INERT` on the twelve cap-free vectors and die on the two
+promoted ones. Kill counts (`kills.sh`), store WITHOUT then WITH the two vectors:
+
+| drive | without | with |
+|---|---:|---:|
+| `charges-wrong-caps-ignored` | **0** | **2** |
+| `charges-wrong-caps-swapped` | **0** | **2** |
+| `charges-wrong-amount-ignored` | 7 | 7 |
+| `charges-wrong-base-amount-ignored` | 4 | 5 |
+| `charges-wrong-calculation-type-always-flat` | 4 | 6 |
+| `charges-wrong-penalty-ignored` | 1 | 1 |
+| `charges-wrong-percent-one-scale-short` | 4 | 5 |
+| `charges-wrong-percent-truncating` | 2 | 2 |
+| `charges-wrong-rounding-half-even` | 1 | 1 |
+| `charges-wrong-time-type-ignored` | 12 | 14 |
+| `charges-wrong-validation-skipped` | 1 | 1 |
+
+Zero then non-zero for both new drives is the demonstration the two branches were
+invisible before. The cap vectors also move four pre-existing percent drives, which is
+expected: they are new percentage-fee observations.
+
+### The coverage instrument, now reaching both cap branches
+
+    go test -count=1 -coverpkg=./internal/apps/charges \
+        -coverprofile=/tmp/c.cov ./internal/apps/charges/conformance/...
+
+    function                     without   with
+    MinimumAndMaximumCap          60.0%   100.0%
+    package (all statements)      57.5%    58.8%
+
+Block-level, the two cap arms the triage named as `0 hits`:
+
+    money.go:87.45,89.3   (raise to minCap)   0 -> 1
+    money.go:90.45,92.3   (lower to maxCap)   0 -> 1
+
+The fall-through blocks stay at 1 in both runs, so the move is the clamp, not the
+dispatch. The measurement is the committed-store test (`-count=1`) driving the real
+`LoadStore`/`Admit`/`Run`; no port function is called directly, so the coverage cannot
+be manufactured.
+
+### The third candidate drive was NOT registered
+
+The brief's third candidate — "clamps before rounding / on the rate instead of the
+fee" — was measured and is **not discriminated by these two figures**, so registering
+it would create an inert drive:
+
+    probe: clamp the pre-rounded quotient (rate) then round     without 0, with 0
+
+Both observed products are exact integers (1481400 and 120000, no remainder), so
+clamping before or after HALF_UP yields the identical integer; the figures carry no
+rounding residue with which to tell the order apart. A construction that instead
+clamps the *percentage* against the *money* caps (a unit misread, not a clamp-stage
+misread) does move, but that is a different rule the seam does not state, and writing
+it would be manufacturing coverage. Per the brief, the candidate is left unregistered.
+
+### The `c5` (type 5) cap captures were not used
+
+`T51-TR-09-c5-maxcap` and `T51-TR-11-c5-mincap` are **sums of per-tranche clamps**
+(`totalFeeChargesCharged = 13641.50` / `24000.00` over three tranches — the `24000.00`
+is exactly three `8000.00` clamps), and the port's percentage branch evaluates one
+whole-loan `base_amount`. Transcribing them would require inventing the per-tranche
+decomposition the seam does not model, which the brief forbids. The single-tranche
+`T51-TR-13-c5-maxcap` does map arithmetically, but it duplicates the `type-2` maxcap
+already promoted and only grades the `type-5` dispatch predicate that §6 already
+records as lower value; it was not promoted.
+
+### Controls
+
+* `go build ./...` — clean; `gofmt -l internal/apps/charges/` — clean.
+* `go test ./...` — all packages pass; the committed-store test passes `-count=1`.
+* `bash .softhouse/conformance.sh` — **exit 2**, and the only exit line is
+  `§4.4.2-RECORDED-DECISION-EXIT`; no `HARD guard failed`.
+* `capcount.sh charges charges-go` → **0** (reference fails no vector).
+* `redcount.sh charges` → **11** registered `charges-wrong-*` drives (9 pre-existing +
+  2 new); every one kills at least one vector with the cap vectors present.
+* `charges-go` on the committed store: `vectors_loaded=14 parity_pass=14 parity_fail=0`.
 
 ## Appendix A — all 36 functions at `0.0%` in the prescribed run
 

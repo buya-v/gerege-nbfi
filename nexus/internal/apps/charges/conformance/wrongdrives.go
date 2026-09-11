@@ -40,6 +40,11 @@ type ignoreVariant struct {
 	// never reads m_charge.amount would leave it. Flat fees are the stored amount
 	// and so answer 0. charges-wrong-amount-ignored.
 	amountAsZero bool
+	// capsErased drops both optional caps before decode, as a port that never
+	// reads m_charge.min_cap/max_cap would leave them. The percentage fee is then
+	// returned un-clamped, so a vector whose recorded fee IS the clamp dies.
+	// charges-wrong-caps-ignored.
+	capsErased bool
 }
 
 // apply rewrites the request fields this drive never reads.
@@ -58,6 +63,10 @@ func (v ignoreVariant) apply(req ChargeRequest) ChargeRequest {
 	}
 	if v.amountAsZero {
 		req.AmountMinor = "0"
+	}
+	if v.capsErased {
+		req.MinCapMinor = nil
+		req.MaxCapMinor = nil
 	}
 	return req
 }

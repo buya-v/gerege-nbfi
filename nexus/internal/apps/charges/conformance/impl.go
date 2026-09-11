@@ -377,6 +377,43 @@ func (validationSkippedEvaluator) Evaluate(req ChargeRequest) (ChargeResult, err
 	return res, nil
 }
 
+// capsSwappedEvaluator is a DELIBERATELY WRONG implementation: it computes the
+// percentage fee correctly and then calls MinimumAndMaximumCap with the two caps
+// in the WRONG ROLES — the maxCap is passed where the minCap belongs and the
+// minCap where the maxCap belongs. Both cap options are pointers and both are
+// optional [VERIFIED: LoanCharge.java:327-343], so a porter who transposes the
+// two arguments (or binds them in the wrong order from the stored row) gets a
+// port that RAISES a fee the oracle lowered and LOWERS a fee the oracle raised.
+// It is the mirror of charges-wrong-caps-ignored: where that drive returns the
+// un-clamped product, this one clamps to the wrong bound whenever exactly one
+// cap is present and the product lies beyond it. Flat charges never reach the
+// clamp and stay green; the two cap vectors each move.
+type capsSwappedEvaluator struct{ goEvaluator }
+
+func (capsSwappedEvaluator) Evaluate(req ChargeRequest) (ChargeResult, error) {
+	res, err := (goEvaluator{}).Evaluate(req)
+	if err != nil || !res.FeePresent {
+		return res, err
+	}
+	c, err := chargeFromRequest(req)
+	if err != nil {
+		return res, err
+	}
+	if c.CalculationType.IsPercentageOfAmount() || c.CalculationType.IsPercentageOfDisbursementAmount() {
+		base, err := parseMinorText(req.BaseAmountMinor)
+		if err != nil {
+			return res, err
+		}
+		p, err := charges.PercentageOf(base, c.Percentage)
+		if err != nil {
+			return res, err
+		}
+		// The transposition: c.MaxCap is the lower bound, c.MinCap the upper.
+		res.FeeMinor = charges.MinimumAndMaximumCap(p, c.MaxCap, c.MinCap)
+	}
+	return res, nil
+}
+
 // roundHalfUp rounds q + r/d to the nearest integer, half away from zero (the
 // port's pinned HALF_UP), big.Int only. It mirrors charges.roundHalfAwayFromZero,
 // which this package cannot call.
@@ -507,4 +544,24 @@ func init() {
 			"base_amount_minor) and OHCAPj-penalty-at-disbursement-refused is refused before any fee, so five vectors "+
 			"survive by design",
 		ignoreFieldEvaluator{v: ignoreVariant{amountAsZero: true}})
+	RegisterWrong("charges-wrong-caps-ignored",
+		"never reads the charge's optional min_cap/max_cap: both are dropped before decode, as a port that "+
+			"ports the percentage arithmetic but not the clamp would leave them. LoanCharge.minimumAndMaximumCap "+
+			"raises a percentageOf below minCap and lowers one above maxCap [VERIFIED: LoanCharge.java:327-343], "+
+			"and m_charge carries the two optional DECIMAL(19,6) bounds the port must read. Every pre-existing "+
+			"vector omits both caps, so this drive was INERT until the two cap vectors were promoted: on those it "+
+			"returns the un-clamped product (1481400 for OHCHCAPaf-pctamount-maxcap, 120000 for "+
+			"OHCHCAPaf-pctamount-mincap) where the oracle recorded the clamp (500000, 800000), so it kills 2; the "+
+			"twelve pre-existing vectors carry no cap and are answered byte-identically",
+		ignoreFieldEvaluator{v: ignoreVariant{capsErased: true}})
+	RegisterWrong("charges-wrong-caps-swapped",
+		"computes the percentage fee correctly but binds the two caps in the WRONG ROLES: maxCap is passed where "+
+			"minCap belongs and minCap where maxCap belongs. Both are optional pointers to a lower/upper bound "+
+			"[VERIFIED: LoanCharge.java:327-343], so a transposed port RAISES what the oracle lowered and LOWERS "+
+			"what the oracle raised. It is the mirror of charges-wrong-caps-ignored and is likewise INERT without "+
+			"the two promoted cap vectors: with exactly one cap present the swap turns the wrong bound on, so it "+
+			"answers 1481400 for OHCHCAPaf-pctamount-maxcap (min bound 500000 does not lower it) and 120000 for "+
+			"OHCHCAPaf-pctamount-mincap (max bound 800000 does not raise it), killing 2; the twelve cap-free "+
+			"vectors have no bound to transpose and survive",
+		capsSwappedEvaluator{})
 }
