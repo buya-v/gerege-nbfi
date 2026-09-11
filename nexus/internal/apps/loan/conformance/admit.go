@@ -43,15 +43,17 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
-		SeamLoanChargeOffJournalEntries, SeamLoanChargeLifecycle, SeamLoanStatusTransition:
+		SeamLoanChargeOffJournalEntries, SeamLoanChargebackJournalEntries,
+		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
-			SeamLoanChargeOffJournalEntries, SeamLoanChargeLifecycle, SeamLoanStatusTransition))
+			SeamLoanChargeOffJournalEntries, SeamLoanChargebackJournalEntries,
+			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -172,6 +174,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ChargeOffJournal != nil {
+		n++
+	}
+	if v.Request.ChargebackJournal != nil {
 		n++
 	}
 	if v.Request.ChargeLifecycle != nil {
@@ -573,6 +578,44 @@ func admitRequest(v *Vector) []string {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.charge_off_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+	case SeamLoanChargebackJournalEntries:
+		if v.Request.ChargebackJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "chargeback-journal seam must set exactly request.chargeback_journal")
+			return problems
+		}
+		j := v.Request.ChargebackJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.chargeback_journal.transaction_id is empty")
+		}
+		for name, val := range map[string]string{
+			"amount":               j.Amount,
+			"portions.principal":   j.Portions.Principal,
+			"portions.overpayment": j.Portions.Overpayment,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.chargeback_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		if _, ok := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment); !ok {
+			problems = append(problems, "request.chargeback_journal portions are not integer minor amounts")
+		} else if sum, _ := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment); j.Amount != sum {
+			problems = append(problems, fmt.Sprintf(
+				"request.chargeback_journal amount %s is not principal %s + overpayment %s: an unported portion cannot be posted",
+				j.Amount, j.Portions.Principal, j.Portions.Overpayment))
+		}
+		// The three accounts the observed branches resolve are read back from the
+		// product (or the payment channel), never invented.
+		for name, val := range map[string]string{
+			"accounts.fund_source":    j.Accounts.FundSource,
+			"accounts.loan_portfolio": j.Accounts.LoanPortfolio,
+			"accounts.overpayment":    j.Accounts.Overpayment,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.chargeback_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
 		}
 	case SeamLoanChargeLifecycle:
@@ -1009,6 +1052,59 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanChargebackJournalEntries:
+		if v.Request.ChargebackJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.ChargebackJournal
+		if len(v.Expect.ChargebackJournalLegs) == 0 {
+			problems = append(problems, "expect.chargeback_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.ChargebackJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.chargeback_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.chargeback_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.chargeback_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.chargeback_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: the amount credit to the fund source, then the
+		// overpayment debit, then the principal debit, in posting order. This
+		// reconciliation is INDEPENDENT of the port under test, so a wrong port
+		// cannot make its own output "admissible".
+		expected, probs := reconstructChargebackJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.ChargebackJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.chargeback_journal_legs has %d legs but the observed posting order needs %d (one credit for the amount, then the overpayment debit, then the principal debit)",
+				len(v.Expect.ChargebackJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.ChargebackJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.chargeback_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the chargeback credits the amount to the fund source, then debits the overpayment portion to OVERPAYMENT, then debits the principal difference to LOAN_PORTFOLIO",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargeLifecycle:
 		if len(v.Expect.ChargeStates) == 0 {
 			problems = append(problems, "expect.charge_states is empty for the charge-lifecycle seam")
@@ -1205,6 +1301,55 @@ func reconstructChargeOffJournalLegs(j ChargeOffJournalRequest) ([]JournalEntryL
 	for _, account := range debitOrder {
 		legs = append(legs, JournalEntryLeg{
 			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: debitAmounts[account],
+		})
+	}
+	return legs, nil
+}
+
+// reconstructChargebackJournalLegs derives the leg list the observed chargeback
+// property requires from the request alone, independently of the port, in the
+// processor's posting order: the amount credit to the resolved fund source, then
+// the overpayment debit to OVERPAYMENT, then the principal debit to
+// LOAN_PORTFOLIO. Each money value stays an integer minor-unit string. It
+// returns the legs and any admission problem: an amount that is not
+// principal + overpayment (an unported portion the port refuses) or a positive
+// slot with no mapped account.
+func reconstructChargebackJournalLegs(j ChargebackJournalRequest) ([]JournalEntryLeg, []string) {
+	sum, ok := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment)
+	if !ok {
+		return nil, []string{"request.chargeback_journal portions are not integer minor amounts"}
+	}
+	if j.Amount != sum {
+		return nil, []string{fmt.Sprintf(
+			"request.chargeback_journal amount %s is not principal %s + overpayment %s: an unported portion cannot be posted",
+			j.Amount, j.Portions.Principal, j.Portions.Overpayment)}
+	}
+	legs := make([]JournalEntryLeg, 0, 3)
+	if j.Amount != "0" {
+		if j.Accounts.FundSource == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.chargeback_journal amount %s has no mapped fund-source account", j.Amount)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "CREDIT", AmountMinor: j.Amount,
+		})
+	}
+	if j.Portions.Overpayment != "0" {
+		if j.Accounts.Overpayment == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.chargeback_journal overpayment %s has no mapped overpayment account", j.Portions.Overpayment)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.Overpayment, EntryType: "DEBIT", AmountMinor: j.Portions.Overpayment,
+		})
+	}
+	if j.Portions.Principal != "0" {
+		if j.Accounts.LoanPortfolio == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.chargeback_journal principal %s has no mapped loan-portfolio account", j.Portions.Principal)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.LoanPortfolio, EntryType: "DEBIT", AmountMinor: j.Portions.Principal,
 		})
 	}
 	return legs, nil

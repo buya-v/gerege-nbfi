@@ -218,6 +218,30 @@ const SeamLoanWriteOffJournalEntries = "loan-writeoff-journal-entries"
 // a penalty portion alone.
 const SeamLoanChargeOffJournalEntries = "loan-chargeoff-journal-entries"
 
+// SeamLoanChargebackJournalEntries is the capture seam this schema grades: the
+// journal entry a loan CHARGEBACK posts on a loan that is NOT charged off, the
+// chargeback sibling of the charge-off-journal seam. It ports
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForChargeback
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1215-1308, pinned
+// commit 426a23544], in posting order: when the amount is > 0 CREDIT the
+// resolved fund source (the transaction paymentTypeId's channel account, else
+// the product FUND_SOURCE); when the overpayment portion is > 0 DEBIT
+// OVERPAYMENT; when principalCredited > principalPaid DEBIT LOAN_PORTFOLIO the
+// difference. The observed domain has no fee or penalty portion, no paid
+// portion and no charged-off loan, so the port has no field for any of them and
+// REFUSES an amount that is not principal + overpayment rather than guessing an
+// unported branch.
+//
+// On the pinned observations transaction L69 (loan 14) carries principal 250
+// and no overpayment (CREDIT fund-source 4 250, DEBIT loan-portfolio 10 250);
+// L99 (loan 19) carries overpayment 250 and no principal (CREDIT 4 250, DEBIT
+// overpayment 18 250); L109 (loan 21) carries 350 = overpayment 250 + principal
+// 100, the overpayment debit 241 preceding the principal debit 242 (CREDIT 4
+// 350, DEBIT 18 250, DEBIT 10 100). The chargeback was posted with
+// paymentTypeId 2, which has no channel mapping, so the product FUND_SOURCE
+// account 4 applies.
+const SeamLoanChargebackJournalEntries = "loan-chargeback-journal-entries"
+
 // SeamLoanChargeLifecycle is the capture seam this schema grades: the
 // money-mutation lifecycle of a single LoanCharge on loan 18. The fee
 // (charge 14, amount 123.45) is created, partly paid 100.00, then fully paid;
@@ -458,6 +482,43 @@ type ChargeOffJournalRequest struct {
 	Accounts      ChargeOffSlotAccounts  `json:"accounts"`
 }
 
+// ChargebackPortionsMoney is the money a chargeback transaction credited, per
+// ledger slot, each an integer STRING in minor units. The observed domain has
+// two slots only: principal and overpayment. There is no field for a fee or
+// penalty portion or a paid portion, so a caller cannot express the unobserved
+// branches of createJournalEntriesForChargeback to this seam.
+type ChargebackPortionsMoney struct {
+	Principal   string `json:"principal"`
+	Overpayment string `json:"overpayment"`
+}
+
+// ChargebackSlotAccounts is the RESOLVED slot->account mapping a chargeback's
+// three postings use: the fund source that the amount credits (the transaction
+// paymentTypeId's payment-channel account when it has one, else the product
+// FUND_SOURCE), the loan-portfolio account the principal difference debits, and
+// the overpayment account the overpayment portion debits. The accounts are the
+// product's accountingMappings read back from the reference server (or the
+// channel mapping), never invented; a positive slot with no account is refused
+// by the port.
+type ChargebackSlotAccounts struct {
+	FundSource    string `json:"fund_source"`
+	LoanPortfolio string `json:"loan_portfolio"`
+	Overpayment   string `json:"overpayment"`
+}
+
+// ChargebackJournalRequest is the loan-chargeback-journal-entries seam's input:
+// the chargeback transaction's amount, its principal and overpayment portions,
+// and the resolved slot->account mapping, plus the transaction id the legs are
+// posted under. The observed identity amount = principal + overpayment is
+// enforced by the port: a mismatch is an unported portion, refused rather than
+// posted.
+type ChargebackJournalRequest struct {
+	TransactionID string                  `json:"transaction_id"`
+	Amount        string                  `json:"amount"`
+	Portions      ChargebackPortionsMoney `json:"portions"`
+	Accounts      ChargebackSlotAccounts  `json:"accounts"`
+}
+
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
 // charges due at disbursement.
 type DisburseRequest struct {
@@ -619,6 +680,10 @@ type Request struct {
 	// charge-off transaction's four portions, the loan's fraud flag and the
 	// product's slot->account mapping.
 	ChargeOffJournal *ChargeOffJournalRequest `json:"charge_off_journal,omitempty"`
+	// ChargebackJournal is the loan-chargeback-journal-entries seam's input: the
+	// chargeback transaction's amount and two portions and the resolved
+	// slot->account mapping.
+	ChargebackJournal *ChargebackJournalRequest `json:"chargeback_journal,omitempty"`
 	// ChargeLifecycle is the loan-charge-lifecycle seam's input: the charge's
 	// amount, penalty flag, and the ordered operations observed.
 	ChargeLifecycle *ChargeLifecycleRequest `json:"charge_lifecycle,omitempty"`
@@ -710,6 +775,13 @@ type Expect struct {
 	// credit/debit split are what discriminate a fraud-ignoring or
 	// debit-per-portion port.
 	ChargeOffJournalLegs []JournalEntryLeg `json:"charge_off_journal_legs,omitempty"`
+	// ChargebackJournalLegs is the loan-chargeback-journal-entries seam's ordered
+	// leg list the chargeback posted: the amount credit to the fund source, then
+	// the overpayment debit, then the principal debit, in posting order. Every
+	// leg is graded on its transaction id, account, side and amount; the
+	// overpayment debit's account and the two-debit order are what discriminate
+	// an overpayment-to-portfolio port or a reordered port.
+	ChargebackJournalLegs []JournalEntryLeg `json:"chargeback_journal_legs,omitempty"`
 	// ChargeStates is the loan-charge-lifecycle seam's ordered list of expected
 	// states: the created state at index 0, then one state per operation in
 	// request.charge_lifecycle.operations, in order.
