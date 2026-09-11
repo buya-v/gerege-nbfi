@@ -1,0 +1,77 @@
+# Tier D FEASIBILITY -- THROWAWAY REFERENCE-ORACLE INSTANCE for replaying schedule-bearing
+# `.feature` scenarios and recording what the oracle actually returns.
+#
+# WHY THIS FILE EXISTS: the e2e runner's global initializer creates products, charges, clients
+# and loans by the hundred in whatever tenant it is pointed at. That would bury `gerege`, the
+# tenant every committed capture reads. So the replay runs against an instance that is
+# DESTROYED afterwards -- teardown by destruction, the only perfect teardown available.
+#
+# SELF-CONTAINED ON PURPOSE, copied line-by-line from the T305 opening-balance rig, which is
+# in turn copied from the pinned checkout's own compose/env files:
+#   image postgres:18.3         config/docker/compose/postgresql.yml
+#   image fineract:latest       config/docker/compose/fineract.yml  (sha256:e596339626bf...,
+#                               the EXACT image id both standing app containers run; checked
+#                               by preflight.sh)
+#   env files                   config/docker/env/{postgresql,fineract,fineract-common,fineract-postgresql}.env
+#
+# WHAT DIFFERS FROM THE STANDING STACK, and nothing else does:
+#   1. NO published database port (the standing dbs own 5432; this one is reached by `docker exec`)
+#   2. 8444:8443 instead of 8443:8443
+#   3. the tenant-seed environment variables below
+#   4. the log volume points at /tmp, never into the pinned checkout
+#
+# THE SEED VARIABLES ARE THE SAME FOUR T305 SOURCE-VERIFIED: tenant identifier -> the tenant
+# store seed; timezone Asia/Ulaanbaatar; rounding-mode 4 (HALF_UP, the CLAUDE.md-ratified mode)
+# seeded at creation rather than patched; and the DB name the postgres init script creates.
+#
+# THE TENANT IS NAMED `tierd`, NOT `gerege`, DELIBERATELY. The identifier is the disclosure: a
+# capture whose provenance said `gerege` while taken on a throwaway would be indistinguishable
+# from one taken on the graded tenant.
+#
+# FOR CAPTURE PURPOSES ONLY. Destroyed by `down.sh` with `-v`.
+services:
+  db:
+    image: postgres:18.3
+    container_name: tierd-oracle-db
+    volumes:
+      - /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    env_file:
+      - /Users/buv/fineract/config/docker/env/postgresql.env
+    environment:
+      FINERACT_TENANT_DEFAULT_DB_NAME: fineract_tierd
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 10s
+      retries: 10
+
+  fineract:
+    image: fineract:latest
+    container_name: tierd-oracle-app
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /Users/buv/fineract/config/docker/logback/logback-override.xml:/app/logback-override.xml:ro
+      - /Users/buv/fineract/config/docker/aws/etc/credentials:/etc/aws/credentials:ro
+      - /tmp/tierd-oracle-logs:/var/logs/fineract:rw
+    tmpfs:
+      - /tmp:rw,nosuid,size=256m
+    ports:
+      - "8444:8443"
+    env_file:
+      - /Users/buv/fineract/config/docker/env/fineract.env
+      - /Users/buv/fineract/config/docker/env/fineract-common.env
+      - /Users/buv/fineract/config/docker/env/fineract-postgresql.env
+    environment:
+      FINERACT_DEFAULT_TENANTDB_IDENTIFIER: tierd
+      FINERACT_DEFAULT_TENANTDB_NAME: fineract_tierd
+      FINERACT_DEFAULT_TENANTDB_DESCRIPTION: Tier D feasibility throwaway replay tenant
+      FINERACT_DEFAULT_TENANTDB_TIMEZONE: Asia/Ulaanbaatar
+      FINERACT_CONFIG_ROUNDING_MODE: "4"
+    healthcheck:
+      test: ["CMD", 'sh', '-c', 'echo -e "Checking for the availability of Fineract server deployment"; while ! nc -z "localhost" 8443; do sleep 1; printf "-"; done; echo -e " >> Fineract server has started";' ]
+      timeout: 1s
+      retries: 60
+    depends_on:
+      db:
+        condition: service_healthy
