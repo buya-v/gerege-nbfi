@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "DN-03-person-blank-skip",
+ "title": "display name: an absent middle part is skipped, not doubled",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Arm 2 of Client.deriveDisplayName [Client.java:457-481], blank-skip limb: an absent middlename is skipped before the join, leaving a single separator, not a doubled or trailing one. Transcribed from capture .softhouse/capture/parties-display-name/out/OHNAMECAP-P2-raw.json (GET /clients/14, tenant gerege): firstname=Синтетик, lastname=Давхардалгүй, middlename absent, displayName=Синтетик Давхардалгүй. The semantic request keys carry the captured wire values (given_name=firstname, patronymic=middlename absent, ovog=lastname). A join that emits the empty slot would produce \"Синтетик  Давхардалгүй\".",
+ "oracle": {
+  "seam": "parties-display-name",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties-display-name/out/OHNAMECAP-P2-raw.json; capture_case_id is the exact displayName field of the observed client row.",
+  "capture_ref": ".softhouse/capture/parties-display-name/out/OHNAMECAP-P2-raw.json",
+  "capture_sha256": "465eb5a3c1cd61e97a58a8b5ab282cada9acf57bc5ad751bb06bdce8e97f225f",
+  "capture_case_id": "\"displayName\":\"Синтетик Давхардалгүй\"",
+  "citation": "OHNAMECAP-P2-raw.json id=14 firstname=Синтетик lastname=Давхардалгүй (no middlename key) displayName=\"Синтетик Давхардалгүй\", legalForm code legalFormType.person"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "display-name",
+  "legal_form": "PERSON",
+  "given_name": "Синтетик",
+  "ovog": "Давхардалгүй"
+ },
+ "expect": {
+  "display_name": "Синтетик Давхардалгүй"
+ },
+ "capabilities_required": [
+  "display-name"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

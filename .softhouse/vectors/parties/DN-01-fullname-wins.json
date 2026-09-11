@@ -1,0 +1,42 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "DN-01-fullname-wins",
+ "title": "display name: a non-blank fullname wins outright",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Arm 1 of Client.deriveDisplayName [Client.java:457-481]: a non-blank fullname wins outright and is copied to displayName unchanged. Transcribed from capture .softhouse/capture/parties/out/clients-1-raw.json (GET /clients/1, tenant gerege): id=1, legalForm code legalFormType.person, fullname and displayName both \"Path B Fixture Borrower\", with no firstname/middlename/lastname keys at all. The vector feeds legal_form=PERSON with fullname=\"Path B Fixture Borrower\" and every part empty, and expects the fullname back verbatim. This is the one display-name arm the committed corpus already observed via CS-03's capture.",
+ "oracle": {
+  "seam": "parties-display-name",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties/out/clients-1-raw.json; capture_case_id is the exact displayName field of the observed client row, which equals its fullname.",
+  "capture_ref": ".softhouse/capture/parties/out/clients-1-raw.json",
+  "capture_sha256": "e0144ecce9453c00308315d6657e387fe41d3bf69876d497957565d8882c73df",
+  "capture_case_id": "\"displayName\":\"Path B Fixture Borrower\"",
+  "citation": "clients-1-raw.json id=1 fullname=\"Path B Fixture Borrower\" displayName=\"Path B Fixture Borrower\", legalForm code legalFormType.person; cross-ref Client.java:457-462 (fullname arm)"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "display-name",
+  "legal_form": "PERSON",
+  "fullname": "Path B Fixture Borrower"
+ },
+ "expect": {
+  "display_name": "Path B Fixture Borrower"
+ },
+ "capabilities_required": [
+  "display-name"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

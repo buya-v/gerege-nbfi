@@ -38,7 +38,7 @@ func Admit(v *Vector, opts Options) []string {
 	}
 	if !IsSchemaSeam(v.Oracle.Seam) {
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only the client-status-ordinal, legal-form-ordinal and grouping-status-ordinal seams", v.Oracle.Seam))
+			"oracle.seam %q: this harness grades only the client-status-ordinal, legal-form-ordinal, grouping-status-ordinal and parties-display-name seams", v.Oracle.Seam))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -60,17 +60,36 @@ func Admit(v *Vector, opts Options) []string {
 
 	if !IsVocabulary(v.Request.Vocabulary) {
 		problems = append(problems, fmt.Sprintf(
-			"request.vocabulary %q is not one of client-status, legal-form, grouping-status", v.Request.Vocabulary))
+			"request.vocabulary %q is not one of client-status, legal-form, grouping-status, display-name", v.Request.Vocabulary))
 	} else if s := seamForVocabulary(v.Request.Vocabulary); v.Oracle.Seam != "" && s != v.Oracle.Seam {
 		problems = append(problems, fmt.Sprintf(
 			"request.vocabulary %q must grade against oracle.seam %q, got %q", v.Request.Vocabulary, s, v.Oracle.Seam))
 	}
-	if v.Request.Name == "" {
-		problems = append(problems, "request.name is empty")
-	}
-	if v.Expect.Ordinal < 0 {
-		problems = append(problems, fmt.Sprintf(
-			"expect.ordinal %d is negative: Fineract enum ordinals are non-negative", v.Expect.Ordinal))
+
+	switch Vocabulary(v.Request.Vocabulary) {
+	case VocabularyDisplayName:
+		if v.Request.LegalForm == "" {
+			problems = append(problems, "request.legal_form is empty: the display-name seam grades a party's legal form plus its four name fields")
+		} else if _, ok := legalFormByName[v.Request.LegalForm]; !ok {
+			problems = append(problems, fmt.Sprintf(
+				"request.legal_form %q is not in the LegalForm vocabulary (PERSON/ENTITY)", v.Request.LegalForm))
+		}
+		if v.Expect.Ordinal != 0 {
+			problems = append(problems, fmt.Sprintf(
+				"expect.ordinal %d: the display-name seam grades a string, so ordinal must be 0", v.Expect.Ordinal))
+		}
+	default:
+		if v.Request.Name == "" {
+			problems = append(problems, "request.name is empty")
+		}
+		if v.Expect.DisplayName != "" {
+			problems = append(problems, fmt.Sprintf(
+				"expect.display_name %q: only the display-name seam grades a string", v.Expect.DisplayName))
+		}
+		if v.Expect.Ordinal < 0 {
+			problems = append(problems, fmt.Sprintf(
+				"expect.ordinal %d is negative: Fineract enum ordinals are non-negative", v.Expect.Ordinal))
+		}
 	}
 
 	problems = append(problems, checkGradedAgainst(v)...)

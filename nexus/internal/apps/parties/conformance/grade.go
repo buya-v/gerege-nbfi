@@ -59,11 +59,23 @@ type vectorResult struct {
 }
 
 // compareOrdinalExpect compares the oracle's expected ordinal with what the
-// implementation produced. ordinal is the single integer cell the seam grades.
+// implementation produced. ordinal is the single integer cell the enum seams
+// grade.
 func compareOrdinalExpect(want, got Expect) []string {
 	var diffs []string
 	if want.Ordinal != got.Ordinal {
 		diffs = append(diffs, fmt.Sprintf("ordinal: want %d, got %d", want.Ordinal, got.Ordinal))
+	}
+	return diffs
+}
+
+// compareDisplayNameExpect compares the oracle's expected display name with what
+// the implementation produced. display_name is the single string cell the
+// display-name seam grades; the entity arm is the empty string (see Expect).
+func compareDisplayNameExpect(want, got Expect) []string {
+	var diffs []string
+	if want.DisplayName != got.DisplayName {
+		diffs = append(diffs, fmt.Sprintf("display_name: want %q, got %q", want.DisplayName, got.DisplayName))
 	}
 	return diffs
 }
@@ -93,8 +105,12 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		return r
 	}
 
-	r.Diffs = compareOrdinalExpect(v.Expect, got)
-	r.GradedCells = 1 // ordinal
+	if Vocabulary(v.Request.Vocabulary) == VocabularyDisplayName {
+		r.Diffs = compareDisplayNameExpect(v.Expect, got)
+	} else {
+		r.Diffs = compareOrdinalExpect(v.Expect, got)
+	}
+	r.GradedCells = 1 // one graded cell, ordinal or display name
 
 	invs := AssertInvariants(v, got)
 	for _, iv := range invs {

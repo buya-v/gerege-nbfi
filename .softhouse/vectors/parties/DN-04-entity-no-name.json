@@ -1,0 +1,44 @@
+{
+ "schema": "gerege.parties.vector/v1",
+ "case_id": "DN-04-entity-no-name",
+ "title": "display name: an entity yields none (empty string)",
+ "class": "parity",
+ "context": "parties",
+ "_note": "Arm 3 of Client.deriveDisplayName [Client.java:457-481]: an ENTITY contributes no joined name and the display name is the empty string, even when all three parts are present. Transcribed from capture .softhouse/capture/parties-display-name/out/OHNAMECAP-E1-m-client.json (read-only SELECT of m_client id 15, tenant gerege): firstname=Байгууллага, middlename=Туршилтын, lastname=Жишээ, fullname=null, display_name=\"\", legal_form_enum=2. The same client's GET /clients/15 omits the displayName key entirely; that face is recorded in OHNAMECAP-E1-raw.json. This seam grades the empty string (see Expect's EMPTY vs ABSENT note).",
+ "oracle": {
+  "seam": "parties-display-name",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Transcribed from the committed capture .softhouse/capture/parties-display-name/out/OHNAMECAP-E1-m-client.json; capture_case_id is the exact display_name field of the observed m_client row, present and empty, corroborating legal_form_enum=2.",
+  "capture_ref": ".softhouse/capture/parties-display-name/out/OHNAMECAP-E1-m-client.json",
+  "capture_sha256": "d22527db1346d1d4905b95472c86f93d4f7b18f7352d5748fddac3e705502664",
+  "capture_case_id": "\"display_name\": \"\"",
+  "citation": "OHNAMECAP-E1-m-client.json id=15 firstname=Байгууллага middlename=Туршилтын lastname=Жишээ fullname=null display_name=\"\" legal_form_enum=2; wire face in OHNAMECAP-E1-raw.json omits displayName"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "vocabulary": "display-name",
+  "legal_form": "ENTITY",
+  "given_name": "Байгууллага",
+  "patronymic": "Туршилтын",
+  "ovog": "Жишээ"
+ },
+ "expect": {
+  "display_name": ""
+ },
+ "capabilities_required": [
+  "display-name"
+ ],
+ "graded_against": [
+  "parties-go"
+ ]
+}

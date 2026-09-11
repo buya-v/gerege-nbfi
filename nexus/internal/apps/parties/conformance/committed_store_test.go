@@ -105,10 +105,10 @@ func TestCommittedCorpusPassesTheReferenceImplementation(t *testing.T) {
 	for _, v := range vectors {
 		bySeam[v.Oracle.Seam]++
 	}
-	for _, seam := range []string{SeamClientStatus, SeamLegalForm, SeamGroupingStatus} {
+	for _, seam := range []string{SeamClientStatus, SeamLegalForm, SeamGroupingStatus, SeamDisplayName} {
 		if bySeam[seam] == 0 {
 			t.Fatalf("no committed vector grades seam %q: with none, the conformance coverage of that "+
-				"vocabulary's ordinal table silently falls back to 0.0%%", seam)
+				"vocabulary silently falls back to 0.0%%", seam)
 		}
 	}
 }
