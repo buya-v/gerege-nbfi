@@ -1,0 +1,39 @@
+S1 bulk extraction report -- feign-s1.log
+========================================================================
+source log        : feign-s1.log
+source bytes/lines: 243112578 / 14992
+exchanges         : 603 total, 27 loan, 576 skipped
+skipped seeding   : 240013663 bytes (98% of source bytes, 99% of framed body bytes)
+kept loan bodies  : 291654 bytes in 33 files
+loans             : 1
+
+per-loan counts
+------------------------------------------------------------------------
+loan   create  cmd_req  cmd_resp  reads   files   bytes
+12     1       6        6         20      33      291654
+
+loan 12 read-back labels (count)
+------------------------------------------------------------------------
+  detail-associations-all-1                               1
+  detail-associations-all-2                               1
+  detail-associations-all-3                               1
+  detail-associations-all-4                               1
+  detail-associations-all-5                               1
+  detail-associations-all-6                               1
+  detail-associations-empty                               1
+  detail-associations-repaymentSchedule-1                 1
+  detail-associations-repaymentSchedule-2                 1
+  detail-associations-repaymentSchedule-3                 1
+  detail-associations-transactions-1                      1
+  detail-associations-transactions-2                      1
+  detail-associations-transactions-3                      1
+  detail-associations-transactions-4                      1
+  detail-associations-transactions-5                      1
+  detail-no-associations-1                                1
+  detail-no-associations-2                                1
+  detail-no-associations-3                                1
+  detail-no-associations-4                                1
+  transactions-template-no-associations-prepayLoan        1
+
+No S1 bodies are committed: the JSON is reproducible from the log with
+  extract.py <log> --out <dir>
