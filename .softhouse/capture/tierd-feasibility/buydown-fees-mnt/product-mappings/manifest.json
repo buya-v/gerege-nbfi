@@ -1,0 +1,32 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json",
+  "log_line": 16732,
+  "sha256": "f235786b841dc00ebe033fee6c4dbc3b6a154645932d90734503e4e6df26dd90"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT.json",
+  "log_line": 18271,
+  "sha256": "89c007ad0447b0ba86611229a3fe5ea1e64063af51199cd98b7fac45f566ae23"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CLASSIFICATION_INCOME_MAP.json",
+  "log_line": 18366,
+  "sha256": "c21a25378d2c770a31c1b9d235ec2518fe3d398c7ce18cbb45959d3e1ff1b18f"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CHARGE_OFF_REASON.json",
+  "log_line": 17676,
+  "sha256": "a6e34474ae827b06b28d3580ab5c735911fde526ae3e33130d2ba4b663799e8c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_FEE_INCOME.json",
+  "log_line": 19948,
+  "sha256": "f07598552c9cd94a6ceae1da7a5ba3d3f8d3ebbd3ca5824ad4b4e7379d93a75d"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT_CHARGE_OFF_REASON.json",
+  "log_line": 18417,
+  "sha256": "439d727055ff9b87b90a102b39e2e5763dcbef159e2ee8799dd80030fa10f917"
+ }
+]
