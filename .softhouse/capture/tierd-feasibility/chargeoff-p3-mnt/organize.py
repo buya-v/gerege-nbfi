@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""OH-TIERD12-CE: organise the flat `stage/` extraction into the committed
+"""OH-TIERD13-CI: organise the flat `stage/` extraction into the committed
 `loans/loan-<id>/` layout and emit the manifests and summary.
 
-Copy of OH-TIERD11-CC `accrual-activity-mnt/organize.py` (itself adopted from
+Copy of OH-TIERD12-CE `accrual-activity-p1-mnt/organize.py` (itself adopted from
 OH-TIERD7-BU `charges-installment-fee-mnt/organize.py`); only the manifest and
-summary file names changed for Part1.  Only the passing scenarios' loans are
+summary file names changed for Part3.  Only the passing scenarios' loans are
 committed; the failed-loan branch is kept for reuse.  `stage/` is git-ignored;
 this script copies (never moves) so it is idempotent and can be re-run after
 extraction.
@@ -53,11 +53,11 @@ def main():
         e['scenario'] = loan_scenario.get(lid)
     manifest.sort(key=lambda e: (e['loan_id'], e['source_line'], e['file']))
 
-    with open(os.path.join(HERE, 'manifest-accrual-activity-p1.json'), 'w') as fh:
+    with open(os.path.join(HERE, 'manifest-chargeoff-p3.json'), 'w') as fh:
         json.dump(manifest, fh, indent=1, sort_keys=True)
         fh.write('\n')
     passed = [e for e in manifest if e['committed']]
-    with open(os.path.join(HERE, 'manifest-accrual-activity-p1-passed.json'), 'w') as fh:
+    with open(os.path.join(HERE, 'manifest-chargeoff-p3-passed.json'), 'w') as fh:
         json.dump(passed, fh, indent=1, sort_keys=True)
         fh.write('\n')
 
@@ -67,7 +67,7 @@ def main():
     summary['failed_scenarios'] = sorted(s['index'] for s in scen['scenarios']
                                          if s['result'] == 'FAILED')
     summary['unattributed_loan_ids'] = [i for i in extracted_ids if i not in loan_scenario]
-    with open(os.path.join(HERE, 'summary-accrual-activity-p1.json'), 'w') as fh:
+    with open(os.path.join(HERE, 'summary-chargeoff-p3.json'), 'w') as fh:
         json.dump(summary, fh, indent=1, sort_keys=True)
         fh.write('\n')
 
