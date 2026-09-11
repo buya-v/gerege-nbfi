@@ -101,13 +101,25 @@ func TestCommittedCorpusPassesTheReferenceImplementation(t *testing.T) {
 	// deletion of one is a failing test rather than a silent return to 0.0%
 	// conformance coverage of the holds rule.
 	holds := 0
+	holdNet := 0
 	for _, v := range vectors {
-		if v.Oracle.Seam == SeamSavingsHoldRelease {
+		switch v.Oracle.Seam {
+		case SeamSavingsHoldRelease:
 			holds++
+		case SeamSavingsHoldNetRunningBalance:
+			holdNet++
 		}
 	}
 	if holds < 2 {
 		t.Fatalf("committed hold-release vectors = %d, want the after-hold and after-release observations: "+
 			"with fewer than two, the conformance coverage of the holds rule silently falls back to 0.0%%", holds)
+	}
+	// The stored running_balance_derived chain is what reaches
+	// HoldNetRunningBalancesOf. Assert the vector that states it (with the
+	// posted balance alongside) is committed, so a later deletion is a failing
+	// test rather than a silent return to 0.0% coverage of the stored chain.
+	if holdNet < 1 {
+		t.Fatalf("committed hold-net-running-balance vectors = %d, want the after-release stored-chain observation: "+
+			"with none, the conformance coverage of HoldNetRunningBalancesOf silently falls back to 0.0%%", holdNet)
 	}
 }

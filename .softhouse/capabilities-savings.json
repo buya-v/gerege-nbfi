@@ -75,6 +75,13 @@
    "status": {
     "hold-release-available-only": "exercised"
    }
+  },
+  {
+   "name": "savings-hold-net-running-balance",
+   "description": "The same savings account 1 hold/release read-back read at the STORED running_balance_derived column instead of the summary: the hold-NET, available-shaped per-row chain the oracle writes (SavingsAccount.recalculateDailyBalances). It sees the hold posting depress the chain to 863.02 and the release posting restore it to 1000.31, with account_balance_derived 1000.31 unmoved throughout — the hold algebra of CLAUDE.md line 14 on the stored column, graded alongside the posted balance it does not move.",
+   "status": {
+    "hold-release-available-only": "exercised"
+   }
   }
  ]
 }

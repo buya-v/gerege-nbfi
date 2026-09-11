@@ -132,6 +132,16 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpMoney("account_balance", v.Expect.AccountBalanceMinor, got.AccountBalanceMinor)
 		s.cmpMoney("held", v.Expect.HeldMinor, got.HeldMinor)
 		s.cmpMoney("available", v.Expect.AvailableMinor, got.AvailableMinor)
+	case SeamSavingsHoldNetRunningBalance:
+		// The stored running_balance_derived chain, one money cell per observed
+		// row, graded alongside the posted balance. The two cells are the two
+		// halves of the one property: the chain moves DOWN by the hold and back
+		// UP by its release, while the posted AccountBalanceOf does not move at
+		// all. Grading only the chain would let a port that also folded the hold
+		// into the posted balance pass; grading only the balance cannot see the
+		// chain at all.
+		s.cmpMoneyList("hold_net_running_balances", v.Expect.HoldNetRunningBalances, got.HoldNetRunningBalances)
+		s.cmpMoney("account_balance", v.Expect.AccountBalanceMinor, got.AccountBalanceMinor)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

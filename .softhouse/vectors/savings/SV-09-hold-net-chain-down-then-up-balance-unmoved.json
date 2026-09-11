@@ -1,0 +1,80 @@
+{
+ "schema": "gerege.savings.vector/v1",
+ "case_id": "SV-09-hold-net-chain-down-then-up-balance-unmoved",
+ "title": "the stored running_balance_derived chain moves DOWN by the hold (137.29 MNT) and back UP by its release, while the posted balance stays 1000.31",
+ "class": "parity",
+ "context": "savings",
+ "_note": "Parity vector transcribed from the committed read-only DB evidence .softhouse/capture/savings-hold-release/out/db-after-release.txt (OH-HOLDCAP-R, tenant gerege, phase=after-release). It grades the oracle's STORED running_balance_derived column — the hold-NET chain SavingsAccount.recalculateDailyBalances writes — which is NOT the posted balance: request.hold_net_running_balance.transactions are the account's whole append-only stream IN THE ORACLE'S TRANSACTION ORDER, transaction date ascending then id ascending, which OWNER.md records as id 1 DEPOSIT 2026-07-02, id 3 INTEREST_POSTING 2026-08-01, id 2 INTEREST_POSTING 2026-09-01, id 6 AMOUNT_HOLD 2026-09-03, id 7 AMOUNT_RELEASE 2026-09-03. That order is NOT id order and NOT the read-back array order (the read-back lists rows date-descending): ids 2 and 3 are INVERTED against the chain, so 1000.00 + 0.15 (id 3) = 1000.15 precedes the 0.16 posting (id 2) = 1000.31. The expected chain is the oracle's running_balance_derived read column by column — 1000.000000, 1000.150000, 1000.310000, 863.020000, 1000.310000 = 100000, 100015, 100031, 86302, 100031 minor units — the hold row (id 6, transaction_type_enum 20) DEPRESSING the chain to 863.02 and the release row (id 7, enum 21) restoring it to 1000.31. expect.account_balance_minor is the same artifact's m_savings_account.account_balance_derived 1000.310000 = 100031: the posted balance, which the hold never moves and which this vector grades ALONGSIDE the chain so the one vector states both halves of the property. No value here was computed by the promotion that the committed artifact does not record; every cell is a stored field.",
+ "oracle": {
+  "seam": "savings-hold-net-running-balance",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "The expected chain cells and the posted balance are transcribed from one committed artifact, the read-only DB evidence of the after-release read-back, so the stored running_balance_derived values and account_balance_derived come from a single observed state. The rows are reordered from the artifact's id listing into the oracle's transaction order, which OWNER.md's dated pre-hold read-back fixes; that reordering is a transcription of an observed order, never a guess. capture_case_id names the savings account the rows belong to.",
+  "capture_ref": ".softhouse/capture/savings-hold-release/out/db-after-release.txt",
+  "capture_sha256": "1fd81692ee9de148df0f6bce794f8328e7abeaa98a98c91c758818fe7d6804c8",
+  "capture_case_id": "savings_account_id=1",
+  "citation": "db-after-release.txt: m_savings_account id 1 account_balance_derived 1000.310000; m_savings_account_transaction (savings_account_id=1) rows id|transaction_type_enum|amount|running_balance_derived|release_id = 1|1|1000.000000|1000.000000|0; 2|3|0.160000|1000.310000|0; 3|3|0.150000|1000.150000|0; 6|20|137.290000|863.020000|7; 7|21|137.290000|1000.310000|0. OWNER.md observes the dates id 1 2026-07-02, id 3 2026-08-01, id 2 2026-09-01, id 6 and id 7 2026-09-03, so the chain order is 1,3,2,6,7 and the stored column values in that order are 1000.000000, 1000.150000, 1000.310000, 863.020000, 1000.310000."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "hold_net_running_balance": {
+   "transactions": [
+    {
+     "id": 1,
+     "type_id": 1,
+     "amount_minor": "100000",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 3,
+     "type_id": 3,
+     "amount_minor": "15",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 2,
+     "type_id": 3,
+     "amount_minor": "16",
+     "release_id_of_hold_amount": 0
+    },
+    {
+     "id": 6,
+     "type_id": 20,
+     "amount_minor": "13729",
+     "release_id_of_hold_amount": 7
+    },
+    {
+     "id": 7,
+     "type_id": 21,
+     "amount_minor": "13729",
+     "release_id_of_hold_amount": 0
+    }
+   ]
+  }
+ },
+ "expect": {
+  "account_balance_minor": "100031",
+  "hold_net_running_balances": [
+   "100000",
+   "100015",
+   "100031",
+   "86302",
+   "100031"
+  ]
+ },
+ "capabilities_required": [
+  "hold-release-available-only"
+ ],
+ "graded_against": [
+  "savings-go"
+ ]
+}
