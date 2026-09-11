@@ -19,10 +19,18 @@ now=$(date +%s)
 # its process, so idle alone cannot tell a stalled run from a finished one -- the control
 # test caught that immediately, lighting up a run that had been merged hours earlier.
 # Liveness is the honest discriminator, so it is measured rather than inferred.
+#
+# 2026-09-11: the cwd is read from lsof's NAME field (-Fn), with a trailing " (deleted)"
+# stripped. The old `awk '{print $NF}'` returned the literal "(deleted)" for a run whose
+# worktree had been removed, so a LIVE run was reported "(no live process)" -- the driver
+# salvaged OH-TIERD-BG as dead while it was still working, in a deleted worktree, in parallel
+# with its replacement. Such a process is now also printed on its own ORPHAN line.
 OH_LIVE=""
 for p in $(ps aux | grep '[o]penhands/bin/python' | awk '{print $2}'); do
-  cwd="$(lsof -p "$p" -a -d cwd 2>/dev/null | tail -1 | awk '{print $NF}')"
-  [ -n "$cwd" ] && OH_LIVE="$OH_LIVE $cwd"
+  cwd="$(lsof -a -p "$p" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p' | sed 's/ (deleted)$//' | tail -1)"
+  [ -n "$cwd" ] || continue
+  OH_LIVE="$OH_LIVE $cwd"
+  [ -d "$cwd" ] || echo "ORPHAN  pid $p is a LIVE openhands run whose worktree $cwd NO LONGER EXISTS -- kill it by pid"
 done
 export OH_LIVE
 dirs=${@:-$(ls -dt ~/.openhands/conversations/*/ 2>/dev/null | head -6)}
