@@ -15,7 +15,7 @@ Source: `.softhouse/capabilities-loanproduct.json`
 * capability `days-in-year` — in_graded_domain: **True** — Decode the m_product_loan.days_in_year_enum stored value (1 actual, 360 days360, 364 days364, 365 days365) to its i18n c
 
 ## Vectors (what is graded today)
-15 files in `.softhouse/vectors/loanproduct/`
+17 files in `.softhouse/vectors/loanproduct/`
 
 * `LP-amort-equal-installments.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-amort-equal-principal.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
@@ -27,7 +27,9 @@ Source: `.softhouse/capabilities-loanproduct.json`
 * `LP-diy-days360.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-diy-days364.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-diy-days365.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
+* `LP-freq-days.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-freq-months.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
+* `LP-freq-weeks.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-freq-whole-term.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-freq-years.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
 * `LP-interest-declining.json` — request `vocabulary,stored` — capture `.softhouse/capture/loanproduct/out/loanproducts-template-raw.json`
@@ -63,7 +65,7 @@ Source: the binary's own -list-implementations (names prefixed `loanproduct-wron
 * `nexus/internal/apps/loanproduct/schedulemodel.go`: `NewScheduleModel`:40, `RepaymentPeriods`:56, `Rounding`:59, `Currency`:62, `Detail`:65, `Zero`:68, `GetInterestRate`:74, `AddInterestRate`:89, `FindRepaymentPeriodByFromAndDueDate`:105, `GetRelatedRepaymentPeriods`:125, `LoanTermInDays`:141, `StartDate`:155, `MaturityDate`:164, `ChangeOutstandingBalanceAndUpdateInterestPeriods`:175, `UpdateInterestPeriodsForInterestPause`:189, `findRepaymentPeriodForBalanceChange`:211, `updateInterestPeriodOnRepaymentPeriod`:227, `findInterestPeriodForBalanceChange`:247, `insertInterestPeriod`:269, `insertInterestPausePeriods`:291, `insertInterestPausePeriodsByAdjustedDates`:307, `hasSegmentWithFromDate`:321, `hasSegmentWithDueDate`:330, `findPreviousInterestPeriod`:342, `calculateNewDueDate`:357, `TotalDueInterest`:371, `TotalDuePrincipal`:381, `TotalPaidInterest`:391, `TotalPaidPrincipal`:401, `TotalCreditedPrincipal`:411, `TotalOutstandingPrincipal`:421, `FindRepaymentPeriod`:429, `IsEmpty`:440, `LastRepaymentPeriod`:451, `IsLastRepaymentPeriod`:457, `DeepCopy`:465, `CopyWithoutPaidAmounts`:471, `copy`:475, `DisableEMIRecalculation`:503, `IsEMIRecalculationEnabled`:506 …
 
 ## Captures this context's vectors already cite
-* `.softhouse/capture/loanproduct/` — 15 vector(s) — (no OWNER.md)
+* `.softhouse/capture/loanproduct/` — 17 vector(s) — (no OWNER.md)
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
