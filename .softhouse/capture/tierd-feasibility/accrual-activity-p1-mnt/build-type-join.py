@@ -83,6 +83,47 @@ def tx_map_for(loan_id):
     return out
 
 
+def classify_unmatched(leg_records):
+    """Group the legs whose loan transaction is NOT in any read-back and infer
+    their type from the posting shape alone (never from a read-back type).
+
+    Observed shape: a net-zero 4-leg pair -- an interest accrual
+    (DEBIT Interest/Fee Receivable / CREDIT Interest Income) followed by its
+    exact reversal (CREDIT receivable / DEBIT income) -- i.e. a *reverted*
+    accrual.  These are the original accrual transactions that the
+    accrual-activity replay superseded and the `transactions` association no
+    longer returns.  The label is INFERRED; the read-backs cannot confirm it.
+    """
+    grouped = {}
+    for r in leg_records:
+        if r['type_code'] is None:
+            grouped.setdefault((r['loan'], r['transaction_id']), []).append(r)
+    txns = []
+    for (lid, label), legs in sorted(grouped.items()):
+        amounts = {}
+        for l in legs:
+            key = (l['entry_type'], l['amount_minor'])
+            amounts[key] = amounts.get(key, 0) + 1
+        def opposite(e):
+            return {'DEBIT': 'CREDIT', 'CREDIT': 'DEBIT'}.get(e, e)
+        net_zero = all(amounts.get((opposite(e), a), 0) == c
+                       for (e, a), c in amounts.items())
+        accts = sorted({l['gl_account_id'] for l in legs})
+        shape = 'accrual' if (len(legs) == 4 and net_zero and len(accts) == 2) else 'unknown'
+        txns.append({'loan': lid, 'transaction_id': label, 'legs': len(legs),
+                     'gl_account_ids': accts, 'net_zero': net_zero,
+                     'inferred_type': 'loanTransactionType.' + shape if shape != 'unknown' else None,
+                     'legs_detail': legs})
+    inferred = sorted({t['inferred_type'] for t in txns if t['inferred_type']})
+    return {'count': len(txns), 'legs': sum(t['legs'] for t in txns),
+            'inferred_types': inferred, 'reason': (
+                'net-zero 4-leg interest accrual + exact reversal; loan transaction '
+                'absent from every `transactions` read-back (superseded/reverted by the '
+                'accrual-activity replay).  Type inferred from posting shape, NOT confirmed '
+                'by read-back.'),
+            'transactions': txns}
+
+
 def detail_currency(loan_id):
     for pat in (os.path.join(LOANS, 'loan-%d' % loan_id, 'loan-*-detail-*.json'),
                 os.path.join(STAGE, 'loan-%d-detail-*.json')):
@@ -135,6 +176,8 @@ def main():
                 'reversed': it.get('reversed'),
             })
 
+    unmatched_analysis = classify_unmatched(leg_records)
+
     types = {}
     for r in leg_records:
         key = r['type_code'] or '(unmapped)'
@@ -158,15 +201,45 @@ def main():
         'currencies': currencies,
         'legs': len(leg_records),
         'unmatched_legs': unmatched,
+        'unmatched_analysis': unmatched_analysis,
         'types': types,
     }
     with open(os.path.join(HERE, 'journalentry-type-join.json'), 'w') as fh:
         json.dump(obj, fh, indent=1, sort_keys=True)
         fh.write('\n')
     write_md(obj)
+    write_accrual_tsv(obj)
     accrual = sorted(k for k in types if 'accrual' in k.lower())
-    print('joined %d legs across %d types; %d unmatched; accrual types %s'
-          % (len(leg_records), len(types), len(unmatched), accrual))
+    print('joined %d legs across %d types; %d unmatched (%d inferred %s); accrual types %s'
+          % (len(leg_records), len(types), len(unmatched),
+             unmatched_analysis['count'],
+             ','.join(unmatched_analysis['inferred_types']) or '?', accrual))
+
+
+def write_accrual_tsv(obj):
+    """Flat listing of every ACCRUAL-type leg (the capture's target) plus the
+    inferred reverted-accrual legs, in the OWNER-required columns."""
+    cols = ['loan', 'tx', 'type', 'inferred', 'entry', 'gl_account_id',
+            'gl_account_code', 'gl_account_name', 'amount_minor', 'currency']
+    rows = []
+
+    def add(r, typ, inferred):
+        rows.append([str(r['loan']), r['transaction_id'], typ, str(inferred),
+                     r['entry_type'], str(r['gl_account_id']), str(r['gl_account_code']),
+                     r['gl_account_name'], str(r['amount_minor']), r['currency']])
+
+    for key, t in obj['types'].items():
+        if 'accrual' in (key or '').lower():
+            for r in t['legs']:
+                add(r, key, False)
+    for t in (obj.get('unmatched_analysis') or {}).get('transactions', []):
+        for r in t['legs_detail']:
+            add(r, t['inferred_type'], True)
+    rows.sort(key=lambda x: (int(x[0]), int(x[1][1:]), 0 if x[4] == 'DEBIT' else 1))
+    with open(os.path.join(HERE, 'accrual-legs.tsv'), 'w') as fh:
+        fh.write('\t'.join(cols) + '\n')
+        for r in rows:
+            fh.write('\t'.join(r) + '\n')
 
 
 def write_md(obj):
@@ -179,7 +252,15 @@ def write_md(obj):
     w('read-backs (`transactions[].id -> transactions[].type.code`).  Amounts are')
     w('integer minor units; the raw sweep bodies keep decimal major units.')
     w('')
-    w('Legs joined: %d; unmatched: %d.' % (obj['legs'], len(obj['unmatched_legs'])))
+    w('Legs joined: %d; unmatched by read-back: %d.' % (obj['legs'], len(obj['unmatched_legs'])))
+    ua = obj.get('unmatched_analysis') or {}
+    if ua.get('count'):
+        w('')
+        w('**%d unmatched legs (%d transactions, loans %s)** carry no type in the read-backs;'
+          % (ua['legs'], ua['count'],
+             ', '.join(str(t['loan']) for t in ua['transactions'])))
+        w('their posting shape infers `%s` (see the section at the end).'
+          % (', '.join(ua['inferred_types']) or 'unknown'))
     w('')
     w('| type | value | loans | transactions | legs |')
     w('| --- | --- | --- | --- | --- |')
@@ -206,6 +287,25 @@ def write_md(obj):
                 r['loan'], r['transaction_id'], r['entry_type'], r['gl_account_id'],
                 r['gl_account_code'], r['gl_account_name'], r['amount_minor'],
                 r['currency'], r['reversed']))
+        w('')
+    ua = obj.get('unmatched_analysis') or {}
+    if ua.get('count'):
+        w('## Unmatched legs -- inferred classification (NOT a read-back type)')
+        w('')
+        w('%d transactions / %d legs on loans %s have no entry in any `transactions`'
+          % (ua['count'], ua['legs'],
+             ', '.join(str(t['loan']) for t in ua['transactions'])))
+        w('read-back.  Reason: %s' % ua['reason'])
+        w('')
+        w('Inferred type: %s' % (', '.join('`%s`' % t for t in ua['inferred_types']) or 'unknown'))
+        w('')
+        w('| loan | tx | legs | accounts | net-zero | inferred type |')
+        w('| --- | --- | ---: | --- | --- | --- |')
+        for t in ua['transactions']:
+            w('| %d | %s | %d | %s | %s | `%s` |' % (
+                t['loan'], t['transaction_id'], t['legs'],
+                ', '.join(str(a) for a in t['gl_account_ids']),
+                t['net_zero'], t['inferred_type']))
         w('')
     with open(os.path.join(HERE, 'journalentry-type-join.md'), 'w') as fh:
         fh.write('\n'.join(out) + '\n')
