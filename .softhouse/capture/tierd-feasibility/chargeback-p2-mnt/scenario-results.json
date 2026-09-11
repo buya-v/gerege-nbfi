@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanChargeback-Part2.feature",
@@ -12,7 +12,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "Verify chargeback function for advanced payment allocation - partial chargeback on overpaid loan",
    "result": "PASSED",
    "tag": "C3080"
@@ -23,7 +23,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC1: partial, prior chargeback",
    "result": "PASSED",
    "tag": "C3081"
@@ -34,7 +34,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC2: partial, prior chargeback with penalty",
    "result": "PASSED",
    "tag": "C3082"
@@ -45,7 +45,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC3: partial, prior chargeback with penalty (2)",
    "result": "PASSED",
    "tag": "C3083"
@@ -56,7 +56,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC4: partial, prior chargeback with penalty and fee",
    "result": "PASSED",
    "tag": "C3084"
@@ -67,7 +67,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC5: full, prior chargeback",
    "result": "PASSED",
    "tag": "C3085"
@@ -78,7 +78,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC6: full, after chargeback",
    "result": "PASSED",
    "tag": "C3086"
@@ -89,7 +89,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC7: partial, after chargeback",
    "result": "PASSED",
    "tag": "C3087"
@@ -100,7 +100,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation UC8: multiple, prior chargebacks on same payment",
    "result": "PASSED",
    "tag": "C3088"
@@ -111,7 +111,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC1: chargeback on principal",
    "result": "PASSED",
    "tag": "C3094"
@@ -122,7 +122,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC2: chargeback on principal and fees",
    "result": "PASSED",
    "tag": "C3095"
@@ -133,7 +133,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC3: chargeback on principal and penalties",
    "result": "PASSED",
    "tag": "C3096"
@@ -144,7 +144,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 13,
    "loan": 13,
-   "loan_client_id": null,
+   "loan_client_id": 13,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC4: when overpayment amount is smaller than chargeback",
    "result": "PASSED",
    "tag": "C3097"
@@ -155,7 +155,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 14,
    "loan": 14,
-   "loan_client_id": null,
+   "loan_client_id": 14,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC5: with fees- when overpayment amount is bigger than chargeback",
    "result": "PASSED",
    "tag": "C3098"
@@ -166,7 +166,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 15,
    "loan": 15,
-   "loan_client_id": null,
+   "loan_client_id": 15,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC6: when overpayment amount is bigger than chargeback",
    "result": "PASSED",
    "tag": "C3099"
@@ -177,7 +177,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 16,
    "loan": 16,
-   "loan_client_id": null,
+   "loan_client_id": 16,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC7: chargeback on charge-off loan account with principal",
    "result": "PASSED",
    "tag": "C3100"
@@ -188,7 +188,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 17,
    "loan": 17,
-   "loan_client_id": null,
+   "loan_client_id": 17,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC8: chargeback on charge-off loan account with principal and Fees",
    "result": "PASSED",
    "tag": "C3101"
@@ -199,7 +199,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 18,
    "loan": 18,
-   "loan_client_id": null,
+   "loan_client_id": 18,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC9: chargeback on charge-off loan account with principal and Penalties",
    "result": "PASSED",
    "tag": "C3102"
@@ -210,7 +210,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 19,
    "loan": 19,
-   "loan_client_id": null,
+   "loan_client_id": 19,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC10: chargeback on overpaid loan",
    "result": "PASSED",
    "tag": "C3111"
@@ -221,7 +221,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 20,
    "loan": 20,
-   "loan_client_id": null,
+   "loan_client_id": 20,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC11: chargeback before maturity on payment with fee",
    "result": "PASSED",
    "tag": "C3116"
@@ -232,7 +232,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 21,
    "loan": 21,
-   "loan_client_id": null,
+   "loan_client_id": 21,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC12: chargeback after maturity on payment with fee",
    "result": "PASSED",
    "tag": "C3117"
@@ -243,7 +243,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 22,
    "loan": 22,
-   "loan_client_id": null,
+   "loan_client_id": 22,
    "name": "Verify chargeback function for advanced payment allocation - credit allocation accounting entries UC13: loan goes overpaid after maturity then chargeback applied on payment with fee",
    "result": "PASSED",
    "tag": "C3118"
@@ -254,7 +254,7 @@
    "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION",
    "index": 23,
    "loan": 23,
-   "loan_client_id": null,
+   "loan_client_id": 23,
    "name": "Verify chargeback function when reverse replay happens with Advanced payment allocation and set allocation rules for Chargeback transaction",
    "result": "PASSED",
    "tag": "C3138"
@@ -265,7 +265,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 24,
    "loan": 24,
-   "loan_client_id": null,
+   "loan_client_id": 24,
    "name": "Verify full chargeback before maturity date - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3406"
@@ -276,7 +276,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 25,
    "loan": 25,
-   "loan_client_id": null,
+   "loan_client_id": 25,
    "name": "Verify partial chargeback before maturity date-1 - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3407"
@@ -287,7 +287,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 26,
    "loan": 26,
-   "loan_client_id": null,
+   "loan_client_id": 26,
    "name": "Verify two chargebacks before maturity - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3408"
@@ -298,7 +298,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 27,
    "loan": 27,
-   "loan_client_id": null,
+   "loan_client_id": 27,
    "name": "Verify full chargeback before maturity date on different business date - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3409"
@@ -309,7 +309,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 28,
    "loan": 28,
-   "loan_client_id": null,
+   "loan_client_id": 28,
    "name": "Verify full chargeback after maturity date - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3410"
@@ -320,7 +320,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
    "index": 29,
    "loan": 29,
-   "loan_client_id": null,
+   "loan_client_id": 29,
    "name": "Verify two chargebacks after maturity date - no chargeback rule - interest recalculation disabled",
    "result": "PASSED",
    "tag": "C3411"
@@ -331,7 +331,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 30,
    "loan": 30,
-   "loan_client_id": null,
+   "loan_client_id": 30,
    "name": "Full chargeback before the maturity date and interest recalculation DISABLED - Allocation priority: interest, fees, principal - UC1",
    "result": "PASSED",
    "tag": "C3417"
@@ -342,7 +342,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 31,
    "loan": 31,
-   "loan_client_id": null,
+   "loan_client_id": 31,
    "name": "Partial chargeback before the maturity date and interest recalculation DISABLED - Allocation priority: interest, fees, principal - UC2",
    "result": "PASSED",
    "tag": "C3418"
@@ -353,7 +353,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_PRINCIPAL_INTEREST_FEE",
    "index": 32,
    "loan": 32,
-   "loan_client_id": null,
+   "loan_client_id": 32,
    "name": "Partial chargeback before the maturity date and interest recalculation DISABLED - Allocation priority: principal, interest, fees - UC3",
    "result": "PASSED",
    "tag": "C3419"
@@ -364,7 +364,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_PRINCIPAL_INTEREST_FEE",
    "index": 33,
    "loan": 33,
-   "loan_client_id": null,
+   "loan_client_id": 33,
    "name": "Two chargeback before the maturity date and interest recalculation DISABLED - Allocation priority: principal, interest, fees - UC4",
    "result": "PASSED",
    "tag": "C3420"
@@ -375,7 +375,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 34,
    "loan": 34,
-   "loan_client_id": null,
+   "loan_client_id": 34,
    "name": "Full chargeback before the maturity date on different business date and interest recalculation DISABLED - Allocation priority: interest, fees, principal - UC5",
    "result": "PASSED",
    "tag": "C3421"
@@ -386,7 +386,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 35,
    "loan": 35,
-   "loan_client_id": null,
+   "loan_client_id": 35,
    "name": "Full chargeback after the maturity date and interest recalculation DISABLED - Allocation priority: interest, fees, principal - UC6",
    "result": "PASSED",
    "tag": "C3422"
@@ -397,7 +397,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 36,
    "loan": 36,
-   "loan_client_id": null,
+   "loan_client_id": 36,
    "name": "Two chargebacks after the maturity date and interest recalculation DISABLED - Allocation priority: interest, fees, principal - UC7",
    "result": "PASSED",
    "tag": "C3423"
@@ -408,7 +408,7 @@
    "feature_product": "LP2_NO_INTEREST_RECALCULATION_CHARGEBACK_ALLOCATION_INTEREST_FIRST",
    "index": 37,
    "loan": 37,
-   "loan_client_id": null,
+   "loan_client_id": 37,
    "name": "Full chargeback with no interest recalculation, interest allocation first, before maturity date",
    "result": "PASSED",
    "tag": "C3490"
@@ -419,7 +419,7 @@
    "feature_product": "LP2_NO_INTEREST_RECALCULATION_CHARGEBACK_ALLOCATION_INTEREST_FIRST",
    "index": 38,
    "loan": 38,
-   "loan_client_id": null,
+   "loan_client_id": 38,
    "name": "Partial chargeback with no interest recalculation, interest allocation first, before maturity date",
    "result": "PASSED",
    "tag": "C3491"
@@ -430,7 +430,7 @@
    "feature_product": "LP2_NO_INTEREST_RECALCULATION_CHARGEBACK_ALLOCATION_PRINCIPAL_FIRST",
    "index": 39,
    "loan": 39,
-   "loan_client_id": null,
+   "loan_client_id": 39,
    "name": "Partial chargeback with disabled interest recalculation, allocation principal first, before maturity date",
    "result": "PASSED",
    "tag": "C3492"
@@ -441,7 +441,7 @@
    "feature_product": "LP2_NO_INTEREST_RECALCULATION_CHARGEBACK_ALLOCATION_PRINCIPAL_FIRST",
    "index": 40,
    "loan": 40,
-   "loan_client_id": null,
+   "loan_client_id": 40,
    "name": "Two chargebacks with disabled interest recalculation, allocation principal first",
    "result": "PASSED",
    "tag": "C3493"
@@ -452,7 +452,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 41,
    "loan": 41,
-   "loan_client_id": null,
+   "loan_client_id": 41,
    "name": "Verify full chargeback before maturity date - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3427"
@@ -463,7 +463,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 42,
    "loan": 42,
-   "loan_client_id": null,
+   "loan_client_id": 42,
    "name": "Verify partial chargeback before maturity date-1 - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3428"
@@ -474,7 +474,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 43,
    "loan": 43,
-   "loan_client_id": null,
+   "loan_client_id": 43,
    "name": "Verify two chargebacks before maturity - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3429"
@@ -485,7 +485,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 44,
    "loan": 44,
-   "loan_client_id": null,
+   "loan_client_id": 44,
    "name": "Verify full chargeback before maturity date on different business date - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3430"
@@ -496,7 +496,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 45,
    "loan": 45,
-   "loan_client_id": null,
+   "loan_client_id": 45,
    "name": "Verify full chargeback after maturity date - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3431"
@@ -507,7 +507,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
    "index": 46,
    "loan": 46,
-   "loan_client_id": null,
+   "loan_client_id": 46,
    "name": "Verify two chargebacks after maturity date - no chargeback rule - interest recalculation enabled",
    "result": "PASSED",
    "tag": "C3432"
@@ -518,7 +518,7 @@
    "feature_product": "LP2_NO_INTEREST_RECALCULATION_CHARGEBACK_ALLOCATION_INTEREST_FIRST",
    "index": 47,
    "loan": 47,
-   "loan_client_id": null,
+   "loan_client_id": 47,
    "name": "Verify that Accrual transactions are not created for the charged back interest - interest recalculation false + chargeback allocation rule is set",
    "result": "PASSED",
    "tag": "C3443"
@@ -529,7 +529,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_INTEREST_PENALTY_FEE_PRINCIPAL",
    "index": 48,
    "loan": 48,
-   "loan_client_id": null,
+   "loan_client_id": 48,
    "name": "Full chargeback before the maturity date with interest recalculation ENABLED - Allocation priority: interest, fees, principal - UC1",
    "result": "PASSED",
    "tag": "C3445"
@@ -540,7 +540,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
    "index": 49,
    "loan": 49,
-   "loan_client_id": null,
+   "loan_client_id": 49,
    "name": "Partial chargeback before the maturity date with interest recalculation ENABLED - Allocation priority: interest, fees, principal - UC2",
    "result": "PASSED",
    "tag": "C3446"
@@ -551,7 +551,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_PRINCIPAL_INTEREST_FEE",
    "index": 50,
    "loan": 50,
-   "loan_client_id": null,
+   "loan_client_id": 50,
    "name": "Partial chargeback before the maturity date with interest recalculation ENABLED - Allocation priority: principal, interest, fees - UC3",
    "result": "PASSED",
    "tag": "C3447"
