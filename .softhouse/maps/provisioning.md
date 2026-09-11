@@ -14,7 +14,7 @@ Source: `.softhouse/capabilities-provisioning.json`
 * capability `criteria-band` — in_graded_domain: **True** — Select the ONE provisioning criteria age band whose closed interval [minAge, maxAge] contains a loan's overdue age, and 
 
 ## Vectors (what is graded today)
-13 files in `.softhouse/vectors/provisioning/`
+16 files in `.softhouse/vectors/provisioning/`
 
 * `PV-01-STANDARD.json` — request `category_id` — capture `.softhouse/capture/provisioning/out/CAT-00-categories-raw.json`
 * `PV-02-SUB-STANDARD.json` — request `category_id` — capture `.softhouse/capture/provisioning/out/CAT-00-categories-raw.json`
@@ -29,29 +29,33 @@ Source: `.softhouse/capabilities-provisioning.json`
 * `PV-11-BAND-SUB-STANDARD.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
 * `PV-12-BAND-DOUBTFUL.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
 * `PV-13-BAND-LOSS.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
+* `PV-14-BAND-STANDARD-UPPER-EDGE.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
+* `PV-15-BAND-SUB-STANDARD-UPPER-EDGE.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
+* `PV-16-BAND-DOUBTFUL-UPPER-EDGE.json` — request `overdue_in_days,definitions` — capture `.softhouse/capture/provisioning/out/CRI-02-criteria-1-raw.json`
 
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/provisioning/conformance/impl.go:41` — `func Register(name string, e ProvisioningEvaluator) {`
 * `nexus/internal/apps/provisioning/conformance/impl.go:51` — `func RegisterWrong(name, defect string, e ProvisioningEvaluator) {`
-* `nexus/internal/apps/provisioning/conformance/impl.go:572` — `Register("provisioning-go", NewGoEvaluator())`
+* `nexus/internal/apps/provisioning/conformance/impl.go:574` — `Register("provisioning-go", NewGoEvaluator())`
 * conformance package files (`nexus/internal/apps/provisioning/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/provisioning/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `provisioning-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
-* `provisioning-wrong-band-first-always` — `nexus/internal/apps/provisioning/conformance/impl.go:622`
-* `provisioning-wrong-band-half-open` — `nexus/internal/apps/provisioning/conformance/impl.go:644`
-* `provisioning-wrong-band-last-always` — `nexus/internal/apps/provisioning/conformance/impl.go:629`
-* `provisioning-wrong-band-off-by-one` — `nexus/internal/apps/provisioning/conformance/impl.go:636`
-* `provisioning-wrong-blank-description` — `nexus/internal/apps/provisioning/conformance/impl.go:573`
-* `provisioning-wrong-category-by-definition-id` — `nexus/internal/apps/provisioning/conformance/impl.go:615`
-* `provisioning-wrong-half-even-rounding` — `nexus/internal/apps/provisioning/conformance/impl.go:577`
-* `provisioning-wrong-reserve-key-ignored` — `nexus/internal/apps/provisioning/conformance/impl.go:606`
-* `provisioning-wrong-sum-then-round` — `nexus/internal/apps/provisioning/conformance/impl.go:598`
-* `provisioning-wrong-truncating` — `nexus/internal/apps/provisioning/conformance/impl.go:591`
+* `provisioning-wrong-band-first-always` — `nexus/internal/apps/provisioning/conformance/impl.go:624`
+* `provisioning-wrong-band-half-open` — `nexus/internal/apps/provisioning/conformance/impl.go:646`
+* `provisioning-wrong-band-half-open-upper` — `nexus/internal/apps/provisioning/conformance/impl.go:654`
+* `provisioning-wrong-band-last-always` — `nexus/internal/apps/provisioning/conformance/impl.go:631`
+* `provisioning-wrong-band-off-by-one` — `nexus/internal/apps/provisioning/conformance/impl.go:638`
+* `provisioning-wrong-blank-description` — `nexus/internal/apps/provisioning/conformance/impl.go:575`
+* `provisioning-wrong-category-by-definition-id` — `nexus/internal/apps/provisioning/conformance/impl.go:617`
+* `provisioning-wrong-half-even-rounding` — `nexus/internal/apps/provisioning/conformance/impl.go:579`
+* `provisioning-wrong-reserve-key-ignored` — `nexus/internal/apps/provisioning/conformance/impl.go:608`
+* `provisioning-wrong-sum-then-round` — `nexus/internal/apps/provisioning/conformance/impl.go:600`
+* `provisioning-wrong-truncating` — `nexus/internal/apps/provisioning/conformance/impl.go:593`
 
-10 drives.
+11 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/provisioning/criteria.go`: `Matches`:29, `Overlaps`:38, `ReserveRate`:58, `OverlappingPairs`:72, `ValidateRange`:92
@@ -59,7 +63,7 @@ Source: the binary's own -list-implementations (names prefixed `provisioning-wro
 * `nexus/internal/apps/provisioning/money.go`: `PercentageOf`:45, `roundHalfAwayFromZero`:65
 
 ## Captures this context's vectors already cite
-* `.softhouse/capture/provisioning/` — 13 vector(s) — (no OWNER.md)
+* `.softhouse/capture/provisioning/` — 16 vector(s) — (no OWNER.md)
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
