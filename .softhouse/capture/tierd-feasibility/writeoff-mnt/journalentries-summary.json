@@ -1,0 +1,27 @@
+{
+ "responses": 19,
+ "loans": 9,
+ "loan_ids": [
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12
+ ],
+ "page_items": 64,
+ "responses_with_writeoff_leg": 13,
+ "gl_leg_counts": {
+  "Loans Receivable": 17,
+  "Suspense/Clearing account": 2,
+  "Interest/Fee Receivable": 11,
+  "Credit Loss/Bad Debt": 10,
+  "Interest Income Charge Off": 9,
+  "Fee Charge Off": 2,
+  "Written off": 8,
+  "Credit Loss/Bad Debt-Fraud": 5
+ }
+}

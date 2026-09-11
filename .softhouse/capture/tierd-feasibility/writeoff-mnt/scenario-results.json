@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanWriteOff.feature",
@@ -12,7 +12,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "As a user I want to do Write-off a loan and verify that undo repayment post write-off results in error",
    "result": "PASSED",
    "tag": "C2934"
@@ -23,7 +23,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "As a user I want to do Write-off a loan and verify that backdate repayment post write-off results in error",
    "result": "PASSED",
    "tag": "C2935"
@@ -34,7 +34,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "As a user I want to do Write-off a loan and verify that undo write-off results in error",
    "result": "PASSED",
    "tag": "C2936"
@@ -45,7 +45,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "Verify accounting journal entries are not duplicated during write-off in case the cumulative loan was already charged-off",
    "result": "PASSED",
    "tag": "C4006"
@@ -56,7 +56,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "Verify accounting journal entries during write-off when cumulative loan was not charged-off before",
    "result": "PASSED",
    "tag": "C4007"
@@ -67,7 +67,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "Verify accounting journal entries are not duplicated during write-off in case the progressive loan was already charged-off",
    "result": "PASSED",
    "tag": "C4010"
@@ -78,7 +78,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF",
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "Verify accounting journal entries are not duplicated during write-off in case the progressive loan was already charged-off after repayment",
    "result": "PASSED",
    "tag": "C4011"
@@ -89,7 +89,7 @@
    "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON",
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "Verify accounting journal entries during write-off in case the progressive loan was already charged-off and then charge-off is undone",
    "result": "PASSED",
    "tag": "C4012"
@@ -100,7 +100,7 @@
    "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "Verify accounting journal entries are not duplicated during write-off in case the progressive reverse-replayed fraud loan was charged-off",
    "result": "PASSED",
    "tag": "C4013"
@@ -111,7 +111,7 @@
    "feature_product": "LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_WRITE_OFF_REASON_MAP",
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "Verify GL entries for Write Off reason mapping - UC1: Write off, LP with write off reason mapping, NO write off reason to expense account",
    "result": "PASSED",
    "tag": "C4111"
@@ -122,7 +122,7 @@
    "feature_product": "LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_WRITE_OFF_REASON_MAP",
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "Verify GL entries for Write Off reason mapping - UC2: Write off, LP with write off reason mapping, with write off reason: Bad Debt",
    "result": "PASSED",
    "tag": "C4112"
@@ -133,7 +133,7 @@
    "feature_product": "LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CLASSIFICATION_INCOME_MAP",
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "Verify GL entries for Write Off reason mapping - UC3: Write off, LP without write off reason mapping, with write off reason: Bad Debt",
    "result": "PASSED",
    "tag": "C4113"

@@ -1,0 +1,128 @@
+{
+ "committed_loans": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12
+ ],
+ "failed_scenarios": [],
+ "files_written": 282,
+ "kept_body_bytes": 2025103,
+ "loan_exchanges": 225,
+ "loans": {
+  "1": {
+   "bytes": 139179,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 11
+  },
+  "10": {
+   "bytes": 145803,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 18,
+   "reads": 11
+  },
+  "11": {
+   "bytes": 146064,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 18,
+   "reads": 11
+  },
+  "12": {
+   "bytes": 145979,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 18,
+   "reads": 11
+  },
+  "2": {
+   "bytes": 124420,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 21,
+   "reads": 10
+  },
+  "3": {
+   "bytes": 139212,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 11
+  },
+  "4": {
+   "bytes": 153721,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 27,
+   "reads": 14
+  },
+  "5": {
+   "bytes": 125728,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 12
+  },
+  "6": {
+   "bytes": 224833,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 17
+  },
+  "7": {
+   "bytes": 319427,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "8": {
+   "bytes": 155692,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 13
+  },
+  "9": {
+   "bytes": 205045,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 15
+  }
+ },
+ "skipped_body_bytes": 140374952,
+ "skipped_exchanges": 1290,
+ "skipped_pct_of_body_bytes": 98,
+ "skipped_pct_of_source_bytes": 93,
+ "source_bytes": 149547153,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-writeoff-mnt.log",
+ "total_exchanges": 1515,
+ "total_lines": 39951,
+ "unattributed_creates": 0,
+ "unattributed_loan_ids": []
+}

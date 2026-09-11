@@ -1,0 +1,37 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION.json",
+  "log_line": 11074,
+  "sha256": "1a6c1ac1caabe49927f1536d1b09c8f5d0585ad88e23c30e01b493dd6ff395bb"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_FLAT.json",
+  "log_line": 10128,
+  "sha256": "8c7dec7a566953ec44270d86ad3c68f9209a1aa2b93178d4f9853537899f7489"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1.json",
+  "log_line": 12664,
+  "sha256": "626ccd8e91d1eda81ed122aead8f8e12d10c8e8695e9004c28dd22e160b31c8e"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF.json",
+  "log_line": 13787,
+  "sha256": "8e8e11833f73fc8be46b493c3b0b04e57454ade7c57ef0249d515cca3e81697d"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON.json",
+  "log_line": 14946,
+  "sha256": "cc99993eab7b8ad03b28178d9fd27a79449011f23d7b97e3a8aaf0b622c5e809"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_WRITE_OFF_REASON_MAP.json",
+  "log_line": 18501,
+  "sha256": "2a59f85ce72fe438bcce4ca2f951f137be698f7107840b68d933e48ad886696b"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CLASSIFICATION_INCOME_MAP.json",
+  "log_line": 18421,
+  "sha256": "7ae3711a18e796fb6d90415c93100be9131620115adc3a966a4093c8a7caa626"
+ }
+]

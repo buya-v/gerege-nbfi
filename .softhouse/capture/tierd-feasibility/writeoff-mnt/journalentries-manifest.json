@@ -1,0 +1,690 @@
+[
+ {
+  "file": "journalentries/loan-4/loan-4-journalentries-1.json",
+  "loan_id": 4,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L13",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 27279,
+  "bytes": 1634,
+  "sha256": "9e531c97de63ac187bbe95513bae37819221fca8d5915b848e21a1cbc1b766d8",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-4/loan-4-journalentries-2.json",
+  "loan_id": 4,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L15",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 27329,
+  "bytes": 4023,
+  "sha256": "43017871c7879bd989b617876f9aefa7cb0ce016e109d7bc0ae2c5e5724d1a0e",
+  "total_filtered_records": 5,
+  "page_items": 5,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "14300"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "DEBIT",
+    "amount_minor": "3000"
+   },
+   {
+    "gl_account_name": "Fee Charge Off",
+    "gl_account_code": "404008",
+    "entry_type": "DEBIT",
+    "amount_minor": "11300"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-4/loan-4-journalentries-3.json",
+  "loan_id": 4,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L16",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 27485,
+  "bytes": 3211,
+  "sha256": "8f39dc09b45a3805d53204d22c36326ff2c1a9cf806e2ad32ea5dddbeb5a5c10",
+  "total_filtered_records": 4,
+  "page_items": 4,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "CREDIT",
+    "amount_minor": "3000"
+   },
+   {
+    "gl_account_name": "Fee Charge Off",
+    "gl_account_code": "404008",
+    "entry_type": "CREDIT",
+    "amount_minor": "11300"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "114300"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-5/loan-5-journalentries-1.json",
+  "loan_id": 5,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L17",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 28783,
+  "bytes": 1634,
+  "sha256": "685452a10559a0d40338a001a3b4bdeb7f0dfd8079e2851945173d983185e108",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Suspense/Clearing account",
+    "gl_account_code": "145023",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-5/loan-5-journalentries-2.json",
+  "loan_id": 5,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L18",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 28941,
+  "bytes": 2408,
+  "sha256": "b687e836023d7d3c78db738e851d7751c9771aadc38b33874d64f1da29b2f535",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "14300"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "114300"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-6/loan-6-journalentries-1.json",
+  "loan_id": 6,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L21",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 30335,
+  "bytes": 3219,
+  "sha256": "32dc486ea7e3089ec8fec08ebe9a565250c4d66d58c79454c382083b1909f283",
+  "total_filtered_records": 4,
+  "page_items": 4,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "1222"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "DEBIT",
+    "amount_minor": "1222"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-6/loan-6-journalentries-2.json",
+  "loan_id": 6,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L22",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 30539,
+  "bytes": 2422,
+  "sha256": "c83e5a9cd186e966f477400eba028e10aff23597442923bc30e0890fac11fc45",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "CREDIT",
+    "amount_minor": "1222"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "101222"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-7/loan-7-journalentries-1.json",
+  "loan_id": 7,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L26",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 32036,
+  "bytes": 3213,
+  "sha256": "b1999f6d0dd64c39fb6b28728ff192a645636e92d7b3848166fa99c58afa3191",
+  "total_filtered_records": 4,
+  "page_items": 4,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "8357"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "49"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "8357"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "DEBIT",
+    "amount_minor": "49"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-7/loan-7-journalentries-2.json",
+  "loan_id": 7,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L27",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 32185,
+  "bytes": 2417,
+  "sha256": "0988b3beafc525137498cacc154fdac5b38789e36ffa808a428db34bc360092b",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "CREDIT",
+    "amount_minor": "8357"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "CREDIT",
+    "amount_minor": "147"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "8504"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-8/loan-8-journalentries-1.json",
+  "loan_id": 8,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L30",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 33557,
+  "bytes": 3215,
+  "sha256": "196c290d8b6d64ea25589dc059a830df4032190ca40ff000eb914bc743e0be59",
+  "total_filtered_records": 4,
+  "page_items": 4,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "61"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "DEBIT",
+    "amount_minor": "61"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-8/loan-8-journalentries-2.json",
+  "loan_id": 8,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L30",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 33634,
+  "bytes": 6390,
+  "sha256": "4038e4c02c88c20ebd7b773877e5778ea4495c34ab57e95531d6470232186183",
+  "total_filtered_records": 8,
+  "page_items": 8,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "61"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "DEBIT",
+    "amount_minor": "61"
+   },
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "DEBIT",
+    "amount_minor": "61"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "CREDIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest Income Charge Off",
+    "gl_account_code": "404001",
+    "entry_type": "CREDIT",
+    "amount_minor": "61"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-8/loan-8-journalentries-3.json",
+  "loan_id": 8,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L31",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 33711,
+  "bytes": 2404,
+  "sha256": "dc0338c61d3194935780e3f52d7ea14026ff6e6faef729704577cf02f2fd3590",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "10000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "205"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "10205"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-9/loan-9-journalentries-1.json",
+  "loan_id": 9,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L35",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 35225,
+  "bytes": 1630,
+  "sha256": "079bc380f90f7c2369b0bf40f51d454b82bd702a8bbe42c5f0a1692f47b4f50a",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "65000"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+    "gl_account_code": "744037",
+    "entry_type": "DEBIT",
+    "amount_minor": "65000"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-9/loan-9-journalentries-2.json",
+  "loan_id": 9,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L36",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 35407,
+  "bytes": 1630,
+  "sha256": "e5fc735e2df8ec055ea933191e9770344e732c3b180474f19fcfc7fa4062135b",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "75000"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+    "gl_account_code": "744037",
+    "entry_type": "DEBIT",
+    "amount_minor": "75000"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-9/loan-9-journalentries-3.json",
+  "loan_id": 9,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L35",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 35457,
+  "bytes": 3220,
+  "sha256": "b504195411c157179818b8532e2e5bbef0fc5326235c4ccc503b278fceb9218c",
+  "total_filtered_records": 4,
+  "page_items": 4,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "65000"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+    "gl_account_code": "744037",
+    "entry_type": "DEBIT",
+    "amount_minor": "65000"
+   },
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "DEBIT",
+    "amount_minor": "65000"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+    "gl_account_code": "744037",
+    "entry_type": "CREDIT",
+    "amount_minor": "65000"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-9/loan-9-journalentries-4.json",
+  "loan_id": 9,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L37",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 35534,
+  "bytes": 1626,
+  "sha256": "0280084fd149db733c66738c5bfbcf6485d504277f7ac33c5774c879b1dce97c",
+  "total_filtered_records": 2,
+  "page_items": 2,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Credit Loss/Bad Debt-Fraud",
+    "gl_account_code": "744037",
+    "entry_type": "CREDIT",
+    "amount_minor": "75000"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "75000"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-10/loan-10-journalentries-1.json",
+  "loan_id": 10,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L39",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 36859,
+  "bytes": 2413,
+  "sha256": "5ff1f699e981451fbf99a1608e0ec3e3617b396607f4912e20363f91dcc6b1d7",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "2513"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "102513"
+   }
+  ],
+  "writeoff_leg": false
+ },
+ {
+  "file": "journalentries/loan-11/loan-11-journalentries-1.json",
+  "loan_id": 11,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L41",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 38231,
+  "bytes": 2426,
+  "sha256": "4095bcb0aecc0b58d415307b7ef291877f891c5c1efbbbf664218838fc60475f",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "2513"
+   },
+   {
+    "gl_account_name": "Credit Loss/Bad Debt",
+    "gl_account_code": "744007",
+    "entry_type": "DEBIT",
+    "amount_minor": "102513"
+   }
+  ],
+  "writeoff_leg": true
+ },
+ {
+  "file": "journalentries/loan-12/loan-12-journalentries-1.json",
+  "loan_id": 12,
+  "url": "https://localhost:8443/fineract-provider/api/v1/journalentries?runningBalance=true&transactionId=L43",
+  "method": "GET",
+  "http_status": 200,
+  "source_line": 39553,
+  "bytes": 2413,
+  "sha256": "06267185e35374465f5b4892aa794cbe71e01f28531f67a3fab466461fec8a81",
+  "total_filtered_records": 3,
+  "page_items": 3,
+  "currency": "MNT",
+  "gl_legs": [
+   {
+    "gl_account_name": "Loans Receivable",
+    "gl_account_code": "112601",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "gl_account_name": "Interest/Fee Receivable",
+    "gl_account_code": "112603",
+    "entry_type": "CREDIT",
+    "amount_minor": "2513"
+   },
+   {
+    "gl_account_name": "Written off",
+    "gl_account_code": "e4",
+    "entry_type": "DEBIT",
+    "amount_minor": "102513"
+   }
+  ],
+  "writeoff_leg": false
+ }
+]
