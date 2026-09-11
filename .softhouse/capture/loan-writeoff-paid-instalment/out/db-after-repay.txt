@@ -1,0 +1,35 @@
+# OH-WOPAID-AU DB evidence: loan 13 [after-repay] (read-only, tenant gerege)
+## m_business_date
+type|date
+BUSINESS_DATE|2026-09-03
+COB_DATE|2026-09-02
+(2 rows)
+## m_loan
+id|account_no|external_id|client_id|product_id|loan_status_id|principal_amount|disbursedon_date|expected_maturedon_date|principal_outstanding_derived|principal_writtenoff_derived|interest_outstanding_derived|interest_writtenoff_derived|fee_charges_outstanding_derived|fee_charges_writtenoff_derived|penalty_charges_outstanding_derived|penalty_charges_writtenoff_derived|total_outstanding_derived|total_writtenoff_derived|writtenoffon_date
+13|000000013|OHWOPAID-L01|12|3|300|100000.000000|2026-01-01|2027-01-01|92115.120000|0.000000|5618.530000|0.000000|100.000000|0.000000|57.000000|0.000000|97890.650000|0.000000|
+(1 row)
+## m_loan_repayment_schedule (amount / completed / writtenoff / obligations_met_on_date)
+installment|duedate|principal_amount|principal_completed_derived|principal_writtenoff_derived|interest_amount|interest_completed_derived|interest_writtenoff_derived|fee_charges_amount|fee_charges_completed_derived|fee_charges_writtenoff_derived|penalty_charges_amount|penalty_charges_completed_derived|penalty_charges_writtenoff_derived|obligations_met_on_date
+1|2026-02-01|7884.880000|7884.880000||1000.000000|1000.000000||||||||2026-02-01
+2|2026-03-01|7963.730000|||921.150000|||100.000000||||||
+3|2026-04-01|8043.370000|||841.510000||||||57.000000|||
+4|2026-05-01|8123.800000|||761.080000|||||||||
+5|2026-06-01|8205.040000|||679.840000|||||||||
+6|2026-07-01|8287.090000|||597.790000|||||||||
+7|2026-08-01|8369.960000|||514.920000|||||||||
+8|2026-09-01|8453.660000|||431.220000|||||||||
+9|2026-10-01|8538.200000|||346.680000|||||||||
+10|2026-11-01|8623.580000|||261.300000|||||||||
+11|2026-12-01|8709.810000|||175.070000|||||||||
+12|2027-01-01|8796.880000|||87.970000|||||||||
+(12 rows)
+## m_loan_charge
+id|charge_id|is_penalty|amount|amount_paid_derived|amount_waived_derived|amount_writtenoff_derived|amount_outstanding_derived|is_paid_derived|waived|due_for_collection_as_of_date
+9|5|f|100.000000||||100.000000|f|f|2026-02-15
+10|4|t|57.000000||||57.000000|f|f|2026-03-15
+(2 rows)
+## m_loan_transaction
+id|transaction_type_enum|transaction_date|amount|principal_portion_derived|interest_portion_derived|fee_charges_portion_derived|penalty_charges_portion_derived|outstanding_loan_balance_derived|is_reversed
+55|1|2026-01-01|100000.000000|||||100000.000000|f
+56|2|2026-02-01|8884.880000|7884.880000|1000.000000|||92115.120000|f
+(2 rows)
