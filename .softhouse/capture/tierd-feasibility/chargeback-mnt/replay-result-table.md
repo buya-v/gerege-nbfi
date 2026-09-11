@@ -4,10 +4,10 @@
 - worktree (disposable copy): `/Users/buv/fineract-tierd`, branch `develop`, HEAD `426a23544e8426a38ae43ae404670a0a7e85b9eb`
 - run window (UTC): `2026-09-11T13:52:55Z` -> `2026-09-11T13:54:31Z`
 - cucumber: **50 scenarios (50 passed), 1367 steps (1367 passed)**; `BUILD SUCCESSFUL in 1m 35s` (no recompile — all tasks UP-TO-DATE)
-- tenant: `tierd` (Asia/Ulaanbaatar), currency **MNT**; the Feign log holds 0 `EUR` tokens and 1524 `MNT` tokens
+- tenant: `tierd` (Asia/Ulaanbaatar), currency **MNT**: the Feign log holds 0 `EUR` substrings and 0 `currencyCode EUR`, against 214 `currencyCode MNT`; the read-backs hold 0 `EUR`
 - Feign capture: `feign-chargeback-mnt.log`, 253580995 bytes, sha256 `bb21464b3094e8461caa982e57359ac177a1dc758c7eb8d43f20da6704db6557`
 - cucumber log: `replay-chargeback-mnt.log`, sha256 `e5810ae0aab305e0e49a8eb54c6e33dc46285f70de3f6886d3004e25daf9a322`
-- extractor: 5402 exchanges total, 1504 loan-attributed, 50 loans, 1830 bodies written
+- extractor (`bin/extract.py`): 4402 exchanges total, 1504 loan-attributed, 2898 skipped, 50 loans, 1830 bodies written
 
 **Every scenario passed, so every loan is committed.** A failure would have been recorded here as a
 finding (step, actual vs expected); none occurred.
