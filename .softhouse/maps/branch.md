@@ -31,7 +31,7 @@ Source: `.softhouse/capabilities-branch.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `branch-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `branch-wrong-off-by-one` — `nexus/internal/apps/branch/conformance/impl.go:315`
 * `branch-wrong-summary-drops-last-row` — `nexus/internal/apps/branch/conformance/impl.go:318`

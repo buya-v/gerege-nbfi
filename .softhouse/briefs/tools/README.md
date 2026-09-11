@@ -209,3 +209,19 @@ control caught two defects first: `loanschedule` registers 17 of its 25 drives t
 table (the generator now takes the list FROM THE BINARY), and the driver's own check loop
 reported 0 for thirteen binaries because zsh passed `-root <path>` as ONE argument — the
 same word-splitting trap recorded above, this time in the control, not the tool.
+
+## Two instrument defects found 2026-09-11, both by a control disagreeing
+
+1. **mapgen.py counted another context's drives.** The loanschedule binary HOSTS the 17
+   ledger drives (`-ledger-impl`), so "every `-wrong-` name" gave loanschedule 25 drives
+   where it has 8. The first control compared the map against the binary with the SAME
+   `-wrong-` grep, so the two agreed for the wrong reason — **a control that shares the
+   instrument's bias is not a control.** The re-run control uses three independent
+   readings (binary listing filtered by `<ctx>-wrong-`, redcount.sh's own listing, the
+   map) and all 14 binaries agree.
+2. **capcount.sh could not measure loanschedule-go.** That binary gates its verdict on
+   `-oracle-probe`; a WRONG impl prints `LOAN SCHEDULE N mismatch` before the UNUSABLE
+   verdict (so kills.sh worked), the CORRECT impl printed nothing measurable. `m_run` now
+   passes the oracle's ACTUAL health (a down oracle still yields exit 2), and `m_extract`
+   reads `VERDICT: PASS (exit 0)` with no mismatch line as 0. Controls after: 45 / 5 / 1,
+   capcount loanschedule-go 0, savings-go 0.

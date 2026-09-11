@@ -34,7 +34,7 @@ Source: `.softhouse/capabilities-shares.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/shares/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `shares-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `shares-wrong-off-by-one` — `nexus/internal/apps/shares/conformance/impl.go:353`
 * `shares-wrong-product-price-transposed` — `nexus/internal/apps/shares/conformance/impl.go:364`

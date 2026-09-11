@@ -33,7 +33,7 @@ Source: `.softhouse/capabilities-collateral.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `collateral-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `collateral-wrong-base-price-hardcoded` — `nexus/internal/apps/collateral/conformance/impl.go:448`
 * `collateral-wrong-blank-quality` — `nexus/internal/apps/collateral/conformance/impl.go:436`

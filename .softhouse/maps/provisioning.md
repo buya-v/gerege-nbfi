@@ -38,7 +38,7 @@ Source: `.softhouse/capabilities-provisioning.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/provisioning/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `provisioning-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `provisioning-wrong-band-first-always` — `nexus/internal/apps/provisioning/conformance/impl.go:622`
 * `provisioning-wrong-band-half-open` — `nexus/internal/apps/provisioning/conformance/impl.go:644`

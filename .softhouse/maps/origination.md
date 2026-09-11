@@ -24,7 +24,7 @@ Source: `.softhouse/capabilities-origination.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `origination-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `origination-wrong-default-active` — `nexus/internal/apps/origination/conformance/impl.go:153`
 * `origination-wrong-swap-status` — `nexus/internal/apps/origination/conformance/impl.go:150`

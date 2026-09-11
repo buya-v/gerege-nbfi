@@ -71,7 +71,7 @@ Source: `.softhouse/capabilities-loan.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loan/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `loan-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `loan-wrong-allocation-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:1843`
 * `loan-wrong-allocation-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:1849`

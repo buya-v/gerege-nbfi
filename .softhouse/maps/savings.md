@@ -40,7 +40,7 @@ Source: `.softhouse/capabilities-savings.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/savings/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `savings-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `savings-wrong-deposit-not-credited` — `nexus/internal/apps/savings/conformance/impl.go:634`
 * `savings-wrong-half-even-daily-interest` — `nexus/internal/apps/savings/conformance/impl.go:626`

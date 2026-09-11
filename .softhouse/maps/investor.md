@@ -26,7 +26,7 @@ Source: `.softhouse/capabilities-investor.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `investor-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `investor-wrong-blank-status` — `nexus/internal/apps/investor/conformance/impl.go:398`
 * `investor-wrong-fabricates-transfer` — `nexus/internal/apps/investor/conformance/impl.go:401`

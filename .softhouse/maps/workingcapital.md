@@ -30,7 +30,7 @@ Source: `.softhouse/capabilities-workingcapital.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/workingcapital/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `workingcapital-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `workingcapital-wrong-allocation-in-advance-as-due` — `nexus/internal/apps/workingcapital/conformance/impl.go:590`
 * `workingcapital-wrong-allocation-order-fee-before-penalty` — `nexus/internal/apps/workingcapital/conformance/impl.go:586`

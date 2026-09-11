@@ -56,7 +56,15 @@ m_run() {
   out=$(go run "$M_BIN" -root "$M_ROOT" -impl "$1" 2>&1)
   case "$out" in
     *"not defined: -root"*|*"-root is required"*)
-      out=$(go run "$M_BIN" -impl "$1" 2>&1) ;;
+      # The loanschedule binary (the one that rejects -root) gates its verdict on
+      # -oracle-probe. A WRONG impl still prints "LOAN SCHEDULE N mismatch" before the
+      # UNUSABLE verdict, so kills.sh worked without it; the CORRECT impl prints no
+      # mismatch line, so capcount read nothing and died (found 2026-09-11 by review.sh
+      # reading UNMEASURED on OH-LSCOV-AK). Pass the oracle's ACTUAL health, never a
+      # literal "up": a down oracle must still yield UNUSABLE -> exit 2, not a PASS.
+      local probe=down
+      curl -sk -m 5 https://localhost:8443/fineract-provider/actuator/health 2>/dev/null | grep -q '"UP"' && probe=up
+      out=$(go run "$M_BIN" -impl "$1" -oracle-probe="$probe" 2>&1) ;;
   esac
   printf '%s\n' "$out"
 }
@@ -79,6 +87,11 @@ m_extract() {
   local n
   n=$(printf '%s\n' "$1" | grep -oE 'parity_fail=[0-9]+' | head -1 | tr -dc '0-9')
   [ -z "$n" ] && n=$(printf '%s\n' "$1" | grep -oE 'LOAN SCHEDULE [0-9]+ mismatch' | head -1 | tr -dc '0-9')
+  # loanschedule on the CORRECT impl prints no mismatch line at all -- only
+  # "VERDICT: PASS (exit 0) — N parity vectors match". PASS with zero mismatch lines is 0;
+  # any other verdict (UNUSABLE, FAIL) still falls through to m_die below.
+  [ -z "$n" ] && printf '%s\n' "$1" | grep -qE '^VERDICT: PASS \(exit 0\)' \
+    && ! printf '%s\n' "$1" | grep -qE 'LOAN SCHEDULE [0-9]+ mismatch' && n=0
   [ -n "$n" ] || m_die "no verdict line in the transcript (neither 'parity_fail=N' nor 'LOAN SCHEDULE N mismatch'). The run produced no measurement. Last lines:
 $(printf '%s\n' "$1" | tail -5)"
   printf '%s' "$n"

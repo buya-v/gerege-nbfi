@@ -41,7 +41,7 @@ Source: `.softhouse/capabilities-parties.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `parties-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `parties-wrong-iota-ordinals` — `nexus/internal/apps/parties/conformance/impl.go:248`
 * `parties-wrong-legalform-person-as-unset` — `nexus/internal/apps/parties/conformance/impl.go:264`

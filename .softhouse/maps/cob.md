@@ -27,7 +27,7 @@ Source: `.softhouse/capabilities-cob.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `cob-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `cob-wrong-shift-order` — `nexus/internal/apps/cob/conformance/impl.go:160`
 * `cob-wrong-skip-delinquency-classification` — `nexus/internal/apps/cob/conformance/impl.go:183`

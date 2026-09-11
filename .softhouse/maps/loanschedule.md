@@ -68,7 +68,7 @@ that is a defect in the map, and the driver fixes the generator.
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loanschedule/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `loanschedule-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `loanschedule-wrong-days-in-year-365` — `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:86`
 * `loanschedule-wrong-disbursement-amount-ignored` — `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:174`
@@ -78,25 +78,8 @@ Source: the binary's own -list-implementations.
 * `loanschedule-wrong-rate-zero` — `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:126`
 * `loanschedule-wrong-repayments-fixed-one` — `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:116`
 * `loanschedule-wrong-schedule-start-ignored` — `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:151`
-* `ledger-wrong-accounting-closed-echoes-transaction-date` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-closure-boundary-exclusive` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-code-ignored` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-date-rules-always-refusing` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-future-date-ignored` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-header-refusing` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-manual-permission-ignored` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-mapping-key-ignored` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-netting-totals` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-openingbalance-always-refusing` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-openingbalance-no-contra` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-openingbalance-posted-entries-ignored` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-residue-rounding` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-side-ordinals-swapped` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-slot-family-blind` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-split-drift` — (registered through a table, not a literal call — see the context's wrong-drive table)
-* `ledger-wrong-truncating` — (registered through a table, not a literal call — see the context's wrong-drive table)
 
-25 drives.
+8 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/loanschedule/emi.go`: `checkCancel`:164, `invalidateFrom`:1454, `newInterestPeriod`:1463, `newRepaymentPeriod`:1469, `deepCopy`:1473, `previous`:1502, `startDate`:1511, `inPeriodM1`:1525, `inPeriodM3`:1540, `findPeriodForBalanceChange`:1546, `relatedPeriods`:1559, `addDisbursement`:1582, `effectiveRepaymentDueDate`:1595, `registerBalanceChange`:1607, `insertSegment`:1638, `recalculate`:1680, `updateOutstandingBalances`:1706, `segmentCalculatedInterest`:1747, `interestChainUpTo`:1788, `calculatedDueInterestMinor`:1823, `dueInterestMinor`:1828, `accumulatedInterestMinor`:1843, `minorFromMajor`:1857, `duePrincipalMinor`:1875, `outstandingLoanBalanceMinor`:1881, `initialBalanceMinor`:1889, `growthFactor`:1904, `calculateRateFactors`:1918, `rateFactorForRecurrence`:1931, `rateFactorForInterest`:1946, `rateFactorByRepaymentPeriod`:1970, `periodRatio`:1995, `periodRatioSeed`:2042, `calculateLevelInstallment`:2080, `applyFinalPeriodResidual`:2122, `findLastUnpaidPeriod`:2186, `emiAdjustment`:2209, `shouldBeAdjusted`:2231, `adjustEMIIfNeeded`:2256

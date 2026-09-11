@@ -38,7 +38,7 @@ Source: `.softhouse/capabilities-charges.json`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/charges/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `charges-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `charges-wrong-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:536`
 * `charges-wrong-base-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:513`

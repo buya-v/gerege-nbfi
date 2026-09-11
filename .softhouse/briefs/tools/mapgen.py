@@ -93,7 +93,7 @@ for ctx in ctxs:
             r = subprocess.run(cmd, cwd="nexus", capture_output=True, text=True, timeout=300)
             got = [l.split()[0] for l in r.stdout.splitlines() if l.strip()]
             if r.returncode == 0 and got:
-                names, src = [g for g in got if "-wrong-" in g], "the binary's own -list-implementations"
+                names, src = [g for g in got if g.startswith(f"{ctx}-wrong-")], "the binary's own -list-implementations (names prefixed `" + ctx + "-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's)"
         except Exception:
             pass
     if names is None:

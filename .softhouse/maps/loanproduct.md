@@ -41,7 +41,7 @@ Source: `.softhouse/capabilities-loanproduct.json`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)
-Source: the binary's own -list-implementations.
+Source: the binary's own -list-implementations (names prefixed `loanproduct-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
 * `loanproduct-wrong-dim-sibling-name` — `nexus/internal/apps/loanproduct/conformance/impl.go:214`
 * `loanproduct-wrong-freq-field-qualified-code` — `nexus/internal/apps/loanproduct/conformance/impl.go:220`
