@@ -55,7 +55,8 @@ Source: `.softhouse/vectors/capabilities-ledger.json`
 
 ## Seam entry points (every file:line that names each seam constant)
 Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its
-evaluator switch, its grading case. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
+evaluator switch, its grading case. An evaluator that dispatches on the REQUEST FIELD (e.g. loan: `case req.Delinquency != nil`)
+does not name the constant — find it by the request type listed here. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
 events finding four of these lines by hand).
 
 (no `Seam… = "…"` constants found in this conformance package)

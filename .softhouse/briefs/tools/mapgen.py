@@ -81,7 +81,7 @@ for ctx in ctxs:
 
     w("\n## Seam entry points (every file:line that names each seam constant)")
     w("Where to edit to extend or add a seam: the constant, its request/expect types, its admission case, its")
-    w("evaluator switch, its grading case. An evaluator that dispatches on the REQUEST FIELD (e.g. loan: `case req.Delinquency != nil`)\")
+    w("evaluator switch, its grading case. An evaluator that dispatches on the REQUEST FIELD (e.g. loan: `case req.Delinquency != nil`)")
     w("does not name the constant — find it by the request type listed here. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586")
     w("events finding four of these lines by hand).\n")
     seam_consts = {}
