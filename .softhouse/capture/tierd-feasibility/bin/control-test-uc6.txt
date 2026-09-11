@@ -1,0 +1,25 @@
+CONTROL TEST: feign-uc6.log vs verified uc6 files
+extract: extract.py
+exchanges: 1444 total, 278 loan, 1166 skipped; loans=11 files=343
+
+verified file                            line    bytes   loan   result
+----------------------------------------------------------------------
+loan-1-approve-request.json              22169   149     1      OK
+loan-1-create-request.json               22116   590     1      OK
+loan-1-detail-associations-all.json      22145   14236   1      OK
+loan-1-disburse-request.json             22301   129     1      OK
+loan-1-repayment-request.json            22450   123     1      OK
+loan-1-schedule-repaymentSchedule.json   22527   16158   1      OK
+loan-10-approve-request.json             34944   149     10     OK
+loan-10-create-request.json              34891   780     10     OK
+loan-10-detail-all.json                  34920   15213   10     OK
+loan-10-disburse-request-1.json          35045   128     10     OK
+loan-10-disburse-request-2.json          35302   128     10     OK
+loan-10-disburse-request-3.json          35451   128     10     OK
+loan-10-disburse-request-4.json          35480   128     10     OK
+loan-10-repayment-request-1.json         35701   124     10     OK
+loan-10-schedule-repaymentSchedule.json  35777   17256   10     OK
+
+verified files: 15; byte-identical under the correct loan: 15; failures: 0
+attribution probe (line 34891 = loan 10 create, 780 B; not loan 1's 590 B): OK
+CONTROL TEST: PASS
