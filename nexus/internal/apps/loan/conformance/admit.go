@@ -413,6 +413,14 @@ func admitRequest(v *Vector) []string {
 					"request.delinquency.overdue_since_date %q is after business_date %q: no committed capture observes an overdue date after the business date, and the negative clamp is NOT part of the graded surface", d.OverdueSinceDate, d.BusinessDate))
 			}
 		}
+		if d.PausedDays < 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.delinquency.paused_days %d is negative: paused days are a non-negative integer count of the days inside an active delinquency pause", d.PausedDays))
+		}
+		if d.GraceDays < 0 {
+			problems = append(problems, fmt.Sprintf(
+				"request.delinquency.grace_days %d is negative: grace days are the non-negative graceOnArrearsAgeing day count the port subtracts", d.GraceDays))
+		}
 	case SeamLoanWriteOffFourBucket:
 		if v.Request.WriteOff == nil || requestShapeCount(v) != 1 {
 			problems = append(problems, "write-off seam must set exactly request.write_off")

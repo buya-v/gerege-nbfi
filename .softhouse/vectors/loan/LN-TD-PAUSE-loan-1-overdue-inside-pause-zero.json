@@ -1,0 +1,47 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-TD-PAUSE-loan-1-overdue-inside-pause-zero",
+    "title": "Tier-D MNT loan 1: overdue entirely inside an active pause reads zero delinquent days (4 overdue -> 0)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the delinquent block of Tier-D MNT loan 1 at business date 2023-10-20. request.delinquency carries the observed overdue-since civil date 2023-10-16 (delinquent.pastDueDate [2023,10,16]), the business date, the observed graceOnArrearsAgeing 3, and the paused-day count 4 derived from the active pause period [2023-10-16, 2023-10-20] the read-back carries. expect.overdue_days 4 and expect.delinquent_days 0 are TRANSCRIPTIONS of delinquent.pastDueDays 4 and delinquent.delinquentDays 0. THE PROPERTY GRADED: a period the loan is paused for does not age into delinquency, and the subtraction is FLOORED AT ZERO — DelinquentDays(4, 4, 3) = 4 - 4 - 3 = -3 -> 0, never a negative day count. OverdueDays(2023-10-16, 2023-10-20) = 4; the pause [2023-10-16, 2023-10-20] covers the whole overdue window, so paused = Min(2023-10-20, business 2023-10-20) - Max(2023-10-16, overdue 2023-10-16) = 4; grace 3 is corroborated by delinquent.delinquentDate [2023,10,19] = pastDueDate + 3. The observed delinquentDays 0 DOES reproduce under the port's DelinquentDays from the observed inputs, so no port discrepancy is recorded here. A port that counts the paused days as delinquent reads 4 - 3 = 1 and goes red. NOT GRADED: the negative clamp in OverdueDays (no overdue date is after the business date), and any balance-named cell (none appears in this vector). This is tenant `tierd`, NOT tenant `gerege`.",
+    "oracle": {
+        "seam": "loan-delinquent-days",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.delinquency and both expected cells are transcribed from the committed MNT capture loan-1-detail-associations-all-5.json, the scenario-1 (C2963, feature line 5) loan read-back under tenant tierd while its delinquency pause was active. capture_case_id names the loan's externalId 55394e5e-4f4f-4736-adc0-433dace9236a. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a (proven identical to the standing oracle by preflight.sh); scenario LoanDelinquency-Part1.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. The file is a single-line JSON document (wc -l = 0), so every observation is at line 1. No value was synthesised: the dates, the pause period and both counts are read directly from the file; the paused-day count 4 is the day difference between the pause bounds clipped to the overdue window.",
+        "capture_ref": ".softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-1/loan-1-detail-associations-all-5.json",
+        "capture_sha256": "d10e61f4d27b9634b64c2946119f63a14419dbb73e929d614c23ad791cd3ee4d",
+        "capture_case_id": "55394e5e-4f4f-4736-adc0-433dace9236a",
+        "citation": "loan-1-detail-associations-all-5.json:1 (single-line committed MNT read-back, tenant tierd) externalId 55394e5e-4f4f-4736-adc0-433dace9236a: delinquent.pastDueDays 4, delinquent.pastDueDate [2023,10,16], delinquent.delinquentDays 0, delinquent.delinquentDate [2023,10,19], delinquent.delinquencyPausePeriods [{\"active\":true,\"pausePeriodStart\":[2023,10,16],\"pausePeriodEnd\":[2023,10,20]}], loan-level graceOnArrearsAgeing 3. Business date 2023-10-20 = pastDueDate 2023-10-16 + pastDueDays 4. Pause overlap: Min(2023-10-20,2023-10-20) - Max(2023-10-16,2023-10-16) = 4. DelinquentDays(4,4,3) = -3 -> 0."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "delinquency": {
+            "overdue_since_date": "2023-10-16",
+            "business_date": "2023-10-20",
+            "paused_days": 4,
+            "grace_days": 3
+        }
+    },
+    "expect": {
+        "overdue_days": "4",
+        "delinquent_days": "0"
+    },
+    "capabilities_required": [
+        "delinquent-days"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-delinquency-pause-ignored"
+    ]
+}

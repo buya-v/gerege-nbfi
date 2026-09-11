@@ -71,10 +71,11 @@ const SeamLoanSummaryOutstanding = "loan-summary-outstanding"
 // dates and the resulting counts at the business date 2026-09-01, so the seam
 // is gradeable with no capture. The request carries the observed overdue-since
 // date (ABSENT on a loan the read-back shows no overdue date for) and the
-// business date; the expectation transcribes the observed pastDueDays /
-// delinquentDays. A port that approximates a month as 30 days, or that errors
-// on an absent overdue date instead of returning zero, disagrees with the
-// read-back.
+// business date, plus the paused-day count of any active delinquency pause and
+// the product's graceOnArrearsAgeing; the expectation transcribes the observed
+// pastDueDays / delinquentDays. A port that approximates a month as 30 days,
+// that errors on an absent overdue date instead of returning zero, or that
+// counts the days inside a pause as delinquent, disagrees with the read-back.
 const SeamLoanDelinquentDays = "loan-delinquent-days"
 
 // SeamLoanJournalEntryBatchBalance is the capture seam this schema grades: the
@@ -407,14 +408,21 @@ type SummaryRequest struct {
 
 // DelinquencyRequest is the loan-delinquent-days seam's input: the summary's
 // overdueSinceDate and the business date the read-back was taken at, both civil
-// dates in "YYYY-MM-DD" form. OverdueSinceDate is OMITTED when the read-back
+// dates in "YYYY-MM-DD" form, plus the two non-date day counts the port's
+// DelinquentDays subtracts. OverdueSinceDate is OMITTED when the read-back
 // carries no overdue date for the loan (the oracle then reports zero overdue
 // days, not an error). BusinessDate is required: without it the day difference
-// is undefined. The dates are plain calendar dates with no clock and no offset,
-// so no time-zone offset is hard-coded anywhere in the path.
+// is undefined. PausedDays is the number of days the loan spent inside an active
+// delinquency pause between the overdue-since date and the business date, and
+// GraceDays is the loan product's graceOnArrearsAgeing; both are non-negative
+// integer day counts, zero on a loan with no pause and no grace. The dates are
+// plain calendar dates with no clock and no offset, so no time-zone offset is
+// hard-coded anywhere in the path.
 type DelinquencyRequest struct {
 	OverdueSinceDate string `json:"overdue_since_date,omitempty"`
 	BusinessDate     string `json:"business_date"`
+	PausedDays       int64  `json:"paused_days"`
+	GraceDays        int64  `json:"grace_days"`
 }
 
 // StatusRequest is the loan-status seam's input: the persisted
