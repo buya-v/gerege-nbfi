@@ -249,3 +249,12 @@ nobody watches the oracle overnight.
 Control-tested with NIGHTQ_DRY=1 before use: valid briefs run; a brief without a Worktree
 line is skipped; finished briefs are not re-run; the kill path fires at the limit, leaves no
 process behind, and reports KILLED (never END).
+
+## The ledger-invariant baseline is 8 pairs from OH-LPDEL-BF on (was 12) — 2026-09-11
+
+Deleting loanproduct's unwired kernel removed the four I-3 findings it carried
+(I3-COMPOSITE-BALANCE / I3-FIELD-WRITE in interestperiod.go and repaymentperiod.go); the rows
+were removed from `.softhouse/guards/ledger-invariants.baseline` in the same change, with a
+note. **Briefs written from now on say "ledger findings 8 pairs", not 12.** The bar's
+recorded-decision line (`ledger findings == baseline`) is what review.sh checks, so it needs
+no change. Current controls: 365 = 48, half-even = 5, parties iota = 12, charges half-even = 1.
