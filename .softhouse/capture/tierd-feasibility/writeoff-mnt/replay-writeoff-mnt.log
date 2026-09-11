@@ -1,0 +1,534 @@
+=== run start 2026-09-11T14:28:12Z DBHOST=172.27.0.2 ===
+Picked up JAVA_TOOL_OPTIONS: -Dfineract.feign.debug=true -Dfineract.capture.log=/work/fineract-e2e-tests-runner/build/capture/feign-writeoff-mnt.log
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy UP-TO-DATE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :
+matching ref: COMMIT - 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ref configuration: COMMIT - pattern: null
+    version: ${describe.tag.version.major}.${describe.tag.version.minor.next}.0-SNAPSHOT
+    describeTagPattern: .*(\d+\.\d+\.\d+).*
+    describeTagFirstParent: false
+
+project version: 1.16.0-SNAPSHOT
+
+> Task :fineract-avro-schemas:compileJava UP-TO-DATE
+> Task :fineract-avro-schemas:processResources UP-TO-DATE
+> Task :fineract-avro-schemas:classes
+> Task :fineract-avro-schemas:jar UP-TO-DATE
+> Task :fineract-client-feign:cleanupGeneratedJavaFiles UP-TO-DATE
+> Task :fineract-client-feign:licenseFormatMain UP-TO-DATE
+> Task :spotlessInternalRegisterDependencies UP-TO-DATE
+> Task :fineract-client-feign:spotlessMisc UP-TO-DATE
+> Task :fineract-client-feign:spotlessMiscApply UP-TO-DATE
+> Task :fineract-client-feign:compileJava UP-TO-DATE
+> Task :fineract-client-feign:processResources UP-TO-DATE
+> Task :fineract-client-feign:classes UP-TO-DATE
+> Task :fineract-client-feign:jar UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-core:processResources NO-SOURCE
+> Task :fineract-e2e-tests-core:classes UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileTestJava UP-TO-DATE
+> Task :fineract-e2e-tests-core:processTestResources UP-TO-DATE
+> Task :fineract-e2e-tests-core:testClasses UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-runner:processResources NO-SOURCE
+> Task :fineract-e2e-tests-runner:classes UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileTestJava UP-TO-DATE
+> Task :fineract-e2e-tests-runner:processTestResources UP-TO-DATE
+> Task :fineract-e2e-tests-runner:testClasses UP-TO-DATE
+Picked up JAVA_TOOL_OPTIONS: -Dfineract.feign.debug=true -Dfineract.capture.log=/work/fineract-e2e-tests-runner/build/capture/feign-writeoff-mnt.log
+14:28:39.640 [main] INFO  o.a.f.t.s.hook.InitializingHook - Setting up global defaults for Fineract
+> Task :fineract-e2e-tests-runner:cucumber
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+
+WARNING: A Java agent has been loaded dynamically (/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.8/f09415827a71be7ed621c7bd02550678f28bc81c/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+@WriteOffFeature @TestRailId:C2934
+[1mScenario:[22m As a user I want to do Write-off a loan and verify that undo repayment post write-off results in error                                            [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:5[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2023"[22m[39m                                                                                                   [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                             [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION | 01 January 2023   | 1000           | 0                      | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 45                | DAYS                  | 15             | DAYS                   | 3                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2023"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"1 January 2023"[22m[39m                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2023"[22m with [1m"1000"[22m EUR transaction amount[39m                                                         [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"22 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"22 January 2023"[22m with [1m100[22m EUR transaction amount[39m                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"29 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"29 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a transaction with date: [1m"29 January 2023"[22m, and with the following data:[39m                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTransactionWithGivenDateDataCheck(java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance |
+      | Close (as written-off) | 650.0  | 650.0     | 0.0      | 0.0  | 0.0       | 0.0          |
+  [32m✔[39m [32m[1mThen [22mCustomer undo [1m"1"[22mth transaction made on [1m"22 January 2023"[22m results a [1m403[22m error and [1m"update not allowed as loan status is written off"[22m error message[39m [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.undoTransactionResultsError(java.lang.String,java.lang.String,int,java.lang.String)[39m
+
+@WriteOffFeature @TestRailId:C2935
+[1mScenario:[22m As a user I want to do Write-off a loan and verify that backdate repayment post write-off results in error                   [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:25[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2023"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                        [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION | 01 January 2023   | 1000           | 0                      | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 45                | DAYS                  | 15             | DAYS                   | 3                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2023"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"1 January 2023"[22m[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2023"[22m with [1m"1000"[22m EUR transaction amount[39m                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"22 January 2023"[22m[39m                                                                             [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"22 January 2023"[22m with [1m100[22m EUR transaction amount[39m                                        [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"29 January 2023"[22m[39m                                                                             [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"29 January 2023"[22m[39m                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a transaction with date: [1m"29 January 2023"[22m, and with the following data:[39m                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTransactionWithGivenDateDataCheck(java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance |
+      | Close (as written-off) | 650.0  | 650.0     | 0.0      | 0.0  | 0.0       | 0.0          |
+  [32m✔[39m [32m[1mThen [22mLoan [1m"AUTOPAY"[22m repayment transaction on [1m"26 January 2023"[22m with [1m50[22m EUR transaction amount results in error[39m                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionWithErrorCheck(java.lang.String,java.lang.String,double)[39m
+
+@WriteOffFeature @TestRailId:C2936
+[1mScenario:[22m As a user I want to do Write-off a loan and verify that undo write-off results in error                                                           [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:45[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2023"[22m[39m                                                                                                   [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                             [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION | 01 January 2023   | 1000           | 0                      | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 45                | DAYS                  | 15             | DAYS                   | 3                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2023"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"1 January 2023"[22m[39m                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2023"[22m with [1m"1000"[22m EUR transaction amount[39m                                                         [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"22 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"22 January 2023"[22m with [1m100[22m EUR transaction amount[39m                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"29 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"29 January 2023"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a transaction with date: [1m"29 January 2023"[22m, and with the following data:[39m                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTransactionWithGivenDateDataCheck(java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance |
+      | Close (as written-off) | 650.0  | 650.0     | 0.0      | 0.0  | 0.0       | 0.0          |
+  [32m✔[39m [32m[1mThen [22mCustomer undo [1m"1"[22mth transaction made on [1m"29 January 2023"[22m results a [1m403[22m error and [1m"update not allowed as loan status is written off"[22m error message[39m [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.undoTransactionResultsError(java.lang.String,java.lang.String,int,java.lang.String)[39m
+
+@WriteOffFeature @TestRailId:C4006
+[1mScenario:[22m Verify accounting journal entries are not duplicated during write-off in case the cumulative loan was already charged-off    [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:64[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2023"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                        [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct       | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy                        |
+      | LP1_INTEREST_FLAT | 1 January 2023    | 1000           | 12                     | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 3                 | MONTHS                | 1              | MONTHS                 | 3                  | 0                       | 0                      | 0                    | PENALTIES_FEES_INTEREST_PRINCIPAL_ORDER |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2023"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"1 January 2023"[22m[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2023"[22m with [1m"1000"[22m EUR transaction amount[39m                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin adds an NSF fee because of payment bounce with [1m"1 January 2023"[22m transaction date[39m                                         [90m# org.apache.fineract.test.stepdef.loan.LoanChargeStepDef.addNSFfee(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"22 February 2023"[22m[39m                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin adds a [1m10[22m % Processing charge to the loan with [1m"en"[22m locale on date: [1m"22 February 2023"[22m[39m                                   [90m# org.apache.fineract.test.stepdef.loan.LoanChargeStepDef.addProcessingFee(double,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does charge-off the loan on [1m"22 February 2023"[22m[39m                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan marked as charged-off on [1m"22 February 2023"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.isLoanChargedOff(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"ACTIVE"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"DISBURSEMENT"[22m transaction with date [1m"01 January 2023"[22m which has the following Journal entries:[39m   [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type      | Account code | Account name              | Debit  | Credit |
+      | ASSET     | 112601       | Loans Receivable          | 1000.0 |        |
+      | LIABILITY | 145023       | Suspense/Clearing account |        | 1000.0 |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"22 February 2023"[22m which has the following Journal entries:[39m    [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit  | Credit |
+      | ASSET   | 112601       | Loans Receivable           |        | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable    |        | 143.0  |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       | 1000.0 |        |
+      | INCOME  | 404001       | Interest Income Charge Off | 30.0   |        |
+      | INCOME  | 404008       | Fee Charge Off             | 113.0  |        |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 March 2023"[22m[39m                                                                                [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"1 March 2023"[22m[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"01 March 2023"[22m which has the following Journal entries:[39m        [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit  | Credit |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       |        | 1000.0 |
+      | INCOME  | 404001       | Interest Income Charge Off |        | 30.0   |
+      | INCOME  | 404008       | Fee Charge Off             |        | 113.0  |
+      | EXPENSE | e4           | Written off                | 1143.0 |        |
+
+@WriteOffFeature @TestRailId:C4007
+[1mScenario:[22m Verify accounting journal entries during write-off when cumulative loan was not charged-off before                           [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:100[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2023"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                        [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct       | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy                        |
+      | LP1_INTEREST_FLAT | 1 January 2023    | 1000           | 12                     | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 3                 | MONTHS                | 1              | MONTHS                 | 3                  | 0                       | 0                      | 0                    | PENALTIES_FEES_INTEREST_PRINCIPAL_ORDER |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2023"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"1 January 2023"[22m[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2023"[22m with [1m"1000"[22m EUR transaction amount[39m                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin adds an NSF fee because of payment bounce with [1m"1 January 2023"[22m transaction date[39m                                         [90m# org.apache.fineract.test.stepdef.loan.LoanChargeStepDef.addNSFfee(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"22 February 2023"[22m[39m                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin adds a [1m10[22m % Processing charge to the loan with [1m"en"[22m locale on date: [1m"22 February 2023"[22m[39m                                   [90m# org.apache.fineract.test.stepdef.loan.LoanChargeStepDef.addProcessingFee(double,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"ACTIVE"[22m[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"DISBURSEMENT"[22m transaction with date [1m"01 January 2023"[22m which has the following Journal entries:[39m   [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type      | Account code | Account name              | Debit  | Credit |
+      | ASSET     | 112601       | Loans Receivable          | 1000.0 |        |
+      | LIABILITY | 145023       | Suspense/Clearing account |        | 1000.0 |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 March 2023"[22m[39m                                                                                [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"1 March 2023"[22m[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"01 March 2023"[22m which has the following Journal entries:[39m        [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name            | Debit  | Credit |
+      | ASSET   | 112601       | Loans Receivable        |        | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable |        | 143.0  |
+      | EXPENSE | e4           | Written off             | 1143.0 |        |
+
+@WriteOffFeature @TestRailId:C4010
+[1mScenario:[22m Verify accounting journal entries are not duplicated during write-off in case the progressive loan was already charged-off     [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:126[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 January 2024"[22m[39m                                                                               [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a client with random data[39m                                                                                         [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                                                    | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1 | 01 January 2024   | 1000           | 7                      | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 3                 | MONTHS                | 1              | MONTHS                 | 3                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"01 January 2024"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"01 January 2024"[22m[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin successfully disburse the loan on [1m"01 January 2024"[22m with [1m"1000"[22m EUR transaction amount[39m                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m3[22m periods, with the following data for periods:[39m                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |           | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2024 |           | 668.6           | 331.4         | 5.83     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 337.23      |
+      | 2  | 29   | 01 March 2024    |           | 335.27          | 333.33        | 3.9      | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 337.23      |
+      | 3  | 31   | 01 April 2024    |           | 0.0             | 335.27        | 1.96     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 337.23      |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 11.69    | 0    | 0         | 1011.69 | 0    | 0          | 0    | 1011.69     |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has the following data:[39m                                                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2024  | Disbursement     | 1000.0 | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"08 February 2024"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"09 February 2024"[22m[39m                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does charge-off the loan on [1m"09 February 2024"[22m[39m                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m3[22m periods, with the following data for periods:[39m                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |           | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2024 |           | 668.6           | 331.4         | 5.83     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 337.23      |
+      | 2  | 29   | 01 March 2024    |           | 335.8           | 332.8         | 4.43     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 337.23      |
+      | 3  | 31   | 01 April 2024    |           | 0.0             | 335.8         | 1.96     | 0.0  | 0.0       | 337.76 | 0.0  | 0.0        | 0.0  | 337.76      |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 12.22    | 0    | 0         | 1012.22 | 0    | 0          | 0    | 1012.22     |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has the following data:[39m                                                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2024  | Disbursement     | 1000.0  | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+      | 09 February 2024 | Accrual          | 7.44    | 0.0       | 7.44     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 09 February 2024 | Charge-off       | 1012.22 | 1000.0    | 12.22    | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"09 February 2024"[22m which has the following Journal entries:[39m      [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit  | Credit |
+      | ASSET   | 112601       | Loans Receivable           |        | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable    |        | 12.22  |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       | 1000.0 |        |
+      | INCOME  | 404001       | Interest Income Charge Off | 12.22  |        |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 March 2024"[22m[39m                                                                                 [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"01 March 2024"[22m[39m                                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m3[22m periods, with the following data for periods:[39m                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date     | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |               | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2024 | 01 March 2024 | 668.6           | 331.4         | 5.83     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 2  | 29   | 01 March 2024    | 01 March 2024 | 335.8           | 332.8         | 4.43     | 0.0  | 0.0       | 337.23 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 3  | 31   | 01 April 2024    | 01 March 2024 | 0.0             | 335.8         | 1.96     | 0.0  | 0.0       | 337.76 | 0.0  | 0.0        | 0.0  | 0.0         |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                    [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 12.22    | 0    | 0         | 1012.22 | 0    | 0          | 0    | 0.0         |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has the following data:[39m                                                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount  | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2024  | Disbursement           | 1000.0  | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+      | 09 February 2024 | Accrual                | 7.44    | 0.0       | 7.44     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 09 February 2024 | Charge-off             | 1012.22 | 1000.0    | 12.22    | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 01 March 2024    | Close (as written-off) | 1012.22 | 1000.0    | 12.22    | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"01 March 2024"[22m which has the following Journal entries:[39m          [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit   | Credit |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       |         | 1000.0 |
+      | INCOME  | 404001       | Interest Income Charge Off |         | 12.22  |
+      | EXPENSE | e4           | Written off                | 1012.22 |        |
+
+@WriteOffFeature @TestRailId:C4011
+[1mScenario:[22m Verify accounting journal entries are not duplicated during write-off in case the progressive loan was already charged-off after repayment [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:193[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2024"[22m[39m                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                      [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                                  | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF | 01 January 2024   | 100            | 7                      | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 6                 | MONTHS                | 1              | MONTHS                 | 6                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m6[22m periods, with the following data for periods:[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |           | 100.0           |               |          | 0.0  |           | 0.0   |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2024 |           | 83.57           | 16.43         | 0.58     | 0.0  | 0.0       | 17.01 | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 29   | 01 March 2024    |           | 67.05           | 16.52         | 0.49     | 0.0  | 0.0       | 17.01 | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2024    |           | 50.43           | 16.62         | 0.39     | 0.0  | 0.0       | 17.01 | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2024      |           | 33.71           | 16.72         | 0.29     | 0.0  | 0.0       | 17.01 | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 5  | 31   | 01 June 2024     |           | 16.9            | 16.81         | 0.2      | 0.0  | 0.0       | 17.01 | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 6  | 30   | 01 July 2024     |           | 0.0             | 16.9          | 0.1      | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05 | 0    | 0          | 0    | 102.05      |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2024"[22m with [1m"100"[22m amount and expected disbursement date on [1m"1 January 2024"[22m[39m                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2024"[22m with [1m"100"[22m EUR transaction amount[39m                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 February 2024"[22m[39m                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"01 February 2024"[22m with [1m17.01[22m EUR transaction amount[39m                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m6[22m periods, with the following data for periods:[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date        | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid  | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |                  | 100.0           |               |          | 0.0  |           | 0.0   | 0.0   |            |      |             |
+      | 1  | 31   | 01 February 2024 | 01 February 2024 | 83.57           | 16.43         | 0.58     | 0.0  | 0.0       | 17.01 | 17.01 | 0.0        | 0.0  | 0.0         |
+      | 2  | 29   | 01 March 2024    |                  | 67.05           | 16.52         | 0.49     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2024    |                  | 50.43           | 16.62         | 0.39     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2024      |                  | 33.71           | 16.72         | 0.29     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 5  | 31   | 01 June 2024     |                  | 16.9            | 16.81         | 0.2      | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 6  | 30   | 01 July 2024     |                  | 0.0             | 16.9          | 0.1      | 0.0  | 0.0       | 17.0  | 0.0   | 0.0        | 0.0  | 17.0        |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid  | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05 | 17.01 | 0          | 0    | 85.04       |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 March 2024"[22m[39m                                                                                              [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does charge-off the loan on [1m"1 March 2024"[22m[39m                                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoanBalanceChangedBusinessEvent is created on [1m"01 March 2024"[22m[39m                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanInterestPauseStepDef.checkLoanBalanceChangedBusinessEvent(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m6[22m periods, with the following data for periods:[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date        | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid  | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |                  | 100.0           |               |          | 0.0  |           | 0.0   | 0.0   |            |      |             |
+      | 1  | 31   | 01 February 2024 | 01 February 2024 | 83.57           | 16.43         | 0.58     | 0.0  | 0.0       | 17.01 | 17.01 | 0.0        | 0.0  | 0.0         |
+      | 2  | 29   | 01 March 2024    |                  | 67.05           | 16.52         | 0.49     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2024    |                  | 50.04           | 17.01         | 0.0      | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2024      |                  | 33.03           | 17.01         | 0.0      | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 5  | 31   | 01 June 2024     |                  | 16.02           | 17.01         | 0.0      | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 6  | 30   | 01 July 2024     |                  | 0.0             | 16.02         | 0.0      | 0.0  | 0.0       | 16.02 | 0.0   | 0.0        | 0.0  | 16.02       |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid  | In advance | Late | Outstanding |
+      | 100           | 1.07     | 0    | 0         | 101.07 | 17.01 | 0          | 0    | 84.06       |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has the following data:[39m                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2024  | Disbursement     | 100.0  | 0.0       | 0.0      | 0.0  | 0.0       | 100.0        | false    | false    |
+      | 01 February 2024 | Repayment        | 17.01  | 16.43     | 0.58     | 0.0  | 0.0       | 83.57        | false    | false    |
+      | 01 March 2024    | Accrual          | 1.07   | 0.0       | 1.07     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 01 March 2024    | Charge-off       | 84.06  | 83.57     | 0.49     | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"01 March 2024"[22m which has the following Journal entries:[39m                     [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 83.57  |
+      | ASSET   | 112603       | Interest/Fee Receivable    |       | 0.49   |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       | 83.57 |        |
+      | INCOME  | 404001       | Interest Income Charge Off | 0.49  |        |
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"01 March 2024"[22m[39m                                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m6[22m periods, with the following data for periods:[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date        | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid  | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |                  | 100.0           |               |          | 0.0  |           | 0.0   | 0.0   |            |      |             |
+      | 1  | 31   | 01 February 2024 | 01 February 2024 | 83.57           | 16.43         | 0.58     | 0.0  | 0.0       | 17.01 | 17.01 | 0.0        | 0.0  | 0.0         |
+      | 2  | 29   | 01 March 2024    | 01 March 2024    | 67.05           | 16.52         | 0.49     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 0.0         |
+      | 3  | 31   | 01 April 2024    | 01 March 2024    | 50.43           | 16.62         | 0.39     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 0.0         |
+      | 4  | 30   | 01 May 2024      | 01 March 2024    | 33.71           | 16.72         | 0.29     | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 0.0         |
+      | 5  | 31   | 01 June 2024     | 01 March 2024    | 16.9            | 16.81         | 0.2      | 0.0  | 0.0       | 17.01 | 0.0   | 0.0        | 0.0  | 0.0         |
+      | 6  | 30   | 01 July 2024     | 01 March 2024    | 0.0             | 16.9          | 0.1      | 0.0  | 0.0       | 17.0  | 0.0   | 0.0        | 0.0  | 0.0         |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid  | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05 | 17.01 | 0          | 0    | 0.0         |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has the following data:[39m                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2024  | Disbursement           | 100.0  | 0.0       | 0.0      | 0.0  | 0.0       | 100.0        | false    | false    |
+      | 01 February 2024 | Repayment              | 17.01  | 16.43     | 0.58     | 0.0  | 0.0       | 83.57        | false    | false    |
+      | 01 March 2024    | Accrual                | 1.07   | 0.0       | 1.07     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 01 March 2024    | Charge-off             | 84.06  | 83.57     | 0.49     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 01 March 2024    | Close (as written-off) | 85.04  | 83.57     | 1.47     | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"01 March 2024"[22m which has the following Journal entries:[39m                      [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       |       | 83.57  |
+      | INCOME  | 404001       | Interest Income Charge Off |       | 1.47   |
+      | EXPENSE | e4           | Written off                | 85.04 |        |
+
+@WriteOffFeature @TestRailId:C4012
+[1mScenario:[22m Verify accounting journal entries during write-off in case the progressive loan was already charged-off and then charge-off is undone [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:281[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"1 January 2024"[22m[39m                                                                                       [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                 [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                          [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                              | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON | 01 January 2024   | 100            | 7                      | DECLINING_BALANCE | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 6                 | MONTHS                | 1              | MONTHS                 | 6                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m6[22m periods, with the following data for periods:[39m                                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2024  |           | 100.0           |               |          | 0.0  |           | 0.0   |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2024 |           | 83.58           | 16.42         | 0.58     | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+      | 2  | 29   | 01 March 2024    |           | 67.07           | 16.51         | 0.49     | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+      | 3  | 31   | 01 April 2024    |           | 50.46           | 16.61         | 0.39     | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+      | 4  | 30   | 01 May 2024      |           | 33.75           | 16.71         | 0.29     | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+      | 5  | 31   | 01 June 2024     |           | 16.95           | 16.8          | 0.2      | 0.0  | 0.0       | 17.0  | 0.0  | 0.0        | 0.0  | 17.0        |
+      | 6  | 30   | 01 July 2024     |           | 0.0             | 16.95         | 0.1      | 0.0  | 0.0       | 17.05 | 0.0  | 0.0        | 0.0  | 17.05       |
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has the following data in Total row:[39m                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05 | 0    | 0          | 0    | 102.05      |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"1 January 2024"[22m with [1m"100"[22m amount and expected disbursement date on [1m"1 January 2024"[22m[39m           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"1 January 2024"[22m with [1m"100"[22m EUR transaction amount[39m                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mAdmin can successfully set Fraud flag to the loan[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.setFraud()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"03 February 2024"[22m[39m                                                                                     [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does charge-off the loan with reason [1m"DELINQUENT"[22m on [1m"03 February 2024"[22m[39m                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoanBalanceChangedBusinessEvent is created on [1m"03 February 2024"[22m[39m                                                                       [90m# org.apache.fineract.test.stepdef.loan.LoanInterestPauseStepDef.checkLoanBalanceChangedBusinessEvent(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m             [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 100.0  |
+      | ASSET   | 112603       | Interest/Fee Receivable    |       | 0.61   |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       | 100.0 |        |
+      | INCOME  | 404001       | Interest Income Charge Off | 0.61  |        |
+  [32m✔[39m [32m[1mThen [22mAdmin does a charge-off undo the loan[39m                                                                                                  [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffUndo()[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m             [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 100.0  |
+      | ASSET   | 112601       | Loans Receivable           | 100.0 |        |
+      | ASSET   | 112603       | Interest/Fee Receivable    |       | 0.61   |
+      | ASSET   | 112603       | Interest/Fee Receivable    | 0.61  |        |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       | 100.0 |        |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt       |       | 100.0  |
+      | INCOME  | 404001       | Interest Income Charge Off | 0.61  |        |
+      | INCOME  | 404001       | Interest Income Charge Off |       | 0.61   |
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"03 February 2024"[22m[39m                                                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m              [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name            | Debit  | Credit |
+      | ASSET   | 112601       | Loans Receivable        |        | 100.0  |
+      | ASSET   | 112603       | Interest/Fee Receivable |        | 2.05   |
+      | EXPENSE | e4           | Written off             | 102.05 |        |
+
+@WriteOffFeature @TestRailId:C4013
+[1mScenario:[22m Verify accounting journal entries are not duplicated during write-off in case the progressive reverse-replayed fraud loan was charged-off                    [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:330[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a client with random data[39m                                                                                                                       [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin set [1m"LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION"[22m loan product [1m"DEFAULT"[22m transaction type to [1m"NEXT_INSTALLMENT"[22m future installment allocation rule[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.editFutureInstallmentAllocationTypeForLoanProduct(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin creates a fully customized loan with the following data:[39m                                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION | 01 February 2024  | 1000           | 0                      | FLAT          | SAME_AS_REPAYMENT_PERIOD    | EQUAL_INSTALLMENTS | 45                | DAYS                  | 15             | DAYS                   | 3                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"01 February 2024"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"01 February 2024"[22m[39m                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin successfully disburse the loan on [1m"01 February 2024"[22m with [1m"1000"[22m EUR transaction amount[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"02 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"02 February 2024"[22m with [1m100[22m EUR transaction amount[39m                                                                       [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"03 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mAdmin can successfully set Fraud flag to the loan[39m                                                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.setFraud()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"03 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does charge-off the loan on [1m"03 February 2024"[22m[39m                                                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.chargeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m                                    [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 650.0  |
+      | EXPENSE | 744037       | Credit Loss/Bad Debt-Fraud | 650.0 |        |
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"04 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mCustomer undo [1m"1"[22mth [1m"Repayment"[22m transaction made on [1m"02 February 2024"[22m[39m                                                                                        [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.undoNthTransactionType(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"CHARGE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m                                    [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 750.0  |
+      | EXPENSE | 744037       | Credit Loss/Bad Debt-Fraud | 750.0 |        |
+  [32m✔[39m [32m[1mThen [22mIn Loan transactions the replayed [1m"CHARGE_OFF"[22m transaction with date [1m"03 February 2024"[22m has a reverted transaction pair with the following Journal entries:[39m   [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.revertedJournalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | ASSET   | 112601       | Loans Receivable           |       | 650.0  |
+      | EXPENSE | 744037       | Credit Loss/Bad Debt-Fraud | 650.0 |        |
+      | ASSET   | 112601       | Loans Receivable           | 650.0 |        |
+      | EXPENSE | 744037       | Credit Loss/Bad Debt-Fraud |       | 650.0  |
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"03 February 2024"[22m[39m                                                                                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"03 February 2024"[22m which has the following Journal entries:[39m                                     [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name               | Debit | Credit |
+      | EXPENSE | 744037       | Credit Loss/Bad Debt-Fraud |       | 750.0  |
+      | EXPENSE | e4           | Written off                | 750.0 |        |
+
+@WriteOffFeature @TestRailId:C4111
+[1mScenario:[22m Verify GL entries for Write Off reason mapping - UC1: Write off, LP with write off reason mapping, NO write off reason to expense account [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:368[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 January 2025"[22m[39m                                                                                          [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                     [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_WRITE_OFF_REASON_MAP | 01 January 2025   | 1000           | 12                     | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 4                 | MONTHS                | 1              | MONTHS                 | 4                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"01 January 2025"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"01 January 2025"[22m[39m            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"01 January 2025"[22m with [1m"1000"[22m EUR transaction amount[39m                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin sets the business date to [1m"02 January 2025"[22m[39m                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                          [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"02 January 2025"[22m[39m                                                                                          [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                                   [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has [1m4[22m periods, with the following data for periods:[39m                                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date       | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2025  |                 | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2025 | 02 January 2025 | 753.72          | 246.28        | 10.0     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 2  | 28   | 01 March 2025    | 02 January 2025 | 504.98          | 248.74        | 7.54     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 3  | 31   | 01 April 2025    | 02 January 2025 | 253.75          | 251.23        | 5.05     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 4  | 30   | 01 May 2025      | 02 January 2025 | 0.0             | 253.75        | 2.54     | 0.0  | 0.0       | 256.29 | 0.0  | 0.0        | 0.0  | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 25.13    | 0    | 0         | 1025.13 | 0    | 0          | 0    | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount  | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2025  | Disbursement           | 1000.0  | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+      | 02 January 2025  | Close (as written-off) | 1025.13 | 1000.0    | 25.13    | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"02 January 2025"[22m which has the following Journal entries:[39m                    [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name            | Debit   | Credit |
+      | ASSET   | 112601       | Loans Receivable        |         | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable |         | 25.13  |
+      | EXPENSE | e4           | Written off             | 1025.13 |        |
+
+@WriteOffFeature @TestRailId:C4112
+[1mScenario:[22m Verify GL entries for Write Off reason mapping - UC2: Write off, LP with write off reason mapping, with write off reason: Bad Debt [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:401[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 January 2025"[22m[39m                                                                                   [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                              [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                       [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                      | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_WRITE_OFF_REASON_MAP | 01 January 2025   | 1000           | 12                     | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 4                 | MONTHS                | 1              | MONTHS                 | 4                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"01 January 2025"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"01 January 2025"[22m[39m     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"01 January 2025"[22m with [1m"1000"[22m EUR transaction amount[39m                                         [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin sets the business date to [1m"02 January 2025"[22m[39m                                                                                    [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                   [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"02 January 2025"[22m with write off reason: [1m"BAD_DEBT"[22m[39m                                                 [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has [1m4[22m periods, with the following data for periods:[39m                                                          [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date       | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2025  |                 | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2025 | 02 January 2025 | 753.72          | 246.28        | 10.0     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 2  | 28   | 01 March 2025    | 02 January 2025 | 504.98          | 248.74        | 7.54     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 3  | 31   | 01 April 2025    | 02 January 2025 | 253.75          | 251.23        | 5.05     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 4  | 30   | 01 May 2025      | 02 January 2025 | 0.0             | 253.75        | 2.54     | 0.0  | 0.0       | 256.29 | 0.0  | 0.0        | 0.0  | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                         [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 25.13    | 0    | 0         | 1025.13 | 0    | 0          | 0    | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                        [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount  | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2025  | Disbursement           | 1000.0  | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+      | 02 January 2025  | Close (as written-off) | 1025.13 | 1000.0    | 25.13    | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"02 January 2025"[22m which has the following Journal entries:[39m             [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name            | Debit   | Credit |
+      | ASSET   | 112601       | Loans Receivable        |         | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable |         | 25.13  |
+      | EXPENSE | 744007       | Credit Loss/Bad Debt    | 1025.13 |        |
+
+@WriteOffFeature @TestRailId:C4113
+[1mScenario:[22m Verify GL entries for Write Off reason mapping - UC3: Write off, LP without write off reason mapping, with write off reason: Bad Debt [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanWriteOff.feature:434[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"01 January 2025"[22m[39m                                                                                      [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                 [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                          [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                                        | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CLASSIFICATION_INCOME_MAP | 01 January 2025   | 1000           | 12                     | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 4                 | MONTHS                | 1              | MONTHS                 | 4                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"01 January 2025"[22m with [1m"1000"[22m amount and expected disbursement date on [1m"01 January 2025"[22m[39m        [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"01 January 2025"[22m with [1m"1000"[22m EUR transaction amount[39m                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin sets the business date to [1m"02 January 2025"[22m[39m                                                                                       [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                      [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin does write-off the loan on [1m"02 January 2025"[22m[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.writeOffLoan(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"CLOSED_WRITTEN_OFF"[22m[39m                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has [1m4[22m periods, with the following data for periods:[39m                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date             | Paid date       | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2025  |                 | 1000.0          |               |          | 0.0  |           | 0.0    | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2025 | 02 January 2025 | 753.72          | 246.28        | 10.0     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 2  | 28   | 01 March 2025    | 02 January 2025 | 504.98          | 248.74        | 7.54     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 3  | 31   | 01 April 2025    | 02 January 2025 | 253.75          | 251.23        | 5.05     | 0.0  | 0.0       | 256.28 | 0.0  | 0.0        | 0.0  | 0.0         |
+      | 4  | 30   | 01 May 2025      | 02 January 2025 | 0.0             | 253.75        | 2.54     | 0.0  | 0.0       | 256.29 | 0.0  | 0.0        | 0.0  | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 1000          | 25.13    | 0    | 0         | 1025.13 | 0    | 0          | 0    | 0.0         |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount  | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 01 January 2025  | Disbursement           | 1000.0  | 0.0       | 0.0      | 0.0  | 0.0       | 1000.0       | false    | false    |
+      | 02 January 2025  | Close (as written-off) | 1025.13 | 1000.0    | 25.13    | 0.0  | 0.0       | 0.0          | false    | false    |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has a [1m"WRITE_OFF"[22m transaction with date [1m"02 January 2025"[22m which has the following Journal entries:[39m                [90m# org.apache.fineract.test.stepdef.common.JournalEntriesStepDef.journalEntryDataCheck(java.lang.String,java.lang.String,io.cucumber.datatable.DataTable)[39m
+      | Type    | Account code | Account name            | Debit   | Credit |
+      | ASSET   | 112601       | Loans Receivable        |         | 1000.0 |
+      | ASSET   | 112603       | Interest/Fee Receivable |         | 25.13  |
+      | EXPENSE | e4           | Written off             | 1025.13 |        |
+
+12 scenarios ([32m12 passed[39m)
+257 steps ([32m257 passed[39m)
+1m 6.666s
+
+[Incubating] Problems report is available at: file:///work/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 32s
+24 actionable tasks: 1 executed, 23 up-to-date
+=== run end 2026-09-11T14:29:46Z rc=0 ===
