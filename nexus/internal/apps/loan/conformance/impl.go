@@ -150,8 +150,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goWriteOff(*req.WriteOff)
 	case req.Reversal != nil:
 		return goReversal(*req.Reversal)
+	case req.WriteOffJournal != nil:
+		return goWriteOffJournal(*req.WriteOffJournal)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal")
 	}
 }
 
@@ -685,6 +687,175 @@ func defectWriteOff(a loan.Allocation, mode writeOffWrongMode) loan.Allocation {
 		return loan.Allocation{Principal: a.Principal, Interest: a.Interest, Fee: a.Penalty, Penalty: a.Fee}
 	}
 	return a
+}
+
+// goWriteOffJournal ports the loan-writeoff-journal-entries seam: it reduces the
+// request's five portions and slot->account mapping to loan.WriteOffPortions and
+// loan.WriteOffAccountMapping and runs the port's own
+// loan.CreateWriteOffJournalEntryLegs. Every monetary cell is an integer minor
+// unit; the mapping is the product's observed accountingMappings, never
+// invented.
+func goWriteOffJournal(r WriteOffJournalRequest) (Expect, error) {
+	portions, err := writeOffPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateWriteOffJournalEntryLegs(r.TransactionID, portions, loan.WriteOffAccountMapping{
+		LoanPortfolio:       r.Accounts.LoanPortfolio,
+		InterestReceivable:  r.Accounts.InterestReceivable,
+		FeesReceivable:      r.Accounts.FeesReceivable,
+		PenaltiesReceivable: r.Accounts.PenaltiesReceivable,
+		Overpayment:         r.Accounts.Overpayment,
+		LossesWrittenOff:    r.Accounts.LossesWrittenOff,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return writeOffJournalLegsExpect(legs), nil
+}
+
+// writeOffPortionsFromRequest reduces the request's per-slot money strings to
+// the port's integer-minor-unit portions. Overpayment is optional (absent on
+// the committed loan-11 write-off, so omitted); every other slot is required.
+func writeOffPortionsFromRequest(p WriteOffPortionsMoney) (loan.WriteOffPortions, error) {
+	var out loan.WriteOffPortions
+	var err error
+	if out.Principal, err = parseMinorText(p.Principal); err != nil {
+		return loan.WriteOffPortions{}, err
+	}
+	if out.Interest, err = parseMinorText(p.Interest); err != nil {
+		return loan.WriteOffPortions{}, err
+	}
+	if out.Fee, err = parseMinorText(p.Fee); err != nil {
+		return loan.WriteOffPortions{}, err
+	}
+	if out.Penalty, err = parseMinorText(p.Penalty); err != nil {
+		return loan.WriteOffPortions{}, err
+	}
+	if p.Overpayment != "" {
+		if out.Overpayment, err = parseMinorText(p.Overpayment); err != nil {
+			return loan.WriteOffPortions{}, err
+		}
+	}
+	return out, nil
+}
+
+// writeOffJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a
+// leg whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func writeOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{WriteOffJournalLegs: out}
+}
+
+// writeOffJournalWrongMode selects which deliberately-wrong write-off posting
+// to run. Each is a port a reasonable reader might write, and each is
+// discriminated by the committed L54 observation.
+type writeOffJournalWrongMode int
+
+const (
+	// wrongWriteOffJournalOneDebitPerPortion posts one debit per discharged
+	// portion instead of ONE debit of the total. The whole batch still balances
+	// (each side sums to 10677553) and every account is right, but the leg
+	// count grows from five to eight and the debit count from one to four, so
+	// only the ordered leg cells see the extra debits.
+	wrongWriteOffJournalOneDebitPerPortion writeOffJournalWrongMode = iota
+	// wrongWriteOffJournalDebitsPrincipalOnly posts all four credits but debits
+	// only the principal portion (10000000), so the credits sum to 10677553
+	// while the debit reads 10000000 and the batch no longer balances.
+	wrongWriteOffJournalDebitsPrincipalOnly
+	// wrongWriteOffJournalDebitsLoanPortfolio debits the loan-portfolio slot
+	// instead of the losses-written-off slot. Every amount and side is right
+	// and the batch still balances; only the debit's ACCOUNT cell moves.
+	wrongWriteOffJournalDebitsLoanPortfolio
+	// wrongWriteOffJournalSwapsFeeAndPenalty credits the fee portion to the
+	// penalties-receivable account and the penalty portion to the fee account,
+	// so the fee (10000) and penalty (5700) account cells move while every total
+	// holds; the distinct non-zero portions mean the swap cannot hide.
+	wrongWriteOffJournalSwapsFeeAndPenalty
+)
+
+// wrongWriteOffJournalEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-writeoff-journal-entries seam, parameterised by which posting defect it
+// commits. On any request that is not a write-off journal it delegates to the
+// correct port, so each drive goes red ONLY on this seam's vector and stays
+// green everywhere else (vector isolation).
+type wrongWriteOffJournalEvaluator struct {
+	goEvaluator
+	mode writeOffJournalWrongMode
+}
+
+func (w wrongWriteOffJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.WriteOffJournal != nil {
+		return wrongWriteOffJournal(*req.WriteOffJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongWriteOffJournal runs the correct posting and then applies exactly one
+// defect, so each drive differs from the port on exactly the cells its defect
+// moves.
+func wrongWriteOffJournal(r WriteOffJournalRequest, mode writeOffJournalWrongMode) (Expect, error) {
+	// Input-level defects perturb the observed mapping the port reads.
+	switch mode {
+	case wrongWriteOffJournalDebitsLoanPortfolio:
+		r.Accounts.LossesWrittenOff = r.Accounts.LoanPortfolio
+	case wrongWriteOffJournalSwapsFeeAndPenalty:
+		r.Accounts.FeesReceivable, r.Accounts.PenaltiesReceivable = r.Accounts.PenaltiesReceivable, r.Accounts.FeesReceivable
+	}
+	expect, err := goWriteOffJournal(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	switch mode {
+	case wrongWriteOffJournalOneDebitPerPortion:
+		expect = oneDebitPerPortion(expect)
+	case wrongWriteOffJournalDebitsPrincipalOnly:
+		principal, err := parseMinorText(r.Portions.Principal)
+		if err != nil {
+			return Expect{}, err
+		}
+		legs := expect.WriteOffJournalLegs
+		if n := len(legs); n > 0 {
+			legs[n-1].AmountMinor = strconv.FormatInt(int64(principal), 10)
+		}
+	}
+	return expect, nil
+}
+
+// oneDebitPerPortion rewrites the correct leg list (credits then one debit) as
+// one debit per credit, after the credits, so the batch balances but carries a
+// debit for every portion.
+func oneDebitPerPortion(e Expect) Expect {
+	var credits, debits []JournalEntryLeg
+	for _, leg := range e.WriteOffJournalLegs {
+		if leg.EntryType == "CREDIT" {
+			credits = append(credits, leg)
+			debits = append(debits, JournalEntryLeg{
+				TransactionID: leg.TransactionID,
+				Account:       leg.Account,
+				EntryType:     "DEBIT",
+				AmountMinor:   leg.AmountMinor,
+			})
+		}
+	}
+	e.WriteOffJournalLegs = append(credits, debits...)
+	if e.WriteOffJournalLegs == nil {
+		e.WriteOffJournalLegs = []JournalEntryLeg{}
+	}
+	return e
 }
 
 // amortizationWrongMode selects which deliberately-wrong whole-schedule
@@ -1832,4 +2003,26 @@ func init() {
 			"(2026-09-03) instead of the reversed transaction's own date (2026-09-02); every side, "+
 			"account, amount and transaction id stays right and only the counter-leg date cells move",
 		wrongReversalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongReversalBusinessDate})
+	RegisterWrong("loan-wrong-writeoff-journal-one-debit-per-portion",
+		"posts one debit per discharged portion instead of ONE debit of the total, so the pinned "+
+			"loan-11 L54 batch carries four debits (10000000/661853/10000/5700) after the four "+
+			"credits; every account and side is right and each side still sums to 10677553, but the "+
+			"leg count grows five to eight and only the ordered leg cells see the extra debits",
+		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalOneDebitPerPortion})
+	RegisterWrong("loan-wrong-writeoff-journal-debits-principal-only",
+		"posts the four credits of a write-off but debits only the principal portion, so the pinned "+
+			"loan-11 L54 batch credits 10677553 while the single debit reads 10000000 and the batch "+
+			"no longer balances",
+		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalDebitsPrincipalOnly})
+	RegisterWrong("loan-wrong-writeoff-journal-debits-loan-portfolio",
+		"debits the loan-portfolio account instead of the losses-written-off account, so the pinned "+
+			"loan-11 L54 debit moves from OHLGR-50010 Losses-Written-Off to OHLGR-10010 "+
+			"Loan-Portfolio while every amount, side and total stays observed — the account cell the "+
+			"batch totals cannot see",
+		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalDebitsLoanPortfolio})
+	RegisterWrong("loan-wrong-writeoff-journal-swaps-fee-and-penalty",
+		"credits the fee portion to the penalties-receivable account and the penalty portion to the "+
+			"fee account; the pinned distinct fee (10000) and penalty (5700) both stay non-zero and "+
+			"every total is unchanged, so only the two account cells move — the swap they exist to catch",
+		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalSwapsFeeAndPenalty})
 }

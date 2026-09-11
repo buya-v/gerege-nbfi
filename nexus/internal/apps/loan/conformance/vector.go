@@ -163,6 +163,37 @@ const SeamLoanWriteOffFourBucket = "loan-writeoff-four-bucket"
 // duplication that the batch totals (both still 1156) cannot.
 const SeamLoanTransactionReversal = "loan-transaction-reversal"
 
+// SeamLoanWriteOffJournalEntries is the capture seam this schema grades: the
+// five-leg journal entry the loan write-off ITSELF posts, the other half of the
+// observation the writeoff-four-bucket seam grades. It ports
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForLoanWriteOffs
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1872-1976, pinned
+// commit 426a23544]. For each of the five portion slots (principal, interest,
+// fees, penalties, overpayment) whose portion is > 0 the processor adds the
+// portion to a total and credits the slot's mapped GL account, MERGING portions
+// that resolve to the SAME account (accountMap); it then posts ONE debit of the
+// total to the losses-written-off account (or the write-off-reason mapping when
+// one is set). The request carries the observed four portions and the product's
+// slot->account mapping; the expectation is the ordered leg list the write-off
+// posted. On the pinned loan-11 observation transaction L54 posts four credits
+// (Loan-Portfolio 10000000, Interest-Receivable 661853, Fees-Receivable 10000,
+// Penalties-Receivable 5700) then ONE debit (Losses-Written-Off 10677553), the
+// credits summing to the debit exactly.
+//
+// WHAT THIS SEAM DOES NOT GRADE. The same-account MERGE is invisible here:
+// product 3 maps the four credit slots to four DIFFERENT accounts, so a port
+// that never merges posts the same five legs, and a drive for the merge would
+// kill ZERO. Grading it needs a product that maps two portion slots to one
+// account (e.g. fees and penalties receivable sharing an account). The
+// zero-portion skip is likewise invisible: every portion on loan 11 is > 0, so
+// a port that never skips a zero posts the same five legs; grading it needs a
+// write-off with an all-zero slot. Overpayment and the write-off-reason mapping
+// are absent from the observation (the request's overpayment slot is zero and
+// the product carries no reason mapping), and the charged-off branch
+// [AccrualBasedAccountingProcessorForLoan.java:1616] is not reached because
+// loan 11 was not charged off.
+const SeamLoanWriteOffJournalEntries = "loan-writeoff-journal-entries"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -298,6 +329,46 @@ type ReversalLegCell struct {
 	Reversed        bool   `json:"reversed"`
 }
 
+// WriteOffPortionsMoney is the per-slot money a write-off discharges, each slot
+// an integer STRING in minor units. It is the request-side reduction of
+// loan.WriteOffPortions: the five fields
+// createJournalEntriesForLoanWriteOffs reads off the write-off transaction.
+// Overpayment is omitted when zero (the committed loan-11 write-off carries no
+// overpayment portion), so the port's zero value is used.
+type WriteOffPortionsMoney struct {
+	Principal   string `json:"principal"`
+	Interest    string `json:"interest"`
+	Fee         string `json:"fee"`
+	Penalty     string `json:"penalty"`
+	Overpayment string `json:"overpayment,omitempty"`
+}
+
+// WriteOffSlotAccounts is the product's write-off slot->account mapping, each
+// account the GL code the oracle's GET /loanproducts/{id}.accountingMappings
+// returns for that slot: loanPortfolioAccount, receivableInterestAccount,
+// receivableFeeAccount, receivablePenaltyAccount,
+// overpaymentLiabilityAccount and writeOffAccount. Overpayment is omitted when
+// the product's overpayment slot is not exercised (every portion is zero).
+type WriteOffSlotAccounts struct {
+	LoanPortfolio       string `json:"loan_portfolio"`
+	InterestReceivable  string `json:"interest_receivable"`
+	FeesReceivable      string `json:"fees_receivable"`
+	PenaltiesReceivable string `json:"penalties_receivable"`
+	Overpayment         string `json:"overpayment,omitempty"`
+	LossesWrittenOff    string `json:"losses_written_off"`
+}
+
+// WriteOffJournalRequest is the loan-writeoff-journal-entries seam's input: the
+// observed write-off portions and the product's slot->account mapping, plus the
+// transaction id the legs are posted under. The mapping is the product's
+// accountingMappings read back from the reference server, never invented; a
+// slot with a positive portion and no account is refused by the port.
+type WriteOffJournalRequest struct {
+	TransactionID string                `json:"transaction_id"`
+	Portions      WriteOffPortionsMoney `json:"portions"`
+	Accounts      WriteOffSlotAccounts  `json:"accounts"`
+}
+
 // DisburseRequest is the loan-disbursement seam's input: approved principal and
 // charges due at disbursement.
 type DisburseRequest struct {
@@ -395,6 +466,9 @@ type Request struct {
 	// Reversal is the loan-transaction-reversal seam's input: the before
 	// read-back legs of one loan transaction and its transaction date.
 	Reversal *ReversalRequest `json:"reversal,omitempty"`
+	// WriteOffJournal is the loan-writeoff-journal-entries seam's input: the
+	// write-off transaction's portions and the product's slot->account mapping.
+	WriteOffJournal *WriteOffJournalRequest `json:"write_off_journal,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -465,6 +539,13 @@ type Expect struct {
 	// six cells; the originals' Reversed flag and the counter-legs' transaction
 	// date are the cells the batch totals cannot see.
 	ReversalLegs []ReversalLegCell `json:"reversal_legs,omitempty"`
+	// WriteOffJournalLegs is the loan-writeoff-journal-entries seam's ordered
+	// leg list the write-off posted: one credit per discharged slot (merged by
+	// account) in portion order, then ONE debit of the total to the
+	// losses-written-off account. Every leg is graded on its transaction id,
+	// account, side and amount; the debit's account and the credit/debit split
+	// are what discriminate a debit-per-portion or wrong-account port.
+	WriteOffJournalLegs []JournalEntryLeg `json:"write_off_journal_legs,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

@@ -42,14 +42,14 @@ func Admit(v *Vector, opts Options) []string {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal:
+		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal))
+			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -164,6 +164,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.Reversal != nil {
+		n++
+	}
+	if v.Request.WriteOffJournal != nil {
 		n++
 	}
 	return n
@@ -448,6 +451,50 @@ func admitRequest(v *Vector) []string {
 			if !isIntegerMinorString(leg.AmountMinor) {
 				problems = append(problems, fmt.Sprintf(
 					"request.reversal.journal_entries[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+	case SeamLoanWriteOffJournalEntries:
+		if v.Request.WriteOffJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "write-off-journal seam must set exactly request.write_off_journal")
+			return problems
+		}
+		j := v.Request.WriteOffJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.write_off_journal.transaction_id is empty")
+		}
+		for name, val := range map[string]string{
+			"portions.principal": j.Portions.Principal,
+			"portions.interest":  j.Portions.Interest,
+			"portions.fee":       j.Portions.Fee,
+			"portions.penalty":   j.Portions.Penalty,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.write_off_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		if j.Portions.Overpayment != "" && !isIntegerMinorString(j.Portions.Overpayment) {
+			problems = append(problems, fmt.Sprintf(
+				"request.write_off_journal.portions.overpayment %q is not a non-negative integer minor amount", j.Portions.Overpayment))
+		}
+		// Every credit slot the write-off DISCHARGES needs its mapped account;
+		// the mapping is read back from the product, never invented. The
+		// overpayment slot's account is optional only because the committed
+		// observation discharges no overpayment. The four credit accounts are
+		// NOT required to be distinct: the port MERGES slots that map to one
+		// account, so a product that shares an account is legal (though the
+		// committed product 3 does not, which is why the merge is invisible
+		// here).
+		for name, val := range map[string]string{
+			"accounts.loan_portfolio":       j.Accounts.LoanPortfolio,
+			"accounts.interest_receivable":  j.Accounts.InterestReceivable,
+			"accounts.fees_receivable":      j.Accounts.FeesReceivable,
+			"accounts.penalties_receivable": j.Accounts.PenaltiesReceivable,
+			"accounts.losses_written_off":   j.Accounts.LossesWrittenOff,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.write_off_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
 		}
 	}
@@ -737,8 +784,122 @@ func admitExpect(v *Vector) []string {
 					"expect.reversal_legs[%d].reversed is true: an appended counter-leg is never flagged reversed", len(r.JournalEntries)+i))
 			}
 		}
+	case SeamLoanWriteOffJournalEntries:
+		if v.Request.WriteOffJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.WriteOffJournal
+		if len(v.Expect.WriteOffJournalLegs) == 0 {
+			problems = append(problems, "expect.write_off_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.WriteOffJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.write_off_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.write_off_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.write_off_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.write_off_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: one credit per non-zero portion in slot order,
+		// merging slots that share an account, then ONE debit of the total to
+		// the losses-written-off slot. This reconciliation is INDEPENDENT of the
+		// port under test, so a wrong port cannot make its own output
+		// "admissible".
+		expected, probs := reconstructWriteOffJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.WriteOffJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.write_off_journal_legs has %d legs but the non-zero slots plus ONE total debit need %d: credits are one per discharged slot (merged by account) and the debit is exactly one",
+				len(v.Expect.WriteOffJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.WriteOffJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.write_off_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the write-off credits each non-zero portion to its slot (merged by account) then debits the total ONCE",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	}
 	return problems
+}
+
+// reconstructWriteOffJournalLegs derives the leg list the observed write-off
+// property requires from the request alone, independently of the port: one
+// credit per non-zero portion in slot order (principal, interest, fees,
+// penalties, overpayment), merging portions that share an account at the first
+// slot's position, then ONE debit of the total to the losses-written-off
+// account. It returns the legs and any admission problems (a positive portion
+// with no mapped account, or a positive total with no losses-written-off
+// account), each money value kept as an integer minor-unit string.
+func reconstructWriteOffJournalLegs(j WriteOffJournalRequest) ([]JournalEntryLeg, []string) {
+	slots := []struct {
+		name    string
+		portion string
+		account string
+	}{
+		{"LOAN_PORTFOLIO", j.Portions.Principal, j.Accounts.LoanPortfolio},
+		{"INTEREST_RECEIVABLE", j.Portions.Interest, j.Accounts.InterestReceivable},
+		{"FEES_RECEIVABLE", j.Portions.Fee, j.Accounts.FeesReceivable},
+		{"PENALTIES_RECEIVABLE", j.Portions.Penalty, j.Accounts.PenaltiesReceivable},
+		{"OVERPAYMENT", j.Portions.Overpayment, j.Accounts.Overpayment},
+	}
+	var order []string
+	amounts := map[string]string{}
+	for _, s := range slots {
+		if s.portion == "" || s.portion == "0" {
+			continue
+		}
+		if s.account == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.write_off_journal slot %s has a positive portion %s but no mapped account", s.name, s.portion)}
+		}
+		if _, seen := amounts[s.account]; seen {
+			sum, _ := sumMinorStrings(amounts[s.account], s.portion)
+			amounts[s.account] = sum
+			continue
+		}
+		order = append(order, s.account)
+		amounts[s.account] = s.portion
+	}
+	legs := make([]JournalEntryLeg, 0, len(order)+1)
+	for _, account := range order {
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "CREDIT", AmountMinor: amounts[account],
+		})
+	}
+	overpayment := j.Portions.Overpayment
+	if overpayment == "" {
+		overpayment = "0"
+	}
+	total, _ := sumMinorStrings(j.Portions.Principal, j.Portions.Interest, j.Portions.Fee, j.Portions.Penalty, overpayment)
+	if total != "0" {
+		if j.Accounts.LossesWrittenOff == "" {
+			return nil, []string{"request.write_off_journal has a positive total but no losses-written-off account"}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.LossesWrittenOff, EntryType: "DEBIT", AmountMinor: total,
+		})
+	}
+	return legs, nil
 }
 
 // oppositeEntryType returns the opposite journal-entry side label for the two
