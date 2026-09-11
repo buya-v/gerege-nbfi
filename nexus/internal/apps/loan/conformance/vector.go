@@ -783,6 +783,78 @@ type ChargedOffRepaymentJournalRequest struct {
 	Accounts      ChargedOffRepaymentSlotAccounts `json:"accounts"`
 }
 
+// SeamLoanInterestPaymentWaiverJournalEntries is the capture seam this schema
+// grades: the journal entry an INTEREST_PAYMENT_WAIVER transaction posts. It
+// ports AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForInterestPaymentWaiverOrInterestRefund for the waiver
+// type [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:793-889, pinned
+// commit 426a23544]. For each of the five portion slots (principal, interest,
+// fees, penalties, overpayment) whose portion is > 0 the processor CREDITS the
+// slot's account — LOAN_PORTFOLIO, INTEREST_RECEIVABLE, FEES_RECEIVABLE,
+// PENALTIES_RECEIVABLE and OVERPAYMENT respectively while the loan is NOT
+// charged off, but the charge-off income account
+// INCOME_FROM_CHARGE_OFF_INTEREST for principal, interest, fees AND penalties
+// once it is, with overpayment unchanged — MERGING portions that resolve to the
+// SAME account (accountMap is a LinkedHashMap) into one credit at the first
+// slot's position; it then posts ONE debit of the total to INTEREST_ON_LOANS.
+// The credits come first and the single debit is last.
+//
+// On the pinned observations transaction L4 (loan 2) credits the loan portfolio
+// 1000 and the interest+fee receivable MERGED to 3000 then debits 4000; L23
+// (loan 7) credits portfolio 100000, receivable 4000 and overpayment 6000 then
+// debits 110000; L42 (loan 11, CHARGED OFF) merges principal 25000 and interest
+// 1000 into ONE charge-off income credit of 26000 then debits 26000; L76 (loan
+// 13, CHARGED OFF) credits charge-off income 4656 and debits 4656. The
+// interest-refund arm shares the method but is NOT observed here.
+const SeamLoanInterestPaymentWaiverJournalEntries = "loan-interest-payment-waiver-journal-entries"
+
+// InterestPaymentWaiverPortionsMoney is the per-slot money an
+// interest-payment waiver applies, each slot an integer STRING in minor units.
+// It is the request-side reduction of loan.RepaymentPortions: the five fields
+// createJournalEntriesForInterestPaymentWaiverOrInterestRefund reads off the
+// waiver transaction. Overpayment is optional (absent when the observed
+// read-back omits it).
+type InterestPaymentWaiverPortionsMoney struct {
+	Principal   string `json:"principal"`
+	Interest    string `json:"interest"`
+	Fee         string `json:"fee"`
+	Penalty     string `json:"penalty"`
+	Overpayment string `json:"overpayment,omitempty"`
+}
+
+// InterestPaymentWaiverSlotAccounts is the product's interest-payment-waiver
+// slot->account mapping, each account the GL code the oracle's
+// GET /loanproducts/{id}.accountingMappings returns for that slot. The
+// loan-portfolio, receivable-interest, receivable-fee, receivable-penalty and
+// overpayment slots are CREDITED while the loan is NOT charged off; when it IS
+// charged off the four principal/interest/fee/penalty slots all credit
+// income_from_charge_off_interest instead, and overpayment still credits
+// overpayment. The interest-on-loan slot is DEBITed ONCE with the total in both
+// branches.
+type InterestPaymentWaiverSlotAccounts struct {
+	LoanPortfolio               string `json:"loan_portfolio"`
+	ReceivableInterest          string `json:"receivable_interest"`
+	ReceivableFee               string `json:"receivable_fee"`
+	ReceivablePenalty           string `json:"receivable_penalty"`
+	Overpayment                 string `json:"overpayment,omitempty"`
+	InterestOnLoan              string `json:"interest_on_loan"`
+	IncomeFromChargeOffInterest string `json:"income_from_charge_off_interest"`
+}
+
+// InterestPaymentWaiverJournalRequest is the
+// loan-interest-payment-waiver-journal-entries seam's input: the observed
+// portions of an INTEREST_PAYMENT_WAIVER transaction, the loan's charged-off
+// state and the product's slot->account mapping, plus the transaction id the
+// legs are posted under. The mapping is the product's accountingMappings read
+// back from the reference server, never invented; a slot with a positive portion
+// and no mapped credit account is refused by the port.
+type InterestPaymentWaiverJournalRequest struct {
+	TransactionID string                             `json:"transaction_id"`
+	Portions      InterestPaymentWaiverPortionsMoney `json:"portions"`
+	ChargedOff    bool                               `json:"charged_off,omitempty"`
+	Accounts      InterestPaymentWaiverSlotAccounts  `json:"accounts"`
+}
+
 // ChargedOffMerchantRefundSlotAccounts is the slot->account mapping of a
 // MERCHANT-ISSUED REFUND or a PAYOUT REFUND on a loan MARKED CHARGED OFF. Each
 // positive portion CREDITS its own charge-off slot: principal
@@ -1141,6 +1213,11 @@ type Request struct {
 	// resolved slot->account mapping (the fund source already resolved through
 	// the payment channel). There is no transaction-type field.
 	ChargedOffRepaymentJournal *ChargedOffRepaymentJournalRequest `json:"charged_off_repayment_journal,omitempty"`
+	// InterestPaymentWaiverJournal is the
+	// loan-interest-payment-waiver-journal-entries seam's input: an
+	// INTEREST_PAYMENT_WAIVER transaction's five portions, the loan's charged-off
+	// state and the product's slot->account mapping.
+	InterestPaymentWaiverJournal *InterestPaymentWaiverJournalRequest `json:"interest_payment_waiver_journal,omitempty"`
 	// ChargedOffMerchantRefundJournal is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's input: a
 	// MERCHANT-ISSUED REFUND transaction's five portions on a loan already marked
@@ -1279,6 +1356,15 @@ type Expect struct {
 	// and, when two portions merged into one recovery credit, splits them back
 	// apart — the account, count and order cells.
 	ChargedOffRepaymentJournalLegs []JournalEntryLeg `json:"charged_off_repayment_journal_legs,omitempty"`
+	// InterestPaymentWaiverJournalLegs is the
+	// loan-interest-payment-waiver-journal-entries seam's ordered leg list an
+	// interest-payment waiver posted: one credit per non-zero portion (merged by
+	// account) in portion order, then ONE debit of the total to INTEREST_ON_LOANS.
+	// Every leg is graded on its transaction id, account, side and amount; the
+	// charged-off account switch (the four portfolio/receivable credits collapsing
+	// onto one charge-off income account) and the credit/debit split are what
+	// discriminate an ignore-charge-off or debit-per-portion port.
+	InterestPaymentWaiverJournalLegs []JournalEntryLeg `json:"interest_payment_waiver_journal_legs,omitempty"`
 	// ChargedOffMerchantRefundJournalLegs is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's ordered leg list a
 	// merchant-issued refund posted on a charged-off loan: one credit per positive

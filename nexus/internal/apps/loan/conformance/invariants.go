@@ -72,6 +72,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertChargebackJournalBalanced(got)}
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		return []InvariantResult{assertCreditBalanceRefundJournalBalanced(got)}
+	case SeamLoanInterestPaymentWaiverJournalEntries:
+		return []InvariantResult{assertInterestPaymentWaiverJournalBalanced(got)}
 	case SeamLoanChargeLifecycle:
 		return []InvariantResult{assertChargeStatesConserved(v, got)}
 	case SeamLoanStatusTransition:
@@ -871,6 +873,55 @@ func assertChargeOffJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("%d debit(s) of %d equal the %d credit portion(s)", debitLegs, debits, creditLegs)
+	return r
+}
+
+// assertInterestPaymentWaiverJournalBalanced: the interest-payment-waiver
+// result carries non-negative integer minor-unit amounts, one or more merged
+// CREDIT legs, EXACTLY ONE DEBIT leg (the total) and the debit equals the credit
+// sum. The merged-account cells are checked by the leg diff; this is the money
+// shape that a debit-per-portion or dropped-debit port cannot satisfy.
+func assertInterestPaymentWaiverJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "interest_payment_waiver_journal_balances", Assertions: 4}
+	if len(got.InterestPaymentWaiverJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range got.InterestPaymentWaiverJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs == 0 || debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d credit leg(s) and %d debit leg(s): a waiver posts its merged credits and then one total debit", creditLegs, debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credits sum to %d but the debits sum to %d: a waiver batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("one debit of %d equals the %d credit portion(s)", debits, creditLegs)
 	return r
 }
 
