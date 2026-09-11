@@ -35,7 +35,7 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `reversal-entry` — in_graded_domain: **True** — The append-only journal-entry side of the FIRST observed loan-transaction reversal: the loan-11 write-off reversed the 2
 
 ## Vectors (what is graded today)
-31 files in `.softhouse/vectors/loan/`
+32 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -68,6 +68,7 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-L18-charge-penalty-waived.json` — request `charge_lifecycle` — capture `.softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-after-waive-detail-raw.json`
 * `LN-L25-accrual-interest-fee-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
 * `LN-L30-accrual-interest-penalty-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
+* `LN-TD-L10-loan-1-pending-amortizes-to-zero.json` — request `schedule_amortization` — capture `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json`
 
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/loan/conformance/impl.go:44` — `func Register(name string, e LoanEvaluator) {`
@@ -154,6 +155,7 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 * `.softhouse/capture/loan-writeoff-paid-instalment/` — 2 vector(s) — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — 3 vector(s) — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — 4 vector(s) — OWNER — loan12-four-bucket-allocation
+* `.softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json/` — 1 vector(s) — (no OWNER.md)
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
