@@ -1,0 +1,43 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-L06-loan-1-disbursement-net",
+ "title": "UC6 loan 1 net disbursal amount (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the net disbursal amount of UC6 loan 1 from the Tier-D MNT replay of LoanUpdateApprovedAmount.feature. This is the same candidate the pilot (F-2026-09-11-tierd-pilot-loan-refusal.md) transcribed in EUR and offered to the loan-disbursement seam, where it was refused by the tenant_params equality rule because the replay tenant was EUR and PIN-loan.json is MNT. The 2026-09-11 driver decision re-seeded the disposable oracle to MNT (same two minor digits, ISO 4217 496 vs 978, so the arithmetic is identical) and replayed the same scenario; this vector is re-transcribed from the MNT capture. request.disburse transcribes the observed approvedPrincipal 1000.000000 -> \"100000\" minor units and feeChargesAtDisbursementCharged 0.000000 -> \"0\". expect.net_disbursal_minor transcribes the observed netDisbursalAmount 1000.000000 -> \"100000\" minor units, equal to the approved principal because no charges were due at disbursement. Nothing was computed by this promotion.",
+ "oracle": {
+  "seam": "loan-disbursement",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.disburse and expect.net_disbursal_minor are transcribed from the committed MNT capture loan-1-detail-associations-all-1.json, the UC6 loan 1 read-back while status was loanStatusType.submitted.and.pending.approval, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId fe61fc1a-87f2-4180-ad97-6116ed335c36, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bf...; scenario LoanUpdateApprovedAmount.feature UC6; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/uc6-mnt/loan-1-detail-associations-all-1.json",
+  "capture_sha256": "cc82ab652b8c2648c41a0d1771f5f84d19d1d113e4b97bdd8f5ed5952ad233f7",
+  "capture_case_id": "fe61fc1a-87f2-4180-ad97-6116ed335c36",
+  "citation": "loan-1-detail-associations-all-1.json (tenant tierd, currency MNT) externalId fe61fc1a-87f2-4180-ad97-6116ed335c36: approvedPrincipal 1000.000000 -> 100000 minor units; feeChargesAtDisbursementCharged 0.000000 -> 0; netDisbursalAmount 1000.000000 -> 100000 minor units"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "disburse": {
+   "approved_principal_minor": "100000",
+   "charges_due_at_disbursement_minor": "0"
+  }
+ },
+ "expect": {
+  "net_disbursal_minor": "100000"
+ },
+ "capabilities_required": [
+  "disbursement-net"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
