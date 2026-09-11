@@ -1,0 +1,3 @@
+originalTxn=a2b795dca42b ids 141(debit acct6) 142(credit acct10) reversed=true reversal_id 143,144
+reversalTxn=a2b7964aa51b ids 143(credit acct6) 144(debit acct10) reversed=false reversal_id NULL
+control: count=114 max_id=144 ; REST max id=144
