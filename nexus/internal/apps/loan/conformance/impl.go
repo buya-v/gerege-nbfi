@@ -158,6 +158,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goChargedOffWriteOffJournal(*req.ChargedOffWriteOffJournal)
 	case req.RepaymentJournal != nil:
 		return goRepaymentJournal(*req.RepaymentJournal)
+	case req.ChargedOffRepaymentJournal != nil:
+		return goChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal)
 	case req.ChargebackJournal != nil:
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.ChargeLifecycle != nil:
@@ -165,7 +167,7 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, chargeback_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, chargeback_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -1065,6 +1067,49 @@ func repaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{RepaymentJournalLegs: out}
 }
 
+// goChargedOffRepaymentJournal ports the loan-chargedoff-repayment-journal-entries
+// seam: it reduces the request's five portions and resolved slot->account
+// mapping to loan.RepaymentPortions and loan.ChargedOffRepaymentAccountMapping
+// and runs the port's own loan.CreateChargedOffRepaymentJournalEntryLegs. Every
+// monetary cell is an integer minor unit; the mapping is the product's observed
+// accountingMappings with the fund source resolved through the payment channel,
+// never invented.
+func goChargedOffRepaymentJournal(r ChargedOffRepaymentJournalRequest) (Expect, error) {
+	portions, err := repaymentPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargedOffRepaymentJournalEntryLegs(r.TransactionID, portions, loan.ChargedOffRepaymentAccountMapping{
+		IncomeFromRecovery: r.Accounts.IncomeFromRecovery,
+		Overpayment:        r.Accounts.Overpayment,
+		FundSource:         r.Accounts.FundSource,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return chargedOffRepaymentJournalLegsExpect(legs), nil
+}
+
+// chargedOffRepaymentJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func chargedOffRepaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{ChargedOffRepaymentJournalLegs: out}
+}
+
 // goChargebackJournal ports the loan-chargeback-journal-entries seam: it reduces
 // the request's amount, principal and overpayment portions and resolved
 // slot->account mapping to loan.MinorUnits and
@@ -1526,6 +1571,74 @@ func wrongChargedOffWriteOffJournal(r ChargedOffWriteOffJournalRequest, mode cha
 		}
 	}
 	return expect, nil
+}
+
+// chargedOffRepaymentJournalWrongMode selects which deliberately-wrong
+// charged-off-repayment posting to run. Each is a port a reasonable reader might
+// write, and it is discriminated by the committed observations.
+type chargedOffRepaymentJournalWrongMode int
+
+const (
+	// wrongChargedOffRepaymentJournalsOrdinary posts the repayment through the
+	// ORDINARY repayment port instead of the charged-off branch, as a port that
+	// forgets the loan is marked charged off does. The principal credit moves to
+	// LOAN_PORTFOLIO and the interest credit to INTEREST_RECEIVABLE instead of
+	// both merging into INCOME_FROM_RECOVERY, so the credits' accounts and count
+	// (and the recovery credit's amount, split back apart) differ while every
+	// side and the single fund-source debit stay observed. On the principal-only
+	// loan-37 observation only the principal credit's account moves; on the
+	// principal+interest loan-19 observation the ONE merged recovery credit
+	// becomes TWO credits.
+	wrongChargedOffRepaymentJournalsOrdinary chargedOffRepaymentJournalWrongMode = iota
+)
+
+// wrongChargedOffRepaymentJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-chargedoff-repayment-journal-entries seam,
+// parameterised by which posting defect it commits. On any request that is not a
+// charged-off repayment journal it delegates to the correct port, so the drive
+// goes red ONLY on this seam's vectors and stays green everywhere else (vector
+// isolation).
+type wrongChargedOffRepaymentJournalEvaluator struct {
+	goEvaluator
+	mode chargedOffRepaymentJournalWrongMode
+}
+
+func (w wrongChargedOffRepaymentJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargedOffRepaymentJournal != nil {
+		return wrongChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongChargedOffRepaymentJournal runs the deliberately-wrong posting selected
+// by mode. It never calls the correct charged-off port, so the drive differs
+// from the port on exactly the cells its defect moves.
+func wrongChargedOffRepaymentJournal(r ChargedOffRepaymentJournalRequest, mode chargedOffRepaymentJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongChargedOffRepaymentJournalsOrdinary:
+		// Post the same portions through the ordinary repayment port: the
+		// principal credits the loan portfolio, the interest the interest
+		// receivable, and the merged recovery credit never forms.
+		ordinary, err := goRepaymentJournal(RepaymentJournalRequest{
+			TransactionID: r.TransactionID,
+			Portions:      r.Portions,
+			Accounts: RepaymentSlotAccounts{
+				LoanPortfolio:      r.Accounts.LoanPortfolio,
+				ReceivableInterest: r.Accounts.ReceivableInterest,
+				FundSource:         r.Accounts.FundSource,
+			},
+		})
+		if err != nil {
+			return Expect{}, err
+		}
+		out := ordinary.RepaymentJournalLegs
+		if out == nil {
+			out = []JournalEntryLeg{}
+		}
+		return Expect{ChargedOffRepaymentJournalLegs: out}, nil
+	default:
+		return Expect{}, fmt.Errorf("loan: unknown charged-off repayment wrong mode %d", mode)
+	}
 }
 
 // repaymentJournalWrongMode selects which deliberately-wrong repayment posting
@@ -2912,6 +3025,15 @@ func init() {
 			"count grows by (credits - 1) and the one-debit invariant fails on the multi-credit "+
 			"observations (loan 18 and loan 19) while the principal-only loan 14 is unaffected",
 		wrongRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentJournalDebitsFundSourcePerPortion})
+	RegisterWrong("loan-wrong-chargedoff-repayment-to-portfolio",
+		"posts a repayment on a loan marked charged off through the ORDINARY repayment port instead "+
+			"of the charged-off branch, as a port that forgets the loan is charged off does; the "+
+			"principal credit moves from income-from-recovery to the loan portfolio and the interest "+
+			"credit to the interest receivable, so the ONE merged recovery credit splits into per-slot "+
+			"credits and the account and count cells move while every side, amount and the single "+
+			"fund-source debit stay observed — on loan-37 (principal only) only the account moves, on "+
+			"loan-19 (principal+interest) the merged recovery credit becomes two",
+		wrongChargedOffRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargedOffRepaymentJournalsOrdinary})
 	RegisterWrong("loan-wrong-chargeback-journal-overpayment-to-portfolio",
 		"debits the overpayment portion of a chargeback to the loan-portfolio account instead of the "+
 			"overpayment account, as a port that reuses one debit account for every non-principal "+
