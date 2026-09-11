@@ -14,6 +14,12 @@
    "evidence": "T40/T46 captures FC-03, FC-09, T46-CH-06: feeChargesDue equals the exact product (14814.00, 6000.00) and the HALF_UP-rounding case (460.56)."
   },
   {
+   "name": "percent-amount-interest-instalment-fee",
+   "description": "A PERCENT_OF_AMOUNT_AND_INTEREST (calculation type 3) charge with time_type 8 INSTALMENT_FEE has base = the period's principal due PLUS the period's interest due, and fee = PercentageOf(base, percentage) rounded HALF_UP to the currency's minor units, with no min/max cap.",
+   "in_graded_domain": true,
+   "evidence": "Tier D charges-installment-fee-mnt captures TD-CHG-loan-6-pct-amount-interest-p1/p6: 1% of (16.41 + 0.59) = 0.17 and 1% of (16.94 + 0.10) = 0.1704 -> 0.17; a principal-only port answers 0.16 on p1. TD-CHG-loan-3-pct-amount-p2 is the type-2 control where interest is NOT added."
+  },
+  {
    "name": "penalty-charge",
    "description": "A charge with is_penalty true is carried and its fee computed identically to a fee; the flag alone does not change arithmetic.",
    "in_graded_domain": true,
@@ -33,10 +39,11 @@
    "status": {
     "flat-fee": "exercised",
     "percent-fee": "exercised",
+    "percent-amount-interest-instalment-fee": "exercised",
     "penalty-charge": "exercised",
     "request-governs": "exercised"
    }
   }
  ],
- "note": "Charges parity-store capability registry. Each capabilities_required name on a vector must map, on the charge-evaluate seam, to status exercised, and the capability must be in the graded domain, else the vector is inadmissible (default-deny). The four graded capabilities are exactly the dimensions the T40/T46 captures observed: the flat fee amount, the percentage-of-amount fee (and its HALF_UP rounding), the penalty flag carrying the same arithmetic, and the request governing the money value over the persisted definition. Interest-based fees (percent-of-interest, percent-of-amount-plus-interest) are exercised by Fineract but NOT in the graded domain: the Go charges slice cannot compute them without the loan's interest, so no fee vector may require them."
+ "note": "Charges parity-store capability registry. Each capabilities_required name on a vector must map, on the charge-evaluate seam, to status exercised, and the capability must be in the graded domain, else the vector is inadmissible (default-deny). The five graded capabilities are exactly the dimensions the captures observed: the flat fee amount, the percentage-of-amount fee (and its HALF_UP rounding), the percent-of-amount-and-interest INSTALMENT fee (base = the period's principal plus its interest), the penalty flag carrying the same arithmetic, and the request governing the money value over the persisted definition. PERCENT_OF_INTEREST remains outside the graded domain: the Go charges slice cannot reconstruct its daily-compounded base from a period's principal and interest, so no fee vector may require it."
 }

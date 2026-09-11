@@ -122,9 +122,11 @@ func TestCommittedCorpusPassesTheReferenceImplementation(t *testing.T) {
 
 // committedChargeMoneyCapabilities are the capability-registry names for the
 // money arithmetics the committed charges corpus is expected to observe. The
-// two entries are the flat-fee and percent-fee rules; the test fails if the
-// corpus loses every vector that exercises one.
+// three entries are the flat-fee rule, the percentage-of-amount rule and the
+// percent-of-amount-and-interest instalment rule; the test fails if the corpus
+// loses every vector that exercises one.
 var committedChargeMoneyCapabilities = []string{
 	"flat-fee",
 	"percent-fee",
+	"percent-amount-interest-instalment-fee",
 }
