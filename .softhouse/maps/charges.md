@@ -9,11 +9,12 @@ Source: `.softhouse/capabilities-charges.json`
 * seam **charge-evaluate** — POST /loans?command=calculateLoanSchedule (Path B): the running Fineract server's charge arithmetic, observed via its response rows.
 * capability `flat-fee` — in_graded_domain: **True** — A FLAT charge's fee/penalty is its flat amount, carried in full, with no percentage arithmetic.
 * capability `percent-fee` — in_graded_domain: **True** — A PERCENT_OF_AMOUNT / PERCENT_OF_DISBURSEMENT charge's fee is PercentageOf(base, percentage) rounded HALF_UP to the curr
+* capability `percent-amount-interest-instalment-fee` — in_graded_domain: **True** — A PERCENT_OF_AMOUNT_AND_INTEREST (calculation type 3) charge with time_type 8 INSTALMENT_FEE has base = the period's pri
 * capability `penalty-charge` — in_graded_domain: **True** — A charge with is_penalty true is carried and its fee computed identically to a fee; the flag alone does not change arith
 * capability `request-governs` — in_graded_domain: **True** — The request supplies the money value (flat amount or percentage); the persisted m_charge.amount is ignored for money.
 
 ## Vectors (what is graded today)
-14 files in `.softhouse/vectors/charges/`
+17 files in `.softhouse/vectors/charges/`
 
 * `FC-01-flat-disbursement.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json`
 * `FC-02-flat-instalment.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/charges/out/fc/FC-02-flat-instalment-raw.json`
@@ -29,11 +30,14 @@ Source: `.softhouse/capabilities-charges.json`
 * `T46-CH-02-defvsreq-flat-disb.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/charges/out/t46/T46-CH-02-defvsreq-flat-disb-raw.json`
 * `T46-CH-06-defvsreq-pctamount-disb.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/charges/out/t46/T46-CH-06-defvsreq-pctamount-disb-raw.json`
 * `T46-CH-07-defvsreq-penalty-instalment.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/charges/out/t46/T46-CH-07-defvsreq-penalty-instalment-raw.json`
+* `TD-CHG-loan-3-pct-amount-p2.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor` — capture `.softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-3/loan-3-detail-associations-all-1.json`
+* `TD-CHG-loan-6-pct-amount-interest-p1.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor,interest_amount_minor` — capture `.softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-6/loan-6-detail-associations-all-1.json`
+* `TD-CHG-loan-6-pct-amount-interest-p6.json` — request `name,currency_code,amount_minor,percentage,applies_to,time_type,calculation_type,payment_mode,penalty,active,deleted,base_amount_minor,interest_amount_minor` — capture `.softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-6/loan-6-detail-associations-all-1.json`
 
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/charges/conformance/impl.go:62` — `func Register(name string, e ChargeEvaluator) {`
 * `nexus/internal/apps/charges/conformance/impl.go:75` — `func RegisterWrong(name, defect string, e ChargeEvaluator) {`
-* `nexus/internal/apps/charges/conformance/impl.go:456` — `Register("charges-go", NewGoEvaluator())`
+* `nexus/internal/apps/charges/conformance/impl.go:475` — `Register("charges-go", NewGoEvaluator())`
 * conformance package files (`nexus/internal/apps/charges/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `money.go`, `nofloat.go`, `report.go`, `vector.go`, `wrongdrives.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/charges/conformance/committed_store_test.go`
 
@@ -48,19 +52,20 @@ events finding four of these lines by hand).
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `charges-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
-* `charges-wrong-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:536`
-* `charges-wrong-base-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:513`
-* `charges-wrong-calculation-type-always-flat` — `nexus/internal/apps/charges/conformance/impl.go:488`
-* `charges-wrong-caps-ignored` — `nexus/internal/apps/charges/conformance/impl.go:547`
-* `charges-wrong-caps-swapped` — `nexus/internal/apps/charges/conformance/impl.go:557`
-* `charges-wrong-penalty-ignored` — `nexus/internal/apps/charges/conformance/impl.go:499`
-* `charges-wrong-percent-one-scale-short` — `nexus/internal/apps/charges/conformance/impl.go:461`
-* `charges-wrong-percent-truncating` — `nexus/internal/apps/charges/conformance/impl.go:457`
-* `charges-wrong-rounding-half-even` — `nexus/internal/apps/charges/conformance/impl.go:470`
-* `charges-wrong-time-type-ignored` — `nexus/internal/apps/charges/conformance/impl.go:523`
-* `charges-wrong-validation-skipped` — `nexus/internal/apps/charges/conformance/impl.go:479`
+* `charges-wrong-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:555`
+* `charges-wrong-base-amount-ignored` — `nexus/internal/apps/charges/conformance/impl.go:532`
+* `charges-wrong-calculation-type-always-flat` — `nexus/internal/apps/charges/conformance/impl.go:507`
+* `charges-wrong-caps-ignored` — `nexus/internal/apps/charges/conformance/impl.go:566`
+* `charges-wrong-caps-swapped` — `nexus/internal/apps/charges/conformance/impl.go:576`
+* `charges-wrong-instalment-interest-ignored` — `nexus/internal/apps/charges/conformance/impl.go:586`
+* `charges-wrong-penalty-ignored` — `nexus/internal/apps/charges/conformance/impl.go:518`
+* `charges-wrong-percent-one-scale-short` — `nexus/internal/apps/charges/conformance/impl.go:480`
+* `charges-wrong-percent-truncating` — `nexus/internal/apps/charges/conformance/impl.go:476`
+* `charges-wrong-rounding-half-even` — `nexus/internal/apps/charges/conformance/impl.go:489`
+* `charges-wrong-time-type-ignored` — `nexus/internal/apps/charges/conformance/impl.go:542`
+* `charges-wrong-validation-skipped` — `nexus/internal/apps/charges/conformance/impl.go:498`
 
-11 drives.
+12 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/charges/applesto.go`: `StoredValue`:40, `String`:48, `ChargeAppliesToFromStoredValue`:58, `IsLoanCharge`:65, `IsSavingsCharge`:66, `IsClientCharge`:67, `IsSharesCharge`:68, `IsWorkingCapitalLoanCharge`:69, `ValidAppliesToStoredValues`:75, `init`:85
@@ -72,6 +77,8 @@ Source: the binary's own -list-implementations (names prefixed `charges-wrong-` 
 
 ## Captures this context's vectors already cite
 * `.softhouse/capture/charges/` — 14 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-3/loan-3-detail-associations-all-1.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/charges-installment-fee-mnt/loans/loan-6/loan-6-detail-associations-all-1.json/` — 2 vector(s) — (no OWNER.md)
 
 ## Every capture directory (with its OWNER.md title) — check the instance before using one
 `tierA-a2/` and other early `t*`/`A2-*` captures came from an EARLIER oracle instance: their ids name
