@@ -1,0 +1,4 @@
+transactionId=a2b795dca42b
+createdIds=141(debit,acct6,type_enum2),142(credit,acct10,type_enum1)
+amount=12345.67 MNT (=1234567 minor units)
+entryDate=2026-06-15
