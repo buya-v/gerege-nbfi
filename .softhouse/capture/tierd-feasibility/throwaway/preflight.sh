@@ -35,5 +35,40 @@ for cname in fineract-db-1 gerege-oracle-db; do
   fi
 done
 
+say ""
+say "3. isolation guard (read-only), then the standing baseline this capture opens with:"
+GUARD="$DIR/guard-throwaway-isolation.sh"
+[ -x "$GUARD" ] || { say "  CANNOT MEASURE: isolation guard missing or not executable: $GUARD. Fail-closed."; exit 2; }
+sh "$GUARD" || { say "  *** isolation guard REFUSED -- see its output above ***"; exit 1; }
+
+# 4. Write the standing baseline that down.sh compares against. It is written HERE, by preflight,
+#    BEFORE the throwaway starts, so a teardown can never compare against a missing file (the
+#    second feasibility attempt did exactly that and cried wolf).
+mkdir -p "$DIR/out"
+BASE="$DIR/out/STANDING-baseline.txt"
+: > "$BASE"
+for entry in fineract-db-1:fineract-db-1:fineract_gerege gerege-oracle-db:gerege-oracle-db:fineract_gerege; do
+  label=$(printf '%s' "$entry" | cut -d: -f1)
+  cname=$(printf '%s' "$entry" | cut -d: -f2)
+  dbname=$(printf '%s' "$entry" | cut -d: -f3)
+  docker ps --format '{{.Names}}' | grep -qx "$cname" || { say "  CANNOT MEASURE baseline: standing DB '$cname' is not running. Fail-closed."; exit 2; }
+  for q in \
+    "acc_gl_journal_entry|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_journal_entry" \
+    "acc_gl_closure|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM acc_gl_closure" \
+    "distinct_transaction_id|SELECT count(DISTINCT transaction_id)::text FROM acc_gl_journal_entry" \
+    "m_portfolio_command_source|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_portfolio_command_source" \
+    "m_client|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_client" \
+    "m_loan|SELECT count(*)||'/'||coalesce(max(id)::text,'null') FROM m_loan" ; do
+    qlabel=$(printf '%s' "$q" | cut -d'|' -f1)
+    sql=$(printf '%s' "$q" | cut -d'|' -f2-)
+    v=$(docker exec -i "$cname" psql -U root -d "$dbname" -Atc "$sql" 2>/dev/null)
+    [ -n "$v" ] || { say "  CANNOT MEASURE baseline: '$cname/$qlabel' returned nothing. Fail-closed."; exit 2; }
+    printf '%s %s = %s\n' "$label" "$qlabel" "$v" >> "$BASE"
+  done
+done
+n=$(wc -l < "$BASE" | tr -d ' ')
+[ "$n" = "12" ] || { say "  CANNOT MEASURE baseline: wrote $n of 12 counters. Fail-closed."; exit 2; }
+say "  standing baseline written by preflight.sh: $BASE ($n counters)"
+
 [ "$rc" -eq 0 ] && say "PREFLIGHT OK" || say "PREFLIGHT FAILED"
 exit $rc

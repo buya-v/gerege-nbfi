@@ -1,0 +1,33 @@
+{
+ "files_written": 343,
+ "kept_body_bytes": 2835261,
+ "loan_exchanges": 278,
+ "loans": {
+  "1": {
+   "bytes": 165380,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 13
+  },
+  "10": {
+   "bytes": 434088,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 43,
+   "reads": 28
+  }
+ },
+ "note": "Full extraction: 343 files, 11 loans, 2,835,261 kept body bytes. Only loans 1 and 10 are committed here.",
+ "skipped_body_bytes": 136591599,
+ "skipped_exchanges": 1185,
+ "skipped_pct_of_body_bytes": 97,
+ "skipped_pct_of_source_bytes": 93,
+ "source_bytes": 146276167,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-uc6-mnt.log",
+ "total_exchanges": 1463,
+ "total_lines": 38469,
+ "unattributed_creates": 0
+}
