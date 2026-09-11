@@ -76,7 +76,9 @@ for name,hx in re.findall(r'([\w.-]+\.(?:json|txt))[^"]{0,80}?sha256[ :]*([0-9a-
     # name (provisioning/out/ENT-04… vs provisioning-upper-edge/out/ENT-04…, found on
     # OH-PROVGRADE-BC, where the beside-capture_ref guess hashed the wrong one).
     mfull=re.search(r'([\w./-]*/'+re.escape(name)+')',cit)
-    f=mfull.group(1) if mfull and os.path.exists(mfull.group(1)) else os.path.join(os.path.dirname(ref),name)
+    cand=[mfull.group(1), '.softhouse/capture/'+mfull.group(1)] if mfull else []
+    cand=[c for c in cand if os.path.exists(c)]
+    f=cand[0] if cand else os.path.join(os.path.dirname(ref),name)
     if not os.path.exists(f): print(f"  NOTE  cited {name} not found beside capture_ref"); continue
     if h(f)!=hx: print(f"  FAIL  cited {name} sha256 {h(f)[:12]} != claimed {hx[:12]}"); rc=1
     else: print(f"  ok    cited {name} hash matches")

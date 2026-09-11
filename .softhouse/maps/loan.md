@@ -33,7 +33,7 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `reversal-entry` — in_graded_domain: **True** — The append-only journal-entry side of the FIRST observed loan-transaction reversal: the loan-11 write-off reversed the 2
 
 ## Vectors (what is graded today)
-27 files in `.softhouse/vectors/loan/`
+29 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -60,6 +60,8 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-L11-writeoff-four-bucket-discharge.json` — request `write_off` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-before-detail-raw.json`
 * `LN-L11-writeoff-journal-five-legs.json` — request `write_off_journal` — capture `.softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-after-journalentries-raw.json`
 * `LN-L12-repayment-five-leg-journal-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
+* `LN-L13-writeoff-four-bucket-discharge.json` — request `write_off` — capture `.softhouse/capture/loan-writeoff-paid-instalment/out/loan-13-after-repay-detail-raw.json`
+* `LN-L13-writeoff-journal-five-legs.json` — request `write_off_journal` — capture `.softhouse/capture/loan-writeoff-paid-instalment/out/loan-13-after-journalentries-raw.json`
 * `LN-L25-accrual-interest-fee-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
 * `LN-L30-accrual-interest-penalty-two-pair-posting.json` — request `journal_entries` — capture `.softhouse/capture/loan12-four-bucket-allocation/out/journalentries-loan-12-after-raw.json`
 
@@ -140,6 +142,7 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 ## Captures this context's vectors already cite
 * `.softhouse/capture/gl-accounting-surface/` — 3 vector(s) — OWNER — capture/gl-accounting-surface
 * `.softhouse/capture/loan/` — 17 vector(s) — (no OWNER.md)
+* `.softhouse/capture/loan-writeoff-paid-instalment/` — 2 vector(s) — OWNER — loan-writeoff-paid-instalment
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — 3 vector(s) — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — 4 vector(s) — OWNER — loan12-four-bucket-allocation
 
@@ -154,6 +157,7 @@ different rows on today's tenant. Prefer captures whose OWNER.md names tenant `g
 * `.softhouse/capture/loan11-writeoff-four-bucket/` — OWNER — loan11-writeoff-four-bucket
 * `.softhouse/capture/loan12-four-bucket-allocation/` — OWNER — loan12-four-bucket-allocation
 * `.softhouse/capture/parties-display-name/` — parties-display-name — capture owner notes
+* `.softhouse/capture/provisioning-upper-edge/` — Provisioning upper-edge capture — OWNER
 * `.softhouse/capture/savings-hold-release/` — OWNER — savings-hold-release
 * `.softhouse/capture/shares-nonround-money/` — OWNER — shares-nonround-money
 * `.softhouse/capture/tb-manual-reversal/` — OWNER — OH-TBCAP-Y: the oracle's trial balance across a manual reversal
