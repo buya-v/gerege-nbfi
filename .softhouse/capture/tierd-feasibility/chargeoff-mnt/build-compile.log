@@ -1,0 +1,67 @@
+=== compile start 2026-09-11T13:33:21Z ===
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy UP-TO-DATE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :
+matching ref: COMMIT - 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ref configuration: COMMIT - pattern: null
+    version: ${describe.tag.version.major}.${describe.tag.version.minor.next}.0-SNAPSHOT
+    describeTagPattern: .*(\d+\.\d+\.\d+).*
+    describeTagFirstParent: false
+
+project version: 1.16.0-SNAPSHOT
+
+> Task :fineract-avro-schemas:compileJava UP-TO-DATE
+> Task :fineract-avro-schemas:processResources UP-TO-DATE
+> Task :fineract-avro-schemas:classes
+> Task :fineract-avro-schemas:jar UP-TO-DATE
+> Task :fineract-client-feign:cleanupGeneratedJavaFiles UP-TO-DATE
+> Task :fineract-client-feign:licenseFormatMain UP-TO-DATE
+> Task :spotlessInternalRegisterDependencies UP-TO-DATE
+> Task :fineract-client-feign:spotlessMisc UP-TO-DATE
+> Task :fineract-client-feign:spotlessMiscApply UP-TO-DATE
+> Task :fineract-client-feign:compileJava UP-TO-DATE
+> Task :fineract-client-feign:processResources UP-TO-DATE
+> Task :fineract-client-feign:classes UP-TO-DATE
+> Task :fineract-client-feign:jar UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-core:processResources NO-SOURCE
+> Task :fineract-e2e-tests-core:classes UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileTestJava FROM-CACHE
+> Task :fineract-e2e-tests-core:processTestResources UP-TO-DATE
+> Task :fineract-e2e-tests-core:testClasses UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-runner:processResources NO-SOURCE
+> Task :fineract-e2e-tests-runner:classes UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileTestJava FROM-CACHE
+
+[Incubating] Problems report is available at: file:///work/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 13s
+22 actionable tasks: 2 from cache, 20 up-to-date
+=== compile end 2026-09-11T13:33:35Z rc=0 ===
+=== class constant proof ===
+fineract-e2e-tests-runner/build/classes/java/test/org/apache/fineract/test/initializer/global/CurrencyGlobalInitializerStep.class: 
+fineract-e2e-tests-runner/build/classes/java/test/org/apache/fineract/test/initializer/global/ChargeGlobalInitializerStep.class: 
+fineract-e2e-tests-core/build/classes/java/test/org/apache/fineract/test/factory/LoanProductsRequestFactory.class: 
+=== class constant proof (python byte scan) ===
+CurrencyGlobalInitializerStep.class           MNT=1 EUR=0 CEUR=0 USD=1
+ChargeGlobalInitializerStep.class             MNT=1 EUR=0 CEUR=0 USD=0
+LoanProductsRequestFactory.class              MNT=1 EUR=0 CEUR=0 USD=3
+SavingsProductRequestFactory.class            MNT=1 EUR=0 CEUR=2 USD=0
+WorkingCapitalChargeRequestFactory.class      MNT=1 EUR=0 CEUR=0 USD=0
