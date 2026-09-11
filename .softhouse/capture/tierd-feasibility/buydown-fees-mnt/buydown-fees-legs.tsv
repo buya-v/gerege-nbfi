@@ -1,0 +1,1569 @@
+type_code	loan	currency	transaction_id	transaction_date	entry_type	gl_account_id	gl_account_code	gl_account_name	amount_minor	fraud	charged_off	chargeoff_tx_ids
+loanTransactionType.buyDownFee	1	MNT	L2	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	1	MNT	L2	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	1	MNT	L6	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	1	MNT	L6	2024-03-31	CREDIT	24	450281	Income From Buy Down	5000	False	False	-
+loanTransactionType.buyDownFee	2	MNT	L10	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	2	MNT	L10	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L11	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L11	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L14	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L14	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L16	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L16	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L18	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L18	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L20	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L20	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L22	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L22	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L24	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L24	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L26	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L26	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L28	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L28	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L30	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L30	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L32	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L32	2024-01-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L34	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L34	2024-01-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L36	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L36	2024-01-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L38	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L38	2024-01-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L40	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L40	2024-01-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L42	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L42	2024-01-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L44	2024-01-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L44	2024-01-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L46	2024-01-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L46	2024-01-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L48	2024-01-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L48	2024-01-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L50	2024-01-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L50	2024-01-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L52	2024-01-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L52	2024-01-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L54	2024-01-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L54	2024-01-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L56	2024-01-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L56	2024-01-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L58	2024-01-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L58	2024-01-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L60	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L60	2024-01-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L62	2024-01-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L62	2024-01-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L64	2024-01-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L64	2024-01-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L66	2024-01-28	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L66	2024-01-28	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L68	2024-01-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L68	2024-01-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L70	2024-01-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L70	2024-01-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L72	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L72	2024-01-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L74	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L74	2024-02-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L76	2024-02-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L76	2024-02-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L78	2024-02-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L78	2024-02-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L80	2024-02-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L80	2024-02-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L82	2024-02-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L82	2024-02-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L84	2024-02-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L84	2024-02-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L86	2024-02-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L86	2024-02-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L88	2024-02-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L88	2024-02-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L90	2024-02-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L90	2024-02-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L92	2024-02-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L92	2024-02-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L94	2024-02-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L94	2024-02-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L96	2024-02-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L96	2024-02-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L98	2024-02-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L98	2024-02-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L100	2024-02-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L100	2024-02-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L102	2024-02-15	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L102	2024-02-15	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L104	2024-02-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L104	2024-02-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L106	2024-02-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L106	2024-02-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L108	2024-02-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L108	2024-02-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L110	2024-02-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L110	2024-02-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L112	2024-02-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L112	2024-02-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L114	2024-02-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L114	2024-02-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L116	2024-02-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L116	2024-02-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L118	2024-02-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L118	2024-02-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L120	2024-02-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L120	2024-02-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L122	2024-02-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L122	2024-02-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L124	2024-02-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L124	2024-02-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L126	2024-02-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L126	2024-02-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L128	2024-02-28	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L128	2024-02-28	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L130	2024-02-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L130	2024-02-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L133	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L133	2024-03-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L135	2024-03-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L135	2024-03-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L136	2024-03-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L136	2024-03-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L138	2024-03-04	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L138	2024-03-04	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L140	2024-03-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L140	2024-03-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L141	2024-03-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L141	2024-03-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L143	2024-03-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L143	2024-03-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L144	2024-03-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L144	2024-03-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L146	2024-03-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L146	2024-03-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L148	2024-03-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L148	2024-03-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L149	2024-03-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L149	2024-03-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L151	2024-03-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L151	2024-03-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L153	2024-03-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L153	2024-03-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L154	2024-03-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L154	2024-03-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L156	2024-03-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L156	2024-03-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L157	2024-03-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L157	2024-03-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L159	2024-03-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L159	2024-03-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L161	2024-03-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L161	2024-03-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L162	2024-03-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L162	2024-03-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L164	2024-03-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L164	2024-03-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L166	2024-03-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L166	2024-03-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L167	2024-03-22	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L167	2024-03-22	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L169	2024-03-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L169	2024-03-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L171	2024-03-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L171	2024-03-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L172	2024-03-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L172	2024-03-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L174	2024-03-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L174	2024-03-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L175	2024-03-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L175	2024-03-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L177	2024-03-28	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L177	2024-03-28	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L179	2024-03-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L179	2024-03-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L180	2024-03-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L180	2024-03-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L182	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	2	MNT	L182	2024-03-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFee	3	MNT	L186	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	3	MNT	L186	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	3	MNT	L190	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	3	MNT	L190	2024-03-01	CREDIT	24	450281	Income From Buy Down	5000	False	False	-
+loanTransactionType.buyDownFee	4	MNT	L192	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	4	MNT	L192	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L193	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L193	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L196	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L196	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L198	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L198	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L200	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L200	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L202	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L202	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L204	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L204	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L206	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L206	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L208	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L208	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L210	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L210	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L212	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L212	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L214	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L214	2024-01-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L216	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L216	2024-01-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L218	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L218	2024-01-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L220	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L220	2024-01-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L222	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L222	2024-01-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L224	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L224	2024-01-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L226	2024-01-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L226	2024-01-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L228	2024-01-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L228	2024-01-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L230	2024-01-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L230	2024-01-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L232	2024-01-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L232	2024-01-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L234	2024-01-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L234	2024-01-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L236	2024-01-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L236	2024-01-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L238	2024-01-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L238	2024-01-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L240	2024-01-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L240	2024-01-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L242	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L242	2024-01-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L244	2024-01-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L244	2024-01-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L246	2024-01-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L246	2024-01-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L248	2024-01-28	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L248	2024-01-28	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L250	2024-01-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L250	2024-01-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L252	2024-01-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L252	2024-01-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L254	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L254	2024-01-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L256	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L256	2024-02-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L258	2024-02-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L258	2024-02-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L260	2024-02-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L260	2024-02-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L262	2024-02-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L262	2024-02-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L264	2024-02-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L264	2024-02-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L266	2024-02-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L266	2024-02-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L268	2024-02-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L268	2024-02-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L270	2024-02-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L270	2024-02-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L272	2024-02-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L272	2024-02-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L274	2024-02-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L274	2024-02-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L276	2024-02-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L276	2024-02-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L278	2024-02-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L278	2024-02-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L280	2024-02-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L280	2024-02-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L282	2024-02-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L282	2024-02-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L284	2024-02-15	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L284	2024-02-15	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L286	2024-02-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L286	2024-02-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L288	2024-02-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L288	2024-02-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L290	2024-02-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L290	2024-02-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L292	2024-02-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L292	2024-02-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L294	2024-02-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L294	2024-02-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L296	2024-02-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L296	2024-02-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L298	2024-02-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L298	2024-02-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L300	2024-02-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L300	2024-02-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L302	2024-02-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L302	2024-02-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L304	2024-02-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L304	2024-02-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L306	2024-02-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L306	2024-02-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L308	2024-02-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L308	2024-02-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L310	2024-02-28	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L310	2024-02-28	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L312	2024-02-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L312	2024-02-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L315	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1703	False	False	-
+loanTransactionType.buyDownFeeAmortization	4	MNT	L315	2024-03-01	CREDIT	24	450281	Income From Buy Down	1703	False	False	-
+loanTransactionType.buyDownFee	5	MNT	L317	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	5	MNT	L317	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	5	MNT	L319	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	3352	False	True	L321
+loanTransactionType.buyDownFeeAmortization	5	MNT	L319	2024-03-01	CREDIT	24	450281	Income From Buy Down	3352	False	True	L321
+loanTransactionType.buyDownFeeAmortization	5	MNT	L322	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1648	False	True	L321
+loanTransactionType.buyDownFeeAmortization	5	MNT	L322	2024-03-01	CREDIT	18	744007	Credit Loss/Bad Debt	1648	False	True	L321
+loanTransactionType.buyDownFee	6	MNT	L325	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	6	MNT	L325	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L326	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L326	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L329	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L329	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L331	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L331	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L333	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L333	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L335	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L335	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L337	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L337	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L339	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L339	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L341	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L341	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L343	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L343	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L345	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L345	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L347	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L347	2024-01-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L349	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L349	2024-01-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L351	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L351	2024-01-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L353	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L353	2024-01-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L355	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L355	2024-01-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L357	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L357	2024-01-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L359	2024-01-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L359	2024-01-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L361	2024-01-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L361	2024-01-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L363	2024-01-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L363	2024-01-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L365	2024-01-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L365	2024-01-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L367	2024-01-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L367	2024-01-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L369	2024-01-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L369	2024-01-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L371	2024-01-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L371	2024-01-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L373	2024-01-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L373	2024-01-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L375	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L375	2024-01-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L377	2024-01-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L377	2024-01-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L379	2024-01-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L379	2024-01-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L381	2024-01-28	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L381	2024-01-28	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L383	2024-01-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L383	2024-01-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L385	2024-01-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L385	2024-01-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L387	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L387	2024-01-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L389	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L389	2024-02-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L391	2024-02-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L391	2024-02-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L393	2024-02-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L393	2024-02-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L395	2024-02-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L395	2024-02-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L397	2024-02-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L397	2024-02-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L399	2024-02-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L399	2024-02-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L401	2024-02-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L401	2024-02-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L403	2024-02-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L403	2024-02-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L405	2024-02-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L405	2024-02-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L407	2024-02-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L407	2024-02-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L409	2024-02-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L409	2024-02-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L411	2024-02-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L411	2024-02-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L413	2024-02-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L413	2024-02-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L415	2024-02-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L415	2024-02-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L417	2024-02-15	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L417	2024-02-15	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L419	2024-02-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L419	2024-02-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L421	2024-02-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L421	2024-02-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L423	2024-02-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L423	2024-02-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L425	2024-02-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L425	2024-02-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L427	2024-02-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L427	2024-02-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L429	2024-02-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L429	2024-02-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L431	2024-02-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L431	2024-02-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L433	2024-02-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L433	2024-02-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L435	2024-02-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L435	2024-02-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L437	2024-02-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L437	2024-02-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L439	2024-02-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L439	2024-02-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L441	2024-02-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L441	2024-02-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L443	2024-02-28	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L443	2024-02-28	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L445	2024-02-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L445	2024-02-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	6	MNT	L446	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	True	L448
+loanTransactionType.buyDownFeeAmortization	6	MNT	L446	2024-03-01	CREDIT	24	450281	Income From Buy Down	55	False	True	L448
+loanTransactionType.buyDownFeeAmortization	6	MNT	L449	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1648	False	True	L448
+loanTransactionType.buyDownFeeAmortization	6	MNT	L449	2024-03-01	CREDIT	18	744007	Credit Loss/Bad Debt	1648	False	True	L448
+loanTransactionType.buyDownFee	7	MNT	L452	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	7	MNT	L452	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L453	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	1758	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L453	2024-02-01	CREDIT	24	450281	Income From Buy Down	1758	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L456	2024-02-01	DEBIT	18	744007	Credit Loss/Bad Debt	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L456	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L456	2024-02-01	CREDIT	18	744007	Credit Loss/Bad Debt	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L456	2024-02-01	CREDIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L458	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	7	MNT	L458	2024-02-01	CREDIT	24	450281	Income From Buy Down	3242	False	False	-
+loanTransactionType.buyDownFee	8	MNT	L460	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	True	False	-
+loanTransactionType.buyDownFee	8	MNT	L460	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L461	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	1758	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L461	2024-02-01	CREDIT	24	450281	Income From Buy Down	1758	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L464	2024-02-01	DEBIT	16	744037	Credit Loss/Bad Debt-Fraud	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L464	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L464	2024-02-01	CREDIT	16	744037	Credit Loss/Bad Debt-Fraud	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L464	2024-02-01	CREDIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L466	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	8	MNT	L466	2024-02-01	CREDIT	24	450281	Income From Buy Down	3242	True	False	-
+loanTransactionType.buyDownFee	9	MNT	L468	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	True	False	-
+loanTransactionType.buyDownFee	9	MNT	L468	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	9	MNT	L469	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	1374	True	True	L471
+loanTransactionType.buyDownFeeAmortization	9	MNT	L469	2024-01-25	CREDIT	24	450281	Income From Buy Down	1374	True	True	L471
+loanTransactionType.buyDownFeeAmortization	9	MNT	L472	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	True	L471
+loanTransactionType.buyDownFeeAmortization	9	MNT	L472	2024-01-25	CREDIT	18	744007	Credit Loss/Bad Debt	3626	True	True	L471
+loanTransactionType.buyDownFee	10	MNT	L475	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	True	False	-
+loanTransactionType.buyDownFee	10	MNT	L475	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	10	MNT	L476	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	1374	True	True	L478
+loanTransactionType.buyDownFeeAmortization	10	MNT	L476	2024-01-25	CREDIT	24	450281	Income From Buy Down	1374	True	True	L478
+loanTransactionType.buyDownFeeAmortization	10	MNT	L479	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	True	L478
+loanTransactionType.buyDownFeeAmortization	10	MNT	L479	2024-01-25	CREDIT	16	744037	Credit Loss/Bad Debt-Fraud	3626	True	True	L478
+loanTransactionType.buyDownFee	11	MNT	L482	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	True	False	-
+loanTransactionType.buyDownFee	11	MNT	L482	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L483	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	1374	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L483	2024-01-25	CREDIT	24	450281	Income From Buy Down	1374	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L486	2024-01-25	DEBIT	18	744007	Credit Loss/Bad Debt	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L486	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L486	2024-01-25	CREDIT	18	744007	Credit Loss/Bad Debt	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L486	2024-01-25	CREDIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L488	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	11	MNT	L488	2024-01-25	CREDIT	24	450281	Income From Buy Down	3626	True	False	-
+loanTransactionType.buyDownFee	12	MNT	L490	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	12	MNT	L490	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	12	MNT	L492	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	1703	False	False	-
+loanTransactionType.buyDownFeeAmortization	12	MNT	L492	2024-01-31	CREDIT	24	450281	Income From Buy Down	1703	False	False	-
+loanTransactionType.buyDownFee	12	MNT	L493	2024-02-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	12	MNT	L493	2024-02-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	12	MNT	L494	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	4149	False	True	L496
+loanTransactionType.buyDownFeeAmortization	12	MNT	L494	2024-03-01	CREDIT	24	450281	Income From Buy Down	4149	False	True	L496
+loanTransactionType.buyDownFeeAmortization	12	MNT	L497	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	4148	False	True	L496
+loanTransactionType.buyDownFeeAmortization	12	MNT	L497	2024-03-01	CREDIT	18	744007	Credit Loss/Bad Debt	4148	False	True	L496
+loanTransactionType.buyDownFee	13	MNT	L500	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	13	MNT	L500	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	13	MNT	L502	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	13	MNT	L502	2024-03-01	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	13	MNT	L504	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	4000	False	False	-
+loanTransactionType.buyDownFeeAmortization	13	MNT	L504	2024-03-31	CREDIT	24	450281	Income From Buy Down	4000	False	False	-
+loanTransactionType.buyDownFee	14	MNT	L509	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	14	MNT	L509	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	14	MNT	L511	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	14	MNT	L511	2024-03-01	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	14	MNT	L512	2024-03-15	DEBIT	22	145024	Deferred Capitalized Income	500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	14	MNT	L512	2024-03-15	CREDIT	23	450280	Buy Down Expense	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	14	MNT	L514	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	3500	False	False	-
+loanTransactionType.buyDownFeeAmortization	14	MNT	L514	2024-03-31	CREDIT	24	450281	Income From Buy Down	3500	False	False	-
+loanTransactionType.buyDownFee	15	MNT	L519	2024-01-02	DEBIT	23	450280	Buy Down Expense	10000	False	False	-
+loanTransactionType.buyDownFee	15	MNT	L519	2024-01-02	CREDIT	22	145024	Deferred Capitalized Income	10000	False	False	-
+loanTransactionType.buyDownFeeAmortization	15	MNT	L521	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	10000	False	False	-
+loanTransactionType.buyDownFeeAmortization	15	MNT	L521	2024-01-02	CREDIT	15	e4	Written off	10000	False	False	-
+loanTransactionType.buyDownFee	16	MNT	L523	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	16	MNT	L523	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L524	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L524	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L527	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L527	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L529	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L529	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L531	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L531	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L533	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L533	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L535	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L535	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L537	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L537	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L539	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L539	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L541	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L541	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L543	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L543	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L545	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L545	2024-01-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L547	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L547	2024-01-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L549	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L549	2024-01-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L551	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L551	2024-01-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L553	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L553	2024-01-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L555	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L555	2024-01-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L557	2024-01-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L557	2024-01-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L559	2024-01-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L559	2024-01-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L561	2024-01-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L561	2024-01-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L563	2024-01-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L563	2024-01-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L565	2024-01-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L565	2024-01-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L567	2024-01-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L567	2024-01-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L569	2024-01-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L569	2024-01-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L571	2024-01-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L571	2024-01-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L573	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L573	2024-01-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L575	2024-01-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L575	2024-01-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L577	2024-01-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L577	2024-01-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L579	2024-01-28	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L579	2024-01-28	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L581	2024-01-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L581	2024-01-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L583	2024-01-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L583	2024-01-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L585	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L585	2024-01-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L588	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L588	2024-02-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L590	2024-02-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L590	2024-02-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L592	2024-02-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L592	2024-02-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L594	2024-02-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L594	2024-02-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L596	2024-02-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L596	2024-02-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L598	2024-02-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L598	2024-02-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L600	2024-02-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L600	2024-02-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L602	2024-02-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L602	2024-02-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L604	2024-02-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L604	2024-02-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L606	2024-02-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L606	2024-02-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L608	2024-02-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L608	2024-02-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L610	2024-02-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L610	2024-02-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L612	2024-02-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L612	2024-02-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L614	2024-02-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L614	2024-02-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L616	2024-02-15	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L616	2024-02-15	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L618	2024-02-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L618	2024-02-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L620	2024-02-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L620	2024-02-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L622	2024-02-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L622	2024-02-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L624	2024-02-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L624	2024-02-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L626	2024-02-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L626	2024-02-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L628	2024-02-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L628	2024-02-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L630	2024-02-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L630	2024-02-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L632	2024-02-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L632	2024-02-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L634	2024-02-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L634	2024-02-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L636	2024-02-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L636	2024-02-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L638	2024-02-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L638	2024-02-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L640	2024-02-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L640	2024-02-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L642	2024-02-28	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L642	2024-02-28	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L644	2024-02-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L644	2024-02-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAdjustment	16	MNT	L645	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	16	MNT	L645	2024-03-01	DEBIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	16	MNT	L645	2024-03-01	CREDIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	16	MNT	L645	2024-03-01	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L647	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	22	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L647	2024-03-01	CREDIT	24	450281	Income From Buy Down	22	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L649	2024-03-02	DEBIT	22	145024	Deferred Capitalized Income	88	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L649	2024-03-02	CREDIT	24	450281	Income From Buy Down	88	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L651	2024-03-03	DEBIT	22	145024	Deferred Capitalized Income	1593	False	False	-
+loanTransactionType.buyDownFeeAmortization	16	MNT	L651	2024-03-03	CREDIT	24	450281	Income From Buy Down	1593	False	False	-
+loanTransactionType.buyDownFee	17	MNT	L653	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	17	MNT	L653	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	17	MNT	L653	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	17	MNT	L653	2024-01-01	CREDIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L654	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L654	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L657	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L657	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L659	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L659	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L661	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L661	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L663	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L663	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L665	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L665	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L667	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L667	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L669	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L669	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L671	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L671	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L673	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L673	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L675	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L675	2024-01-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L677	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L677	2024-01-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L679	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L679	2024-01-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L681	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L681	2024-01-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L683	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L683	2024-01-15	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L685	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L685	2024-01-16	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L687	2024-01-17	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L687	2024-01-17	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L689	2024-01-18	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L689	2024-01-18	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L691	2024-01-19	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L691	2024-01-19	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L693	2024-01-20	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L693	2024-01-20	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L695	2024-01-21	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L695	2024-01-21	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L697	2024-01-22	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L697	2024-01-22	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L699	2024-01-23	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L699	2024-01-23	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L701	2024-01-24	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L701	2024-01-24	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L703	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L703	2024-01-25	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L705	2024-01-26	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L705	2024-01-26	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L707	2024-01-27	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L707	2024-01-27	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L709	2024-01-28	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L709	2024-01-28	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L711	2024-01-29	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L711	2024-01-29	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L713	2024-01-30	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L713	2024-01-30	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L715	2024-01-31	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L715	2024-01-31	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L717	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L717	2024-02-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L719	2024-02-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L719	2024-02-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L721	2024-02-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L721	2024-02-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L723	2024-02-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L723	2024-02-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L725	2024-02-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L725	2024-02-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L727	2024-02-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L727	2024-02-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L729	2024-02-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L729	2024-02-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L731	2024-02-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L731	2024-02-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L733	2024-02-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L733	2024-02-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L735	2024-02-10	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L735	2024-02-10	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L737	2024-02-11	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L737	2024-02-11	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L739	2024-02-12	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L739	2024-02-12	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L741	2024-02-13	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L741	2024-02-13	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L743	2024-02-14	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L743	2024-02-14	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L745	2024-02-15	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	17	MNT	L745	2024-02-15	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	17	MNT	L747	2024-02-16	DEBIT	24	450281	Income From Buy Down	2527	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	17	MNT	L747	2024-02-16	CREDIT	22	145024	Deferred Capitalized Income	2527	False	False	-
+loanTransactionType.buyDownFee	18	MNT	L751	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	18	MNT	L751	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	18	MNT	L751	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	18	MNT	L751	2024-01-01	CREDIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	19	MNT	L755	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	19	MNT	L755	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	19	MNT	L755	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	19	MNT	L755	2024-01-01	CREDIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L756	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L756	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAdjustment	19	MNT	L757	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	19	MNT	L757	2024-01-10	DEBIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	19	MNT	L757	2024-01-10	CREDIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	19	MNT	L757	2024-01-10	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L759	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L759	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L761	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L761	2024-01-03	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L763	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L763	2024-01-04	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L765	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L765	2024-01-05	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L767	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L767	2024-01-06	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L769	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L769	2024-01-07	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L771	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L771	2024-01-08	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L773	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L773	2024-01-09	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L775	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	19	MNT	L775	2024-01-10	CREDIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	19	MNT	L777	2024-01-11	DEBIT	24	450281	Income From Buy Down	549	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	19	MNT	L777	2024-01-11	CREDIT	22	145024	Deferred Capitalized Income	549	False	False	-
+loanTransactionType.buyDownFee	20	MNT	L781	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	-
+loanTransactionType.buyDownFee	20	MNT	L781	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	20	MNT	L785	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	20	MNT	L785	2024-03-31	CREDIT	24	450281	Income From Buy Down	5000	False	False	-
+loanTransactionType.buyDownFee	21	MNT	L789	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	-
+loanTransactionType.buyDownFee	21	MNT	L789	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	21	MNT	L789	2024-01-01	CREDIT	5	145023	Suspense/Clearing account	5000	False	False	-
+loanTransactionType.buyDownFee	21	MNT	L789	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	22	MNT	L793	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	-
+loanTransactionType.buyDownFee	22	MNT	L793	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L794	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	1758	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L794	2024-02-01	CREDIT	24	450281	Income From Buy Down	1758	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L797	2024-02-01	DEBIT	18	744007	Credit Loss/Bad Debt	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L797	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L797	2024-02-01	CREDIT	18	744007	Credit Loss/Bad Debt	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L797	2024-02-01	CREDIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L799	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	False	False	-
+loanTransactionType.buyDownFeeAmortization	22	MNT	L799	2024-02-01	CREDIT	24	450281	Income From Buy Down	3242	False	False	-
+loanTransactionType.buyDownFee	23	MNT	L801	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	True	False	-
+loanTransactionType.buyDownFee	23	MNT	L801	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L802	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	1758	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L802	2024-02-01	CREDIT	24	450281	Income From Buy Down	1758	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L805	2024-02-01	DEBIT	16	744037	Credit Loss/Bad Debt-Fraud	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L805	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L805	2024-02-01	CREDIT	16	744037	Credit Loss/Bad Debt-Fraud	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L805	2024-02-01	CREDIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L807	2024-02-01	DEBIT	22	145024	Deferred Capitalized Income	3242	True	False	-
+loanTransactionType.buyDownFeeAmortization	23	MNT	L807	2024-02-01	CREDIT	24	450281	Income From Buy Down	3242	True	False	-
+loanTransactionType.buyDownFee	24	MNT	L809	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	True	False	-
+loanTransactionType.buyDownFee	24	MNT	L809	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L810	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	1374	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L810	2024-01-25	CREDIT	24	450281	Income From Buy Down	1374	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L813	2024-01-25	DEBIT	18	744007	Credit Loss/Bad Debt	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L813	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L813	2024-01-25	CREDIT	18	744007	Credit Loss/Bad Debt	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L813	2024-01-25	CREDIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L815	2024-01-25	DEBIT	22	145024	Deferred Capitalized Income	3626	True	False	-
+loanTransactionType.buyDownFeeAmortization	24	MNT	L815	2024-01-25	CREDIT	24	450281	Income From Buy Down	3626	True	False	-
+loanTransactionType.buyDownFee	25	MNT	L817	2024-01-01	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	-
+loanTransactionType.buyDownFee	25	MNT	L817	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	25	MNT	L819	2024-03-01	DEBIT	5	145023	Suspense/Clearing account	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	25	MNT	L819	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	25	MNT	L819	2024-03-01	CREDIT	5	145023	Suspense/Clearing account	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	25	MNT	L819	2024-03-01	CREDIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	25	MNT	L821	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	4000	False	False	-
+loanTransactionType.buyDownFeeAmortization	25	MNT	L821	2024-03-31	CREDIT	24	450281	Income From Buy Down	4000	False	False	-
+loanTransactionType.buyDownFeeAmortization	25	MNT	L825	2024-04-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	25	MNT	L825	2024-04-01	CREDIT	24	450281	Income From Buy Down	1000	False	False	-
+loanTransactionType.buyDownFee	26	MNT	L827	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	26	MNT	L827	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	26	MNT	L828	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	26	MNT	L828	2024-01-01	CREDIT	23	450280	Buy Down Expense	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	26	MNT	L830	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	26	MNT	L830	2024-01-01	CREDIT	24	450281	Income From Buy Down	2500	False	False	-
+loanTransactionType.buyDownFee	27	MNT	L832	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	27	MNT	L832	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L833	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L833	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFee	27	MNT	L834	2024-01-02	DEBIT	23	450280	Buy Down Expense	10000	False	False	-
+loanTransactionType.buyDownFee	27	MNT	L834	2024-01-02	CREDIT	22	145024	Deferred Capitalized Income	10000	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L836	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	166	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L836	2024-01-02	CREDIT	24	450281	Income From Buy Down	166	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L839	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	14779	False	False	-
+loanTransactionType.buyDownFeeAmortization	27	MNT	L839	2024-01-03	CREDIT	24	450281	Income From Buy Down	14779	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L841	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L841	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L841	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L841	2024-01-01	CREDIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L842	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L842	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L843	2024-01-02	DEBIT	23	450280	Buy Down Expense	20000	False	False	-
+loanTransactionType.buyDownFee	28	MNT	L843	2024-01-02	CREDIT	22	145024	Deferred Capitalized Income	20000	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L845	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	277	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L845	2024-01-02	CREDIT	24	450281	Income From Buy Down	277	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L847	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	222	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L847	2024-01-03	DEBIT	24	450281	Income From Buy Down	110	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L847	2024-01-03	CREDIT	22	145024	Deferred Capitalized Income	110	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L847	2024-01-03	CREDIT	24	450281	Income From Buy Down	222	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L849	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	223	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L849	2024-01-04	CREDIT	24	450281	Income From Buy Down	223	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L852	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	19333	False	False	-
+loanTransactionType.buyDownFeeAmortization	28	MNT	L852	2024-01-05	CREDIT	24	450281	Income From Buy Down	19333	False	False	-
+loanTransactionType.buyDownFee	29	MNT	L854	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	29	MNT	L854	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L855	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L855	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFee	29	MNT	L856	2024-01-02	DEBIT	23	450280	Buy Down Expense	10000	False	False	-
+loanTransactionType.buyDownFee	29	MNT	L856	2024-01-02	CREDIT	22	145024	Deferred Capitalized Income	10000	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L858	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	166	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L858	2024-01-02	CREDIT	24	450281	Income From Buy Down	166	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L859	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	4000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L859	2024-01-02	CREDIT	23	450280	Buy Down Expense	4000	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L861	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	111	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L861	2024-01-03	DEBIT	24	450281	Income From Buy Down	34	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L861	2024-01-03	CREDIT	22	145024	Deferred Capitalized Income	34	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L861	2024-01-03	CREDIT	24	450281	Income From Buy Down	111	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L863	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	121	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L863	2024-01-04	CREDIT	24	450281	Income From Buy Down	121	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L864	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	6000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L864	2024-01-04	CREDIT	23	450280	Buy Down Expense	6000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	29	MNT	L866	2024-01-05	DEBIT	24	450281	Income From Buy Down	14	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	29	MNT	L866	2024-01-05	CREDIT	22	145024	Deferred Capitalized Income	14	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L867	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	29	MNT	L867	2024-01-05	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	29	MNT	L869	2024-01-06	DEBIT	24	450281	Income From Buy Down	54	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	29	MNT	L869	2024-01-06	CREDIT	22	145024	Deferred Capitalized Income	54	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L872	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	3649	False	False	-
+loanTransactionType.buyDownFeeAmortization	29	MNT	L872	2024-01-07	CREDIT	24	450281	Income From Buy Down	3649	False	False	-
+loanTransactionType.buyDownFee	30	MNT	L874	2024-01-01	DEBIT	23	450280	Buy Down Expense	100	False	False	-
+loanTransactionType.buyDownFee	30	MNT	L874	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	100	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L875	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L875	2024-01-01	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L877	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L877	2024-01-02	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L879	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L879	2024-01-03	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L881	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L881	2024-01-04	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L883	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L883	2024-01-05	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L885	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L885	2024-01-06	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L887	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L887	2024-01-07	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L889	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L889	2024-01-08	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L891	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L891	2024-01-09	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L893	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L893	2024-01-10	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L895	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L895	2024-01-11	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L897	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L897	2024-01-12	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L899	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L899	2024-01-13	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L901	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	30	MNT	L901	2024-01-14	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAdjustment	30	MNT	L902	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	70	False	False	-
+loanTransactionType.buyDownFeeAdjustment	30	MNT	L902	2024-01-15	CREDIT	23	450280	Buy Down Expense	70	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	30	MNT	L904	2024-01-15	DEBIT	24	450281	Income From Buy Down	17	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	30	MNT	L904	2024-01-15	CREDIT	22	145024	Deferred Capitalized Income	17	False	False	-
+loanTransactionType.buyDownFee	31	MNT	L917	2024-01-01	DEBIT	23	450280	Buy Down Expense	100	False	False	-
+loanTransactionType.buyDownFee	31	MNT	L917	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	100	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L918	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L918	2024-01-01	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L920	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L920	2024-01-02	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L922	2024-01-03	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L922	2024-01-03	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L924	2024-01-04	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L924	2024-01-04	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L926	2024-01-05	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L926	2024-01-05	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L928	2024-01-06	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L928	2024-01-06	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L930	2024-01-07	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L930	2024-01-07	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L932	2024-01-08	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L932	2024-01-08	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L934	2024-01-09	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L934	2024-01-09	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L936	2024-01-10	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L936	2024-01-10	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L938	2024-01-11	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L938	2024-01-11	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L940	2024-01-12	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L940	2024-01-12	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L942	2024-01-13	DEBIT	22	145024	Deferred Capitalized Income	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L942	2024-01-13	CREDIT	24	450281	Income From Buy Down	3	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L944	2024-01-14	DEBIT	22	145024	Deferred Capitalized Income	4	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L944	2024-01-14	CREDIT	24	450281	Income From Buy Down	4	False	False	-
+loanTransactionType.buyDownFeeAdjustment	31	MNT	L945	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	30	False	False	-
+loanTransactionType.buyDownFeeAdjustment	31	MNT	L945	2024-01-15	CREDIT	23	450280	Buy Down Expense	30	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L947	2024-01-15	DEBIT	22	145024	Deferred Capitalized Income	1	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L947	2024-01-15	CREDIT	24	450281	Income From Buy Down	1	False	False	-
+loanTransactionType.buyDownFeeAmortization	31	MNT	L948	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	2	False	True	L950
+loanTransactionType.buyDownFeeAmortization	31	MNT	L948	2024-01-16	CREDIT	24	450281	Income From Buy Down	2	False	True	L950
+loanTransactionType.buyDownFeeAmortization	31	MNT	L951	2024-01-16	DEBIT	22	145024	Deferred Capitalized Income	20	False	True	L950
+loanTransactionType.buyDownFeeAmortization	31	MNT	L951	2024-01-16	CREDIT	18	744007	Credit Loss/Bad Debt	20	False	True	L950
+loanTransactionType.buyDownFee	32	MNT	L954	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	32	MNT	L954	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	32	MNT	L955	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	32	MNT	L955	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	32	MNT	L958	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	4945	False	False	-
+loanTransactionType.buyDownFeeAmortization	32	MNT	L958	2024-01-02	CREDIT	24	450281	Income From Buy Down	4945	False	False	-
+loanTransactionType.buyDownFee	33	MNT	L960	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	33	MNT	L960	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	33	MNT	L961	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	33	MNT	L961	2024-01-01	CREDIT	7	404007	Fee Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	33	MNT	L964	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	4945	False	False	-
+loanTransactionType.buyDownFeeAmortization	33	MNT	L964	2024-01-02	CREDIT	7	404007	Fee Income	4945	False	False	-
+loanTransactionType.buyDownFee	34	MNT	L966	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	34	MNT	L966	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L967	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L967	2024-01-01	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFee	34	MNT	L968	2024-01-02	DEBIT	23	450280	Buy Down Expense	2000	False	False	-
+loanTransactionType.buyDownFee	34	MNT	L968	2024-01-02	CREDIT	22	145024	Deferred Capitalized Income	2000	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L970	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	77	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L970	2024-01-02	CREDIT	7	404007	Fee Income	22	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L970	2024-01-02	CREDIT	24	450281	Income From Buy Down	55	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L972	2024-01-02	DEBIT	22	145024	Deferred Capitalized Income	6868	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L972	2024-01-02	CREDIT	7	404007	Fee Income	1978	False	False	-
+loanTransactionType.buyDownFeeAmortization	34	MNT	L972	2024-01-02	CREDIT	24	450281	Income From Buy Down	4890	False	False	-
+loanTransactionType.buyDownFee	35	MNT	L974	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	35	MNT	L974	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	35	MNT	L975	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	35	MNT	L975	2024-01-01	CREDIT	23	450280	Buy Down Expense	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L977	2024-04-14	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L977	2024-04-14	CREDIT	7	404007	Fee Income	2500	False	False	-
+loanTransactionType.buyDownFee	35	MNT	L978	2024-01-01	DEBIT	23	450280	Buy Down Expense	3000	False	False	-
+loanTransactionType.buyDownFee	35	MNT	L978	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	3000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	35	MNT	L979	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	35	MNT	L979	2024-01-01	CREDIT	23	450280	Buy Down Expense	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L980	2024-04-15	DEBIT	7	404007	Fee Income	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L980	2024-04-15	DEBIT	22	145024	Deferred Capitalized Income	3000	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L980	2024-04-15	CREDIT	22	145024	Deferred Capitalized Income	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	35	MNT	L980	2024-04-15	CREDIT	24	450281	Income From Buy Down	3000	False	False	-
+loanTransactionType.buyDownFee	36	MNT	L984	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	36	MNT	L984	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	36	MNT	L985	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	36	MNT	L985	2024-01-01	CREDIT	23	450280	Buy Down Expense	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L987	2024-04-14	DEBIT	22	145024	Deferred Capitalized Income	2500	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L987	2024-04-14	CREDIT	24	450281	Income From Buy Down	2500	False	False	-
+loanTransactionType.buyDownFee	36	MNT	L988	2024-01-01	DEBIT	23	450280	Buy Down Expense	3000	False	False	-
+loanTransactionType.buyDownFee	36	MNT	L988	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	3000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	36	MNT	L989	2024-01-01	DEBIT	22	145024	Deferred Capitalized Income	500	False	False	-
+loanTransactionType.buyDownFeeAdjustment	36	MNT	L989	2024-01-01	CREDIT	23	450280	Buy Down Expense	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L990	2024-04-15	DEBIT	22	145024	Deferred Capitalized Income	3000	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L990	2024-04-15	DEBIT	24	450281	Income From Buy Down	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L990	2024-04-15	CREDIT	22	145024	Deferred Capitalized Income	500	False	False	-
+loanTransactionType.buyDownFeeAmortization	36	MNT	L990	2024-04-15	CREDIT	24	450281	Income From Buy Down	3000	False	False	-
+loanTransactionType.buyDownFee	37	MNT	L994	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	37	MNT	L994	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	37	MNT	L995	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	37	MNT	L995	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L996	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L996	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L998	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L998	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1000	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1000	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1002	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1002	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1004	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1004	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1006	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1006	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1008	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1008	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1010	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1010	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1012	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1012	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1014	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1014	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1016	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1016	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1018	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1018	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1020	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1020	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1022	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1022	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1024	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1024	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1026	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1026	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1028	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1028	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1030	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1030	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1032	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1032	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1034	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1034	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1036	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1036	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1038	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1038	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1040	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1040	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1042	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1042	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1044	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1044	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1046	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1046	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1048	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1048	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1050	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1050	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1052	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1052	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1054	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1054	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1056	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1056	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1058	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1058	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	37	MNT	L1059	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	37	MNT	L1059	2026-04-12	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	37	MNT	L1059	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	37	MNT	L1059	2026-04-12	CREDIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	37	MNT	L1061	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	37	MNT	L1061	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1063	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	37	MNT	L1063	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	38	MNT	L1182	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	38	MNT	L1182	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	38	MNT	L1183	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	38	MNT	L1183	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1184	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1184	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1186	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1186	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1188	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1188	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1190	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1190	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1192	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1192	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1194	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1194	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1196	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1196	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1198	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1198	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1200	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1200	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1202	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1202	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1204	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1204	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1206	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1206	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1208	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1208	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1210	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1210	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1212	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1212	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1214	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1214	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1216	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1216	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1218	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1218	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1220	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1220	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1222	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1222	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1224	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1224	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1226	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1226	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1228	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1228	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1230	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1230	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1232	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1232	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1234	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1234	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1236	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1236	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1238	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1238	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1240	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1240	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1242	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1242	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1244	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1244	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1246	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1246	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	38	MNT	L1247	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	38	MNT	L1247	2026-04-12	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	38	MNT	L1247	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	38	MNT	L1247	2026-04-12	CREDIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	38	MNT	L1249	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	38	MNT	L1249	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1251	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	38	MNT	L1251	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	39	MNT	L1370	2026-03-11	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFee	39	MNT	L1370	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	39	MNT	L1371	2026-03-11	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFee	39	MNT	L1371	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1372	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1372	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1374	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1374	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1376	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1376	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1378	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1378	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1380	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1380	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1382	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1382	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1384	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1384	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1386	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1386	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1388	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1388	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1390	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1390	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1392	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1392	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1394	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1394	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1396	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1396	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1398	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1398	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1400	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1400	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1402	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1402	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1404	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1404	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1406	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1406	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1408	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1408	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1410	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1410	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1412	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1412	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1414	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1414	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1416	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1416	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1418	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1418	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1420	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1420	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1422	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1422	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1424	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1424	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1426	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1426	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1428	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1428	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1430	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1430	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1432	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1432	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1434	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1434	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	39	MNT	L1435	2026-04-12	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	39	MNT	L1435	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	39	MNT	L1435	2026-04-12	CREDIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	39	MNT	L1435	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	39	MNT	L1437	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	39	MNT	L1437	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1439	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	39	MNT	L1439	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	40	MNT	L1558	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	40	MNT	L1558	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	40	MNT	L1559	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	40	MNT	L1559	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1560	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1560	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1562	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1562	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1564	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1564	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1566	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1566	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1568	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1568	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1570	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1570	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1572	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1572	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1574	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1574	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1576	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1576	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1578	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1578	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1580	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1580	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1582	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1582	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1584	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1584	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1586	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1586	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1588	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1588	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1590	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1590	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1592	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1592	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1594	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1594	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1596	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1596	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1598	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1598	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1600	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1600	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1602	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1602	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1604	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1604	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1606	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1606	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1608	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1608	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1610	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1610	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1612	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1612	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1614	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1614	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1616	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1616	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1618	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1618	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1620	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1620	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1622	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1622	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	40	MNT	L1623	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	40	MNT	L1623	2026-04-12	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	40	MNT	L1623	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	40	MNT	L1623	2026-04-12	CREDIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	40	MNT	L1625	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	40	MNT	L1625	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1627	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	40	MNT	L1627	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	41	MNT	L1746	2026-03-11	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFee	41	MNT	L1746	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	41	MNT	L1747	2026-03-11	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFee	41	MNT	L1747	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1748	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1748	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1750	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1750	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1752	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1752	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1754	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1754	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1756	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1756	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1758	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1758	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1760	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1760	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1762	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1762	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1764	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1764	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1766	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1766	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1768	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1768	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1770	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1770	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1772	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1772	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1774	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1774	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1776	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1776	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1778	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1778	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1780	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1780	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1782	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1782	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1784	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1784	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1786	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1786	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1788	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1788	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1790	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1790	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1792	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1792	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1794	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1794	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1796	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1796	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1798	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1798	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1800	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1800	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1802	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1802	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1804	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1804	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1806	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1806	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1808	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1808	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1810	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1810	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	41	MNT	L1811	2026-04-12	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	41	MNT	L1811	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	41	MNT	L1811	2026-04-12	CREDIT	5	145023	Suspense/Clearing account	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	41	MNT	L1811	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	41	MNT	L1813	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	41	MNT	L1813	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1815	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	41	MNT	L1815	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	42	MNT	L1934	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	42	MNT	L1934	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	42	MNT	L1935	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	42	MNT	L1935	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1936	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1936	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1938	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1938	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1940	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1940	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1942	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1942	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1944	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1944	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1946	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1946	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1948	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1948	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1950	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1950	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1952	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1952	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1954	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1954	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1956	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1956	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1958	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1958	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1960	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1960	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1962	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1962	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1964	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1964	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1966	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1966	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1968	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1968	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1970	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1970	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1972	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1972	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1974	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1974	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1976	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1976	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1978	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1978	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1980	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1980	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1982	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1982	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1984	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1984	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1986	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1986	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1988	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1988	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1990	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1990	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1992	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1992	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1994	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1994	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1996	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1996	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1998	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L1998	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	42	MNT	L1999	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	42	MNT	L1999	2026-04-12	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	42	MNT	L1999	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	42	MNT	L1999	2026-04-12	CREDIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	42	MNT	L2001	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	42	MNT	L2001	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L2003	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	42	MNT	L2003	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	43	MNT	L2122	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	43	MNT	L2122	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFee	43	MNT	L2123	2026-03-11	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFee	43	MNT	L2123	2026-03-11	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2124	2026-03-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2124	2026-03-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2126	2026-03-12	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2126	2026-03-12	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2128	2026-03-13	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2128	2026-03-13	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2130	2026-03-14	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2130	2026-03-14	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2132	2026-03-15	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2132	2026-03-15	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2134	2026-03-16	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2134	2026-03-16	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2136	2026-03-17	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2136	2026-03-17	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2138	2026-03-18	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2138	2026-03-18	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2140	2026-03-19	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2140	2026-03-19	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2142	2026-03-20	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2142	2026-03-20	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2144	2026-03-21	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2144	2026-03-21	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2146	2026-03-22	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2146	2026-03-22	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2148	2026-03-23	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2148	2026-03-23	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2150	2026-03-24	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2150	2026-03-24	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2152	2026-03-25	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2152	2026-03-25	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2154	2026-03-26	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2154	2026-03-26	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2156	2026-03-27	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2156	2026-03-27	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2158	2026-03-28	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2158	2026-03-28	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2160	2026-03-29	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2160	2026-03-29	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2162	2026-03-30	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2162	2026-03-30	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2164	2026-03-31	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2164	2026-03-31	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2166	2026-04-01	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2166	2026-04-01	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2168	2026-04-02	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2168	2026-04-02	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2170	2026-04-03	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2170	2026-04-03	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2172	2026-04-04	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2172	2026-04-04	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2174	2026-04-05	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2174	2026-04-05	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2176	2026-04-06	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2176	2026-04-06	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2178	2026-04-07	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2178	2026-04-07	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2180	2026-04-08	DEBIT	22	145024	Deferred Capitalized Income	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2180	2026-04-08	CREDIT	24	450281	Income From Buy Down	654	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2182	2026-04-09	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2182	2026-04-09	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2184	2026-04-10	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2184	2026-04-10	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2186	2026-04-11	DEBIT	22	145024	Deferred Capitalized Income	652	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2186	2026-04-11	CREDIT	24	450281	Income From Buy Down	652	False	False	-
+loanTransactionType.buyDownFeeAdjustment	43	MNT	L2187	2026-04-12	DEBIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	43	MNT	L2187	2026-04-12	DEBIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	43	MNT	L2187	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	30000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	43	MNT	L2187	2026-04-12	CREDIT	23	450280	Buy Down Expense	30000	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	43	MNT	L2189	2026-04-12	DEBIT	24	450281	Income From Buy Down	10109	False	False	-
+loanTransactionType.buyDownFeeAmortizationAdjustment	43	MNT	L2189	2026-04-12	CREDIT	22	145024	Deferred Capitalized Income	10109	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2191	2026-04-13	DEBIT	22	145024	Deferred Capitalized Income	11413	False	False	-
+loanTransactionType.buyDownFeeAmortization	43	MNT	L2191	2026-04-13	CREDIT	24	450281	Income From Buy Down	11413	False	False	-
+loanTransactionType.buyDownFee	44	MNT	L2310	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	44	MNT	L2310	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	44	MNT	L2314	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	44	MNT	L2314	2024-03-31	CREDIT	24	450281	Income From Buy Down	5000	False	False	-
+loanTransactionType.buyDownFee	45	MNT	L2318	2024-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	45	MNT	L2318	2024-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	45	MNT	L2320	2024-03-01	DEBIT	22	145024	Deferred Capitalized Income	1000	False	False	-
+loanTransactionType.buyDownFeeAdjustment	45	MNT	L2320	2024-03-01	CREDIT	23	450280	Buy Down Expense	1000	False	False	-
+loanTransactionType.buyDownFeeAmortization	45	MNT	L2322	2024-03-31	DEBIT	22	145024	Deferred Capitalized Income	4000	False	False	-
+loanTransactionType.buyDownFeeAmortization	45	MNT	L2322	2024-03-31	CREDIT	24	450281	Income From Buy Down	4000	False	False	-
+loanTransactionType.buyDownFee	46	MNT	L2327	2026-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	46	MNT	L2327	2026-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	46	MNT	L2328	2026-01-01	DEBIT	22	145024	Deferred Capitalized Income	56	False	False	-
+loanTransactionType.buyDownFeeAmortization	46	MNT	L2328	2026-01-01	CREDIT	24	450281	Income From Buy Down	56	False	False	-
+loanTransactionType.buyDownFeeAmortization	46	MNT	L2331	2026-01-03	DEBIT	22	145024	Deferred Capitalized Income	4944	False	False	-
+loanTransactionType.buyDownFeeAmortization	46	MNT	L2331	2026-01-03	CREDIT	24	450281	Income From Buy Down	4944	False	False	-
+loanTransactionType.buyDownFee	47	MNT	L2336	2026-01-01	DEBIT	23	450280	Buy Down Expense	5000	False	False	-
+loanTransactionType.buyDownFee	47	MNT	L2336	2026-01-01	CREDIT	22	145024	Deferred Capitalized Income	5000	False	False	-
+loanTransactionType.buyDownFeeAmortization	47	MNT	L2337	2026-01-01	DEBIT	22	145024	Deferred Capitalized Income	56	False	False	-
+loanTransactionType.buyDownFeeAmortization	47	MNT	L2337	2026-01-01	CREDIT	24	450281	Income From Buy Down	56	False	False	-
+loanTransactionType.buyDownFeeAmortization	47	MNT	L2340	2026-01-03	DEBIT	22	145024	Deferred Capitalized Income	4944	False	False	-
+loanTransactionType.buyDownFeeAmortization	47	MNT	L2340	2026-01-03	CREDIT	24	450281	Income From Buy Down	4944	False	False	-
