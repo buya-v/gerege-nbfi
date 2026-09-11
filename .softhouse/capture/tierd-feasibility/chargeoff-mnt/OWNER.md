@@ -8,10 +8,19 @@ Capture only: no vector, no drive, no `.go`.  Money in the tables, manifests and
 file is integer minor units (MNT, 2 ISO 4217 minor digits); the raw oracle bodies under
 `loans/` carry the decimal major units the oracle emitted, unchanged.
 
-The point of this capture is the charged-off **write-off** branch — the journal entries
-produced by `createJournalEntriesForWriteOffsWhenLoanIsChargedOff` — which no previous
-capture had observed.  Every charge-off scenario below exercises it and the oracle
-agreed with the `.feature` journal-entry expectations.
+The journal entries observed here are the **charge-off posting** —
+`createJournalEntriesForChargeOff` [AccrualBasedAccountingProcessorForLoan.java:890] — on
+31 charge-off transactions (fraud and non-fraud; principal, interest and fee legs), and
+**repayments on a charged-off loan** (`createJournalEntriesForRepaymentWhenLoanIsChargedOff`,
+:1388; 5 transactions credit `Recoveries`).  No previous capture had observed either.
+
+CORRECTION (driver, 2026-09-11, after merge 77697e49): an earlier text of this file said the
+capture reached the charged-off **write-off** branch
+(`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`, :1616).  It does not: the read-backs
+under `loans/` contain **no** `writeOff` transaction (types seen: disbursement 50, chargeOff 59,
+accrual 70, repayment 25, downPayment 7, merchantIssuedRefund 3, payoutRefund 2,
+accrualActivity 2, goodwillCredit 2).  That branch remains UNOBSERVED.  See
+`.softhouse/findings/F-2026-09-11-tierd-chargeoff-branch-mislabel.md`.
 
 ## What is here
 
@@ -29,10 +38,12 @@ agreed with the `.feature` journal-entry expectations.
 | `manifest-chargeoff-passed.json` | manifest of the committed bodies (1267) |
 | `summary-chargeoff.json` | extractor totals and per-loan counts |
 | `loans/loan-<id>/` | the per-loan read-backs committed for the PASSED scenarios |
-| `journalentries/loan-<id>/` | the observed GL journal entries of the charge-off/write-off branch (85 responses, 33 loans) |
+| `journalentries/loan-<id>/` | the observed GL journal entries of the charge-off posting and charged-off repayments (85 responses, 33 loans) |
 | `journalentries-manifest.json` | per-response metadata: loan, source line, sha256, GL legs in integer minor units |
 | `journalentries-summary.json` | journal-entry totals and GL-account leg counts |
 | `extract-journalentries.py` | the supplementary extractor for the `/journalentries` bodies |
+| `product-mappings/` | the observed loan-product GL account mappings the charge-off posting resolves through (oracle `retrieveOneLoanProduct` echo + accepted create requests for LP1 / LP1_INTEREST_FLAT; sha256 in `product-mappings/manifest.json`) |
+| `extract-product-mappings.py` | extracts `product-mappings/` from the raw Feign log |
 | `teardown-isolation.txt` | baseline-vs-teardown counter comparison |
 
 ## Source
@@ -1225,8 +1236,9 @@ loans/loan-50/loan-50-detail-associations-transactions-6.json
 
 ## The write-off branch — `/journalentries` evidence
 
-The point of this capture is the charged-off write-off branch
-(`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`), whose output is GL journal
+The journal entries here are the charge-off posting (`createJournalEntriesForChargeOff`, :890)
+and repayments on a charged-off loan (:1388) — NOT the charged-off write-off branch (:1616),
+which this capture never reached (see the correction at the top).  Their output is GL journal
 entries.  Those do not appear under `loans/`: the control-tested extractor is
 loan-keyed and emits only `/loans` traffic.  The branch is observed directly in the
 runner's `GET /journalentries?runningBalance=true&transactionId=L<loanId>` responses,
@@ -1236,7 +1248,7 @@ captured here by `extract-journalentries.py` and committed under `journalentries
 * Attribution is not assumed: every leg's `entityType` is `LOAN`, every response's
   `entityId` set is the single loan `N` and its `transactionId` is `L<N>`; every leg's
   `currency.code` is `MNT` (`decimalPlaces 2`).
-* **43** of the 85 responses carry a charge-off/write-off leg.  Payments, refunds and
+* **43** of the 85 responses carry a charge-off leg.  Payments, refunds and
   running-balance reads make up the rest.
 
 GL accounts seen across the 240 legs:
@@ -1254,8 +1266,8 @@ GL accounts seen across the 240 legs:
 
 Example — loan 1, feature line 5, `journalentries/loan-1/loan-1-journalentries-2.json`:
 `DEBIT Credit Loss/Bad Debt 744007 100000` / `CREDIT Loans Receivable 112601 100000`
-(minor units; the raw body carries `1000.0`).  That pair is the write-off posting of the
-charged-off loan.
+(minor units; the raw body carries `1000.0`).  That pair is the charge-off posting of the
+principal (CHARGE_OFF_EXPENSE debit, LOAN_PORTFOLIO credit).
 
 The manifest's `amount_minor` values are integer minor units (MNT, 2 ISO 4217 digits);
 the raw bodies under `journalentries/` carry the decimal major units the oracle emitted,
@@ -1265,9 +1277,8 @@ unchanged, exactly as under `loans/`.  Each body's sha256 is in
 
 ## Failures
 
-None. Every scenario passed; the charged-off write-off branch
-(`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`) was exercised and the oracle
-agreed with every `.feature` journal-entry expectation.  The branch's GL legs are
+None. Every scenario passed; the charge-off posting (`createJournalEntriesForChargeOff`) was
+exercised and the oracle agreed with every `.feature` journal-entry expectation.  The branch's GL legs are
 committed above (`journalentries/`), so that claim is observation, not inference.  No EUR
 control was run in this capture task.
 

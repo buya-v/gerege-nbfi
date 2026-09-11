@@ -58,8 +58,8 @@ def main():
     w('file is integer minor units (MNT, 2 ISO 4217 minor digits); the raw oracle bodies under')
     w('`loans/` carry the decimal major units the oracle emitted, unchanged.')
     w('')
-    w('The point of this capture is the charged-off **write-off** branch — the journal entries')
-    w('produced by `createJournalEntriesForWriteOffsWhenLoanIsChargedOff` — which no previous')
+    w('The journal entries observed here are the **charge-off posting** (createJournalEntriesForChargeOff, :890)')
+    w('and repayments on a charged-off loan (:1388) — NOT the write-off branch (:1616), unobserved; which no previous')
     w('capture had observed.  Every charge-off scenario below exercises it and the oracle')
     w('agreed with the `.feature` journal-entry expectations.')
     w('')
@@ -150,8 +150,8 @@ def main():
     w('## Failures')
     w('')
     if scen['failed'] == 0:
-        w('None. Every scenario passed; the charged-off write-off branch')
-        w('(`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`) was exercised and the oracle')
+        w('None. Every scenario passed; the charge-off posting')
+        w('(`createJournalEntriesForChargeOff`) was exercised and the oracle')
         w('agreed with every `.feature` journal-entry expectation.  No EUR control was run in this')
         w('capture task.')
     else:

@@ -3,7 +3,7 @@
 
 `bin/extract.py` is loan-keyed and deliberately skips non-`/loans` routes, so the
 GL journal entries produced by
-`createJournalEntriesForWriteOffsWhenLoanIsChargedOff` are not in `loans/`.
+`createJournalEntriesForChargeOff` (:890) are not in `loans/` (driver correction: NOT :1616 write-offs).
 This supplementary extractor captures exactly those bodies, attributed to the
 loan in each response (`entityId`; `transactionId` is `L<loanId>`).
 
@@ -158,7 +158,7 @@ def main():
         json.dump(summary, fh, indent=1)
         fh.write("\n")
 
-    print("journalentries responses: %d over %d loans; %d carry a write-off leg"
+    print("journalentries responses: %d over %d loans; %d carry a charge-off leg"
           % (summary["responses"], summary["loans"], summary["responses_with_writeoff_leg"]))
 
 

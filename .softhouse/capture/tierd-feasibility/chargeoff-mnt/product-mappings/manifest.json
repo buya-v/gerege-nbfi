@@ -1,0 +1,17 @@
+[
+ {
+  "file": "product-mappings/product-20-retrieve-one-response.json",
+  "log_line": 96924,
+  "sha256": "c01fa811be9439f205b546bf29e2205fa8687ffdb4586e76313cb53ec26c44f1"
+ },
+ {
+  "file": "product-mappings/create-request-LP1.json",
+  "log_line": 10278,
+  "sha256": "2c6de3c8771b789ab6f29c9d09ec3c7edee16a72414543c513a9ed8fbf40d6cc"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_FLAT.json",
+  "log_line": 10279,
+  "sha256": "d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759"
+ }
+]
