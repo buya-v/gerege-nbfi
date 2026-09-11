@@ -152,8 +152,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goReversal(*req.Reversal)
 	case req.WriteOffJournal != nil:
 		return goWriteOffJournal(*req.WriteOffJournal)
+	case req.ChargeLifecycle != nil:
+		return goChargeLifecycle(*req.ChargeLifecycle)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_lifecycle")
 	}
 }
 
@@ -758,6 +760,202 @@ func writeOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{WriteOffJournalLegs: out}
+}
+
+// goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
+// LoanCharge of the observed amount and penalty flag, applies the ordered
+// operations through the port's own money mutations, and captures the state
+// after creation and after every operation. A "pay" operation runs
+// UpdatePaidAmountBy; a "waive" operation runs Waive. After every operation the
+// schedule/reprocess reconcile UpdateWaivedAmount runs on the charge — the path
+// the oracle invokes on every charge — which is a no-op in every observed state
+// and therefore never moves a cell. Every monetary cell is an integer minor
+// unit; nothing is parsed as a float.
+func goChargeLifecycle(c ChargeLifecycleRequest) (Expect, error) {
+	amount, err := parseMinorText(c.AmountMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	charge := loan.LoanCharge{
+		Amount:            amount,
+		AmountOutstanding: amount,
+		Penalty:           c.Penalty,
+		Active:            true,
+	}
+	if err := assertChargeOutstandingConserved(charge); err != nil {
+		return Expect{}, err
+	}
+	states := []ChargeLifecycleState{chargeLifecycleState(charge)}
+	for _, op := range c.Operations {
+		switch op.Op {
+		case "pay":
+			increment, err := parseMinorText(op.AmountMinor)
+			if err != nil {
+				return Expect{}, err
+			}
+			charge.UpdatePaidAmountBy(increment)
+		case "waive":
+			charge.Waive()
+		default:
+			return Expect{}, fmt.Errorf("loan: charge-lifecycle operation %q is neither pay nor waive", op.Op)
+		}
+		charge.UpdateWaivedAmount()
+		if err := assertChargeOutstandingConserved(charge); err != nil {
+			return Expect{}, err
+		}
+		states = append(states, chargeLifecycleState(charge))
+	}
+	return Expect{ChargeStates: states}, nil
+}
+
+// assertChargeOutstandingConserved grades the seam's one property directly
+// through the port's own derivation: the authoritative AmountOutstanding field
+// must equal loan.LoanCharge.CalculateOutstanding (amount minus paid minus
+// waived minus written off) in every observed state. On the committed captures
+// written-off is always zero, so this is exactly amount minus paid minus waived.
+func assertChargeOutstandingConserved(c loan.LoanCharge) error {
+	if got, want := c.AmountOutstanding, c.CalculateOutstanding(); got != want {
+		return fmt.Errorf("loan: charge outstanding %d != CalculateOutstanding (amount - paid - waived) %d", got, want)
+	}
+	return nil
+}
+
+// chargeLifecycleState renders one LoanCharge's observed cells as the seam's
+// state: amountPaid, amountWaived and amountOutstanding as integer minor-unit
+// strings plus the paid/waived flags.
+func chargeLifecycleState(c loan.LoanCharge) ChargeLifecycleState {
+	return chargeLifecycleStateFromOutstanding(c, c.AmountOutstanding)
+}
+
+// chargeLifecycleStateFromOutstanding renders the same observed cells but takes
+// the outstanding explicitly. The caller passes a value the port DERIVED (its
+// own CalculateOutstanding on a charge whose inputs were changed), so no
+// balance-named field is ever assigned in this package — the value is in
+// flight, exactly like the correct renderer above.
+func chargeLifecycleStateFromOutstanding(c loan.LoanCharge, outstanding loan.MinorUnits) ChargeLifecycleState {
+	return ChargeLifecycleState{
+		PaidMinor:        strconv.FormatInt(int64(c.AmountPaid), 10),
+		WaivedMinor:      strconv.FormatInt(int64(c.AmountWaived), 10),
+		OutstandingMinor: strconv.FormatInt(int64(outstanding), 10),
+		Paid:             c.Paid,
+		Waived:           c.Waived,
+	}
+}
+
+// chargeLifecycleWrongMode selects which deliberately-wrong charge-lifecycle
+// reading to run. Each is a port a reasonable reader might write, and each is
+// discriminated by the committed loan-18 observation. Every mode changes the
+// charge's INPUTS or the OPERATIONS it applies and then reads the outstanding
+// off the port's own derivation; no balance-named field is assigned in this
+// package.
+type chargeLifecycleWrongMode int
+
+const (
+	// wrongChargePartialMarksPaid flips the paid flag as soon as any amount is
+	// paid, before outstanding reaches zero. The port still moves amountPaid to
+	// 10000 and derives outstanding 2345; only the flag flips early. The pinned
+	// fee's partial step (amountPaid 10000, outstanding 2345, paid false) then
+	// reads paid true.
+	wrongChargePartialMarksPaid chargeLifecycleWrongMode = iota
+	// wrongChargeWaiverLeavesOutstanding records amountWaived through the port's
+	// own Waive, then re-derives outstanding from a view with the waived input
+	// dropped, so the pinned penalty (waived 6789, outstanding 0) reads
+	// outstanding 6789 while the waived cell and flag stay observed.
+	wrongChargeWaiverLeavesOutstanding
+	// wrongChargeWaiverCountsAsPaid applies a waiver as a PAYMENT: the "waive"
+	// operation runs UpdatePaidAmountBy(outstanding) instead of Waive, routing
+	// the amount into amountPaid and the paid flag, so the pinned penalty (paid
+	// false, waived true) reads amountPaid 6789, amountWaived 0, paid true,
+	// waived false.
+	wrongChargeWaiverCountsAsPaid
+	// wrongChargeOutstandingIgnoresWaived re-derives every state's outstanding
+	// from a view with the waived input dropped (amount minus paid only), so the
+	// pinned waived penalty (outstanding 0) reads outstanding 6789.
+	wrongChargeOutstandingIgnoresWaived
+)
+
+// wrongChargeLifecycleEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-charge-lifecycle seam, parameterised by which lifecycle defect it
+// commits. On any request that is not a charge lifecycle it delegates to the
+// correct port, so each drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongChargeLifecycleEvaluator struct {
+	goEvaluator
+	mode chargeLifecycleWrongMode
+}
+
+func (w wrongChargeLifecycleEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargeLifecycle != nil {
+		return wrongChargeLifecycle(*req.ChargeLifecycle, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongChargeLifecycle runs the lifecycle through deliberately-wrong behaviour.
+// Each mode changes the charge's INPUTS or the OPERATIONS it applies and then
+// renders the outstanding through the port's own derivation (the field a port
+// mutation left, or CalculateOutstanding on a view whose inputs were changed) —
+// the balance is never assigned here.
+func wrongChargeLifecycle(c ChargeLifecycleRequest, mode chargeLifecycleWrongMode) (Expect, error) {
+	amount, err := parseMinorText(c.AmountMinor)
+	if err != nil {
+		return Expect{}, err
+	}
+	charge := loan.LoanCharge{
+		Amount:            amount,
+		AmountOutstanding: amount,
+		Penalty:           c.Penalty,
+		Active:            true,
+	}
+	states := []ChargeLifecycleState{chargeLifecycleWrongState(charge, mode)}
+	for _, op := range c.Operations {
+		switch op.Op {
+		case "pay":
+			increment, err := parseMinorText(op.AmountMinor)
+			if err != nil {
+				return Expect{}, err
+			}
+			charge.UpdatePaidAmountBy(increment)
+			if mode == wrongChargePartialMarksPaid && charge.AmountPaid > 0 {
+				// The defect: the paid flag flips on the first payment. The
+				// paid amount and outstanding remain the port's own.
+				charge.Paid = true
+			}
+		case "waive":
+			if mode == wrongChargeWaiverCountsAsPaid {
+				// The defect: a waiver is applied as a payment, so the port
+				// routes the amount into amountPaid and derives the rest.
+				increment := charge.AmountOutstanding
+				charge.UpdatePaidAmountBy(increment)
+			} else {
+				charge.Waive()
+			}
+		default:
+			return Expect{}, fmt.Errorf("loan: charge-lifecycle operation %q is neither pay nor waive", op.Op)
+		}
+		charge.UpdateWaivedAmount()
+		states = append(states, chargeLifecycleWrongState(charge, mode))
+	}
+	return Expect{ChargeStates: states}, nil
+}
+
+// chargeLifecycleWrongState renders one charge for a wrong drive. The two
+// modes whose defect is that the outstanding ignores the waiver drop the
+// waived input on a view charge and re-derive the outstanding through the
+// port's own CalculateOutstanding (amount - paid - waived = amount - paid); the
+// waived cell and the flags still come from the charge the operations ran on.
+// Every other mode renders the charge's own port-derived state.
+func chargeLifecycleWrongState(c loan.LoanCharge, mode chargeLifecycleWrongMode) ChargeLifecycleState {
+	if mode == wrongChargeOutstandingIgnoresWaived ||
+		(mode == wrongChargeWaiverLeavesOutstanding && c.AmountWaived > 0) {
+		view := loan.LoanCharge{
+			Amount:           c.Amount,
+			AmountPaid:       c.AmountPaid,
+			AmountWrittenOff: c.AmountWrittenOff,
+		}
+		return chargeLifecycleStateFromOutstanding(c, view.CalculateOutstanding())
+	}
+	return chargeLifecycleState(c)
 }
 
 // writeOffJournalWrongMode selects which deliberately-wrong write-off posting
@@ -2025,4 +2223,24 @@ func init() {
 			"fee account; the pinned distinct fee (10000) and penalty (5700) both stay non-zero and "+
 			"every total is unchanged, so only the two account cells move — the swap they exist to catch",
 		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalSwapsFeeAndPenalty})
+	RegisterWrong("loan-wrong-charge-partial-marks-paid",
+		"flips the paid flag as soon as any amount is paid, before outstanding reaches zero, so the "+
+			"pinned fee's partial step (amountPaid 10000, outstanding 2345, paid false) reads paid "+
+			"true while the amounts are unchanged",
+		wrongChargeLifecycleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargePartialMarksPaid})
+	RegisterWrong("loan-wrong-charge-waiver-leaves-outstanding",
+		"records the waived amount but leaves the charge's outstanding reduced by paid only, so the "+
+			"pinned waived penalty (amountWaived 6789, outstanding 0) reads outstanding 6789 while "+
+			"the waived cell and flag are correct",
+		wrongChargeLifecycleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeWaiverLeavesOutstanding})
+	RegisterWrong("loan-wrong-charge-waiver-counts-as-paid",
+		"routes a waiver into amountPaid and the paid flag instead of amountWaived and the waived "+
+			"flag, so the pinned penalty (paid false, waived true) reads amountPaid 6789, "+
+			"amountWaived 0, paid true, waived false",
+		wrongChargeLifecycleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeWaiverCountsAsPaid})
+	RegisterWrong("loan-wrong-charge-outstanding-ignores-waived",
+		"derives a charge's outstanding as amount minus paid only, never subtracting the waived "+
+			"amount, so the pinned waived penalty (outstanding 0) reads outstanding 6789 while "+
+			"every paid cell and flag is correct",
+		wrongChargeLifecycleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeOutstandingIgnoresWaived})
 }

@@ -1,0 +1,76 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L18-charge-fee-partial-then-repaid",
+    "title": "A fee charge (loan 18, charge 14, amount 123.45) is created then partly paid 100.00 \u2014 amountPaid 10000, outstanding 2345, paid stays FALSE \u2014 and only the final repayment of the remaining 2345 flips paid TRUE with outstanding 0",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the loan-18 FEE charge (loanChargeId 14, charge definition 5, OHLGR-Fee-SDD-100, amount 123.45, SDD due 2026-01-15) through its money-mutation lifecycle on the running Fineract server under tenant gerege, business date 2026-09-03. request.charge_lifecycle transcribes the charge's amount (123.45 -> 12345 minor) and its two observed repayment operations: the partial repayment of 100.00 (tx70, step 3, loanChargePaidByList chargeId 14 amount 10000) and the final payoff of 2345 minor of fee inside the 106641.98 repayment (tx72, step 5). expect.charge_states transcribes the observed charge fields (amountPaid / amountWaived / amountOutstanding plus the paid and waived flags) from the created read-back, the after-partial read-back and the final read-back. This vector grades ONE property: a payment moves paid up to the amount and leaves paid false while anything remains (10000 paid, 2345 outstanding, paid false) and only flips paid true when the outstanding reaches zero (12345 paid, 0 outstanding, paid true). WHAT THIS VECTOR DOES NOT GRADE: any waiver. The fee is never waived, so the waiver drives (waiver-leaves-outstanding, waiver-counts-as-paid, outstanding-ignores-waived) are indistinguishable here and are graded by the penalty vector instead. Nothing was computed by this promotion: every state cell is read directly from the committed files.",
+    "oracle": {
+        "seam": "loan-charge-lifecycle",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.charge_lifecycle.amount_minor is the fee amount 123.45 read from out/loan-18-created-detail-raw.json; request.charge_lifecycle.operations are the two charge-14 payments observed in out/loan-18-after-partial-raw and out/loan-18-final-transactions-raw.json (100.00 partial, 2345 minor final); expect.charge_states are the observed charge-14 cells in the created, after-partial and final committed detail read-backs. Captures are single-line JSON documents, so line 1 is the observation. capture_case_id names the loan externalId OHCHGCAP-L01, which appears in the referenced capture.",
+        "capture_ref": ".softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-after-partial-detail-raw.json",
+        "capture_sha256": "72c31879318d9fa4ced1896952604492dc1255a3d3e3ec935547e77c6685b51c",
+        "capture_case_id": "OHCHGCAP-L01",
+        "citation": "loan-18-created-detail-raw.json:1 (sha256 2acb49a26842e405b8f4deb531712637a4637632ddef1d1e443f29527e697bf9): charges[loanChargeId 14] name \"OHLGR-Fee-SDD-100\", penalty false, amount 123.45, amountPaid 0, amountWaived 0, amountOutstanding 123.45, paid false, waived false. loan-18-after-partial-detail-raw.json:1 (sha256 72c31879318d9fa4ced1896952604492dc1255a3d3e3ec935547e77c6685b51c): charges[loanChargeId 14] amountPaid 100.0 (10000 minor), amountWaived 0, amountOutstanding 23.45 (2345 minor), paid false, waived false; the step-3 repayment tx70 carries feeChargesPortion 100.0 and loanChargePaidByList {chargeId 14, amount 100.0}. loan-18-final-detail-raw.json:1 (sha256 979310855f2d0e3d8738982932dfa0815a63be2bfc369bd719977101aa5761e5): charges[loanChargeId 14] amountPaid 123.45 (12345 minor), amountWaived 0, amountOutstanding 0.0, paid true, waived false; status.code loanStatusType.closed.obligations.met."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "charge_lifecycle": {
+            "amount_minor": "12345",
+            "penalty": false,
+            "operations": [
+                {
+                    "op": "pay",
+                    "amount_minor": "10000"
+                },
+                {
+                    "op": "pay",
+                    "amount_minor": "2345"
+                }
+            ]
+        }
+    },
+    "expect": {
+        "charge_states": [
+            {
+                "paid_minor": "0",
+                "waived_minor": "0",
+                "outstanding_minor": "12345",
+                "paid": false,
+                "waived": false
+            },
+            {
+                "paid_minor": "10000",
+                "waived_minor": "0",
+                "outstanding_minor": "2345",
+                "paid": false,
+                "waived": false
+            },
+            {
+                "paid_minor": "12345",
+                "waived_minor": "0",
+                "outstanding_minor": "0",
+                "paid": true,
+                "waived": false
+            }
+        ]
+    },
+    "capabilities_required": [
+        "charge-lifecycle"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-charge-partial-marks-paid"
+    ]
+}

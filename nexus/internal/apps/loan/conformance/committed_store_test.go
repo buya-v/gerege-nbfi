@@ -131,4 +131,5 @@ var committedLoanSeams = []string{
 	SeamLoanWriteOffFourBucket,
 	SeamLoanTransactionReversal,
 	SeamLoanWriteOffJournalEntries,
+	SeamLoanChargeLifecycle,
 }

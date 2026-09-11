@@ -1,0 +1,66 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-L18-charge-penalty-waived",
+    "title": "A penalty charge (loan 18, charge 13, amount 67.89) is created then waived whole: amountWaived moves 0 -> 6789, amountOutstanding 6789 -> 0 and the waived flag flips true while paid stays FALSE",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the loan-18 PENALTY charge (loanChargeId 13, charge definition 4, OHLGR-Penalty-Flat-57, amount 67.89, SDD due 2026-02-15) through its creation and single waiver on the running Fineract server under tenant gerege, business date 2026-09-03. request.charge_lifecycle transcribes the charge's amount (67.89 -> 6789 minor), its penalty flag (true) and the one observed operation: the waiver POST /loans/18/charges/13?command=waive (step 4, tx71 loanTransactionType.waiveCharges, 2026-02-15). expect.charge_states transcribes the observed charge fields (amountPaid / amountWaived / amountOutstanding plus the paid and waived flags) from the created read-back and the after-waive read-back. This vector grades ONE property: a waiver moves the whole outstanding into amountWaived (0 -> 6789), clears amountOutstanding (6789 -> 0) and flips waived true while paid stays false. The waived penalty leaves the loan ACTIVE because the fee is still outstanding; journal entries remain 4. Nothing was computed by this promotion: every state cell is read directly from the committed files.",
+    "oracle": {
+        "seam": "loan-charge-lifecycle",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.charge_lifecycle.amount_minor and penalty flag are read from out/loan-18-created-detail-raw.json (charge 13, 67.89, penalty true); request.charge_lifecycle.operations is the single waive step (POST /loans/18/charges/13?command=waive); expect.charge_states are the observed charge-13 cells in out/loan-18-created-detail-raw.json and out/loan-18-after-waive-detail-raw.json. Captures are single-line JSON documents, so line 1 is the observation. capture_case_id names the loan externalId OHCHGCAP-L01, which appears in the referenced capture.",
+        "capture_ref": ".softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-after-waive-detail-raw.json",
+        "capture_sha256": "dd6b8da353531cc91bc3948eab3bb2659fe44fc2ec7892d244e31d339bd1888f",
+        "capture_case_id": "OHCHGCAP-L01",
+        "citation": "loan-18-created-detail-raw.json:1 (sha256 2acb49a26842e405b8f4deb531712637a4637632ddef1d1e443f29527e697bf9): charges[loanChargeId 13] name \"OHLGR-Penalty-Flat-57\", penalty true, amount 67.89, amountPaid 0, amountWaived 0, amountOutstanding 67.89, paid false, waived false. loan-18-after-waive-detail-raw.json:1 (sha256 dd6b8da353531cc91bc3948eab3bb2659fe44fc2ec7892d244e31d339bd1888f): charges[loanChargeId 13] amountPaid 0.0, amountWaived 67.89 (6789 minor), amountOutstanding 0.0, paid false, waived true; the waive transaction tx71 is loanTransactionType.waiveCharges dated 2026-02-15; status.code loanStatusType.active; journal entries still 4."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "charge_lifecycle": {
+            "amount_minor": "6789",
+            "penalty": true,
+            "operations": [
+                {
+                    "op": "waive"
+                }
+            ]
+        }
+    },
+    "expect": {
+        "charge_states": [
+            {
+                "paid_minor": "0",
+                "waived_minor": "0",
+                "outstanding_minor": "6789",
+                "paid": false,
+                "waived": false
+            },
+            {
+                "paid_minor": "0",
+                "waived_minor": "6789",
+                "outstanding_minor": "0",
+                "paid": false,
+                "waived": true
+            }
+        ]
+    },
+    "capabilities_required": [
+        "charge-lifecycle"
+    ],
+    "graded_against": [
+        "loan-go",
+        "loan-wrong-charge-waiver-leaves-outstanding",
+        "loan-wrong-charge-waiver-counts-as-paid",
+        "loan-wrong-charge-outstanding-ignores-waived"
+    ]
+}
