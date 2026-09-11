@@ -1,6 +1,6 @@
 # OH-WOJE-AA — port and grade the write-off's journal entry. NO ORACLE.
 
-Worktree: `/Users/buv/oh-gerege-woje` (branch `feat/OHWOJEaa`)
+Worktree: `/Users/buv/oh-gerege-woje2` (branch `feat/OHWOJEaa2`)
 Work ONLY in that directory. **Take no captures. Issue no POST/PUT/DELETE.**
 
 **A run works ONLY in its own worktree.** `/Users/buv/gerege-nbfi` is the driver's checkout —
@@ -38,9 +38,20 @@ to the SAME account** (`accountMap`, `:1891`); post the credits in that insertio
 ONE debit of the total to `LOSSES_WRITTEN_OFF` (or to the write-off-reason mapping when one is
 set, `:1963-1975`).
 
-The slot → account mapping for product 3 is committed evidence already — find the
-`acc_product_mapping` capture `OH-MAP-E` merged (search `.softhouse/capture/` for product 3's
-mapping rows) and cite it. **Never invent a mapping.**
+**THE MAPPING IS HERE — do not search for it** (a first attempt at this brief spent 420
+events grepping for `acc_product_mapping` and found nothing, because the evidence is REST, not
+SQL): `.softhouse/capture/investor-asset-transfer-100/out/loanproduct-3-raw.json` —
+`GET /loanproducts/3` on TODAY's oracle instance, `accountingMappings`:
+
+    loanPortfolioAccount       OHLGR-10010 Loan-Portfolio        (slot LOAN_PORTFOLIO)
+    receivableInterestAccount  OHLGR-10012 Interest-Receivable   (slot INTEREST_RECEIVABLE)
+    receivableFeeAccount       OHLGR-10013 Fees-Receivable       (slot FEES_RECEIVABLE)
+    receivablePenaltyAccount   OHLGR-10014 Penalties-Receivable  (slot PENALTIES_RECEIVABLE)
+    overpaymentLiabilityAccount OHLGR-20011 Overpayment-Liability (slot OVERPAYMENT)
+    writeOffAccount            OHLGR-50010 Losses-Written-Off    (slot LOSSES_WRITTEN_OFF)
+
+Cite it by path and sha256. **Do NOT use `.softhouse/capture/tierA-a2/`** — it came from an
+EARLIER oracle instance; its product ids name different products. **Never invent a mapping.**
 
 Port it into `nexus/internal/apps/loan/` as a pure function: portions (integer minor units) +
 slot→account mapping → legs (`JournalEntryLeg`, `journalbatch.go`). Cite `file:line`.
