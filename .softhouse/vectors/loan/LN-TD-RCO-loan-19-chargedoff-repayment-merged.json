@@ -1,0 +1,68 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RCO-loan-19-chargedoff-repayment-merged",
+ "title": "A repayment on a FRAUD loan marked charged off credits INCOME_FROM_RECOVERY 643.00 for its 633.00 principal and 10.00 interest, MERGED, then debits the resolved fund source 1 exactly ONCE (loan 19 L61)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a REPAYMENT posted on a loan ALREADY MARKED CHARGED OFF under createJournalEntriesForRepaymentWhenLoanIsChargedOff, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP1_INTEREST_FLAT / loanProductId 3, loan 19 chargedOff true, fraud true) at repayment transaction L61. request.charged_off_repayment_journal.portions transcribes the loan read-back's repayment transaction id 61 (externalId 3b52ebe2-0312-47c7-a56f-c4b0fcb54692, type loanTransactionType.repayment, paymentDetailData.paymentType.id 5): principalPortion 633.0 -> \"63300\", interestPortion 10.0 -> \"1000\", feeCharges/penaltyCharges/overpaymentPortion 0 and omitted. The repayment is preceded in the read-back by the loan's NON-REVERSED chargeOff transaction id 59, so the loan is already marked charged off when L61 posts. request.charged_off_repayment_journal.accounts is the accepted create request product-mappings/create-request-LP1_INTEREST_FLAT.json's accountingMappings with the fund source RESOLVED through the payment channel: incomeFromRecoveryAccountId 17 (Recoveries), loanPortfolioAccountId 6, receivableInterestAccountId 10, overpaymentLiabilityAccountId 16, fundSourceAccountId 1; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 18, so paymentType 5 has no channel mapping and resolves to the product fund source 1. expect.charged_off_repayment_journal_legs is a TRANSCRIPTION of the two L61 legs in id order from the journal-entries read-back: JE 175 CREDIT glAccountId 17 643.00, JE 176 DEBIT glAccountId 1 643.00. THIS VECTOR GRADES ONE PROPERTY: a repayment on a charged-off loan CREDITS every positive principal, interest, fee and penalty portion to INCOME_FROM_RECOVERY — whatever the fraud flag — MERGING those slots into one credit at the first slot's position, then DEBITs the total exactly ONCE to the resolved fund source. The 63300 principal and 1000 interest share the recovery account 17, so the merged-credit branch IS exercised: a port that posts the repayment like an ordinary one emits TWO credits (63300 to account 6, 1000 to account 10) instead of the one merged 64300 credit to 17, and a port that ignores the charge-off state in any other way moves a leg. WHAT THIS VECTOR DOES NOT GRADE: a positive fee, penalty or overpayment portion (all three are zero here — the principal-only loan-37 vector grades a second shape); the fraud flag's effect on the recovery account (there is none — this branch never reads it, and both observations share account 17); the method's unobserved merchant-issued-refund, payout-refund, goodwill-credit and else branches (no transaction-type input exists). The journal-entries read-back holds only these two legs for L61, both reversed false, so no later reversal is mixed in. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargedoff-repayment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charged_off_repayment_journal.portions is transcribed from the committed repayment loan read-back .softhouse/capture/tierd-feasibility/chargeoff-mnt/loans/loan-19/loan-19-detail-associations-transactions-3.json (sha256 45000de92c01bb61be6c7a3723f24ffdfd3ca5abf6b20bfa7bf45895c54c567f): loan 19, chargedOff true, fraud true, loanProductId 3, transactions[id 59 type loanTransactionType.chargeOff, manuallyReversed false] precedes transactions[id 61 externalId 3b52ebe2-0312-47c7-a56f-c4b0fcb54692] type loanTransactionType.repayment, paymentDetailData.paymentType.id 5, principalPortion 633.0, interestPortion 10.0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. expect.charged_off_repayment_journal_legs is transcribed from the committed journal-entries read-back .softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-19/loan-19-journalentries-4.json (sha256 75a8281f9b38012aad05d3ca9e73c405ea6983a839fac68e6de82d69937e7c56): transactionId L61 pageItems ids 175 (CREDIT glAccountId 17 amount 643.0) and 176 (DEBIT glAccountId 1 amount 643.0); these are the ONLY two pageItems in the file and both carry reversed false, so no later reversal legs are mixed in. request.charged_off_repayment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeoff-mnt/product-mappings/create-request-LP1_INTEREST_FLAT.json (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759): loanPortfolioAccountId 6, receivableInterestAccountId 10, receivableFeeAccountId 10, receivablePenaltyAccountId 10, overpaymentLiabilityAccountId 16, fundSourceAccountId 1, incomeFromRecoveryAccountId 17, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 18}] -- the only channel mapping, so paymentType 5 resolves to the product fund source 1. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (633.0 -> 63300, 10.0 -> 1000, 643.0 -> 64300), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-19/loan-19-journalentries-4.json",
+  "capture_sha256": "75a8281f9b38012aad05d3ca9e73c405ea6983a839fac68e6de82d69937e7c56",
+  "capture_case_id": "L61",
+  "citation": "journalentries/loan-19/loan-19-journalentries-4.json:1 (sha256 75a8281f9b38012aad05d3ca9e73c405ea6983a839fac68e6de82d69937e7c56): transactionId L61 carries two legs in id order -- id 175 entryType.value CREDIT glAccountId 17 amount 643.0 (glAccountName Recoveries); id 176 DEBIT glAccountId 1 amount 643.0 (glAccountName Suspense/Clearing account). The one credit equals the one debit (64300 minor units). Portions are in loans/loan-19/loan-19-detail-associations-transactions-3.json:1 (sha256 45000de92c01bb61be6c7a3723f24ffdfd3ca5abf6b20bfa7bf45895c54c567f): loan 19 chargedOff true, fraud true, loanProductId 3, transactions[id 59 type loanTransactionType.chargeOff] precedes transactions[id 61 externalId 3b52ebe2-0312-47c7-a56f-c4b0fcb54692] type loanTransactionType.repayment, paymentDetailData.paymentType.id 5, principalPortion 633.0, interestPortion 10.0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP1_INTEREST_FLAT.json:1 (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759): incomeFromRecoveryAccountId 17, loanPortfolioAccountId 6, receivableInterestAccountId 10, overpaymentLiabilityAccountId 16, fundSourceAccountId 1, with the only channel mapping paymentTypeId 1 -> 18, so paymentType 5 resolves to the product fund source 1."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charged_off_repayment_journal": {
+   "transaction_id": "L61",
+   "portions": {
+    "principal": "63300",
+    "interest": "1000",
+    "fee": "0",
+    "penalty": "0"
+   },
+   "accounts": {
+    "income_from_recovery": "17",
+    "loan_portfolio": "6",
+    "receivable_interest": "10",
+    "fund_source": "1"
+   }
+  }
+ },
+ "expect": {
+  "charged_off_repayment_journal_legs": [
+   {
+    "transaction_id": "L61",
+    "account": "17",
+    "entry_type": "CREDIT",
+    "amount_minor": "64300"
+   },
+   {
+    "transaction_id": "L61",
+    "account": "1",
+    "entry_type": "DEBIT",
+    "amount_minor": "64300"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargedoff-repayment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargedoff-repayment-to-portfolio"
+ ]
+}

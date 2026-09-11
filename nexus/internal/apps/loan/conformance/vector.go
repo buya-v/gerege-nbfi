@@ -266,6 +266,35 @@ const SeamLoanChargedOffWriteOffJournalEntries = "loan-chargedoff-writeoff-journ
 // paymentType 11 (AUTOPAY) resolves to the product fund source 4.
 const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 
+// SeamLoanChargedOffRepaymentJournalEntries is the capture seam this schema
+// grades: the journal entry a REPAYMENT posts on a loan ALREADY MARKED CHARGED
+// OFF. It ports AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForRepaymentWhenLoanIsChargedOff [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:1388-1615, dispatch :1369-1377,
+// pinned commit 426a23544]. For every positive portion slot — principal,
+// interest, fees, penalties — the processor CREDITS INCOME_FROM_RECOVERY,
+// whatever the loan's fraud flag (this branch never reads it); a positive
+// overpayment portion credits OVERPAYMENT. Portions that resolve to the SAME
+// account MERGE into one credit at the first slot's position (creditBalances is
+// a LinkedHashMap). It then posts ONE debit of the total to the RESOLVED fund
+// source (the transaction paymentTypeId's payment-channel account when the
+// product maps that channel, else the product FUND_SOURCE): every portion debits
+// that same account, so the debit map merges them too. Credits come first, the
+// single debit last.
+//
+// The method's merchant-issued-refund, payout-refund, goodwill-credit and else
+// branches are NOT observed on a charged-off loan and are not expressible here:
+// the port takes a REPAYMENT only, with no transaction-type parameter.
+//
+// On the pinned observations transaction L61 (loan 19, FRAUD, product
+// LP1_INTEREST_FLAT) merges its 633 principal and 10 interest into ONE credit
+// of 643 to the recovery account 17, then debits the fund source 1 643; L125
+// (loan 37, product LP1) credits the recovery account 17 500 and debits the fund
+// source 1 500. The account ids are THIS replay's product mapping: the only
+// channel mapping is paymentTypeId 1 -> 18, so the observed paymentType 5
+// resolves to the product fund source 1.
+const SeamLoanChargedOffRepaymentJournalEntries = "loan-chargedoff-repayment-journal-entries"
+
 // SeamLoanChargebackJournalEntries is the capture seam this schema grades: the
 // journal entry a loan CHARGEBACK posts on a loan that is NOT charged off, the
 // chargeback sibling of the charge-off-journal seam. It ports
@@ -622,6 +651,43 @@ type RepaymentJournalRequest struct {
 	Accounts      RepaymentSlotAccounts  `json:"accounts"`
 }
 
+// ChargedOffRepaymentSlotAccounts is the slot->account mapping of a repayment on
+// a loan MARKED CHARGED OFF. IncomeFromRecovery is the recovery account every
+// positive principal, interest, fee and penalty portion credits (regardless of
+// the loan's fraud flag); Overpayment is the account a positive overpayment
+// portion credits; FundSource is the RESOLVED account the single total debit
+// posts to (the transaction paymentTypeId's payment-channel account when the
+// product maps that channel, else the product FUND_SOURCE).
+//
+// The ordinary loan-portfolio and interest-receivable slots are carried too, not
+// because the charged-off port reads them — it never does — but because the
+// registered wrong implementation expresses the ordinary-posting defect by
+// reposting the same repayment through the ORDINARY port, which needs them. A
+// correct charged-off port reads only income_from_recovery, overpayment and
+// fund_source.
+type ChargedOffRepaymentSlotAccounts struct {
+	IncomeFromRecovery string `json:"income_from_recovery"`
+	LoanPortfolio      string `json:"loan_portfolio"`
+	ReceivableInterest string `json:"receivable_interest"`
+	Overpayment        string `json:"overpayment,omitempty"`
+	FundSource         string `json:"fund_source"`
+}
+
+// ChargedOffRepaymentJournalRequest is the
+// loan-chargedoff-repayment-journal-entries seam's input: the observed portions
+// of a REPAYMENT on a loan already marked charged off and the resolved
+// slot->account mapping, plus the transaction id the legs are posted under.
+// There is no transaction-type field: the port takes a repayment only. The
+// mapping is the product's accountingMappings (with the fund source resolved
+// through the payment channel) read back from the reference server, never
+// invented; a slot with a positive portion and no mapped account is refused by
+// the port.
+type ChargedOffRepaymentJournalRequest struct {
+	TransactionID string                          `json:"transaction_id"`
+	Portions      RepaymentPortionsMoney          `json:"portions"`
+	Accounts      ChargedOffRepaymentSlotAccounts `json:"accounts"`
+}
+
 // ChargebackPortionsMoney is the money a chargeback transaction credited, per
 // ledger slot, each an integer STRING in minor units. The observed domain has
 // two slots only: principal and overpayment. There is no field for a fee or
@@ -830,6 +896,12 @@ type Request struct {
 	// charged off and the resolved slot->account mapping (the fund source already
 	// resolved through the payment channel).
 	RepaymentJournal *RepaymentJournalRequest `json:"repayment_journal,omitempty"`
+	// ChargedOffRepaymentJournal is the
+	// loan-chargedoff-repayment-journal-entries seam's input: a REPAYMENT
+	// transaction's five portions on a loan already marked charged off and the
+	// resolved slot->account mapping (the fund source already resolved through
+	// the payment channel). There is no transaction-type field.
+	ChargedOffRepaymentJournal *ChargedOffRepaymentJournalRequest `json:"charged_off_repayment_journal,omitempty"`
 	// ChargebackJournal is the loan-chargeback-journal-entries seam's input: the
 	// chargeback transaction's amount and two portions and the resolved
 	// slot->account mapping.
@@ -941,6 +1013,17 @@ type Expect struct {
 	// account, and the one-debit count are what discriminate a
 	// debit-per-portion port.
 	RepaymentJournalLegs []JournalEntryLeg `json:"repayment_journal_legs,omitempty"`
+	// ChargedOffRepaymentJournalLegs is the
+	// loan-chargedoff-repayment-journal-entries seam's ordered leg list a
+	// charged-off loan's repayment posted: one credit to INCOME_FROM_RECOVERY
+	// MERGING every positive principal, interest, fee and penalty portion (plus a
+	// separate overpayment credit when that portion is positive), then ONE debit
+	// of the total to the resolved fund source. Every leg is graded on its
+	// transaction id, account, side and amount; a port that posts the repayment
+	// like an ordinary one moves the credits to the portfolio/receivable accounts
+	// and, when two portions merged into one recovery credit, splits them back
+	// apart — the account, count and order cells.
+	ChargedOffRepaymentJournalLegs []JournalEntryLeg `json:"charged_off_repayment_journal_legs,omitempty"`
 	// ChargebackJournalLegs is the loan-chargeback-journal-entries seam's ordered
 	// leg list the chargeback posted: the amount credit to the fund source, then
 	// the overpayment debit, then the principal debit, in posting order. Every
