@@ -47,10 +47,11 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
 		SeamLoanChargedOffMerchantRefundJournalEntries,
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
+		SeamLoanCreditBalanceRefundJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
@@ -59,6 +60,7 @@ func Admit(v *Vector, opts Options) []string {
 			SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
 			SeamLoanChargedOffMerchantRefundJournalEntries,
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
+			SeamLoanCreditBalanceRefundJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
 	if v.Oracle.FineractCommit == "" {
@@ -198,6 +200,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ChargebackJournal != nil {
+		n++
+	}
+	if v.Request.CreditBalanceRefundJournal != nil {
 		n++
 	}
 	if v.Request.ChargeLifecycle != nil {
@@ -901,6 +906,48 @@ func admitRequest(v *Vector) []string {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.chargeback_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+	case SeamLoanCreditBalanceRefundJournalEntries:
+		if v.Request.CreditBalanceRefundJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "credit-balance-refund-journal seam must set exactly request.credit_balance_refund_journal")
+			return problems
+		}
+		j := v.Request.CreditBalanceRefundJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.credit_balance_refund_journal.transaction_id is empty")
+		}
+		principal := minorTextOrZero(j.Portions.Principal)
+		overpayment := minorTextOrZero(j.Portions.Overpayment)
+		for name, val := range map[string]string{
+			"portions.principal":   principal,
+			"portions.overpayment": overpayment,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.credit_balance_refund_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// The fund-source, loan-portfolio and overpayment slots are read back from
+		// the product for every vector; the charged-off / fraud switch selects the
+		// principal account and is demanded only for a positive principal.
+		acctChecks := map[string]string{
+			"accounts.fund_source":    j.Accounts.FundSource,
+			"accounts.loan_portfolio": j.Accounts.LoanPortfolio,
+			"accounts.overpayment":    j.Accounts.Overpayment,
+		}
+		if principal != "0" {
+			switch {
+			case j.ChargedOff && j.Fraud:
+				acctChecks["accounts.charge_off_fraud_expense"] = j.Accounts.ChargeOffFraudExpense
+			case j.ChargedOff:
+				acctChecks["accounts.charge_off_expense"] = j.Accounts.ChargeOffExpense
+			}
+		}
+		for name, val := range acctChecks {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.credit_balance_refund_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
 		}
 	case SeamLoanChargeLifecycle:
@@ -1660,6 +1707,59 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanCreditBalanceRefundJournalEntries:
+		if v.Request.CreditBalanceRefundJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.CreditBalanceRefundJournal
+		if len(v.Expect.CreditBalanceRefundJournalLegs) == 0 {
+			problems = append(problems, "expect.credit_balance_refund_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.CreditBalanceRefundJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.credit_balance_refund_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.credit_balance_refund_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.credit_balance_refund_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.credit_balance_refund_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: the principal debit first, then the overpayment debit,
+		// then ONE credit of the total to the fund source. This reconciliation is
+		// INDEPENDENT of the port under test, so a wrong port cannot make its own
+		// output "admissible".
+		expected, probs := reconstructCreditBalanceRefundJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.CreditBalanceRefundJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.credit_balance_refund_journal_legs has %d legs but the observed posting order needs %d (the principal debit, then the overpayment debit, then one total credit)",
+				len(v.Expect.CreditBalanceRefundJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.CreditBalanceRefundJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.credit_balance_refund_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the refund debits the principal portion to the portfolio or charge-off account, then debits the overpayment portion to OVERPAYMENT, then credits the total to the fund source",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargeLifecycle:
 		if len(v.Expect.ChargeStates) == 0 {
 			problems = append(problems, "expect.charge_states is empty for the charge-lifecycle seam")
@@ -2290,6 +2390,61 @@ func reconstructChargebackJournalLegs(j ChargebackJournalRequest) ([]JournalEntr
 		}
 		legs = append(legs, JournalEntryLeg{
 			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: penalty,
+		})
+	}
+	return legs, nil
+}
+
+// reconstructCreditBalanceRefundJournalLegs derives the leg list the observed
+// credit-balance-refund property requires from the request alone, independently
+// of the port, in the processor's posting order: the principal debit first (to
+// LOAN_PORTFOLIO, or CHARGE_OFF_EXPENSE once charged off, or
+// CHARGE_OFF_FRAUD_EXPENSE when also fraud), then the overpayment debit to
+// OVERPAYMENT, then ONE credit of the total to the resolved fund source. Each
+// money value stays an integer minor-unit string. It returns the legs and any
+// admission problem: a positive portion with no mapped account, or a positive
+// total with no mapped fund source.
+func reconstructCreditBalanceRefundJournalLegs(j CreditBalanceRefundJournalRequest) ([]JournalEntryLeg, []string) {
+	principal := minorTextOrZero(j.Portions.Principal)
+	overpayment := minorTextOrZero(j.Portions.Overpayment)
+	legs := make([]JournalEntryLeg, 0, 3)
+	if principal != "0" {
+		account := j.Accounts.LoanPortfolio
+		switch {
+		case j.ChargedOff && j.Fraud:
+			account = j.Accounts.ChargeOffFraudExpense
+		case j.ChargedOff:
+			account = j.Accounts.ChargeOffExpense
+		}
+		if account == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.credit_balance_refund_journal principal %s has no mapped principal account (charged off %t, fraud %t)",
+				principal, j.ChargedOff, j.Fraud)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: principal,
+		})
+	}
+	if overpayment != "0" {
+		if j.Accounts.Overpayment == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.credit_balance_refund_journal overpayment %s has no mapped overpayment account", overpayment)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.Overpayment, EntryType: "DEBIT", AmountMinor: overpayment,
+		})
+	}
+	total, ok := sumMinorStrings(principal, overpayment)
+	if !ok {
+		return nil, []string{"request.credit_balance_refund_journal portions are not integer minor amounts"}
+	}
+	if total != "0" {
+		if j.Accounts.FundSource == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.credit_balance_refund_journal total %s has no mapped fund-source account", total)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "CREDIT", AmountMinor: total,
 		})
 	}
 	return legs, nil

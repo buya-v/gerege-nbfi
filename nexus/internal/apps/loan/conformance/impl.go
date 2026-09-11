@@ -166,12 +166,14 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goAccrualJournal(*req.AccrualJournal)
 	case req.ChargebackJournal != nil:
 		return goChargebackJournal(*req.ChargebackJournal)
+	case req.CreditBalanceRefundJournal != nil:
+		return goCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, charged_off_merchant_refund_journal, accrual_journal, chargeback_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, charged_off_merchant_refund_journal, accrual_journal, chargeback_journal, credit_balance_refund_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -1306,6 +1308,58 @@ func chargebackJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{ChargebackJournalLegs: out}
 }
 
+// goCreditBalanceRefundJournal ports the loan-credit-balance-refund-journal-entries
+// seam: it reduces the request's principal and overpayment portions, the
+// charged-off and fraud flags and the resolved slot->account mapping to
+// loan.MinorUnits and loan.CreditBalanceRefundAccountMapping and runs the port's
+// own loan.CreateCreditBalanceRefundJournalEntryLegs. Every monetary cell is an
+// integer minor unit; the mapping is the product's (or the payment channel's)
+// observed accountingMappings, never invented. The observed identity total =
+// principal + overpayment is derived by the port, the principal account switch
+// is the charged-off / fraud state, and the single total credit is what
+// separates this seam from a debit-per-portion port.
+func goCreditBalanceRefundJournal(r CreditBalanceRefundJournalRequest) (Expect, error) {
+	principal, err := parseMinorText(minorTextOrZero(r.Portions.Principal))
+	if err != nil {
+		return Expect{}, err
+	}
+	overpayment, err := parseMinorText(minorTextOrZero(r.Portions.Overpayment))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateCreditBalanceRefundJournalEntryLegs(r.TransactionID, principal, overpayment, r.ChargedOff, r.Fraud, loan.CreditBalanceRefundAccountMapping{
+		FundSource:            r.Accounts.FundSource,
+		LoanPortfolio:         r.Accounts.LoanPortfolio,
+		Overpayment:           r.Accounts.Overpayment,
+		ChargeOffExpense:      r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense: r.Accounts.ChargeOffFraudExpense,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return creditBalanceRefundJournalLegsExpect(legs), nil
+}
+
+// creditBalanceRefundJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func creditBalanceRefundJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{CreditBalanceRefundJournalLegs: out}
+}
+
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
 // LoanCharge of the observed amount and penalty flag, applies the ordered
 // operations through the port's own money mutations, and captures the state
@@ -2040,6 +2094,51 @@ func wrongChargebackJournal(r ChargebackJournalRequest, mode chargebackJournalWr
 		r.ChargedOff = false
 	}
 	return goChargebackJournal(r)
+}
+
+// creditBalanceRefundJournalWrongMode selects which deliberately-wrong credit
+// balance refund posting to run. Each is a port a reasonable reader might
+// write, and each is discriminated by the committed observations.
+type creditBalanceRefundJournalWrongMode int
+
+const (
+	// wrongCreditBalanceRefundJournalIgnoresChargeOff posts the principal
+	// portion to LOAN_PORTFOLIO even on a charged-off (and fraud) loan, as a
+	// port that never reads the loan's charged-off flag does. On the pinned
+	// charged-off loan-28 the principal debit moves from CHARGE_OFF_EXPENSE 15
+	// to LOAN_PORTFOLIO 5, and on the charged-off-and-fraud loan-27 from
+	// CHARGE_OFF_FRAUD_EXPENSE 11 to LOAN_PORTFOLIO 5; the not-charged-off
+	// observations (loans 1 and 19) are unaffected.
+	wrongCreditBalanceRefundJournalIgnoresChargeOff creditBalanceRefundJournalWrongMode = iota
+)
+
+// wrongCreditBalanceRefundJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-credit-balance-refund-journal-entries seam,
+// parameterised by which posting defect it commits. On any request that is not
+// a credit balance refund journal it delegates to the correct port, so each
+// drive goes red ONLY on this seam's vectors and stays green everywhere else
+// (vector isolation).
+type wrongCreditBalanceRefundJournalEvaluator struct {
+	goEvaluator
+	mode creditBalanceRefundJournalWrongMode
+}
+
+func (w wrongCreditBalanceRefundJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.CreditBalanceRefundJournal != nil {
+		return wrongCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongCreditBalanceRefundJournal runs the correct posting and then applies
+// exactly one defect, so the drive differs from the port on exactly the cells
+// its defect moves.
+func wrongCreditBalanceRefundJournal(r CreditBalanceRefundJournalRequest, mode creditBalanceRefundJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongCreditBalanceRefundJournalIgnoresChargeOff:
+		r.ChargedOff = false
+	}
+	return goCreditBalanceRefundJournal(r)
 }
 
 // amortizationWrongMode selects which deliberately-wrong whole-schedule
@@ -3366,6 +3465,15 @@ func init() {
 			"move while every side, amount and count stays observed — and the not-charged-off "+
 			"observations (loans 11, 12 and the three existing vectors) are unaffected",
 		wrongChargebackJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargebackJournalIgnoresChargeOff})
+	RegisterWrong("loan-wrong-cbr-ignores-charge-off",
+		"posts the principal portion of a credit balance refund to the loan-portfolio account even on a "+
+			"charged-off (and fraud) loan, as a port that never reads the loan's charged-off flag does; "+
+			"on the pinned charged-off loan-28 the principal debit moves from CHARGE_OFF_EXPENSE 15 to "+
+			"LOAN_PORTFOLIO 5, and on the charged-off-and-fraud loan-27 from "+
+			"CHARGE_OFF_FRAUD_EXPENSE 11 to LOAN_PORTFOLIO 5, so the account cell moves while every "+
+			"side, amount, the single fund-source credit and the count stay observed — and the "+
+			"not-charged-off observations (loans 1 and 19) are unaffected",
+		wrongCreditBalanceRefundJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongCreditBalanceRefundJournalIgnoresChargeOff})
 	RegisterWrong("loan-wrong-charge-partial-marks-paid",
 		"flips the paid flag as soon as any amount is paid, before outstanding reaches zero, so the "+
 			"pinned fee's partial step (amountPaid 10000, outstanding 2345, paid false) reads paid "+
