@@ -2611,3 +2611,4 @@ Every loan in this capture is **MNT**.
 * **Unmatched / not type-confirmable:** 14 legs (5 transactions) carry no entry in any `transactions` read-back; see `journalentry-type-join.md`.
 * **Fraud:** no loan in this feature is fraud-flagged, so the `isMarkedFraud` / charge-off-fraud variants are not exercised (every `fraud` above is `false`).
 
+* **No empty capitalized-income type — a finding in itself:** all four type codes the read-backs carry (`loanTransactionType.capitalizedIncome`, `...capitalizedIncomeAdjustment`, `...capitalizedIncomeAmortization`, `...capitalizedIncomeAmortizationAdjustment`) have at least one leg and at least one transaction, so no capitalized-income transaction type is a no-leg finding.
