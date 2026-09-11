@@ -3192,6 +3192,20 @@
   "committed": true
  },
  {
+  "api": "LoansApi#retrieveOneLoan",
+  "bytes": 13568,
+  "file": "loans/loan-10/loan-10-detail-associations-repaymentSchedule.json",
+  "http_status": 200,
+  "json_valid": true,
+  "kind": "read",
+  "loan_id": 10,
+  "method": "GET",
+  "sha256": "c184624a8790ea943492f3a7bbeef3ee17586e5a580a15288f24f0adeb62c35a",
+  "source_line": 36444,
+  "url": "https://localhost:8443/fineract-provider/api/v1/loans/10?associations=repaymentSchedule&staffInSelectedOfficeOnly=false",
+  "committed": true
+ },
+ {
   "api": "LoansApi#calculateOrSubmitLoanApplication",
   "bytes": 593,
   "file": "loans/loan-11/loan-11-create-request.json",
