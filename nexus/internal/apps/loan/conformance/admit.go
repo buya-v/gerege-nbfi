@@ -751,8 +751,11 @@ func admitRequest(v *Vector) []string {
 		if j.TransactionID == "" {
 			problems = append(problems, "request.charged_off_merchant_refund_journal.transaction_id is empty")
 		}
-		if j.Fraud {
-			problems = append(problems, "request.charged_off_merchant_refund_journal.fraud is true: the merchant-refund fraud split is not observed and the port refuses it")
+		switch j.Kind {
+		case "", "merchant_issued_refund", "payout_refund":
+		default:
+			problems = append(problems, fmt.Sprintf(
+				"request.charged_off_merchant_refund_journal.kind %q is not an observed refund arm: only merchant_issued_refund or payout_refund post through this branch (an empty kind defaults to merchant_issued_refund)", j.Kind))
 		}
 		for name, val := range map[string]string{
 			"portions.principal":   j.Portions.Principal,
@@ -791,6 +794,10 @@ func admitRequest(v *Vector) []string {
 		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
 			problems = append(problems,
 				"request.charged_off_merchant_refund_journal.accounts.overpayment is empty but the overpayment portion is positive")
+		}
+		if j.Fraud && j.Accounts.ChargeOffFraudExpense == "" {
+			problems = append(problems,
+				"request.charged_off_merchant_refund_journal.accounts.charge_off_fraud_expense is empty but the loan is fraud: the principal portion credits the fraud charge-off account, read back from the product, never invented")
 		}
 	case SeamLoanAccrualJournalEntries:
 		if v.Request.AccrualJournal == nil || requestShapeCount(v) != 1 {
@@ -2017,26 +2024,34 @@ func reconstructChargedOffRepaymentJournalLegs(j ChargedOffRepaymentJournalReque
 }
 
 // reconstructChargedOffMerchantRefundJournalLegs derives the leg list the
-// observed charged-off merchant-issued-refund property requires from the request
-// alone, independently of the port, in the processor's posting order: every
-// non-zero principal, interest, fee and penalty portion CREDITS its OWN
-// charge-off slot (portions that resolve to the same account MERGE at the first
-// slot's position), a positive overpayment portion credits its account, then ONE
-// debit of the total to the RESOLVED fund source. Each money value stays an
-// integer minor-unit string. It returns the legs and any admission problem: a
-// positive portion with no mapped credit account, or a positive total with no
-// fund-source account.
+// observed charged-off refund property requires from the request alone,
+// independently of the port, in the processor's posting order: every non-zero
+// principal, interest, fee and penalty portion CREDITS its OWN charge-off slot
+// (the principal portion to the fraud charge-off account when the loan is fraud,
+// else the ordinary charge-off expense account; portions that resolve to the
+// same account MERGE at the first slot's position), a positive overpayment
+// portion credits its account, then ONE debit of the total to the RESOLVED fund
+// source. The merchant-issued and payout arms post identically; the kind selects
+// admission only. Each money value stays an integer minor-unit string. It
+// returns the legs and any admission problem: a positive portion with no mapped
+// credit account, or a positive total with no fund-source account.
 func reconstructChargedOffMerchantRefundJournalLegs(j ChargedOffMerchantRefundJournalRequest) ([]JournalEntryLeg, []string) {
 	overpayment := j.Portions.Overpayment
 	if overpayment == "" {
 		overpayment = "0"
+	}
+	principalAccount := j.Accounts.ChargeOffExpense
+	principalSlot := "principal"
+	if j.Fraud {
+		principalAccount = j.Accounts.ChargeOffFraudExpense
+		principalSlot = "principal (fraud)"
 	}
 	slots := []struct {
 		name    string
 		amount  string
 		account string
 	}{
-		{"principal", j.Portions.Principal, j.Accounts.ChargeOffExpense},
+		{principalSlot, j.Portions.Principal, principalAccount},
 		{"interest", j.Portions.Interest, j.Accounts.IncomeFromChargeOffInterest},
 		{"fee", j.Portions.Fee, j.Accounts.IncomeFromChargeOffFees},
 		{"penalty", j.Portions.Penalty, j.Accounts.IncomeFromChargeOffPenalty},
