@@ -74,6 +74,12 @@
    "in_graded_domain": true,
    "evidence": "Capture loan11-writeoff-four-bucket under tenant gerege, business date 2026-09-03: out/loan-11-after-journalentries-raw.json (sha256 28d073c3735cc226d2852586018390c26529536cfb6da15921c099a63506aa4c, 31 pageItems) carries transactionId L54 as five legs in id order — JE 136 CREDIT OHLGR-10010 100000.00, JE 137 CREDIT OHLGR-10012 6618.53, JE 138 CREDIT OHLGR-10013 100.00, JE 139 CREDIT OHLGR-10014 57.00, JE 140 DEBIT OHLGR-50010 106775.53; the four credits sum EXACTLY to the one debit (10000000 + 661853 + 10000 + 5700 = 10677553 minor units). The request portions are transcribed from out/loan-11-after-transactions-raw.json (sha256 76a86a88f4efe020145ba376a1b1a30e5c9ec3a63651cb1610b3b09948d0c53a, HTTP 200) transaction id 54 (type loanTransactionType.writeOff): principalPortion 100000.0, interestPortion 6618.53, feeChargesPortion 100.0, penaltyChargesPortion 57.0, overpaymentPortion absent. The slot->account mapping is transcribed from capture investor-asset-transfer-100/out/loanproduct-3-raw.json (sha256 3c9241a02f78706a576a0be1c2506a3784f47dbe37be090e23f9a5073d20aa3d, GET /loanproducts/3 on TODAY's oracle instance, product id 3 name OHLGR-Accrual-Loan) accountingMappings: loanPortfolioAccount OHLGR-10010, receivableInterestAccount OHLGR-10012, receivableFeeAccount OHLGR-10013, receivablePenaltyAccount OHLGR-10014, overpaymentLiabilityAccount OHLGR-20011, writeOffAccount OHLGR-50010."
   },
+  {
+   "name": "charge-lifecycle",
+   "description": "The money-mutation lifecycle of a single LoanCharge observed on loan 18, tenant gerege: a charge's outstanding is amount minus paid minus waived; a payment increments amountPaid up to the amount and flips the paid flag only when nothing remains; a waiver moves the whole outstanding into amountWaived, clears outstanding and flips the waived flag while leaving paid false. The fee vector (charge 14, OHLGR-Fee-SDD-100, amount 123.45) is created, partly paid 100.00, then fully paid 23.45, so the paid flag stays false through the partial step and flips only when outstanding reaches zero; the penalty vector (charge 13, OHLGR-Penalty-Flat-57, amount 67.89) is created then waived, so the waived flag flips, outstanding clears and paid stays false. Graded through loan.UpdatePaidAmountBy, loan.Waive and loan.UpdateWaivedAmount. It does NOT grade an instalment-fee charge (the LoanInstallmentCharge delegation is out of the port's slice) or the write-off/reversal undo paths.",
+   "in_graded_domain": true,
+   "evidence": "Capture loan-charge-partial-waive-repaid under tenant gerege, business date 2026-09-03 (loan 18, externalId OHCHGCAP-L01, product 3 OHLGR-Accrual-Loan, ACCRUAL PERIODIC). out/loan-18-created-detail-raw.json (sha256 2acb49a26842e405b8f4deb531712637a4637632ddef1d1e443f29527e697bf9, single-line committed read-back): charge 14 name OHLGR-Fee-SDD-100 amount 123.45 amountPaid 0 amountWaived 0 amountOutstanding 123.45 paid false waived false; charge 13 name OHLGR-Penalty-Flat-57 penalty true amount 67.89 amountPaid 0 amountWaived 0 amountOutstanding 67.89 paid false waived false. out/loan-18-after-partial-detail-raw.json (sha256 72c31879318d9fa4ced1896952604492dc1255a3d3e3ec935547e77c6685b51c): charge 14 amountPaid 100.0 amountOutstanding 23.45 paid false; charge 13 unchanged. out/loan-18-after-waive-detail-raw.json (sha256 dd6b8da353531cc91bc3948eab3bb2659fe44fc2ec7892d244e31d339bd1888f): charge 13 amountWaived 67.89 amountOutstanding 0.0 paid false waived true; charge 14 unchanged. out/loan-18-final-detail-raw.json (sha256 979310855f2d0e3d8738982932dfa0815a63be2bfc369bd719977101aa5761e5): charge 14 amountPaid 123.45 amountOutstanding 0.0 paid true; charge 13 unchanged (waived true). Every cell is a whole number of minor units (123.45 -> 12345, 67.89 -> 6789, 100.00 -> 10000, 23.45 -> 2345), no sub-minor residue."
+  },
 
   {
    "name": "reversal-entry",
@@ -165,6 +171,13 @@
    "description": "The five-leg journal entry of the first observed loan write-off, on TODAY's oracle instance, tenant gerege: loan 11 (product 3, ACCRUAL PERIODIC) written off at business date 2026-09-03 posted transactionId L54 as four CREDIT legs to the four receivable/portfolio slot accounts and ONE DEBIT of their exact sum to the losses-written-off account, graded through loan.CreateWriteOffJournalEntryLegs.",
    "status": {
     "writeoff-journal-entry": "exercised"
+   }
+  },
+  {
+   "name": "loan-charge-lifecycle",
+   "description": "The money-mutation lifecycle of a single LoanCharge observed on loan 18: a charge's outstanding is amount minus paid minus waived; a payment increments paid up to the amount and flips the paid flag only when nothing remains; a waiver moves the whole outstanding into waived and flips the waived flag. The fee vector (charge 14, amount 123.45) is created, partly paid 100.00, then fully paid; the penalty vector (charge 13, amount 67.89) is created and waived. Each step is graded through loan.UpdatePaidAmountBy, loan.Waive and loan.UpdateWaivedAmount.",
+   "status": {
+    "charge-lifecycle": "exercised"
    }
   }
  ]

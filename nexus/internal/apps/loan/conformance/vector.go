@@ -194,6 +194,14 @@ const SeamLoanTransactionReversal = "loan-transaction-reversal"
 // loan 11 was not charged off.
 const SeamLoanWriteOffJournalEntries = "loan-writeoff-journal-entries"
 
+// SeamLoanChargeLifecycle is the capture seam this schema grades: the
+// money-mutation lifecycle of a single LoanCharge on loan 18. The fee
+// (charge 14, amount 123.45) is created, partly paid 100.00, then fully paid;
+// the penalty (charge 13, amount 67.89) is created and waived. Each step is
+// graded through loan.UpdatePaidAmountBy, loan.Waive and
+// loan.UpdateWaivedAmount.
+const SeamLoanChargeLifecycle = "loan-charge-lifecycle"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 func SchemaContexts() []string { return []string{LoanContext} }
@@ -405,6 +413,34 @@ type StatusRequest struct {
 	StoredValue int32 `json:"stored_value"`
 }
 
+// ChargeLifecycleOperation is one operation applied to a LoanCharge in the
+// charge-lifecycle seam. Op is "pay" or "waive". For "pay", AmountMinor is
+// the integer minor-unit amount to pay; for "waive" it is ignored.
+type ChargeLifecycleOperation struct {
+	Op          string `json:"op"`
+	AmountMinor string `json:"amount_minor,omitempty"`
+}
+
+// ChargeLifecycleRequest is the loan-charge-lifecycle seam's input: the
+// charge's amount, whether it is a penalty, and the ordered operations taken
+// from the observed transactions.
+type ChargeLifecycleRequest struct {
+	AmountMinor string                     `json:"amount_minor"`
+	Penalty     bool                       `json:"penalty"`
+	Operations  []ChargeLifecycleOperation `json:"operations"`
+}
+
+// ChargeLifecycleState is the expected state of a LoanCharge after one
+// operation (or after creation, at index 0). All money fields are integer
+// strings in minor units.
+type ChargeLifecycleState struct {
+	PaidMinor        string `json:"paid_minor"`
+	WaivedMinor      string `json:"waived_minor"`
+	OutstandingMinor string `json:"outstanding_minor"`
+	Paid             bool   `json:"paid"`
+	Waived           bool   `json:"waived"`
+}
+
 // TransactionRow is one row of the loan-transaction-balance seam's input: a
 // transaction read-back row reduced to the cells the balance derivation reads.
 // Type is the row's Fineract transaction_type_enum in code-suffix form —
@@ -469,6 +505,9 @@ type Request struct {
 	// WriteOffJournal is the loan-writeoff-journal-entries seam's input: the
 	// write-off transaction's portions and the product's slot->account mapping.
 	WriteOffJournal *WriteOffJournalRequest `json:"write_off_journal,omitempty"`
+	// ChargeLifecycle is the loan-charge-lifecycle seam's input: the charge's
+	// amount, penalty flag, and the ordered operations observed.
+	ChargeLifecycle *ChargeLifecycleRequest `json:"charge_lifecycle,omitempty"`
 }
 
 // Expect is what the oracle produced for the request. For the repayment seam it
@@ -546,6 +585,10 @@ type Expect struct {
 	// account, side and amount; the debit's account and the credit/debit split
 	// are what discriminate a debit-per-portion or wrong-account port.
 	WriteOffJournalLegs []JournalEntryLeg `json:"write_off_journal_legs,omitempty"`
+	// ChargeStates is the loan-charge-lifecycle seam's ordered list of expected
+	// states: the created state at index 0, then one state per operation in
+	// request.charge_lifecycle.operations, in order.
+	ChargeStates []ChargeLifecycleState `json:"charge_states,omitempty"`
 }
 
 // TransactionBalanceRow is the transaction-balance seam's verdict for one

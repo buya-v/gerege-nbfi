@@ -200,6 +200,29 @@ func diffWriteOffJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
 	}
 }
 
+// diffChargeStates compares the ordered state sequence of the charge-lifecycle
+// seam: the created state at index 0, then the state after each operation. Each
+// state grades five cells — amountPaid, amountWaived and amountOutstanding as
+// money cells, plus the paid and waived flags as structural cells. The count is
+// compared first, so a dropped or extra operation is a visible difference
+// rather than a silent truncation. A port that flips paid on a partial payment,
+// leaves outstanding un-reduced after a waiver, routes a waiver into paid, or
+// derives outstanding from amount minus paid alone moves at least one cell.
+func diffChargeStates(s *cellSink, want, got []ChargeLifecycleState) {
+	s.cmpText("charge_states.count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
+	n := len(want)
+	if len(got) < n {
+		n = len(got)
+	}
+	for i := 0; i < n; i++ {
+		s.cmpMoney(fmt.Sprintf("charge_states[%d].paid_minor", i), want[i].PaidMinor, got[i].PaidMinor)
+		s.cmpMoney(fmt.Sprintf("charge_states[%d].waived_minor", i), want[i].WaivedMinor, got[i].WaivedMinor)
+		s.cmpMoney(fmt.Sprintf("charge_states[%d].outstanding_minor", i), want[i].OutstandingMinor, got[i].OutstandingMinor)
+		s.cmpText(fmt.Sprintf("charge_states[%d].paid", i), fmt.Sprintf("%t", want[i].Paid), fmt.Sprintf("%t", got[i].Paid))
+		s.cmpText(fmt.Sprintf("charge_states[%d].waived", i), fmt.Sprintf("%t", want[i].Waived), fmt.Sprintf("%t", got[i].Waived))
+	}
+}
+
 // canonicalJournalEntryAccountSides returns a copy of in sorted by
 // (transaction_id, account, entry_type) so the side comparison is
 // order-insensitive.
@@ -275,6 +298,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffReversalLegs(&s, v.Expect.ReversalLegs, got.ReversalLegs)
 	case SeamLoanWriteOffJournalEntries:
 		diffWriteOffJournalLegs(&s, v.Expect.WriteOffJournalLegs, got.WriteOffJournalLegs)
+	case SeamLoanChargeLifecycle:
+		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

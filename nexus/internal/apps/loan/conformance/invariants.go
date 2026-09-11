@@ -54,6 +54,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertReversalAppendOnly(v, got)}
 	case SeamLoanWriteOffJournalEntries:
 		return []InvariantResult{assertWriteOffJournalBalanced(got)}
+	case SeamLoanChargeLifecycle:
+		return []InvariantResult{assertChargeStatesConserved(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -150,6 +152,74 @@ func assertNetDisbursalNonNegative(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("net_disbursal %q is a non-negative integer minor amount", got.NetDisbursalMinor)
+	return r
+}
+
+// assertChargeStatesConserved: every state of a charge-lifecycle result carries
+// non-negative integer minor-unit money, the state count matches the request's
+// operations plus the created state, no state is flagged both fully paid and
+// fully waived, and the charge's amount is CONSERVED across the three cells —
+// amountPaid + amountWaived + amountOutstanding equals the requested amount
+// EXACTLY, state by state. The assertions are on the implementation's RESULT: a
+// port that derives outstanding from amount minus paid alone, or that records a
+// waiver without reducing outstanding, breaks the conservation identity on the
+// waived state even when each cell is still a plausible integer.
+func assertChargeStatesConserved(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "charge_states_conserved", Assertions: 2}
+	req := v.Request.ChargeLifecycle
+	if req == nil {
+		r.Status = InvariantViolated
+		r.Detail = "charge-lifecycle request is nil"
+		return r
+	}
+	wantStates := len(req.Operations) + 1
+	if len(got.ChargeStates) != wantStates {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("result has %d states for %d operations (want %d)",
+			len(got.ChargeStates), len(req.Operations), wantStates)
+		return r
+	}
+	if !isIntegerMinorString(req.AmountMinor) {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("request amount %q is not a non-negative integer minor amount", req.AmountMinor)
+		return r
+	}
+	amount, err := parseMinorText(req.AmountMinor)
+	if err != nil {
+		r.Status = InvariantViolated
+		r.Detail = err.Error()
+		return r
+	}
+	r.Assertions = wantStates
+	for i, st := range got.ChargeStates {
+		for name, val := range map[string]string{
+			"paid":        st.PaidMinor,
+			"waived":      st.WaivedMinor,
+			"outstanding": st.OutstandingMinor,
+		} {
+			if !isIntegerMinorString(val) {
+				r.Status = InvariantViolated
+				r.Detail = fmt.Sprintf("state %d %s %q is not a non-negative integer minor amount", i, name, val)
+				return r
+			}
+		}
+		paid, _ := parseMinorText(st.PaidMinor)
+		waived, _ := parseMinorText(st.WaivedMinor)
+		outstanding, _ := parseMinorText(st.OutstandingMinor)
+		if paid+waived+outstanding != amount {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("state %d does not conserve the charge amount: paid %s + waived %s + outstanding %s != amount %s",
+				i, st.PaidMinor, st.WaivedMinor, st.OutstandingMinor, req.AmountMinor)
+			return r
+		}
+		if st.Paid && st.Waived {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("state %d is flagged both fully paid and fully waived", i)
+			return r
+		}
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("all %d states are non-negative integer minor units conserving the charge amount", len(got.ChargeStates))
 	return r
 }
 

@@ -42,14 +42,16 @@ func Admit(v *Vector, opts Options) []string {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries:
+		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
+		SeamLoanChargeLifecycle:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
-			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries))
+			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
+			SeamLoanChargeLifecycle))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -167,6 +169,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.WriteOffJournal != nil {
+		n++
+	}
+	if v.Request.ChargeLifecycle != nil {
 		n++
 	}
 	return n
@@ -495,6 +500,46 @@ func admitRequest(v *Vector) []string {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.write_off_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+	case SeamLoanChargeLifecycle:
+		if v.Request.ChargeLifecycle == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "charge-lifecycle seam must set exactly request.charge_lifecycle")
+			return problems
+		}
+		c := v.Request.ChargeLifecycle
+		if !isIntegerMinorString(c.AmountMinor) {
+			problems = append(problems, fmt.Sprintf("request.charge_lifecycle.amount_minor %q is not a non-negative integer minor amount", c.AmountMinor))
+		}
+		if len(c.Operations) == 0 {
+			problems = append(problems, "request.charge_lifecycle.operations is empty")
+			return problems
+		}
+		for i, op := range c.Operations {
+			switch op.Op {
+			case "pay":
+				if !isIntegerMinorString(op.AmountMinor) {
+					problems = append(problems, fmt.Sprintf("request.charge_lifecycle.operations[%d].amount_minor %q is not a non-negative integer minor amount", i, op.AmountMinor))
+				}
+			case "waive":
+			default:
+				problems = append(problems, fmt.Sprintf("request.charge_lifecycle.operations[%d].op %q is not pay/waive", i, op.Op))
+			}
+		}
+		if len(v.Expect.ChargeStates) != len(c.Operations)+1 {
+			problems = append(problems, fmt.Sprintf(
+				"expect.charge_states has %d entries but needs %d (created state plus one per operation)",
+				len(v.Expect.ChargeStates), len(c.Operations)+1))
+		}
+		for i, st := range v.Expect.ChargeStates {
+			for name, val := range map[string]string{
+				"paid_minor":        st.PaidMinor,
+				"waived_minor":      st.WaivedMinor,
+				"outstanding_minor": st.OutstandingMinor,
+			} {
+				if !isIntegerMinorString(val) {
+					problems = append(problems, fmt.Sprintf("expect.charge_states[%d].%s %q is not a non-negative integer minor amount", i, name, val))
+				}
 			}
 		}
 	}
@@ -836,6 +881,31 @@ func admitExpect(v *Vector) []string {
 					"expect.write_off_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the write-off credits each non-zero portion to its slot (merged by account) then debits the total ONCE",
 					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
+	case SeamLoanChargeLifecycle:
+		if len(v.Expect.ChargeStates) == 0 {
+			problems = append(problems, "expect.charge_states is empty for the charge-lifecycle seam")
+			return problems
+		}
+		for i, st := range v.Expect.ChargeStates {
+			for name, val := range map[string]string{
+				"paid_minor":        st.PaidMinor,
+				"waived_minor":      st.WaivedMinor,
+				"outstanding_minor": st.OutstandingMinor,
+			} {
+				if !isIntegerMinorString(val) {
+					problems = append(problems, fmt.Sprintf("expect.charge_states[%d].%s %q is not a non-negative integer minor amount", i, name, val))
+				}
+			}
+		}
+		if v.Request.ChargeLifecycle != nil {
+			c := v.Request.ChargeLifecycle
+			wantStates := len(c.Operations) + 1
+			if len(v.Expect.ChargeStates) != wantStates {
+				problems = append(problems, fmt.Sprintf(
+					"expect.charge_states has %d entries but request.charge_lifecycle.operations has %d (need %d)",
+					len(v.Expect.ChargeStates), len(c.Operations), wantStates))
 			}
 		}
 	}
