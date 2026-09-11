@@ -11,11 +11,11 @@
  },
  "provenance": {
   "kind": "oracle-capture",
-  "note": "The expected chain cells and the posted balance are transcribed from one committed artifact, the read-only DB evidence of the after-release read-back, so the stored running_balance_derived values and account_balance_derived come from a single observed state. The rows are reordered from the artifact's id listing into the oracle's transaction order, which OWNER.md's dated pre-hold read-back fixes; that reordering is a transcription of an observed order, never a guess. capture_case_id names the savings account the rows belong to.",
-  "capture_ref": ".softhouse/capture/savings-hold-release/out/db-after-release.txt",
-  "capture_sha256": "1fd81692ee9de148df0f6bce794f8328e7abeaa98a98c91c758818fe7d6804c8",
-  "capture_case_id": "savings_account_id=1",
-  "citation": "db-after-release.txt: m_savings_account id 1 account_balance_derived 1000.310000; m_savings_account_transaction (savings_account_id=1) rows id|transaction_type_enum|amount|running_balance_derived|release_id = 1|1|1000.000000|1000.000000|0; 2|3|0.160000|1000.310000|0; 3|3|0.150000|1000.150000|0; 6|20|137.290000|863.020000|7; 7|21|137.290000|1000.310000|0. OWNER.md observes the dates id 1 2026-07-02, id 3 2026-08-01, id 2 2026-09-01, id 6 and id 7 2026-09-03, so the chain order is 1,3,2,6,7 and the stored column values in that order are 1000.000000, 1000.150000, 1000.310000, 863.020000, 1000.310000."
+  "note": "The expected chain cells and the posted balance are transcribed from one committed artifact, the read-only DB evidence of the after-release read-back, so the stored running_balance_derived values and account_balance_derived come from a single observed state. The rows are reordered from the artifact's id listing into the oracle's transaction order, which OWNER.md's dated pre-hold read-back fixes; that reordering is a transcription of an observed order, never a guess. capture_case_id names the savings account the rows belong to. [Re-pointed by the driver 2026-09-11: the run cited the psql dump db-after-release.txt, which the wire-float guard refuses because a cited capture record must parse as JSON. The same capture directory's REST read-back carries every graded figure; the DB dump agrees row for row (running_balance_derived) and remains corroboration, not the citation.]",
+  "capture_ref": ".softhouse/capture/savings-hold-release/out/savings-hold-after-release-account-raw.json",
+  "capture_sha256": "19852ab0a45d3d2e3b7ce0d42d1b7b347f364ea2296fd7f4fd65f1f2c24f3336",
+  "capture_case_id": "000000001",
+  "citation": "savings-hold-after-release-account-raw.json:1 (single-line committed REST read-back GET /savingsaccounts/1?associations=all, tenant gerege): summary.accountBalance 1000.31; transactions (id, type, date, amount, runningBalance) = 1 Deposit 2026-07-02 1000.0 1000.0; 3 Interest posting 2026-08-01 0.15 1000.15; 2 Interest posting 2026-09-01 0.16 1000.31; 6 Amount on hold 2026-09-03 137.29 863.02 (releaseTransactionId 7); 7 Release Amount 2026-09-03 137.29 1000.31. The transaction dates fix the chain order 1,3,2,6,7."
  },
  "tenant_params": {
   "rounding_mode": "HALF_UP",
