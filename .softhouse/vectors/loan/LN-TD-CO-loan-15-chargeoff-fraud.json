@@ -1,0 +1,92 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CO-loan-15-chargeoff-fraud",
+ "title": "A FRAUD loan charge-off debits the principal portion to the FRAUD expense account 13 instead of the ordinary charge-off expense account 14 (loan 15 L44, same portions as loan 7)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the FIVE-LEG journal entry a loan marked FRAUD posted when it was CHARGED OFF under the branch with NO charge-off reason, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP1_INTEREST_FLAT / product 3). request.charge_off_journal.portions transcribes the loan read-back's charge-off transaction id 44 (externalId L44, type loanTransactionType.chargeOff): principalPortion 1000.0 -> \"100000\", interestPortion 30.0 -> \"3000\", feeChargesPortion 103.0 -> \"10300\", penaltyChargesPortion 10.0 -> \"1000\" minor units -- EXACTLY the loan-7 portions. request.charge_off_journal.fraud is the loan's observed fraud flag true. request.charge_off_journal.accounts is the same product mapping as the non-fraud vector (create-request-LP1_INTEREST_FLAT.json / echo product-20-retrieve-one-response.json): loanPortfolio 6, receivable interest/fee/penalty 10, chargeOffExpense 14, chargeOffFraudExpense 13, incomeFromChargeOffInterest 20, incomeFromChargeOffFees 11, incomeFromChargeOffPenalty 11. expect.charge_off_journal_legs is a TRANSCRIPTION of the five L44 legs in id order: JE 122 CREDIT account 6 1000.00, JE 123 CREDIT account 10 143.00, JE 124 DEBIT account 13 1000.00, JE 125 DEBIT account 20 30.00, JE 126 DEBIT account 11 113.00. THIS VECTOR GRADES ONE PROPERTY: when the loan is marked fraud, the principal debit moves to the chargeOffFraudExpense account (13), while the credit account and the two income debits are IDENTICAL to the non-fraud vector. It is the ONLY committed observation where the fraud flag changes the posted account: a port that ignores the loan's fraud flag and always debits the ordinary charge-off expense account 14 posts the SAME five amounts, sides and totals but the principal debit account cell moves, which is why a drive that ignores fraud dies here and survives on the two non-fraud vectors. WHAT THIS VECTOR DOES NOT GRADE: the merge is also observable here (interest/fee/penalty credits merge to 143.00; fee/penalty income debits merge to 113.00) but the loan-7 vector already isolates it; the zero-portion skip — every portion here is > 0; and the charge-off-reason mapping — absent from the product, and the port REFUSES it. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargeoff-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charge_off_journal.portions and .fraud are transcribed from the committed charge-off loan read-back .softhouse/capture/tierd-feasibility/chargeoff-mnt/loans/loan-15/loan-15-detail-associations-transactions-2.json (sha256 ee9dcd25d2ddeb86bca6fad95eb04e7cb864481fb484feeb317e189d2b732d01): fraud true, transactions[id 44, externalId L44] type loanTransactionType.chargeOff with principalPortion 1000.0, interestPortion 30.0, feeChargesPortion 103.0, penaltyChargesPortion 10.0. expect.charge_off_journal_legs is transcribed from the committed journal-entries read-back journalentries/loan-15/loan-15-journalentries-2.json (sha256 31abd79f800250fa1aff11705239035bbec6566ed452c907a466ac6a15345262), transactionId L44 pageItems ids 122-126. request.charge_off_journal.accounts is transcribed from the committed product-mappings/create-request-LP1_INTEREST_FLAT.json (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759) and cross-checked against product-mappings/product-20-retrieve-one-response.json (sha256 c01fa811be9439f205b546bf29e2205fa8687ffdb4586e76313cb53ec26c44f1). TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario ChargeOff.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-15/loan-15-journalentries-2.json",
+  "capture_sha256": "31abd79f800250fa1aff11705239035bbec6566ed452c907a466ac6a15345262",
+  "capture_case_id": "L44",
+  "citation": "journalentries/loan-15/loan-15-journalentries-2.json:1 (sha256 31abd79f800250fa1aff11705239035bbec6566ed452c907a466ac6a15345262, committed read-back, tenant tierd): transactionId L44 carries five legs in id order -- id 122 entryType.value CREDIT glAccountId 6 amount 1000.0; id 123 CREDIT glAccountId 10 amount 143.0; id 124 DEBIT glAccountId 13 amount 1000.0; id 125 DEBIT glAccountId 20 amount 30.0; id 126 DEBIT glAccountId 11 amount 113.0. Portions and fraud flag are in loans/loan-15/loan-15-detail-associations-transactions-2.json:1 (sha256 ee9dcd25d2ddeb86bca6fad95eb04e7cb864481fb484feeb317e189d2b732d01): fraud true, transactions[id 44 externalId L44] principalPortion 1000.0, interestPortion 30.0, feeChargesPortion 103.0, penaltyChargesPortion 10.0. The slot->account-id mapping is in product-mappings/create-request-LP1_INTEREST_FLAT.json:1 (sha256 d799095ba73752d5be8257340184ece3bd2a2664ac5f53dec66256cef6288759): loanPortfolioAccountId 6, receivableInterestAccountId 10, receivableFeeAccountId 10, receivablePenaltyAccountId 10, chargeOffExpenseAccountId 14, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 11, incomeFromChargeOffPenaltyAccountId 11."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charge_off_journal": {
+   "transaction_id": "L44",
+   "portions": {
+    "principal": "100000",
+    "interest": "3000",
+    "fee": "10300",
+    "penalty": "1000"
+   },
+   "fraud": true,
+   "accounts": {
+    "loan_portfolio": "6",
+    "interest_receivable": "10",
+    "fees_receivable": "10",
+    "penalties_receivable": "10",
+    "charge_off_expense": "14",
+    "charge_off_fraud_expense": "13",
+    "income_from_charge_off_interest": "20",
+    "income_from_charge_off_fees": "11",
+    "income_from_charge_off_penalty": "11"
+   }
+  }
+ },
+ "expect": {
+  "charge_off_journal_legs": [
+   {
+    "transaction_id": "L44",
+    "account": "6",
+    "entry_type": "CREDIT",
+    "amount_minor": "100000"
+   },
+   {
+    "transaction_id": "L44",
+    "account": "10",
+    "entry_type": "CREDIT",
+    "amount_minor": "14300"
+   },
+   {
+    "transaction_id": "L44",
+    "account": "13",
+    "entry_type": "DEBIT",
+    "amount_minor": "100000"
+   },
+   {
+    "transaction_id": "L44",
+    "account": "20",
+    "entry_type": "DEBIT",
+    "amount_minor": "3000"
+   },
+   {
+    "transaction_id": "L44",
+    "account": "11",
+    "entry_type": "DEBIT",
+    "amount_minor": "11300"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargeoff-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargeoff-journal-ignores-fraud"
+ ]
+}
