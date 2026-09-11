@@ -113,6 +113,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goAccountStatus(*req.AccountStatus)
 	case req.Stream != nil:
 		return goTransactionStream(*req.Stream)
+	case req.HoldRelease != nil:
+		return goHoldRelease(*req.HoldRelease)
 	default:
 		return Expect{}, fmt.Errorf("savings: request must set exactly one seam sub-request")
 	}
@@ -349,6 +351,158 @@ func (w runningBalanceBeforeEvaluator) Evaluate(req Request) (Expect, error) {
 	return w.goEvaluator.Evaluate(req)
 }
 
+// buildHoldReleaseRows decodes the observed hold/release stream into the
+// savings package's own transaction rows, carrying the two id facts the hold
+// algebra needs (the row id and the hold's release id). decode is the
+// stored-value mapping the implementation under test applies; the correct
+// evaluator uses savingsDecode, and the deliberately wrong evaluators pass a
+// corrupt mapping in its place.
+func buildHoldReleaseRows(r HoldReleaseRequest, decode func(stored int32) (savingspkg.SavingsAccountTransactionType, bool)) ([]savingspkg.SavingsAccountTransaction, error) {
+	rows := make([]savingspkg.SavingsAccountTransaction, 0, len(r.Transactions))
+	for i, row := range r.Transactions {
+		t, ok := decode(row.TypeStoredValue)
+		if !ok {
+			return nil, fmt.Errorf("savings: hold row %d: transaction type stored value %d is not a savings transaction type", i, row.TypeStoredValue)
+		}
+		amount, err := parseMinorText(row.AmountMinor)
+		if err != nil {
+			return nil, fmt.Errorf("savings: hold row %d amount: %v", i, err)
+		}
+		rows = append(rows, savingspkg.SavingsAccountTransaction{
+			ID:                    row.ID,
+			Type:                  t,
+			Amount:                savingspkg.MinorUnits(amount),
+			ReleaseIDOfHoldAmount: row.ReleaseIDOfHoldAmount,
+		})
+	}
+	return rows, nil
+}
+
+// goHoldRelease evaluates the savings-hold-release seam with the port's own
+// derivations, all three from the same observed append-only stream:
+//
+//	account_balance = AccountBalanceOf(rows)  // the hold contributes NOTHING
+//	held            = HeldOf(rows)            // the outstanding hold, by id pairing
+//	available       = AvailableOf(rows)       // balance less held
+//
+// The derivation splits the three cells deliberately: if the hold were folded
+// into the posted balance, this evaluator would report 863.02 as the balance
+// and 725.73 as available on the after-hold stream, against the oracle's
+// 1000.31 and 863.02.
+func goHoldRelease(r HoldReleaseRequest) (Expect, error) {
+	rows, err := buildHoldReleaseRows(r, savingsDecode)
+	if err != nil {
+		return Expect{}, err
+	}
+	balance := savingspkg.AccountBalanceOf(rows)
+	held, err := savingspkg.HeldOf(rows)
+	if err != nil {
+		return Expect{}, fmt.Errorf("savings: held amount: %v", err)
+	}
+	available, err := savingspkg.AvailableOf(rows)
+	if err != nil {
+		return Expect{}, fmt.Errorf("savings: available amount: %v", err)
+	}
+	return Expect{
+		AccountBalanceMinor: strconv.FormatInt(int64(balance), 10),
+		HeldMinor:           strconv.FormatInt(int64(held), 10),
+		AvailableMinor:      strconv.FormatInt(int64(available), 10),
+	}, nil
+}
+
+// holdFoldRawBalance is the posted-balance fold of the NATURAL MISTAKE: it
+// classifies each row by its RAW entry type instead of the oracle's folded
+// classification. AMOUNT_HOLD carries raw entry DEBIT and AMOUNT_RELEASE raw
+// entry CREDIT, so this fold subtracts the hold from the posted balance (and
+// adds the release back) — exactly the pre-T515 defect the savings package's
+// Effect()/IsDebit() documentation records. It exists only to drive the
+// hold/release vectors red; it is not the port's own derivation.
+func holdFoldRawBalance(rows []savingspkg.SavingsAccountTransaction) savingspkg.MinorUnits {
+	var total savingspkg.MinorUnits
+	for _, t := range rows {
+		amount := t.Amount
+		if amount < 0 {
+			amount = -amount
+		}
+		switch {
+		case t.Type.IsDebitEntryType():
+			total -= amount
+		case t.Type.IsCreditEntryType():
+			total += amount
+		}
+	}
+	return total
+}
+
+// holdFoldedIntoBalanceEvaluator is a DELIBERATELY WRONG implementation: it
+// folds the hold into the POSTED balance by classifying rows with their raw
+// entry type, the natural mistake CLAUDE.md line 14 forbids. HeldOf and
+// AvailableOf stay the port's own, so on the after-hold vector it reports
+// account_balance 863.02 (the oracle's AVAILABLE, not its balance), held 137.29
+// and available 725.73 — two cells red. On the after-release vector the hold and
+// release cancel and it accidentally passes: that is precisely why the
+// after-hold state is the observation that grades the rule.
+type holdFoldedIntoBalanceEvaluator struct{ goEvaluator }
+
+func (w holdFoldedIntoBalanceEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.HoldRelease != nil {
+		rows, err := buildHoldReleaseRows(*req.HoldRelease, savingsDecode)
+		if err != nil {
+			return Expect{}, err
+		}
+		balance := holdFoldRawBalance(rows)
+		held, err := savingspkg.HeldOf(rows)
+		if err != nil {
+			return Expect{}, fmt.Errorf("savings: held amount: %v", err)
+		}
+		return Expect{
+			AccountBalanceMinor: strconv.FormatInt(int64(balance), 10),
+			HeldMinor:           strconv.FormatInt(int64(held), 10),
+			AvailableMinor:      strconv.FormatInt(int64(balance-held), 10),
+		}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// holdIgnoredEvaluator is a DELIBERATELY WRONG implementation: its stored-value
+// decode maps both AMOUNT_HOLD and AMOUNT_RELEASE rows to a balance-neutral
+// type, so the hold is invisible to every derivation — the posted balance is
+// right by accident, but held is 0 and available never falls. The after-hold
+// vector goes red (held 0 vs 137.29, available 1000.31 vs 863.02); the
+// after-release vector passes, which is again the point of capturing the held
+// state.
+type holdIgnoredEvaluator struct{ goEvaluator }
+
+func (w holdIgnoredEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.HoldRelease != nil {
+		rows, err := buildHoldReleaseRows(*req.HoldRelease, func(stored int32) (savingspkg.SavingsAccountTransactionType, bool) {
+			switch stored {
+			case savingspkg.TxnAmountHold.StoredValue(), savingspkg.TxnAmountRelease.StoredValue():
+				return savingspkg.TxnAccrual, true
+			}
+			return savingsDecode(stored)
+		})
+		if err != nil {
+			return Expect{}, err
+		}
+		balance := savingspkg.AccountBalanceOf(rows)
+		held, err := savingspkg.HeldOf(rows)
+		if err != nil {
+			return Expect{}, fmt.Errorf("savings: held amount: %v", err)
+		}
+		available, err := savingspkg.AvailableOf(rows)
+		if err != nil {
+			return Expect{}, fmt.Errorf("savings: available amount: %v", err)
+		}
+		return Expect{
+			AccountBalanceMinor: strconv.FormatInt(int64(balance), 10),
+			HeldMinor:           strconv.FormatInt(int64(held), 10),
+			AvailableMinor:      strconv.FormatInt(int64(available), 10),
+		}, nil
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
 func init() {
 	Register("savings-go", NewGoEvaluator())
 	RegisterWrong("savings-wrong-half-even-daily-interest",
@@ -370,4 +524,14 @@ func init() {
 	RegisterWrong("savings-wrong-running-balance-before",
 		"derives each row's running balance as the balance BEFORE that row instead of after it",
 		runningBalanceBeforeEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-hold-folded-into-balance",
+		"classifies a hold by its raw entry type, so AMOUNT_HOLD subtracts from the POSTED "+
+			"balance instead of altering available only: on the after-hold vector the balance "+
+			"reads 863.02 (the oracle's AVAILABLE) and available reads 725.73",
+		holdFoldedIntoBalanceEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("savings-wrong-hold-ignored",
+		"decodes AMOUNT_HOLD and AMOUNT_RELEASE to a balance-neutral type, so the hold is "+
+			"invisible: the balance is right by accident but held stays 0 and available never "+
+			"falls by the held amount",
+		holdIgnoredEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 }

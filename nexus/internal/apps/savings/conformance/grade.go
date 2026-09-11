@@ -123,6 +123,15 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		s.cmpStatusID("status_id", v.Expect.StatusID, got.StatusID)
 	case SeamSavingsDeposit, SeamSavingsTransactions:
 		s.cmpMoneyList("running_balances", v.Expect.RunningBalances, got.RunningBalances)
+	case SeamSavingsHoldRelease:
+		// Three money cells, all three pinned. The posted balance is the cell
+		// that must NOT move on a hold; available is the cell that must; held is
+		// the subtrahend that makes the other two legible. Comparing them
+		// separately is what makes a port that reports the correct AVAILABLE in
+		// the balance cell fail rather than pass by coincidence.
+		s.cmpMoney("account_balance", v.Expect.AccountBalanceMinor, got.AccountBalanceMinor)
+		s.cmpMoney("held", v.Expect.HeldMinor, got.HeldMinor)
+		s.cmpMoney("available", v.Expect.AvailableMinor, got.AvailableMinor)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

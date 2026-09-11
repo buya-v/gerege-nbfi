@@ -31,6 +31,12 @@
    "description": "The INTEREST CALCULATION behind the monthly-posting account SEED-Savings-Product (product id 1): postings 0.15 (30 days) and 0.16 (31 days). The day counts are derived from the MANIFEST prose, not single transcribed capture fields, and neither posting ties HALF_UP against HALF_EVEN. The account's observed posting AMOUNTS and running balances ARE graded, but under the deposit-credit-balance and interest-posting-credit-balance capabilities (the savings-transactions seam), not under this calculation capability.",
    "in_graded_domain": false,
    "evidence": "Capture savings-account-monthly-raw.json under tenant gerege: transactions id 2 (0.16) and id 3 (0.15), but no single field records the 30-day/31-day day counts, so promotion does not port them."
+  },
+  {
+   "name": "hold-release-available-only",
+   "description": "An AMOUNT_HOLD posting posts a transaction, reduces summary.availableBalance by the held amount and leaves summary.accountBalance (the POSTED balance) unmoved, and its AMOUNT_RELEASE restores available with the posted balance still unmoved. This is CLAUDE.md line 14 as a gradeable cell: the hold is a posting (transaction_type_enum 20, amountHold) that alters available only.",
+   "in_graded_domain": true,
+   "evidence": "Capture savings-hold-release/ under tenant gerege, savings account 1 (accountNo 000000001): the hold POST (out/savings-hold-holdAmount-raw.json, HTTP 200, resourceId 6) and its read-back (out/savings-hold-after-hold-account-raw.json) record summary.accountBalance 1000.31 (unmoved), summary.availableBalance 863.02, and an AMOUNT_HOLD row (id 6, transactionType.id 20, amountHold, amount 137.29); the release POST (out/savings-hold-releaseAmount-raw.json, HTTP 200, resourceId 7) and its read-back (out/savings-hold-after-release-account-raw.json) record accountBalance 1000.31 and availableBalance 1000.31."
   }
  ],
  "seams": [
@@ -61,6 +67,13 @@
    "status": {
     "deposit-credit-balance": "exercised",
     "interest-posting-credit-balance": "exercised"
+   }
+  },
+  {
+   "name": "savings-hold-release",
+   "description": "The hold/release command acknowledgements and account read-backs on the running Fineract server, tenant gerege, savings account 1 (accountNo 000000001): the post-hold and post-release account summaries and the appended AMOUNT_HOLD/AMOUNT_RELEASE transaction rows. Two states are transcribed: after the hold (accountBalance 1000.31, availableBalance 863.02, held 137.29) and after the release (accountBalance 1000.31, availableBalance 1000.31, held 0).",
+   "status": {
+    "hold-release-available-only": "exercised"
    }
   }
  ]
