@@ -45,18 +45,18 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 		SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
 		SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
-		SeamLoanChargebackJournalEntries,
+		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 			SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
 			SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
-			SeamLoanChargebackJournalEntries,
+			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
 	if v.Oracle.FineractCommit == "" {
@@ -187,6 +187,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ChargedOffRepaymentJournal != nil {
+		n++
+	}
+	if v.Request.AccrualJournal != nil {
 		n++
 	}
 	if v.Request.ChargebackJournal != nil {
@@ -733,6 +736,40 @@ func admitRequest(v *Vector) []string {
 		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
 			problems = append(problems,
 				"request.charged_off_repayment_journal.accounts.overpayment is empty but the overpayment portion is positive")
+		}
+	case SeamLoanAccrualJournalEntries:
+		if v.Request.AccrualJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "accrual-journal seam must set exactly request.accrual_journal")
+			return problems
+		}
+		j := v.Request.AccrualJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.accrual_journal.transaction_id is empty")
+		}
+		for name, val := range map[string]string{
+			"portions.interest": j.Portions.Interest,
+			"portions.fee":      j.Portions.Fee,
+			"portions.penalty":  j.Portions.Penalty,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.accrual_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// Every slot account is read back from the product's accountingMappings,
+		// never invented; the port refuses a positive portion with no account.
+		for name, val := range map[string]string{
+			"accounts.receivable_interest": j.Accounts.ReceivableInterest,
+			"accounts.receivable_fee":      j.Accounts.ReceivableFee,
+			"accounts.receivable_penalty":  j.Accounts.ReceivablePenalty,
+			"accounts.interest_on_loans":   j.Accounts.InterestOnLoans,
+			"accounts.income_from_fee":     j.Accounts.IncomeFromFee,
+			"accounts.income_from_penalty": j.Accounts.IncomeFromPenalty,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.accrual_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
 		}
 	case SeamLoanChargebackJournalEntries:
 		if v.Request.ChargebackJournal == nil || requestShapeCount(v) != 1 {
@@ -1369,6 +1406,59 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanAccrualJournalEntries:
+		if v.Request.AccrualJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.AccrualJournal
+		if len(v.Expect.AccrualJournalLegs) == 0 {
+			problems = append(problems, "expect.accrual_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.AccrualJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.accrual_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.accrual_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.accrual_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.accrual_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: the interest pair (debit first), then the fee pair and
+		// the penalty pair (credit first), each only when its portion is positive
+		// and each its own pair. This reconciliation is INDEPENDENT of the port
+		// under test, so a wrong port cannot make its own output "admissible".
+		expected, probs := reconstructAccrualJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.AccrualJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.accrual_journal_legs has %d legs but the observed posting order needs %d (an interest pair, then a fee pair, then a penalty pair, each only when its portion is positive)",
+				len(v.Expect.AccrualJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.AccrualJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.accrual_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): an accrual posts the interest pair debit-first (the adjustment swaps it) then the fee and penalty pairs credit-first, each only when positive and each its own pair",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargebackJournalEntries:
 		if v.Request.ChargebackJournal == nil {
 			// admitRequest already refused the missing request shape.
@@ -1813,6 +1903,76 @@ func reconstructChargedOffRepaymentJournalLegs(j ChargedOffRepaymentJournalReque
 		legs = append(legs, JournalEntryLeg{
 			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "DEBIT", AmountMinor: total,
 		})
+	}
+	return legs, nil
+}
+
+// reconstructAccrualJournalLegs derives the leg list the observed accrual
+// property requires from the request alone, independently of the port, in the
+// processor's posting order: the interest pair (DEBIT the receivable, CREDIT
+// the interest-on-loans; swapped for an adjustment), then the fee pair and then
+// the penalty pair (CREDIT the income account, DEBIT the receivable; swapped
+// for an adjustment), each only when its portion is positive and each its own
+// pair. Each money value stays an integer minor-unit string. It returns the
+// legs and any admission problem: a positive portion with no mapped account for
+// a side it needs.
+func reconstructAccrualJournalLegs(j AccrualJournalRequest) ([]JournalEntryLeg, []string) {
+	interest, fee, penalty := j.Portions.Interest, j.Portions.Fee, j.Portions.Penalty
+	if interest == "" {
+		interest = "0"
+	}
+	if fee == "" {
+		fee = "0"
+	}
+	if penalty == "" {
+		penalty = "0"
+	}
+	legs := make([]JournalEntryLeg, 0, 6)
+
+	if interest != "0" {
+		debit, credit := j.Accounts.ReceivableInterest, j.Accounts.InterestOnLoans
+		if j.Adjustment {
+			debit, credit = j.Accounts.InterestOnLoans, j.Accounts.ReceivableInterest
+		}
+		if debit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal interest portion %s has no debit account", interest)}
+		}
+		if credit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal interest portion %s has no credit account", interest)}
+		}
+		legs = append(legs,
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: debit, EntryType: "DEBIT", AmountMinor: interest},
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: credit, EntryType: "CREDIT", AmountMinor: interest})
+	}
+	if fee != "0" {
+		debit, credit := j.Accounts.ReceivableFee, j.Accounts.IncomeFromFee
+		if j.Adjustment {
+			debit, credit = j.Accounts.IncomeFromFee, j.Accounts.ReceivableFee
+		}
+		if credit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal fee portion %s has no credit account", fee)}
+		}
+		if debit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal fee portion %s has no debit account", fee)}
+		}
+		legs = append(legs,
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: credit, EntryType: "CREDIT", AmountMinor: fee},
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: debit, EntryType: "DEBIT", AmountMinor: fee})
+	}
+	if penalty != "0" {
+		debit, credit := j.Accounts.ReceivablePenalty, j.Accounts.IncomeFromPenalty
+		if j.Adjustment {
+			debit, credit = j.Accounts.IncomeFromPenalty, j.Accounts.ReceivablePenalty
+		}
+		if credit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal penalty portion %s has no credit account", penalty)}
+		}
+		if debit == "" {
+			return nil, []string{fmt.Sprintf("request.accrual_journal penalty portion %s has no debit account", penalty)}
+		}
+		legs = append(legs,
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: credit, EntryType: "CREDIT", AmountMinor: penalty},
+			JournalEntryLeg{TransactionID: j.TransactionID, Account: debit, EntryType: "DEBIT", AmountMinor: penalty})
 	}
 	return legs, nil
 }

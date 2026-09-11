@@ -1,0 +1,69 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-AC-loan-1-accrual-interest",
+ "title": "An ACCRUAL of 0.33 interest on loan 1 debits INTEREST_RECEIVABLE 7, then credits INTEREST_ON_LOANS 8 (loan 1 L2)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry the accrual branch createJournalEntriesForAccruals [AccrualBasedAccountingProcessorForLoan.java:2015-2087, dispatch :79-81, pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb] posts for a tax-free an ACCRUAL transaction, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY / loanProductId 39) at transaction L2. request.accrual_journal.transaction_id is \"L2\" and request.accrual_journal.portions transcribes the loan read-back's transaction id 2 (externalId d567395b-5df2-4868-b91c-859c21c65d97, type loanTransactionType.accrual, value Accrual): interestPortion 0.33 and feeCharges/penaltyCharges/principal/overpayment all 0. Zero portions are carried as \"0\"; there is no principal or overpayment field because the observed accrual posts neither. request.accrual_journal.accounts is the RESOLVED product slot->account mapping read from The slot->account mapping is the accepted create requests product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY.json (sha256 666ace910cd27fc7cef6c8d3b523fd03c723cac37a1ae91d4f4fdb72fafeb402) and product-mappings/create-request-LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY_ACCRUAL_ACTIVITY.json (sha256 a4fba0993ada42e0f11a05568951ae14da41de99fdff23fea919803755c153a6), which agree: receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, interestOnLoanAccountId 8, incomeFromFeeAccountId 5, incomeFromPenaltyAccountId 5. expect.accrual_journal_legs is a TRANSCRIPTION of the L2 legs in id order from the sweep: JE 3 DEBIT glAccountId 7 0.33, JE 4 CREDIT glAccountId 8 0.33. Every swept leg carries reversed false and the sweep holds only these legs for L2, so no later reversal is mixed in. THIS VECTOR GRADES ONE PROPERTY: the interest pair posts DEBIT then CREDIT, an accrual debiting the receivable 7 and crediting the income 8; a port that swaps the sides or the accounts moves a leg. WHAT THIS VECTOR DOES NOT GRADE: the swap an ACCRUAL_ADJUSTMENT performs (this transaction is an accrual; the loan-15 vector grades the swap), the fee and penalty groups (both zero here; the loan-11 and loan-19 vectors grade them), and the tax branch or any charge-specific GL mapping (no input exists for them). Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-accrual-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.accrual_journal.portions is transcribed from the committed loan read-back .softhouse/capture/tierd-feasibility/accrual-activity-p1-mnt/loans/loan-1/loan-1-detail-associations-transactions-3.json (sha256 f9f28f6786d20f7c4e540bbdd360a691e5a1d25f71a28f581de4c9ca34b64b2a): loan 1, LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY / loanProductId 39, transactions[id 2 externalId d567395b-5df2-4868-b91c-859c21c65d97] type loanTransactionType.accrual (Accrual), interestPortion 0.33 and feeCharges/penaltyCharges/principal/overpayment all 0. expect.accrual_journal_legs is transcribed from the committed journal-entry sweep .softhouse/capture/tierd-feasibility/accrual-activity-p1-mnt/journalentries-sweep/loan-1.json (sha256 be126f5be61f6fc55b32dafd09f21f76f46a9f87b10d8bfd9b0ba18574c43c49): transactionId L2 pageItems in id order -- JE 3 DEBIT glAccountId 7 0.33, JE 4 CREDIT glAccountId 8 0.33; all carry reversed false and none other names L2. The slot->account mapping is the accepted create requests product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY.json (sha256 666ace910cd27fc7cef6c8d3b523fd03c723cac37a1ae91d4f4fdb72fafeb402) and product-mappings/create-request-LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY_ACCRUAL_ACTIVITY.json (sha256 a4fba0993ada42e0f11a05568951ae14da41de99fdff23fea919803755c153a6), which agree: receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, interestOnLoanAccountId 8, incomeFromFeeAccountId 5, incomeFromPenaltyAccountId 5. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (0.33 -> 33, 10.0 -> 1000, 15.0 -> 1500, 2.79 -> 279 as applicable), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/accrual-activity-p1-mnt/journalentries-sweep/loan-1.json",
+  "capture_sha256": "be126f5be61f6fc55b32dafd09f21f76f46a9f87b10d8bfd9b0ba18574c43c49",
+  "capture_case_id": "L2",
+  "citation": "journalentries-sweep/loan-1.json:1 (sha256 be126f5be61f6fc55b32dafd09f21f76f46a9f87b10d8bfd9b0ba18574c43c49): transactionId L2 carries these legs in id order -- JE 3 DEBIT glAccountId 7 0.33, JE 4 CREDIT glAccountId 8 0.33. The slot->account mapping is the accepted create requests product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY.json (sha256 666ace910cd27fc7cef6c8d3b523fd03c723cac37a1ae91d4f4fdb72fafeb402) and product-mappings/create-request-LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY_ACCRUAL_ACTIVITY.json (sha256 a4fba0993ada42e0f11a05568951ae14da41de99fdff23fea919803755c153a6), which agree: receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, interestOnLoanAccountId 8, incomeFromFeeAccountId 5, incomeFromPenaltyAccountId 5. Portions are in loans/loan-1/loan-1-detail-associations-transactions-3.json:1 (sha256 f9f28f6786d20f7c4e540bbdd360a691e5a1d25f71a28f581de4c9ca34b64b2a): loan transaction id 2 externalId d567395b-5df2-4868-b91c-859c21c65d97 type loanTransactionType.accrual, interestPortion 0.33 and feeCharges/penaltyCharges/principal/overpayment all 0."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "accrual_journal": {
+   "transaction_id": "L2",
+   "portions": {
+    "interest": "33",
+    "fee": "0",
+    "penalty": "0"
+   },
+   "accounts": {
+    "receivable_interest": "7",
+    "receivable_fee": "7",
+    "receivable_penalty": "7",
+    "interest_on_loans": "8",
+    "income_from_fee": "5",
+    "income_from_penalty": "5"
+   }
+  }
+ },
+ "expect": {
+  "accrual_journal_legs": [
+   {
+    "transaction_id": "L2",
+    "account": "7",
+    "entry_type": "DEBIT",
+    "amount_minor": "33"
+   },
+   {
+    "transaction_id": "L2",
+    "account": "8",
+    "entry_type": "CREDIT",
+    "amount_minor": "33"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "accrual-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-accrual-journal-adjustment-not-reversed"
+ ]
+}
