@@ -64,6 +64,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertRepaymentJournalBalanced(got)}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		return []InvariantResult{assertChargedOffRepaymentJournalBalanced(got)}
+	case SeamLoanAccrualJournalEntries:
+		return []InvariantResult{assertAccrualJournalBalanced(got)}
 	case SeamLoanChargebackJournalEntries:
 		return []InvariantResult{assertChargebackJournalBalanced(got)}
 	case SeamLoanChargeLifecycle:
@@ -716,6 +718,53 @@ func assertChargedOffRepaymentJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("one debit of %d equals the %d credit portion(s)", debits, len(got.ChargedOffRepaymentJournalLegs)-1)
+	return r
+}
+
+// assertAccrualJournalBalanced checks the harness-independent invariant of any
+// accrual or accrual-adjustment posting: a non-empty leg list whose amounts are
+// non-negative integer minor units, whose sides are DEBIT/CREDIT, and whose
+// credit total equals its debit total. It does NOT assert a leg count or side
+// order, so it cannot be satisfied by a wrong port that merely reorders or
+// merges the groups; the graded leg cells do that. Every accrual group posts
+// both a debit and a credit of the same amount, so a balanced batch is exactly
+// one credit per debit across the group(s).
+func assertAccrualJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "accrual_journal_balanced", Assertions: 3}
+	if len(got.AccrualJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range got.AccrualJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credits sum to %d but the debits sum to %d: an accrual batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("%d debit leg(s) and %d credit leg(s) balance at %d", debitLegs, creditLegs, debits)
 	return r
 }
 

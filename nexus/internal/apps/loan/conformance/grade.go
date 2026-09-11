@@ -381,6 +381,11 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		// and count cells are what separate the merged recovery credit from a
 		// per-slot ordinary posting.
 		diffRepaymentJournalLegs(&s, v.Expect.ChargedOffRepaymentJournalLegs, got.ChargedOffRepaymentJournalLegs)
+	case SeamLoanAccrualJournalEntries:
+		// Reuse the repayment-journal per-leg differ: the property is the same
+		// fixed ordered leg list, and the interest pair's side (swapped by an
+		// adjustment) is what separates an adjustment from an accrual.
+		diffRepaymentJournalLegs(&s, v.Expect.AccrualJournalLegs, got.AccrualJournalLegs)
 	case SeamLoanChargebackJournalEntries:
 		diffChargebackJournalLegs(&s, v.Expect.ChargebackJournalLegs, got.ChargebackJournalLegs)
 	case SeamLoanChargeLifecycle:

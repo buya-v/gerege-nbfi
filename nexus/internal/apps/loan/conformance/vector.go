@@ -295,6 +295,37 @@ const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 // resolves to the product fund source 1.
 const SeamLoanChargedOffRepaymentJournalEntries = "loan-chargedoff-repayment-journal-entries"
 
+// SeamLoanAccrualJournalEntries is the capture seam this schema grades: the
+// journal entry an ACCRUAL or ACCRUAL_ADJUSTMENT transaction posts, the
+// tax-free observed shape of AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForAccruals [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:2015-2087, dispatch :79-81,
+// pinned commit 426a23544]. The interest group posts first when interest > 0:
+// an accrual DEBITs INTEREST_RECEIVABLE then CREDITs INTEREST_ON_LOANS, an
+// adjustment posts the same pair with the accounts swapped. Then, each only
+// when its portion > 0, the fee group and the penalty group post through
+// helper.createJournalEntriesForLoanCharges [AccountingProcessorHelper.java:
+// 393-435], which CREDITs first and DEBITs second: accrual CREDIT
+// INCOME_FROM_FEES / DEBIT FEES_RECEIVABLE and CREDIT INCOME_FROM_PENALTIES /
+// DEBIT PENALTIES_RECEIVABLE; an adjustment swaps the sides. The fee and
+// penalty groups are separate helper calls and never merge with each other.
+//
+// On the pinned observations loan-1 L2 (accrual, interest 0.33) posts a 33
+// debit to account 7 then a 33 credit to 8; loan-11 L84 (accrual, interest
+// 10.00, fee 10.00, penalty 15.00) posts the interest pair, then a fee credit
+// 5 / debit 7 pair, then a penalty credit 5 / debit 7 pair — six legs, the two
+// charge groups not merged despite sharing accounts 5 and 7; loan-15 L107
+// (accrual adjustment, interest 2.79) posts a 279 debit to 8 then a 279 credit
+// to 7; loan-19 L145 (accrual, penalty 15.00 alone) posts a 1500 credit to 5
+// then a 1500 debit to 7. The account ids are THIS replay's product mapping
+// (receivable interest/fee/penalty 7, interestOnLoan 8, incomeFromFee 5,
+// incomeFromPenalty 5).
+//
+// The tax branch and the charge-specific GL mappings are NOT observed and are
+// not expressible here: the port takes the resolved product accounts and no
+// tax or charge input.
+const SeamLoanAccrualJournalEntries = "loan-accrual-journal-entries"
+
 // SeamLoanChargebackJournalEntries is the capture seam this schema grades: the
 // journal entry a loan CHARGEBACK posts on a loan that is NOT charged off, the
 // chargeback sibling of the charge-off-journal seam. It ports
@@ -688,6 +719,46 @@ type ChargedOffRepaymentJournalRequest struct {
 	Accounts      ChargedOffRepaymentSlotAccounts `json:"accounts"`
 }
 
+// AccrualPortionsMoney is the per-slot money an accrual or accrual-adjustment
+// transaction accrues, each slot an integer STRING in minor units. It is the
+// request-side reduction of loan.AccrualPortions: the three fields
+// createJournalEntriesForAccruals reads off the transaction (interestPortion,
+// feeChargesPortion, penaltyChargesPortion). There is no principal or
+// overpayment field because the observed accrual posts neither.
+type AccrualPortionsMoney struct {
+	Interest string `json:"interest"`
+	Fee      string `json:"fee"`
+	Penalty  string `json:"penalty"`
+}
+
+// AccrualSlotAccounts is the product's accrual slot->account mapping, each
+// account the GL code the oracle's GET /loanproducts/{id}.accountingMappings
+// returns for that slot. The receivable slots are the DEBIT side of an accrual
+// and the CREDIT side of an adjustment; the income slots the reverse. The port
+// takes them resolved: no tax or per-charge mapping is carried.
+type AccrualSlotAccounts struct {
+	ReceivableInterest string `json:"receivable_interest"`
+	ReceivableFee      string `json:"receivable_fee"`
+	ReceivablePenalty  string `json:"receivable_penalty"`
+	InterestOnLoans    string `json:"interest_on_loans"`
+	IncomeFromFee      string `json:"income_from_fee"`
+	IncomeFromPenalty  string `json:"income_from_penalty"`
+}
+
+// AccrualJournalRequest is the loan-accrual-journal-entries seam's input: the
+// observed portions of an ACCRUAL or ACCRUAL_ADJUSTMENT transaction and the
+// resolved slot->account mapping, plus the transaction id the legs are posted
+// under and whether the transaction is an adjustment. The mapping is the
+// product's accountingMappings read back from the reference server, never
+// invented; a slot with a positive portion and no mapped account is refused by
+// the port.
+type AccrualJournalRequest struct {
+	TransactionID string               `json:"transaction_id"`
+	Adjustment    bool                 `json:"adjustment,omitempty"`
+	Portions      AccrualPortionsMoney `json:"portions"`
+	Accounts      AccrualSlotAccounts  `json:"accounts"`
+}
+
 // ChargebackPortionsMoney is the money a chargeback transaction credited, per
 // ledger slot, each an integer STRING in minor units. The observed domain has
 // two slots only: principal and overpayment. There is no field for a fee or
@@ -902,6 +973,10 @@ type Request struct {
 	// resolved slot->account mapping (the fund source already resolved through
 	// the payment channel). There is no transaction-type field.
 	ChargedOffRepaymentJournal *ChargedOffRepaymentJournalRequest `json:"charged_off_repayment_journal,omitempty"`
+	// AccrualJournal is the loan-accrual-journal-entries seam's input: an
+	// ACCRUAL or ACCRUAL_ADJUSTMENT transaction's three portions and the
+	// product's resolved slot->account mapping, with the adjustment flag.
+	AccrualJournal *AccrualJournalRequest `json:"accrual_journal,omitempty"`
 	// ChargebackJournal is the loan-chargeback-journal-entries seam's input: the
 	// chargeback transaction's amount and two portions and the resolved
 	// slot->account mapping.
@@ -1024,6 +1099,14 @@ type Expect struct {
 	// and, when two portions merged into one recovery credit, splits them back
 	// apart — the account, count and order cells.
 	ChargedOffRepaymentJournalLegs []JournalEntryLeg `json:"charged_off_repayment_journal_legs,omitempty"`
+	// AccrualJournalLegs is the loan-accrual-journal-entries seam's ordered leg
+	// list an accrual or accrual-adjustment transaction posted: the interest
+	// pair (debit first), then the fee pair and the penalty pair (credit first),
+	// each only when its portion is positive and each its own pair. Every leg is
+	// graded on its transaction id, account, side and amount; the side of a
+	// swapped adjustment interest pair, and the fact that the fee and penalty
+	// groups never merge, are what discriminate a wrong port.
+	AccrualJournalLegs []JournalEntryLeg `json:"accrual_journal_legs,omitempty"`
 	// ChargebackJournalLegs is the loan-chargeback-journal-entries seam's ordered
 	// leg list the chargeback posted: the amount credit to the fund source, then
 	// the overpayment debit, then the principal debit, in posting order. Every

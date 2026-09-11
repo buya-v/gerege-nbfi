@@ -160,6 +160,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goRepaymentJournal(*req.RepaymentJournal)
 	case req.ChargedOffRepaymentJournal != nil:
 		return goChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal)
+	case req.AccrualJournal != nil:
+		return goAccrualJournal(*req.AccrualJournal)
 	case req.ChargebackJournal != nil:
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.ChargeLifecycle != nil:
@@ -167,7 +169,7 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, chargeback_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, accrual_journal, chargeback_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -1110,6 +1112,58 @@ func chargedOffRepaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{ChargedOffRepaymentJournalLegs: out}
 }
 
+// goAccrualJournal ports the loan-accrual-journal-entries seam: it reduces the
+// request's three portions and resolved slot->account mapping to
+// loan.AccrualPortions and loan.AccrualAccountMapping and runs the port's own
+// loan.CreateAccrualJournalEntryLegs with the adjustment flag. Every monetary
+// cell is an integer minor unit; the mapping is the product's observed
+// accountingMappings, never invented.
+func goAccrualJournal(r AccrualJournalRequest) (Expect, error) {
+	var portions loan.AccrualPortions
+	var err error
+	if portions.Interest, err = parseMinorText(r.Portions.Interest); err != nil {
+		return Expect{}, err
+	}
+	if portions.Fee, err = parseMinorText(r.Portions.Fee); err != nil {
+		return Expect{}, err
+	}
+	if portions.Penalty, err = parseMinorText(r.Portions.Penalty); err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateAccrualJournalEntryLegs(r.TransactionID, r.Adjustment, portions, loan.AccrualAccountMapping{
+		ReceivableInterest: r.Accounts.ReceivableInterest,
+		ReceivableFee:      r.Accounts.ReceivableFee,
+		ReceivablePenalty:  r.Accounts.ReceivablePenalty,
+		InterestOnLoans:    r.Accounts.InterestOnLoans,
+		IncomeFromFee:      r.Accounts.IncomeFromFee,
+		IncomeFromPenalty:  r.Accounts.IncomeFromPenalty,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return accrualJournalLegsExpect(legs), nil
+}
+
+// accrualJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a
+// leg whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func accrualJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{AccrualJournalLegs: out}
+}
+
 // goChargebackJournal ports the loan-chargeback-journal-entries seam: it reduces
 // the request's amount, principal and overpayment portions and resolved
 // slot->account mapping to loan.MinorUnits and
@@ -1638,6 +1692,52 @@ func wrongChargedOffRepaymentJournal(r ChargedOffRepaymentJournalRequest, mode c
 		return Expect{ChargedOffRepaymentJournalLegs: out}, nil
 	default:
 		return Expect{}, fmt.Errorf("loan: unknown charged-off repayment wrong mode %d", mode)
+	}
+}
+
+// accrualJournalWrongMode selects which deliberately-wrong accrual posting to
+// run. Each is a port a reasonable reader might write, and it is discriminated
+// by the committed observations.
+type accrualJournalWrongMode int
+
+const (
+	// wrongAccrualJournalAdjustmentNotReversed posts an ACCRUAL_ADJUSTMENT
+	// through the accrual branch, as a port that forgets to swap the sides for
+	// an adjustment does. On the loan-15 L107 observation the interest pair
+	// keeps the accrual sides (DEBIT the receivable 7, CREDIT the interest
+	// income 8) instead of the reversed pair (DEBIT 8, CREDIT 7), so both legs
+	// move while every count, amount and every non-adjustment vector stays
+	// observed.
+	wrongAccrualJournalAdjustmentNotReversed accrualJournalWrongMode = iota
+)
+
+// wrongAccrualJournalEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-accrual-journal-entries seam, parameterised by which posting defect it
+// commits. On any request that is not an accrual journal it delegates to the
+// correct port, so the drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongAccrualJournalEvaluator struct {
+	goEvaluator
+	mode accrualJournalWrongMode
+}
+
+func (w wrongAccrualJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.AccrualJournal != nil {
+		return wrongAccrualJournal(*req.AccrualJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongAccrualJournal runs the deliberately-wrong posting selected by mode. The
+// adjustment-not-reversed defect drops the flag before the posting, so an
+// adjustment is posted with the accrual's (unswapped) sides.
+func wrongAccrualJournal(r AccrualJournalRequest, mode accrualJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongAccrualJournalAdjustmentNotReversed:
+		r.Adjustment = false
+		return goAccrualJournal(r)
+	default:
+		return Expect{}, fmt.Errorf("loan: unknown accrual wrong mode %d", mode)
 	}
 }
 
@@ -3034,6 +3134,14 @@ func init() {
 			"fund-source debit stay observed — on loan-37 (principal only) only the account moves, on "+
 			"loan-19 (principal+interest) the merged recovery credit becomes two",
 		wrongChargedOffRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargedOffRepaymentJournalsOrdinary})
+	RegisterWrong("loan-wrong-accrual-journal-adjustment-not-reversed",
+		"posts an ACCRUAL_ADJUSTMENT transaction through the accrual branch, as a port that forgets to "+
+			"swap the two sides for an adjustment does; on the pinned loan-15 L107 observation (interest "+
+			"279, adjustment) the interest pair keeps the accrual sides — DEBIT interest-receivable 7 and "+
+			"CREDIT interest-on-loans 8 — instead of the reversed pair DEBIT 8 / CREDIT 7, so both legs' "+
+			"account and side cells move while the count and every amount stay observed and every "+
+			"non-adjustment vector (loans 1, 11 and 19) is unaffected",
+		wrongAccrualJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongAccrualJournalAdjustmentNotReversed})
 	RegisterWrong("loan-wrong-chargeback-journal-overpayment-to-portfolio",
 		"debits the overpayment portion of a chargeback to the loan-portfolio account instead of the "+
 			"overpayment account, as a port that reuses one debit account for every non-principal "+
