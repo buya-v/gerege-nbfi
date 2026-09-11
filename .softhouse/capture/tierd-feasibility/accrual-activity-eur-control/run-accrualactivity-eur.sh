@@ -1,7 +1,8 @@
 #!/bin/bash
 # OH-ACCCTL-CG: replay the ONE failing scenario of LoanAccrualActivity-Part2.feature
-# (scenario 11 / C3697 / feature line 1232, "Verify accrual activity of overpaid loan in case of
-# reversed MIR made before MIR and CBR for progressive loan - UC6") with Feign FULL capture, in
+# (scenario 11 / @TestRailId:C3697 at feature line 1231 / Scenario at line 1232,
+# "Verify accrual activity of overpaid loan in case of reversed MIR made before MIR and CBR for
+# progressive loan - UC6") with Feign FULL capture, in
 # the JDK container over the DISPOSABLE copy, tenant `tierd`, on the copy with the five currency
 # constants reverted to EUR. Derived from ../charges-eur-control/run-charges-eur.sh
 # (OH-CHGCTL-BV), itself derived from ../uc10-eur-control/run-uc10-eur.sh (OH-UC10CTL-BQ): same
