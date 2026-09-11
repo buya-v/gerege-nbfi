@@ -1,0 +1,5 @@
+TierD throwaway for OH-TIERD14-CL -- 2026-09-11T16:26:47Z
+tierd-oracle-app  fineract:latest  Up 4 minutes (healthy)
+tierd-oracle-db  postgres:18.3  Up 5 minutes (healthy)
+health: {"status":"UP","groups":["liveness","readiness"]}
+tenant: tierd  db: fineract_tierd  port: 8444
