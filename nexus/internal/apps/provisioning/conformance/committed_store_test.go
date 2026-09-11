@@ -96,20 +96,24 @@ func TestCommittedCorpusPassesTheReferenceImplementation(t *testing.T) {
 		t.Fatalf("invariant violations = %d, want 0", s.InvariantViolations)
 	}
 
-	// Both seams are what distinguishes a category read from a reserve
-	// computation, and each seam reaches different port code: the reserve seam is
-	// what drives GenerateReserveEntries -> GenerateReserveEntriesWith ->
-	// PercentageOf -> roundHalfAwayFromZero. Assert both observations are
-	// committed, so a later deletion of one seam is a failing test rather than a
-	// silent return to 0.0% coverage of that seam.
+	// Every seam is what distinguishes one graded dimension from another, and each
+	// seam reaches different port code: the entry-reserve seam drives
+	// GenerateReserveEntries -> GenerateReserveEntriesWith -> PercentageOf ->
+	// roundHalfAwayFromZero, and the criteria-band seam drives Criteria.ReserveRate
+	// -> CriteriaDefinition.Matches (the oracle's age->band join predicate).
+	// Assert one observation of each is committed, so a later deletion of a seam is
+	// a failing test rather than a silent return to 0.0% coverage of that seam.
 	categories := 0
 	reserves := 0
+	bands := 0
 	for _, v := range vectors {
 		switch v.Oracle.Seam {
 		case SeamProvisioningCategoryRead:
 			categories++
 		case SeamProvisioningEntryReserve:
 			reserves++
+		case SeamProvisioningCriteriaBand:
+			bands++
 		}
 	}
 	if categories < 1 {
@@ -119,6 +123,10 @@ func TestCommittedCorpusPassesTheReferenceImplementation(t *testing.T) {
 	if reserves < 1 {
 		t.Fatalf("committed entry-reserve vectors = %d, want at least one observation of the reserve arithmetic: "+
 			"with none, the conformance coverage of GenerateReserveEntries/PercentageOf silently falls back to 0.0%%", reserves)
+	}
+	if bands < 1 {
+		t.Fatalf("committed criteria-band vectors = %d, want at least one observation of the age->band selection rule: "+
+			"with none, the conformance coverage of Criteria.ReserveRate/CriteriaDefinition.Matches silently falls back to 0.0%%", bands)
 	}
 
 	// The multi-entry observation is the only shape that reaches the DISTINCT-KEY

@@ -25,6 +25,14 @@ const SeamProvisioningCategoryRead = "provisioning-category-read"
 // GET /v1/provisioningentries/{id}/entries.
 const SeamProvisioningEntryReserve = "provisioning-entry-reserve"
 
+// SeamProvisioningCriteriaBand is the third capture seam this schema grades: the
+// criteria definitions (observed on GET /v1/provisioningcriteria/{id}) plus one
+// overdue age, and the single definition the oracle's join predicate
+// (pcd.min_age <= overdueInDays AND overdueInDays <= pcd.max_age) selects from
+// them. The selection's category, reserve percentage and GL account pair are the
+// already-observed decisions ENT-04 recorded.
+const SeamProvisioningCriteriaBand = "provisioning-criteria-band"
+
 // SchemaContexts returns the complete set of store contexts a vector bearing
 // SchemaV1 may claim. A vector claiming any other context is INADMISSIBLE.
 //
@@ -88,12 +96,37 @@ type Provenance struct {
 type TenantParams = shared.TenantParams
 
 // Request is the input the implementation is graded on. It is the union of the
-// two seams: the category read (category_id) and the entry reserve (inputs, a
-// list of per-loan reserve rows). A category vector sets exactly category_id; a
-// reserve vector sets exactly inputs.
+// three seams: the category read (category_id), the entry reserve (inputs, a
+// list of per-loan reserve rows), and the criteria band (definitions, the age
+// bands of one criteria, plus the single overdue_in_days to select among them).
+// A category vector sets exactly category_id; a reserve vector sets exactly
+// inputs; a criteria-band vector sets exactly definitions and overdue_in_days.
 type Request struct {
 	CategoryID int64             `json:"category_id"`
 	Inputs     []ReserveInputRow `json:"inputs"`
+
+	// Definitions and OverdueInDays are the criteria-band seam's request: the
+	// age bands of one provisioning criteria and the single overdue age the
+	// oracle's join predicate maps to one of them.
+	Definitions   []CriteriaDefinitionRow `json:"definitions"`
+	OverdueInDays int64                   `json:"overdue_in_days"`
+}
+
+// CriteriaDefinitionRow is one age band of a provisioning criteria the
+// criteria-band seam is graded on: the closed overdue-age interval
+// [min_age, max_age], the reserve percentage and the liability/expense GL
+// account pair. Percentage is the integer micro-per-cent Percent the port
+// carries (1.00 % -> 1_000_000), never money and never a float; min_age/max_age
+// and the two accounts are integers.
+type CriteriaDefinitionRow struct {
+	ID               int64  `json:"id"`
+	CategoryID       int64  `json:"category_id"`
+	CategoryName     string `json:"category_name"`
+	MinimumAge       int64  `json:"min_age"`
+	MaximumAge       int64  `json:"max_age"`
+	Percentage       int64  `json:"percentage"`
+	LiabilityAccount int64  `json:"liability_account"`
+	ExpenseAccount   int64  `json:"expense_account"`
 }
 
 // ReserveInputRow is one per-loan provisioning row the entry-reserve seam is
@@ -120,11 +153,18 @@ type ReserveInputRow struct {
 // aggregate's NOT NULL members and description is its nullable member. For the
 // entry-reserve seam it is one aggregated reserve entry, with the reserved
 // amount as an integer STRING in minor units plus the identity that pins which
-// band the amount belongs to.
+// band the amount belongs to. For the criteria-band seam it is the selected
+// band: the category (id and name), the reserve percentage in integer
+// micro-per-cent, and the liability/expense GL account pair.
 type Expect struct {
 	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+
+	// Percentage is the criteria-band seam's selected reserve percentage, in
+	// integer micro-per-cent (1.00 % -> 1_000_000). It is a percentage, never
+	// money, and never a float.
+	Percentage int64 `json:"percentage"`
 
 	ReservedAmountMinor string `json:"reserved_amount_minor"`
 	OfficeID            int64  `json:"office_id"`

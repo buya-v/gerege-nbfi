@@ -12,6 +12,12 @@
    "description": "Read the aggregated reserve amount (amountreserved) and its band identity (categoryId, overdueInDays) from GET /v1/provisioningentries/{id}/entries, as produced by POST /provisioningentries.",
    "in_graded_domain": true,
    "evidence": "Capture ENT-04 under tenant gerege: the running oracle returned four aggregated entries (STANDARD 1066.19, SUB-STANDARD 26654.63, DOUBTFUL 74234.32, LOSS 106618.53), each with categoryId and overdueInDays."
+  },
+  {
+   "name": "criteria-band",
+   "description": "Select the ONE provisioning criteria age band whose closed interval [minAge, maxAge] contains a loan's overdue age, and read its category (id and name), reserve percentage (integer micro-per-cent) and liability/expense GL account pair. This is the oracle's join predicate pcd.min_age <= overdueInDays AND overdueInDays <= pcd.max_age.",
+   "in_graded_domain": true,
+   "evidence": "Capture CRI-02 under tenant gerege (criteriaId 1, SEED-Probe-Criteria, loan product 2) gives the four definitions: STANDARD [0,29] 1.00% liability 2 expense 4, SUB-STANDARD [30,59] 25.00%, DOUBTFUL [60,89] 50.00%, LOSS [90,36500] 100.00%. Capture ENT-04 records the four observed decisions: overdue 0 -> STANDARD, 31 -> SUB-STANDARD, 62 -> DOUBTFUL, 92 -> LOSS. The percentage is transcribed in integer micro-per-cent (1.00 -> 1000000), never as a float."
   }
  ],
  "seams": [
@@ -28,7 +34,14 @@
    "status": {
     "reserve-amount": "exercised"
    }
+  },
+  {
+   "name": "provisioning-criteria-band",
+   "description": "Replay the committed CRI-02 criteria definitions (GET /v1/provisioningcriteria/1) plus one overdue age through the oracle's join predicate pcd.min_age <= overdueInDays AND overdueInDays <= pcd.max_age; the selected definition's category, reserve percentage and GL accounts are pinned by the ENT-04 observed decisions (0/31/62/92).",
+   "status": {
+    "criteria-band": "exercised"
+   }
   }
  ],
- "note": "Provisioning parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Two capabilities are graded: the category aggregate read (provisioning-category-read seam) and the aggregated reserve amount (provisioning-entry-reserve seam). The age-band match (Matches/ReserveRate) and the overlap invariant (Overlaps/ValidateRange) are NOT in the graded domain: the running oracle produced no matched-band refusal or overlap refusal to transcribe, and producing one would write a deliberately-broken criteria to the tenant (forbidden)."
+ "note": "Provisioning parity-store capability registry. Each capabilities_required name on a vector must map, on the vector's seam, to status exercised, and the capability must be in the graded domain, else the vector is refused (default-deny). Three capabilities are graded: the category aggregate read (provisioning-category-read seam), the aggregated reserve amount (provisioning-entry-reserve seam), and the age-band selection rule (provisioning-criteria-band seam): the criteria definitions are the observed CRI-02 capture and the four selections are the observed ENT-04 decisions, replayed as a seam so ReserveRate and Matches are reached. The overlap invariant (Overlaps/ValidateRange) is NOT in the graded domain: the running oracle produced no overlap refusal to transcribe, and producing one would write a deliberately-broken criteria to the tenant (forbidden)."
 }

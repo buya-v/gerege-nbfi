@@ -103,6 +103,14 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 				len(got))}
 			return r
 		}
+	case SeamProvisioningCriteriaBand:
+		if len(got) != 1 {
+			r.Outcome = OutcomeError
+			r.Reasons = []string{fmt.Sprintf("provisioning: criteria band selection produced %d results, want exactly 1", len(got))}
+			return r
+		}
+		diffs = compareBandExpect(v.Expect, got[0])
+		r.GradedCells = 5 // category_id, name, percentage, liability_account, expense_account
 	default:
 		if len(got) != 1 {
 			r.Outcome = OutcomeError
@@ -142,6 +150,31 @@ func compareExpect(want Expect, got Expect) []string {
 	}
 	if want.Description != got.Description {
 		diffs = append(diffs, fmt.Sprintf("description: want %q, got %q", want.Description, got.Description))
+	}
+	return diffs
+}
+
+// compareBandExpect compares an expected criteria-band selection against the
+// evaluated one. category_id and name identify the selected band; percentage is
+// the reserve percentage in integer micro-per-cent; liability_account and
+// expense_account are the GL account pair the selected band posts to. All five
+// are integers: percentage is not money, but it is still never a float.
+func compareBandExpect(want Expect, got Expect) []string {
+	var diffs []string
+	if want.CategoryID != got.CategoryID {
+		diffs = append(diffs, fmt.Sprintf("category_id: want %d, got %d", want.CategoryID, got.CategoryID))
+	}
+	if want.Name != got.Name {
+		diffs = append(diffs, fmt.Sprintf("name: want %q, got %q", want.Name, got.Name))
+	}
+	if want.Percentage != got.Percentage {
+		diffs = append(diffs, fmt.Sprintf("percentage: want %d, got %d", want.Percentage, got.Percentage))
+	}
+	if want.LiabilityAccount != got.LiabilityAccount {
+		diffs = append(diffs, fmt.Sprintf("liability_account: want %d, got %d", want.LiabilityAccount, got.LiabilityAccount))
+	}
+	if want.ExpenseAccount != got.ExpenseAccount {
+		diffs = append(diffs, fmt.Sprintf("expense_account: want %d, got %d", want.ExpenseAccount, got.ExpenseAccount))
 	}
 	return diffs
 }
