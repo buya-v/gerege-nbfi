@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -40,13 +41,15 @@ func Admit(v *Vector, opts Options) []string {
 	switch v.Oracle.Seam {
 	case SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 		SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays:
+		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
+		SeamLoanWriteOffFourBucket:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
-			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays))
+			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
+			SeamLoanWriteOffFourBucket))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -126,7 +129,7 @@ func Admit(v *Vector, opts Options) []string {
 	return problems
 }
 
-// requestShapeCount is how many of the eight request sub-shapes a vector sets.
+// requestShapeCount is how many of the request sub-shapes a vector sets.
 // Every seam requires exactly one.
 func requestShapeCount(v *Vector) int {
 	n := 0
@@ -155,6 +158,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.Delinquency != nil {
+		n++
+	}
+	if v.Request.WriteOff != nil {
 		n++
 	}
 	return n
@@ -380,6 +386,29 @@ func admitRequest(v *Vector) []string {
 					"request.delinquency.overdue_since_date %q is after business_date %q: no committed capture observes an overdue date after the business date, and the negative clamp is NOT part of the graded surface", d.OverdueSinceDate, d.BusinessDate))
 			}
 		}
+	case SeamLoanWriteOffFourBucket:
+		if v.Request.WriteOff == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "write-off seam must set exactly request.write_off")
+			return problems
+		}
+		w := v.Request.WriteOff
+		if len(w.Installments) == 0 {
+			problems = append(problems, "request.write_off.installments is empty: the four-bucket discharge needs at least one instalment")
+			return problems
+		}
+		for i, in := range w.Installments {
+			for name, val := range map[string]string{
+				"principal_outstanding_minor": in.PrincipalOutstandingMinor,
+				"interest_outstanding_minor":  in.InterestOutstandingMinor,
+				"fee_outstanding_minor":       in.FeeOutstandingMinor,
+				"penalty_outstanding_minor":   in.PenaltyOutstandingMinor,
+			} {
+				if !isIntegerMinorString(val) {
+					problems = append(problems, fmt.Sprintf(
+						"request.write_off.installments[%d].%s %q is not a non-negative integer minor amount", i, name, val))
+				}
+			}
+		}
 	}
 	return problems
 }
@@ -543,6 +572,41 @@ func admitExpect(v *Vector) []string {
 			problems = append(problems, fmt.Sprintf(
 				"expect.delinquent_days %q is not a non-negative integer day count", v.Expect.DelinquentDays))
 		}
+	case SeamLoanWriteOffFourBucket:
+		if v.Expect.WriteOffAllocation == nil {
+			problems = append(problems, "expect.write_off_allocation is missing for the write-off seam")
+			return problems
+		}
+		a := v.Expect.WriteOffAllocation
+		for name, val := range map[string]string{
+			"write_off_allocation.principal": a.Principal,
+			"write_off_allocation.interest":  a.Interest,
+			"write_off_allocation.fee":       a.Fee,
+			"write_off_allocation.penalty":   a.Penalty,
+			"write_off_total_minor":          v.Expect.WriteOffTotalMinor,
+		} {
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf("expect.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// The property is that the four portions SUM to the write-off amount.
+		// Admission refuses a vector whose four transcribed portions do not
+		// reconcile to the transcribed amount, so the harness never grades a
+		// self-inconsistent observation. Some bucket must be non-zero: an
+		// all-zero discharge grades nothing.
+		if isIntegerMinorString(a.Principal) && isIntegerMinorString(a.Interest) &&
+			isIntegerMinorString(a.Fee) && isIntegerMinorString(a.Penalty) &&
+			isIntegerMinorString(v.Expect.WriteOffTotalMinor) {
+			sum, _ := sumMinorStrings(a.Principal, a.Interest, a.Fee, a.Penalty)
+			if sum != v.Expect.WriteOffTotalMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.write_off_allocation buckets sum to %s but expect.write_off_total_minor is %s: the four portions must sum to the write-off amount",
+					sum, v.Expect.WriteOffTotalMinor))
+			}
+			if sum == "0" {
+				problems = append(problems, "expect.write_off_allocation is all zeros: a zero discharge exercises no bucket")
+			}
+		}
 	}
 	return problems
 }
@@ -594,6 +658,22 @@ func checkGradedAgainst(v *Vector) []string {
 // bytesContain reports whether the raw capture bytes contain the given needle.
 func bytesContain(raw []byte, needle string) bool {
 	return strings.Contains(string(raw), needle)
+}
+
+// sumMinorStrings adds non-negative integer minor-unit strings and returns the
+// decimal sum, with ok false if any operand does not parse. It exists so
+// admission can assert the four write-off portions reconcile to the observed
+// amount using integer arithmetic only.
+func sumMinorStrings(vals ...string) (string, bool) {
+	var total int64
+	for _, v := range vals {
+		n, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			return "", false
+		}
+		total += n
+	}
+	return strconv.FormatInt(total, 10), true
 }
 
 // isIntegerMinorString reports whether s is a non-negative integer (money in
