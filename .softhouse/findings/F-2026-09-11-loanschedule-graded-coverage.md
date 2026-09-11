@@ -46,7 +46,7 @@ coverage it produces is real, not manufactured. Removing a vector removes the co
 
 On the committed store the control loads **50 vectors (46 `parity`, 4
 `contract-refusal`)** and passes; `conformance.sh` independently reports the same 46 parity
-vectors, `7884` cells compared (`VERDICT: PASS`, `/tmp/ls_conf.log:1354`).
+vectors, `7884` cells compared (`VERDICT: PASS`, `/tmp/ls_conf_final.log:1354`).
 
 ## 2. Measurement — the two reported figures are identical
 
@@ -234,7 +234,7 @@ ungraded reference money rule at all.
 * `go build ./...` — clean.
 * `go test ./...` — all 31 packages pass (exit 0).
 * `bash .softhouse/conformance.sh` — **exit 2** with
-  `§4.4.2-RECORDED-DECISION-EXIT` (`/tmp/ls_conf.log:1393`); the `loanschedule` graded run
+  `§4.4.2-RECORDED-DECISION-EXIT` (`/tmp/ls_conf_final.log:1393`); the `loanschedule` graded run
   inside it is `VERDICT: PASS — 46 parity vectors match the pinned reference oracle, 7884
   cells compared`. This is the recorded decision, **not** a "HARD guard failed".
 * New test: `go test -run
