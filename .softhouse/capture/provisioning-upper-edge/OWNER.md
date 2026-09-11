@@ -103,6 +103,14 @@ from a single row.
 No refusal. The oracle accepted a second entry on a new date (history 1 = `2026-09-01`,
 history 2 = `2026-09-03`); the one-entry-per-date rule did not block a distinct date.
 
+## Bar
+
+`bash .softhouse/conformance.sh` → **exit 2**, and the only exit-2 reason in the log is
+`conformance: §4.4.2-RECORDED-DECISION-EXIT — ledger findings == baseline; the graded run
+completed and the bar is refused by that recorded decision`. `HARD guard failed` count **0**;
+graded `parity vectors PASS 49 FAIL 0`. This capture adds no vector and changes no Go code, so the
+bar is unchanged.
+
 ## Artifacts
 
 Raw JSON under `out/` (vector-citable); all HTTP response bodies unmodified. `req/` holds the
