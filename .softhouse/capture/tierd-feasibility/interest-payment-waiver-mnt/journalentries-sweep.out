@@ -1,0 +1,16 @@
+loan 1    rc=0   http=200      3489 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=1&limit=-1
+loan 2    rc=0   http=200      3488 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=2&limit=-1
+loan 3    rc=0   http=200      2800 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=3&limit=-1
+loan 4    rc=0   http=200     12516 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=4&limit=-1
+loan 5    rc=0   http=200      9062 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=5&limit=-1
+loan 6    rc=0   http=200      5602 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=6&limit=-1
+loan 7    rc=0   http=200      5574 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=7&limit=-1
+loan 8    rc=0   http=200      6293 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=8&limit=-1
+loan 9    rc=0   http=200      9034 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=9&limit=-1
+loan 10   rc=0   http=200      7663 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=10&limit=-1
+loan 11   rc=0   http=200      7005 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=11&limit=-1
+loan 12   rc=0   http=200     13342 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=12&limit=-1
+loan 13   rc=0   http=200     45531 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=13&limit=-1
+loan 14   rc=0   http=200     49040 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=14&limit=-1
+loan 15   rc=0   http=200     46293 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=15&limit=-1
+sweep: 15 loans, 324 legs; manifest /Users/buv/oh-gerege-tierd14/.softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/journalentries-sweep-manifest.json

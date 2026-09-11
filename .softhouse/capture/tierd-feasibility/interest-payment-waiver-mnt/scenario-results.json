@@ -1,0 +1,182 @@
+{
+ "attribution_validated": true,
+ "currency": "MNT",
+ "failed": 0,
+ "feature": "LoanInterestPaymentWaiver.feature",
+ "passed": 15,
+ "scenario_count": 15,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 5,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": 1,
+   "name": "Verify Interest Payment Waiver transaction - UC1: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver on due date with exact amount",
+   "result": "PASSED",
+   "tag": "C3141"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 40,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": 2,
+   "name": "Verify Interest Payment Waiver transaction - UC2: LP1 product, cumulative schedule, flat interest, allocation: fee-interest-principal, interestPaymentWaiver on due date with partial amount",
+   "result": "PASSED",
+   "tag": "C3142"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 77,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": 3,
+   "name": "Verify Interest Payment Waiver transaction - UC3: LP1 product, cumulative schedule, flat interest, allocation: principal-interest, interestPaymentWaiver on due date with partial amount",
+   "result": "PASSED",
+   "tag": "C3143"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 111,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": 4,
+   "name": "Verify Interest Payment Waiver transaction - UC4: LP1 product, cumulative schedule, flat interest, allocation: principal-interest, interestPaymentWaiver after maturity date, overpayment",
+   "result": "PASSED",
+   "tag": "C3144"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 204,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": 5,
+   "name": "Verify Interest Payment Waiver transaction - UC5: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver before due date, repayment on due date, undo interestPaymentWaiver",
+   "result": "PASSED",
+   "tag": "C3145"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 302,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": 6,
+   "name": "Verify Interest Payment Waiver transaction - UC6: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver before due date, repayment on due date, chergeback for interestPaymentWaiver",
+   "result": "PASSED",
+   "tag": "C3146"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 399,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": 7,
+   "name": "Verify Interest Payment Waiver transaction - UC7: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver puts loan in overpaid status when transaction amount is greater than balance",
+   "result": "PASSED",
+   "tag": "C3147"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 443,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": 8,
+   "name": "Verify Interest Payment Waiver transaction - UC8: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver puts loan from closed to overpaid status",
+   "result": "PASSED",
+   "tag": "C3148"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 495,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": 9,
+   "name": "Verify Interest Payment Waiver transaction - UC9: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, loan overdue calculation is updated upon interestPaymentWaiver transaction",
+   "result": "PASSED",
+   "tag": "C3149"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 558,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": 10,
+   "name": "Verify Interest Payment Waiver transaction - UC10: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver and charge-off",
+   "result": "PASSED",
+   "tag": "C3150"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 626,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": 11,
+   "name": "Verify Interest Payment Waiver transaction - UC11: LP1 product, cumulative schedule, flat interest, allocation: interest-principal, interestPaymentWaiver after charge-off",
+   "result": "PASSED",
+   "tag": "C3151"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 695,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_ZERO_CHARGE_OFF",
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": 12,
+   "name": "Verify Interest Payment Waiver transaction - UC12: IPW after Charge-off - UC1",
+   "result": "PASSED",
+   "tag": "C4200"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 751,
+   "feature_product": "LP2_ADV_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OF_ACCRUAL",
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": 13,
+   "name": "Verify Interest Payment Waiver transaction - UC12: IPW after Charge-off - UC2",
+   "result": "PASSED",
+   "tag": "C4204"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 953,
+   "feature_product": "LP2_ADV_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OF_ACCRUAL",
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": 14,
+   "name": "Verify Interest Payment Waiver transaction - UC12: Payout Refund after Charge-off - UC3",
+   "result": "PASSED",
+   "tag": "C4205"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1194,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OFF_ACCRUAL",
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": 15,
+   "name": "Verify Interest Payment Waiver transaction - UC12: Goodwill Credit after Charge-off - UC4",
+   "result": "PASSED",
+   "tag": "C4206"
+  }
+ ],
+ "steps": {
+  "failed": 0,
+  "passed": 468,
+  "skipped": 0,
+  "total": 468
+ },
+ "tenant": "tierd"
+}

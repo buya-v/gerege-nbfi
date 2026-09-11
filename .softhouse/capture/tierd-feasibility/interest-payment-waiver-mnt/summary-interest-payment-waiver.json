@@ -1,0 +1,155 @@
+{
+ "committed_loans": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15
+ ],
+ "failed_scenarios": [],
+ "files_written": 709,
+ "kept_body_bytes": 10467443,
+ "loan_exchanges": 589,
+ "loans": {
+  "1": {
+   "bytes": 148788,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 20,
+   "reads": 13
+  },
+  "10": {
+   "bytes": 232514,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 28,
+   "reads": 19
+  },
+  "11": {
+   "bytes": 244920,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 28,
+   "reads": 19
+  },
+  "12": {
+   "bytes": 701369,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 36,
+   "reads": 21
+  },
+  "13": {
+   "bytes": 2117609,
+   "command_requests": 23,
+   "command_responses": 23,
+   "create_requests": 1,
+   "files": 115,
+   "reads": 68
+  },
+  "14": {
+   "bytes": 2640537,
+   "command_requests": 23,
+   "command_responses": 23,
+   "create_requests": 1,
+   "files": 114,
+   "reads": 67
+  },
+  "15": {
+   "bytes": 2067287,
+   "command_requests": 22,
+   "command_responses": 22,
+   "create_requests": 1,
+   "files": 111,
+   "reads": 66
+  },
+  "2": {
+   "bytes": 152145,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  },
+  "3": {
+   "bytes": 148547,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 20,
+   "reads": 13
+  },
+  "4": {
+   "bytes": 511494,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 49,
+   "reads": 34
+  },
+  "5": {
+   "bytes": 366060,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 40,
+   "reads": 29
+  },
+  "6": {
+   "bytes": 376716,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 40,
+   "reads": 29
+  },
+  "7": {
+   "bytes": 192534,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 17
+  },
+  "8": {
+   "bytes": 264968,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 22
+  },
+  "9": {
+   "bytes": 301955,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 23
+  }
+ },
+ "skipped_body_bytes": 148483270,
+ "skipped_exchanges": 1414,
+ "skipped_pct_of_body_bytes": 93,
+ "skipped_pct_of_source_bytes": 88,
+ "source_bytes": 168123968,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-interest-payment-waiver-mnt.log",
+ "total_exchanges": 2003,
+ "total_lines": 52310,
+ "unattributed_creates": 0,
+ "unattributed_loan_ids": []
+}
