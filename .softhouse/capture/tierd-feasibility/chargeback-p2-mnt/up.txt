@@ -1,0 +1,17 @@
+ Network tierd-oracle_default Creating 
+ Network tierd-oracle_default Created 
+ Container tierd-oracle-db Creating 
+ Container tierd-oracle-db Created 
+ Container tierd-oracle-app Creating 
+ Container tierd-oracle-app Created 
+ Container tierd-oracle-db Starting 
+ Container tierd-oracle-db Started 
+ Container tierd-oracle-db Waiting 
+ Container tierd-oracle-db Healthy 
+ Container tierd-oracle-app Starting 
+ Container tierd-oracle-app Started 
+ Container tierd-oracle-app Waiting 
+ Container tierd-oracle-db Waiting 
+ Container tierd-oracle-db Healthy 
+ Container tierd-oracle-app Healthy 
+rc=0
