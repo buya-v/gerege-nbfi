@@ -1,0 +1,72 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CB-loan-21-chargeback-mixed",
+ "title": "A mixed loan chargeback credits the FUND_SOURCE 350.00, then debits OVERPAYMENT 250.00, then debits LOAN_PORTFOLIO 100.00 (loan 21 L109)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the THREE-LEG journal entry a loan CHARGEBACK posted on a loan that is NOT charged off, the mixed shape, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP1 / product 6) at the chargeback transaction. request.chargeback_journal.amount is the accepted chargeback request transactionAmount 350.0 -> \"35000\" minor units, raised with paymentTypeId 2 (loans/loan-21/loan-21-chargeback-request.json); transaction_id L109 is the journal entries' transaction id for the read-back's transaction id 109 (type loanTransactionType.chargeback, which follows a 500.00 repayment carrying a 250.00 overpayment and 250.00 principal). request.chargeback_journal.portions transcribes the loan read-back's chargeback transaction id 109 after the chargeback: principalPortion 100.0 -> \"10000\", overpaymentPortion 250.0 -> \"25000\"; the observed identity amount = principal + overpayment holds exactly (35000 = 10000 + 25000). request.chargeback_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request product-mappings/create-request-LP1.json: fundSourceAccountId 4, loanPortfolioAccountId 10, overpaymentLiabilityAccountId 18; paymentTypeId 2 has no channel mapping, so the default FUND_SOURCE 4 applies. expect.chargeback_journal_legs is a TRANSCRIPTION of the three L109 legs in id order: JE 240 CREDIT account 4 350.0, JE 241 DEBIT account 18 250.0, JE 242 DEBIT account 10 100.0. THIS VECTOR GRADES ONE PROPERTY: a chargeback credits the amount to the resolved fund source, then debits the OVERPAYMENT portion to OVERPAYMENT, then debits the principal credited beyond paid to LOAN_PORTFOLIO, in that posting order -- the overpayment debit PRECEDES the principal debit. It is the shape that discriminates both the registered drive loan-wrong-chargeback-journal-overpayment-to-portfolio (a port that routes the overpayment portion to LOAN_PORTFOLIO moves the debit from account 18 to account 10) and a port that reorders the two debits. Nothing was computed by this promotion: every amount, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargeback-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.chargeback_journal.amount is transcribed from the committed accepted chargeback request .softhouse/capture/tierd-feasibility/chargeback-mnt/loans/loan-21/loan-21-chargeback-request.json (sha256 24688bcc68ec2b16593ad4016198e92a2d0c0692e7b8c265d1e5e8d08f3a6b78): transactionAmount 350.0, paymentTypeId 2. request.chargeback_journal.portions is transcribed from the committed chargeback loan read-back .softhouse/capture/tierd-feasibility/chargeback-mnt/loans/loan-21/loan-21-detail-associations-transactions-10.json (sha256 ee7d5cc62c31af68445b5e0a07dbbbc3f55a379f7c9846f41ec2aff8dc9a0827): transactions id 109 type loanTransactionType.chargeback amount 350.0, principalPortion 100.0, overpaymentPortion 250.0. expect.chargeback_journal_legs is transcribed from the committed journal-entries read-back .softhouse/capture/tierd-feasibility/chargeback-mnt/journalentries/loan-21/loan-21-journalentries-5.json (sha256 bb3da42d26e3106cf58ea6f0b3f73cd522a7fe620427ad1a5dbd46c8538432b2), transactionId L109 pageItems ids 240-242. request.chargeback_journal.accounts is transcribed from the committed product mapping .softhouse/capture/tierd-feasibility/chargeback-mnt/product-mappings/create-request-LP1.json (sha256 87e5c4e859d979a4ea1dc8b9aa662a148e5021cbf6a7213cc7c2d772486d62e1): fundSourceAccountId 4, loanPortfolioAccountId 10, overpaymentLiabilityAccountId 18, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 17]. TENANT `tierd` -- NOT tenant `gerege`; the instance was destroyed. Every amount is an exact decimal parsed to integer minor units (250.0 -> 25000, 350.0 -> 35000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeback-mnt/journalentries/loan-21/loan-21-journalentries-5.json",
+  "capture_sha256": "bb3da42d26e3106cf58ea6f0b3f73cd522a7fe620427ad1a5dbd46c8538432b2",
+  "capture_case_id": "L109",
+  "citation": "journalentries/loan-21/loan-21-journalentries-5.json:1 (sha256 bb3da42d26e3106cf58ea6f0b3f73cd522a7fe620427ad1a5dbd46c8538432b2, committed read-back, tenant tierd): transactionId L109 carries three legs in id order -- id 240 entryType.value CREDIT glAccountId 4 amount 350.0; id 241 entryType.value DEBIT glAccountId 18 amount 250.0; id 242 entryType.value DEBIT glAccountId 10 amount 100.0. The credit equals the two debits (35000 = 25000 + 10000 minor units), and the overpayment debit id 241 precedes the principal debit id 242. Portions are in loans/loan-21/loan-21-detail-associations-transactions-10.json:1 (sha256 ee7d5cc62c31af68445b5e0a07dbbbc3f55a379f7c9846f41ec2aff8dc9a0827): transactions id 109 type loanTransactionType.chargeback, principalPortion 100.0, overpaymentPortion 250.0. The amount is in loans/loan-21/loan-21-chargeback-request.json:1 (sha256 24688bcc68ec2b16593ad4016198e92a2d0c0692e7b8c265d1e5e8d08f3a6b78): transactionAmount 350.0, paymentTypeId 2. The slot->account-id mapping is in product-mappings/create-request-LP1.json:1 (sha256 87e5c4e859d979a4ea1dc8b9aa662a148e5021cbf6a7213cc7c2d772486d62e1): fundSourceAccountId 4, loanPortfolioAccountId 10, overpaymentLiabilityAccountId 18."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "chargeback_journal": {
+   "transaction_id": "L109",
+   "amount": "35000",
+   "portions": {
+    "principal": "10000",
+    "overpayment": "25000"
+   },
+   "accounts": {
+    "fund_source": "4",
+    "loan_portfolio": "10",
+    "overpayment": "18"
+   }
+  }
+ },
+ "expect": {
+  "chargeback_journal_legs": [
+   {
+    "transaction_id": "L109",
+    "account": "4",
+    "entry_type": "CREDIT",
+    "amount_minor": "35000"
+   },
+   {
+    "transaction_id": "L109",
+    "account": "18",
+    "entry_type": "DEBIT",
+    "amount_minor": "25000"
+   },
+   {
+    "transaction_id": "L109",
+    "account": "10",
+    "entry_type": "DEBIT",
+    "amount_minor": "10000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargeback-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargeback-journal-overpayment-to-portfolio"
+ ]
+}

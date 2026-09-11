@@ -58,6 +58,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertWriteOffJournalBalanced(got)}
 	case SeamLoanChargeOffJournalEntries:
 		return []InvariantResult{assertChargeOffJournalBalanced(got)}
+	case SeamLoanChargebackJournalEntries:
+		return []InvariantResult{assertChargebackJournalBalanced(got)}
 	case SeamLoanChargeLifecycle:
 		return []InvariantResult{assertChargeStatesConserved(v, got)}
 	case SeamLoanStatusTransition:
@@ -607,5 +609,55 @@ func assertChargeOffJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("%d debit(s) of %d equal the %d credit portion(s)", debitLegs, debits, creditLegs)
+	return r
+}
+
+// assertChargebackJournalBalanced: the chargeback result carries non-negative
+// integer minor-unit amounts and the debits sum to the credits. A chargeback
+// posts ONE amount credit and up to two debits (overpayment, then principal), so
+// the credit-leg count is one and the debit-leg count is not fixed; the
+// side-consistency and the credit/debit balance are the money shape the account
+// cells in diffChargebackJournalLegs do not already cover.
+func assertChargebackJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "chargeback_journal_balances", Assertions: 3}
+	if len(got.ChargebackJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range got.ChargebackJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs == 0 || debitLegs == 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d credit leg(s) and %d debit leg(s): a chargeback posts both sides", creditLegs, debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credits sum to %d but the debits sum to %d: a chargeback batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("%d debit(s) of %d equal the %d credit(s)", debitLegs, debits, creditLegs)
 	return r
 }
