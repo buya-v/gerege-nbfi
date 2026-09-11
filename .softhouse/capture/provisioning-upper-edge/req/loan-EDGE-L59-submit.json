@@ -1,0 +1,22 @@
+{
+  "clientId": 17,
+  "productId": 2,
+  "externalId": "EDGE-L59",
+  "principal": "100000",
+  "loanTermFrequency": 12,
+  "loanTermFrequencyType": 2,
+  "numberOfRepayments": 12,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": 2,
+  "interestRatePerPeriod": 12,
+  "interestRateFrequencyType": 3,
+  "amortizationType": 1,
+  "interestType": 0,
+  "interestCalculationPeriodType": 1,
+  "transactionProcessingStrategyCode": "mifos-standard-strategy",
+  "loanType": "individual",
+  "submittedOnDate": "06 June 2026",
+  "expectedDisbursementDate": "06 June 2026",
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

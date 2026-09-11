@@ -31,14 +31,18 @@ print("business date =", bd)
 for ext in ('EDGE-L29', 'EDGE-L59', 'EDGE-L89'):
     d = json.load(open(os.path.join(out, 'loan-%s-detail-raw.json' % ext)))
     dl = d['delinquent']
-    # oldest instalment whose 'complete' flag is false
-    unpaid = [i for i in d['repaymentSchedule']['periods'] if not i.get('complete') and i.get('dueDate')]
+    # period 0 is the disbursement placeholder (period=None, amount 0); the first
+    # real instalment is the smallest `period` that is not `complete`.
+    unpaid = [i for i in d['repaymentSchedule']['periods']
+              if i.get('period') and not i.get('complete') and i.get('dueDate')]
     unpaid.sort(key=lambda i: tuple(i['dueDate']))
     first = unpaid[0]
     due = datetime.date(*first['dueDate'])
-    print("%s id=%s: due=%s oracle pastDueDays=%s delinquentDays=%s arithmetic=%d outstanding=%s status=%s" % (
-        ext, d['id'], due, dl['pastDueDays'], dl['delinquentDays'], (bd - due).days,
-        d['summary']['totalOutstanding'], d['status']['value']))
+    oracle_due = datetime.date(*dl['pastDueDate'])
+    print("%s id=%s: first-instalment due=%s | oracle pastDueDate=%s pastDueDays=%s delinquentDays=%s "
+          "| arithmetic=%d | outstanding=%s status=%s" % (
+        ext, d['id'], due, oracle_due, dl['pastDueDays'], dl['delinquentDays'],
+        (bd - oracle_due).days, d['summary']['totalOutstanding'], d['status']['value']))
 PY
 
 echo "readback done"

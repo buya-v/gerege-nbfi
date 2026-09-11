@@ -27,6 +27,8 @@ mkdir -p "$REQ_DIR" "$OUT_DIR"
 
 PRODUCT=2
 
+: > "$OUT_DIR/edge-loans-idmap.txt"
+
 # externalId | client externalId | client activation | disbursement/first-due+1mo
 LOANS=(
   "EDGE-L89|EDGE-C89|06 April 2026|06 May 2026"
