@@ -29,6 +29,10 @@ agreed with the `.feature` journal-entry expectations.
 | `manifest-chargeoff-passed.json` | manifest of the committed bodies (1267) |
 | `summary-chargeoff.json` | extractor totals and per-loan counts |
 | `loans/loan-<id>/` | the per-loan read-backs committed for the PASSED scenarios |
+| `journalentries/loan-<id>/` | the observed GL journal entries of the charge-off/write-off branch (85 responses, 33 loans) |
+| `journalentries-manifest.json` | per-response metadata: loan, source line, sha256, GL legs in integer minor units |
+| `journalentries-summary.json` | journal-entry totals and GL-account leg counts |
+| `extract-journalentries.py` | the supplementary extractor for the `/journalentries` bodies |
 | `teardown-isolation.txt` | baseline-vs-teardown counter comparison |
 
 ## Source
@@ -1219,16 +1223,57 @@ loans/loan-50/loan-50-detail-associations-transactions-5.json
 loans/loan-50/loan-50-detail-associations-transactions-6.json
 ```
 
+## The write-off branch — `/journalentries` evidence
+
+The point of this capture is the charged-off write-off branch
+(`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`), whose output is GL journal
+entries.  Those do not appear under `loans/`: the control-tested extractor is
+loan-keyed and emits only `/loans` traffic.  The branch is observed directly in the
+runner's `GET /journalentries?runningBalance=true&transactionId=L<loanId>` responses,
+captured here by `extract-journalentries.py` and committed under `journalentries/`.
+
+* **85** responses, **240** journal-entry legs, over **33** loans (2–5 responses each).
+* Attribution is not assumed: every leg's `entityType` is `LOAN`, every response's
+  `entityId` set is the single loan `N` and its `transactionId` is `L<N>`; every leg's
+  `currency.code` is `MNT` (`decimalPlaces 2`).
+* **43** of the 85 responses carry a charge-off/write-off leg.  Payments, refunds and
+  running-balance reads make up the rest.
+
+GL accounts seen across the 240 legs:
+
+| GL account | code | legs |
+| --- | --- | --- |
+| Loans Receivable | 112601 | 81 |
+| Suspense/Clearing account | 145023 | 56 |
+| Fee Charge Off | — | 23 |
+| Credit Loss/Bad Debt | 744007 | 21 |
+| Interest/Fee Receivable | — | 19 |
+| Credit Loss/Bad Debt-Fraud | — | 19 |
+| Interest Income Charge Off | — | 16 |
+| Recoveries | — | 5 |
+
+Example — loan 1, feature line 5, `journalentries/loan-1/loan-1-journalentries-2.json`:
+`DEBIT Credit Loss/Bad Debt 744007 100000` / `CREDIT Loans Receivable 112601 100000`
+(minor units; the raw body carries `1000.0`).  That pair is the write-off posting of the
+charged-off loan.
+
+The manifest's `amount_minor` values are integer minor units (MNT, 2 ISO 4217 digits);
+the raw bodies under `journalentries/` carry the decimal major units the oracle emitted,
+unchanged, exactly as under `loans/`.  Each body's sha256 is in
+`journalentries-manifest.json`; the GL-account leg counts are in
+`journalentries-summary.json`.
+
 ## Failures
 
 None. Every scenario passed; the charged-off write-off branch
 (`createJournalEntriesForWriteOffsWhenLoanIsChargedOff`) was exercised and the oracle
-agreed with every `.feature` journal-entry expectation.  No EUR control was run in this
-capture task.
+agreed with every `.feature` journal-entry expectation.  The branch's GL legs are
+committed above (`journalentries/`), so that claim is observation, not inference.  No EUR
+control was run in this capture task.
 
 ## Currency
 
-Every committed body carrying a currency object resolves to `code = "MNT"` (2710 occurrences); the literal token `EUR` appears in 0 committed bodies.  So the
+Every committed body carrying a currency object resolves to `code = "MNT"` (2950 occurrences across 788 bodies, including the 85 `journalentries/` read-backs); the literal token `EUR` appears in 0 committed bodies.  So the
 oracle emitted MNT observations, not synthesis.
 
 ## Isolation
