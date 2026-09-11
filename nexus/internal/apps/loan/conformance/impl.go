@@ -152,12 +152,14 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goReversal(*req.Reversal)
 	case req.WriteOffJournal != nil:
 		return goWriteOffJournal(*req.WriteOffJournal)
+	case req.ChargeOffJournal != nil:
+		return goChargeOffJournal(*req.ChargeOffJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -839,6 +841,77 @@ func writeOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{WriteOffJournalLegs: out}
 }
 
+// goChargeOffJournal ports the loan-chargeoff-journal-entries seam: it reduces
+// the request's four portions, fraud flag and slot->account mapping to
+// loan.ChargeOffPortions and loan.ChargeOffAccountMapping and runs the port's
+// own loan.CreateChargeOffJournalEntryLegs. Every monetary cell is an integer
+// minor unit; the mapping is the product's observed accountingMappings, never
+// invented. The charge-off-reason branch is not observed, so the port refuses a
+// non-empty reason mapping.
+func goChargeOffJournal(r ChargeOffJournalRequest) (Expect, error) {
+	portions, err := chargeOffPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargeOffJournalEntryLegs(r.TransactionID, portions, r.Fraud, loan.ChargeOffAccountMapping{
+		LoanPortfolio:               r.Accounts.LoanPortfolio,
+		InterestReceivable:          r.Accounts.InterestReceivable,
+		FeesReceivable:              r.Accounts.FeesReceivable,
+		PenaltiesReceivable:         r.Accounts.PenaltiesReceivable,
+		ChargeOffExpense:            r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:       r.Accounts.ChargeOffFraudExpense,
+		IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
+		IncomeFromChargeOffFees:     r.Accounts.IncomeFromChargeOffFees,
+		IncomeFromChargeOffPenalty:  r.Accounts.IncomeFromChargeOffPenalty,
+		ChargeOffReason:             r.Accounts.ChargeOffReason,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return chargeOffJournalLegsExpect(legs), nil
+}
+
+// chargeOffPortionsFromRequest reduces the request's per-slot money strings to
+// the port's integer-minor-unit portions. Every slot is required; an omitted
+// slot is zero.
+func chargeOffPortionsFromRequest(p ChargeOffPortionsMoney) (loan.ChargeOffPortions, error) {
+	var out loan.ChargeOffPortions
+	var err error
+	if out.Principal, err = parseMinorText(p.Principal); err != nil {
+		return loan.ChargeOffPortions{}, err
+	}
+	if out.Interest, err = parseMinorText(p.Interest); err != nil {
+		return loan.ChargeOffPortions{}, err
+	}
+	if out.Fee, err = parseMinorText(p.Fee); err != nil {
+		return loan.ChargeOffPortions{}, err
+	}
+	if out.Penalty, err = parseMinorText(p.Penalty); err != nil {
+		return loan.ChargeOffPortions{}, err
+	}
+	return out, nil
+}
+
+// chargeOffJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a
+// leg whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func chargeOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{ChargeOffJournalLegs: out}
+}
+
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
 // LoanCharge of the observed amount and penalty flag, applies the ordered
 // operations through the port's own money mutations, and captures the state
@@ -1131,6 +1204,50 @@ func oneDebitPerPortion(e Expect) Expect {
 		e.WriteOffJournalLegs = []JournalEntryLeg{}
 	}
 	return e
+}
+
+// chargeOffJournalWrongMode selects which deliberately-wrong charge-off posting
+// to run. Each is a port a reasonable reader might write, and each is
+// discriminated by the committed observations.
+type chargeOffJournalWrongMode int
+
+const (
+	// wrongChargeOffJournalIgnoresFraud debits the principal portion to the
+	// ordinary CHARGE_OFF_EXPENSE account even when the loan is marked fraud,
+	// as a port that never reads the fraud flag does. On the pinned loan-7 and
+	// loan-4 (non-fraud) observations it posts the observed legs; on the fraud
+	// loan-15 observation the principal debit moves from the fraud expense
+	// account (13) to the ordinary charge-off expense account (14), so only
+	// that account cell moves.
+	wrongChargeOffJournalIgnoresFraud chargeOffJournalWrongMode = iota
+)
+
+// wrongChargeOffJournalEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-chargeoff-journal-entries seam, parameterised by which posting defect it
+// commits. On any request that is not a charge-off journal it delegates to the
+// correct port, so each drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongChargeOffJournalEvaluator struct {
+	goEvaluator
+	mode chargeOffJournalWrongMode
+}
+
+func (w wrongChargeOffJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargeOffJournal != nil {
+		return wrongChargeOffJournal(*req.ChargeOffJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongChargeOffJournal runs the correct posting and then applies exactly one
+// defect, so the drive differs from the port on exactly the cells its defect
+// moves.
+func wrongChargeOffJournal(r ChargeOffJournalRequest, mode chargeOffJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongChargeOffJournalIgnoresFraud:
+		r.Accounts.ChargeOffFraudExpense = r.Accounts.ChargeOffExpense
+	}
+	return goChargeOffJournal(r)
 }
 
 // amortizationWrongMode selects which deliberately-wrong whole-schedule
@@ -2383,6 +2500,13 @@ func init() {
 			"fee account; the pinned distinct fee (10000) and penalty (5700) both stay non-zero and "+
 			"every total is unchanged, so only the two account cells move — the swap they exist to catch",
 		wrongWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongWriteOffJournalSwapsFeeAndPenalty})
+	RegisterWrong("loan-wrong-chargeoff-journal-ignores-fraud",
+		"debits the principal portion of a charge-off to the ordinary charge-off expense account even "+
+			"when the loan is marked fraud, as a port that never reads the fraud flag does; the "+
+			"pinned fraud loan-15 L44 principal debit moves from the fraud expense account (13) to "+
+			"the ordinary charge-off expense account (14) while the non-fraud observations are "+
+			"unaffected — the fraud flag's effect on the account cell",
+		wrongChargeOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeOffJournalIgnoresFraud})
 	RegisterWrong("loan-wrong-charge-partial-marks-paid",
 		"flips the paid flag as soon as any amount is paid, before outstanding reaches zero, so the "+
 			"pinned fee's partial step (amountPaid 10000, outstanding 2345, paid false) reads paid "+

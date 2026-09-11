@@ -187,16 +187,37 @@ func diffReversalLegs(s *cellSink, want, got []ReversalLegCell) {
 // because the property is a fixed "credits in slot order, then one debit"
 // layout, not a set.
 func diffWriteOffJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
-	s.cmpText("write_off_journal_legs.count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
+	diffJournalLegs(s, "write_off_journal_legs", want, got)
+}
+
+// diffChargeOffJournalLegs compares the ordered leg list of a loan charge-off's
+// journal entry through the same per-leg differ the write-off-journal seam uses.
+// Every leg grades four cells: the amount is the one money cell, and the
+// transaction id, account and side are structural. The account cells see a port
+// that ignores the fraud flag (the principal debit on the ordinary charge-off
+// expense account instead of the fraud expense account); the count and side
+// cells see a debit-per-portion port. The list is positional because the
+// property is a fixed "credits in slot order, then debits in slot order"
+// layout, not a set.
+func diffChargeOffJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "charge_off_journal_legs", want, got)
+}
+
+// diffJournalLegs is the shared ordered-leg differ: the count is compared
+// first, so a port that posts a leg per portion (more legs) or drops a leg is a
+// visible difference rather than a silent truncation. Each label is prefixed
+// with the seam's expect field name.
+func diffJournalLegs(s *cellSink, prefix string, want, got []JournalEntryLeg) {
+	s.cmpText(prefix+".count", fmt.Sprintf("%d", len(want)), fmt.Sprintf("%d", len(got)))
 	n := len(want)
 	if len(got) < n {
 		n = len(got)
 	}
 	for i := 0; i < n; i++ {
-		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].transaction_id", i), want[i].TransactionID, got[i].TransactionID)
-		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].account", i), want[i].Account, got[i].Account)
-		s.cmpText(fmt.Sprintf("write_off_journal_legs[%d].entry_type", i), want[i].EntryType, got[i].EntryType)
-		s.cmpMoney(fmt.Sprintf("write_off_journal_legs[%d].amount", i), want[i].AmountMinor, got[i].AmountMinor)
+		s.cmpText(fmt.Sprintf("%s[%d].transaction_id", prefix, i), want[i].TransactionID, got[i].TransactionID)
+		s.cmpText(fmt.Sprintf("%s[%d].account", prefix, i), want[i].Account, got[i].Account)
+		s.cmpText(fmt.Sprintf("%s[%d].entry_type", prefix, i), want[i].EntryType, got[i].EntryType)
+		s.cmpMoney(fmt.Sprintf("%s[%d].amount", prefix, i), want[i].AmountMinor, got[i].AmountMinor)
 	}
 }
 
@@ -310,6 +331,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffReversalLegs(&s, v.Expect.ReversalLegs, got.ReversalLegs)
 	case SeamLoanWriteOffJournalEntries:
 		diffWriteOffJournalLegs(&s, v.Expect.WriteOffJournalLegs, got.WriteOffJournalLegs)
+	case SeamLoanChargeOffJournalEntries:
+		diffChargeOffJournalLegs(&s, v.Expect.ChargeOffJournalLegs, got.ChargeOffJournalLegs)
 	case SeamLoanChargeLifecycle:
 		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
 	case SeamLoanStatusTransition:
