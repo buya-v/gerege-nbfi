@@ -354,7 +354,9 @@ def write_accrual_tsv(obj):
     rows = []
 
     def add(r, typ, inferred):
-        rows.append([str(r['loan']), r['transaction_id'], typ, str(inferred),
+        # `typ` is None when an unmatched transaction's posting shape did not
+        # match the inferred-reverted-accrual pattern; keep the row, label it.
+        rows.append([str(r['loan']), r['transaction_id'], typ or 'unknown', str(inferred),
                      r['entry_type'], str(r['gl_account_id']), str(r['gl_account_code']),
                      r['gl_account_name'], str(r['amount_minor']), r['currency']])
 

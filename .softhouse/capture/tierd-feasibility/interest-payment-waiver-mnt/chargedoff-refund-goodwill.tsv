@@ -1,0 +1,6 @@
+type	loan	tx	entry	gl_account_id	gl_account_name	amount_minor	fraud	currency	transaction_date	chargeoff_tx_id
+loanTransactionType.payoutRefund	14	L95	DEBIT	6	Suspense/Clearing account	6742	False	MNT	2022-09-16	L93
+loanTransactionType.payoutRefund	14	L95	CREDIT	11	Credit Loss/Bad Debt	6742	False	MNT	2022-09-16	L93
+loanTransactionType.goodwillCredit	15	L113	DEBIT	19	Goodwill Expense Account	6307	False	MNT	2022-09-16	L112
+loanTransactionType.goodwillCredit	15	L113	DEBIT	20	Interest Income Charge Off	347	False	MNT	2022-09-16	L112
+loanTransactionType.goodwillCredit	15	L113	CREDIT	13	Recoveries	6654	False	MNT	2022-09-16	L112
