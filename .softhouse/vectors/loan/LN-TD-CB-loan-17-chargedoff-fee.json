@@ -1,0 +1,81 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CB-loan-17-chargedoff-fee",
+ "title": "A charged-off loan's fee chargeback credits FUND_SOURCE 280.00, debits CHARGE_OFF_EXPENSE 250.00, then debits INCOME_FROM_CHARGE_OFF_FEES 30.00 (loan 17 L113)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the charged-off journal entry a loan CHARGEBACK posted, the fee shape, on the Tier-D Part2 MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION). request.chargeback_journal.amount is the accepted chargeback request transactionAmount 280.0 -> \"28000\" minor units, raised with paymentTypeId 2 (loans/loan-17/loan-17-chargeback-request.json); transaction_id L113 is the sweep's transactionId for the read-back's transaction id 113 (type Chargeback). request.chargeback_journal.portions transcribes the read-back's chargeback transaction id 113: principalPortion 250.0 -> \"25000\", feeChargesPortion 30.0 -> \"3000\", penaltyChargesPortion 0.0 -> \"0\", overpaymentPortion 0.0 -> \"0\"; the observed identity amount = principal + fee + penalty + overpayment holds (28000 = 25000 + 3000 + 0 + 0). request.chargeback_journal.charged_off is the read-back's top-level chargedOff true (fraud false); when charged off getPrincipalAccount / getFeeAccount / getPenaltyAccount resolve CHARGE_OFF_EXPENSE / INCOME_FROM_CHARGE_OFF_FEES / INCOME_FROM_CHARGE_OFF_PENALTY. request.chargeback_journal.accounts transcribes the product mapping LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION: fundSourceAccountId 6, loanPortfolioAccountId 5, overpaymentLiabilityAccountId 17, receivableFee/PenaltyAccountId 10, chargeOffExpenseAccountId 16, incomeFromChargeOffFees/PenaltyAccountId 14; paymentTypeId 2 has no channel mapping (the one channel mapping is paymentTypeId 1 -> 19), so the default FUND_SOURCE 6 applies, exactly the account the observed credit names. expect.chargeback_journal_legs is a TRANSCRIPTION of the 3 L113 legs in id order: JE 248 CREDIT account 6 280.0, JE 249 DEBIT account 16 250.0, JE 250 DEBIT account 14 30.0. THIS VECTOR GRADES ONE PROPERTY: on a charged-off loan the principal debit switches from LOAN_PORTFOLIO 5 to CHARGE_OFF_EXPENSE 16 AND the fee debit switches from FEES_RECEIVABLE 10 to INCOME_FROM_CHARGE_OFF_FEES 14. Nothing was computed by this promotion: every amount, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-chargeback-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.chargeback_journal.amount is transcribed from the committed accepted chargeback request .softhouse/capture/tierd-feasibility/chargeback-p2-mnt/loans/loan-17/loan-17-chargeback-request.json: transactionAmount 280.0, paymentTypeId 2. request.chargeback_journal.portions and charged_off are transcribed from the committed chargeback loan read-back .softhouse/capture/tierd-feasibility/chargeback-p2-mnt/loans/loan-17/loan-17-detail-associations-transactions-6.json (sha256 6f9eff1578e32a42f9c300878c79a17c99856cdb4f55bfa18b9e29dcf5a8a299): transactions id 113 type Chargeback, principalPortion 250.0 -> \"25000\", feeChargesPortion 30.0 -> \"3000\", penaltyChargesPortion 0.0 -> \"0\", overpaymentPortion 0.0 -> \"0\", chargedOff true, fraud false. expect.chargeback_journal_legs is transcribed from the committed journal-entries sweep .softhouse/capture/tierd-feasibility/chargeback-p2-mnt/journalentries-sweep/loan-17.json (sha256 f8bd35dbcfcb229f19a1c9c2d3ac5d58311683bef4d289e3a15a12f250cd6f9b), transactionId L113. request.chargeback_journal.accounts is transcribed from the committed product mapping .softhouse/capture/tierd-feasibility/chargeback-p2-mnt/product-mappings/create-request-LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION.json (sha256 50960b9638fed51ab80134b986e49509f2d3b11a55e7fe5430f9d943b0c1d5a6): fundSourceAccountId 6, loanPortfolioAccountId 5, overpaymentLiabilityAccountId 17, receivableFee/PenaltyAccountId 10, chargeOffExpenseAccountId 16, incomeFromChargeOffFees/PenaltyAccountId 14, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 19]. TENANT `tierd` -- NOT tenant `gerege`; the instance was destroyed. Every amount is an exact decimal parsed to integer minor units (280.0 -> 28000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeback-p2-mnt/journalentries-sweep/loan-17.json",
+  "capture_sha256": "f8bd35dbcfcb229f19a1c9c2d3ac5d58311683bef4d289e3a15a12f250cd6f9b",
+  "capture_case_id": "L113",
+  "citation": "journalentries-sweep/loan-17.json:1 (sha256 f8bd35dbcfcb229f19a1c9c2d3ac5d58311683bef4d289e3a15a12f250cd6f9b, committed read-back, tenant tierd): transactionId L113 carries 3 legs in id order -- id 248 entryType.value CREDIT glAccountId 6 amount 280.0; id 249 entryType.value DEBIT glAccountId 16 amount 250.0; id 250 entryType.value DEBIT glAccountId 14 amount 30.0. Portions and charged-off state are in loans/loan-17/loan-17-detail-associations-transactions-6.json:1 (sha256 6f9eff1578e32a42f9c300878c79a17c99856cdb4f55bfa18b9e29dcf5a8a299): transactions id 113 type Chargeback, principalPortion 250.0, feeChargesPortion 30.0, penaltyChargesPortion 0.0, overpaymentPortion 0.0, chargedOff true, fraud false. The amount is in loans/loan-17/loan-17-chargeback-request.json:1: transactionAmount 280.0, paymentTypeId 2. The slot->account-id mapping is in product-mappings/create-request-LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROG_SCHEDULE_HOR_INST_LVL_DELINQUENCY_CREDIT_ALLOCATION.json:1 (sha256 50960b9638fed51ab80134b986e49509f2d3b11a55e7fe5430f9d943b0c1d5a6)."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "chargeback_journal": {
+   "transaction_id": "L113",
+   "amount": "28000",
+   "portions": {
+    "principal": "25000",
+    "fee": "3000",
+    "penalty": "0",
+    "overpayment": "0"
+   },
+   "charged_off": true,
+   "fraud": false,
+   "accounts": {
+    "fund_source": "6",
+    "loan_portfolio": "5",
+    "overpayment": "17",
+    "fees_receivable": "10",
+    "penalties_receivable": "10",
+    "charge_off_expense": "16",
+    "income_from_charge_off_fees": "14",
+    "income_from_charge_off_penalty": "14"
+   }
+  }
+ },
+ "expect": {
+  "chargeback_journal_legs": [
+   {
+    "transaction_id": "L113",
+    "account": "6",
+    "entry_type": "CREDIT",
+    "amount_minor": "28000"
+   },
+   {
+    "transaction_id": "L113",
+    "account": "16",
+    "entry_type": "DEBIT",
+    "amount_minor": "25000"
+   },
+   {
+    "transaction_id": "L113",
+    "account": "14",
+    "entry_type": "DEBIT",
+    "amount_minor": "3000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargeback-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargeback-ignores-charge-off"
+ ]
+}

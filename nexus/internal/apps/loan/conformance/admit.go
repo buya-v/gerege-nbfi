@@ -842,30 +842,62 @@ func admitRequest(v *Vector) []string {
 		if j.TransactionID == "" {
 			problems = append(problems, "request.chargeback_journal.transaction_id is empty")
 		}
+		if j.ChargedOff && j.Fraud {
+			problems = append(problems, "request.chargeback_journal is charged off AND fraud: the fraud CHARGE_OFF_FRAUD_EXPENSE branch is not observed and cannot be posted")
+		}
+		principal := minorTextOrZero(j.Portions.Principal)
+		fee := minorTextOrZero(j.Portions.Fee)
+		penalty := minorTextOrZero(j.Portions.Penalty)
+		overpayment := minorTextOrZero(j.Portions.Overpayment)
 		for name, val := range map[string]string{
 			"amount":               j.Amount,
-			"portions.principal":   j.Portions.Principal,
-			"portions.overpayment": j.Portions.Overpayment,
+			"portions.principal":   principal,
+			"portions.fee":         fee,
+			"portions.penalty":     penalty,
+			"portions.overpayment": overpayment,
 		} {
 			if !isIntegerMinorString(val) {
 				problems = append(problems, fmt.Sprintf(
 					"request.chargeback_journal.%s %q is not a non-negative integer minor amount", name, val))
 			}
 		}
-		if _, ok := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment); !ok {
+		if sum, ok := sumMinorStrings(principal, fee, penalty, overpayment); !ok {
 			problems = append(problems, "request.chargeback_journal portions are not integer minor amounts")
-		} else if sum, _ := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment); j.Amount != sum {
+		} else if j.Amount != sum {
 			problems = append(problems, fmt.Sprintf(
-				"request.chargeback_journal amount %s is not principal %s + overpayment %s: an unported portion cannot be posted",
-				j.Amount, j.Portions.Principal, j.Portions.Overpayment))
+				"request.chargeback_journal amount %s is not principal %s + fee %s + penalty %s + overpayment %s: an unported portion cannot be posted",
+				j.Amount, principal, fee, penalty, overpayment))
 		}
-		// The three accounts the observed branches resolve are read back from the
-		// product (or the payment channel), never invented.
-		for name, val := range map[string]string{
+		// The unconditional slot accounts, and every account a positive portion
+		// resolves, are read back from the product (or the payment channel), never
+		// invented; the charged-off switch selects the charge-off account. The
+		// omitted fee/penalty accounts of the three pinned principal/overpayment
+		// vectors are zero portions, so they are not demanded.
+		acctChecks := map[string]string{
 			"accounts.fund_source":    j.Accounts.FundSource,
 			"accounts.loan_portfolio": j.Accounts.LoanPortfolio,
 			"accounts.overpayment":    j.Accounts.Overpayment,
-		} {
+		}
+		if principal != "0" {
+			if j.ChargedOff {
+				acctChecks["accounts.charge_off_expense"] = j.Accounts.ChargeOffExpense
+			}
+		}
+		if fee != "0" {
+			if j.ChargedOff {
+				acctChecks["accounts.income_from_charge_off_fees"] = j.Accounts.IncomeFromChargeOffFees
+			} else {
+				acctChecks["accounts.fees_receivable"] = j.Accounts.FeesReceivable
+			}
+		}
+		if penalty != "0" {
+			if j.ChargedOff {
+				acctChecks["accounts.income_from_charge_off_penalty"] = j.Accounts.IncomeFromChargeOffPenalty
+			} else {
+				acctChecks["accounts.penalties_receivable"] = j.Accounts.PenaltiesReceivable
+			}
+		}
+		for name, val := range acctChecks {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.chargeback_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
@@ -2177,22 +2209,32 @@ func reconstructAccrualJournalLegs(j AccrualJournalRequest) ([]JournalEntryLeg, 
 // reconstructChargebackJournalLegs derives the leg list the observed chargeback
 // property requires from the request alone, independently of the port, in the
 // processor's posting order: the amount credit to the resolved fund source, then
-// the overpayment debit to OVERPAYMENT, then the principal debit to
-// LOAN_PORTFOLIO. Each money value stays an integer minor-unit string. It
-// returns the legs and any admission problem: an amount that is not
-// principal + overpayment (an unported portion the port refuses) or a positive
-// slot with no mapped account.
+// the overpayment debit to OVERPAYMENT, then the principal debit, then the fee
+// debit, then the penalty debit. A not-charged-off loan debits LOAN_PORTFOLIO /
+// FEES_RECEIVABLE / PENALTIES_RECEIVABLE; a charged-off loan debits
+// CHARGE_OFF_EXPENSE / INCOME_FROM_CHARGE_OFF_FEES / INCOME_FROM_CHARGE_OFF_PENALTY.
+// Each money value stays an integer minor-unit string. It returns the legs and
+// any admission problem: an amount that is not principal + fee + penalty +
+// overpayment (an unported portion the port refuses), a charged-off-and-fraud
+// loan, or a positive slot with no mapped account.
 func reconstructChargebackJournalLegs(j ChargebackJournalRequest) ([]JournalEntryLeg, []string) {
-	sum, ok := sumMinorStrings(j.Portions.Principal, j.Portions.Overpayment)
+	if j.ChargedOff && j.Fraud {
+		return nil, []string{"request.chargeback_journal is charged off AND fraud: the fraud CHARGE_OFF_FRAUD_EXPENSE branch is not observed and cannot be posted"}
+	}
+	principal := minorTextOrZero(j.Portions.Principal)
+	fee := minorTextOrZero(j.Portions.Fee)
+	penalty := minorTextOrZero(j.Portions.Penalty)
+	overpayment := minorTextOrZero(j.Portions.Overpayment)
+	sum, ok := sumMinorStrings(principal, fee, penalty, overpayment)
 	if !ok {
 		return nil, []string{"request.chargeback_journal portions are not integer minor amounts"}
 	}
 	if j.Amount != sum {
 		return nil, []string{fmt.Sprintf(
-			"request.chargeback_journal amount %s is not principal %s + overpayment %s: an unported portion cannot be posted",
-			j.Amount, j.Portions.Principal, j.Portions.Overpayment)}
+			"request.chargeback_journal amount %s is not principal %s + fee %s + penalty %s + overpayment %s: an unported portion cannot be posted",
+			j.Amount, principal, fee, penalty, overpayment)}
 	}
-	legs := make([]JournalEntryLeg, 0, 3)
+	legs := make([]JournalEntryLeg, 0, 5)
 	if j.Amount != "0" {
 		if j.Accounts.FundSource == "" {
 			return nil, []string{fmt.Sprintf(
@@ -2202,25 +2244,65 @@ func reconstructChargebackJournalLegs(j ChargebackJournalRequest) ([]JournalEntr
 			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "CREDIT", AmountMinor: j.Amount,
 		})
 	}
-	if j.Portions.Overpayment != "0" {
+	if overpayment != "0" {
 		if j.Accounts.Overpayment == "" {
 			return nil, []string{fmt.Sprintf(
-				"request.chargeback_journal overpayment %s has no mapped overpayment account", j.Portions.Overpayment)}
+				"request.chargeback_journal overpayment %s has no mapped overpayment account", overpayment)}
 		}
 		legs = append(legs, JournalEntryLeg{
-			TransactionID: j.TransactionID, Account: j.Accounts.Overpayment, EntryType: "DEBIT", AmountMinor: j.Portions.Overpayment,
+			TransactionID: j.TransactionID, Account: j.Accounts.Overpayment, EntryType: "DEBIT", AmountMinor: overpayment,
 		})
 	}
-	if j.Portions.Principal != "0" {
-		if j.Accounts.LoanPortfolio == "" {
+	if principal != "0" {
+		account := j.Accounts.LoanPortfolio
+		if j.ChargedOff {
+			account = j.Accounts.ChargeOffExpense
+		}
+		if account == "" {
 			return nil, []string{fmt.Sprintf(
-				"request.chargeback_journal principal %s has no mapped loan-portfolio account", j.Portions.Principal)}
+				"request.chargeback_journal principal %s has no mapped principal account (charged off %t)", principal, j.ChargedOff)}
 		}
 		legs = append(legs, JournalEntryLeg{
-			TransactionID: j.TransactionID, Account: j.Accounts.LoanPortfolio, EntryType: "DEBIT", AmountMinor: j.Portions.Principal,
+			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: principal,
+		})
+	}
+	if fee != "0" {
+		account := j.Accounts.FeesReceivable
+		if j.ChargedOff {
+			account = j.Accounts.IncomeFromChargeOffFees
+		}
+		if account == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.chargeback_journal fee %s has no mapped fee account (charged off %t)", fee, j.ChargedOff)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: fee,
+		})
+	}
+	if penalty != "0" {
+		account := j.Accounts.PenaltiesReceivable
+		if j.ChargedOff {
+			account = j.Accounts.IncomeFromChargeOffPenalty
+		}
+		if account == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.chargeback_journal penalty %s has no mapped penalty account (charged off %t)", penalty, j.ChargedOff)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: penalty,
 		})
 	}
 	return legs, nil
+}
+
+// minorTextOrZero treats an omitted (empty) optional portion as zero, so the
+// three pinned principal/overpayment-only vectors stay valid while the extended
+// fee and penalty fields default to zero.
+func minorTextOrZero(s string) string {
+	if s == "" {
+		return "0"
+	}
+	return s
 }
 
 // oppositeEntryType returns the opposite journal-entry side label for the two

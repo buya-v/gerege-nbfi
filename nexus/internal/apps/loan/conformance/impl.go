@@ -1239,31 +1239,46 @@ func accrualJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 }
 
 // goChargebackJournal ports the loan-chargeback-journal-entries seam: it reduces
-// the request's amount, principal and overpayment portions and resolved
-// slot->account mapping to loan.MinorUnits and
+// the request's amount, principal, fee, penalty and overpayment portions, the
+// charged-off flag and resolved slot->account mapping to loan.MinorUnits and
 // loan.ChargebackAccountMapping and runs the port's own
 // loan.CreateChargebackJournalEntryLegs. Every monetary cell is an integer minor
 // unit; the mapping is the product's (or the payment channel's) observed
 // accountingMappings, never invented. The observed identity amount = principal +
-// overpayment is enforced by the port, and the unobserved fee/penalty/paid
-// branches cannot be expressed.
+// fee + penalty + overpayment is enforced by the port, and the unobserved
+// paid branches and charged-off fraud branch cannot be expressed. An omitted
+// optional fee or penalty portion defaults to zero, so the three pinned
+// principal/overpayment-only vectors keep their meaning.
 func goChargebackJournal(r ChargebackJournalRequest) (Expect, error) {
 	amount, err := parseMinorText(r.Amount)
 	if err != nil {
 		return Expect{}, err
 	}
-	principal, err := parseMinorText(r.Portions.Principal)
+	principal, err := parseMinorText(minorTextOrZero(r.Portions.Principal))
 	if err != nil {
 		return Expect{}, err
 	}
-	overpayment, err := parseMinorText(r.Portions.Overpayment)
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
 	if err != nil {
 		return Expect{}, err
 	}
-	legs, err := loan.CreateChargebackJournalEntryLegs(r.TransactionID, amount, principal, overpayment, loan.ChargebackAccountMapping{
-		FundSource:    r.Accounts.FundSource,
-		LoanPortfolio: r.Accounts.LoanPortfolio,
-		Overpayment:   r.Accounts.Overpayment,
+	penalty, err := parseMinorText(minorTextOrZero(r.Portions.Penalty))
+	if err != nil {
+		return Expect{}, err
+	}
+	overpayment, err := parseMinorText(minorTextOrZero(r.Portions.Overpayment))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargebackJournalEntryLegs(r.TransactionID, amount, principal, fee, penalty, overpayment, r.ChargedOff, r.Fraud, loan.ChargebackAccountMapping{
+		FundSource:                 r.Accounts.FundSource,
+		LoanPortfolio:              r.Accounts.LoanPortfolio,
+		Overpayment:                r.Accounts.Overpayment,
+		FeesReceivable:             r.Accounts.FeesReceivable,
+		PenaltiesReceivable:        r.Accounts.PenaltiesReceivable,
+		ChargeOffExpense:           r.Accounts.ChargeOffExpense,
+		IncomeFromChargeOffFees:    r.Accounts.IncomeFromChargeOffFees,
+		IncomeFromChargeOffPenalty: r.Accounts.IncomeFromChargeOffPenalty,
 	})
 	if err != nil {
 		return Expect{}, err
@@ -1988,6 +2003,13 @@ const (
 	// 100) both debits name account 10, so the account cell of the first debit
 	// moves while every amount and side stays observed.
 	wrongChargebackJournalOverpaymentToPortfolio chargebackJournalWrongMode = iota
+	// wrongChargebackJournalIgnoresChargeOff posts every portion to the
+	// not-charged-off portfolio/receivable accounts, as a port that never reads
+	// the loan's charged-off flag does. On a charged-off loan the principal
+	// debit moves from CHARGE_OFF_EXPENSE to LOAN_PORTFOLIO and the fee/penalty
+	// debits from the charge-off income accounts to the receivables; the
+	// not-charged-off observations are unaffected.
+	wrongChargebackJournalIgnoresChargeOff
 )
 
 // wrongChargebackJournalEvaluator is a DELIBERATELY WRONG implementation of the
@@ -2014,6 +2036,8 @@ func wrongChargebackJournal(r ChargebackJournalRequest, mode chargebackJournalWr
 	switch mode {
 	case wrongChargebackJournalOverpaymentToPortfolio:
 		r.Accounts.Overpayment = r.Accounts.LoanPortfolio
+	case wrongChargebackJournalIgnoresChargeOff:
+		r.ChargedOff = false
 	}
 	return goChargebackJournal(r)
 }
@@ -3333,6 +3357,15 @@ func init() {
 			"10, so the first debit's account cell moves while every side, amount and total stays "+
 			"observed — and loan-14 (principal only) is unaffected",
 		wrongChargebackJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargebackJournalOverpaymentToPortfolio})
+	RegisterWrong("loan-wrong-chargeback-ignores-charge-off",
+		"posts a chargeback on a charged-off loan through the not-charged-off portfolio/receivable "+
+			"accounts, as a port that never reads the loan's charged-off flag does; on the pinned "+
+			"charged-off loan-16 (principal 250) the principal debit moves from CHARGE_OFF_EXPENSE 16 "+
+			"to LOAN_PORTFOLIO 5, and on loan-17 / loan-18 the fee / penalty debits move from the "+
+			"charge-off income account 14 to the receivable account 10 as well, so the account cells "+
+			"move while every side, amount and count stays observed — and the not-charged-off "+
+			"observations (loans 11, 12 and the three existing vectors) are unaffected",
+		wrongChargebackJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargebackJournalIgnoresChargeOff})
 	RegisterWrong("loan-wrong-charge-partial-marks-paid",
 		"flips the paid flag as soon as any amount is paid, before outstanding reaches zero, so the "+
 			"pinned fee's partial step (amountPaid 10000, outstanding 2345, paid false) reads paid "+
