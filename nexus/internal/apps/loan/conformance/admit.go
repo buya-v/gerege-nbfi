@@ -47,11 +47,11 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
 		SeamLoanChargedOffMerchantRefundJournalEntries,
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
-		SeamLoanCreditBalanceRefundJournalEntries,
+		SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
@@ -60,7 +60,7 @@ func Admit(v *Vector, opts Options) []string {
 			SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
 			SeamLoanChargedOffMerchantRefundJournalEntries,
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
-			SeamLoanCreditBalanceRefundJournalEntries,
+			SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
 	}
 	if v.Oracle.FineractCommit == "" {
@@ -203,6 +203,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.CreditBalanceRefundJournal != nil {
+		n++
+	}
+	if v.Request.InterestPaymentWaiverJournal != nil {
 		n++
 	}
 	if v.Request.ChargeLifecycle != nil {
@@ -948,6 +951,56 @@ func admitRequest(v *Vector) []string {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.credit_balance_refund_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+	case SeamLoanInterestPaymentWaiverJournalEntries:
+		if v.Request.InterestPaymentWaiverJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "interest-payment-waiver-journal seam must set exactly request.interest_payment_waiver_journal")
+			return problems
+		}
+		j := v.Request.InterestPaymentWaiverJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.interest_payment_waiver_journal.transaction_id is empty")
+		}
+		portions := map[string]string{
+			"portions.principal":   j.Portions.Principal,
+			"portions.interest":    j.Portions.Interest,
+			"portions.fee":         j.Portions.Fee,
+			"portions.penalty":     j.Portions.Penalty,
+			"portions.overpayment": minorTextOrZero(j.Portions.Overpayment),
+		}
+		for name, val := range portions {
+			if !isIntegerMinorString(minorTextOrZero(val)) {
+				problems = append(problems, fmt.Sprintf(
+					"request.interest_payment_waiver_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		positive := func(s string) bool { return strings.TrimLeft(minorTextOrZero(s), "0") != "" }
+		acctChecks := map[string]string{}
+		needPositive := func(busy bool, name, account string) {
+			if busy {
+				acctChecks[name] = account
+			}
+		}
+		if j.ChargedOff {
+			needPositive(positive(j.Portions.Principal), "accounts.income_from_charge_off_interest", j.Accounts.IncomeFromChargeOffInterest)
+			needPositive(positive(j.Portions.Interest), "accounts.income_from_charge_off_interest", j.Accounts.IncomeFromChargeOffInterest)
+			needPositive(positive(j.Portions.Fee), "accounts.income_from_charge_off_interest", j.Accounts.IncomeFromChargeOffInterest)
+			needPositive(positive(j.Portions.Penalty), "accounts.income_from_charge_off_interest", j.Accounts.IncomeFromChargeOffInterest)
+		} else {
+			needPositive(positive(j.Portions.Principal), "accounts.loan_portfolio", j.Accounts.LoanPortfolio)
+			needPositive(positive(j.Portions.Interest), "accounts.receivable_interest", j.Accounts.ReceivableInterest)
+			needPositive(positive(j.Portions.Fee), "accounts.receivable_fee", j.Accounts.ReceivableFee)
+			needPositive(positive(j.Portions.Penalty), "accounts.receivable_penalty", j.Accounts.ReceivablePenalty)
+		}
+		needPositive(positive(j.Portions.Overpayment), "accounts.overpayment", j.Accounts.Overpayment)
+		total := positive(j.Portions.Principal) || positive(j.Portions.Interest) || positive(j.Portions.Fee) ||
+			positive(j.Portions.Penalty) || positive(j.Portions.Overpayment)
+		needPositive(total, "accounts.interest_on_loan", j.Accounts.InterestOnLoan)
+		for name, val := range acctChecks {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.interest_payment_waiver_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
 		}
 	case SeamLoanChargeLifecycle:
@@ -1760,6 +1813,60 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanInterestPaymentWaiverJournalEntries:
+		if v.Request.InterestPaymentWaiverJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.InterestPaymentWaiverJournal
+		if len(v.Expect.InterestPaymentWaiverJournalLegs) == 0 {
+			problems = append(problems, "expect.interest_payment_waiver_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.InterestPaymentWaiverJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.interest_payment_waiver_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.interest_payment_waiver_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.interest_payment_waiver_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.interest_payment_waiver_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: one CREDIT per non-zero portion, merged by account in
+		// portion order (the charged-off branch collapses the four
+		// portfolio/receivable credits onto the one charge-off income account),
+		// then ONE DEBIT of the total to INTEREST_ON_LOANS. Independent of the
+		// port under test.
+		expected, probs := reconstructInterestPaymentWaiverJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.InterestPaymentWaiverJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.interest_payment_waiver_journal_legs has %d legs but the observed posting needs %d (one credit per non-zero slot, merged by account, then one total debit)",
+				len(v.Expect.InterestPaymentWaiverJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.InterestPaymentWaiverJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.interest_payment_waiver_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the waiver credits each positive slot's branch account (merged in portion order) and then debits the total to INTEREST_ON_LOANS",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargeLifecycle:
 		if len(v.Expect.ChargeStates) == 0 {
 			problems = append(problems, "expect.charge_states is empty for the charge-lifecycle seam")
@@ -2445,6 +2552,81 @@ func reconstructCreditBalanceRefundJournalLegs(j CreditBalanceRefundJournalReque
 		}
 		legs = append(legs, JournalEntryLeg{
 			TransactionID: j.TransactionID, Account: j.Accounts.FundSource, EntryType: "CREDIT", AmountMinor: total,
+		})
+	}
+	return legs, nil
+}
+
+// reconstructInterestPaymentWaiverJournalLegs independently reconstructs the
+// ONLY leg list the observed interest-payment-waiver property admits, straight
+// from the request: one CREDIT per non-zero portion, merged by account in
+// portion order (the charged-off branch collapses principal, interest, fees and
+// penalties onto the one charge-off income account), then ONE DEBIT of the total
+// to INTEREST_ON_LOANS. It never calls the port under test, so a wrong port
+// cannot make its own output "admissible".
+func reconstructInterestPaymentWaiverJournalLegs(j InterestPaymentWaiverJournalRequest) ([]JournalEntryLeg, []string) {
+	amounts := []string{
+		minorTextOrZero(j.Portions.Principal),
+		minorTextOrZero(j.Portions.Interest),
+		minorTextOrZero(j.Portions.Fee),
+		minorTextOrZero(j.Portions.Penalty),
+		minorTextOrZero(j.Portions.Overpayment),
+	}
+	names := []string{"LOAN_PORTFOLIO", "INTEREST_RECEIVABLE", "FEES_RECEIVABLE", "PENALTIES_RECEIVABLE", "OVERPAYMENT"}
+	accounts := []string{
+		j.Accounts.LoanPortfolio,
+		j.Accounts.ReceivableInterest,
+		j.Accounts.ReceivableFee,
+		j.Accounts.ReceivablePenalty,
+		j.Accounts.Overpayment,
+	}
+	if j.ChargedOff {
+		accounts[0] = j.Accounts.IncomeFromChargeOffInterest
+		accounts[1] = j.Accounts.IncomeFromChargeOffInterest
+		accounts[2] = j.Accounts.IncomeFromChargeOffInterest
+		accounts[3] = j.Accounts.IncomeFromChargeOffInterest
+	}
+
+	var order []string
+	merged := map[string]int64{}
+	for i, name := range names {
+		amt := amounts[i]
+		if amt == "0" {
+			continue
+		}
+		n, err := strconv.ParseInt(amt, 10, 64)
+		if err != nil || n < 0 {
+			return nil, []string{fmt.Sprintf(
+				"request.interest_payment_waiver_journal slot %s %q is not a non-negative integer minor amount", name, amt)}
+		}
+		if accounts[i] == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.interest_payment_waiver_journal slot %s %s has no mapped credit account", name, amt)}
+		}
+		if _, seen := merged[accounts[i]]; !seen {
+			order = append(order, accounts[i])
+		}
+		merged[accounts[i]] += n
+	}
+
+	legs := make([]JournalEntryLeg, 0, len(order)+1)
+	for _, account := range order {
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: account, EntryType: "CREDIT",
+			AmountMinor: strconv.FormatInt(merged[account], 10),
+		})
+	}
+	total, ok := sumMinorStrings(amounts...)
+	if !ok {
+		return nil, []string{"request.interest_payment_waiver_journal portions are not integer minor amounts"}
+	}
+	if total != "0" {
+		if j.Accounts.InterestOnLoan == "" {
+			return nil, []string{fmt.Sprintf(
+				"request.interest_payment_waiver_journal total %s has no mapped interest-on-loan account", total)}
+		}
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: j.TransactionID, Account: j.Accounts.InterestOnLoan, EntryType: "DEBIT", AmountMinor: total,
 		})
 	}
 	return legs, nil

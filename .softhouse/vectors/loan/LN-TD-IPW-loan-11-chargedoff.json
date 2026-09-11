@@ -1,0 +1,73 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-IPW-loan-11-chargedoff",
+ "title": "An interest-payment waiver on a CHARGED-OFF loan merges principal and interest into ONE INCOME_FROM_CHARGE_OFF_INTEREST credit (loan 11 L42: credit 260.00, debit 260.00)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry an INTEREST_PAYMENT_WAIVER posted on loan 11 (product LP1_INTEREST_FLAT) when the loan was MARKED CHARGED OFF on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits). request.interest_payment_waiver_journal.portions transcribes the loan read-back transaction id 42 (externalId L42): principalPortion 250.0 -> \"25000\", interestPortion 10.0 -> \"1000\", fee 0, penalty 0, overpayment 0. charged_off is the read-back's top-level chargedOff true (a non-reversed chargeOff transaction L41 precedes L42). accounts is the product mapping from create-request-LP1_INTEREST_FLAT.json (sha256 af7c2cde...f13d): loanPortfolio 2, receivables 4, overpayment 17, interestOnLoan 9, incomeFromChargeOffInterest 20. expect.interest_payment_waiver_journal_legs transcribes the two L42 legs in id order from the sweep: JE 103 CREDIT account 20 260.0 (the principal and interest portions MERGED onto ONE charge-off income credit), JE 104 DEBIT account 9 260.0. THIS VECTOR GRADES: the charged-off branch switching all four portfolio/receivable credits to INCOME_FROM_CHARGE_OFF_INTEREST and merging them. It discriminates loan-wrong-ipw-ignores-charge-off (which would post CREDIT 2 25000, CREDIT 4 1000, DEBIT 9 26000). Nothing was computed; exact decimals parsed to integer minor units, never a float.",
+ "oracle": {
+  "seam": "loan-interest-payment-waiver-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Parity vector transcribing the journal entry an INTEREST_PAYMENT_WAIVER posted on loan 11 (product LP1_INTEREST_FLAT) when the loan was MARKED CHARGED OFF on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits). request.interest_payment_waiver_journal.portions transcribes the loan read-back transaction id 42 (externalId L42): principalPortion 250.0 -> \"25000\", interestPortion 10.0 -> \"1000\", fee 0, penalty 0, overpayment 0. charged_off is the read-back's top-level chargedOff true (a non-reversed chargeOff transaction L41 precedes L42). accounts is the product mapping from create-request-LP1_INTEREST_FLAT.json (sha256 af7c2cde...f13d): loanPortfolio 2, receivables 4, overpayment 17, interestOnLoan 9, incomeFromChargeOffInterest 20. expect.interest_payment_waiver_journal_legs transcribes the two L42 legs in id order from the sweep: JE 103 CREDIT account 20 260.0 (the principal and interest portions MERGED onto ONE charge-off income credit), JE 104 DEBIT account 9 260.0. THIS VECTOR GRADES: the charged-off branch switching all four portfolio/receivable credits to INCOME_FROM_CHARGE_OFF_INTEREST and merging them. It discriminates loan-wrong-ipw-ignores-charge-off (which would post CREDIT 2 25000, CREDIT 4 1000, DEBIT 9 26000). Nothing was computed; exact decimals parsed to integer minor units, never a float.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/journalentries-sweep/loan-11.json",
+  "capture_sha256": "41b895907ad0be04ff575034b27ef8a3762536824dabbe0b6e0209cf7fcba241",
+  "capture_case_id": "L42",
+  "citation": "journalentries-sweep/loan-11.json:1 (sha256 41b895907ad0be04ff575034b27ef8a3762536824dabbe0b6e0209cf7fcba241, committed sweep, tenant tierd): transactionId L42 carries 2 leg(s) in id order. Portions and charged-off state are in .softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/loans/loan-11/loan-11-detail-associations-transactions-5.json:1 (sha256 d3bc4ec6b9ab1da069a5632f27e63ae9d1c5d960b6d747d62b32ec6b7efc9f18): transactions[id 42 externalId L42] type loanTransactionType.interestPaymentWaiver. The slot->account-id mapping is in .softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/product-mappings/create-request-LP1_INTEREST_FLAT.json:1 (sha256 af7c2cde2d7d0bdb3eac90560d6df4b440406498fa113fb817d320b0d335f13d)."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "interest_payment_waiver_journal": {
+   "transaction_id": "L42",
+   "portions": {
+    "principal": "25000",
+    "interest": "1000",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "0"
+   },
+   "charged_off": true,
+   "accounts": {
+    "loan_portfolio": "2",
+    "receivable_interest": "4",
+    "receivable_fee": "4",
+    "receivable_penalty": "4",
+    "overpayment": "17",
+    "interest_on_loan": "9",
+    "income_from_charge_off_interest": "20"
+   }
+  }
+ },
+ "expect": {
+  "interest_payment_waiver_journal_legs": [
+   {
+    "transaction_id": "L42",
+    "account": "20",
+    "entry_type": "CREDIT",
+    "amount_minor": "26000"
+   },
+   {
+    "transaction_id": "L42",
+    "account": "9",
+    "entry_type": "DEBIT",
+    "amount_minor": "26000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "interest-payment-waiver-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-ipw-ignores-charge-off"
+ ]
+}

@@ -253,6 +253,19 @@ func diffCreditBalanceRefundJournalLegs(s *cellSink, want, got []JournalEntryLeg
 	diffJournalLegs(s, "credit_balance_refund_journal_legs", want, got)
 }
 
+// diffInterestPaymentWaiverJournalLegs compares the ordered leg list of an
+// interest-payment waiver's journal entry through the same per-leg differ. Every
+// leg grades four cells: the amount is the one money cell, and the transaction
+// id, account and side are structural. The account cells see a port that ignores
+// the loan's charged-off state (posting the portfolio/receivable credits instead
+// of the one merged charge-off income credit); the count and side cells see a
+// port that posts a debit per portion instead of the single total debit. The
+// list is positional because the property is a fixed "credits in slot order,
+// merged by account, then one debit" layout.
+func diffInterestPaymentWaiverJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "interest_payment_waiver_journal_legs", want, got)
+}
+
 // diffJournalLegs is the shared ordered-leg differ: the count is compared
 // first, so a port that posts a leg per portion (more legs) or drops a leg is a
 // visible difference rather than a silent truncation. Each label is prefixed
@@ -408,6 +421,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffChargebackJournalLegs(&s, v.Expect.ChargebackJournalLegs, got.ChargebackJournalLegs)
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		diffCreditBalanceRefundJournalLegs(&s, v.Expect.CreditBalanceRefundJournalLegs, got.CreditBalanceRefundJournalLegs)
+	case SeamLoanInterestPaymentWaiverJournalEntries:
+		diffInterestPaymentWaiverJournalLegs(&s, v.Expect.InterestPaymentWaiverJournalLegs, got.InterestPaymentWaiverJournalLegs)
 	case SeamLoanChargeLifecycle:
 		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
 	case SeamLoanStatusTransition:

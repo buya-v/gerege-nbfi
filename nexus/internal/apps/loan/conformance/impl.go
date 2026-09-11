@@ -168,12 +168,14 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.CreditBalanceRefundJournal != nil:
 		return goCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal)
+	case req.InterestPaymentWaiverJournal != nil:
+		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, charged_off_merchant_refund_journal, accrual_journal, chargeback_journal, credit_balance_refund_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, repayment_journal, charged_off_repayment_journal, charged_off_merchant_refund_journal, accrual_journal, chargeback_journal, credit_balance_refund_journal, interest_payment_waiver_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -1360,6 +1362,50 @@ func creditBalanceRefundJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{CreditBalanceRefundJournalLegs: out}
 }
 
+// goInterestPaymentWaiverJournal ports the loan-interest-payment-waiver-journal
+// seam: it reduces the request's five integer-minor portions and the loan's
+// charged-off flag, runs the port's CreateInterestPaymentWaiverJournalEntryLegs,
+// and renders the ordered legs. Nothing is parsed as a float.
+func goInterestPaymentWaiverJournal(r InterestPaymentWaiverJournalRequest) (Expect, error) {
+	portions, err := repaymentPortionsFromRequest(RepaymentPortionsMoney(r.Portions))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateInterestPaymentWaiverJournalEntryLegs(r.TransactionID, portions, r.ChargedOff, loan.InterestPaymentWaiverAccountMapping{
+		LoanPortfolio:               r.Accounts.LoanPortfolio,
+		ReceivableInterest:          r.Accounts.ReceivableInterest,
+		ReceivableFee:               r.Accounts.ReceivableFee,
+		ReceivablePenalty:           r.Accounts.ReceivablePenalty,
+		Overpayment:                 r.Accounts.Overpayment,
+		InterestOnLoan:              r.Accounts.InterestOnLoan,
+		IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return interestPaymentWaiverJournalLegsExpect(legs), nil
+}
+
+// interestPaymentWaiverJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func interestPaymentWaiverJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{InterestPaymentWaiverJournalLegs: out}
+}
+
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
 // LoanCharge of the observed amount and penalty flag, applies the ordered
 // operations through the port's own money mutations, and captures the state
@@ -1696,6 +1742,51 @@ func wrongChargeOffJournal(r ChargeOffJournalRequest, mode chargeOffJournalWrong
 		r.Accounts.ChargeOffFraudExpense = r.Accounts.ChargeOffExpense
 	}
 	return goChargeOffJournal(r)
+}
+
+// interestPaymentWaiverJournalWrongMode selects which deliberately-wrong
+// interest-payment-waiver posting to run. Each is a port a reasonable reader
+// might write, and each is discriminated by the committed observations.
+type interestPaymentWaiverJournalWrongMode int
+
+const (
+	// wrongIPWIgnoresChargeOff posts the NOT-charged-off accounts for every
+	// loan, as a port that never reads the charged-off flag does. On the pinned
+	// loan-2 and loan-7 (not charged off) observations it posts the observed
+	// legs; on the charged-off loan-11 and loan-13 observations the four merged
+	// credits move from the one charge-off income account (20) to the
+	// portfolio/receivable/overpayment accounts, so the account and leg-count
+	// cells move.
+	wrongIPWIgnoresChargeOff interestPaymentWaiverJournalWrongMode = iota
+)
+
+// wrongInterestPaymentWaiverJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-interest-payment-waiver-journal-entries seam,
+// parameterised by which posting defect it commits. On any request that is not
+// an interest-payment-waiver journal it delegates to the correct port, so the
+// drive goes red ONLY on this seam's vectors and stays green everywhere else
+// (vector isolation).
+type wrongInterestPaymentWaiverJournalEvaluator struct {
+	goEvaluator
+	mode interestPaymentWaiverJournalWrongMode
+}
+
+func (w wrongInterestPaymentWaiverJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.InterestPaymentWaiverJournal != nil {
+		return wrongInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongInterestPaymentWaiverJournal runs the correct posting and then applies
+// exactly one defect, so the drive differs from the port on exactly the cells
+// its defect moves.
+func wrongInterestPaymentWaiverJournal(r InterestPaymentWaiverJournalRequest, mode interestPaymentWaiverJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongIPWIgnoresChargeOff:
+		r.ChargedOff = false
+	}
+	return goInterestPaymentWaiverJournal(r)
 }
 
 // chargedOffWriteOffJournalWrongMode selects which deliberately-wrong
@@ -3398,6 +3489,15 @@ func init() {
 			"the ordinary charge-off expense account (14) while the non-fraud observations are "+
 			"unaffected — the fraud flag's effect on the account cell",
 		wrongChargeOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeOffJournalIgnoresFraud})
+	RegisterWrong("loan-wrong-ipw-ignores-charge-off",
+		"posts the NOT-charged-off portfolio/receivable/overpayment accounts for an "+
+			"interest-payment waiver on every loan, as a port that never reads the loan's charged-off "+
+			"flag does; on the pinned charged-off observations loan-11 L42 and loan-13 L76 the merged "+
+			"credit moves from the single INCOME_FROM_CHARGE_OFF_INTEREST account (20) to LOAN_PORTFOLIO "+
+			"2, INTEREST_RECEIVABLE 4 and, on loan-11, OVERPAYMENT 17, so the account and count cells "+
+			"move while every side and amount stays observed — and the not-charged-off observations "+
+			"(loans 2 and 7) are unaffected",
+		wrongInterestPaymentWaiverJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongIPWIgnoresChargeOff})
 	RegisterWrong("loan-wrong-chargedoff-writeoff-debits-fund-source",
 		"posts the per-portion FUND_SOURCE debits populateCreditDebitMaps accumulates instead of the "+
 			"one LOSSES_WRITTEN_OFF debit the oracle posts, as a port that iterates the debit map too "+
