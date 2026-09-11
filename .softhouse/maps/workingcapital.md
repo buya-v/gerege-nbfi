@@ -26,7 +26,7 @@ Source: `.softhouse/capabilities-workingcapital.json`
 * `nexus/internal/apps/workingcapital/conformance/impl.go:33` — `func Register(name string, e WorkingCapitalEvaluator) {`
 * `nexus/internal/apps/workingcapital/conformance/impl.go:43` — `func RegisterWrong(name, defect string, e WorkingCapitalEvaluator) {`
 * `nexus/internal/apps/workingcapital/conformance/impl.go:564` — `Register("workingcapital-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/workingcapital/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/workingcapital/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

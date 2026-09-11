@@ -74,7 +74,8 @@ for ctx in ctxs:
         for i, l in enumerate(open(f), 1):
             if re.match(r"func (Register|RegisterWrong)\(", l) or re.search(r"\bRegister\(\"[a-z0-9-]+-go\"", l):
                 w(f"* `{rel(f)}:{i}` — `{l.strip()[:100]}`")
-    w(f"* conformance package files: " + ", ".join(f"`{os.path.basename(f)}`" for f in conf if not f.endswith("_test.go")))
+    cdir = f"{APPS}/{ctx}/conformance/"
+    w(f"* conformance package files (`{cdir}`): " + ", ".join(f"`{os.path.relpath(f, cdir)}`" for f in conf))
     cst = f"{APPS}/{ctx}/conformance/committed_store_test.go"
     w(f"* committed-store test (the only valid coverage instrument): " + (f"`{cst}`" if os.path.exists(cst) else "**ABSENT — coverage from conformance is NOT meaningful for this context**"))
 

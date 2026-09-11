@@ -50,7 +50,7 @@ Source: `.softhouse/vectors/capabilities-ledger.json`
 * `nexus/internal/apps/ledger/conformance/impl.go:124` — `func Register(name string, p EntryPoster) {`
 * `nexus/internal/apps/ledger/conformance/impl.go:140` — `func RegisterWrong(name, defect string, p EntryPoster) {`
 * `nexus/internal/apps/ledger/conformance/impl.go:1299` — `Register("ledger-go", NewGoPoster())`
-* conformance package files: `admit.go`, `capability.go`, `grade.go`, `impl.go`, `invariants.go`, `notgraded.go`, `oraclederived.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/ledger/conformance/`): `admit.go`, `admit_widening_test.go`, `capability.go`, `conformance_test.go`, `daterefusals_test.go`, `daterules_mutation_test.go`, `divergence_test.go`, `grade.go`, `impl.go`, `invariants.go`, `notgraded.go`, `notgraded_test.go`, `openingbalance_accept_test.go`, `openingbalance_test.go`, `oraclederived.go`, `oraclederived_test.go`, `refusalargs_test.go`, `slotadmission_test.go`, `vector.go`, `verbatimallowlist_test.go`, `verbatimboundary_test.go`
 * committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
 
 ## Drives registered (name — file:line)

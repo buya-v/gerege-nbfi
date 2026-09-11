@@ -34,7 +34,7 @@ Source: `.softhouse/capabilities-provisioning.json`
 * `nexus/internal/apps/provisioning/conformance/impl.go:41` — `func Register(name string, e ProvisioningEvaluator) {`
 * `nexus/internal/apps/provisioning/conformance/impl.go:51` — `func RegisterWrong(name, defect string, e ProvisioningEvaluator) {`
 * `nexus/internal/apps/provisioning/conformance/impl.go:572` — `Register("provisioning-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/provisioning/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/provisioning/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

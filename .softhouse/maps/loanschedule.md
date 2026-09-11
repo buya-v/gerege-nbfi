@@ -64,7 +64,7 @@ that is a defect in the map, and the driver fixes the generator.
 * `nexus/internal/apps/loanschedule/conformance/cmd/conformance/impl_hook.go:49` — `conformance.Register("loanschedule-go", loanschedule.New())`
 * `nexus/internal/apps/loanschedule/conformance/registry.go:35` — `func Register(name string, g contract.ScheduleGenerator) {`
 * `nexus/internal/apps/loanschedule/conformance/registry.go:51` — `func RegisterWrong(name, defect string, g contract.ScheduleGenerator) {`
-* conformance package files: `admit.go`, `capability.go`, `census.go`, `impl_hook.go`, `main.go`, `enums.go`, `exemption.go`, `grade.go`, `invariants.go`, `money.go`, `nofloat.go`, `registry.go`, `reporoot.go`, `report.go`, `structural.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/loanschedule/conformance/`): `admit.go`, `capability.go`, `census.go`, `cmd/conformance/impl_hook.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `coverage_refusal_test.go`, `enums.go`, `exemption.go`, `exemption_test.go`, `grade.go`, `invariants.go`, `money.go`, `nofloat.go`, `registry.go`, `reporoot.go`, `reporoot_test.go`, `report.go`, `report_determinism_test.go`, `store_integrity_test.go`, `structural.go`, `structural_test.go`, `vector.go`, `verdict_divergence_test.go`, `verdict_fail_ledger_test.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loanschedule/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

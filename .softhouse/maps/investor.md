@@ -22,8 +22,8 @@ Source: `.softhouse/capabilities-investor.json`
 * `nexus/internal/apps/investor/conformance/impl.go:44` — `func Register(name string, e InvestorEvaluator) {`
 * `nexus/internal/apps/investor/conformance/impl.go:54` — `func RegisterWrong(name, defect string, e InvestorEvaluator) {`
 * `nexus/internal/apps/investor/conformance/impl.go:397` — `Register("investor-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
-* committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
+* conformance package files (`nexus/internal/apps/investor/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* committed-store test (the only valid coverage instrument): `nexus/internal/apps/investor/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `investor-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).

@@ -29,7 +29,7 @@ Source: `.softhouse/capabilities-collateral.json`
 * `nexus/internal/apps/collateral/conformance/impl.go:50` — `func Register(name string, e CollateralEvaluator) {`
 * `nexus/internal/apps/collateral/conformance/impl.go:60` — `func RegisterWrong(name, defect string, e CollateralEvaluator) {`
 * `nexus/internal/apps/collateral/conformance/impl.go:435` — `Register("collateral-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/collateral/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/collateral/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

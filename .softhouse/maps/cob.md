@@ -23,7 +23,7 @@ Source: `.softhouse/capabilities-cob.json`
 * `nexus/internal/apps/cob/conformance/impl.go:25` — `func Register(name string, e COBEvaluator) {`
 * `nexus/internal/apps/cob/conformance/impl.go:35` — `func RegisterWrong(name, defect string, e COBEvaluator) {`
 * `nexus/internal/apps/cob/conformance/impl.go:159` — `Register("cob-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/cob/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/cob/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

@@ -34,7 +34,7 @@ Source: `.softhouse/capabilities-charges.json`
 * `nexus/internal/apps/charges/conformance/impl.go:62` — `func Register(name string, e ChargeEvaluator) {`
 * `nexus/internal/apps/charges/conformance/impl.go:75` — `func RegisterWrong(name, defect string, e ChargeEvaluator) {`
 * `nexus/internal/apps/charges/conformance/impl.go:456` — `Register("charges-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `money.go`, `nofloat.go`, `report.go`, `vector.go`, `wrongdrives.go`
+* conformance package files (`nexus/internal/apps/charges/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `money.go`, `nofloat.go`, `report.go`, `vector.go`, `wrongdrives.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/charges/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

@@ -36,7 +36,7 @@ Source: `.softhouse/capabilities-savings.json`
 * `nexus/internal/apps/savings/conformance/impl.go:37` — `func Register(name string, e SavingsEvaluator) {`
 * `nexus/internal/apps/savings/conformance/impl.go:47` — `func RegisterWrong(name, defect string, e SavingsEvaluator) {`
 * `nexus/internal/apps/savings/conformance/impl.go:625` — `Register("savings-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/savings/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/savings/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)

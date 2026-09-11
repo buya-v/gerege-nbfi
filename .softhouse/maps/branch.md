@@ -27,7 +27,7 @@ Source: `.softhouse/capabilities-branch.json`
 * `nexus/internal/apps/branch/conformance/impl.go:28` — `func Register(name string, e BranchEvaluator) {`
 * `nexus/internal/apps/branch/conformance/impl.go:38` — `func RegisterWrong(name, defect string, e BranchEvaluator) {`
 * `nexus/internal/apps/branch/conformance/impl.go:314` — `Register("branch-go", NewGoEvaluator())`
-* conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
+* conformance package files (`nexus/internal/apps/branch/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/branch/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
