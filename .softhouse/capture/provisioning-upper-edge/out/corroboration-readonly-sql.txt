@@ -1,0 +1,38 @@
+# READ-ONLY SQL corroboration (not a vector record) — 2026-09-11T06:31:03Z
+
+## criteria definitions
+criteria_id|category_id|category_name|min_age|max_age|provision_percentage
+1|1|STANDARD|0|29|1.00
+1|2|SUB-STANDARD|30|59|25.00
+1|3|DOUBTFUL|60|89|50.00
+1|4|LOSS|90|36500|100.00
+(4 rows)
+
+## product-2 loans: oldest unsettled instalment age at 2026-09-03
+id|external_id|oldest_unpaid_due|age_days
+3|SEED-L03|2026-10-01|-28
+6|SEED-L06|2026-09-01|2
+16|EDGE-L29|2026-08-05|29
+2|SEED-L02|2026-08-01|33
+15|EDGE-L59|2026-07-06|59
+1|SEED-L01|2026-07-01|64
+5|SEED-L05|2026-07-01|64
+14|EDGE-L89|2026-06-06|89
+4|SEED-L04|2026-06-01|94
+(9 rows)
+
+## m_loanproduct_provisioning_entry rows (both histories)
+history_id|created_date|overdue_in_days|reseve_amount|category_id|product_id
+1|2026-09-01|0|1066.190000|1|2
+1|2026-09-01|31|26654.630000|2|2
+1|2026-09-01|62|74234.320000|3|2
+1|2026-09-01|92|106618.530000|4|2
+2|2026-09-03|0|977.340000|1|2
+2|2026-09-03|2|1066.720000|1|2
+2|2026-09-03|29|1066.190000|1|2
+2|2026-09-03|33|26654.630000|2|2
+2|2026-09-03|59|26654.630000|2|2
+2|2026-09-03|64|73734.320000|3|2
+2|2026-09-03|89|53309.270000|3|2
+2|2026-09-03|94|106618.530000|4|2
+(12 rows)
