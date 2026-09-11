@@ -49,8 +49,89 @@ second active currency) are unchanged. The unused `CurrencyOptions` import in
 - standing tenants `gerege`/`default` untouched; `preflight.sh` wrote
   `throwaway/out/STANDING-baseline.txt` before start and `down.sh` compared to it.
 
+## Replay result — 11/11 scenarios PASS in MNT
+
+`LoanUpdateApprovedAmount.feature` replayed end to end against the MNT-seeded throwaway
+(`fineract:latest` = `e596339626bf…`, tenant `tierd`). Full Gradle output:
+`replay-uc6-mnt.log`. Feign capture: `feign-uc6-mnt.log` (146,276,167 bytes, 38,469 lines;
+kept in the disposable copy, not committed for size). Summary line:
+**`11 scenarios (11 passed)` / `199 steps (199 passed)`**.
+
+| # | scenario | feature line | result |
+| --- | --- | --- | --- |
+| 1 | UC1 — update approved amount for progressive loan | 5 | PASS |
+| 2 | UC3 — after undo disbursement, single disb progressive | 19 | PASS |
+| 3 | UC4 — over-applied, percentage, multidisbursal | 36 | PASS |
+| 4 | UC8_1 — over-applied + capitalized income, percentage | 55 | PASS |
+| 5 | UC8_2 — capitalized income, progressive | 75 | PASS |
+| 6 | UC8_3 — capitalized income, multidisbursal | 92 | PASS |
+| 7 | UC5_1 — before disbursement, single disb cumulative | 109 | PASS |
+| 8 | UC5_2 — before disbursement, single disb progressive | 123 | PASS |
+| 9 | **UC6** — approved-amount change, multidisbursal, no tranches | 137 | PASS |
+| 10 | UC7_1 — approved-amount change with lower value, two tranches | 165 | PASS |
+| 11 | UC7_2 — approved-amount change with greater value, two tranches | 204 | PASS |
+
+Passing is the oracle's own check: the runner asserts the response values in the `.feature`
+file, so MNT did not change a single scenario's arithmetic (as expected: MNT and EUR both
+have 2 minor digits).
+
+## Extraction — `bin/extract.py` on the MNT Feign log
+
+```
+python3 bin/extract.py <disposable>/fineract-e2e-tests-runner/build/capture/feign-uc6-mnt.log --out uc6-mnt
+exchanges: 1463 total, 278 loan, 1185 skipped
+loans: 11; files: 343; kept body bytes: 2835261
+```
+
+Only **loan 1** (product 50, client 1, 1000.00, 6 periods, 7%) and **loan 10** (product 96,
+client 10, three tranches 300/200/500) are committed here — 65 files, matching the pilot's
+two target loans. The other 278 loan files are reproducible from the log and were not
+committed. `manifest-uc6-loans-1-10.json` carries the source line, bytes and sha256 of every
+committed body; `summary-uc6-loans-1-10.json` carries the per-loan counts and the full-run
+totals.
+
+## Read-back currency check — every committed read-back is MNT
+
+Every file whose JSON contains a currency object resolves to `code = "MNT"`
+(`decimalPlaces = 2`, name "Mongolian Tugrik"). The committed bodies with currency:
+`loan-1-detail-*` (13 reads) and `loan-10-detail-*` (43 reads) plus the two
+`*-transactions-template-*` payloads. Request/command bodies carry no currency field (the
+loan's currency comes from the seeded product). No `EUR` token appears anywhere in the
+capture (see `currency-seed-mnt.diff`). `loan-1-create-request.json` has no currency member;
+the created loan's currency is the product's MNT.
+
+## Promotion — one pilot candidate now ADMITS and passes `loan-go`
+
+The pilot's first candidate (`LN-TD-L10-loan-1-pending-amortizes-to-zero`, seam
+`loan-schedule-amortization`) was re-transcribed from the MNT read-back
+`loan-1-detail-associations-all-1.json` (externalId `fe61fc1a-87f2-4180-ad97-6116ed335c36`,
+sha256 `cc82ab652b8c2648c41a0d1771f5f84d19d1d113e4b97bdd8f5ed5952ad233f7`) with
+`tenant_params.currency = "MNT"` — the observed value, not an inheritance. It is committed at
+`.softhouse/vectors/loan/LN-TD-L10-loan-1-pending-amortizes-to-zero.json`.
+
+```
+$ go test -count=1 -run Committed ./internal/apps/loan/conformance/     # ok
+$ go run ./internal/apps/loan/conformance/cmd/conformance -root ..
+VERDICT: PASS (exit 0)
+vectors_loaded=32 parity_pass=32 parity_fail=0 refused=0 inadmissible=0 harness_error=0
+```
+
+The other two pilot candidates (`...-schedule-interest-period-1`, `...-disbursement-net`) were
+**not** re-transcribed: the pilot measured both as noticed by **zero** drives, so they would be
+inert additions. Only the amortization candidate, which the pilot measured as adding a second
+kill to three drives, was promoted.
+
+## Isolation
+
+`preflight.sh` wrote `throwaway/out/STANDING-baseline.txt` in THIS worktree before the
+throwaway started; `down.sh` compared against it. Standing tenants `gerege`/`default`
+untouched. Every `tierd-*` container removed. The build container ran with
+`--network container:tierd-oracle-app`, so the Feign client's `https://localhost:8443`
+reached the **throwaway** (shared netns), never the host's standing oracle.
+
 ## Status
 
-- [ ] Replay UC6 scenarios in MNT (per-scenario pass/fail recorded here)
-- [ ] Extract loan 1 / loan 10 with `bin/extract.py` into this directory
-- [ ] Read-back currencies checked = MNT
+- [x] Replay UC6 scenarios in MNT (per-scenario pass/fail recorded above)
+- [x] Extract loan 1 / loan 10 with `bin/extract.py` into this directory
+- [x] Read-back currencies checked = MNT
+- [x] Pilot candidate re-transcribed from the MNT capture; admitted and passing under `loan-go`
