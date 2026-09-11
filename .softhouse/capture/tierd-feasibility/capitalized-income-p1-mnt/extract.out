@@ -1,0 +1,58 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-capitalized-income-p1-mnt.log (292565461 bytes, 113034 lines)
+exchanges: 4307 total, 1531 loan, 2776 skipped (83% of source bytes, 89% of framed body bytes; 243506972 bytes skipped)
+loans: 50; files: 1849; kept body bytes: 29592837
+unattributed creates: 18
+  loan 1: create=1 cmd_req=4 cmd_resp=4 reads=18 files=27 bytes=188553
+  loan 2: create=1 cmd_req=4 cmd_resp=4 reads=17 files=26 bytes=197632
+  loan 3: create=1 cmd_req=5 cmd_resp=5 reads=21 files=32 bytes=326248
+  loan 4: create=1 cmd_req=4 cmd_resp=4 reads=13 files=22 bytes=141954
+  loan 5: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=206396
+  loan 6: create=1 cmd_req=7 cmd_resp=7 reads=26 files=41 bytes=300035
+  loan 7: create=1 cmd_req=9 cmd_resp=9 reads=34 files=53 bytes=539463
+  loan 8: create=1 cmd_req=6 cmd_resp=6 reads=17 files=30 bytes=243967
+  loan 9: create=1 cmd_req=13 cmd_resp=13 reads=29 files=56 bytes=505729
+  loan 10: create=1 cmd_req=13 cmd_resp=13 reads=30 files=57 bytes=510135
+  loan 11: create=1 cmd_req=12 cmd_resp=12 reads=29 files=54 bytes=453480
+  loan 12: create=1 cmd_req=11 cmd_resp=11 reads=28 files=51 bytes=466937
+  loan 13: create=1 cmd_req=9 cmd_resp=9 reads=25 files=44 bytes=364580
+  loan 14: create=1 cmd_req=7 cmd_resp=7 reads=19 files=34 bytes=276359
+  loan 15: create=1 cmd_req=11 cmd_resp=11 reads=25 files=48 bytes=367967
+  loan 16: create=1 cmd_req=11 cmd_resp=11 reads=24 files=47 bytes=385720
+  loan 17: create=1 cmd_req=9 cmd_resp=9 reads=25 files=44 bytes=364714
+  loan 18: create=1 cmd_req=7 cmd_resp=7 reads=19 files=34 bytes=276359
+  loan 19: create=1 cmd_req=4 cmd_resp=4 reads=21 files=30 bytes=272784
+  loan 20: create=1 cmd_req=5 cmd_resp=5 reads=22 files=33 bytes=296262
+  loan 21: create=1 cmd_req=4 cmd_resp=4 reads=17 files=26 bytes=208362
+  loan 22: create=1 cmd_req=4 cmd_resp=4 reads=28 files=37 bytes=1158624
+  loan 23: create=1 cmd_req=4 cmd_resp=4 reads=28 files=37 bytes=1158246
+  loan 24: create=1 cmd_req=6 cmd_resp=6 reads=21 files=34 bytes=303135
+  loan 25: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=282352
+  loan 26: create=1 cmd_req=6 cmd_resp=6 reads=22 files=35 bytes=303205
+  loan 27: create=1 cmd_req=7 cmd_resp=7 reads=23 files=38 bytes=338776
+  loan 28: create=1 cmd_req=6 cmd_resp=6 reads=29 files=42 bytes=2322006
+  loan 29: create=1 cmd_req=5 cmd_resp=5 reads=25 files=36 bytes=1295108
+  loan 30: create=1 cmd_req=6 cmd_resp=6 reads=26 files=39 bytes=1314311
+  loan 31: create=1 cmd_req=7 cmd_resp=7 reads=34 files=49 bytes=633093
+  loan 32: create=1 cmd_req=8 cmd_resp=8 reads=38 files=55 bytes=748945
+  loan 33: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=2173674
+  loan 34: create=1 cmd_req=6 cmd_resp=6 reads=19 files=32 bytes=1709104
+  loan 35: create=1 cmd_req=5 cmd_resp=5 reads=14 files=25 bytes=176532
+  loan 36: create=1 cmd_req=5 cmd_resp=5 reads=14 files=25 bytes=176886
+  loan 37: create=1 cmd_req=6 cmd_resp=6 reads=15 files=28 bytes=196154
+  loan 38: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=314236
+  loan 39: create=1 cmd_req=9 cmd_resp=9 reads=16 files=35 bytes=211178
+  loan 40: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=211865
+  loan 41: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=233471
+  loan 42: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=2198585
+  loan 43: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=589542
+  loan 44: create=1 cmd_req=7 cmd_resp=7 reads=21 files=36 bytes=638615
+  loan 45: create=1 cmd_req=6 cmd_resp=6 reads=23 files=36 bytes=379497
+  loan 46: create=1 cmd_req=8 cmd_resp=8 reads=32 files=49 bytes=2307904
+  loan 47: create=1 cmd_req=6 cmd_resp=6 reads=23 files=36 bytes=323787
+  loan 48: create=1 cmd_req=8 cmd_resp=8 reads=21 files=38 bytes=341186
+  loan 49: create=1 cmd_req=6 cmd_resp=6 reads=22 files=35 bytes=286529
+  loan 50: create=1 cmd_req=6 cmd_resp=6 reads=24 files=37 bytes=372655
+wrote 1849 files to stage
+copied 1849 body files into loans/loan-*/ (50 committed loans)
+manifest entries: 1849; committed: 1849; loans: 50; unattributed: []
+kept_body_bytes: 29592837 of committed files: 29592837
