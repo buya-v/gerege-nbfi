@@ -387,3 +387,14 @@ evidence, not this list, decides which are real.
 - `transactiontype.go:292` `IsDiscountFeeAmortization`
 - `transactiontype.go:297` `IsRepaymentType`
 - `writeoff.go:36` `WriteOffOutstanding`
+
+## Addendum (driver, 2026-09-11 evening) — §4.6 installment-level delinquency: observed as an aggregate only
+
+The MNT replay of `LoanDelinquency-Part1.feature` (`.softhouse/capture/tierd-feasibility/delinquency-mnt/`) holds 111
+read-backs with `delinquent.installmentLevelDelinquency` populated — but only the AGGREGATE buckets
+`AggregateInstallmentDelinquency` returns (e.g. loan 14 read-back 5: range 1 250.00, range 3 250.00, range 30 500.00 from
+four overdue 250.00 instalments). The per-instalment TAGS it takes as input (which range each instalment fell in) are not
+in any payload; reconstructing them means re-deriving each instalment's age, which pause periods perturb. A vector built
+that way would largely re-sum numbers reverse-engineered from the observed answer, so the driver has NOT dispatched it.
+Gradeable honestly only via a capture that exposes per-instalment delinquency tags, or by grading the tagging step and the
+aggregation together once the tagging rule is ported. Pause periods (§4.2) are graded — see OH-DLPAUSE-BT2.
