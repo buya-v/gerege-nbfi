@@ -38,7 +38,7 @@ Source: `.softhouse/capabilities-parties.json`
 * `nexus/internal/apps/parties/conformance/impl.go:35` — `func RegisterWrong(name, defect string, e PartiesEvaluator) {`
 * `nexus/internal/apps/parties/conformance/impl.go:244` — `Register("parties-go", NewGoEvaluator())`
 * conformance package files: `admit.go`, `capability.go`, `main.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
-* committed-store test (the only valid coverage instrument): **ABSENT — coverage from conformance is NOT meaningful for this context**
+* committed-store test (the only valid coverage instrument): `nexus/internal/apps/parties/conformance/committed_store_test.go`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `parties-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
