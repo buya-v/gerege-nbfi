@@ -1,0 +1,463 @@
+{
+ "currency": "MNT",
+ "failed": 13,
+ "feature": "LoanChargesInstallmentFee.feature",
+ "passed": 15,
+ "scenario_count": 28,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 5,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_DAILY_INSTALLMENT_FEE_FLAT_CHARGES",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": 1,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_DAILY_INSTALLMENT_FEE_FLAT_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: flat charge type, interestRecalculation = true",
+   "result": "PASSED",
+   "tag": "C3784"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 89,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_DAILY_INSTALLMENT_FEE_FLAT_CHARGES",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": 2,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_DAILY_INSTALLMENT_FEE_FLAT_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: flat charge type, interestRecalculation = true, early repayment",
+   "result": "PASSED",
+   "tag": "C3811"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 173,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_AMOUNT_CHARGES",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": 3,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_AMOUNT_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: percentage amount charge type, interestRecalculation = false",
+   "result": "PASSED",
+   "tag": "C3785"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 0.01, 0.0, 17.05, 0.0, 0.0, 0.0, 17.05] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 0.0, 0.0, 17.04, 0.0, 0.0, 0.0, 17.04]]",
+     "resource": 4,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 265,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 257,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_INTEREST_CHARGES",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": 4,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_INTEREST_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: percentage interest charge type, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3786"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 0.01, 0.0, 17.05, 0.0, 0.0, 0.0, 17.05] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 0.0, 0.0, 17.04, 0.0, 0.0, 0.0, 17.04]]",
+     "resource": 5,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 349,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 341,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_INTEREST_CHARGES",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": 5,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_INTEREST_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: percentage interest charge type, interestRecalculation = false, early repayment",
+   "result": "FAILED",
+   "tag": "C3812"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 425,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_AMOUNT_INTEREST_CHARGES",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": 6,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_PERCENT_AMOUNT_INTEREST_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: percentage amount + interest charge type, interestRecalculation = false",
+   "result": "PASSED",
+   "tag": "C3787"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.35, 0.0, 27.39, 0.0, 0.0, 0.0, 27.39] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.34, 0.0, 27.38, 0.0, 0.0, 0.0, 27.38]]",
+     "resource": 7,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 517,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 509,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_ALL_CHARGES",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": 7,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_ALL_CHARGES",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: all charge types, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3788"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.01, 0.0, 27.05, 0.0, 0.0, 0.0, 27.05] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.0, 0.0, 27.04, 0.0, 0.0, 0.0, 27.04]]",
+     "resource": 8,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 610,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 602,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_FLAT_INTEREST_CHARGES_TRANCHE",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": 8,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_FLAT_INTEREST_CHARGES_TRANCHE",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: flat + % interest charge types, tranche loan, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3789"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.01, 0.0, 27.05, 0.0, 0.0, 0.0, 27.05] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.0, 0.0, 27.04, 0.0, 0.0, 0.0, 27.04]]",
+     "resource": 9,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 724,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 716,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_FLAT_INTEREST_CHARGES_TRANCHE",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": 9,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_INSTALLMENT_FEE_FLAT_INTEREST_CHARGES_TRANCHE",
+   "name": "Progressive loan - Verify the loan creation with installment fee charge: flat + % interest charge types, tranche loan, interestRecalculation = false, early repayment",
+   "result": "FAILED",
+   "tag": "C3813"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.01, 0.0, 27.01, 0.0, 0.0, 0.0, 27.01] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.0, 0.0, 27.0, 0.0, 0.0, 0.0, 27.0]]",
+     "resource": 10,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 847,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 837,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": 10,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "name": "Progressive loan - Verify add installment fee charge: flat + % interest charge types, tranche loan, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3814"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 952,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_INTEREST_RECALCULATION_MULTIDISB",
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": 11,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_INTEREST_RECALCULATION_MULTIDISB",
+   "name": "Progressive loan - Verify add installment fee charge: flat charge type, tranche loan, interestRecalculation = true, early repayment",
+   "result": "PASSED",
+   "tag": "C3820"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1071,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": 12,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "name": "Progressive loan - Verify add installment fee charge: flat charge type, interestRecalculation = true",
+   "result": "PASSED",
+   "tag": "C3790"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1156,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": 13,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify add installment fee charge: flat charge type, interestRecalculation = false",
+   "result": "PASSED",
+   "tag": "C3815"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1241,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": 14,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "name": "Progressive loan - Verify add installment fee charge: percentage amount charge type is NOT allowed when interestRecalculation = true",
+   "result": "PASSED",
+   "tag": "C3816"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1254,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": 15,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify add installment fee charge: percentage amount charge type, interestRecalculation = false",
+   "result": "PASSED",
+   "tag": "C3791"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1339,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 16,
+   "loan": 16,
+   "loan_client_id": 16,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "name": "Progressive loan - Verify add installment fee charge: percentage interest charge type is NOT allowed when interestRecalculation = true",
+   "result": "PASSED",
+   "tag": "C3792"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 0.01, 0.0, 17.01, 0.0, 0.0, 0.0, 17.01] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 0.0, 0.0, 17.0, 0.0, 0.0, 0.0, 17.0]]",
+     "resource": 17,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1361,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1352,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 17,
+   "loan": 17,
+   "loan_client_id": 17,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify add installment fee charge: percentage interest charge type, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3817"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1437,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 18,
+   "loan": 18,
+   "loan_client_id": 18,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "name": "Progressive loan - Verify add installment fee charge: percentage amount + interest charge type is NOT allowed when interestRecalculation = true",
+   "result": "PASSED",
+   "tag": "C3818"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1450,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 19,
+   "loan": 19,
+   "loan_client_id": 19,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify add installment fee charge: percentage amount + interest charge type, interestRecalculation = false",
+   "result": "PASSED",
+   "tag": "C3793"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.35, 0.0, 27.35, 0.0, 0.0, 0.0, 27.35] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.34, 0.0, 27.34, 0.0, 0.0, 0.0, 27.34]]",
+     "resource": 20,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1547,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1535,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 20,
+   "loan": 20,
+   "loan_client_id": 20,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify add installment fee charge: all charge types, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3794"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.35, 0.0, 27.39, 0.0, 0.0, 0.0, 27.39] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.34, 0.0, 27.38, 0.0, 0.0, 0.0, 27.38]]",
+     "resource": 21,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1644,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1632,
+   "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR",
+   "index": 21,
+   "loan": 21,
+   "loan_client_id": 21,
+   "loan_product_name": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR",
+   "name": "Progressive loan - Verify add installment fee charge, then make zero-interest charge-off: all charge types, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3795"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.35, 0.0, 27.39, 0.0, 0.0, 0.0, 27.39] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.94, 0.1, 10.34, 0.0, 27.38, 0.0, 0.0, 0.0, 27.38]]",
+     "resource": 22,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1738,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1726,
+   "feature_product": "LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR",
+   "index": 22,
+   "loan": 22,
+   "loan_client_id": 22,
+   "loan_product_name": "LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR",
+   "name": "Progressive loan - Verify add installment fee charge, then make accelerate maturity date charge-off: all charge types, interestRecalculation = false",
+   "result": "FAILED",
+   "tag": "C3796"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1816,
+   "feature_product": null,
+   "index": 23,
+   "loan": 23,
+   "loan_client_id": 23,
+   "loan_product_name": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "name": "Verify that partially waived installment fee applied correctly in reverse-replay logic, Progressive loan",
+   "result": "PASSED",
+   "tag": "C3797"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.35, 0.0, 27.35, 0.0, 0.0, 0.0, 27.35] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.34, 0.0, 27.34, 0.0, 0.0, 0.0, 27.34]]",
+     "resource": 24,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1860,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1849,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 24,
+   "loan": 24,
+   "loan_client_id": 24,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify non-tranche loan with all installment fee charge types and repayments",
+   "result": "FAILED",
+   "tag": "C3823"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.01, 0.0, 27.01, 0.0, 0.0, 0.0, 27.01] -",
+     "expected": "[6, 30, 01 July 2024, null, 0.0, 16.9, 0.1, 10.0, 0.0, 27.0, 0.0, 0.0, 0.0, 27.0]]",
+     "resource": 25,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1933,
+     "tab_line": 7
+    }
+   ],
+   "feature_line": 1923,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "index": 25,
+   "loan": 25,
+   "loan_client_id": 25,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "name": "Progressive loan - Verify tranche loan with installment fee charges, repayments and multiple disbursements",
+   "result": "FAILED",
+   "tag": "C3824"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[2, 31, 01 February 2024, null, 62.0, 13.0, 0.0, 10.0, 0.0, 23.0, 0.0, 0.0, 0.0, 23.0] -",
+     "expected": "[2, 31, 01 February 2024, null, 63.0, 12.0, 0.0, 10.0, 0.0, 22.0, 0.0, 0.0, 0.0, 22.0]]",
+     "resource": 26,
+     "step": "Then Loan Repayment schedule has 7 periods, with the following data for periods:",
+     "step_feature_line": 2039,
+     "tab_line": 3
+    }
+   ],
+   "feature_line": 2026,
+   "feature_product": "LP2_DOWNPAYMENT",
+   "index": 26,
+   "loan": 26,
+   "loan_client_id": 26,
+   "loan_product_name": "LP2_DOWNPAYMENT",
+   "name": "Cumulative loan - Verify final income accrual with multiple fee charges created successfully",
+   "result": "FAILED",
+   "tag": "C3890"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2097,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "index": 27,
+   "loan": 27,
+   "loan_client_id": 27,
+   "loan_product_name": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "name": "Progressive loan - Verify final income accrual with multiple fee charges created successfully",
+   "result": "PASSED",
+   "tag": "C3891"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2225,
+   "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 28,
+   "loan": 28,
+   "loan_client_id": 28,
+   "loan_product_name": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "name": "Verify installment fee charge allocation when loan has down payment, additional installment and re-aging",
+   "result": "PASSED",
+   "tag": "C3892"
+  }
+ ],
+ "tenant": "tierd"
+}
