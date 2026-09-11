@@ -1,0 +1,54 @@
+{
+ "schema": "gerege.charges.vector/v1",
+ "case_id": "OHCHCAPaf-pctamount-mincap",
+ "title": "Percentage-of-amount fee raised to minCap: 0.1% of 1,200,000.00 = 1,200.00, minCap 8,000.00 -> fee 8,000.00 MNT.",
+ "class": "parity",
+ "context": "charges",
+ "_note": "The minCap branch of charges.MinimumAndMaximumCap (nexus/internal/apps/charges/money.go:87-89, the raise-to-minCap arm), which no pre-existing vector reached because all 12 committed charges vectors omit min_cap_minor/max_cap_minor. A PERCENT_OF_AMOUNT (calculation_type 2, time_type 1 DISBURSEMENT) charge on the loan principal 1,200,000.00 at 0.1%. The exact product 1,200,000.00 x 0.1% = 1,200.00 has no fraction (120000 minor units) and is BELOW minCap 8,000.00, so the oracle raises it to the cap: totalFeeChargesCharged = 8000.00, feeChargesDue = 8000.00 on the disbursement row of the committed raw capture. The vector transcribes the fee AFTER the clamp.",
+ "oracle": {
+  "seam": "charge-evaluate",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from the committed T51 capture T51-TR-12-c2-mincap. No oracle contact was made by this promotion; every figure is read off the committed raw JSON. fee_minor 800000 is the exact major->minor scaling of the observed totalFeeChargesCharged 8000.00 (feeChargesDue 8000.000000); base_amount_minor 120000000 is the exact scaling of totalPrincipalDisbursed 1,200,000.00; percentage 100000 is 0.1% in micro-per-cent (m_charge stores whole per cent as DECIMAL(19,6): 0.100000); min_cap_minor 800000 is the exact scaling of the charge definition's minCap 8000. The un-clamped product 120000 is NOT an observed fee and is recorded only as the arithmetical witness that 8000.00 is the RAISED value, not the product.",
+  "capture_ref": ".softhouse/capture/charges/out/t51/T51-TR-12-c2-mincap-raw.json",
+  "capture_sha256": "6340a095d2dad70bb74b412fde18c77921170fff37ea984f5c90fad3e14ae86b",
+  "capture_case_id": "T51-TR-12-c2-mincap",
+  "citation": "T51 Path B capture, committed at tenant gerege under the pinned jar 426a23544e8426a38ae43ae404670a0a7e85b9eb (git.dirty=false), rounding-mode 4 HALF_UP, MathContext precision 19, PostgreSQL only; preconditions in .softhouse/capture/charges/out/t51/preconditions-T51.txt. Charge definition .softhouse/capture/charges/out/t51/req-create-c2-mincap.json (chargeCalculationType 2, minCap 8000); schedule request .softhouse/capture/charges/req/calc-T51-TR-12-c2-mincap.json. No new capture, POST, PUT or DELETE was issued by this promotion."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "name": "T51 pct of amount DISB minCap8000",
+  "currency_code": "MNT",
+  "amount_minor": "0",
+  "percentage": 100000,
+  "applies_to": 1,
+  "time_type": 1,
+  "calculation_type": 2,
+  "payment_mode": 0,
+  "min_cap_minor": "800000",
+  "penalty": false,
+  "active": true,
+  "deleted": false,
+  "base_amount_minor": "120000000"
+ },
+ "expect": {
+  "kind": "fee",
+  "validation_codes": [],
+  "fee_minor": "800000"
+ },
+ "capabilities_required": [
+  "percent-fee"
+ ],
+ "graded_against": [
+  "charges-go"
+ ]
+}
