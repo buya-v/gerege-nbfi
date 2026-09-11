@@ -7,11 +7,11 @@
 full**. Every cited loan read-back in `.softhouse/vectors/loan/` today has `charges: null`
 and no captured loan is ever paid off; this capture supplies both.
 
-**Status: Complete.** The oracle accepted every step — no refusal. Four writes only:
+**Status: Complete.** The oracle accepted every step — no refusal. Subject writes only:
 `POST /clients`, `POST /loans` (charges applied at submission), `POST /loans/18?command=approve`
-+ `?command=disburse`, `POST /loans/18/transactions?command=repayment` (**100.00**, step 3),
-`POST /loans/18/charges/13?command=waive` (step 4), `POST /loans/18/transactions?command=repayment`
-(**106641.98**, step 5). Every other call is a `GET`.
+and `?command=disburse`, then the three observed steps — `POST /loans/18/transactions?command=repayment`
+(**100.00**, step 3), `POST /loans/18/charges/13?command=waive` (step 4), and
+`POST /loans/18/transactions?command=repayment` (**106641.98**, step 5). Every other call is a `GET`.
 
 **Why it exists (the targets).** `nexus/internal/apps/loan/charge.go` carries 18 money-mutation
 functions over a `LoanCharge`'s `amount / amountPaid / amountWaived / amountOutstanding`
@@ -87,7 +87,7 @@ Loan status `loanStatusType.active` (**300**). Summary: `totalExpectedRepayment 
 **Function observed:** none of `charge.go`'s mutations — this step fixes the input state
 (`CalculateOutstanding = Amount − AmountPaid − AmountWaived − AmountWrittenOff` reproduces
 each `amountOutstanding`). `disbursement.go NetDisbursalAmount` is **not** exercised here:
-neither charge is due at disbursment, so the net disbursal equals the principal (10000000).
+neither charge is due at disbursement, so the net disbursal equals the principal (10000000).
 Charges are applied at submission, which the oracle accepted.
 
 ### Step 3 — partly pay the fee: repayment **100.00** (2026-01-15)
@@ -241,7 +241,7 @@ each body survives a binary-double round trip byte-for-byte.
 
 ## Writes
 
-Three setup writes (client, loan submit with its two charges, approve+disburse) and three
+Four setup writes (client, loan submit with its two charges, approve, disburse) and three
 subject writes (partial repayment, charge waiver, full repayment). No SQL insert; tenant
 `gerege` only; no `default` tenant write; no product/charge-definition/client mutation beyond
 the documented creation; no `.go` file touched. The driver pushes.
