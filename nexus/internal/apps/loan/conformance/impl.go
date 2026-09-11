@@ -154,8 +154,10 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goWriteOffJournal(*req.WriteOffJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
+	case req.StatusTransition != nil:
+		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_lifecycle")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -447,6 +449,80 @@ func goStatus(s StatusRequest) (Expect, error) {
 		return Expect{}, fmt.Errorf("loan-status: stored value %d is not a legal loan status", s.StoredValue)
 	}
 	return Expect{StatusCode: st.Code(), StatusStoredValue: st.StoredValue()}, nil
+}
+
+// statusTransitionModeEvent dispatches the observed event through
+// loan.NextStatus; statusTransitionModeBalance recomputes from the facts through
+// loan.DetermineTransition. The two are the two halves of the oracle's
+// DefaultLoanLifecycleStateMachine the committed transitions exercise.
+const (
+	statusTransitionModeEvent   = "event"
+	statusTransitionModeBalance = "balance"
+)
+
+// statusTransitionFacts converts a request's observed fact snapshot into the
+// loan.Facts the state machine reads. The five fields are predicates over the
+// loan's balances, derived by the caller from the read-back; none is a balance
+// value.
+func statusTransitionFacts(s StatusTransitionRequest) loan.Facts {
+	return loan.Facts{
+		HasOutstanding:          s.HasOutstanding,
+		RepaidInFull:            s.RepaidInFull,
+		TotalOverpaidIsPositive: s.TotalOverpaidIsPositive,
+		TotalOverpaidIsZero:     s.TotalOverpaidIsZero,
+		AllChargesPaid:          s.AllChargesPaid,
+	}
+}
+
+// statusTransitionExpect renders the status the state machine returned: the
+// read-back code plus the stored value it round-trips to. Both are read off the
+// enum the port itself decoded; no status field is assigned.
+func statusTransitionExpect(st loan.LoanStatus) Expect {
+	return Expect{NextStatusCode: st.Code(), NextStatusStoredValue: st.StoredValue()}
+}
+
+// loanEventFromName resolves the observed Fineract LoanEvent constant name to
+// the port's event. loanEventName has no exported reverse, and the observed
+// vocabulary is deliberately narrow — only the events the committed captures
+// dispatch. It is a pure switch, not a lookup table, so no mutable package state
+// exists to drift from the captures it pins.
+func loanEventFromName(name string) (loan.LoanEvent, bool) {
+	switch name {
+	case "LOAN_CREATED":
+		return loan.EventLoanCreated, true
+	case "LOAN_APPROVED":
+		return loan.EventLoanApproved, true
+	case "LOAN_DISBURSED":
+		return loan.EventLoanDisbursed, true
+	case "WRITE_OFF_OUTSTANDING":
+		return loan.EventWriteOffOutstanding, true
+	}
+	return 0, false
+}
+
+// goStatusTransition runs one observed lifecycle transition through the port.
+// Mode "event" dispatches (from, event); mode "balance" recomputes the status
+// from the fact snapshot. A transition the oracle leaves unmoved returns the
+// unchanged status, exactly as NextStatus/DetermineTransition do.
+func goStatusTransition(s StatusTransitionRequest) (Expect, error) {
+	from, ok := loan.LoanStatusFromStoredValue(s.FromStoredValue)
+	if !ok {
+		return Expect{}, fmt.Errorf("loan-status-transition: stored value %d is not a legal loan status", s.FromStoredValue)
+	}
+	facts := statusTransitionFacts(s)
+	switch s.Mode {
+	case statusTransitionModeEvent:
+		ev, ok := loanEventFromName(s.Event)
+		if !ok {
+			return Expect{}, fmt.Errorf("loan-status-transition: event %q is not an observed loan event", s.Event)
+		}
+		next, _ := loan.NextStatus(from, ev, facts)
+		return statusTransitionExpect(next), nil
+	case statusTransitionModeBalance:
+		return statusTransitionExpect(loan.DetermineTransition(from, facts).Status), nil
+	default:
+		return Expect{}, fmt.Errorf("loan-status-transition: mode %q is neither %q nor %q", s.Mode, statusTransitionModeEvent, statusTransitionModeBalance)
+	}
 }
 
 // scheduleInterestMinor ports the single-period interest of the MANIFEST's
@@ -1257,6 +1333,67 @@ func wrongSummary(s SummaryRequest) (Expect, error) {
 	}
 	total := principal + fee
 	return Expect{SummaryTotalMinor: strconv.FormatInt(int64(total), 10)}, nil
+}
+
+// wrongStatusTransitionMode selects which deliberately-wrong lifecycle rule a
+// wrongStatusTransitionEvaluator applies.
+type wrongStatusTransitionMode int
+
+const (
+	// wrongTransitionIgnoresRepaidInFull is the RepaidInFull arm of the balance
+	// re-derivation wired to the wrong fact: it behaves as if a loan whose
+	// outstanding has reached zero still has outstanding, so an active loan
+	// repaid in full stays ACTIVE instead of closing as obligations met.
+	wrongTransitionIgnoresRepaidInFull wrongStatusTransitionMode = iota
+	// wrongTransitionWriteOffClosesObligationsMet maps the write-off event to
+	// CLOSED_OBLIGATIONS_MET instead of CLOSED_WRITTEN_OFF, losing the write-off
+	// distinction.
+	wrongTransitionWriteOffClosesObligationsMet
+	// wrongTransitionApproveSkipsToActive jumps straight from
+	// SUBMITTED_AND_PENDING_APPROVAL to ACTIVE on approval, as if approval also
+	// disbursed.
+	wrongTransitionApproveSkipsToActive
+)
+
+// wrongStatusTransitionEvaluator is a DELIBERATELY WRONG implementation of the
+// loan-status-transition seam: it perturbs one observed transition according to
+// its mode. Three vectors pin three defects the task calls out: the
+// repaid-in-full balance transition ignored, the write-off event closing as
+// obligations met, and approval skipping to active.
+type wrongStatusTransitionEvaluator struct {
+	goEvaluator
+	mode wrongStatusTransitionMode
+}
+
+func (w wrongStatusTransitionEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.StatusTransition == nil {
+		return w.goEvaluator.Evaluate(req)
+	}
+	corrected := *req.StatusTransition
+	switch w.mode {
+	case wrongTransitionIgnoresRepaidInFull:
+		if corrected.Mode == statusTransitionModeBalance && corrected.RepaidInFull && !corrected.HasOutstanding {
+			corrected.RepaidInFull = false
+		}
+		return goStatusTransition(corrected)
+	case wrongTransitionWriteOffClosesObligationsMet:
+		if corrected.Mode == statusTransitionModeEvent && corrected.Event == "WRITE_OFF_OUTSTANDING" {
+			return Expect{
+				NextStatusCode:        loan.StatusClosedObligationsMet.Code(),
+				NextStatusStoredValue: loan.StatusClosedObligationsMet.StoredValue(),
+			}, nil
+		}
+		return goStatusTransition(corrected)
+	case wrongTransitionApproveSkipsToActive:
+		if corrected.Mode == statusTransitionModeEvent && corrected.Event == "LOAN_APPROVED" {
+			return Expect{
+				NextStatusCode:        loan.StatusActive.Code(),
+				NextStatusStoredValue: loan.StatusActive.StoredValue(),
+			}, nil
+		}
+		return goStatusTransition(corrected)
+	}
+	return goStatusTransition(corrected)
 }
 
 // wrongStatusEvaluator is a DELIBERATELY WRONG implementation of the status
@@ -2243,4 +2380,19 @@ func init() {
 			"amount, so the pinned waived penalty (outstanding 0) reads outstanding 6789 while "+
 			"every paid cell and flag is correct",
 		wrongChargeLifecycleEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeOutstandingIgnoresWaived})
+	RegisterWrong("loan-wrong-status-transition-ignores-repaid-in-full",
+		"drops the RepaidInFull arm of the balance re-derivation, behaving as if a loan whose "+
+			"outstanding has reached zero still has outstanding, so the pinned repaid-in-full "+
+			"transition (active, obligations satisfied) stays ACTIVE instead of closing as "+
+			"CLOSED_OBLIGATIONS_MET",
+		wrongStatusTransitionEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongTransitionIgnoresRepaidInFull})
+	RegisterWrong("loan-wrong-status-transition-writeoff-closes-obligations-met",
+		"maps the WRITE_OFF_OUTSTANDING event to CLOSED_OBLIGATIONS_MET instead of "+
+			"CLOSED_WRITTEN_OFF, so the pinned write-off transition records the discharge as a "+
+			"normal repayment close and the closed-state distinction is lost",
+		wrongStatusTransitionEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongTransitionWriteOffClosesObligationsMet})
+	RegisterWrong("loan-wrong-status-transition-approve-skips-to-active",
+		"jumps straight from SUBMITTED_AND_PENDING_APPROVAL to ACTIVE on approval, as if approval "+
+			"also disbursed, so the pinned approve transition reads ACTIVE instead of APPROVED",
+		wrongStatusTransitionEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongTransitionApproveSkipsToActive})
 }

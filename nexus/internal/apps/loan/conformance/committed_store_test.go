@@ -132,4 +132,5 @@ var committedLoanSeams = []string{
 	SeamLoanTransactionReversal,
 	SeamLoanWriteOffJournalEntries,
 	SeamLoanChargeLifecycle,
+	SeamLoanStatusTransition,
 }

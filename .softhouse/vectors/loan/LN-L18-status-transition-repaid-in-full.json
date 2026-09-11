@@ -1,0 +1,50 @@
+{
+  "schema": "gerege.loan.vector/v1",
+  "case_id": "LN-L18-status-transition-repaid-in-full",
+  "title": "loan 18 repaid in full re-derives the balance to closed-obligations-met",
+  "class": "parity",
+  "context": "loan",
+  "_note": "Loan 18 (externalId OHCHGCAP-L01) reaches status id 600 loanStatusType.closed.obligations.met after its fee is partly paid and then fully paid and its penalty waived; the preceding read-back (loan-18-after-waive-detail-raw.json) reads 300 active. The facts are predicates only: no outstanding, repaid in full, no overpayment, all charges paid. Mode balance recomputes through loan.DetermineTransition. Nothing was computed by this promotion.",
+  "oracle": {
+    "seam": "loan-status-transition",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+  },
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "expect.next_status_code/next_status_stored_value are transcribed from the status block of the committed final detail read-back for loan 18; the from-status and predicates come from the same read-back and its preceding after-waive read-back.",
+    "capture_ref": ".softhouse/capture/loan-charge-partial-waive-repaid/out/loan-18-final-detail-raw.json",
+    "capture_sha256": "979310855f2d0e3d8738982932dfa0815a63be2bfc369bd719977101aa5761e5",
+    "capture_case_id": "OHCHGCAP-L01",
+    "citation": "loan-18-final-detail-raw.json {\"externalId\":\"OHCHGCAP-L01\",\"status\":{\"id\":600,\"code\":\"loanStatusType.closed.obligations.met\"}}"
+  },
+  "tenant_params": {
+    "rounding_mode": "HALF_UP",
+    "rounding_ordinal": 4,
+    "precision": 19,
+    "currency": "MNT",
+    "minor_units": 2,
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "request": {
+    "status_transition": {
+      "mode": "balance",
+      "from_stored_value": 300,
+      "has_outstanding": false,
+      "repaid_in_full": true,
+      "total_overpaid_is_positive": false,
+      "total_overpaid_is_zero": true,
+      "all_charges_paid": true
+    }
+  },
+  "expect": {
+    "next_status_code": "loanStatusType.closed.obligations.met",
+    "next_status_stored_value": 600
+  },
+  "capabilities_required": [
+    "loan-status-transition"
+  ],
+  "graded_against": [
+    "loan-go",
+    "loan-wrong-status-transition-ignores-repaid-in-full"
+  ]
+}

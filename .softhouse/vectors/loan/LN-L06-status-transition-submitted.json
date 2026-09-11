@@ -1,0 +1,45 @@
+{
+  "schema": "gerege.loan.vector/v1",
+  "case_id": "LN-L06-status-transition-submitted",
+  "title": "SEED-L06 create dispatches LOAN_CREATED onto submitted-and-pending-approval",
+  "class": "parity",
+  "context": "loan",
+  "_note": "The SEED-L06 create command (loanId 6) leaves the loan in the oracle's null/INVALID status; the state machine's answer to LOAN_CREATED from there is SUBMITTED_AND_PENDING_APPROVAL (id 100, loanStatusType.submitted.and.pending.approval), the status the subsequent approve command's read-back transitively confirms. from_stored_value 0 is LoanStatus.INVALID, the only status LOAN_CREATED is dispatched from; loan.NextStatus special-cases it. Nothing was computed by this promotion.",
+  "oracle": {
+    "seam": "loan-status-transition",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+  },
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "capture_ref names the committed create command read-back for SEED-L06; the answer is the state machine's documented LOAN_CREATED arm pinned by the enum table.",
+    "capture_ref": ".softhouse/capture/loan/out/loan-L06-submit-raw.json",
+    "capture_sha256": "4ebfd714c3253804fc7be4b63025aef058b7c99eea9659c15f1710434044eee5",
+    "capture_case_id": "SEED-L06",
+    "citation": "loan-L06-submit-raw.json {\"loanId\":6,\"resourceExternalId\":\"SEED-L06\"}"
+  },
+  "tenant_params": {
+    "rounding_mode": "HALF_UP",
+    "rounding_ordinal": 4,
+    "precision": 19,
+    "currency": "MNT",
+    "minor_units": 2,
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "request": {
+    "status_transition": {
+      "mode": "event",
+      "from_stored_value": 0,
+      "event": "LOAN_CREATED"
+    }
+  },
+  "expect": {
+    "next_status_code": "loanStatusType.submitted.and.pending.approval",
+    "next_status_stored_value": 100
+  },
+  "capabilities_required": [
+    "loan-status-transition"
+  ],
+  "graded_against": [
+    "loan-go"
+  ]
+}

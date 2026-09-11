@@ -223,6 +223,18 @@ func diffChargeStates(s *cellSink, want, got []ChargeLifecycleState) {
 	}
 }
 
+// diffStatusTransition compares the status the lifecycle state machine
+// returned: the decoded read-back code and the stored value it round-trips to.
+// Both are structural cells — the code is an i18n label, the stored value the
+// persisted m_loan.loan_status_id — so a wrong closed-state distinction
+// (written off vs obligations met) or an iota-collapsed ordinal moves a cell.
+// No balance value is compared because none is returned: the machine answers
+// with a status.
+func diffStatusTransition(s *cellSink, want, got Expect) {
+	s.cmpText("next_status_code", want.NextStatusCode, got.NextStatusCode)
+	s.cmpStoredValue("next_status_stored_value", want.NextStatusStoredValue, got.NextStatusStoredValue)
+}
+
 // canonicalJournalEntryAccountSides returns a copy of in sorted by
 // (transaction_id, account, entry_type) so the side comparison is
 // order-insensitive.
@@ -300,6 +312,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffWriteOffJournalLegs(&s, v.Expect.WriteOffJournalLegs, got.WriteOffJournalLegs)
 	case SeamLoanChargeLifecycle:
 		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
+	case SeamLoanStatusTransition:
+		diffStatusTransition(&s, v.Expect, got)
 	}
 	r.GradedCells = s.graded
 	r.MoneyCells = s.money

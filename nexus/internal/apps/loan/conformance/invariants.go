@@ -3,6 +3,8 @@ package conformance
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/gerege/nexus/internal/apps/loan"
 )
 
 // The property invariants this context can grade. The loan slice's gradeable
@@ -56,6 +58,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertWriteOffJournalBalanced(got)}
 	case SeamLoanChargeLifecycle:
 		return []InvariantResult{assertChargeStatesConserved(v, got)}
+	case SeamLoanStatusTransition:
+		return []InvariantResult{assertStatusTransitionIdentity(v, got)}
 	default:
 		return []InvariantResult{assertNetDisbursalNonNegative(got)}
 	}
@@ -138,6 +142,51 @@ func assertStatusIdentity(v *Vector, got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("status %d round-trips and reads back as %q", got.StatusStoredValue, got.StatusCode)
+	return r
+}
+
+// assertStatusTransitionIdentity: the status a lifecycle transition returns must
+// be a legal decoded loan status whose i18n code matches the stored value it
+// round-trips to. This is the persistence-identity property: a port that
+// returns a right-looking code off a wrong m_loan.loan_status_id (or a code that
+// does not belong to the status it stores) breaks the decode round-trip and is
+// never a transcription of the oracle's read-back. The request's own `from`
+// status is asserted legal too, so a vector cannot smuggle an out-of-band
+// ordinal past admission. The assertion is on the implementation's RESULT, so an
+// independently self-consistent port still fails here.
+func assertStatusTransitionIdentity(v *Vector, got Expect) InvariantResult {
+	r := InvariantResult{Name: "status_transition_identity", Assertions: 3}
+	req := v.Request.StatusTransition
+	if req == nil {
+		r.Status = InvariantViolated
+		r.Detail = "loan-status-transition request is nil"
+		return r
+	}
+	st, ok := loan.LoanStatusFromStoredValue(got.NextStatusStoredValue)
+	if !ok {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("next status stored value %d is not a legal loan status", got.NextStatusStoredValue)
+		return r
+	}
+	if got.NextStatusCode == "" {
+		r.Status = InvariantViolated
+		r.Detail = "next_status_code is empty"
+		return r
+	}
+	if st.Code() != got.NextStatusCode {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("next status stored value %d decodes to %q, not the returned code %q",
+			got.NextStatusStoredValue, st.Code(), got.NextStatusCode)
+		return r
+	}
+	if _, ok := loan.LoanStatusFromStoredValue(req.FromStoredValue); !ok {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("request from_stored_value %d is not a legal loan status", req.FromStoredValue)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("next status %d decodes to %q and the from status %d is legal",
+		got.NextStatusStoredValue, got.NextStatusCode, req.FromStoredValue)
 	return r
 }
 

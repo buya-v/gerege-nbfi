@@ -1,0 +1,46 @@
+{
+  "schema": "gerege.loan.vector/v1",
+  "case_id": "LN-L11-status-transition-written-off",
+  "title": "loan 11 write-off dispatches WRITE_OFF_OUTSTANDING onto closed-written-off",
+  "class": "parity",
+  "context": "loan",
+  "_note": "Loan 11 (externalId OHGLR-L02) reads status id 300 active in loan-11-before-detail-raw.json and status id 601 loanStatusType.closed.written.off in loan-11-after-detail-raw.json after the write-off; the same after read-back closes loan 13 at 601 in loan-writeoff-paid-instalment/out/loan-13-after-detail-raw.json. Dispatched from ACTIVE on WRITE_OFF_OUTSTANDING. Nothing was computed by this promotion.",
+  "oracle": {
+    "seam": "loan-status-transition",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+  },
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "expect.next_status_code/next_status_stored_value are transcribed from the status block of the committed write-off after read-back for loan 11; the from-status 300 comes from the committed before read-back.",
+    "capture_ref": ".softhouse/capture/loan11-writeoff-four-bucket/out/loan-11-after-detail-raw.json",
+    "capture_sha256": "822db5dd95ce8f52563a4feb1a23fecfd3e601a7f3de4e387ffb429f3c64e5d4",
+    "capture_case_id": "OHGLR-L02",
+    "citation": "loan-11-after-detail-raw.json {\"externalId\":\"OHGLR-L02\",\"status\":{\"id\":601,\"code\":\"loanStatusType.closed.written.off\"}}"
+  },
+  "tenant_params": {
+    "rounding_mode": "HALF_UP",
+    "rounding_ordinal": 4,
+    "precision": 19,
+    "currency": "MNT",
+    "minor_units": 2,
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "request": {
+    "status_transition": {
+      "mode": "event",
+      "from_stored_value": 300,
+      "event": "WRITE_OFF_OUTSTANDING"
+    }
+  },
+  "expect": {
+    "next_status_code": "loanStatusType.closed.written.off",
+    "next_status_stored_value": 601
+  },
+  "capabilities_required": [
+    "loan-status-transition"
+  ],
+  "graded_against": [
+    "loan-go",
+    "loan-wrong-status-transition-writeoff-closes-obligations-met"
+  ]
+}
