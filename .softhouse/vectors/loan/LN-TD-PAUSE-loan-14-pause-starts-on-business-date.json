@@ -1,0 +1,46 @@
+{
+    "schema": "gerege.loan.vector/v1",
+    "case_id": "LN-TD-PAUSE-loan-14-pause-starts-on-business-date",
+    "title": "Tier-D MNT loan 14: a pause starting on the business date contributes zero paused days (47 overdue -> 44)",
+    "class": "parity",
+    "context": "loan",
+    "_note": "Parity vector transcribing the earlier delinquent block of Tier-D MNT loan 14 at business date 2023-11-17, the day its pause begins. request.delinquency carries the observed overdue-since civil date 2023-10-01 (delinquent.pastDueDate [2023,10,1]), the business date, the observed graceOnArrearsAgeing 3, and the paused-day count 0 derived from the active pause period [2023-11-17, 2023-12-30] the read-back carries. expect.overdue_days 47 and expect.delinquent_days 44 are TRANSCRIPTIONS of delinquent.pastDueDays 47 and delinquent.delinquentDays 44. THE PROPERTY GRADED: the pause input is a live window and only days INSIDE it are excluded — on the day the pause starts it has excluded nothing, so the count is overdue - grace. OverdueDays(2023-10-01, 2023-11-17) = 31 (October) + 16 = 47; the pause [2023-11-17, 2023-12-30] clips against the overdue window [2023-10-01, 2023-11-17] to Min(2023-12-30, business 2023-11-17) - Max(2023-11-17, overdue 2023-10-01) = 0 paused days; grace 3 is corroborated by delinquent.delinquentDate [2023,10,4] = pastDueDate + 3; DelinquentDays(47, 0, 3) = 44, exactly the delinquentDays the read-back carries. The observed delinquentDays 44 DOES reproduce under the port's DelinquentDays from the observed inputs, so no port discrepancy is recorded here. A port that counted the pause's whole declared span would subtract 43 and read 4; this vector would catch that, so it is NOT the inert control the drive's prose calls out (a pause that starts ON the business date has zero ELAPSED paused days, and that is the fact pinned). NOT GRADED: the negative clamp in OverdueDays (no overdue date is after the business date), and any balance-named cell (none appears in this vector). This is tenant `tierd`, NOT tenant `gerege`.",
+    "oracle": {
+        "seam": "loan-delinquent-days",
+        "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+    },
+    "provenance": {
+        "kind": "oracle-capture",
+        "note": "request.delinquency and both expected cells are transcribed from the committed MNT capture loan-14-detail-associations-all-4.json, the scenario-14 (C2992, feature line 241) loan read-back under tenant tierd on the business date its delinquency pause begins. capture_case_id names the loan's externalId 4ca028e9-24b5-4009-a2df-13670f4e938b. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a (proven identical to the standing oracle by preflight.sh); scenario LoanDelinquency-Part1.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. The file is a single-line JSON document (wc -l = 0), so every observation is at line 1. No value was synthesised: the dates, the pause period and both counts are read directly from the file; the paused-day count 0 is the day difference between the pause bounds clipped to the overdue window.",
+        "capture_ref": ".softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-14/loan-14-detail-associations-all-4.json",
+        "capture_sha256": "71110c87f6d6d74a577e48e60cd1204e3996960818e4b06a559b88bb2a4b32bd",
+        "capture_case_id": "4ca028e9-24b5-4009-a2df-13670f4e938b",
+        "citation": "loan-14-detail-associations-all-4.json:1 (single-line committed MNT read-back, tenant tierd) externalId 4ca028e9-24b5-4009-a2df-13670f4e938b: delinquent.pastDueDays 47, delinquent.pastDueDate [2023,10,1], delinquent.delinquentDays 44, delinquent.delinquentDate [2023,10,4], delinquent.delinquencyPausePeriods [{\"active\":true,\"pausePeriodStart\":[2023,11,17],\"pausePeriodEnd\":[2023,12,30]}], loan-level graceOnArrearsAgeing 3. Business date 2023-11-17 = pastDueDate 2023-10-01 + pastDueDays 47 (31+16). Pause overlap: Min(2023-12-30,2023-11-17) - Max(2023-11-17,2023-10-01) = 0. DelinquentDays(47,0,3)=44."
+    },
+    "tenant_params": {
+        "rounding_mode": "HALF_UP",
+        "rounding_ordinal": 4,
+        "precision": 19,
+        "currency": "MNT",
+        "minor_units": 2,
+        "timezone": "Asia/Ulaanbaatar"
+    },
+    "request": {
+        "delinquency": {
+            "overdue_since_date": "2023-10-01",
+            "business_date": "2023-11-17",
+            "paused_days": 0,
+            "grace_days": 3
+        }
+    },
+    "expect": {
+        "overdue_days": "47",
+        "delinquent_days": "44"
+    },
+    "capabilities_required": [
+        "delinquent-days"
+    ],
+    "graded_against": [
+        "loan-go"
+    ]
+}
