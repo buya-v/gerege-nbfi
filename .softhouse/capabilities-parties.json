@@ -18,6 +18,12 @@
    "description": "Map a GroupingTypeStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED) to the integer ordinal Fineract persists in m_group.status_enum.",
    "in_graded_domain": true,
    "evidence": "Capture grouping-status-source.txt (GroupingTypeStatus.java:23-32). The grouping-status ordinal is NOT observable on the running oracle: m_group is empty (m-group-readback-raw.json) and GET /groups/template exposes no status options, so the pinned Java source is the only truth."
+  },
+  {
+   "name": "national-id",
+   "description": "Validate a Mongolian national ID structurally: exactly 10 runes, two uppercase Mongolian Cyrillic letters (А-Я, Ё, Ө, Ү) followed by eight ASCII digits, with the birth date carried in the first six digits under the +20 month rule.",
+   "in_graded_domain": false,
+   "evidence": "No oracle behaviour exists: Apache Fineract has no Mongolian national-ID rule, so this is a Gerege rule, not a port, and no parity vector may be written for it. There is no capture, seam or vector; the rule is proved only by unit tests in nexus/internal/apps/parties/nationalid_test.go derived from the structure stated in CLAUDE.md. It is outside the graded domain because it cannot be graded against the reference oracle."
   }
  ],
  "seams": [

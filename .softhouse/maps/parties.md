@@ -12,6 +12,7 @@ Source: `.softhouse/capabilities-parties.json`
 * capability `client-status` — in_graded_domain: **True** — Map a ClientStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED/REJECTED/WITHDRAWN) to
 * capability `legal-form` — in_graded_domain: **True** — Map a LegalForm enum NAME (PERSON/ENTITY) to the integer ordinal Fineract persists in m_client.legal_form_enum.
 * capability `grouping-status` — in_graded_domain: **True** — Map a GroupingTypeStatus enum NAME (INVALID/PENDING/ACTIVE/TRANSFER_IN_PROGRESS/TRANSFER_ON_HOLD/CLOSED) to the integer 
+* capability `national-id` — in_graded_domain: **False** — Validate a Mongolian national ID structurally: exactly 10 runes, two uppercase Mongolian Cyrillic letters (А-Я, Ё, Ө, Ү)
 
 ## Vectors (what is graded today)
 16 files in `.softhouse/vectors/parties/`
@@ -55,6 +56,7 @@ Source: the binary's own -list-implementations (names prefixed `parties-wrong-` 
 * `nexus/internal/apps/parties/clientstatus.go`: `StoredValue`:58, `String`:66, `ClientStatusFromStoredValue`:76, `IsPending`:81, `IsActive`:82, `IsClosed`:83, `IsRejected`:84, `IsWithdrawn`:85, `IsTransferInProgress`:86, `IsTransferOnHold`:87, `IsUnderTransfer`:91, `init`:93
 * `nexus/internal/apps/parties/group.go`: `StoredValue`:46, `String`:54, `GroupingTypeStatusFromStoredValue`:63, `IsPending`:68, `IsActive`:69, `IsClosed`:70, `IsTransferInProgress`:71, `IsTransferOnHold`:72, `IsUnderTransfer`:73, `init`:77, `NewGroupLevel`:98, `IsCenter`:107, `IsGroup`:111, `IsIdentifiedByParentID`:115, `NewGroup`:142, `IsActive`:158, `IsPending`:159, `IsClosed`:160, `IsNotActive`:161, `IsNotPending`:162, `IsCenter`:165
 * `nexus/internal/apps/parties/legalform.go`: `StoredValue`:29, `String`:31, `LegalFormFromStoredValue`:40, `IsPerson`:54, `IsEntity`:57, `IsUnset`:60
+* `nexus/internal/apps/parties/nationalid.go`: `Error`:32, `ValidateNationalID`:78, `isMongolianCyrillicUpper`:128, `nationalIDYearMonth`:136, `daysInGregorianMonth`:149, `isGregorianLeapYear`:167
 * `nexus/internal/apps/parties/postgres.go`: `NewPostgresClientRepository`:30, `Insert`:46, `FindByID`:78, `FindByAccountNumber`:83, `FindByExternalID`:88, `findOne`:92, `UpdateStatus`:109, `scanClient`:116, `NewPostgresGroupRepository`:180, `Insert`:185, `FindByID`:202, `FindByAccountNumber`:210, `findOne`:217, `UpdateStatus`:250, `NewPostgresGroupLevelRepository`:268, `List`:273, `nullInt`:294, `nullStr`:301, `nullTime`:308, `valInt`:315, `valTime`:322
 
 ## Captures this context's vectors already cite

@@ -14,7 +14,10 @@
 //   - LegalForm PERSON/ENTITY with the isPerson/isEntity tests
 //     [VERIFIED: LegalForm.java:24-58];
 //   - GroupLevel's Center/Group classification by level name
-//     [VERIFIED: GroupLevel.java:73-81].
+//     [VERIFIED: GroupLevel.java:73-81];
+//   - ValidateNationalID: the Mongolian national ID's structural rule (10 runes,
+//     two uppercase Cyrillic letters, eight ASCII digits, the +20 month rule),
+//     a Gerege rule with no Fineract counterpart and so no oracle vector.
 //
 // The reference oracle is Apache Fineract at /Users/buv/fineract, pinned at
 // commit 426a23544e8426a38ae43ae404670a0a7e85b9eb. Behavioural claims carry
