@@ -1,0 +1,44 @@
+{
+  "capture": "accrual-activity-eur-control",
+  "task": "OH-ACCCTL-CG",
+  "question": "Does the one-minor-unit MNT failure of LoanAccrualActivity-Part2 scenario 11 (@TestRailId:C3697) fail identically in EUR, or did the MNT re-seed change the arithmetic?",
+  "feature": "fineract-e2e-tests-runner/src/test/resources/features/LoanAccrualActivity-Part2.feature",
+  "currency": "EUR",
+  "scenario_filter": [
+    "^Verify accrual activity of overpaid loan in case of reversed MIR made before MIR and CBR for progressive loan - UC6$"
+  ],
+  "scenario_filter_unique": true,
+  "scenario_filter_note": "anchored ^...$; grep -c of the exact Scenario line in the feature == 1 (line 1232, tag @TestRailId:C3697 at line 1231); the two other 'overpaid loan ... reversed ...' scenarios (UC4 line 771, UC5 line 968) do not match",
+  "summary": {
+    "scenarios": 1,
+    "passed": 0,
+    "failed": 1,
+    "steps": 48,
+    "steps_passed": 27,
+    "steps_skipped": 20,
+    "steps_failed": 1
+  },
+  "scenarios": [
+    {
+      "scenario": 11,
+      "testrail": "C3697",
+      "feature_line": 1232,
+      "failing_step_line": 1274,
+      "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+      "resource": 1,
+      "resource_note": "EUR control ran the scenario alone, so the oracle allocated loan id 1; in the whole-file MNT replay the same scenario was loan 11. The assertion text and every money cell are otherwise identical.",
+      "result": "FAILED",
+      "tab_line": 2,
+      "period": 1,
+      "actual": [1, 31, "21 April 2025", null, 222.25, 120.21, 1.93, 0.0, 0.0, 122.14, 20.21, 20.21, 0.0, 101.93],
+      "expected": [1, 31, "21 April 2025", null, 222.26, 120.2, 1.93, 0.0, 0.0, 122.13, 20.2, 20.2, 0.0, 101.93],
+      "delta_minor": {"balance": -1, "principal_due": 1, "due": 1, "paid": 1, "in_advance": 1},
+      "mnt_actual": [1, 31, "21 April 2025", null, 222.25, 120.21, 1.93, 0.0, 0.0, 122.14, 20.21, 20.21, 0.0, 101.93],
+      "mnt_expected": [1, 31, "21 April 2025", null, 222.26, 120.2, 1.93, 0.0, 0.0, 122.13, 20.2, 20.2, 0.0, 101.93],
+      "mnt_delta_minor": {"balance": -1, "principal_due": 1, "due": 1, "paid": 1, "in_advance": 1},
+      "mnt_resource": 11,
+      "eur_equals_mnt_actual": true
+    }
+  ],
+  "verdict": "same failure in EUR (EUR actual == MNT actual byte-for-byte in every money cell; the pinned build disagrees with its own .feature at line 1274, so the MNT output is gradeable and the re-seed did not change the arithmetic)"
+}

@@ -1,0 +1,261 @@
+=== run start 2026-09-11T15:41:48Z DBHOST=172.27.0.2 ===
+NAME=^Verify accrual activity of overpaid loan in case of reversed MIR made before MIR and CBR for progressive loan - UC6$
+Picked up JAVA_TOOL_OPTIONS: -Dfineract.feign.debug=true -Dfineract.capture.log=/work/fineract-e2e-tests-runner/build/capture/feign-accrualactivity-eur.log
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy UP-TO-DATE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :
+matching ref: COMMIT - 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ref configuration: COMMIT - pattern: null
+    version: ${describe.tag.version.major}.${describe.tag.version.minor.next}.0-SNAPSHOT
+    describeTagPattern: .*(\d+\.\d+\.\d+).*
+    describeTagFirstParent: false
+
+project version: 1.16.0-SNAPSHOT
+
+> Task :fineract-avro-schemas:compileJava UP-TO-DATE
+> Task :fineract-avro-schemas:processResources UP-TO-DATE
+> Task :fineract-avro-schemas:classes
+> Task :fineract-avro-schemas:jar UP-TO-DATE
+> Task :fineract-client-feign:cleanupGeneratedJavaFiles UP-TO-DATE
+> Task :fineract-client-feign:licenseFormatMain UP-TO-DATE
+> Task :spotlessInternalRegisterDependencies UP-TO-DATE
+> Task :fineract-client-feign:spotlessMisc UP-TO-DATE
+> Task :fineract-client-feign:spotlessMiscApply UP-TO-DATE
+> Task :fineract-client-feign:compileJava UP-TO-DATE
+> Task :fineract-client-feign:processResources UP-TO-DATE
+> Task :fineract-client-feign:classes UP-TO-DATE
+> Task :fineract-client-feign:jar UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-core:processResources NO-SOURCE
+> Task :fineract-e2e-tests-core:classes UP-TO-DATE
+> Task :fineract-e2e-tests-core:compileTestJava FROM-CACHE
+> Task :fineract-e2e-tests-core:processTestResources UP-TO-DATE
+> Task :fineract-e2e-tests-core:testClasses UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileJava NO-SOURCE
+> Task :fineract-e2e-tests-runner:processResources NO-SOURCE
+> Task :fineract-e2e-tests-runner:classes UP-TO-DATE
+> Task :fineract-e2e-tests-runner:compileTestJava FROM-CACHE
+> Task :fineract-e2e-tests-runner:processTestResources UP-TO-DATE
+> Task :fineract-e2e-tests-runner:testClasses UP-TO-DATE
+Picked up JAVA_TOOL_OPTIONS: -Dfineract.feign.debug=true -Dfineract.capture.log=/work/fineract-e2e-tests-runner/build/capture/feign-accrualactivity-eur.log
+15:42:01.690 [main] INFO  o.a.f.t.s.hook.InitializingHook - Setting up global defaults for Fineract
+> Task :fineract-e2e-tests-runner:cucumber
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+
+WARNING: A Java agent has been loaded dynamically (/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.8/f09415827a71be7ed621c7bd02550678f28bc81c/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+@LoanAccrualActivityFeature @TestRailId:C3697
+[1mScenario:[22m Verify accrual activity of overpaid loan in case of reversed MIR made before MIR and CBR for progressive loan - UC6                                                      [90m# fineract-e2e-tests-runner/src/test/resources/features/LoanAccrualActivity-Part2.feature:1232[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"21 March 2025"[22m[39m                                                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a client with random data[39m                                                                                                                                    [90m# org.apache.fineract.test.stepdef.common.ClientStepDef.createClientRandomFirstNameLastName()[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin creates a fully customized loan with the following data:[39m                                                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createFullyCustomizedLoan(io.cucumber.datatable.DataTable)[39m
+      | LoanProduct                                                                        | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE | 21 March 2025     | 242.46         | 29.99                  | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 12                | MONTHS                | 1              | MONTHS                 | 12                 | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully approves the loan on [1m"21 March 2025"[22m with [1m"242.46"[22m amount and expected disbursement date on [1m"21 March 2025"[22m[39m                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.approveLoan(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin successfully disburse the loan on [1m"21 March 2025"[22m with [1m"242.46"[22m EUR transaction amount[39m                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.disburseLoan(java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan Repayment schedule has [1m12[22m periods, with the following data for periods:[39m                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date              | Paid date | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid | In advance | Late | Outstanding |
+      |    |      | 21 March 2025     |           | 242.46          |               |          | 0.0  |           | 0.0   | 0.0  |            |      |             |
+      | 1  | 31   | 21 April 2025     |           | 224.88          | 17.58         | 6.06     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 2  | 30   | 21 May 2025       |           | 206.86          | 18.02         | 5.62     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 3  | 31   | 21 June 2025      |           | 188.39          | 18.47         | 5.17     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 4  | 30   | 21 July 2025      |           | 169.46          | 18.93         | 4.71     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 5  | 31   | 21 August 2025    |           | 150.06          | 19.4          | 4.24     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 6  | 31   | 21 September 2025 |           | 130.17          | 19.89         | 3.75     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 7  | 30   | 21 October 2025   |           | 109.78          | 20.39         | 3.25     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 8  | 31   | 21 November 2025  |           | 88.88           | 20.9          | 2.74     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 9  | 30   | 21 December 2025  |           | 67.46           | 21.42         | 2.22     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 10 | 31   | 21 January 2026   |           | 45.51           | 21.95         | 1.69     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 11 | 31   | 21 February 2026  |           | 23.01           | 22.5          | 1.14     | 0.0  | 0.0       | 23.64 | 0.0  | 0.0        | 0.0  | 23.64       |
+      | 12 | 28   | 21 March 2026     |           | 0.0             | 23.01         | 0.58     | 0.0  | 0.0       | 23.59 | 0.0  | 0.0        | 0.0  | 23.59       |
+  [32m✔[39m [32m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid | In advance | Late | Outstanding |
+      | 242.46        | 41.17    | 0.0  | 0.0       | 283.63 | 0.0  | 0.0        | 0.0  | 283.63      |
+  [32m✔[39m [32m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 21 March 2025    | Disbursement     | 242.46 | 0.0       | 0.0      | 0.0  | 0.0       | 242.46       | false    | false    |
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"21 March 2025"[22m with [1m100[22m EUR transaction amount[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mAnd [22mCustomer makes [1m"MERCHANT_ISSUED_REFUND"[22m transaction with [1m"AUTOPAY"[22m payment type on [1m"21 March 2025"[22m with [1m242.46[22m EUR transaction amount and system-generated Idempotency key[39m [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createTransactionWithAutoIdempotencyKey(java.lang.String,java.lang.String,java.lang.String,double)[39m
+  [32m✔[39m [32m[1mThen [22mLoan status will be [1m"OVERPAID"[22m[39m                                                                                                                                            [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanStatus(java.lang.String)[39m
+  [32m✔[39m [32m[1mThen [22mLoan has [1m100[22m overpaid amount[39m                                                                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanOverpaid(double)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"28 March 2025"[22m[39m                                                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                                                         [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin makes Credit Balance Refund transaction on [1m"28 March 2025"[22m with [1m100[22m EUR transaction amount[39m                                                                          [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.createCBR(java.lang.String,double)[39m
+  [32m✔[39m [32m[1mThen [22mLoan is closed with zero outstanding balance and it's all installments have obligations met[39m                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanClosedAndInstallmentsObligationsMet()[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"02 April 2025"[22m[39m                                                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                                                         [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [32m✔[39m [32m[1mWhen [22mCustomer undo [1m"1"[22mth [1m"Repayment"[22m transaction made on [1m"21 March 2025"[22m[39m                                                                                                       [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.undoNthTransactionType(java.lang.String,java.lang.String,java.lang.String)[39m
+  [32m✔[39m [32m[1mWhen [22mAdmin sets the business date to [1m"21 April 2025"[22m[39m                                                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [32m✔[39m [32m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                                                         [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [31m✘[39m [31m[1mThen [22mLoan Repayment schedule has [1m12[22m periods, with the following data for periods:[39m                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date              | Paid date     | Balance of loan | Principal due | Interest | Fees | Penalties | Due    | Paid  | In advance | Late | Outstanding |
+      |    |      | 21 March 2025     |               | 242.46          |               |          | 0.0  |           | 0.0    | 0.0   |            |      |             |
+      | 1  | 31   | 21 April 2025     |               | 222.26          | 120.2         | 1.93     | 0.0  | 0.0       | 122.13 | 20.2  | 20.2       | 0.0  | 101.93      |
+      | 2  | 30   | 21 May 2025       | 21 March 2025 | 202.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 3  | 31   | 21 June 2025      | 21 March 2025 | 181.86          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 4  | 30   | 21 July 2025      | 21 March 2025 | 161.66          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 5  | 31   | 21 August 2025    | 21 March 2025 | 141.46          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 6  | 31   | 21 September 2025 | 21 March 2025 | 121.26          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 7  | 30   | 21 October 2025   | 21 March 2025 | 101.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 8  | 31   | 21 November 2025  | 21 March 2025 | 80.86           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 9  | 30   | 21 December 2025  | 21 March 2025 | 60.66           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 10 | 31   | 21 January 2026   | 21 March 2025 | 40.46           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 11 | 31   | 21 February 2026  | 21 March 2025 | 20.26           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2   | 20.2  | 20.2       | 0.0  | 0.0         |
+      | 12 | 28   | 21 March 2026     | 21 March 2025 | 0.0             | 20.26         | 0.0      | 0.0  | 0.0       | 20.26  | 20.26 | 20.26      | 0.0  | 0.0         |
+        [31morg.opentest4j.AssertionFailedError: [[39m
+        [31mWrong value in Repayment schedule of resource 1 tab line 2.[39m
+        [31mActual values in line (with the same due date) are: [39m
+        [31m[1, 31, 21 April 2025, null, 222.25, 120.21, 1.93, 0.0, 0.0, 122.14, 20.21, 20.21, 0.0, 101.93] - [39m
+        [31mBut expected values in line: [39m
+        [31m[1, 31, 21 April 2025, null, 222.26, 120.2, 1.93, 0.0, 0.0, 122.13, 20.2, 20.2, 0.0, 101.93]] [39m
+        [31mExpecting value to be true but was false[39m
+        [31m	at org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(LoanStepDef.java:2312)[39m
+        [31m	at ✽.Loan Repayment schedule has 12 periods, with the following data for periods:(file:///work/fineract-e2e-tests-runner/src/test/resources/features/LoanAccrualActivity-Part2.feature:1274)[39m
+  [36m↷[39m [36m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid   | In advance | Late | Outstanding |
+      | 342.46        | 1.93     | 0.0  | 0.0       | 344.39 | 242.46 | 242.46     | 0.0  | 101.93      |
+  [36m↷[39m [36m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 21 March 2025    | Disbursement           | 242.46 | 0.0       | 0.0      | 0.0  | 0.0       | 242.46       | false    | false    |
+      | 21 March 2025    | Repayment              | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 142.46       | true     | false    |
+      | 21 March 2025    | Merchant Issued Refund | 242.46 | 242.46    | 0.0      | 0.0  | 0.0       | 0.0          | false    | true     |
+      | 28 March 2025    | Credit Balance Refund  | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 100.0        | false    | true     |
+      | 20 April 2025    | Accrual                | 1.85   | 0.0       | 1.85     | 0.0  | 0.0       | 0.0          | false    | false    |
+  [36m↷[39m [36m[1mThen [22mCredit Balance Refund transaction on active loan [1m"21 April 2025"[22m with [1m100[22m EUR transaction amount will result an error[39m                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.notOverpaidLoanCBRError(java.lang.String,double)[39m
+  [36m↷[39m [36m[1mWhen [22mAdmin sets the business date to [1m"29 April 2025"[22m[39m                                                                                                                           [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [36m↷[39m [36m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                                                         [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [36m↷[39m [36m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"29 April 2025"[22m with [1m100[22m EUR transaction amount[39m                                                                                      [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [36m↷[39m [36m[1mThen [22mLoan has [1m2.6[22m outstanding amount[39m                                                                                                                                           [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanOutstanding(double)[39m
+  [36m↷[39m [36m[1mThen [22mLoan Repayment schedule has [1m12[22m periods, with the following data for periods:[39m                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date              | Paid date     | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid  | In advance | Late  | Outstanding |
+      |    |      | 21 March 2025     |               | 242.46          |               |          | 0.0  |           | 0.0   | 0.0   |            |       |             |
+      | 1  | 31   | 21 April 2025     |               | 222.26          | 120.2         | 2.6      | 0.0  | 0.0       | 122.8 | 120.2 | 20.2       | 100.0 | 2.6         |
+      | 2  | 30   | 21 May 2025       | 21 March 2025 | 202.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 3  | 31   | 21 June 2025      | 21 March 2025 | 181.86          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 4  | 30   | 21 July 2025      | 21 March 2025 | 161.66          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 5  | 31   | 21 August 2025    | 21 March 2025 | 141.46          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 6  | 31   | 21 September 2025 | 21 March 2025 | 121.26          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 7  | 30   | 21 October 2025   | 21 March 2025 | 101.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 8  | 31   | 21 November 2025  | 21 March 2025 | 80.86           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 9  | 30   | 21 December 2025  | 21 March 2025 | 60.66           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 10 | 31   | 21 January 2026   | 21 March 2025 | 40.46           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 11 | 31   | 21 February 2026  | 21 March 2025 | 20.26           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 12 | 28   | 21 March 2026     | 21 March 2025 | 0.0             | 20.26         | 0.0      | 0.0  | 0.0       | 20.26 | 20.26 | 20.26      | 0.0   | 0.0         |
+  [36m↷[39m [36m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid   | In advance | Late  | Outstanding |
+      | 342.46        | 2.6      | 0.0  | 0.0       | 345.06 | 342.46 | 242.46     | 100.0 | 2.6         |
+  [36m↷[39m [36m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 21 March 2025    | Disbursement           | 242.46 | 0.0       | 0.0      | 0.0  | 0.0       | 242.46       | false    | false    |
+      | 21 March 2025    | Repayment              | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 142.46       | true     | false    |
+      | 21 March 2025    | Merchant Issued Refund | 242.46 | 242.46    | 0.0      | 0.0  | 0.0       | 0.0          | false    | true     |
+      | 28 March 2025    | Credit Balance Refund  | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 100.0        | false    | true     |
+      | 20 April 2025    | Accrual                | 1.85   | 0.0       | 1.85     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 21 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 22 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 23 April 2025    | Accrual                | 0.09   | 0.0       | 0.09     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 24 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 25 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 26 April 2025    | Accrual                | 0.09   | 0.0       | 0.09     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 27 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 28 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 29 April 2025    | Repayment              | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 0.0          | false    | false    |
+  [36m↷[39m [36m[1mThen [22mCredit Balance Refund transaction on active loan [1m"29 April 2025"[22m with [1m100[22m EUR transaction amount will result an error[39m                                                     [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.notOverpaidLoanCBRError(java.lang.String,double)[39m
+  [36m↷[39m [36m[1mWhen [22mAdmin sets the business date to [1m"06 May 2025"[22m[39m                                                                                                                             [90m# org.apache.fineract.test.stepdef.common.BusinessDateStepDef.setBusinessDate(java.lang.String)[39m
+  [36m↷[39m [36m[1mAnd [22mAdmin runs inline COB job for Loan[39m                                                                                                                                         [90m# org.apache.fineract.test.stepdef.loan.InlineCOBStepDef.runInlineCOB()[39m
+  [36m↷[39m [36m[1mAnd [22mCustomer makes [1m"AUTOPAY"[22m repayment on [1m"06 May 2025"[22m with [1m2.6[22m EUR transaction amount[39m                                                                                        [90m# org.apache.fineract.test.stepdef.loan.LoanRepaymentStepDef.makeLoanRepayment(java.lang.String,java.lang.String,double)[39m
+  [36m↷[39m [36m[1mThen [22mLoan is closed with zero outstanding balance and it's all installments have obligations met[39m                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanClosedAndInstallmentsObligationsMet()[39m
+  [36m↷[39m [36m[1mThen [22mLoan has [1m0[22m outstanding amount[39m                                                                                                                                             [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanOutstanding(double)[39m
+  [36m↷[39m [36m[1mThen [22mLoan Repayment schedule has [1m12[22m periods, with the following data for periods:[39m                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(int,io.cucumber.datatable.DataTable)[39m
+      | Nr | Days | Date              | Paid date     | Balance of loan | Principal due | Interest | Fees | Penalties | Due   | Paid  | In advance | Late  | Outstanding |
+      |    |      | 21 March 2025     |               | 242.46          |               |          | 0.0  |           | 0.0   | 0.0   |            |       |             |
+      | 1  | 31   | 21 April 2025     | 06 May 2025   | 222.26          | 120.2         | 2.6      | 0.0  | 0.0       | 122.8 | 122.8 | 20.2       | 102.6 | 0.0         |
+      | 2  | 30   | 21 May 2025       | 21 March 2025 | 202.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 3  | 31   | 21 June 2025      | 21 March 2025 | 181.86          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 4  | 30   | 21 July 2025      | 21 March 2025 | 161.66          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 5  | 31   | 21 August 2025    | 21 March 2025 | 141.46          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 6  | 31   | 21 September 2025 | 21 March 2025 | 121.26          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 7  | 30   | 21 October 2025   | 21 March 2025 | 101.06          | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 8  | 31   | 21 November 2025  | 21 March 2025 | 80.86           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 9  | 30   | 21 December 2025  | 21 March 2025 | 60.66           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 10 | 31   | 21 January 2026   | 21 March 2025 | 40.46           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 11 | 31   | 21 February 2026  | 21 March 2025 | 20.26           | 20.2          | 0.0      | 0.0  | 0.0       | 20.2  | 20.2  | 20.2       | 0.0   | 0.0         |
+      | 12 | 28   | 21 March 2026     | 21 March 2025 | 0.0             | 20.26         | 0.0      | 0.0  | 0.0       | 20.26 | 20.26 | 20.26      | 0.0   | 0.0         |
+  [36m↷[39m [36m[1mAnd [22mLoan Repayment schedule has the following data in Total row:[39m                                                                                                               [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentScheduleAmountCheck(io.cucumber.datatable.DataTable)[39m
+      | Principal due | Interest | Fees | Penalties | Due    | Paid   | In advance | Late  | Outstanding |
+      | 342.46        | 2.6      | 0.0  | 0.0       | 345.06 | 345.06 | 242.46     | 102.6 | 0.0         |
+  [36m↷[39m [36m[1mAnd [22mLoan Transactions tab has the following data:[39m                                                                                                                              [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.loanTransactionsTabCheck(io.cucumber.datatable.DataTable)[39m
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted | Replayed |
+      | 21 March 2025    | Disbursement           | 242.46 | 0.0       | 0.0      | 0.0  | 0.0       | 242.46       | false    | false    |
+      | 21 March 2025    | Repayment              | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 142.46       | true     | false    |
+      | 21 March 2025    | Merchant Issued Refund | 242.46 | 242.46    | 0.0      | 0.0  | 0.0       | 0.0          | false    | true     |
+      | 28 March 2025    | Credit Balance Refund  | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 100.0        | false    | true     |
+      | 20 April 2025    | Accrual                | 1.85   | 0.0       | 1.85     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 21 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 22 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 23 April 2025    | Accrual                | 0.09   | 0.0       | 0.09     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 24 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 25 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 26 April 2025    | Accrual                | 0.09   | 0.0       | 0.09     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 27 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 28 April 2025    | Accrual                | 0.08   | 0.0       | 0.08     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 29 April 2025    | Repayment              | 100.0  | 100.0     | 0.0      | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 29 April 2025    | Accrual                | 0.09   | 0.0       | 0.09     | 0.0  | 0.0       | 0.0          | false    | false    |
+      | 06 May 2025      | Repayment              | 2.6    | 0.0       | 2.6      | 0.0  | 0.0       | 0.0          | false    | false    |
+  [36m↷[39m [36m[1mThen [22mCredit Balance Refund transaction on active loan [1m"06 May 2025"[22m with [1m100[22m EUR transaction amount will result an error[39m                                                       [90m# org.apache.fineract.test.stepdef.loan.LoanStepDef.notOverpaidLoanCBRError(java.lang.String,double)[39m
+
+[31mFailed scenarios:[39m
+  1) Verify accrual activity of overpaid loan in case of reversed MIR made before MIR and CBR for progressive loan - UC6 [90m# file:///work/fineract-e2e-tests-runner/src/test/resources/features/LoanAccrualActivity-Part2.feature:1232[39m
+       [31morg.opentest4j.AssertionFailedError: [[39m
+       [31mWrong value in Repayment schedule of resource 1 tab line 2.[39m
+       [31mActual values in line (with the same due date) are: [39m
+       [31m[1, 31, 21 April 2025, null, 222.25, 120.21, 1.93, 0.0, 0.0, 122.14, 20.21, 20.21, 0.0, 101.93] - [39m
+       [31mBut expected values in line: [39m
+       [31m[1, 31, 21 April 2025, null, 222.26, 120.2, 1.93, 0.0, 0.0, 122.13, 20.2, 20.2, 0.0, 101.93]] [39m
+       [31mExpecting value to be true but was false[39m
+       [31m	at org.apache.fineract.test.stepdef.loan.LoanStepDef.loanRepaymentSchedulePeriodsCheck(LoanStepDef.java:2312)[39m
+       [31m	at ✽.Loan Repayment schedule has 12 periods, with the following data for periods:(file:///work/fineract-e2e-tests-runner/src/test/resources/features/LoanAccrualActivity-Part2.feature:1274)[39m
+
+
+1 scenarios ([31m1 failed[39m)
+48 steps ([32m27 passed[39m, [36m20 skipped[39m, [31m1 failed[39m)
+0m 43.975s
+
+> Task :fineract-e2e-tests-runner:cucumber FAILED
+
+[Incubating] Problems report is available at: file:///work/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':fineract-e2e-tests-runner:cucumber'.
+> java.lang.RuntimeException: The execution failed
+
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 56s
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+24 actionable tasks: 1 executed, 2 from cache, 21 up-to-date
+=== run end 2026-09-11T15:42:45Z rc=1 ===

@@ -1,0 +1,9 @@
+feign capture: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-accrualactivity-eur.log
+bytes: 114187919
+lines: 23546
+sha256: 52e9c2b5458576040ad74ca46c2a91e3d73794c8eeb1129add427f09e8ac46ed
+EUR code tokens: 14664
+EUR currencyCode tokens: 214
+MNT code tokens: 0
+MNT currencyCode tokens: 0
+USD currencyCode tokens: 1
