@@ -88,3 +88,9 @@ Its loan (11) is NOT committed under `loans/`. The cause is not decided here; th
 ## Isolation
 `preflight.txt` (same image as the standing oracle, baseline written fail-closed) and `teardown-isolation.txt`
 (12/12 standing counters on both standing DBs == baseline; every `tierd-*` container removed).
+
+## Currency — NOT all MNT
+Currency objects across the committed bodies: MNT 7,555, **USD 232**. The USD ones come from the product
+`LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_360_30_USD`, whose accepted create request carries
+`currencyCode: USD` — the feature file uses a USD product there, and the MNT re-seed did not change it. Loans: 31 (USD 232, MNT 0).
+Those loans' amounts are USD observations (2 minor digits), not MNT: a vector citing them must say USD, never MNT.
