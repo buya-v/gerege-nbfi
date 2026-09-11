@@ -1,0 +1,74 @@
+[
+ {
+  "scenario": "UC1",
+  "feature_line": 5,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation petiod: same as repayment  - UC1: 2nd disbursement on due date, interest recalculation enabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC2",
+  "feature_line": 76,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC2: 2nd disbursement on due date, interest recalculation disabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC3",
+  "feature_line": 147,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC3: 2nd disbursement on due date, interest recalculation disabled, partial period interest calculation disabled"
+ },
+ {
+  "scenario": "UC4",
+  "feature_line": 218,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation petiod: same as repayment  - UC4: 2nd disbursement NOT on due date, interest recalculation enabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC5",
+  "feature_line": 272,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC5: 2nd disbursement NOT on due date, interest recalculation disabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC6",
+  "feature_line": 326,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC6: 2nd disbursement NOT on due date, interest recalculation disabled, partial period interest calculation disabled"
+ },
+ {
+  "scenario": "UC7",
+  "feature_line": 380,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC7: 2nd disbursement is in the middle of 2nd period + backdated repayment, interest recalculation enabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC8",
+  "feature_line": 528,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC8: 2nd disbursement is in the middle of 2nd period + backdated repayment, interest recalculation disabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC9",
+  "feature_line": 676,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC9: 2nd disbursement is in the middle of 2nd period + backdated repayment, interest recalculation disabled, partial period interest calculation disabled"
+ },
+ {
+  "scenario": "UC10",
+  "feature_line": 824,
+  "result": "FAILED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC10: complex transactions, interest recalculation enabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC11",
+  "feature_line": 1070,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC11: complex transactions, interest recalculation disabled, partial period interest calculation enabled"
+ },
+ {
+  "scenario": "UC12",
+  "feature_line": 1315,
+  "result": "PASSED",
+  "name": "Verify Loan repayment schedule for progressive loan, interest type: Declining balance, interest calculation period: same as repayment - UC12: complex transactions, interest recalculation disabled, partial period interest calculation disabled"
+ }
+]
