@@ -1,0 +1,780 @@
+{
+  "businessDate": "2026-09-03",
+  "loans": [
+    {
+      "id": 1,
+      "accountNo": "000000001",
+      "externalId": "SEED-L01",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 2,
+      "accountNo": "000000002",
+      "externalId": "SEED-L02",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 3,
+      "accountNo": "000000003",
+      "externalId": "SEED-L03",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [
+        {
+          "period": 1,
+          "dueDate": [
+            2026,
+            9,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7884.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 1000.0,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        }
+      ],
+      "nUnpaidWithPrincipal": 11
+    },
+    {
+      "id": 4,
+      "accountNo": "000000004",
+      "externalId": "SEED-L04",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 5,
+      "accountNo": "000000005",
+      "externalId": "SEED-L05",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 6,
+      "accountNo": "000000006",
+      "externalId": "SEED-L06",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 7,
+      "accountNo": "000000007",
+      "externalId": "SEED-L07",
+      "productId": 2,
+      "productName": "SEED-Probe-Loan",
+      "accountingType": 1,
+      "loanStatusId": 100,
+      "status": "loanStatusType.submitted.and.pending.approval",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 8,
+      "accountNo": "000000008",
+      "externalId": null,
+      "productId": 1,
+      "productName": "T22 mode probe halfcent",
+      "accountingType": 1,
+      "loanStatusId": 100,
+      "status": "loanStatusType.submitted.and.pending.approval",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 9,
+      "accountNo": "000000009",
+      "externalId": null,
+      "productId": 1,
+      "productName": "T22 mode probe halfcent",
+      "accountingType": 1,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 10,
+      "accountNo": "000000010",
+      "externalId": "OHGLR-L01",
+      "productId": 3,
+      "productName": "OHLGR-Accrual-Loan",
+      "accountingType": 3,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [],
+      "nUnpaidWithPrincipal": 12
+    },
+    {
+      "id": 11,
+      "accountNo": "000000011",
+      "externalId": "OHGLR-L02",
+      "productId": 3,
+      "productName": "OHLGR-Accrual-Loan",
+      "accountingType": 3,
+      "loanStatusId": 601,
+      "status": "loanStatusType.closed.written.off",
+      "paidInstalments": [
+        {
+          "period": 1,
+          "dueDate": [
+            2026,
+            2,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7884.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 1000.0,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 2,
+          "dueDate": [
+            2026,
+            3,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7963.73,
+          "principalOutstanding": 0.0,
+          "interestDue": 921.15,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 100.0,
+          "feeChargesOutstanding": 0.0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 3,
+          "dueDate": [
+            2026,
+            4,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8043.37,
+          "principalOutstanding": 0.0,
+          "interestDue": 841.51,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 57.0,
+          "penaltyChargesOutstanding": 0.0
+        },
+        {
+          "period": 4,
+          "dueDate": [
+            2026,
+            5,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8123.8,
+          "principalOutstanding": 0.0,
+          "interestDue": 761.08,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 5,
+          "dueDate": [
+            2026,
+            6,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8205.04,
+          "principalOutstanding": 0.0,
+          "interestDue": 679.84,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 6,
+          "dueDate": [
+            2026,
+            7,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8287.09,
+          "principalOutstanding": 0.0,
+          "interestDue": 597.79,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 7,
+          "dueDate": [
+            2026,
+            8,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8369.96,
+          "principalOutstanding": 0.0,
+          "interestDue": 514.92,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 8,
+          "dueDate": [
+            2026,
+            9,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8453.66,
+          "principalOutstanding": 0.0,
+          "interestDue": 431.22,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 9,
+          "dueDate": [
+            2026,
+            10,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8538.2,
+          "principalOutstanding": 0.0,
+          "interestDue": 346.68,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 10,
+          "dueDate": [
+            2026,
+            11,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8623.58,
+          "principalOutstanding": 0.0,
+          "interestDue": 261.3,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 11,
+          "dueDate": [
+            2026,
+            12,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8709.81,
+          "principalOutstanding": 0.0,
+          "interestDue": 175.07,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 12,
+          "dueDate": [
+            2027,
+            1,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8796.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 87.97,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        }
+      ],
+      "nUnpaidWithPrincipal": 0
+    },
+    {
+      "id": 12,
+      "accountNo": "000000012",
+      "externalId": "OHLGT-L03",
+      "productId": 3,
+      "productName": "OHLGR-Accrual-Loan",
+      "accountingType": 3,
+      "loanStatusId": 300,
+      "status": "loanStatusType.active",
+      "paidInstalments": [
+        {
+          "period": 1,
+          "dueDate": [
+            2026,
+            2,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7884.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 1000.0,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 2,
+          "dueDate": [
+            2026,
+            3,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7963.73,
+          "principalOutstanding": 0.0,
+          "interestDue": 921.15,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 100.0,
+          "feeChargesOutstanding": 0.0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 3,
+          "dueDate": [
+            2026,
+            4,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8043.37,
+          "principalOutstanding": 0.0,
+          "interestDue": 841.51,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 57.0,
+          "penaltyChargesOutstanding": 0.0
+        },
+        {
+          "period": 4,
+          "dueDate": [
+            2026,
+            5,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8123.8,
+          "principalOutstanding": 0.0,
+          "interestDue": 761.08,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 5,
+          "dueDate": [
+            2026,
+            6,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8205.04,
+          "principalOutstanding": 0.0,
+          "interestDue": 679.84,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 6,
+          "dueDate": [
+            2026,
+            7,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8287.09,
+          "principalOutstanding": 0.0,
+          "interestDue": 597.79,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 7,
+          "dueDate": [
+            2026,
+            8,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8369.96,
+          "principalOutstanding": 0.0,
+          "interestDue": 514.92,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 8,
+          "dueDate": [
+            2026,
+            9,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8453.66,
+          "principalOutstanding": 0.0,
+          "interestDue": 431.22,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 9,
+          "dueDate": [
+            2026,
+            10,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8538.2,
+          "principalOutstanding": 0.0,
+          "interestDue": 346.68,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 10,
+          "dueDate": [
+            2026,
+            11,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8623.58,
+          "principalOutstanding": 0.0,
+          "interestDue": 261.3,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 11,
+          "dueDate": [
+            2026,
+            12,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8709.81,
+          "principalOutstanding": 0.0,
+          "interestDue": 175.07,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        }
+      ],
+      "nUnpaidWithPrincipal": 1
+    }
+  ],
+  "candidates": [
+    {
+      "id": 3,
+      "productId": 2,
+      "accountingType": 1,
+      "paidInstalments": [
+        {
+          "period": 1,
+          "dueDate": [
+            2026,
+            9,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7884.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 1000.0,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "productId": 3,
+      "accountingType": 3,
+      "paidInstalments": [
+        {
+          "period": 1,
+          "dueDate": [
+            2026,
+            2,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7884.88,
+          "principalOutstanding": 0.0,
+          "interestDue": 1000.0,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 2,
+          "dueDate": [
+            2026,
+            3,
+            1
+          ],
+          "complete": true,
+          "principalDue": 7963.73,
+          "principalOutstanding": 0.0,
+          "interestDue": 921.15,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 100.0,
+          "feeChargesOutstanding": 0.0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 3,
+          "dueDate": [
+            2026,
+            4,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8043.37,
+          "principalOutstanding": 0.0,
+          "interestDue": 841.51,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 57.0,
+          "penaltyChargesOutstanding": 0.0
+        },
+        {
+          "period": 4,
+          "dueDate": [
+            2026,
+            5,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8123.8,
+          "principalOutstanding": 0.0,
+          "interestDue": 761.08,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 5,
+          "dueDate": [
+            2026,
+            6,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8205.04,
+          "principalOutstanding": 0.0,
+          "interestDue": 679.84,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 6,
+          "dueDate": [
+            2026,
+            7,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8287.09,
+          "principalOutstanding": 0.0,
+          "interestDue": 597.79,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 7,
+          "dueDate": [
+            2026,
+            8,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8369.96,
+          "principalOutstanding": 0.0,
+          "interestDue": 514.92,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 8,
+          "dueDate": [
+            2026,
+            9,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8453.66,
+          "principalOutstanding": 0.0,
+          "interestDue": 431.22,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 9,
+          "dueDate": [
+            2026,
+            10,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8538.2,
+          "principalOutstanding": 0.0,
+          "interestDue": 346.68,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 10,
+          "dueDate": [
+            2026,
+            11,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8623.58,
+          "principalOutstanding": 0.0,
+          "interestDue": 261.3,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        },
+        {
+          "period": 11,
+          "dueDate": [
+            2026,
+            12,
+            1
+          ],
+          "complete": true,
+          "principalDue": 8709.81,
+          "principalOutstanding": 0.0,
+          "interestDue": 175.07,
+          "interestOutstanding": 0.0,
+          "feeChargesDue": 0,
+          "feeChargesOutstanding": 0,
+          "penaltyChargesDue": 0,
+          "penaltyChargesOutstanding": 0
+        }
+      ]
+    }
+  ]
+}
