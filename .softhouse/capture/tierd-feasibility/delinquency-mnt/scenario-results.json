@@ -1,0 +1,652 @@
+{
+ "feature": "LoanDelinquency-Part1.feature",
+ "scenarios": [
+  {
+   "index": 1,
+   "line": 5,
+   "loan_client": 1,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    1
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE and RESUME by loanId",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2963"
+  },
+  {
+   "index": 2,
+   "line": 26,
+   "loan_client": 2,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    2
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE and RESUME by loanExternalId",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2964"
+  },
+  {
+   "index": 3,
+   "line": 47,
+   "loan_client": 3,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    3
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE and RESUME actions supported only",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2965"
+  },
+  {
+   "index": 4,
+   "line": 69,
+   "loan_client": 4,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    4
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE with start date on actual business date",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2966"
+  },
+  {
+   "index": 5,
+   "line": 84,
+   "loan_client": 5,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    5
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE with start date later than actual business date",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2967"
+  },
+  {
+   "index": 6,
+   "line": 99,
+   "loan_client": 6,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    6
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE with start date before than actual business date is possible",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2968"
+  },
+  {
+   "index": 7,
+   "line": 114,
+   "loan_client": 7,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    7
+   ],
+   "name": "Verify Loan delinquency pause API - PAUSE action on non-active loan result an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2969"
+  },
+  {
+   "index": 8,
+   "line": 139,
+   "loan_client": 8,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    8
+   ],
+   "name": "Verify Loan delinquency pause API - RESUME action on non-active loan result an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2970"
+  },
+  {
+   "index": 9,
+   "line": 162,
+   "loan_client": 9,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    9
+   ],
+   "name": "Verify Loan delinquency pause API - Overlapping PAUSE periods result an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2971"
+  },
+  {
+   "index": 10,
+   "line": 179,
+   "loan_client": 10,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    10
+   ],
+   "name": "Verify Loan delinquency pause API - RESUME without an active PAUSE period results an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2972"
+  },
+  {
+   "index": 11,
+   "line": 190,
+   "loan_client": 11,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    11
+   ],
+   "name": "Verify Loan delinquency pause API - RESUME with start date before than actual business date results an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2973"
+  },
+  {
+   "index": 12,
+   "line": 207,
+   "loan_client": 12,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    12
+   ],
+   "name": "Verify Loan delinquency pause API - RESUME with start date later than actual business date results an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2974"
+  },
+  {
+   "index": 13,
+   "line": 224,
+   "loan_client": 13,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    13
+   ],
+   "name": "Verify Loan delinquency pause API - RESUME with end date results an error",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2975"
+  },
+  {
+   "index": 14,
+   "line": 241,
+   "loan_client": 14,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    14
+   ],
+   "name": "Verify Loan level loan delinquency - loan goes into delinquency pause then will be resumed",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2992"
+  },
+  {
+   "index": 15,
+   "line": 269,
+   "loan_client": 15,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    15
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes into delinquency bucket",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2979"
+  },
+  {
+   "index": 16,
+   "line": 286,
+   "loan_client": 16,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    16
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes from one delinquency bucket to an other",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2980"
+  },
+  {
+   "index": 17,
+   "line": 311,
+   "loan_client": 17,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    17
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes out from delinquency by late repayment",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2981"
+  },
+  {
+   "index": 18,
+   "line": 332,
+   "loan_client": 18,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    18
+   ],
+   "name": "Verify Installment level loan delinquency - some of the installments go out from delinquency by late repayment",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2982"
+  },
+  {
+   "index": 19,
+   "line": 354,
+   "loan_client": 19,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    19
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes out from delinquency by Goodwill credit transaction",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2983"
+  },
+  {
+   "index": 20,
+   "line": 375,
+   "loan_client": 20,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    20
+   ],
+   "name": "Verify Installment level loan delinquency - some of the installments go out from delinquency by Goodwill credit transaction",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2984"
+  },
+  {
+   "index": 21,
+   "line": 397,
+   "loan_client": 21,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    21
+   ],
+   "name": "Verify Installment level loan delinquency - loan with charges goes into delinquency bucket",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2985"
+  },
+  {
+   "index": 22,
+   "line": 417,
+   "loan_client": 22,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    22
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes into delinquency pause",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2987"
+  },
+  {
+   "index": 23,
+   "line": 467,
+   "loan_client": 23,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    23
+   ],
+   "name": "Verify Installment level loan delinquency - loan goes into delinquency pause then will be resumed",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2988"
+  },
+  {
+   "index": 24,
+   "line": 513,
+   "loan_client": 24,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    24
+   ],
+   "name": "Verify that a non-super user with CREATE_DELINQUENCY_ACTION permission can initiate a DELINQUENCY PAUSE",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2990"
+  },
+  {
+   "index": 25,
+   "line": 531,
+   "loan_client": 25,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    25
+   ],
+   "name": "Verify that a non-super user with no CREATE_DELINQUENCY_ACTION permission gets an error when initiate a DELINQUENCY PAUSE",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C2991"
+  },
+  {
+   "index": 26,
+   "line": 545,
+   "loan_client": 26,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    26
+   ],
+   "name": "Verify Loan delinquency pause E2E - full PAUSE period",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C2999"
+  },
+  {
+   "index": 27,
+   "line": 617,
+   "loan_client": 27,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    27
+   ],
+   "name": "Verify Loan delinquency pause E2E - PAUSE period with RESUME",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3000"
+  },
+  {
+   "index": 28,
+   "line": 667,
+   "loan_client": 28,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    28
+   ],
+   "name": "Verify Loan delinquency pause E2E - PAUSE period with RESUME and second PAUSE",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3001"
+  },
+  {
+   "index": 29,
+   "line": 797,
+   "loan_client": 29,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    29
+   ],
+   "name": "Verify Loan delinquency pause E2E - full repayment (late/due date) during PAUSE period",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3002"
+  },
+  {
+   "index": 30,
+   "line": 853,
+   "loan_client": 30,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    30
+   ],
+   "name": "Verify Loan delinquency pause E2E - partial repayment during PAUSE period",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3003"
+  },
+  {
+   "index": 31,
+   "line": 912,
+   "loan_client": 31,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    31
+   ],
+   "name": "Verify Loan delinquency pause E2E - full repayment (only late) during PAUSE period then RESUME",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3004"
+  },
+  {
+   "index": 32,
+   "line": 1005,
+   "loan_client": 32,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    32
+   ],
+   "name": "Verify that in case of resume on end/start date of continous pause periods first period ends automatically, second period ended by resume",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3013"
+  },
+  {
+   "index": 33,
+   "line": 1070,
+   "loans": [],
+   "name": "Verify that creating a loan with Advanced payment allocation with product no Advanced payment allocation set results an error",
+   "note": "creates a client and a deliberately failing loan; no loan id",
+   "product": "LP1",
+   "result": "PASSED",
+   "tag": "C3014"
+  },
+  {
+   "index": 34,
+   "line": 1078,
+   "loan_client": 34,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    33
+   ],
+   "name": "Verify Backdated Pause Delinquency - Event Trigger: LoanDelinquencyRangeChangeBusinessEvent, LoanAccountDelinquencyPauseChangedBusinessEvent check",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3015"
+  },
+  {
+   "index": 35,
+   "line": 1113,
+   "loan_client": 35,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    34
+   ],
+   "name": "Verify that for pause period calculations business date is being used instead of COB date",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3016"
+  },
+  {
+   "index": 36,
+   "line": 1168,
+   "loan_client": 36,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    35
+   ],
+   "name": "Verify that if Global configuration: next-payment-due-date is set to: earliest-unpaid-date then in Loan details delinquent.nextPaymentDueDate will be the first unpaid installment date",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3018"
+  },
+  {
+   "index": 37,
+   "line": 1184,
+   "loan_client": 37,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    36
+   ],
+   "name": "Verify that if Global configuration: next-payment-due-date is set to: next-unpaid-due-date then in Loan details delinquent.nextPaymentDueDate will be the next unpaid installment date regardless of the status of previous installments",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3019"
+  },
+  {
+   "index": 38,
+   "line": 1200,
+   "loan_client": 38,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    37
+   ],
+   "name": "Verify that delinquencyRange field in LoanAccountDelinquencyRangeDataV1 is not null in case of delinquent Loan",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3032"
+  },
+  {
+   "index": 39,
+   "line": 1216,
+   "loan_client": 39,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "loans": [
+    38
+   ],
+   "name": "Verify that delinquency is NOT applied after loan submitted and approved",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_INSTALLMENT_LEVEL_DELINQUENCY",
+   "result": "PASSED",
+   "tag": "C3035"
+  },
+  {
+   "index": 40,
+   "line": 1231,
+   "loan_client": 40,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    39
+   ],
+   "name": "Verify that delinquent.lastRepaymentAmount is calculated correctly in case of auto downpayment",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C3047"
+  },
+  {
+   "index": 41,
+   "line": 1243,
+   "loan_client": 41,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    40
+   ],
+   "name": "Verify that on Loans in SUBMITTED_AND_PENDING_APPROVAL or APPROVED status delinquency is not applied",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C3066"
+  },
+  {
+   "index": 42,
+   "line": 1257,
+   "loan_client": 42,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    41
+   ],
+   "name": "Verify that the delinquency is not applied on Loan with Rejected status",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C3135"
+  },
+  {
+   "index": 43,
+   "line": 1282,
+   "loan_client": 43,
+   "loan_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "loans": [
+    42
+   ],
+   "name": "Verify that the delinquency is not applied on Loan with Withdrawn status",
+   "product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "result": "PASSED",
+   "tag": "C3136"
+  },
+  {
+   "index": 44,
+   "line": 1307,
+   "loan_client": 44,
+   "loan_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "loans": [
+    43
+   ],
+   "name": "Verify Installment level loan delinquency can be applied on loan account level in case of non-installment level delinquency loan product",
+   "product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "result": "PASSED",
+   "tag": "C3137"
+  },
+  {
+   "index": 45,
+   "line": 1324,
+   "loan_client": 45,
+   "loan_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "loans": [
+    44
+   ],
+   "name": "Verify nextPaymentAmount value with repayment on first installment - progressive loan, no interest recalculation, zero interest rate - UC1",
+   "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "result": "PASSED",
+   "tag": "C3930"
+  },
+  {
+   "index": 46,
+   "line": 1394,
+   "loan_client": 46,
+   "loan_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "loans": [
+    45
+   ],
+   "name": "Verify nextPaymentAmount value with penalty on first installment - progressive loan, no interest recalculation, non-zero interest rate - UC2",
+   "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30",
+   "result": "PASSED",
+   "tag": "C3931"
+  },
+  {
+   "index": 47,
+   "line": 1460,
+   "loan_client": 47,
+   "loan_product": "LP2_INTEREST_FLAT_ADV_PMT_ALLOC_MULTIDISBURSE",
+   "loans": [
+    46
+   ],
+   "name": "Verify nextPaymentAmount value with repayment at 2nd installment - progressive loan, no interest recalculation, the same as repayment period - UC3",
+   "product": "LP2_INTEREST_FLAT_ADV_PMT_ALLOC_MULTIDISBURSE",
+   "result": "PASSED",
+   "tag": "C3932"
+  },
+  {
+   "index": 48,
+   "line": 1524,
+   "loan_client": 48,
+   "loan_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "loans": [
+    47
+   ],
+   "name": "Verify nextPaymentAmount value - progressive loan, interest recalculation daily - UC4",
+   "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "result": "PASSED",
+   "tag": "C3933"
+  },
+  {
+   "index": 49,
+   "line": 1586,
+   "loan_client": 49,
+   "loan_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "loans": [
+    48
+   ],
+   "name": "Verify nextPaymentAmount value with chargeback - progressive loan, interest recalculation daily - UC5",
+   "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "result": "PASSED",
+   "tag": "C3934"
+  },
+  {
+   "index": 50,
+   "line": 1658,
+   "loan_client": 50,
+   "loan_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "loans": [
+    49
+   ],
+   "name": "Verify nextPaymentAmount value with full repayment on first installment - progressive loan, interest recalculation daily - UC6",
+   "product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "result": "PASSED",
+   "tag": "C3935"
+  }
+ ]
+}
