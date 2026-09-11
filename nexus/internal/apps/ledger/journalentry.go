@@ -84,6 +84,17 @@ type JournalEntry struct {
 	CurrencyCode  string
 	TransactionID string
 	Reversed      bool
+	// ReversalEntry is the counter-entry that reverses this one; it is nil on
+	// every entry that is not the original of a MANUAL reversal. The oracle
+	// records this link as acc_gl_journal_entry.reversal_id, the counter row's
+	// database id [VERIFIED: doc.go TRAP 3 lists reversal_id among
+	// acc_gl_journal_entry's columns; the capture read it as the counter ids
+	// 143 and 144]. A pure builder cannot know a database-assigned id and must
+	// never invent one, so RevertJournalEntries represents the same link by
+	// identity: the pointer names the counter-entry it built for this original.
+	// The LOAN reversal path neither flags an original nor links one
+	// (loan/reversal.go); only the manual path sets this field.
+	ReversalEntry *JournalEntry
 	ManualEntry   bool
 	EntryDate     string // strict yyyy-MM-dd
 	Side          EntrySide
