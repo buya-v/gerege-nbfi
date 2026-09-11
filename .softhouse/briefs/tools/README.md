@@ -234,3 +234,18 @@ loanschedule vectors on a scratch copy — exactly 45 — and WITH them — 48. 
 disagrees, first measure it without the run's new vectors: equal to the pinned value means
 the corpus moved (update the pin); different means the instrument moved (stop).
 Current controls: 365 = 48, half-even = 5, parties iota = 12, charges half-even = 1.
+
+## nightq.sh — the overnight queue (Buyan, 2026-09-11: "queue but don't merge")
+
+    nohup caffeinate -is bash .softhouse/briefs/tools/nightq.sh > .softhouse/briefs/logs/nightq.log 2>&1 &
+
+Runs every brief in `.softhouse/briefs/queue/` in filename order, one at a time, each in its
+own worktree/branch cut from the current main; a wall-clock limit per run (NIGHTQ_LIMIT_MIN,
+default 75) kills a stalled run and its children by pid and moves on. It NEVER merges or
+pushes; each brief is renamed `done-` and the report (the nohup log) lists every
+branch for the driver's morning review with review.sh. Queue only ORACLE-FREE briefs —
+nobody watches the oracle overnight.
+
+Control-tested with NIGHTQ_DRY=1 before use: valid briefs run; a brief without a Worktree
+line is skipped; finished briefs are not re-run; the kill path fires at the limit, leaves no
+process behind, and reports KILLED (never END).
