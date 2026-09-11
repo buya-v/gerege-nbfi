@@ -380,7 +380,7 @@ func TestRefusedVectorDoesNotSilenceUnbackedEndToEnd(t *testing.T) {
 
 	// The kill count must shed exactly the refused vectors' kills, and the shed
 	// count must be DISCLOSED rather than dropped. 14 refused vectors carry 62
-	// kills (56 money, 6 structural) of the store's 113 (106 money, 7 structural).
+	// kills (56 money, 6 structural) of the store's 118 (111 money, 7 structural).
 	//
 	// THESE THREE NUMBERS ARE CORPUS-WIDE TRIPWIRES AND THEY MOVED WITH T116.
 	// 110 -> 113 and 103 -> 106 money kills, because T116 promoted three parity
@@ -389,11 +389,19 @@ func TestRefusedVectorDoesNotSilenceUnbackedEndToEnd(t *testing.T) {
 	// none of the three being among the 14 the perturbation refuses. The refused
 	// count (62) and the structural counts (7 and 1) are UNMOVED, which is what
 	// says the change is additive and touched no existing vector.
+	//
+	// MOVED AGAIN WITH OH-LSGRADE-AX: 113 -> 118 and 106 -> 111 money kills. That
+	// promotion added three parity vectors (LSCAP-DISB-P1, -P3, -BND) from capture
+	// pass 3j, each transcribing a disbursement dated inside a LATER repayment
+	// period; they carry five money counterfactuals in total (one straight-line
+	// each, plus one final-period-balancing on P3 and BND). The credited count
+	// moved 51 -> 56 and NONE of the three is among the refused 14, so the refused
+	// count (62) and both structural counts (7 and 1) stay UNMOVED again.
 	if s.RefusedCounterfactualsNamed != 62 {
 		t.Errorf("kills carried by refused vectors: got %d, want 62", s.RefusedCounterfactualsNamed)
 	}
-	if s.CounterfactualsNamed != 51 || s.MoneyKills != 50 || s.StructuralKills != 1 {
-		t.Errorf("credited kills: got %d (%d money, %d structural), want 51 (50 money, 1 structural)",
+	if s.CounterfactualsNamed != 56 || s.MoneyKills != 55 || s.StructuralKills != 1 {
+		t.Errorf("credited kills: got %d (%d money, %d structural), want 56 (55 money, 1 structural)",
 			s.CounterfactualsNamed, s.MoneyKills, s.StructuralKills)
 	}
 	if !strings.Contains(out, "kills carried by REFUSED vectors") {
@@ -417,9 +425,9 @@ func TestRefusedVectorDoesNotSilenceUnbackedEndToEnd(t *testing.T) {
 		t.Errorf("kills carried by refused vectors on the committed store: got %d, want 0",
 			ps.RefusedCounterfactualsNamed)
 	}
-	if ps.CounterfactualsNamed != 113 || ps.MoneyKills != 106 || ps.StructuralKills != 7 {
+	if ps.CounterfactualsNamed != 118 || ps.MoneyKills != 111 || ps.StructuralKills != 7 {
 		t.Errorf("the committed store's kill count moved: got %d (%d money, %d structural), "+
-			"want 113 (106 money, 7 structural)",
+			"want 118 (111 money, 7 structural)",
 			ps.CounterfactualsNamed, ps.MoneyKills, ps.StructuralKills)
 	}
 	if len(ps.UncoveredGradedCapabilities) != 0 {
@@ -678,11 +686,12 @@ func TestErroredVectorCannotBackACapability(t *testing.T) {
 			s.ErroredCorroborationsClaimed, injected)
 	}
 	// THE CORPUS-WIDE TRIPWIRE, and it MOVED WITH T116 (110 -> 113, 103 -> 106
-	// money). Same three numbers as TestRefusedVectorDoesNotSilenceUnbackedEndToEnd
-	// asserts for the pristine store, because this run sheds the whole corpus.
-	if s.ErroredCounterfactualsNamed != 113 {
-		t.Errorf("kills carried by HARNESS-ERROR vectors: got %d, want 113 (the whole committed corpus). "+
-			"If a promotion moved the corpus, move this number and the 113 in "+
+	// money) and again with OH-LSGRADE-AX (113 -> 118, 106 -> 111 money). Same three
+	// numbers as TestRefusedVectorDoesNotSilenceUnbackedEndToEnd asserts for the
+	// pristine store, because this run sheds the whole corpus.
+	if s.ErroredCounterfactualsNamed != 118 {
+		t.Errorf("kills carried by HARNESS-ERROR vectors: got %d, want 118 (the whole committed corpus). "+
+			"If a promotion moved the corpus, move this number and the 118 in "+
 			"TestRefusedVectorDoesNotSilenceUnbackedEndToEnd together.", s.ErroredCounterfactualsNamed)
 	}
 
