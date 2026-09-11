@@ -47,10 +47,14 @@
 #     go/types reachability discriminator, which does not exist yet, and the
 #     persistence-surface heuristic proposed instead was MEASURED being defeated by one
 #     `git mv` (T505 MAJOR-1).
-I3-COMPOSITE-BALANCE	internal/apps/loanproduct/interestperiod.go
-I3-COMPOSITE-BALANCE	internal/apps/loanproduct/repaymentperiod.go
-I3-FIELD-WRITE	internal/apps/loanproduct/interestperiod.go
-I3-FIELD-WRITE	internal/apps/loanproduct/repaymentperiod.go
+#
+#     REPAIRED 2026-09-11 BY DELETION (OH-LPDEL-BF, on Buyan's decision): the four loanproduct
+#     rows that stood here -- I3-COMPOSITE-BALANCE and I3-FIELD-WRITE in interestperiod.go and
+#     repaymentperiod.go -- were in loanproduct's progressive-recomputation kernel, which no
+#     application imported and no vector reached (F-2026-09-11-loanproduct-graded-coverage §5.1).
+#     The kernel was deleted; the schedule arithmetic lives in loanschedule, graded under DEC-1.
+#     The rows are removed in the same commit as the files, so the repair is visible here and
+#     not by a finding quietly vanishing. The twin loanschedule/emi.go row below is UNTOUCHED.
 #
 # --- found by T509's widening; each needs an owner, none is cleared by this file ---
 #     loan/charge.go         AmountOutstanding, the port of m_loan_charge.amount_outstanding_derived
