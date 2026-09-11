@@ -1,0 +1,5 @@
+# OH-WOPAID-AU business date (read-only)
+type|date
+BUSINESS_DATE|2026-09-03
+COB_DATE|2026-09-02
+(2 rows)
