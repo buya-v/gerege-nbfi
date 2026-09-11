@@ -14,6 +14,7 @@ PSQL="docker exec gerege-oracle-db psql -U postgres -d fineract_gerege"
   $PSQL -c "SELECT step_execution_id, job_execution_id, step_name, status, exit_code FROM batch_step_execution WHERE job_execution_id=10046"
   $PSQL -c "SELECT * FROM batch_job_execution_params WHERE job_execution_id=10046"
   $PSQL -c "SELECT job_execution_id, length(short_context) FROM batch_job_execution_context WHERE job_execution_id=10046"
+  $PSQL -c "SELECT step_execution_id, length(short_context) FROM batch_step_execution_context WHERE step_execution_id=10073"
 } > "$OUT/batch-rows-10046.txt" 2>&1
 
 # the failing cast's inputs, read off the row the tasklet would have consumed:

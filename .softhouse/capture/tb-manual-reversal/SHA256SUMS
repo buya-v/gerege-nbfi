@@ -1,4 +1,4 @@
-fbe3706dbb51fe2b7dea139978d4a96d65e0aaf84d30c72446844097697be25e  ./OWNER.md
+76a313a5869b9ca98f59ec99d7007489dc4e6a1812e0c2d971e7ade8cb4842b6  ./OWNER.md
 581f79b41453220ff3f7eb23d6c318b5cf20595a320ba998cc64072a1bab80db  ./WHY-EMPTY.md
 343d4bc5c0e278a632812e0c896a0313a695c67a79cd9f0796f2718d374c4362  ./bin/rest.sh
 e14b037afabb88269b00e9c4aff5d92839ee31c42ddbed976c5ecdfa7ca5d658  ./bin/step00-baseline.sh
@@ -8,7 +8,7 @@ e14b037afabb88269b00e9c4aff5d92839ee31c42ddbed976c5ecdfa7ca5d658  ./bin/step00-b
 d2ce04d589bf92becdaa9c94a837cd726ead7c4df92a3d79ba739aa42a42ce47  ./bin/step03-readback.sh
 8e6a86942080d19fc286c04df256ecf779c27967a085063dbe8d8479c2556c3a  ./bin/step04-execute-job30.sh
 60f26c613b0f3c91cbf6d160fb8c8e2780254e8b0c3339502ca254653c2a22a2  ./bin/step05-read-mtb.sh
-8117be621bf274064a8f9ab3b6b1c36d0487d1991277222bcf83c7d91c3e255e  ./bin/step06-record-reason.sh
+7413f5deb9c2fdab83ad4850f5c8b9ae26d4ce82728cf4c8239d659a5e37555d  ./bin/step06-record-reason.sh
 299217fd4460d2ecf580c30fd78e675029c71644083036d1b3e33c580be50efc  ./evidence/default-tenant-job30-failure-2026-09-08.txt
 223ba84bca2de5cf7f51a4a673ca779d7ef363ff8f6f25ac1a358573871c8cfd  ./evidence/job30-run-log-extract.txt
 2d94b37ac720cebb3e8cd2a94b88be7e83343f54f7c31edf2c7ce39807d9a93b  ./raw/00-businessdate-sql.txt
@@ -91,5 +91,5 @@ a508e0792f7c287c9f3394dc75381ab50b61cd7f891d7159320a66704369c586  ./step05-trial
 476644ee500dc3208ea4e262ba245efd2eeb5187e1377e19da97fa26bea70934  ./step05-trial-balance/mtb-columns.txt
 9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./step05-trial-balance/mtb-count.txt
 c95534cdac39ee91e1afe0d906cc27dd44ec5dd54e927322e59152c14dc393dd  ./step06-reason/REASON.md
-ff56ec5abc20c2adab46e92197e0293635d158a542b9267a8a6d630811577f88  ./step06-reason/batch-rows-10046.txt
+093f5a9dca05d7e59ef75f9ac912e1e07d7f16c915d49dcc3adf0fccd581d50b  ./step06-reason/batch-rows-10046.txt
 4ed8f00fad77aef0dbb839ca1cf57cddf826de840ec8fd2c1007b4c5f16b0a18  ./step06-reason/row4-type.txt
