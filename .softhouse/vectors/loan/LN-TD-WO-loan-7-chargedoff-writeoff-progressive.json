@@ -1,0 +1,78 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-WO-loan-7-chargedoff-writeoff-progressive",
+ "title": "A non-fraud write-off on a loan MARKED CHARGED OFF credits the 83.57 principal and 1.47 interest to their charge-off income accounts and debits the 85.04 total ONCE to LOSSES_WRITTEN_OFF (loan 7 L27)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a write-off posted on a loan ALREADY MARKED CHARGED OFF, under createJournalEntriesForWriteOffsWhenLoanIsChargedOff, on the Tier-D MNT write-off replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF / product 67) at the write-off transaction. request.charged_off_write_off_journal.portions transcribes the loan read-back's write-off transaction id 27 (externalId L27, type loanTransactionType.writeOff, fraud false, chargedOff true): principalPortion 83.57 -> \"8357\", interestPortion 1.47 -> \"147\" minor units; feeChargesPortion, penaltyChargesPortion and overpaymentPortion are 0 and are omitted. request.charged_off_write_off_journal.fraud is the loan's observed fraud flag false. request.charged_off_write_off_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF.json: chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 16, incomeFromChargeOffPenaltyAccountId 16, overpaymentLiabilityAccountId 11, writeOffAccountId 19, fundSourceAccountId 5. expect.charged_off_write_off_journal_legs is a TRANSCRIPTION of the three L27 legs in id order from the journal-entries read-back: JE 65 CREDIT account 18 83.57, JE 66 CREDIT account 20 1.47, JE 67 DEBIT account 19 85.04. THIS VECTOR GRADES ONE PROPERTY: a charged-off write-off with a fractional minor-unit principal and interest CREDITS each to its distinct charge-off account at the exact integer minor unit (8357 / 147), then DEBITs the total ONCE to losses-written-off (8504), with the credits before the single debit. It discriminates a port that rounds or drops sub-major-unit residue (the amounts are not whole major units), that posts one debit per portion, or that posts the fund-source debits. WHAT THIS VECTOR DOES NOT GRADE: the fraud branch (LN-TD-WO-loan-9-chargedoff-writeoff-fraud) and the same-account merge (LN-TD-WO-loan-4-chargedoff-writeoff-merged); fee/penalty/overpayment are zero here. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files; 83.57 and 1.47 are exact decimal parses to integer minor units, never floats.",
+ "oracle": {
+  "seam": "loan-chargedoff-writeoff-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charged_off_write_off_journal.portions and .fraud are transcribed from the committed write-off loan read-back .softhouse/capture/tierd-feasibility/writeoff-mnt/loans/loan-7/loan-7-detail-associations-transactions-5.json (sha256 5c58eb126bce157c952e23440276fc7fb8c7fa027f0869cb9a7d970f0e69284c): fraud false, chargedOff true, transactions[id 27, externalId L27] type loanTransactionType.writeOff with principalPortion 83.57, interestPortion 1.47, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. expect.charged_off_write_off_journal_legs is transcribed from the committed journal-entries read-back journalentries/loan-7/loan-7-journalentries-2.json (sha256 0988b3beafc525137498cacc154fdac5b38789e36ffa808a428db34bc360092b), transactionId L27 pageItems ids 65-67. request.charged_off_write_off_journal.accounts is transcribed from the committed product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF.json (sha256 8e8e11833f73fc8be46b493c3b0b04e57454ade7c57ef0249d515cca3e81697d). TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario writeOff on a charged-off loan; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/writeoff-mnt/journalentries/loan-7/loan-7-journalentries-2.json",
+  "capture_sha256": "0988b3beafc525137498cacc154fdac5b38789e36ffa808a428db34bc360092b",
+  "capture_case_id": "L27",
+  "citation": "journalentries/loan-7/loan-7-journalentries-2.json:1 (sha256 0988b3beafc525137498cacc154fdac5b38789e36ffa808a428db34bc360092b, committed read-back, tenant tierd): transactionId L27 carries three legs in id order -- id 65 entryType.value CREDIT glAccountId 18 amount 83.57; id 66 CREDIT glAccountId 20 amount 1.47; id 67 DEBIT glAccountId 19 amount 85.04. The two credits sum to the one debit (8357 + 147 = 8504 minor units). Portions are in loans/loan-7/loan-7-detail-associations-transactions-5.json:1 (sha256 5c58eb126bce157c952e23440276fc7fb8c7fa027f0869cb9a7d970f0e69284c): fraud false, chargedOff true, transactions[id 27 externalId L27] type loanTransactionType.writeOff, principalPortion 83.57, interestPortion 1.47, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF.json:1 (sha256 8e8e11833f73fc8be46b493c3b0b04e57454ade7c57ef0249d515cca3e81697d): chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 13, incomeFromChargeOffInterestAccountId 20, incomeFromChargeOffFeesAccountId 16, incomeFromChargeOffPenaltyAccountId 16, overpaymentLiabilityAccountId 11, writeOffAccountId 19, fundSourceAccountId 5."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charged_off_write_off_journal": {
+   "transaction_id": "L27",
+   "portions": {
+    "principal": "8357",
+    "interest": "147",
+    "fee": "0",
+    "penalty": "0"
+   },
+   "accounts": {
+    "charge_off_expense": "18",
+    "charge_off_fraud_expense": "13",
+    "income_from_charge_off_interest": "20",
+    "income_from_charge_off_fees": "16",
+    "income_from_charge_off_penalty": "16",
+    "overpayment": "11",
+    "losses_written_off": "19",
+    "fund_source": "5"
+   }
+  }
+ },
+ "expect": {
+  "charged_off_write_off_journal_legs": [
+   {
+    "transaction_id": "L27",
+    "account": "18",
+    "entry_type": "CREDIT",
+    "amount_minor": "8357"
+   },
+   {
+    "transaction_id": "L27",
+    "account": "20",
+    "entry_type": "CREDIT",
+    "amount_minor": "147"
+   },
+   {
+    "transaction_id": "L27",
+    "account": "19",
+    "entry_type": "DEBIT",
+    "amount_minor": "8504"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "chargedoff-writeoff-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-chargedoff-writeoff-debits-fund-source"
+ ]
+}

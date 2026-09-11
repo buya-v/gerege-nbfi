@@ -218,6 +218,30 @@ const SeamLoanWriteOffJournalEntries = "loan-writeoff-journal-entries"
 // a penalty portion alone.
 const SeamLoanChargeOffJournalEntries = "loan-chargeoff-journal-entries"
 
+// SeamLoanChargedOffWriteOffJournalEntries is the capture seam this schema
+// grades: the journal entry a WRITE-OFF posts on a loan that is ALREADY MARKED
+// CHARGED OFF, the charged-off sibling of the write-off-journal seam. It ports
+// AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForWriteOffsWhenLoanIsChargedOff [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:1616-1694, pinned commit
+// 426a23544]. For each of the five portion slots (principal, interest, fees,
+// penalties, overpayment) whose portion is > 0 the processor CREDITS the
+// charge-off expense/income account the earlier charge-off debited — the FRAUD
+// expense account for the principal when the loan is marked fraud, the ordinary
+// charge-off expense account otherwise — MERGING portions that resolve to the
+// SAME account (accountMap is a LinkedHashMap); it then posts the credits in
+// insertion order followed by ONE debit of the total to LOSSES_WRITTEN_OFF. The
+// FUND_SOURCE debits populateCreditDebitMaps accumulates are NEVER posted: only
+// the credit map is iterated.
+//
+// On the pinned observations transaction L16 (loan 4, non-fraud) credits the
+// charge-off expense 100000, the charge-off interest account 3000 and the
+// fee+penalty account 11300, then debits losses-written-off 114300; L37 (loan 9,
+// fraud) credits the fraud expense 75000 and debits 75000; L27 (loan 7)
+// credits 8357 and 147 then debits 8504. The account ids are THIS replay's
+// product mappings, not an earlier replay's.
+const SeamLoanChargedOffWriteOffJournalEntries = "loan-chargedoff-writeoff-journal-entries"
+
 // SeamLoanChargebackJournalEntries is the capture seam this schema grades: the
 // journal entry a loan CHARGEBACK posts on a loan that is NOT charged off, the
 // chargeback sibling of the charge-off-journal seam. It ports
@@ -482,6 +506,55 @@ type ChargeOffJournalRequest struct {
 	Accounts      ChargeOffSlotAccounts  `json:"accounts"`
 }
 
+// ChargedOffWriteOffPortionsMoney is the per-slot money a write-off on a
+// charged-off loan reverses, each slot an integer STRING in minor units. It is
+// the request-side reduction of loan.ChargedOffWriteOffPortions: the five fields
+// createJournalEntriesForWriteOffsWhenLoanIsChargedOff reads off the write-off
+// transaction. Overpayment is optional (absent when the observed read-back
+// omits it).
+type ChargedOffWriteOffPortionsMoney struct {
+	Principal   string `json:"principal"`
+	Interest    string `json:"interest"`
+	Fee         string `json:"fee"`
+	Penalty     string `json:"penalty"`
+	Overpayment string `json:"overpayment,omitempty"`
+}
+
+// ChargedOffWriteOffSlotAccounts is the product's charged-off write-off
+// slot->account mapping, each account the GL code the oracle's
+// GET /loanproducts/{id}.accountingMappings returns for that slot. The
+// charge-off expense (or fraud expense, when the loan is marked fraud),
+// income-from-charge-off-interest, income-from-charge-off-fees,
+// income-from-charge-off-penalty and overpayment slots are CREDITED; the
+// losses-written-off slot is DEBITed ONCE with the total. FundSource is the
+// product's FUND_SOURCE slot, which the processor resolves as the paired debit
+// of every portion and NEVER posts; it carries no posting and exists only so
+// the wrong-mode drive can name the account its unposted debit map would use.
+type ChargedOffWriteOffSlotAccounts struct {
+	ChargeOffExpense            string `json:"charge_off_expense"`
+	ChargeOffFraudExpense       string `json:"charge_off_fraud_expense"`
+	IncomeFromChargeOffInterest string `json:"income_from_charge_off_interest"`
+	IncomeFromChargeOffFees     string `json:"income_from_charge_off_fees"`
+	IncomeFromChargeOffPenalty  string `json:"income_from_charge_off_penalty"`
+	Overpayment                 string `json:"overpayment,omitempty"`
+	LossesWrittenOff            string `json:"losses_written_off"`
+	FundSource                  string `json:"fund_source"`
+}
+
+// ChargedOffWriteOffJournalRequest is the loan-chargedoff-writeoff-journal-entries
+// seam's input: the observed write-off portions of a loan that is ALREADY MARKED
+// CHARGED OFF, whether the loan is marked fraud, and the product's
+// slot->account mapping, plus the transaction id the legs are posted under. The
+// mapping is the product's accountingMappings read back from the reference
+// server, never invented; a slot with a positive portion and no credit account
+// is refused by the port.
+type ChargedOffWriteOffJournalRequest struct {
+	TransactionID string                          `json:"transaction_id"`
+	Portions      ChargedOffWriteOffPortionsMoney `json:"portions"`
+	Fraud         bool                            `json:"fraud,omitempty"`
+	Accounts      ChargedOffWriteOffSlotAccounts  `json:"accounts"`
+}
+
 // ChargebackPortionsMoney is the money a chargeback transaction credited, per
 // ledger slot, each an integer STRING in minor units. The observed domain has
 // two slots only: principal and overpayment. There is no field for a fee or
@@ -680,6 +753,11 @@ type Request struct {
 	// charge-off transaction's four portions, the loan's fraud flag and the
 	// product's slot->account mapping.
 	ChargeOffJournal *ChargeOffJournalRequest `json:"charge_off_journal,omitempty"`
+	// ChargedOffWriteOffJournal is the
+	// loan-chargedoff-writeoff-journal-entries seam's input: the write-off
+	// transaction's five portions on a loan already marked charged off, the
+	// loan's fraud flag and the product's slot->account mapping.
+	ChargedOffWriteOffJournal *ChargedOffWriteOffJournalRequest `json:"charged_off_write_off_journal,omitempty"`
 	// ChargebackJournal is the loan-chargeback-journal-entries seam's input: the
 	// chargeback transaction's amount and two portions and the resolved
 	// slot->account mapping.
@@ -775,6 +853,14 @@ type Expect struct {
 	// credit/debit split are what discriminate a fraud-ignoring or
 	// debit-per-portion port.
 	ChargeOffJournalLegs []JournalEntryLeg `json:"charge_off_journal_legs,omitempty"`
+	// ChargedOffWriteOffJournalLegs is the loan-chargedoff-writeoff-journal-entries
+	// seam's ordered leg list the charged-off write-off posted: one credit per
+	// reversed slot (merged by account) in portion order, then ONE debit of the
+	// total to the losses-written-off account. Every leg is graded on its
+	// transaction id, account, side and amount; the principal credit's account
+	// (fraud vs ordinary charge-off expense) and the single debit's account and
+	// count are what discriminate a fraud-ignoring or fund-source-debiting port.
+	ChargedOffWriteOffJournalLegs []JournalEntryLeg `json:"charged_off_write_off_journal_legs,omitempty"`
 	// ChargebackJournalLegs is the loan-chargeback-journal-entries seam's ordered
 	// leg list the chargeback posted: the amount credit to the fund source, then
 	// the overpayment debit, then the principal debit, in posting order. Every

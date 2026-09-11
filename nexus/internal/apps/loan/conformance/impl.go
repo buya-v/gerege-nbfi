@@ -154,6 +154,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goWriteOffJournal(*req.WriteOffJournal)
 	case req.ChargeOffJournal != nil:
 		return goChargeOffJournal(*req.ChargeOffJournal)
+	case req.ChargedOffWriteOffJournal != nil:
+		return goChargedOffWriteOffJournal(*req.ChargedOffWriteOffJournal)
 	case req.ChargebackJournal != nil:
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.ChargeLifecycle != nil:
@@ -161,7 +163,7 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 	case req.StatusTransition != nil:
 		return goStatusTransition(*req.StatusTransition)
 	default:
-		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, chargeback_journal, charge_lifecycle, status_transition")
+		return Expect{}, fmt.Errorf("loan: request must set exactly one of repayment, schedule, disburse, summary, status, transactions, journal_entries, schedule_amortization, delinquency, write_off, reversal, write_off_journal, charge_off_journal, charged_off_write_off_journal, chargeback_journal, charge_lifecycle, status_transition")
 	}
 }
 
@@ -914,6 +916,81 @@ func chargeOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 	return Expect{ChargeOffJournalLegs: out}
 }
 
+// goChargedOffWriteOffJournal ports the
+// loan-chargedoff-writeoff-journal-entries seam: it reduces the request's five
+// portions, fraud flag and slot->account mapping to
+// loan.ChargedOffWriteOffPortions and loan.ChargedOffWriteOffAccountMapping and
+// runs the port's own loan.CreateChargedOffWriteOffJournalEntryLegs. Every
+// monetary cell is an integer minor unit; the mapping is the product's observed
+// accountingMappings, never invented. The fund-source slot the processor
+// resolves but never posts is deliberately not carried into the port.
+func goChargedOffWriteOffJournal(r ChargedOffWriteOffJournalRequest) (Expect, error) {
+	portions, err := chargedOffWriteOffPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargedOffWriteOffJournalEntryLegs(r.TransactionID, portions, r.Fraud, loan.ChargedOffWriteOffAccountMapping{
+		ChargeOffExpense:            r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:       r.Accounts.ChargeOffFraudExpense,
+		IncomeFromChargeOffInterest: r.Accounts.IncomeFromChargeOffInterest,
+		IncomeFromChargeOffFees:     r.Accounts.IncomeFromChargeOffFees,
+		IncomeFromChargeOffPenalty:  r.Accounts.IncomeFromChargeOffPenalty,
+		Overpayment:                 r.Accounts.Overpayment,
+		LossesWrittenOff:            r.Accounts.LossesWrittenOff,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return chargedOffWriteOffJournalLegsExpect(legs), nil
+}
+
+// chargedOffWriteOffPortionsFromRequest reduces the request's per-slot money
+// strings to the port's integer-minor-unit portions. Overpayment is optional
+// (absent on every observed charged-off write-off, so omitted); every other slot
+// is required.
+func chargedOffWriteOffPortionsFromRequest(p ChargedOffWriteOffPortionsMoney) (loan.ChargedOffWriteOffPortions, error) {
+	var out loan.ChargedOffWriteOffPortions
+	var err error
+	if out.Principal, err = parseMinorText(p.Principal); err != nil {
+		return loan.ChargedOffWriteOffPortions{}, err
+	}
+	if out.Interest, err = parseMinorText(p.Interest); err != nil {
+		return loan.ChargedOffWriteOffPortions{}, err
+	}
+	if out.Fee, err = parseMinorText(p.Fee); err != nil {
+		return loan.ChargedOffWriteOffPortions{}, err
+	}
+	if out.Penalty, err = parseMinorText(p.Penalty); err != nil {
+		return loan.ChargedOffWriteOffPortions{}, err
+	}
+	if p.Overpayment != "" {
+		if out.Overpayment, err = parseMinorText(p.Overpayment); err != nil {
+			return loan.ChargedOffWriteOffPortions{}, err
+		}
+	}
+	return out, nil
+}
+
+// chargedOffWriteOffJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func chargedOffWriteOffJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{ChargedOffWriteOffJournalLegs: out}
+}
+
 // goChargebackJournal ports the loan-chargeback-journal-entries seam: it reduces
 // the request's amount, principal and overpayment portions and resolved
 // slot->account mapping to loan.MinorUnits and
@@ -1303,6 +1380,78 @@ func wrongChargeOffJournal(r ChargeOffJournalRequest, mode chargeOffJournalWrong
 		r.Accounts.ChargeOffFraudExpense = r.Accounts.ChargeOffExpense
 	}
 	return goChargeOffJournal(r)
+}
+
+// chargedOffWriteOffJournalWrongMode selects which deliberately-wrong
+// charged-off-write-off posting to run. Each is a port a reasonable reader might
+// write, and it is discriminated by the committed observations.
+type chargedOffWriteOffJournalWrongMode int
+
+const (
+	// wrongChargedOffWriteOffDebitsFundSource posts the per-portion FUND_SOURCE
+	// debits populateCreditDebitMaps accumulates instead of the one
+	// LOSSES_WRITTEN_OFF debit the oracle posts, as a port that iterates both
+	// maps does. The credits are unchanged; the ONE losses-written-off debit is
+	// replaced by one debit per credit to the fund-source account, so the leg
+	// count grows by (credits - 1), the last leg's account moves from
+	// losses-written-off to fund-source, and the batch no longer balances when
+	// the fund source differs from the merged credit accounts. It is the mirror
+	// of the unposted debit map the oracle deliberately ignores.
+	wrongChargedOffWriteOffDebitsFundSource chargedOffWriteOffJournalWrongMode = iota
+)
+
+// wrongChargedOffWriteOffJournalEvaluator is a DELIBERATELY WRONG implementation
+// of the loan-chargedoff-writeoff-journal-entries seam, parameterised by which
+// posting defect it commits. On any request that is not a charged-off write-off
+// journal it delegates to the correct port, so the drive goes red ONLY on this
+// seam's vector and stays green everywhere else (vector isolation).
+type wrongChargedOffWriteOffJournalEvaluator struct {
+	goEvaluator
+	mode chargedOffWriteOffJournalWrongMode
+}
+
+func (w wrongChargedOffWriteOffJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargedOffWriteOffJournal != nil {
+		return wrongChargedOffWriteOffJournal(*req.ChargedOffWriteOffJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongChargedOffWriteOffJournal runs the correct posting and then applies
+// exactly one defect, so the drive differs from the port on exactly the cells
+// its defect moves.
+func wrongChargedOffWriteOffJournal(r ChargedOffWriteOffJournalRequest, mode chargedOffWriteOffJournalWrongMode) (Expect, error) {
+	expect, err := goChargedOffWriteOffJournal(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	switch mode {
+	case wrongChargedOffWriteOffDebitsFundSource:
+		// Replace the single losses-written-off debit with one fund-source debit
+		// per credit, after the credits, so the batch carries the unposted debit
+		// map's per-portion legs instead of the oracle's one total debit.
+		fund := r.Accounts.FundSource
+		if fund == "" {
+			fund = r.Accounts.LossesWrittenOff
+		}
+		var credits, debits []JournalEntryLeg
+		for _, leg := range expect.ChargedOffWriteOffJournalLegs {
+			if leg.EntryType == "CREDIT" {
+				credits = append(credits, leg)
+				debits = append(debits, JournalEntryLeg{
+					TransactionID: leg.TransactionID,
+					Account:       fund,
+					EntryType:     "DEBIT",
+					AmountMinor:   leg.AmountMinor,
+				})
+			}
+		}
+		expect.ChargedOffWriteOffJournalLegs = append(credits, debits...)
+		if expect.ChargedOffWriteOffJournalLegs == nil {
+			expect.ChargedOffWriteOffJournalLegs = []JournalEntryLeg{}
+		}
+	}
+	return expect, nil
 }
 
 // chargebackJournalWrongMode selects which deliberately-wrong chargeback posting
@@ -2607,6 +2756,13 @@ func init() {
 			"the ordinary charge-off expense account (14) while the non-fraud observations are "+
 			"unaffected — the fraud flag's effect on the account cell",
 		wrongChargeOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargeOffJournalIgnoresFraud})
+	RegisterWrong("loan-wrong-chargedoff-writeoff-debits-fund-source",
+		"posts the per-portion FUND_SOURCE debits populateCreditDebitMaps accumulates instead of the "+
+			"one LOSSES_WRITTEN_OFF debit the oracle posts, as a port that iterates the debit map too "+
+			"does; the credits are unchanged but the single losses-written-off debit becomes one "+
+			"fund-source debit per credit, so the leg count grows, the last leg's account moves, and "+
+			"the batch no longer balances — the debit map the oracle deliberately never posts",
+		wrongChargedOffWriteOffJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongChargedOffWriteOffDebitsFundSource})
 	RegisterWrong("loan-wrong-chargeback-journal-overpayment-to-portfolio",
 		"debits the overpayment portion of a chargeback to the loan-portfolio account instead of the "+
 			"overpayment account, as a port that reuses one debit account for every non-principal "+
