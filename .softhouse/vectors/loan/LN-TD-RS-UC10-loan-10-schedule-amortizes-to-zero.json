@@ -1,0 +1,48 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RS-UC10-loan-10-schedule-amortizes-to-zero",
+ "title": "UC10 loan 10 whole repayment schedule: the three observed principal components sum to the disbursed principal and amortize to zero (Tier-D MNT replay)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the WHOLE repayment schedule of UC10 loan 10 from the Tier-D MNT replay of LoanRepaymentSchedule.feature (throwaway tenant `tierd`, currency MNT, 2 minor digits; product LP2_ADV_PYMNT_INTEREST_DECL_BAL_SARP_EMI_360_30_INT_RECALC_DAILY_MULTIDISB_PARTIAL_PERIOD). request.schedule_amortization transcribes repaymentSchedule.totalPrincipalDisbursed 1200.00 -> \"120000\" minor units and the three observed repayment-period principalDue values 335.50,429.73,434.77 -> 33550,42973,43477. The disbursement row(s) carry no principalDue and are NOT components, exactly as period 0 is excluded on the single-disbursement captures. expect.principal_sum_minor and expect.final_principal_balance_minor are TRANSCRIPTIONS, not recomputations: the components sum to 120000 = the disbursed principal, and the final period's principalLoanBalanceOutstanding is 0.0, so the final balance is \"0\". Loan 10 is a two-tranche MULTI-DISBURSEMENT loan: its schedule opens with two disbursement rows, 1000.00 on 2025-01-01 and 200.00 on 2025-02-15; totalPrincipalDisbursed 1200.00 is the observed scalar this seam admits and the tranche structure itself is not representable here. Nothing was computed by this promotion.  UC10 is the scenario whose pinned build returns a period-2 split one minor unit off its own feature table (F-2026-09-11-tierd-repsched-mnt-uc10): the feature expects principal 429.74 / interest 11.28 / balance 434.76, the oracle read back 429.73 / 11.29 / 434.77. The oracle's output IS the observation and the feature table is not, so the observed values are transcribed as-is. The UC10 loan-10 repaymentSchedule read-back was not among the PASSED read-backs; it was extracted from the MNT replay log with .softhouse/capture/tierd-feasibility/bin/extract.py and committed under loans/loan-10/loan-10-detail-associations-repaymentSchedule.json (sha256 c184624a...), with its manifest line set committed.",
+ "oracle": {
+  "seam": "loan-schedule-amortization",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request and expect are transcribed from the committed MNT capture loan-10-detail-associations-repaymentSchedule.json, the UC10 loan 10 read-back via associations=repaymentSchedule, carrying currency.code MNT (decimalPlaces 2). capture_case_id names the loan's externalId cdb65e44-b864-4187-a899-9c15041ebfe0, which appears in the capture's top-level externalId. TENANT `tierd` -- NOT tenant `gerege`. IMAGE sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a; scenario LoanRepaymentSchedule.feature UC10; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. No value was synthesised. UC10 is the scenario whose pinned build returns a period-2 split one minor unit off its own feature table (F-2026-09-11-tierd-repsched-mnt-uc10): the feature expects principal 429.74 / interest 11.28 / balance 434.76, the oracle read back 429.73 / 11.29 / 434.77. The oracle's output IS the observation and the feature table is not, so the observed values are transcribed as-is. The UC10 loan-10 repaymentSchedule read-back was not among the PASSED read-backs; it was extracted from the MNT replay log with .softhouse/capture/tierd-feasibility/bin/extract.py and committed under loans/loan-10/loan-10-detail-associations-repaymentSchedule.json (sha256 c184624a...), with its manifest line set committed.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/repayment-schedule-mnt/loans/loan-10/loan-10-detail-associations-repaymentSchedule.json",
+  "capture_sha256": "c184624a8790ea943492f3a7bbeef3ee17586e5a580a15288f24f0adeb62c35a",
+  "capture_case_id": "cdb65e44-b864-4187-a899-9c15041ebfe0",
+  "citation": "loan-10-detail-associations-repaymentSchedule.json (tenant tierd, currency MNT) externalId cdb65e44-b864-4187-a899-9c15041ebfe0: repaymentSchedule.totalPrincipalDisbursed 1200.00 -> 120000 minor units; the repayment periods principalDue 335.50,429.73,434.77 -> 33550,42973,43477; sum = 120000 == totalPrincipalDisbursed; the final period principalLoanBalanceOutstanding 0.0 -> 0"
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "schedule_amortization": {
+   "principal_disbursed_minor": "120000",
+   "principal_components_minor": [
+    "33550",
+    "42973",
+    "43477"
+   ]
+  }
+ },
+ "expect": {
+  "principal_sum_minor": "120000",
+  "final_principal_balance_minor": "0"
+ },
+ "capabilities_required": [
+  "schedule-principal-amortization"
+ ],
+ "graded_against": [
+  "loan-go"
+ ]
+}
