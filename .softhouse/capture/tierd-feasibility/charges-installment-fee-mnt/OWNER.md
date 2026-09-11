@@ -882,6 +882,22 @@ compared against that exact file and reported every counter equal to baseline
 (`teardown-isolation.txt`).  All `tierd-*` containers, the `tierd-oracle` network and
 its volume are gone; standing tenants `gerege` and `default` were never written.
 
+## EUR control — OH-CHGCTL-BV (2026-09-11): the 13 failures are NOT caused by the MNT re-seed
+
+A control replay of three of the 13 failing scenarios — **26** (`C3890`, the 100-minor-unit
+period-2 split), **4** (`C3786`) and **7** (`C3788`) — was run on the disposable copy with the five
+currency constants of `uc6-mnt/currency-seed-mnt.diff` reverted to `EUR` (Feign capture on,
+tenant `tierd`, same pinned image). **All three FAIL in EUR, identically**: same steps, same
+periods, same cells, same deltas as the MNT whole-file replay above (EUR `actual` == MNT `actual`
+in every cell). The five constants were then restored and proven byte-identical to the recorded
+seed diff, and the throwaway torn down to the standing baseline.
+
+**Meaning.** The MNT re-seed is not the cause. The pinned build disagrees with its own `.feature`
+expectations in EUR too, so the oracle's MNT output is gradeable; the 15 PASSED scenarios stand
+and the 13 failures are pin-vs-feature disagreements. Evidence and cell tables:
+`../charges-eur-control/OWNER.md` and `scenario-results.json`; finding:
+`.softhouse/findings/F-2026-09-11-tierd-charges-mnt-eur-control.md`.
+
 ---
 
 This capture was created by an AI agent (OpenHands) on behalf of the user.
