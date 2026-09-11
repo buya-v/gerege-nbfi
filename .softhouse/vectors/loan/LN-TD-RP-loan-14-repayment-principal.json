@@ -1,0 +1,69 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-RP-loan-14-repayment-principal",
+ "title": "An ordinary loan repayment posts ONE 250.00 credit to LOAN_PORTFOLIO 10 and ONE 250.00 debit to the resolved fund source 4 (loan 14 L66, principal-only)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry an ORDINARY repayment posted under createJournalEntriesForLoanRepayments, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP1 / product 6, loan 14 not charged off) at repayment transaction L66. request.repayment_journal.portions transcribes the loan read-back's repayment transaction id 66 (externalId c7edadd7-c7b8-4e9d-b4b6-b347bd1d6dbe, type loanTransactionType.repayment, paymentDetailData.paymentType.id 11 AUTOPAY): principalPortion 250.0 -> \"25000\" minor units, interest/fee/penalty/overpayment 0 and omitted. request.repayment_journal.accounts is the accepted create request product-mappings/create-request-LP1.json's accountingMappings with the fund source RESOLVED through the payment channel: loanPortfolioAccountId 10, receivableInterest/Fee/PenaltyAccountId 7, overpaymentLiabilityAccountId 18, fundSourceAccountId 4; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 17, so paymentType 11 (AUTOPAY) has no channel mapping and resolves to the product fund source 4. expect.repayment_journal_legs is a TRANSCRIPTION of the two L66 legs in id order from the journal-entries read-back: JE 142 CREDIT account 10 250.00, JE 143 DEBIT account 4 250.00. THIS VECTOR GRADES ONE PROPERTY: an ordinary repayment CREDITS each non-zero portion to its slot account, MERGING portions that share a credit account at the first slot's position, then DEBITs the total exactly ONCE to the resolved fund source, credits first and the single debit last. A port that credits the wrong slot account or debits an account other than the resolved fund source moves a leg. WHAT THIS VECTOR DOES NOT GRADE: the one-debit-vs-debit-per-portion discriminator — with a single credited portion the two postings coincide, so this vector does not distinguish them (the loan-18 L93 and loan-19 L98 vectors do); the excluded branches (goodwill credit, transfer, isIncomeFromFee, charge refund, tax) have no input and are not expressible. The journal-entries read-back holds only these two legs for L66: no later reversal of L66 is present, so only the original posting's legs are transcribed. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-repayment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.repayment_journal.portions is transcribed from the committed repayment loan read-back .softhouse/capture/tierd-feasibility/chargeback-mnt/loans/loan-14/loan-14-detail-associations-transactions-2.json (sha256 ed7f162bbad3b72aeb84b52dda5a6dabf17879d3f8a3c257be91834c2435911c): loan 14, chargedOff false, loanProductId 6, transactions[id 66 externalId c7edadd7-c7b8-4e9d-b4b6-b347bd1d6dbe] type loanTransactionType.repayment, paymentDetailData.paymentType.id 11 AUTOPAY, principalPortion 250.0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. expect.repayment_journal_legs is transcribed from the committed journal-entries read-back .softhouse/capture/tierd-feasibility/chargeback-mnt/journalentries/loan-14/loan-14-journalentries-2.json (sha256 793a7b2f2e3120d2b044ab11b690573c55d36f55749ead0667ef601b9cd8d351): transactionId L66 pageItems ids 142 (CREDIT glAccountId 10 amount 250.0) and 143 (DEBIT glAccountId 4 amount 250.0); these are the ONLY two pageItems in the file and both carry reversed false, so no later reversal legs are mixed in. request.repayment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeback-mnt/product-mappings/create-request-LP1.json (sha256 87e5c4e859d979a4ea1dc8b9aa662a148e5021cbf6a7213cc7c2d772486d62e1): loanPortfolioAccountId 10, receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, overpaymentLiabilityAccountId 18, fundSourceAccountId 4, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 17}] -- the only channel mapping, so paymentType 11 resolves to the product fund source 4. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (250.0 -> 25000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeback-mnt/journalentries/loan-14/loan-14-journalentries-2.json",
+  "capture_sha256": "793a7b2f2e3120d2b044ab11b690573c55d36f55749ead0667ef601b9cd8d351",
+  "capture_case_id": "L66",
+  "citation": "journalentries/loan-14/loan-14-journalentries-2.json:1 (sha256 793a7b2f2e3120d2b044ab11b690573c55d36f55749ead0667ef601b9cd8d351): transactionId L66 carries two legs in id order -- id 142 entryType.value CREDIT glAccountId 10 amount 250.0; id 143 DEBIT glAccountId 4 amount 250.0. The one credit equals the one debit (25000 minor units). Portions are in loans/loan-14/loan-14-detail-associations-transactions-2.json:1 (sha256 ed7f162bbad3b72aeb84b52dda5a6dabf17879d3f8a3c257be91834c2435911c): loan 14 chargedOff false, transactions[id 66 externalId c7edadd7-c7b8-4e9d-b4b6-b347bd1d6dbe] type loanTransactionType.repayment, paymentDetailData.paymentType.id 11 AUTOPAY, principalPortion 250.0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP1.json:1 (sha256 87e5c4e859d979a4ea1dc8b9aa662a148e5021cbf6a7213cc7c2d772486d62e1): loanPortfolioAccountId 10, receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, overpaymentLiabilityAccountId 18, fundSourceAccountId 4, with the only channel mapping paymentTypeId 1 -> 17, so the AUTOPAY paymentType 11 resolves to 4."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "repayment_journal": {
+   "transaction_id": "L66",
+   "portions": {
+    "principal": "25000",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "0"
+   },
+   "accounts": {
+    "loan_portfolio": "10",
+    "receivable_interest": "7",
+    "receivable_fee": "7",
+    "receivable_penalty": "7",
+    "fund_source": "4"
+   }
+  }
+ },
+ "expect": {
+  "repayment_journal_legs": [
+   {
+    "transaction_id": "L66",
+    "account": "10",
+    "entry_type": "CREDIT",
+    "amount_minor": "25000"
+   },
+   {
+    "transaction_id": "L66",
+    "account": "4",
+    "entry_type": "DEBIT",
+    "amount_minor": "25000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "repayment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-repayment-journal-one-debit-per-portion"
+ ]
+}

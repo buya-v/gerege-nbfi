@@ -217,6 +217,18 @@ func diffChargedOffWriteOffJournalLegs(s *cellSink, want, got []JournalEntryLeg)
 	diffJournalLegs(s, "charged_off_write_off_journal_legs", want, got)
 }
 
+// diffRepaymentJournalLegs compares the ordered leg list of an ordinary loan
+// repayment's journal entry through the same per-leg differ the write-off-journal
+// seam uses. Every leg grades four cells: the amount is the one money cell, and
+// the transaction id, account and side are structural. The account cells see a
+// port that credits the wrong receivable slot or debits a fund source other than
+// the resolved one; the count and side cells see a debit-per-portion port. The
+// list is positional because the property is a fixed "credits in slot order,
+// then one debit" layout, not a set.
+func diffRepaymentJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "repayment_journal_legs", want, got)
+}
+
 // diffChargebackJournalLegs compares the ordered leg list of a loan chargeback's
 // journal entry through the same per-leg differ the write-off-journal seam uses.
 // Every leg grades four cells: the amount is the one money cell, and the
@@ -361,6 +373,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffChargeOffJournalLegs(&s, v.Expect.ChargeOffJournalLegs, got.ChargeOffJournalLegs)
 	case SeamLoanChargedOffWriteOffJournalEntries:
 		diffChargedOffWriteOffJournalLegs(&s, v.Expect.ChargedOffWriteOffJournalLegs, got.ChargedOffWriteOffJournalLegs)
+	case SeamLoanRepaymentJournalEntries:
+		diffRepaymentJournalLegs(&s, v.Expect.RepaymentJournalLegs, got.RepaymentJournalLegs)
 	case SeamLoanChargebackJournalEntries:
 		diffChargebackJournalLegs(&s, v.Expect.ChargebackJournalLegs, got.ChargebackJournalLegs)
 	case SeamLoanChargeLifecycle:
