@@ -41,3 +41,8 @@ hooks do not even fire for a worktree spawn — so the reading could only ever m
   anyway (1162502.50 x 1% = 11625.0250).
 
 Do not "fix" either file. They are the record.
+
+**STANDING RULE (2026-09-11): every brief names its context's map.** `.softhouse/maps/<ctx>.md`
+is generated from the tree (`tools/mapgen.py`) and lists where every seam, vector, drive, port
+function and capture is. 64% of agent actions over 71 runs were navigation; a brief that says
+"read the map, do not search" removes most of it. Regenerate the maps after every merge.

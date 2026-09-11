@@ -192,3 +192,20 @@ drives, 87.5% / 75.0% coverage. Its first run also caught a wrong control name i
 reported it as UNMEASURED rather than 0.
 
 `ledger` drives are not measured here (no conformance binary): read the CENSUS block.
+
+## mapgen.py — one generated MAP per context (2026-09-11)
+
+    python3 .softhouse/briefs/tools/mapgen.py [--root <worktree>] [<context> …]   # writes .softhouse/maps/<ctx>.md
+
+For each context: seams and capabilities (with `in_graded_domain`), every vector and its
+capture, where `Register`/`RegisterWrong` live, every drive with file:line, every port
+function with file:line, the captures its vectors cite, every capture directory's OWNER
+title, the measuring commands for THAT binary, and the oracle / DB / source locations.
+**Generated, never hand-written — regenerate after every merge that touches a context.**
+
+Control-tested before use: each map's drive count against the binary's own
+`-list-implementations` — 14/14 binaries agree, and ledger's 17 equals its census. The
+control caught two defects first: `loanschedule` registers 17 of its 25 drives through a
+table (the generator now takes the list FROM THE BINARY), and the driver's own check loop
+reported 0 for thirteen binaries because zsh passed `-root <path>` as ONE argument — the
+same word-splitting trap recorded above, this time in the control, not the tool.
