@@ -132,7 +132,15 @@ live_cwds = [c for c in os.environ.get('OH_LIVE','').split() if c]
 recent = ' '.join(
     ((json.load(open(f)).get('action') or {}).get('command') or '')
     for f in ev[-25:] if os.path.exists(f)) if live_cwds else ''
-is_live = any(c in recent for c in live_cwds)
+# A run whose last 25 commands never name its worktree (e.g. a stretch of `docker logs` /
+# `sleep` while a build runs) was read "(no live process)" while alive (OH-TIERD2-BH,
+# 2026-09-11). So it is also live if ANY command of the conversation names a live worktree
+# AND the conversation wrote an event within 300 s. A finished conversation that once
+# touched the same path goes quiet and reads dead again.
+whole = ' '.join(
+    ((json.load(open(f)).get('action') or {}).get('command') or '')
+    for f in ev if os.path.exists(f)) if live_cwds else ''
+is_live = any(c in recent for c in live_cwds) or (idle < 300 and any(c in whole for c in live_cwds))
 if not is_live:
     flag = '(no live process)'
 elif idle >= SILENT_S:
