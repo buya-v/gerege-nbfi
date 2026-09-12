@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanRepayment-Part1.feature",
@@ -12,7 +12,7 @@
    "feature_product": null,
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "Loan repayment functionality with business date setup",
    "result": "PASSED",
    "tag": "C49"
@@ -23,7 +23,7 @@
    "feature_product": null,
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "As a user I would like to check that the repayment transaction is failed when the repayment date is after the business date",
    "result": "PASSED",
    "tag": "C32"
@@ -34,7 +34,7 @@
    "feature_product": null,
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "As a user I would like to check that the repayment is successful if the repayment date is equal to the business date",
    "result": "PASSED",
    "tag": "C44"
@@ -45,7 +45,7 @@
    "feature_product": null,
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "As a user I would like to increase the business day by the scheduled job and want to create a repayment transaction on that day",
    "result": "PASSED",
    "tag": "C45"
@@ -56,7 +56,7 @@
    "feature_product": null,
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "Verify that as a user I am able to make a repayment with AutoPay type",
    "result": "PASSED",
    "tag": "C2430"
@@ -67,7 +67,7 @@
    "feature_product": null,
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "Verify that as a user I am able to make a repayment with Down payment type",
    "result": "PASSED",
    "tag": "C2431"
@@ -78,7 +78,7 @@
    "feature_product": null,
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "Verify that as a user I am able to make a repayment with Real time type",
    "result": "PASSED",
    "tag": "C2432"
@@ -89,7 +89,7 @@
    "feature_product": null,
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "Verify that as a user I am able to make a repayment with Scheduled type",
    "result": "PASSED",
    "tag": "C2433"
@@ -100,7 +100,7 @@
    "feature_product": null,
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "Verify that as a user I am able to make a repayment with Check payment type",
    "result": "PASSED",
    "tag": "C2434"
@@ -111,7 +111,7 @@
    "feature_product": null,
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "Verify that as a user I am able to make a repayment with Oca payment type",
    "result": "PASSED",
    "tag": "C2435"
@@ -122,7 +122,7 @@
    "feature_product": null,
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "Verify that as a user I am able to make a repayment with Adjustment chargeback payment type",
    "result": "PASSED",
    "tag": "C2436"
@@ -133,7 +133,7 @@
    "feature_product": null,
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "Verify that as a user I am able to make a repayment with Adjustment refund payment type",
    "result": "PASSED",
    "tag": "C2437"
@@ -144,7 +144,7 @@
    "feature_product": null,
    "index": 13,
    "loan": 13,
-   "loan_client_id": null,
+   "loan_client_id": 13,
    "name": "As a user I would like to check the Autopay repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2464"
@@ -155,7 +155,7 @@
    "feature_product": null,
    "index": 14,
    "loan": 14,
-   "loan_client_id": null,
+   "loan_client_id": 14,
    "name": "As a user I would like to check the Down payment repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2465"
@@ -166,7 +166,7 @@
    "feature_product": null,
    "index": 15,
    "loan": 15,
-   "loan_client_id": null,
+   "loan_client_id": 15,
    "name": "As a user I would like to check the real time repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2466"
@@ -177,7 +177,7 @@
    "feature_product": null,
    "index": 16,
    "loan": 16,
-   "loan_client_id": null,
+   "loan_client_id": 16,
    "name": "As a user I would like to check the scheduled repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2467"
@@ -188,7 +188,7 @@
    "feature_product": null,
    "index": 17,
    "loan": 17,
-   "loan_client_id": null,
+   "loan_client_id": 17,
    "name": "As a user I would like to check the check payment repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2468"
@@ -199,7 +199,7 @@
    "feature_product": null,
    "index": 18,
    "loan": 18,
-   "loan_client_id": null,
+   "loan_client_id": 18,
    "name": "As a user I would like to check the oca payment repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2469"
@@ -210,7 +210,7 @@
    "feature_product": null,
    "index": 19,
    "loan": 19,
-   "loan_client_id": null,
+   "loan_client_id": 19,
    "name": "As a user I would like to check the repayment adjustment chargeback repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2470"
@@ -221,7 +221,7 @@
    "feature_product": null,
    "index": 20,
    "loan": 20,
-   "loan_client_id": null,
+   "loan_client_id": 20,
    "name": "As a user I would like to check the repayment adjustment refund repayment undo and repayment after loan closed state",
    "result": "PASSED",
    "tag": "C2471"
@@ -232,7 +232,7 @@
    "feature_product": null,
    "index": 21,
    "loan": 21,
-   "loan_client_id": null,
+   "loan_client_id": 21,
    "name": "Verify that inlineCOB job creates two separate events for LoanRepaymentDueBusinessEvent and LoanRepaymentOverdueBusinessEvent: due and overdue days values from global config",
    "result": "PASSED",
    "tag": "C2485"
@@ -243,7 +243,7 @@
    "feature_product": "LP1_DUE_DATE",
    "index": 22,
    "loan": 22,
-   "loan_client_id": null,
+   "loan_client_id": 22,
    "name": "Verify that inlineCOB job creates two separate events for LoanRepaymentDueBusinessEvent and LoanRepaymentOverdueBusinessEvent: due and overdue days values from Loan product",
    "result": "PASSED",
    "tag": "C2689"
@@ -254,7 +254,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 23,
    "loan": 23,
-   "loan_client_id": null,
+   "loan_client_id": 23,
    "name": "RS01 - Repayment Schedule with interest type: flat, interest period: Same as payment period, amortization type: Equal installments",
    "result": "PASSED",
    "tag": "C2490"
@@ -265,7 +265,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
    "index": 24,
    "loan": 24,
-   "loan_client_id": null,
+   "loan_client_id": 24,
    "name": "RS02 - Repayment Schedule with interest type: Declining Balance, interest period: Same as payment period, amortization type: Equal installments",
    "result": "PASSED",
    "tag": "C2492"
@@ -276,7 +276,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_DAILY",
    "index": 25,
    "loan": 25,
-   "loan_client_id": null,
+   "loan_client_id": 25,
    "name": "RS03 - Repayment Schedule with interest type: Declining Balance, interest period: Daily, amortization type: Equal installments",
    "result": "PASSED",
    "tag": "C2493"
@@ -287,7 +287,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
    "index": 26,
    "loan": 26,
-   "loan_client_id": null,
+   "loan_client_id": 26,
    "name": "RS04 - Repayment Schedule with interest type: Declining Balance, interest period: Same as payment period, amortization type: Equal principal payments",
    "result": "PASSED",
    "tag": "C2494"
@@ -298,7 +298,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
    "index": 27,
    "loan": 27,
-   "loan_client_id": null,
+   "loan_client_id": 27,
    "name": "RS05 - Repayment Schedule with interest type: Declining Balance, interest period: Same as payment period, amortization type: Equal installments, Grace on principal payment",
    "result": "PASSED",
    "tag": "C2495"
@@ -309,7 +309,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
    "index": 28,
    "loan": 28,
-   "loan_client_id": null,
+   "loan_client_id": 28,
    "name": "RS06 - Repayment Schedule with interest type: Declining Balance, interest period: Same as payment period, amortization type: Equal installments, Grace on principal payment and interest payment",
    "result": "PASSED",
    "tag": "C2496"
@@ -320,7 +320,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
    "index": 29,
    "loan": 29,
-   "loan_client_id": null,
+   "loan_client_id": 29,
    "name": "RS07 - Repayment Schedule with interest type: Declining Balance, interest period: Same as payment period, amortization type: Equal installments, Grace on principal payment and setting up interest free period",
    "result": "PASSED",
    "tag": "C2497"
@@ -331,7 +331,7 @@
    "feature_product": null,
    "index": 30,
    "loan": 30,
-   "loan_client_id": null,
+   "loan_client_id": 30,
    "name": "As admin I would like to be sure that Edit from Goodwill Credit of on loan transaction can not be done",
    "result": "PASSED",
    "tag": "C2498"
@@ -342,7 +342,7 @@
    "feature_product": null,
    "index": 31,
    "loan": 31,
-   "loan_client_id": null,
+   "loan_client_id": 31,
    "name": "As admin I would like to be sure that Edit from Payout Refund of on loan transaction can not be done",
    "result": "PASSED",
    "tag": "C2499"
@@ -353,7 +353,7 @@
    "feature_product": null,
    "index": 32,
    "loan": 32,
-   "loan_client_id": null,
+   "loan_client_id": 32,
    "name": "As admin I would like to be sure that Edit from Merchant Issued Refund of on loan transaction can not be done",
    "result": "PASSED",
    "tag": "C2500"
@@ -364,7 +364,7 @@
    "feature_product": null,
    "index": 33,
    "loan": 33,
-   "loan_client_id": null,
+   "loan_client_id": 33,
    "name": "As admin I would like to check the last payment amount after a merchant issue refund",
    "result": "PASSED",
    "tag": "C2531"
@@ -375,7 +375,7 @@
    "feature_product": "LP1_1MONTH_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_MONTHLY",
    "index": 34,
    "loan": 34,
-   "loan_client_id": null,
+   "loan_client_id": 34,
    "name": "RP01 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with Interest compounding",
    "result": "PASSED",
    "tag": "C2555"
@@ -386,7 +386,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 35,
    "loan": 35,
-   "loan_client_id": null,
+   "loan_client_id": 35,
    "name": "RP02 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with on time exact payment",
    "result": "PASSED",
    "tag": "C2556"
@@ -397,7 +397,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 36,
    "loan": 36,
-   "loan_client_id": null,
+   "loan_client_id": 36,
    "name": "RP03 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with early exact payment",
    "result": "PASSED",
    "tag": "C2557"
@@ -408,7 +408,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 37,
    "loan": 37,
-   "loan_client_id": null,
+   "loan_client_id": 37,
    "name": "RP04 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with late exact payment",
    "result": "PASSED",
    "tag": "C2558"
@@ -419,7 +419,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 38,
    "loan": 38,
-   "loan_client_id": null,
+   "loan_client_id": 38,
    "name": "RP05 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with on time partial payment",
    "result": "PASSED",
    "tag": "C2559"
@@ -430,7 +430,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 39,
    "loan": 39,
-   "loan_client_id": null,
+   "loan_client_id": 39,
    "name": "RP06 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with early partial payment",
    "result": "PASSED",
    "tag": "C2560"
@@ -441,7 +441,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 40,
    "loan": 40,
-   "loan_client_id": null,
+   "loan_client_id": 40,
    "name": "RP07 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with late partial payment",
    "result": "PASSED",
    "tag": "C2561"
@@ -452,7 +452,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 41,
    "loan": 41,
-   "loan_client_id": null,
+   "loan_client_id": 41,
    "name": "RP08 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with on time excess payment",
    "result": "PASSED",
    "tag": "C2562"
@@ -463,7 +463,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 42,
    "loan": 42,
-   "loan_client_id": null,
+   "loan_client_id": 42,
    "name": "RP09 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with early excess payment",
    "result": "PASSED",
    "tag": "C2563"
@@ -474,7 +474,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 43,
    "loan": 43,
-   "loan_client_id": null,
+   "loan_client_id": 43,
    "name": "RP10 - Repayment Schedule with interest type: Declining Balance and Interest Recalculation with late excess payment",
    "result": "PASSED",
    "tag": "C2564"
@@ -485,7 +485,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 44,
    "loan": 44,
-   "loan_client_id": null,
+   "loan_client_id": 44,
    "name": "Verify that the accounting treatment is correct for Goodwill Credit transaction",
    "result": "PASSED",
    "tag": "C2625"
@@ -496,7 +496,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 45,
    "loan": 45,
-   "loan_client_id": null,
+   "loan_client_id": 45,
    "name": "Verify that the accounting treatment is correct for Goodwill Credit transaction after Charge-off",
    "result": "PASSED",
    "tag": "C2626"
@@ -507,7 +507,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 46,
    "loan": 46,
-   "loan_client_id": null,
+   "loan_client_id": 46,
    "name": "Verify that the accounting treatment is correct for Goodwill Credit transaction when undo happened",
    "result": "PASSED",
    "tag": "C2627"
@@ -518,7 +518,7 @@
    "feature_product": "LP1_INTEREST_FLAT",
    "index": 47,
    "loan": 47,
-   "loan_client_id": null,
+   "loan_client_id": 47,
    "name": "Verify that the accounting treatment is correct for Goodwill Credit transaction when the loan was Charged-off and undo happened for Goodwill",
    "result": "PASSED",
    "tag": "C2628"
@@ -529,7 +529,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE_RESCHEDULE_REDUCE_NR_INST",
    "index": 48,
    "loan": 48,
-   "loan_client_id": null,
+   "loan_client_id": 48,
    "name": "RP11 - Repayment Schedule with interest type: Declining Balance - Prepayment - Reduce number of installments",
    "result": "PASSED",
    "tag": "C2629"
@@ -540,7 +540,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE",
    "index": 49,
    "loan": 49,
-   "loan_client_id": null,
+   "loan_client_id": 49,
    "name": "RP12 - Repayment Schedule with interest type: Declining Balance - Prepayment - Reduce Installment amount",
    "result": "PASSED",
    "tag": "C2630"
@@ -551,7 +551,7 @@
    "feature_product": "LP1_INTEREST_DECLINING_BALANCE_DAILY_RECALCULATION_COMPOUNDING_NONE_RESCHEDULE_RESCH_NEXT_REP",
    "index": 50,
    "loan": 50,
-   "loan_client_id": null,
+   "loan_client_id": 50,
    "name": "RP13 - Repayment Schedule with interest type: Declining Balance - Prepayment - Reschedule next repayments",
    "result": "PASSED",
    "tag": "C2631"
