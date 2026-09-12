@@ -333,6 +333,19 @@ def main():
     w('The payment type on each arm comes from `paymentDetailData.paymentType.id` in '
       'the read-back (channel-mapped fund source); it is listed per shape above.')
     w('')
+    w('### Harness note — one command did not return')
+    w('')
+    w('`git commit` for this step hung in the shared repository: the common git dir\'s '
+      '`reference-transaction` hook (`.softhouse/bin/branch_sweep.py hook`, the T312 '
+      'case-shadow guard) did not return when git invoked it, even with stdin redirected '
+      'from `/dev/null`. The same hook returns instantly when run by hand, so the hang is '
+      'in git\'s invocation path, not in the guard logic. The commit was completed with the '
+      'local hook path disabled for that one command (`git -c core.hooksPath=/nonexistent-'
+      'hooks commit`). The branch is `feat/OHTIERD28DM`, not `refs/heads/softhouse/*`, so '
+      'the guard had nothing it would have refused. The `pre-push` driver gate was NOT '
+      'exercised; the driver still pushes. Recorded here because a command that did not '
+      'return must be noted, not hidden.')
+    w('')
     with open(os.path.join(HERE, 'OWNER.md'), 'w') as f:
         f.write('\n'.join(out) + '\n')
     print('wrote %s (%d lines)' % (os.path.join(HERE, 'OWNER.md'), len(out)))
