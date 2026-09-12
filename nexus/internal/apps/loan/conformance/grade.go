@@ -266,6 +266,19 @@ func diffInterestPaymentWaiverJournalLegs(s *cellSink, want, got []JournalEntryL
 	diffJournalLegs(s, "interest_payment_waiver_journal_legs", want, got)
 }
 
+// diffCapitalizedIncomeAmortizationJournalLegs compares the ordered leg list of
+// a capitalized-income amortization's journal entry through the same per-leg
+// differ. Every leg grades four cells: the amount is the one money cell, and the
+// transaction id, account and side are structural. The account cell sees a port
+// that ignores the loan's charged-off / written-off / fraud state (always
+// crediting income from capitalization); the count cell sees a port that fails
+// to merge the interest and fee portions onto the one income account or drops
+// the debit. The list is positional because the property is a fixed "one merged
+// credit then one debit" layout.
+func diffCapitalizedIncomeAmortizationJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "capitalized_income_amortization_journal_legs", want, got)
+}
+
 // diffJournalLegs is the shared ordered-leg differ: the count is compared
 // first, so a port that posts a leg per portion (more legs) or drops a leg is a
 // visible difference rather than a silent truncation. Each label is prefixed
@@ -423,6 +436,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffCreditBalanceRefundJournalLegs(&s, v.Expect.CreditBalanceRefundJournalLegs, got.CreditBalanceRefundJournalLegs)
 	case SeamLoanInterestPaymentWaiverJournalEntries:
 		diffInterestPaymentWaiverJournalLegs(&s, v.Expect.InterestPaymentWaiverJournalLegs, got.InterestPaymentWaiverJournalLegs)
+	case SeamLoanCapitalizedIncomeAmortizationJournalEntries:
+		diffCapitalizedIncomeAmortizationJournalLegs(&s, v.Expect.CapitalizedIncomeAmortizationJournalLegs, got.CapitalizedIncomeAmortizationJournalLegs)
 	case SeamLoanChargeLifecycle:
 		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
 	case SeamLoanStatusTransition:
