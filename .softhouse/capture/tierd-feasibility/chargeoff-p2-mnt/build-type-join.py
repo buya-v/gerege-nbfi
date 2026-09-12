@@ -204,46 +204,54 @@ def _chargeoff_ids(body, only_non_reversed=False):
     return sorted(out)
 
 
-def _co_detail(source_line, f, body):
-    rel = os.path.relpath(f, HERE) if os.path.isabs(f) else f
-    all_cos = _chargeoff_ids(body)
-    live = _chargeoff_ids(body, only_non_reversed=True)
-    return {
-        'charged_off': bool(body.get('chargedOff')),
-        'chargeoff_ids': live,
-        'reversed_chargeoff_ids': [tid for tid in all_cos if tid not in live],
-        'readback_file': rel,
-        'source_line': source_line,
-    }
-
-
-def latest_chargeoff_detail(loan_id, reads):
-    """The loan's LATEST read-back and its charge-off evidence.
-
-    The rule needs the highest-index read-back that carries BOTH `chargedOff`
-    and a `transactions` list, so a charge-off later undone (which vanishes from
-    the latest read-back) is not counted.  `reads` is ordered by manifest
-    `source_line` -- the per-endpoint file suffixes are not cross-endpoint
-    chronological.  Falls back to the latest read-back carrying only
-    `chargedOff` when no transaction-bearing read-back exists.
-
-    Returns {charged_off, chargeoff_ids, reversed_chargeoff_ids, readback_file,
-    source_line} or None."""
-    flagged = None
+def _latest_body(reads, loan_id, predicate):
+    """The highest-`source_line` read-back of the loan satisfying `predicate`."""
     for sl, f in reversed(reads.get(loan_id, [])):
         try:
             body = json.load(open(f))
         except (ValueError, IOError):
             continue
-        if not (isinstance(body, dict) and 'chargedOff' in body):
-            continue
-        if flagged is None:
-            flagged = (sl, f, body)
-        if isinstance(body.get('transactions'), list):
-            return _co_detail(sl, f, body)
-    if flagged is not None:
-        return _co_detail(*flagged)
+        if isinstance(body, dict) and predicate(body):
+            return sl, f, body
     return None
+
+
+def latest_chargeoff_detail(loan_id, reads):
+    """The loan's LATEST read-back and its charge-off evidence.
+
+    The charged-off FLAG comes from the loan's LATEST read-back (highest manifest
+    `source_line`) that carries `chargedOff` -- exactly the brief's rule.  A
+    charge-off that was undone must vanish from that latest read-back and so is
+    not counted; using an earlier transaction-bearing read-back's
+    `manuallyReversed` is NOT reliable (OH-TIERD23-DC error).
+
+    The charge-off transaction IDs (for the "LOWER transaction id" test) are
+    read from the latest read-back that lists transactions, because only such a
+    read-back can list a `chargeOff` transaction.  For loans charged off after
+    their last transaction-bearing read-back the latest read-back still supplies
+    the true flag, but no read-back lists the charge-off id.  `reads` is ordered
+    by manifest `source_line` -- the per-endpoint file suffixes are not
+    cross-endpoint chronological.
+
+    Returns {charged_off, chargeoff_ids, reversed_chargeoff_ids, readback_file,
+    source_line} or None."""
+    flagged = _latest_body(reads, loan_id, lambda b: 'chargedOff' in b)
+    if flagged is None:
+        return None
+    sl, f, body = flagged
+    charged_off = bool(body.get('chargedOff'))
+    txb = _latest_body(reads, loan_id,
+                       lambda b: isinstance(b.get('transactions'), list))
+    source = txb[2] if (charged_off and txb is not None) else body
+    all_cos = _chargeoff_ids(source)
+    live = _chargeoff_ids(source, only_non_reversed=True) if charged_off else []
+    return {
+        'charged_off': charged_off,
+        'chargeoff_ids': live,
+        'reversed_chargeoff_ids': [tid for tid in all_cos if tid not in live],
+        'readback_file': os.path.relpath(f, HERE) if os.path.isabs(f) else f,
+        'source_line': sl,
+    }
 
 
 def undone_chargeoffs(loan_id, reads, txmaps):
@@ -258,7 +266,7 @@ def undone_chargeoffs(loan_id, reads, txmaps):
       * a `chargeOff` id an EARLIER transaction-bearing read-back listed but the
         latest one has dropped entirely (it vanished).
     For each, the transactions the loan posted before and after it are taken
-    from the latest read-back that still lists the undone charge-off."""
+    from the loan's LATEST transaction-bearing read-back (its final state)."""
     txn_reads = []
     for sl, f in reads.get(loan_id, []):
         try:
@@ -304,11 +312,10 @@ def undone_chargeoffs(loan_id, reads, txmaps):
 
     out = []
     for tid in sorted(undone):
-        ref_sl, ref_f, ref = None, None, None
-        for sl, f, body in reversed(txn_reads):
-            if tid in set(_chargeoff_ids(body)):
-                ref_sl, ref_f, ref = sl, f, body
-                break
+        # Before/after are read from the loan's LATEST transaction-bearing
+        # read-back (its final state), so postings made after the undo are not
+        # lost when the undone charge-off itself has vanished from that read-back.
+        ref_sl, ref_f, ref = latest_sl, latest_f, latest
         before, after = [], []
         for t in (ref or {}).get('transactions') or []:
             other = t.get('id')
@@ -368,7 +375,10 @@ def sweep_items(loan_id):
 def inject_response_chargeoff(txmap, loan_id):
     """Add synthetic `chargeOff` entries for the response ids not in the read-back
     map, so the charge-off transaction is typed and its date/amount are known.
-    Date comes from the sweep leg; amount from the sum of its debit legs."""
+    Date comes from the sweep leg; amount from the sum of its debit legs.
+    Returns the ids actually added (a response id already in the read-back map
+    needs no supplement)."""
+    added = []
     for rid in chargeoff_response_ids(loan_id):
         if rid in txmap:
             continue
@@ -391,7 +401,8 @@ def inject_response_chargeoff(txmap, loan_id):
             'portions': {},
             'source': 'charge-off-response',
         }
-    return txmap
+        added.append(rid)
+    return added
 
 
 def shape_key(legs):
@@ -561,8 +572,11 @@ def main():
     # read-back; the charge-off command response names its id, so inject it (for
     # TYPE completeness only -- it does NOT feed the charged-off rule).
     txmaps = {lid: tx_map_for(lid) for lid in loan_ids}
+    injected = {}
     for lid in loan_ids:
-        inject_response_chargeoff(txmaps[lid], lid)
+        added = inject_response_chargeoff(txmaps[lid], lid)
+        if added:
+            injected[lid] = sorted(added)
     # Merged non-reversed chargeOff ids across all read-backs (cross-check only).
     readback_chargeoffs = {lid: set(chargeoffs_for(lid)) for lid in loan_ids}
     response_chargeoffs = {lid: set(chargeoff_response_ids(lid)) for lid in loan_ids}
@@ -658,8 +672,6 @@ def main():
 
     # Supplement finding: charge-offs recovered from the command response because
     # the loan was charged off after its last read-back (TYPE completeness only).
-    injected = {lid: sorted(response_chargeoffs[lid] - readback_chargeoffs[lid])
-                for lid in loan_ids if response_chargeoffs[lid] - readback_chargeoffs[lid]}
     if injected:
         tg['findings'].append(
             'chargeOff supplement (NOT a read-back): %s.  For these loans the feature '

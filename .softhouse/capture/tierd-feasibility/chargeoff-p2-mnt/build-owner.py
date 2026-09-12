@@ -42,6 +42,13 @@ def sides_str(sides):
     return ', '.join('%s %s' % (side, acct) for side, acct in sides)
 
 
+def txlist(rows):
+    if not rows:
+        return '_(none)_'
+    return ', '.join('%s %s %s' % (r['transaction_id'], r['type'], m(r['amount_minor']))
+                     for r in rows)
+
+
 def main():
     J = load('journalentry-type-join.json')
     R = load('scenario-results.json')
@@ -206,22 +213,25 @@ def main():
       'CHRONOLOGICALLY LATEST read-back, so a charge-off later undone does not count. '
       'The read-backs are numbered PER ENDPOINT (`...-1`, `...-2`, ...), so the file '
       'suffix is not a cross-endpoint chronology; the LATEST read-back is the one with '
-      'the highest manifest `source_line`. That distinction is load-bearing here: the '
-      '`detail-associations-all-*` stream stops before the charge-off for loans 9, 10, '
-      '11 and 12, so the flag must come from the later `transactions`/`repaymentSchedule` '
-      'read-backs, which say `chargedOff=true`.')
+      'the highest manifest `source_line`. That distinction is load-bearing here: for '
+      'loans 4 and 6 the last transaction-bearing read-back predates the charge-off, so '
+      'the flag must come from the later `repaymentSchedule` read-backs, which say '
+      '`chargedOff=true`; and for the undo loans (3, 22, 23, 48) it is the latest '
+      'read-back\'s `chargedOff=false` (or dropped chargeOff) that excludes the undone '
+      'charge-off, while loans 12, 13, 28, 29, 37 and 38 are re-charged off under a '
+      'NEWER transaction id and stay charged off.')
     w('')
-    w('The charge-off transaction itself is missing from the read-backs for **loans 9, '
-      '10 and 12**: the feature charged those loans off AFTER their last transactions '
-      'read-back. The charge-off command response names the id (`resourceId`, see '
-      '`chargeoff_supplement` in the join), and that id is injected as the `chargeOff` '
-      'transaction so the arm and the charged-off dimension are complete for all 14 '
-      'loans. It is flagged as a supplement, never as a read-back.')
+    w('The charge-off transaction id is missing from every read-back for **loans 4, 6, '
+      '17, 42** (the feature charged those loans off AFTER their last transactions '
+      'read-back) and for the re-charged loans it is superseded. The charge-off command '
+      'response names the id (`resourceId`, see `chargeoff_supplement` in the join), and '
+      'an id absent from the read-backs is injected as the `chargeOff` transaction so the '
+      'arm type is complete. It is flagged as a supplement, never as a read-back, and is '
+      'NOT used for the charged-off rule.')
     w('')
-    w('The **Credit Balance Refund** step of the feature does not post as '
-      '`payoutRefund`: it posts as `loanTransactionType.creditBalanceRefund` (14 legs, '
-      'loans 13 and 14, listed in the all-types table). `payoutRefund` itself has NO '
-      'legs, and is reported as a finding.')
+    w('The **Credit Balance Refund** step of the feature posts as '
+      '`loanTransactionType.creditBalanceRefund` (12 legs, loans 20 and 45, listed in '
+      'the all-types table); `loanTransactionType.payoutRefund` does not appear at all.')
     w('')
     w('### Type × charged-off → legs → loans (all types)')
     w('')
@@ -284,6 +294,24 @@ def main():
               % (s['shape'], ex['loan'], ex['transaction_id'],
                  portions_str(ex['portions']), m(ex['payment_type_id']), s['count'],
                  ', '.join(str(x) for x in s['loans'])))
+        w('')
+    w('### Undone charge-offs (transactions before / after the undo)')
+    w('')
+    w('A charge-off is UNDONE when the loan\'s LATEST read-back marks it '
+      '`manuallyReversed`/`reversed`, or when an earlier read-back listed it and the '
+      'latest read-back dropped it entirely (it vanished). Each such charge-off is '
+      'EXCLUDED from the charged-off dimension. The before/after transactions are read '
+      'from the loan\'s latest transaction-bearing read-back — its final state.')
+    w('')
+    for u in J['undone_chargeoffs']:
+        w('#### loan %d — `%s` — %s' % (u['loan'], u['transaction_id'], u['evidence']))
+        w('')
+        w('- evidence: `%s` (manifest source_line %s); ordering read-back `%s` '
+          '(source_line %s).' % (u['evidence_readback'], u['evidence_source_line'],
+                                 u['order_readback'], u['order_source_line']))
+        w('- transactions posted BEFORE the undo: %s' % txlist(u['transactions_before']))
+        w('- the undone charge-off: `%s`' % u['transaction_id'])
+        w('- transactions posted AFTER the undo: %s' % txlist(u['transactions_after']))
         w('')
     w('### Per-loan currency and charge-off state')
     w('')
