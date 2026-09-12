@@ -1,0 +1,101 @@
+{
+ "committed_loans": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "failed_scenarios": [],
+ "files_written": 267,
+ "kept_body_bytes": 2499408,
+ "loan_exchanges": 224,
+ "loans": {
+  "1": {
+   "bytes": 221984,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "2": {
+   "bytes": 227799,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "3": {
+   "bytes": 227703,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "4": {
+   "bytes": 371206,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 36,
+   "reads": 25
+  },
+  "5": {
+   "bytes": 353273,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 35,
+   "reads": 24
+  },
+  "6": {
+   "bytes": 469888,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 44,
+   "reads": 31
+  },
+  "7": {
+   "bytes": 244832,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 28,
+   "reads": 17
+  },
+  "8": {
+   "bytes": 196921,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 13
+  },
+  "9": {
+   "bytes": 185802,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  }
+ },
+ "skipped_body_bytes": 131523295,
+ "skipped_exchanges": 1161,
+ "skipped_pct_of_body_bytes": 98,
+ "skipped_pct_of_source_bytes": 93,
+ "source_bytes": 140551107,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-payout-refund-mnt.log",
+ "total_exchanges": 1385,
+ "total_lines": 36413,
+ "unattributed_creates": 0,
+ "unattributed_loan_ids": []
+}

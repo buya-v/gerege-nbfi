@@ -1,0 +1,13 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-payout-refund-mnt.log (140551107 bytes, 36413 lines)
+exchanges: 1385 total, 224 loan, 1161 skipped (93% of source bytes, 98% of framed body bytes; 131523295 bytes skipped)
+loans: 9; files: 267; kept body bytes: 2499408
+  loan 1: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=221984
+  loan 2: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=227799
+  loan 3: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=227703
+  loan 4: create=1 cmd_req=5 cmd_resp=5 reads=25 files=36 bytes=371206
+  loan 5: create=1 cmd_req=5 cmd_resp=5 reads=24 files=35 bytes=353273
+  loan 6: create=1 cmd_req=6 cmd_resp=6 reads=31 files=44 bytes=469888
+  loan 7: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=244832
+  loan 8: create=1 cmd_req=6 cmd_resp=6 reads=13 files=26 bytes=196921
+  loan 9: create=1 cmd_req=4 cmd_resp=4 reads=14 files=23 bytes=185802
+wrote 267 files to stage
