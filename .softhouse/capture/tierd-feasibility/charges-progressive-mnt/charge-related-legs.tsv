@@ -1,0 +1,60 @@
+type_code	loan	currency	transaction_id	transaction_date	entry_type	gl_account_id	gl_account_code	gl_account_name	amount_minor	fraud	charged_off	charged_off_latest	chargeoff_tx_ids
+loanTransactionType.interestRefund	26	MNT	L148	2025-08-13	DEBIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	26	MNT	L148	2025-08-13	DEBIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.interestRefund	26	MNT	L148	2025-08-13	CREDIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	26	MNT	L148	2025-08-13	CREDIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	DEBIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	DEBIT	8	112601	Loans Receivable	17820	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	DEBIT	9	112603	Interest/Fee Receivable	12	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	DEBIT	19	l1	Overpayment account	1048	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	CREDIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	CREDIT	8	112601	Loans Receivable	17820	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	12	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L149	2025-08-13	CREDIT	19	l1	Overpayment account	1048	False	False	False	-
+loanTransactionType.interestRefund	26	MNT	L156	2025-08-13	DEBIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	26	MNT	L156	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	787	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L157	2025-08-13	DEBIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L157	2025-08-13	CREDIT	8	112601	Loans Receivable	17820	False	False	False	-
+loanTransactionType.merchantIssuedRefund	26	MNT	L157	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	1060	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L173	2025-08-13	DEBIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L173	2025-08-13	DEBIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L173	2025-08-13	CREDIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L173	2025-08-13	CREDIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	DEBIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	DEBIT	8	112601	Loans Receivable	17820	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	DEBIT	9	112603	Interest/Fee Receivable	12	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	DEBIT	19	l1	Overpayment account	1048	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	CREDIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	CREDIT	8	112601	Loans Receivable	17820	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	12	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L174	2025-08-13	CREDIT	19	l1	Overpayment account	1048	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L177	2025-08-13	DEBIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L177	2025-08-13	DEBIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L177	2025-08-13	CREDIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L177	2025-08-13	CREDIT	19	l1	Overpayment account	787	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	DEBIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	DEBIT	8	112601	Loans Receivable	18620	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	DEBIT	9	112603	Interest/Fee Receivable	202	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	DEBIT	19	l1	Overpayment account	58	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	CREDIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	CREDIT	8	112601	Loans Receivable	18620	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	202	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L178	2025-08-13	CREDIT	19	l1	Overpayment account	58	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L179	2025-08-13	DEBIT	4	404000	Interest Income	787	False	False	False	-
+loanTransactionType.interestRefund	27	MNT	L179	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	787	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L180	2025-08-13	DEBIT	7	145023	Suspense/Clearing account	18880	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L180	2025-08-13	CREDIT	8	112601	Loans Receivable	18620	False	False	False	-
+loanTransactionType.merchantIssuedRefund	27	MNT	L180	2025-08-13	CREDIT	9	112603	Interest/Fee Receivable	260	False	False	False	-
+loanTransactionType.chargeAdjustment	30	MNT	L190	2024-09-27	DEBIT	3	404007	Fee Income	100	False	False	False	-
+loanTransactionType.chargeAdjustment	30	MNT	L190	2024-09-27	CREDIT	8	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	36	MNT	L213	2024-02-01	DEBIT	3	404007	Fee Income	2000	False	False	False	-
+loanTransactionType.chargeAdjustment	36	MNT	L213	2024-02-01	CREDIT	9	112603	Interest/Fee Receivable	2000	False	False	False	-
+loanTransactionType.chargeOff	40	MNT	L231	2024-03-01	DEBIT	11	744007	Credit Loss/Bad Debt	10000	False	True	True	L231
+loanTransactionType.chargeOff	40	MNT	L231	2024-03-01	DEBIT	12	404008	Fee Charge Off	500	False	True	True	L231
+loanTransactionType.chargeOff	40	MNT	L231	2024-03-01	DEBIT	17	404001	Interest Income Charge Off	214	False	True	True	L231
+loanTransactionType.chargeOff	40	MNT	L231	2024-03-01	CREDIT	8	112601	Loans Receivable	10000	False	True	True	L231
+loanTransactionType.chargeOff	40	MNT	L231	2024-03-01	CREDIT	9	112603	Interest/Fee Receivable	714	False	True	True	L231
+loanTransactionType.chargeAdjustment	40	MNT	L232	2024-03-01	DEBIT	3	404007	Fee Income	500	False	True	True	L231
+loanTransactionType.chargeAdjustment	40	MNT	L232	2024-03-01	CREDIT	12	404008	Fee Charge Off	500	False	True	True	L231
+loanTransactionType.chargeAdjustment	41	MNT	L239	2025-03-25	DEBIT	3	404007	Fee Income	1000	False	False	False	-
+loanTransactionType.chargeAdjustment	41	MNT	L239	2025-03-25	CREDIT	8	112601	Loans Receivable	1000	False	False	False	-
