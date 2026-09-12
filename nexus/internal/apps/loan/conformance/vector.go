@@ -295,6 +295,43 @@ const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 // loan.
 const SeamLoanGoodwillCreditJournalEntries = "loan-goodwill-credit-journal-entries"
 
+// SeamLoanChargeAdjustmentJournalEntries is the capture seam this schema grades:
+// the journal entry a CHARGE ADJUSTMENT posts on a loan. It ports
+// AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForLoanChargeAdjustment and
+// .createJournalEntriesForChargeOffLoanChargeAdjustment [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:997-1214, pinned commit
+// 426a23544]. The credit side depends on the loan's charged-off state: NOT
+// charged off, principal credits LOAN_PORTFOLIO, interest INTEREST_RECEIVABLE,
+// fees FEES_RECEIVABLE, penalties PENALTIES_RECEIVABLE and overpayment
+// OVERPAYMENT; charged off, principal, interest and fees all credit
+// INCOME_FROM_CHARGE_OFF_FEES, penalties credit
+// INCOME_FROM_CHARGE_OFF_PENALTY and overpayment credits OVERPAYMENT. Portions
+// that resolve to the SAME account MERGE into one credit at the first slot's
+// position (the processor's accountMap is a LinkedHashMap). It then posts
+// exactly ONE DEBIT of the total, after every credit: INCOME_FROM_PENALTIES when
+// the adjusted charge is a penalty, else INCOME_FROM_FEES.
+//
+// The Java resolves that debit account through
+// AccountingProcessorHelper.createDebitJournalEntryForLoanCharges, which can
+// honour a CHARGE-SPECIFIC override; this seam takes the PRODUCT accounts only
+// and carries no charge id, so that override is REFUSED.
+//
+// Honest limit: in every observed product INCOME_FROM_FEES and
+// INCOME_FROM_PENALTIES map to the SAME GL account (3 in charges-progressive-mnt,
+// 9 in charges-cumulative-mnt), so these observations cannot discriminate the
+// fee-vs-penalty debit choice. The port posts it as the Java has it; the vectors
+// grade the credits, the merge and the single-debit total, not that choice.
+//
+// On the pinned observations L239 (loan 41, NOT charged off, product LP1)
+// credits the portfolio 8 10.00 and debits the income 3 10.00; L213 (loan 36,
+// NOT charged off, penalty charge) credits the penalty receivable 9 20.00 and
+// debits 3 20.00; L232 (loan 40, CHARGED OFF) credits the charge-off fees 12
+// 5.00 and debits 3 5.00; L38 (loan 7, NOT charged off) credits the portfolio 2
+// 1.00 and the penalty receivable 7 2.00, then ONE debit 9 3.00. Account ids
+// are THIS replay's product mapping.
+const SeamLoanChargeAdjustmentJournalEntries = "loan-charge-adjustment-journal-entries"
+
 // SeamLoanChargedOffRepaymentJournalEntries is the capture seam this schema
 // grades: the journal entry a REPAYMENT posts on a loan ALREADY MARKED CHARGED
 // OFF. It ports AccrualBasedAccountingProcessorForLoan
@@ -834,6 +871,41 @@ type GoodwillCreditJournalRequest struct {
 	Portions      RepaymentPortionsMoney     `json:"portions"`
 	ChargedOff    bool                       `json:"charged_off,omitempty"`
 	Accounts      GoodwillCreditSlotAccounts `json:"accounts"`
+}
+
+// ChargeAdjustmentSlotAccounts is the product's charge-adjustment
+// slot->account mapping: the five CREDIT slots of the NOT-charged-off arm (the
+// receivables), the two charge-off income slots the charged-off arm credits
+// instead, and the two income slots the single total debit selects between. A
+// positive portion must have its slot mapped; a positive total must have the
+// selected debit slot mapped, else the port refuses. Overpayment is shared by
+// both arms.
+type ChargeAdjustmentSlotAccounts struct {
+	LoanPortfolio              string `json:"loan_portfolio"`
+	ReceivableInterest         string `json:"receivable_interest"`
+	ReceivableFee              string `json:"receivable_fee"`
+	ReceivablePenalty          string `json:"receivable_penalty"`
+	Overpayment                string `json:"overpayment,omitempty"`
+	IncomeFromChargeOffFees    string `json:"income_from_charge_off_fees"`
+	IncomeFromChargeOffPenalty string `json:"income_from_charge_off_penalty"`
+	IncomeFromFees             string `json:"income_from_fees"`
+	IncomeFromPenalties        string `json:"income_from_penalties"`
+}
+
+// ChargeAdjustmentJournalRequest is the
+// loan-charge-adjustment-journal-entries seam's input: the observed portions of
+// a CHARGE ADJUSTMENT transaction, the loan's charged-off state, whether the
+// adjusted charge is a penalty (which selects the single debit account) and the
+// product's slot->account mapping, plus the transaction id the legs are posted
+// under. The mapping is the product's accountingMappings read back from the
+// reference server, never invented, and carries no charge id: a charge-specific
+// debit override is not modelled.
+type ChargeAdjustmentJournalRequest struct {
+	TransactionID string                       `json:"transaction_id"`
+	Portions      RepaymentPortionsMoney       `json:"portions"`
+	ChargedOff    bool                         `json:"charged_off,omitempty"`
+	PenaltyCharge bool                         `json:"penalty_charge,omitempty"`
+	Accounts      ChargeAdjustmentSlotAccounts `json:"accounts"`
 }
 
 // ChargedOffRepaymentSlotAccounts is the slot->account mapping of a repayment on
@@ -1401,6 +1473,12 @@ type Request struct {
 	// (its five credit slots, its four goodwill debit slots and the resolved fund
 	// source the wrong drive debits).
 	GoodwillCreditJournal *GoodwillCreditJournalRequest `json:"goodwill_credit_journal,omitempty"`
+	// ChargeAdjustmentJournal is the loan-charge-adjustment-journal-entries
+	// seam's input: a CHARGE ADJUSTMENT transaction's five portions, the loan's
+	// charged-off state (which moves the credit side to the charge-off income
+	// table), whether the adjusted charge is a penalty (which selects the single
+	// debit income account) and the product's slot->account mapping.
+	ChargeAdjustmentJournal *ChargeAdjustmentJournalRequest `json:"charge_adjustment_journal,omitempty"`
 	// ChargedOffRepaymentJournal is the
 	// loan-chargedoff-repayment-journal-entries seam's input: a REPAYMENT
 	// transaction's five portions on a loan already marked charged off and the
@@ -1558,6 +1636,17 @@ type Expect struct {
 	// goodwill slot moves an account, and a port that debits per credit moves the
 	// count on a multi-credit transaction.
 	GoodwillCreditJournalLegs []JournalEntryLeg `json:"goodwill_credit_journal_legs,omitempty"`
+	// ChargeAdjustmentJournalLegs is the
+	// loan-charge-adjustment-journal-entries seam's ordered leg list a charge
+	// adjustment posted: one credit per non-zero portion (merged by account) in
+	// portion order — the receivables on a NOT-charged-off loan, the charge-off
+	// income table on a charged-off loan — then ONE debit of the total to
+	// INCOME_FROM_PENALTIES when the adjusted charge is a penalty, else
+	// INCOME_FROM_FEES. Every leg is graded on its transaction id, account, side
+	// and amount; a port that posts the not-charged-off credits on a charged-off
+	// loan moves the credit accounts, and a port that splits the single debit
+	// moves the count.
+	ChargeAdjustmentJournalLegs []JournalEntryLeg `json:"charge_adjustment_journal_legs,omitempty"`
 	// ChargedOffRepaymentJournalLegs is the
 	// loan-chargedoff-repayment-journal-entries seam's ordered leg list a
 	// charged-off loan's repayment posted: one credit to INCOME_FROM_RECOVERY

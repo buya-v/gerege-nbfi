@@ -64,6 +64,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertRepaymentJournalBalanced(got)}
 	case SeamLoanGoodwillCreditJournalEntries:
 		return []InvariantResult{assertGoodwillCreditJournalBalanced(got)}
+	case SeamLoanChargeAdjustmentJournalEntries:
+		return []InvariantResult{assertChargeAdjustmentJournalBalanced(got)}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		return []InvariantResult{assertChargedOffRepaymentJournalBalanced(got)}
 	case SeamLoanChargedOffMerchantRefundJournalEntries:
@@ -732,6 +734,65 @@ func assertGoodwillCreditJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by %d goodwill debit leg(s)", creditLegs, credits, debitLegs)
+	return r
+}
+
+// assertChargeAdjustmentJournalBalanced: a charge adjustment's result carries
+// non-negative integer minor-unit amounts, at least one credit leg, EXACTLY ONE
+// debit leg and the debit sums to the credits. Unlike a goodwill credit the
+// debit side is a single income debit of the total (INCOME_FROM_FEES, or
+// INCOME_FROM_PENALTIES when the adjusted charge is a penalty), so the count is
+// fixed at one: a port that emits one debit per credit fails here. It is
+// asserted on the implementation's RESULT, so a port that drops or unbalances a
+// leg fails too; the account cells that separate the not-charged-off credits
+// from the charge-off income table are the leg differ's job.
+func assertChargeAdjustmentJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "charge_adjustment_journal_balances", Assertions: 4}
+	legs := got.ChargeAdjustmentJournalLegs
+	if len(legs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range legs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no credit leg: a charge adjustment credits each non-zero portion"
+		return r
+	}
+	if debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d debit leg(s): a charge adjustment posts exactly ONE debit of the total", debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the %d credit leg(s) sum to %d but the single debit is %d: a charge adjustment must balance", creditLegs, credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by the one income debit", creditLegs, credits)
 	return r
 }
 

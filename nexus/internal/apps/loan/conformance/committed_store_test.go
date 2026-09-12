@@ -135,6 +135,7 @@ var committedLoanSeams = []string{
 	SeamLoanChargedOffWriteOffJournalEntries,
 	SeamLoanRepaymentJournalEntries,
 	SeamLoanGoodwillCreditJournalEntries,
+	SeamLoanChargeAdjustmentJournalEntries,
 	SeamLoanChargedOffRepaymentJournalEntries,
 	SeamLoanChargedOffMerchantRefundJournalEntries,
 	SeamLoanAccrualJournalEntries,
