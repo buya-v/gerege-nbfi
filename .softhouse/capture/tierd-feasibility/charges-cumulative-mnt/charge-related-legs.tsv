@@ -1,0 +1,69 @@
+type_code	loan	currency	transaction_id	transaction_date	entry_type	gl_account_id	gl_account_code	gl_account_name	amount_minor	fraud	charged_off	charged_off_latest	chargeoff_tx_ids
+loanTransactionType.chargeback	4	MNT	L17	2022-05-01	DEBIT	2	112601	Loans Receivable	25000	False	False	False	-
+loanTransactionType.chargeback	4	MNT	L17	2022-05-01	CREDIT	5	145023	Suspense/Clearing account	25000	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L36	2022-11-04	DEBIT	7	112603	Interest/Fee Receivable	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L36	2022-11-04	DEBIT	9	404007	Fee Income	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L36	2022-11-04	CREDIT	7	112603	Interest/Fee Receivable	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L36	2022-11-04	CREDIT	9	404007	Fee Income	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	DEBIT	2	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	DEBIT	7	112603	Interest/Fee Receivable	200	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	DEBIT	9	404007	Fee Income	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	CREDIT	2	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	CREDIT	7	112603	Interest/Fee Receivable	200	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L38	2022-11-04	CREDIT	9	404007	Fee Income	300	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L40	2022-11-04	DEBIT	7	112603	Interest/Fee Receivable	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L40	2022-11-04	DEBIT	9	404007	Fee Income	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L40	2022-11-04	CREDIT	7	112603	Interest/Fee Receivable	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L40	2022-11-04	CREDIT	9	404007	Fee Income	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L41	2022-11-04	DEBIT	9	404007	Fee Income	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L41	2022-11-04	CREDIT	2	112601	Loans Receivable	400	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L43	2022-11-04	DEBIT	9	404007	Fee Income	500	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L43	2022-11-04	CREDIT	2	112601	Loans Receivable	500	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L45	2022-11-04	DEBIT	2	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L45	2022-11-04	DEBIT	9	404007	Fee Income	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L45	2022-11-04	CREDIT	2	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L45	2022-11-04	CREDIT	9	404007	Fee Income	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L46	2022-11-04	DEBIT	9	404007	Fee Income	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L46	2022-11-04	CREDIT	2	112601	Loans Receivable	100	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L47	2022-11-04	DEBIT	9	404007	Fee Income	200	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L47	2022-11-04	DEBIT	19	l1	Overpayment account	200	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L47	2022-11-04	CREDIT	9	404007	Fee Income	200	False	False	False	-
+loanTransactionType.chargeAdjustment	7	MNT	L47	2022-11-04	CREDIT	19	l1	Overpayment account	200	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	DEBIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	DEBIT	5	145023	Suspense/Clearing account	30000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	DEBIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	CREDIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	CREDIT	5	145023	Suspense/Clearing account	30000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L61	2023-01-10	CREDIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L63	2023-01-10	DEBIT	2	112601	Loans Receivable	11000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L63	2023-01-10	DEBIT	19	l1	Overpayment account	19000	False	False	False	-
+loanTransactionType.chargeback	11	MNT	L63	2023-01-10	CREDIT	5	145023	Suspense/Clearing account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	DEBIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	DEBIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	DEBIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	CREDIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	CREDIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	13	MNT	L75	2023-01-10	CREDIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	DEBIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	DEBIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	DEBIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	CREDIT	2	112601	Loans Receivable	10000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	CREDIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L81	2023-01-10	CREDIT	19	l1	Overpayment account	20000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L82	2023-01-10	DEBIT	2	112601	Loans Receivable	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L82	2023-01-10	DEBIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L82	2023-01-10	CREDIT	2	112601	Loans Receivable	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L82	2023-01-10	CREDIT	18	744003	Goodwill Expense Account	30000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L83	2023-01-10	DEBIT	13	404008	Fee Charge Off	1000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L83	2023-01-10	DEBIT	18	744003	Goodwill Expense Account	29000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L83	2023-01-10	CREDIT	2	112601	Loans Receivable	29000	False	False	False	-
+loanTransactionType.goodwillCredit	14	MNT	L83	2023-01-10	CREDIT	7	112603	Interest/Fee Receivable	1000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L98	2023-01-10	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L98	2023-01-10	DEBIT	19	l1	Overpayment account	5000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L98	2023-01-10	CREDIT	5	145023	Suspense/Clearing account	5000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L98	2023-01-10	CREDIT	19	l1	Overpayment account	5000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L100	2023-01-10	DEBIT	5	145023	Suspense/Clearing account	5000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L100	2023-01-10	CREDIT	2	112601	Loans Receivable	1000	False	False	False	-
+loanTransactionType.payoutRefund	18	MNT	L100	2023-01-10	CREDIT	19	l1	Overpayment account	4000	False	False	False	-
+loanTransactionType.creditBalanceRefund	18	MNT	L102	2023-01-10	DEBIT	19	l1	Overpayment account	4000	False	False	False	-
+loanTransactionType.creditBalanceRefund	18	MNT	L102	2023-01-10	CREDIT	5	145023	Suspense/Clearing account	4000	False	False	False	-

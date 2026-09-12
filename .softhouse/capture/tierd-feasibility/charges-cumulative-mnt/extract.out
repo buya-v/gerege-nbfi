@@ -1,0 +1,32 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-charges-cumulative-mnt.log (165871330 bytes, 68670 lines)
+exchanges: 2609 total, 803 loan, 1806 skipped (87% of source bytes, 94% of framed body bytes; 145925072 bytes skipped)
+loans: 25; files: 955; kept body bytes: 7995488
+  loan 1: create=1 cmd_req=4 cmd_resp=4 reads=13 files=22 bytes=241130
+  loan 2: create=1 cmd_req=4 cmd_resp=4 reads=13 files=22 bytes=241133
+  loan 3: create=1 cmd_req=8 cmd_resp=8 reads=20 files=37 bytes=269786
+  loan 4: create=1 cmd_req=10 cmd_resp=10 reads=24 files=45 bytes=355935
+  loan 5: create=1 cmd_req=9 cmd_resp=9 reads=25 files=44 bytes=301809
+  loan 6: create=1 cmd_req=10 cmd_resp=10 reads=19 files=40 bytes=267308
+  loan 7: create=1 cmd_req=17 cmd_resp=17 reads=181 files=216 bytes=3127064
+  loan 8: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=132936
+  loan 9: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=132974
+  loan 10: create=1 cmd_req=5 cmd_resp=5 reads=18 files=29 bytes=161997
+  loan 11: create=1 cmd_req=6 cmd_resp=6 reads=22 files=35 bytes=198757
+  loan 12: create=1 cmd_req=7 cmd_resp=7 reads=24 files=39 bytes=237920
+  loan 13: create=1 cmd_req=7 cmd_resp=7 reads=24 files=39 bytes=237704
+  loan 14: create=1 cmd_req=7 cmd_resp=7 reads=24 files=39 bytes=238129
+  loan 15: create=1 cmd_req=6 cmd_resp=6 reads=17 files=30 bytes=155286
+  loan 16: create=1 cmd_req=4 cmd_resp=4 reads=14 files=23 bytes=122055
+  loan 17: create=1 cmd_req=4 cmd_resp=4 reads=14 files=23 bytes=122008
+  loan 18: create=1 cmd_req=6 cmd_resp=6 reads=19 files=32 bytes=182432
+  loan 19: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=154471
+  loan 20: create=1 cmd_req=4 cmd_resp=4 reads=17 files=26 bytes=146307
+  loan 21: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=162373
+  loan 22: create=1 cmd_req=3 cmd_resp=3 reads=16 files=23 bytes=189269
+  loan 23: create=1 cmd_req=3 cmd_resp=3 reads=16 files=23 bytes=190555
+  loan 24: create=1 cmd_req=7 cmd_resp=7 reads=21 files=36 bytes=230405
+  loan 25: create=1 cmd_req=5 cmd_resp=5 reads=21 files=32 bytes=195745
+wrote 955 files to stage
+copied 955 body files into loans/loan-*/ (25 committed loans)
+manifest entries: 955; committed: 955; loans: 25; unattributed: []
+kept_body_bytes: 7995488 of committed files: 7995488
