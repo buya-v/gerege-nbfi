@@ -1,0 +1,226 @@
+{
+ "attribution_validated": false,
+ "currency": "MNT",
+ "failed": 0,
+ "feature": "LoanMerchantIssuedRefund.feature",
+ "passed": 19,
+ "scenario_count": 19,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 4,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": null,
+   "name": "Merchant Issued Refund reverse replayed with penalty charge and interest recalculation",
+   "result": "PASSED",
+   "tag": "C3731"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 36,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INT_RECALCULATION_ZERO_INT_CHARGE_OFF_INT_RECOGNITION_FROM_DISB_DATE",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": null,
+   "name": "Verify that the MIR works correctly when last installment principal got updated to null - 360/30",
+   "result": "PASSED",
+   "tag": "C3774"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 54,
+   "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": null,
+   "name": "Verify that the MIR works correctly when last installment principal got updated to null - Actual/Actual",
+   "result": "PASSED",
+   "tag": "C3775"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 72,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": null,
+   "name": "Merchant Issued Refund with interestRefundCalculation = false (Interest Refund transaction should NOT be created)",
+   "result": "PASSED",
+   "tag": "C3842"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 112,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": null,
+   "name": "Merchant Issued Refund with interestRefundCalculation = true (Interest Refund transaction SHOULD be created)",
+   "result": "PASSED",
+   "tag": "C3843"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 153,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": null,
+   "name": "Merchant Issued Refund without interestRefundCalculation (should fallback to loan product config)",
+   "result": "PASSED",
+   "tag": "C3844"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 194,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": null,
+   "name": "Verify reversal of Merchant Issued Refund when interestRefundCalculation=false (no Interest Refund to reverse)",
+   "result": "PASSED",
+   "tag": "C3854"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 245,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": null,
+   "name": "Multiple refunds on same loan with different interestRefundCalculation settings",
+   "result": "PASSED",
+   "tag": "C3855"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 285,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": null,
+   "name": "Merchant Issued Refund on fully paid loan with interestRefundCalculation variations",
+   "result": "PASSED",
+   "tag": "C3856"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 339,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": null,
+   "name": "Manual Interest Refund creation for Merchant Issued Refund with interestRefundCalculation = false",
+   "result": "PASSED",
+   "tag": "C3873"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 403,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": null,
+   "name": "Undo Merchant Issued Refund with manual Interest Refund, both transactions are reversed",
+   "result": "PASSED",
+   "tag": "C3874"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 495,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": null,
+   "name": "Prevent manual Interest Refund creation if interestRefundCalculation = true and Interest Refund already exists",
+   "result": "PASSED",
+   "tag": "C3875"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 537,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": null,
+   "name": "Prevent manual Interest Refund creation with mismatched transaction date for Merchant Issued Refund",
+   "result": "PASSED",
+   "tag": "C3880"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 555,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": null,
+   "name": "High interest rate in advance paid Repayment + Merchant Issued Refund",
+   "result": "PASSED",
+   "tag": "C4127"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 642,
+   "feature_product": "LP2_ADV_PMT_ALLOC_ACTUAL_ACTUAL_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": null,
+   "name": "Verify manual Interest Refund is recalculated during reprocessing even if no prior transaction was reverse-replayed",
+   "result": "PASSED",
+   "tag": "C4355"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 700,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 16,
+   "loan": 16,
+   "loan_client_id": null,
+   "name": "Verify MIR and CBR with adjust interest afterwards outcomes with improper allocations on account - UC1",
+   "result": "PASSED",
+   "tag": "C4570"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 814,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 17,
+   "loan": 17,
+   "loan_client_id": null,
+   "name": "Verify PR and CBR with adjust interest afterwards outcomes with improper allocations on account - UC2",
+   "result": "PASSED",
+   "tag": "C4541"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 928,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 18,
+   "loan": 18,
+   "loan_client_id": null,
+   "name": "Verify Goodwill Credit and CBR with adjust interest afterwards outcomes with improper allocations on account - UC3",
+   "result": "PASSED",
+   "tag": "C4571"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1039,
+   "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACCRUAL_ACTIVITY",
+   "index": 19,
+   "loan": 19,
+   "loan_client_id": null,
+   "name": "Verify adding manual Interest Refund on closed loan with multiple tranches",
+   "result": "PASSED",
+   "tag": "C4542"
+  }
+ ],
+ "steps": {
+  "failed": 0,
+  "passed": 528,
+  "skipped": 0,
+  "total": 528
+ },
+ "tenant": "tierd"
+}
