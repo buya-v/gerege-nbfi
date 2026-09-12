@@ -174,6 +174,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.BuyDownFeeJournal != nil:
 		return goBuyDownFeeJournal(*req.BuyDownFeeJournal)
+	case req.BuyDownFeeAdjustmentJournal != nil:
+		return goBuyDownFeeAdjustmentJournal(*req.BuyDownFeeAdjustmentJournal)
 	case req.CreditBalanceRefundJournal != nil:
 		return goCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal)
 	case req.InterestPaymentWaiverJournal != nil:
@@ -1513,6 +1515,49 @@ func buyDownFeeJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{BuyDownFeeJournalLegs: out}
+}
+
+// goBuyDownFeeAdjustmentJournal ports the
+// loan-buy-down-fee-adjustment-journal-entries seam: it reduces the request's
+// amount, merchantBuyDownFee fact and resolved slot->account mapping to
+// loan.MinorUnits and loan.BuyDownFeeAdjustmentAccountMapping and runs the
+// port's own loan.CreateBuyDownFeeAdjustmentJournalEntryLegs. Every monetary
+// cell is an integer minor unit; the mapping is the product's (or the payment
+// channel's) observed accountingMappings, never invented.
+func goBuyDownFeeAdjustmentJournal(r BuyDownFeeAdjustmentJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateBuyDownFeeAdjustmentJournalEntryLegs(r.TransactionID, amount, r.Merchant, loan.BuyDownFeeAdjustmentAccountMapping{
+		FundSource:              r.Accounts.FundSource,
+		BuyDownExpense:          r.Accounts.BuyDownExpense,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return buyDownFeeAdjustmentJournalLegsExpect(legs), nil
+}
+
+// buyDownFeeAdjustmentJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func buyDownFeeAdjustmentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{BuyDownFeeAdjustmentJournalLegs: out}
 }
 
 // goCreditBalanceRefundJournal ports the loan-credit-balance-refund-journal-entries
@@ -2893,6 +2938,37 @@ func (w wrongBuyDownFeeJournalEvaluator) Evaluate(req Request) (Expect, error) {
 func wrongBuyDownFeeJournal(r BuyDownFeeJournalRequest) (Expect, error) {
 	r.Merchant = false
 	return goBuyDownFeeJournal(r)
+}
+
+// wrongBuyDownFeeAdjustmentJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-buy-down-fee-adjustment-journal-entries seam: it
+// always credits the FUND SOURCE, as a port that never reads the loan's
+// merchantBuyDownFee fact does. On the merchant observations loan-13 L502 and
+// loan-14 L511 the credit moves from the buy-down expense account 23 to the
+// fund-source account 5 while every side, amount and the deferred-income debit
+// stay observed; the non-merchant observations loan-25 L819 and loan-39 L1435
+// are unaffected. (Forcing the flag the other way is inert: the non-merchant
+// products map no buy-down expense account, so the port refuses instead of
+// posting a wrong leg.) On any request that is not a buy-down-fee adjustment
+// journal it delegates to the correct port, so the drive goes red ONLY on this
+// seam's vectors and stays green everywhere else (vector isolation).
+type wrongBuyDownFeeAdjustmentJournalEvaluator struct {
+	goEvaluator
+}
+
+func (w wrongBuyDownFeeAdjustmentJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.BuyDownFeeAdjustmentJournal != nil {
+		return wrongBuyDownFeeAdjustmentJournal(*req.BuyDownFeeAdjustmentJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongBuyDownFeeAdjustmentJournal runs the correct posting with the
+// merchantBuyDownFee fact forced off, so it credits the fund source even on a
+// merchant product.
+func wrongBuyDownFeeAdjustmentJournal(r BuyDownFeeAdjustmentJournalRequest) (Expect, error) {
+	r.Merchant = false
+	return goBuyDownFeeAdjustmentJournal(r)
 }
 
 // creditBalanceRefundJournalWrongMode selects which deliberately-wrong credit
@@ -4354,6 +4430,14 @@ func init() {
 			"every side, amount, the deferred-income-liability credit and the count stay observed — and "+
 			"the non-merchant observation loan-20 L781 is unaffected",
 		wrongBuyDownFeeJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-buydown-adjustment-ignores-merchant",
+		"always credits the fund source for a buy-down-fee adjustment, as a port that never reads "+
+			"the loan's merchantBuyDownFee fact does; on the pinned merchant observation loan-13 L502 "+
+			"the credit moves from the buy-down expense account 23 to the fund-source account 5 while "+
+			"every side, amount, the deferred-income-liability debit and the count stay observed, on "+
+			"loan-14 L511 the credit likewise moves 23->5, and the non-merchant observations loan-25 "+
+			"L819 and loan-39 L1435 are unaffected",
+		wrongBuyDownFeeAdjustmentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-cbr-ignores-charge-off",
 		"posts the principal portion of a credit balance refund to the loan-portfolio account even on a "+
 			"charged-off (and fraud) loan, as a port that never reads the loan's charged-off flag does; "+
