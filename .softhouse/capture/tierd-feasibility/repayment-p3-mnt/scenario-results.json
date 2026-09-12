@@ -1,0 +1,632 @@
+{
+ "attribution_validated": true,
+ "currency": "MNT",
+ "failed": 4,
+ "feature": "LoanRepayment-Part3.feature",
+ "passed": 46,
+ "scenario_count": 50,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 6,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": 1,
+   "name": "Verify that in case of pre-payed installments for total amount (loan balance is 0) LoanRepaymentDueBusinessEvent is not sent - LP2 advanced payment allocation product",
+   "result": "PASSED",
+   "tag": "C2908"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[1, 30, 01 October 2023, null, 936.63, 313.37, 15.63, 0.0, 0.0, 329.0, 0.0, 0.0, 0.0, 329.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 2 tab line 2.",
+      "Actual values in line (with the same due date) are:",
+      "[1, 30, 01 October 2023, null, 936.63, 313.37, 15.63, 0.0, 0.0, 329.0, 0.0, 0.0, 0.0, 329.0] -",
+      "But expected values in line:",
+      "[1, 30, 01 October 2023, null, 937.62, 312.38, 15.62, 0.0, 0.0, 328.0, 0.0, 0.0, 0.0, 328.0]]"
+     ],
+     "expected": "[1, 30, 01 October 2023, null, 937.62, 312.38, 15.62, 0.0, 0.0, 328.0, 0.0, 0.0, 0.0, 328.0]]",
+     "resource": 2,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 47,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 39,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": 2,
+   "name": "Verify that outstanding amounts are rounded correctly in case of: installmentAmountInMultiplesOf=1, interestType: FLAT, amortizationType: EQUAL_INSTALLMENTS",
+   "result": "FAILED",
+   "tag": "C2961"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[1, 30, 01 October 2023, null, 943.63, 306.37, 15.63, 0.0, 0.0, 322.0, 0.0, 0.0, 0.0, 322.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 3 tab line 2.",
+      "Actual values in line (with the same due date) are:",
+      "[1, 30, 01 October 2023, null, 943.63, 306.37, 15.63, 0.0, 0.0, 322.0, 0.0, 0.0, 0.0, 322.0] -",
+      "But expected values in line:",
+      "[1, 30, 01 October 2023, null, 943.62, 306.38, 15.62, 0.0, 0.0, 322.0, 0.0, 0.0, 0.0, 322.0]]"
+     ],
+     "expected": "[1, 30, 01 October 2023, null, 943.62, 306.38, 15.62, 0.0, 0.0, 322.0, 0.0, 0.0, 0.0, 322.0]]",
+     "resource": 3,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 67,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 59,
+   "feature_product": "LP1_INTEREST_DECLINING_BALANCE_PERIOD_SAME_AS_PAYMENT",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": 3,
+   "name": "Verify that outstanding amounts are rounded correctly in case of: installmentAmountInMultiplesOf=1, interestType: DECLINING_BALANCE, amortizationType: EQUAL_INSTALLMENTS",
+   "result": "FAILED",
+   "tag": "C2962"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 79,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": 4,
+   "name": "Verify that there is not auto downpayment if disburseWithoutAutoDownPayment command is used",
+   "result": "PASSED",
+   "tag": "C3106"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 99,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": 5,
+   "name": "Verify installment due date logic for monthly installments - last day of the month",
+   "result": "PASSED",
+   "tag": "C3129"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 142,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": 6,
+   "name": "Verify installment due date logic for monthly installments - last day of the month, expected and real disbursement dates are different",
+   "result": "PASSED",
+   "tag": "C3130"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 186,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION_REPAYMENT_START_SUBMITTED",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": 7,
+   "name": "Verify installment due date logic for monthly installments - last day of the month, repayment start calculated from Submitted on date - submit, approve, disburse on same date",
+   "result": "PASSED",
+   "tag": "C3131"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 229,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION_REPAYMENT_START_SUBMITTED",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": 8,
+   "name": "Verify installment due date logic for monthly installments - last day of the month, repayment start calculated from Submitted on date - submit and approve on same date, disburse on next day",
+   "result": "PASSED",
+   "tag": "C3132"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 273,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION_REPAYMENT_START_SUBMITTED",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": 9,
+   "name": "Verify installment due date logic for monthly installments - last day of the month, repayment start calculated from Submitted on date - submit and approve on same date, expected disbursement date on next day",
+   "result": "PASSED",
+   "tag": "C3133"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 317,
+   "feature_product": "LP2_DOWNPAYMENT_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": 10,
+   "name": "Verify AdvancedPaymentAllocation behaviour: loanScheduleProcessingType-horizontal, charge after maturity, in advanced repayment (future installment type: NEXT_INSTALLMENT)",
+   "result": "PASSED",
+   "tag": "C3223"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 394,
+   "feature_product": "LP1_INTEREST_DECLINING_BALANCE_SAR_RECALCULATION_SAME_AS_REPAYMENT_COMPOUNDING_NONE_MULTIDISB",
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": 11,
+   "name": "Verify that interest recalculation works properly when triggered by COB",
+   "result": "PASSED",
+   "tag": "C3224"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 444,
+   "feature_product": "LP1_ADV_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": 12,
+   "name": "Verify that payment allocation is correct in case of fee charged on an OVERPAID Loan and payment is backdated",
+   "result": "PASSED",
+   "tag": "C3225"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 580,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": 13,
+   "name": "Verify that repayment reversal is created as the result of backdated repayment transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3247"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 616,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": 14,
+   "name": "Verify that repayment reversal is created as the result of backdated goodwill credit transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3261"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 652,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": 15,
+   "name": "Verify that repayment reversal is created as the result of backdated interest payment waiver transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3262"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 688,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 16,
+   "loan": 16,
+   "loan_client_id": 16,
+   "name": "Verify that repayment reversal is created as the result of backdated merchant issued refund transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3263"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 724,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 17,
+   "loan": 17,
+   "loan_client_id": 17,
+   "name": "Verify that repayment reversal is created as the result of backdated payout refund transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3264"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 760,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 18,
+   "loan": 18,
+   "loan_client_id": 18,
+   "name": "Verify that repayment reversal is created as the result of backdated charge adjustment transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3265"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 798,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "index": 19,
+   "loan": 19,
+   "loan_client_id": 19,
+   "name": "Verify that repayment reversal is created as the result of backdated disbursal transaction for interest bearing product",
+   "result": "PASSED",
+   "tag": "C3266"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 835,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_INTEREST_RECALCULATION",
+   "index": 20,
+   "loan": 20,
+   "loan_client_id": 20,
+   "name": "Verify the relationship for Interest Refund transaction after repayment by reverting related transaction",
+   "result": "PASSED",
+   "tag": "C3296"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 877,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_DOWNPAYMENT",
+   "index": 21,
+   "loan": 21,
+   "loan_client_id": 21,
+   "name": "Verify that repayment made during downpayment period should not call payInterest or payPrincipal methods on the EmiCalculator for interest bearing progressive product with interest recalculation",
+   "result": "PASSED",
+   "tag": "C3293"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 900,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_DOWNPAYMENT",
+   "index": 22,
+   "loan": 22,
+   "loan_client_id": 22,
+   "name": "Verify that payment transactions made during downpayment period should not call payInterest or payPrincipal methods on the EmiCalculator for interest bearing progressive product with interest recalculation",
+   "result": "PASSED",
+   "tag": "C3294"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 929,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_DOWNPAYMENT",
+   "index": 23,
+   "loan": 23,
+   "loan_client_id": 23,
+   "name": "Verify that backdated repayment made after loan maturity date should not call payInterest or payPrincipal methods on the EmiCalculator for interest bearing progressive product with interest recalculation",
+   "result": "PASSED",
+   "tag": "C3295"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 953,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY",
+   "index": 24,
+   "loan": 24,
+   "loan_client_id": 24,
+   "name": "Verify repayment reversal on interest bearing loan with NSF fee without down payment when accrual activity is present",
+   "result": "PASSED",
+   "tag": "C3382"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[null, null, 22 December 2024, null, 6080.58, null, null, 0.0, null, 0.0, 0.0, null, null, null]",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 25 tab line 2.",
+      "Actual values in line (with the same due date) are:",
+      "[null, null, 22 December 2024, null, 6080.58, null, null, 0.0, null, 0.0, 0.0, null, null, null]",
+      "[1, 0, 22 December 2024, 22 December 2024, 4560.43, 1520.15, 0.0, 0.0, 0.0, 1520.15, 1520.15, 0.0, 0.0, 0.0] -",
+      "But expected values in line:",
+      "[1, 0, 22 December 2024, 22 December 2024, 4560.44, 1520.14, 0.0, 0.0, 0.0, 1520.14, 1520.14, 0.0, 0.0, 0.0]]"
+     ],
+     "expected": "[1, 0, 22 December 2024, 22 December 2024, 4560.43, 1520.15, 0.0, 0.0, 0.0, 1520.15, 1520.15, 0.0, 0.0, 0.0] -",
+     "resource": 25,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 1016,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 1007,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_AUTO_DOWNPAYMENT_EMI_ACTUAL_ACTUAL_ACCRUAL_ACTIVITY",
+   "index": 25,
+   "loan": 25,
+   "loan_client_id": 25,
+   "name": "Verify repayment reversal on interest bearing loan with NSF fee with down payment when accrual activity is present",
+   "result": "FAILED",
+   "tag": "C3383"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1068,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "index": 26,
+   "loan": 26,
+   "loan_client_id": 26,
+   "name": "Validate interest calculation for on progressive interest bearing loan with multi-disbursement - MIR on disbursement date",
+   "result": "PASSED",
+   "tag": "C3391"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1129,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE",
+   "index": 27,
+   "loan": 27,
+   "loan_client_id": 27,
+   "name": "Validate interest calculation for on progressive interest bearing loan with multi-disbursement - MIR on disbursement date, 2nd disbursement on middle of 2nd period",
+   "result": "PASSED",
+   "tag": "C3392"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1191,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_ACCRUAL_ACTIVITY_POSTING",
+   "index": 28,
+   "loan": 28,
+   "loan_client_id": 28,
+   "name": "Verify that after repayment reversal Goodwill credit is reversed and replayed with non null external-id",
+   "result": "PASSED",
+   "tag": "C3442"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1285,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 29,
+   "loan": 29,
+   "loan_client_id": 29,
+   "name": "Verify the next/last installament payment allocation in case the repayment is before the installment date",
+   "result": "PASSED",
+   "tag": "C3520"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1315,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 30,
+   "loan": 30,
+   "loan_client_id": 30,
+   "name": "Verify the next/last installament payment allocation in case the repayment is on the installment date",
+   "result": "PASSED",
+   "tag": "C3521"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1345,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 31,
+   "loan": 31,
+   "loan_client_id": 31,
+   "name": "Verify Loan is fully paid and closed after partial repayments, Merchant issued refund which overpays the loan, partial CBR and reversal of 1st repayment",
+   "result": "PASSED",
+   "tag": "C3569"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1463,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 32,
+   "loan": 32,
+   "loan_client_id": 32,
+   "name": "Verify early repayment on high interest loan works properly and align the interest properly - UC1",
+   "result": "PASSED",
+   "tag": "C3589"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1561,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 33,
+   "loan": 33,
+   "loan_client_id": 33,
+   "name": "Verify early repayment on high interest loan works properly and align the interest properly while increase interest rate - UC2",
+   "result": "PASSED",
+   "tag": "C3614"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1742,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 34,
+   "loan": 34,
+   "loan_client_id": 34,
+   "name": "Verify early repayment on high interest loan works properly and align the interest properly while reduce interest rate with repayment undo - UC3",
+   "result": "PASSED",
+   "tag": "C3615"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1924,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 35,
+   "loan": 35,
+   "loan_client_id": 35,
+   "name": "Verify early repayment on high interest loan works properly and align the interest properly with charge trans and charge-off transactions - UC4",
+   "result": "PASSED",
+   "tag": "C3616"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2062,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_ACTUAL",
+   "index": 36,
+   "loan": 36,
+   "loan_client_id": 36,
+   "name": "Verify early repayment on high interest loan works properly and align the interest properly with MIR and no interest recalculation - UC5",
+   "result": "PASSED",
+   "tag": "C3617"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2191,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_INTEREST_RECALCULATION",
+   "index": 37,
+   "loan": 37,
+   "loan_client_id": 37,
+   "name": "Verify no accrual activity created for approved interest bearing loan",
+   "result": "PASSED",
+   "tag": "C3590"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2223,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 38,
+   "loan": 38,
+   "loan_client_id": 38,
+   "name": "Verify the next/last installment payment allocation in case the repayment is before the installment date",
+   "result": "PASSED",
+   "tag": "C3666"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2272,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 39,
+   "loan": 39,
+   "loan_client_id": 39,
+   "name": "Verify the next/last installment payment allocation in case the repayment is on the installment date, amount should go first to the next installment and only then to the last",
+   "result": "PASSED",
+   "tag": "C3667"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2302,
+   "feature_product": "LP2_NO_INTEREST_RECALCULATION_ALLOCATION_PENALTY_FIRST",
+   "index": 40,
+   "loan": 40,
+   "loan_client_id": 40,
+   "name": "Verify progressive loan repayment reversals with penalty charge and backdated repayment",
+   "result": "PASSED",
+   "tag": "C3840"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2386,
+   "feature_product": "LP2_NO_INTEREST_RECALCULATION_ALLOCATION_PENALTY_FIRST",
+   "index": 41,
+   "loan": 41,
+   "loan_client_id": 41,
+   "name": "Verify backdated repayment allocation respects payment order for future dated penalties",
+   "result": "PASSED",
+   "tag": "C3841"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2482,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 42,
+   "loan": 42,
+   "loan_client_id": 42,
+   "name": "Verify repayment reversal after full repayment of principal and fee",
+   "result": "PASSED",
+   "tag": "C4053"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2585,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 43,
+   "loan": 43,
+   "loan_client_id": 43,
+   "name": "Verify 2 months of EMIs to be paid early and late with repayment trn at last installment - UC1",
+   "result": "PASSED",
+   "tag": "C4148"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2752,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 44,
+   "loan": 44,
+   "loan_client_id": 44,
+   "name": "Verify 2 months of EMIs to be paid early and late with MIR trn at last installment - UC2",
+   "result": "PASSED",
+   "tag": "C4149"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2921,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 45,
+   "loan": 45,
+   "loan_client_id": 45,
+   "name": "Verify 2 months of EMIs to be paid early and late with charge and repayment trns at last installment  - UC3",
+   "result": "PASSED",
+   "tag": "C4150"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3094,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 46,
+   "loan": 46,
+   "loan_client_id": 46,
+   "name": "Verify near 2 months of EMIs to be paid early and late with repayment trn at last installment - UC1",
+   "result": "PASSED",
+   "tag": "C4151"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3236,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 47,
+   "loan": 47,
+   "loan_client_id": 47,
+   "name": "Verify near 2 months of EMIs to be paid early and late with repayment trn at last installment - UC2",
+   "result": "PASSED",
+   "tag": "C4152"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3378,
+   "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR",
+   "index": 48,
+   "loan": 48,
+   "loan_client_id": 48,
+   "name": "Verify the loan creation with total disbursement amount less then 1 for progressive loan",
+   "result": "PASSED",
+   "tag": "C4350"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[1, 31, 26 November 2025, null, 0.5, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 49 tab line 2.",
+      "Actual values in line (with the same due date) are:",
+      "[1, 31, 26 November 2025, null, 0.5, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0] -",
+      "But expected values in line:",
+      "[1, 31, 26 November 2025, null, 1.0, 0.5, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.5]]"
+     ],
+     "expected": "[1, 31, 26 November 2025, null, 1.0, 0.5, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.5]]",
+     "resource": 49,
+     "step": "Then Loan Repayment schedule has 3 periods, with the following data for periods:",
+     "step_feature_line": 3436,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 3419,
+   "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR",
+   "index": 49,
+   "loan": 49,
+   "loan_client_id": 49,
+   "name": "Verify the loan creation with total calculated EMI less than 1 for progressive loan - 3 repayment periods",
+   "result": "FAILED",
+   "tag": "C4351"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3466,
+   "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR",
+   "index": 50,
+   "loan": 50,
+   "loan_client_id": 50,
+   "name": "Verify the loan creation with total calculated EMI less than 2 (rounded towards 1) for progressive loan - 3 repayment periods",
+   "result": "PASSED",
+   "tag": "C4352"
+  }
+ ],
+ "steps": {
+  "failed": 4,
+  "passed": 1335,
+  "skipped": 21,
+  "total": 1360
+ },
+ "tenant": "tierd"
+}
