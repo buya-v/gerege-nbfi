@@ -1,0 +1,245 @@
+{
+ "committed_loans": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25
+ ],
+ "failed_scenarios": [],
+ "files_written": 955,
+ "kept_body_bytes": 7995488,
+ "loan_exchanges": 803,
+ "loans": {
+  "1": {
+   "bytes": 241130,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 13
+  },
+  "10": {
+   "bytes": 161997,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 29,
+   "reads": 18
+  },
+  "11": {
+   "bytes": 198757,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 35,
+   "reads": 22
+  },
+  "12": {
+   "bytes": 237920,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 39,
+   "reads": 24
+  },
+  "13": {
+   "bytes": 237704,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 39,
+   "reads": 24
+  },
+  "14": {
+   "bytes": 238129,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 39,
+   "reads": 24
+  },
+  "15": {
+   "bytes": 155286,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "16": {
+   "bytes": 122055,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  },
+  "17": {
+   "bytes": 122008,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  },
+  "18": {
+   "bytes": 182432,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 19
+  },
+  "19": {
+   "bytes": 154471,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "2": {
+   "bytes": 241133,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 13
+  },
+  "20": {
+   "bytes": 146307,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 17
+  },
+  "21": {
+   "bytes": 162373,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "22": {
+   "bytes": 189269,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 16
+  },
+  "23": {
+   "bytes": 190555,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 16
+  },
+  "24": {
+   "bytes": 230405,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 36,
+   "reads": 21
+  },
+  "25": {
+   "bytes": 195745,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 21
+  },
+  "3": {
+   "bytes": 269786,
+   "command_requests": 8,
+   "command_responses": 8,
+   "create_requests": 1,
+   "files": 37,
+   "reads": 20
+  },
+  "4": {
+   "bytes": 355935,
+   "command_requests": 10,
+   "command_responses": 10,
+   "create_requests": 1,
+   "files": 45,
+   "reads": 24
+  },
+  "5": {
+   "bytes": 301809,
+   "command_requests": 9,
+   "command_responses": 9,
+   "create_requests": 1,
+   "files": 44,
+   "reads": 25
+  },
+  "6": {
+   "bytes": 267308,
+   "command_requests": 10,
+   "command_responses": 10,
+   "create_requests": 1,
+   "files": 40,
+   "reads": 19
+  },
+  "7": {
+   "bytes": 3127064,
+   "command_requests": 17,
+   "command_responses": 17,
+   "create_requests": 1,
+   "files": 216,
+   "reads": 181
+  },
+  "8": {
+   "bytes": 132936,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  },
+  "9": {
+   "bytes": 132974,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 25,
+   "reads": 16
+  }
+ },
+ "skipped_body_bytes": 145925072,
+ "skipped_exchanges": 1806,
+ "skipped_pct_of_body_bytes": 94,
+ "skipped_pct_of_source_bytes": 87,
+ "source_bytes": 165871330,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-charges-cumulative-mnt.log",
+ "total_exchanges": 2609,
+ "total_lines": 68670,
+ "unattributed_creates": 0,
+ "unattributed_loan_ids": []
+}
