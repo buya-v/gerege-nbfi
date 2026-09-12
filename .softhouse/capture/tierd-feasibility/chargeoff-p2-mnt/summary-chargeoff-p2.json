@@ -1,0 +1,463 @@
+{
+ "committed_loans": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48
+ ],
+ "failed_scenarios": [],
+ "files_written": 1407,
+ "kept_body_bytes": 12866809,
+ "loan_exchanges": 1160,
+ "loans": {
+  "1": {
+   "bytes": 261538,
+   "command_requests": 8,
+   "command_responses": 8,
+   "create_requests": 1,
+   "files": 39,
+   "reads": 22
+  },
+  "10": {
+   "bytes": 378291,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 36,
+   "reads": 21
+  },
+  "11": {
+   "bytes": 233664,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "12": {
+   "bytes": 338378,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "13": {
+   "bytes": 348734,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 21
+  },
+  "14": {
+   "bytes": 332289,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "15": {
+   "bytes": 236806,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "16": {
+   "bytes": 236896,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "17": {
+   "bytes": 239093,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 17
+  },
+  "18": {
+   "bytes": 236884,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "19": {
+   "bytes": 189061,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 27,
+   "reads": 14
+  },
+  "2": {
+   "bytes": 201764,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 15
+  },
+  "20": {
+   "bytes": 742025,
+   "command_requests": 11,
+   "command_responses": 11,
+   "create_requests": 1,
+   "files": 58,
+   "reads": 35
+  },
+  "21": {
+   "bytes": 233509,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "22": {
+   "bytes": 216814,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  },
+  "23": {
+   "bytes": 304111,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "24": {
+   "bytes": 255567,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 17
+  },
+  "25": {
+   "bytes": 255584,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 26,
+   "reads": 17
+  },
+  "26": {
+   "bytes": 414638,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 38,
+   "reads": 23
+  },
+  "27": {
+   "bytes": 310368,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 21
+  },
+  "28": {
+   "bytes": 354458,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 33,
+   "reads": 22
+  },
+  "29": {
+   "bytes": 341684,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 33,
+   "reads": 22
+  },
+  "3": {
+   "bytes": 249083,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 27,
+   "reads": 18
+  },
+  "30": {
+   "bytes": 343808,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 33,
+   "reads": 22
+  },
+  "31": {
+   "bytes": 306303,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 29,
+   "reads": 20
+  },
+  "32": {
+   "bytes": 196523,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "33": {
+   "bytes": 196604,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "34": {
+   "bytes": 196559,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "35": {
+   "bytes": 318534,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 36,
+   "reads": 21
+  },
+  "36": {
+   "bytes": 196872,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "37": {
+   "bytes": 283962,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "38": {
+   "bytes": 292841,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 21
+  },
+  "39": {
+   "bytes": 283188,
+   "command_requests": 5,
+   "command_responses": 5,
+   "create_requests": 1,
+   "files": 31,
+   "reads": 20
+  },
+  "4": {
+   "bytes": 126559,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 17,
+   "reads": 10
+  },
+  "40": {
+   "bytes": 200100,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "41": {
+   "bytes": 200025,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "42": {
+   "bytes": 202300,
+   "command_requests": 7,
+   "command_responses": 7,
+   "create_requests": 1,
+   "files": 32,
+   "reads": 17
+  },
+  "43": {
+   "bytes": 200080,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 30,
+   "reads": 17
+  },
+  "44": {
+   "bytes": 156843,
+   "command_requests": 6,
+   "command_responses": 6,
+   "create_requests": 1,
+   "files": 27,
+   "reads": 14
+  },
+  "45": {
+   "bytes": 650788,
+   "command_requests": 11,
+   "command_responses": 11,
+   "create_requests": 1,
+   "files": 58,
+   "reads": 35
+  },
+  "46": {
+   "bytes": 196970,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "47": {
+   "bytes": 198521,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "48": {
+   "bytes": 180271,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 23,
+   "reads": 14
+  },
+  "5": {
+   "bytes": 201782,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 22,
+   "reads": 15
+  },
+  "6": {
+   "bytes": 126589,
+   "command_requests": 3,
+   "command_responses": 3,
+   "create_requests": 1,
+   "files": 17,
+   "reads": 10
+  },
+  "7": {
+   "bytes": 233190,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "8": {
+   "bytes": 233194,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  },
+  "9": {
+   "bytes": 233164,
+   "command_requests": 4,
+   "command_responses": 4,
+   "create_requests": 1,
+   "files": 24,
+   "reads": 15
+  }
+ },
+ "skipped_body_bytes": 248965151,
+ "skipped_exchanges": 2603,
+ "skipped_loans": [],
+ "skipped_pct_of_body_bytes": 95,
+ "skipped_pct_of_source_bytes": 89,
+ "skipped_scenarios": [
+  [
+   31,
+   "C3360"
+  ],
+  [
+   32,
+   "C3361"
+  ]
+ ],
+ "source_bytes": 278971953,
+ "source_log": "/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-chargeoff-p2-mnt.log",
+ "total_exchanges": 3763,
+ "total_lines": 99063,
+ "unattributed_creates": 0,
+ "unattributed_loan_ids": []
+}
