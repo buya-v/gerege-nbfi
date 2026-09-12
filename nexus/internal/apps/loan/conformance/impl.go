@@ -2324,6 +2324,17 @@ const (
 	// debit coincide, so only the multi-credit observations (loan 18 and loan 19)
 	// discriminate it.
 	wrongRepaymentJournalDebitsFundSourcePerPortion repaymentJournalWrongMode = iota
+
+	// wrongRepaymentJournalCreditsNotMerged posts one credit per positive
+	// portion SLOT instead of merging the slots that resolve to the same GL
+	// account, as a port that iterates the five portions independently does.
+	// Every amount, every side and the one total FUND_SOURCE debit are the
+	// oracle's; only two slots that share an account split into two credits, so
+	// the leg count grows by one per collapsed pair. In these products the
+	// interest, fee and penalty receivables all map to account 4, so the
+	// loan-1 L14 observation (interest 1.60 + penalty 2.80 -> one 4.40 credit)
+	// discriminates it; a slot map with one account per slot cannot.
+	wrongRepaymentJournalCreditsNotMerged
 )
 
 // wrongRepaymentJournalEvaluator is a DELIBERATELY WRONG implementation of the
@@ -2373,6 +2384,43 @@ func wrongRepaymentJournal(r RepaymentJournalRequest, mode repaymentJournalWrong
 		if expect.RepaymentJournalLegs == nil {
 			expect.RepaymentJournalLegs = []JournalEntryLeg{}
 		}
+	case wrongRepaymentJournalCreditsNotMerged:
+		// Rebuild the credits one per positive portion slot without the port's
+		// merge of slots that resolve to the same account, then keep the
+		// oracle's single total debit as the last leg. The amount cells and the
+		// debit are the oracle's; only same-account credits split.
+		portions, perr := repaymentPortionsFromRequest(r.Portions)
+		if perr != nil {
+			return Expect{}, perr
+		}
+		slots := []struct {
+			account string
+			amount  loan.MinorUnits
+		}{
+			{r.Accounts.LoanPortfolio, portions.Principal},
+			{r.Accounts.ReceivableInterest, portions.Interest},
+			{r.Accounts.ReceivableFee, portions.Fee},
+			{r.Accounts.ReceivablePenalty, portions.Penalty},
+			{r.Accounts.Overpayment, portions.Overpayment},
+		}
+		legs := make([]JournalEntryLeg, 0, len(slots)+1)
+		for _, s := range slots {
+			if s.amount <= 0 {
+				continue
+			}
+			legs = append(legs, JournalEntryLeg{
+				TransactionID: r.TransactionID,
+				Account:       s.account,
+				EntryType:     "CREDIT",
+				AmountMinor:   strconv.FormatInt(int64(s.amount), 10),
+			})
+		}
+		for _, leg := range expect.RepaymentJournalLegs {
+			if leg.EntryType == "DEBIT" {
+				legs = append(legs, leg)
+			}
+		}
+		expect.RepaymentJournalLegs = legs
 	}
 	return expect, nil
 }
@@ -3877,6 +3925,16 @@ func init() {
 			"count grows by (credits - 1) and the one-debit invariant fails on the multi-credit "+
 			"observations (loan 18 and loan 19) while the principal-only loan 14 is unaffected",
 		wrongRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentJournalDebitsFundSourcePerPortion})
+	RegisterWrong("loan-wrong-repayment-credits-not-merged",
+		"posts one credit per positive portion SLOT instead of merging the slots that resolve to "+
+			"the same GL account, as a port that iterates the five portions independently does; every "+
+			"amount, every side and the one total FUND_SOURCE debit are the oracle's, but two slots "+
+			"sharing an account split into two credits, so the leg count grows by one per collapsed "+
+			"pair and the per-(transaction, account) side list goes red — on the loan-1 L14 "+
+			"merchant-issued refund (interest 1.60 + penalty 2.80, both mapping to account 4) the one "+
+			"4.40 receivable credit becomes 1.60 and 2.80, while the single-credit observations are "+
+			"unaffected",
+		wrongRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentJournalCreditsNotMerged})
 	RegisterWrong("loan-wrong-goodwill-debits-fund-source",
 		"posts the goodwill credit's debit side as ONE transfer to the resolved fund source, exactly "+
 			"as an ordinary repayment does, instead of debiting the portions through the goodwill "+
