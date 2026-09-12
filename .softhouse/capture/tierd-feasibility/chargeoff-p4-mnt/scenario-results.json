@@ -1,5 +1,5 @@
 {
- "attribution_validated": false,
+ "attribution_validated": true,
  "currency": "MNT",
  "failed": 0,
  "feature": "LoanChargeOff-Part4.feature",
@@ -12,7 +12,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_REFUND_FULL",
    "index": 1,
    "loan": 1,
-   "loan_client_id": null,
+   "loan_client_id": 1,
    "name": "Verify repayment reversal after charge-off and merchant issued refund and interestRecalculation=false",
    "result": "PASSED",
    "tag": "C3622"
@@ -23,7 +23,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF",
    "index": 2,
    "loan": 2,
-   "loan_client_id": null,
+   "loan_client_id": 2,
    "name": "Verify repayment reversal after zero interest behaviour charge-off and merchant issued refund and interestRecalculation=false",
    "result": "PASSED",
    "tag": "C3623"
@@ -34,7 +34,7 @@
    "feature_product": "LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF",
    "index": 3,
    "loan": 3,
-   "loan_client_id": null,
+   "loan_client_id": 3,
    "name": "Verify repayment reversal after accelerate maturity behaviour charge-off and merchant issued refund and interestRecalculation=false",
    "result": "PASSED",
    "tag": "C3624"
@@ -45,7 +45,7 @@
    "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON",
    "index": 4,
    "loan": 4,
-   "loan_client_id": null,
+   "loan_client_id": 4,
    "name": "As a user I want to verify that charge-off transaction if the amount balance becomes zero is reversed after backdated full repayment and MIR, interestRecalculation = false",
    "result": "PASSED",
    "tag": "C3643"
@@ -56,7 +56,7 @@
    "feature_product": "LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC",
    "index": 5,
    "loan": 5,
-   "loan_client_id": null,
+   "loan_client_id": 5,
    "name": "As a user I want to verify that charge-off transaction if the amount balance becomes zero is reversed after backdated full repayment and MIR, interestRecalculation = true",
    "result": "PASSED",
    "tag": "C3644"
@@ -67,7 +67,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR",
    "index": 6,
    "loan": 6,
-   "loan_client_id": null,
+   "loan_client_id": 6,
    "name": "Verify correct schedule reconstruction when backdated repayment covers remaining balance after charge-off with interest recalculation",
    "result": "PASSED",
    "tag": "C3719"
@@ -78,7 +78,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR",
    "index": 7,
    "loan": 7,
-   "loan_client_id": null,
+   "loan_client_id": 7,
    "name": "Verify that charge-off flag and charge-off date are lifted in case the charge-off transaction got reversed",
    "result": "PASSED",
    "tag": "C3757"
@@ -89,7 +89,7 @@
    "feature_product": "LP2_ADV_PYMNT_INTEREST_RECOGNITION_DISBURSEMENT_DAILY_EMI_360_30_ACCRUAL_ACTIVITY",
    "index": 8,
    "loan": 8,
-   "loan_client_id": null,
+   "loan_client_id": 8,
    "name": "Backdated charge-off accrual handling with isInterestRecognitionOnDisbursementDate=true",
    "result": "PASSED",
    "tag": "C3988"
@@ -100,7 +100,7 @@
    "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_ZERO_CHARGE_OFF",
    "index": 9,
    "loan": 9,
-   "loan_client_id": null,
+   "loan_client_id": 9,
    "name": "Verify early repayment with MIRs and change-off afterwards for 24m progressive loan - UC1",
    "result": "PASSED",
    "tag": "C4016"
@@ -111,7 +111,7 @@
    "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_ZERO_CHARGE_OFF",
    "index": 10,
    "loan": 10,
-   "loan_client_id": null,
+   "loan_client_id": 10,
    "name": "Verify early repayment with MIRs and charge with change-off afterwards for 24m progressive loan - UC2",
    "result": "PASSED",
    "tag": "C4017"
@@ -122,7 +122,7 @@
    "feature_product": "LP2_ADV_PYMNT_360_30_ZERO_INTEREST_CHARGE_OFF_ACCRUAL_ACTIVITY",
    "index": 11,
    "loan": 11,
-   "loan_client_id": null,
+   "loan_client_id": 11,
    "name": "Verify that totalUnpaidPayableNotDueInterest doesn't get reset to 0 on the charge-off date",
    "result": "PASSED",
    "tag": "C4153"
@@ -133,7 +133,7 @@
    "feature_product": "LP2_ADV_PYMNT_360_30_ZERO_INTEREST_CHARGE_OFF_ACCRUAL_ACTIVITY",
    "index": 12,
    "loan": 12,
-   "loan_client_id": null,
+   "loan_client_id": 12,
    "name": "Verify that totalUnpaidPayableNotDueInterest is correct when charge-off falls on a due date of an open repayment period",
    "result": "PASSED",
    "tag": "C4228"
@@ -144,7 +144,7 @@
    "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OFF_ACCRUAL",
    "index": 13,
    "loan": 13,
-   "loan_client_id": null,
+   "loan_client_id": 13,
    "name": "Verify charge-off after repayment reversal with merchant refund and credit balance refund",
    "result": "PASSED",
    "tag": "C4579"
@@ -155,7 +155,7 @@
    "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OFF_ACCRUAL",
    "index": 14,
    "loan": 14,
-   "loan_client_id": null,
+   "loan_client_id": 14,
    "name": "Verify charge-off after repayment reversal with multiple merchant refunds and credit balance refund",
    "result": "PASSED",
    "tag": "C4580"

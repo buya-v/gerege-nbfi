@@ -1,0 +1,18 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-chargeoff-p4-mnt.log (164776103 bytes, 51333 lines)
+exchanges: 1955 total, 518 loan, 1437 skipped (88% of source bytes, 93% of framed body bytes; 145446124 bytes skipped)
+loans: 14; files: 620; kept body bytes: 10308307
+  loan 1: create=1 cmd_req=6 cmd_resp=6 reads=27 files=40 bytes=366187
+  loan 2: create=1 cmd_req=6 cmd_resp=6 reads=27 files=40 bytes=366733
+  loan 3: create=1 cmd_req=6 cmd_resp=6 reads=27 files=40 bytes=341822
+  loan 4: create=1 cmd_req=6 cmd_resp=6 reads=25 files=38 bytes=360564
+  loan 5: create=1 cmd_req=6 cmd_resp=6 reads=25 files=38 bytes=411562
+  loan 6: create=1 cmd_req=6 cmd_resp=6 reads=28 files=41 bytes=461196
+  loan 7: create=1 cmd_req=5 cmd_resp=5 reads=28 files=39 bytes=414419
+  loan 8: create=1 cmd_req=4 cmd_resp=4 reads=11 files=20 bytes=325568
+  loan 9: create=1 cmd_req=12 cmd_resp=12 reads=39 files=64 bytes=1671201
+  loan 10: create=1 cmd_req=13 cmd_resp=13 reads=40 files=67 bytes=1673365
+  loan 11: create=1 cmd_req=5 cmd_resp=5 reads=24 files=35 bytes=613413
+  loan 12: create=1 cmd_req=5 cmd_resp=5 reads=22 files=33 bytes=550846
+  loan 13: create=1 cmd_req=8 cmd_resp=8 reads=21 files=38 bytes=694598
+  loan 14: create=1 cmd_req=14 cmd_resp=14 reads=58 files=87 bytes=2056833
+wrote 620 files to stage
