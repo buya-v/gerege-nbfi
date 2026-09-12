@@ -241,6 +241,17 @@ func diffChargebackJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
 	diffJournalLegs(s, "chargeback_journal_legs", want, got)
 }
 
+// diffBuyDownFeeJournalLegs compares the ordered leg list of a buy-down fee's
+// journal entry through the same per-leg differ. Every leg grades four cells:
+// the amount is the one money cell, and the transaction id, account and side
+// are structural. The account cell sees a port that ignores the product's
+// merchantBuyDownFee fact and always debits the fund source; the count cell sees
+// a port that drops a leg. The list is positional because the property is a
+// fixed "one debit then one credit" layout, not a set.
+func diffBuyDownFeeJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "buy_down_fee_journal_legs", want, got)
+}
+
 // diffCreditBalanceRefundJournalLegs compares the ordered leg list of a credit
 // balance refund's journal entry through the same per-leg differ. Every leg
 // grades four cells: the amount is the one money cell, and the transaction id,
@@ -432,6 +443,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffRepaymentJournalLegs(&s, v.Expect.AccrualJournalLegs, got.AccrualJournalLegs)
 	case SeamLoanChargebackJournalEntries:
 		diffChargebackJournalLegs(&s, v.Expect.ChargebackJournalLegs, got.ChargebackJournalLegs)
+	case SeamLoanBuyDownFeeJournalEntries:
+		diffBuyDownFeeJournalLegs(&s, v.Expect.BuyDownFeeJournalLegs, got.BuyDownFeeJournalLegs)
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		diffCreditBalanceRefundJournalLegs(&s, v.Expect.CreditBalanceRefundJournalLegs, got.CreditBalanceRefundJournalLegs)
 	case SeamLoanInterestPaymentWaiverJournalEntries:

@@ -49,10 +49,10 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 		SeamLoanCapitalizedIncomeAmortizationJournalEntries,
-		SeamLoanChargeLifecycle, SeamLoanStatusTransition:
+		SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
@@ -63,7 +63,7 @@ func Admit(v *Vector, opts Options) []string {
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 			SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 			SeamLoanCapitalizedIncomeAmortizationJournalEntries,
-			SeamLoanChargeLifecycle, SeamLoanStatusTransition))
+			SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -202,6 +202,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.ChargebackJournal != nil {
+		n++
+	}
+	if v.Request.BuyDownFeeJournal != nil {
 		n++
 	}
 	if v.Request.CreditBalanceRefundJournal != nil {
@@ -915,6 +918,34 @@ func admitRequest(v *Vector) []string {
 				problems = append(problems, fmt.Sprintf(
 					"request.chargeback_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
+		}
+	case SeamLoanBuyDownFeeJournalEntries:
+		if v.Request.BuyDownFeeJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "buy-down-fee-journal seam must set exactly request.buy_down_fee_journal")
+			return problems
+		}
+		j := v.Request.BuyDownFeeJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.buy_down_fee_journal.transaction_id is empty")
+		}
+		if !isIntegerMinorString(j.Amount) {
+			problems = append(problems, fmt.Sprintf(
+				"request.buy_down_fee_journal.amount %q is not a non-negative integer minor amount", j.Amount))
+		}
+		// The debit account is selected by the loan product's merchantBuyDownFee
+		// fact and, with the deferred-income account, must be read back from the
+		// product, never invented: a NON-merchant product has no buy-down expense
+		// account, so a merchant request with no buy_down_expense is refused.
+		debitName, debitAccount := "accounts.fund_source", j.Accounts.FundSource
+		if j.Merchant {
+			debitName, debitAccount = "accounts.buy_down_expense", j.Accounts.BuyDownExpense
+		}
+		if debitAccount == "" {
+			problems = append(problems, fmt.Sprintf(
+				"request.buy_down_fee_journal.%s is empty: the selected debit slot->account mapping is read back from the product, never invented", debitName))
+		}
+		if j.Accounts.DeferredIncomeLiability == "" {
+			problems = append(problems, "request.buy_down_fee_journal.accounts.deferred_income_liability is empty: the slot->account mapping is read back from the product, never invented")
 		}
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		if v.Request.CreditBalanceRefundJournal == nil || requestShapeCount(v) != 1 {
@@ -1808,6 +1839,59 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanBuyDownFeeJournalEntries:
+		if v.Request.BuyDownFeeJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.BuyDownFeeJournal
+		if len(v.Expect.BuyDownFeeJournalLegs) == 0 {
+			problems = append(problems, "expect.buy_down_fee_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.BuyDownFeeJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.buy_down_fee_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.buy_down_fee_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: ONE debit of the amount to the selected account, then
+		// ONE credit of the amount to deferred income liability. This
+		// reconciliation is INDEPENDENT of the port under test, so a wrong port
+		// cannot make its own output "admissible".
+		expected, probs := reconstructBuyDownFeeJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.BuyDownFeeJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.buy_down_fee_journal_legs has %d legs but the observed posting order needs %d (one debit of the amount, then one credit of the amount)",
+				len(v.Expect.BuyDownFeeJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.BuyDownFeeJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): a buy-down fee debits the amount to the merchant buy-down expense account or else the fund source, then credits the amount to deferred income liability",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		if v.Request.CreditBalanceRefundJournal == nil {
 			// admitRequest already refused the missing request shape.
@@ -2513,6 +2597,43 @@ func reconstructAccrualJournalLegs(j AccrualJournalRequest) ([]JournalEntryLeg, 
 			JournalEntryLeg{TransactionID: j.TransactionID, Account: debit, EntryType: "DEBIT", AmountMinor: penalty})
 	}
 	return legs, nil
+}
+
+// reconstructBuyDownFeeJournalLegs derives the leg list the observed buy-down
+// fee property requires from the request alone, independently of the port, in
+// the processor's posting order: ONE debit of the amount to buy-down expense
+// when the merchantBuyDownFee fact is set, else to the resolved fund source,
+// then ONE credit of the amount to deferred income liability. Each money value
+// stays an integer minor-unit string. It returns the legs and any admission
+// problem: an amount that is not an integer minor string, or the selected debit
+// account / deferred-income account missing (a NON-merchant product has no
+// buy-down expense account, so a merchant request with no buy_down_expense is
+// refused).
+func reconstructBuyDownFeeJournalLegs(j BuyDownFeeJournalRequest) ([]JournalEntryLeg, []string) {
+	amount := j.Amount
+	if !isIntegerMinorString(amount) {
+		return nil, []string{fmt.Sprintf(
+			"request.buy_down_fee_journal.amount %q is not a non-negative integer minor amount", amount)}
+	}
+	if amount == "0" {
+		return nil, nil
+	}
+	debit := j.Accounts.FundSource
+	if j.Merchant {
+		debit = j.Accounts.BuyDownExpense
+	}
+	if debit == "" {
+		return nil, []string{fmt.Sprintf(
+			"request.buy_down_fee_journal amount %s has no mapped debit account (merchant %t)", amount, j.Merchant)}
+	}
+	if j.Accounts.DeferredIncomeLiability == "" {
+		return nil, []string{fmt.Sprintf(
+			"request.buy_down_fee_journal amount %s has no mapped deferred-income-liability account", amount)}
+	}
+	return []JournalEntryLeg{
+		{TransactionID: j.TransactionID, Account: debit, EntryType: "DEBIT", AmountMinor: amount},
+		{TransactionID: j.TransactionID, Account: j.Accounts.DeferredIncomeLiability, EntryType: "CREDIT", AmountMinor: amount},
+	}, nil
 }
 
 // reconstructChargebackJournalLegs derives the leg list the observed chargeback

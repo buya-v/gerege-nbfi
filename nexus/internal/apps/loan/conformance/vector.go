@@ -386,6 +386,27 @@ const SeamLoanAccrualJournalEntries = "loan-accrual-journal-entries"
 // account 4 applies.
 const SeamLoanChargebackJournalEntries = "loan-chargeback-journal-entries"
 
+// SeamLoanBuyDownFeeJournalEntries is the capture seam this schema grades: the
+// journal entry a BUY_DOWN_FEE transaction posts. It ports
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForBuyDownFee
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:530-551, pinned commit
+// 426a23544]. When the amount is > 0 it posts two legs in order through
+// helper.createJournalEntriesForLoan(debit, credit): DEBIT BUY_DOWN_EXPENSE when
+// the loan product's merchantBuyDownFee is set, else the resolved FUND_SOURCE,
+// then CREDIT DEFERRED_INCOME_LIABILITY, both with the amount.
+//
+// On the pinned observations L2 (loan 1, merchant product
+// LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES) DEBITs buy-down
+// expense account 23 5000 then CREDITs deferred-income-liability 22 5000; L781
+// (loan 20, non-merchant product
+// LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT) DEBITs
+// fund-source account 5 5000 then CREDITs 22 5000. The only channel mapping is
+// paymentTypeId 1 -> 17, and both transactions use paymentTypeId 5, so the
+// product FUND_SOURCE 5 applies on the non-merchant side. A NON-merchant product
+// has no buy-down expense account, so a merchant=true input whose mapping omits
+// it is refused rather than falling back to the fund source.
+const SeamLoanBuyDownFeeJournalEntries = "loan-buy-down-fee-journal-entries"
+
 // SeamLoanCreditBalanceRefundJournalEntries is the capture seam this schema
 // grades: the journal entry a CREDIT BALANCE REFUND posts, the refund sibling of
 // the chargeback seam. It ports
@@ -1068,6 +1089,32 @@ type ChargebackJournalRequest struct {
 	Accounts      ChargebackSlotAccounts  `json:"accounts"`
 }
 
+// BuyDownFeeSlotAccounts is the resolved slot->account mapping for a buy-down
+// fee, each an integer STRING account id. FundSource is already resolved through
+// the transaction's payment channel (the product FUND_SOURCE when the channel
+// map has no entry); BuyDownExpense is present only on a merchant product (a
+// NON-merchant product has no buy-down expense account).
+type BuyDownFeeSlotAccounts struct {
+	FundSource              string `json:"fund_source"`
+	BuyDownExpense          string `json:"buy_down_expense,omitempty"`
+	DeferredIncomeLiability string `json:"deferred_income_liability"`
+}
+
+// BuyDownFeeJournalRequest is the loan-buy-down-fee-journal-entries seam's
+// input: the buy-down-fee transaction's amount, the loan product's
+// merchantBuyDownFee fact (which selects the debit account), and the resolved
+// slot->account mapping, plus the transaction id the legs are posted under. The
+// port refuses a negative amount and a positive amount whose selected debit
+// account or deferred-income account is unmapped; because a NON-merchant product
+// carries no buy-down expense account, a merchant=true request with no
+// buy_down_expense is refused rather than guessed.
+type BuyDownFeeJournalRequest struct {
+	TransactionID string                 `json:"transaction_id"`
+	Amount        string                 `json:"amount"`
+	Merchant      bool                   `json:"merchant,omitempty"`
+	Accounts      BuyDownFeeSlotAccounts `json:"accounts"`
+}
+
 // CreditBalanceRefundPortionsMoney is the two money portions a credit-balance
 // refund posts, each an integer STRING in minor units: the principal debited to
 // the portfolio or charge-off account and the overpayment debited to
@@ -1311,6 +1358,10 @@ type Request struct {
 	// chargeback transaction's amount and four portions, the loan's charged-off
 	// and fraud facts, and the resolved slot->account mapping.
 	ChargebackJournal *ChargebackJournalRequest `json:"chargeback_journal,omitempty"`
+	// BuyDownFeeJournal is the loan-buy-down-fee-journal-entries seam's input: the
+	// buy-down-fee transaction's amount, the loan product's merchantBuyDownFee
+	// fact, and the resolved slot->account mapping.
+	BuyDownFeeJournal *BuyDownFeeJournalRequest `json:"buy_down_fee_journal,omitempty"`
 	// CreditBalanceRefundJournal is the
 	// loan-credit-balance-refund-journal-entries seam's input: the refund
 	// transaction's principal and overpayment portions, the loan's charged-off
@@ -1479,6 +1530,14 @@ type Expect struct {
 	// and amount; the overpayment debit's account, the two-debit order and the
 	// charge-off account switch are what discriminate a wrong port.
 	ChargebackJournalLegs []JournalEntryLeg `json:"chargeback_journal_legs,omitempty"`
+	// BuyDownFeeJournalLegs is the loan-buy-down-fee-journal-entries seam's
+	// ordered leg list a buy-down fee posted: ONE debit of the amount to the
+	// selected account (buy-down expense on a merchant product, else the resolved
+	// fund source), then ONE credit of the amount to deferred income liability.
+	// Every leg is graded on its transaction id, account, side and amount; the
+	// merchant-selected debit account is what discriminates a port that ignores
+	// the merchantBuyDownFee fact.
+	BuyDownFeeJournalLegs []JournalEntryLeg `json:"buy_down_fee_journal_legs,omitempty"`
 	// CreditBalanceRefundJournalLegs is the
 	// loan-credit-balance-refund-journal-entries seam's ordered leg list the
 	// refund posted: the principal debit (to the portfolio account, or the
