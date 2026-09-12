@@ -1,0 +1,47 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_MULTIDISBURSE.json",
+  "log_line": 11507,
+  "sha256": "dbc5b3db651331ff10e115464745215dfac7feb4535dc0109f6b1b411655e5d3"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF.json",
+  "log_line": 13293,
+  "sha256": "10b484ed10f363865efcc3dca861a8148edb2999f6d0cf63da1dc2afb8871cde"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PAYMENT_ALLOC_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE.json",
+  "log_line": 12646,
+  "sha256": "03369cfd1b0a460aed64b05d95e773f855f2ed5f58ac1379173102ef90e5c11c"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.json",
+  "log_line": 12999,
+  "sha256": "993198da7d3ee3eca195d19bc063430fb383a2cbd3032a6722bafafebd9214cb"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR.json",
+  "log_line": 13166,
+  "sha256": "c8ab29036e6e658a0a999db020a495e0536390efcbd14a9d47fb7571a4fca802"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_ALLOW_PARTIAL_PERIOD.json",
+  "log_line": 13220,
+  "sha256": "ba90b8d578461773afc7d315a2d6c934394b7424bab2c86217ed1d143a81e751"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF.json",
+  "log_line": 13459,
+  "sha256": "9bf73180a216e21d00309714f1946aff7d55cee52e82421255e356878ffa3935"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1.json",
+  "log_line": 12268,
+  "sha256": "a7f63b689c4de1f1bbc7455050ee54f0dac9d0ae3bfbcb0b030ed249b6f48e3f"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.json",
+  "log_line": 12955,
+  "sha256": "f9fd65a67d221e2ae803d5f67b54000619018afca5e91dfedcaa5ff6ddaa4076"
+ }
+]
