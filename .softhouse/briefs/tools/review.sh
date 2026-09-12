@@ -136,7 +136,11 @@ fi
 say "-- 9 the full bar (conformance.sh) on the committed tree"
 if [ "${REVIEW_SKIP_BAR:-0}" = 1 ]; then say "  UNMEASURED bar skipped by REVIEW_SKIP_BAR=1"; unmeasured=1; else
   bl=$(mktemp); (cd "$WT" && bash .softhouse/conformance.sh >"$bl" 2>&1); brc=$?
-  if grep -q 'a HARD guard failed' "$bl"; then bad "the bar: a HARD guard failed —"; grep -A3 -E 'REFUSED' "$bl" | grep -v 'NAMED, NOT REFUSED' | head -8 | sed 's/^/          /'
+  if grep -q 'a HARD guard failed' "$bl"; then bad "the bar: a HARD guard failed — full bar log kept: $bl"
+    # The ledger-invariants refusal is printed on EVERY run; when its compare matched the baseline
+    # ("RED BY RECORDED DECISION") it is not the failure, so drop it and show the guard that did fail.
+    if grep -q 'RED BY RECORDED DECISION' "$bl"; then say "          (ledger-invariants matched its baseline; the failing guard is another)"; lx='ledger-invariants|\[I[0-9]-[A-Z]|double-entry invariants|^ +&[A-Za-z]|RED BY RECORDED'; else lx='^$'; fi
+    grep -A3 -E 'not gofmt-clean|CEILING|INSPECTED ZERO|ERROR|REFUSED|FAIL' "$bl" | grep -v -E "$lx" | grep -v -E 'NAMED, NOT REFUSED|a HARD guard failed' | head -14 | sed 's/^/          /'; bl=
   elif [ $brc -eq 2 ] && grep -q '§4.4.2-RECORDED-DECISION-EXIT' "$bl"; then ok "exit 2 by the §4.4.2 recorded decision (ledger findings == baseline)"
   elif [ $brc -eq 0 ]; then ok "exit 0"
   else bad "the bar exited $brc without the recorded-decision line — read $bl"; bl=; fi
