@@ -1,0 +1,75 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-GW-loan-46-overpayment",
+ "title": "A goodwill credit of 500.00 overpayment credits OVERPAYMENT 13 and debits GOODWILL_CREDIT 20 -- the debit is NOT the resolved fund source 7 an ordinary repayment posts (loan 46 L466, fraud set but NOT charged off)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.goodwill_credit_journal.portions is transcribed from the committed goodwillCredit loan read-back .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/loans/loan-46/loan-46-detail-associations-transactions-9.json (sha256 23ca88b607bd14047fbbb38cf22598d6779ab35a59bed2cd01246ee45e5c1634): loan 46, chargedOff false, fraud true (the fraud flag is irrelevant on this NOT-charged-off arm), loanProductId 92, transactions[id 466 type loanTransactionType.goodwillCredit, paymentDetailData.paymentType.id 4, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 500.000000]. expect.goodwill_credit_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/journalentries-sweep/loan-46.json (sha256 22ca45f69a4f183b017ab6e96d61418cf4433321d57a9ad43d980434cee858b7): transactionId L466 pageItems ids 1206 (entryType.value CREDIT glAccountId 13 amount 500.000000) and 1207 (entryType.value DEBIT glAccountId 20 amount 500.000000), in id order. request.goodwill_credit_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC.json (sha256 87eb7f45fe201145f9fc83f77e551fbfae6deee12ab4b2717332f262ac11cd2f): loanPortfolioAccountId 6, receivableInterestAccountId 3, receivableFeeAccountId 3, receivablePenaltyAccountId 3, overpaymentLiabilityAccountId 13, fundSourceAccountId 7, goodwillCreditAccountId 20, incomeFromGoodwillCreditInterestAccountId 16, incomeFromGoodwillCreditFeesAccountId 12, incomeFromGoodwillCreditPenaltyAccountId 12, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 19}] -- the only channel mapping, so paymentType 4 resolves to the product fund source 7, which a goodwill credit does NOT post: the overpayment DEBIT goes to GOODWILL_CREDIT 20, the same account the principal slot would use. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (500.000000 -> 50000), never a float. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-goodwill-credit-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.goodwill_credit_journal.portions is transcribed from the committed goodwillCredit loan read-back .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/loans/loan-46/loan-46-detail-associations-transactions-9.json (sha256 23ca88b607bd14047fbbb38cf22598d6779ab35a59bed2cd01246ee45e5c1634): loan 46, chargedOff false, fraud true (the fraud flag is irrelevant on this NOT-charged-off arm), loanProductId 92, transactions[id 466 type loanTransactionType.goodwillCredit, paymentDetailData.paymentType.id 4, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 500.000000]. expect.goodwill_credit_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/journalentries-sweep/loan-46.json (sha256 22ca45f69a4f183b017ab6e96d61418cf4433321d57a9ad43d980434cee858b7): transactionId L466 pageItems ids 1206 (entryType.value CREDIT glAccountId 13 amount 500.000000) and 1207 (entryType.value DEBIT glAccountId 20 amount 500.000000), in id order. request.goodwill_credit_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC.json (sha256 87eb7f45fe201145f9fc83f77e551fbfae6deee12ab4b2717332f262ac11cd2f): loanPortfolioAccountId 6, receivableInterestAccountId 3, receivableFeeAccountId 3, receivablePenaltyAccountId 3, overpaymentLiabilityAccountId 13, fundSourceAccountId 7, goodwillCreditAccountId 20, incomeFromGoodwillCreditInterestAccountId 16, incomeFromGoodwillCreditFeesAccountId 12, incomeFromGoodwillCreditPenaltyAccountId 12, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 19}] -- the only channel mapping, so paymentType 4 resolves to the product fund source 7, which a goodwill credit does NOT post: the overpayment DEBIT goes to GOODWILL_CREDIT 20, the same account the principal slot would use. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (500.000000 -> 50000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/chargeoff-p3-mnt/journalentries-sweep/loan-46.json",
+  "capture_sha256": "22ca45f69a4f183b017ab6e96d61418cf4433321d57a9ad43d980434cee858b7",
+  "capture_case_id": "L466",
+  "citation": "journalentries-sweep/loan-46.json:1 (sha256 22ca45f69a4f183b017ab6e96d61418cf4433321d57a9ad43d980434cee858b7): transactionId L466 carries two legs in id order -- id 1206 entryType.value CREDIT glAccountId 13 amount 500.000000; id 1207 entryType.value DEBIT glAccountId 20 amount 500.000000. Portions are in loans/loan-46/loan-46-detail-associations-transactions-9.json:1 (sha256 23ca88b607bd14047fbbb38cf22598d6779ab35a59bed2cd01246ee45e5c1634): loan 46 chargedOff false, fraud true, transactions[id 466] type loanTransactionType.goodwillCredit, paymentDetailData.paymentType.id 4, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 500.000000. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC.json:1 (sha256 87eb7f45fe201145f9fc83f77e551fbfae6deee12ab4b2717332f262ac11cd2f): loanPortfolioAccountId 6, receivableInterestAccountId 3, receivableFeeAccountId 3, receivablePenaltyAccountId 3, overpaymentLiabilityAccountId 13, fundSourceAccountId 7, goodwillCreditAccountId 20, incomeFromGoodwillCreditInterestAccountId 16, incomeFromGoodwillCreditFeesAccountId 12, incomeFromGoodwillCreditPenaltyAccountId 12, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 19]."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "goodwill_credit_journal": {
+   "transaction_id": "L466",
+   "portions": {
+    "principal": "0",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "50000"
+   },
+   "accounts": {
+    "loan_portfolio": "6",
+    "receivable_interest": "3",
+    "receivable_fee": "3",
+    "receivable_penalty": "3",
+    "overpayment": "13",
+    "goodwill_credit": "20",
+    "income_from_goodwill_credit_interest": "16",
+    "income_from_goodwill_credit_fees": "12",
+    "income_from_goodwill_credit_penalty": "12",
+    "fund_source": "7"
+   }
+  }
+ },
+ "expect": {
+  "goodwill_credit_journal_legs": [
+   {
+    "transaction_id": "L466",
+    "account": "13",
+    "entry_type": "CREDIT",
+    "amount_minor": "50000"
+   },
+   {
+    "transaction_id": "L466",
+    "account": "20",
+    "entry_type": "DEBIT",
+    "amount_minor": "50000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "goodwill-credit-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-goodwill-debits-fund-source"
+ ]
+}
