@@ -1,0 +1,73 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-IRF-loan-3-chargedoff-merged",
+ "title": "An INTEREST REFUND on a CHARGED-OFF loan merges principal 41.76 and interest 0.15 into ONE credit to INCOME_FROM_CHARGE_OFF_INTEREST 17 (loan 3 L33: credit 41.91, debit 41.91)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry an INTEREST_REFUND posted on loan 3 (product LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF, CHARGED OFF) on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits). The dispatch posts an interest refund through the SAME method as an interest-payment waiver (AccrualBasedAccountingProcessorForLoan.java:134-135, isInterestPaymentWaiver() || isInterestRefund()), and the seam request carries the portions, the charged-off flag and the slot->account mapping only. request.interest_payment_waiver_journal.portions transcribes the loan read-back transaction id 33 (externalId L33, type loanTransactionType.interestRefund): principalPortion 41.76 -> \"4176\" AND interestPortion 0.15 -> \"15\"; fee/penalty/overpayment 0. The charged-off state is the read-back's top-level chargedOff true, and the read-back's chargeOff transaction id 31 (amount 444.23, 2025-06-10) precedes L33, so BOTH positive slots resolve to the charged-off credit account. accounts is the product's slot->GL-account-id mapping from the accepted create request create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF.json (sha256 bade51ab...9b43): loanPortfolio 7, receivable interest/fee/penalty 4, overpayment 16, interestOnLoan 9, incomeFromChargeOffInterest 17 -- so principal 4176 + interest 15 both credit 17. expect.interest_payment_waiver_journal_legs is the ONE merged credit and the ONE debit the sweep records in id order: JE 98 CREDIT account 17 41.91, JE 99 DEBIT account 9 41.91. THIS VECTOR GRADES: the charged-off merge. A journal that posts one credit per positive slot would emit two credits (17 4176 and 17 15) plus a split debit, which is the exact wrong implementation `loan-wrong-ipw-charged-off-credits-not-merged` models; the merged single credit is what this vector pins. Nothing was computed: every portion, account and leg is read directly from the committed files; amounts are exact decimals parsed to integer minor units, never a float.",
+ "oracle": {
+  "seam": "loan-interest-payment-waiver-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "Parity vector transcribing the journal entry an INTEREST_REFUND posted on loan 3 (CHARGED OFF) on the Tier-D MNT replay. The dispatch sends isInterestPaymentWaiver() || isInterestRefund() to the same journal method (AccrualBasedAccountingProcessorForLoan.java:134-135). request.interest_payment_waiver_journal.portions transcribes loan read-back transaction id 33 (externalId L33, type loanTransactionType.interestRefund): principalPortion 41.76 -> \"4176\", interestPortion 0.15 -> \"15\", the other three portions 0. Charged-off state is the read-back's chargedOff true, with chargeOff transaction 31 before L33. accounts is the product's slot->account map: principal and interest both resolve to incomeFromChargeOffInterest 17. expect legs are the ONE merged credit and ONE debit in the sweep, in id order.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-3.json",
+  "capture_sha256": "41f7cd915db4a425832534223c208536df3f1c48f9601f5c0ee467814877c52e",
+  "capture_case_id": "L33",
+  "citation": "journalentries-sweep/loan-3.json:1 (sha256 41f7cd915db4a425832534223c208536df3f1c48f9601f5c0ee467814877c52e, committed sweep, tenant tierd): transactionId L33 carries 2 leg(s) in id order, JE 98 CREDIT glAccountId 17 amount 41.91 then JE 99 DEBIT glAccountId 9 amount 41.91 -- one credit because principal and interest both resolve to 17 and MERGE. Portions, charged-off state and the preceding chargeOff are in .softhouse/capture/tierd-feasibility/merchant-refund-mnt/loans/loan-3/loan-3-detail-associations-transactions-4.json:1 (sha256 673010a763945e0da2c7ec902dfa966fed10f53d7c3d8bf303b783370d993fcc): chargedOff true, transactions[id 31] type loanTransactionType.chargeOff before transactions[id 33 externalId L33] type loanTransactionType.interestRefund with principalPortion 41.76 and interestPortion 0.15. The slot->account-id mapping is in .softhouse/capture/tierd-feasibility/merchant-refund-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF.json:1 (sha256 bade51abf1579c49584b2341e096e55f203db1f026765e1e4a56be1bd6829b43)."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "interest_payment_waiver_journal": {
+   "transaction_id": "L33",
+   "portions": {
+    "principal": "4176",
+    "interest": "15",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "0"
+   },
+   "charged_off": true,
+   "accounts": {
+    "loan_portfolio": "7",
+    "receivable_interest": "4",
+    "receivable_fee": "4",
+    "receivable_penalty": "4",
+    "overpayment": "16",
+    "interest_on_loan": "9",
+    "income_from_charge_off_interest": "17"
+   }
+  }
+ },
+ "expect": {
+  "interest_payment_waiver_journal_legs": [
+   {
+    "transaction_id": "L33",
+    "account": "17",
+    "entry_type": "CREDIT",
+    "amount_minor": "4191"
+   },
+   {
+    "transaction_id": "L33",
+    "account": "9",
+    "entry_type": "DEBIT",
+    "amount_minor": "4191"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "interest-payment-waiver-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-ipw-ignores-charge-off"
+ ]
+}
