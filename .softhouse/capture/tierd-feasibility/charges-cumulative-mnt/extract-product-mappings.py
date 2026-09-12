@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Extract the accepted createLoanProduct request body for each named product from a Tier D Feign log.
 
-createJournalEntriesForRepaymentWhenLoanIsChargedOff
-[AccrualBasedAccountingProcessorForLoan.java:1388-1615] picks its accounts by TRANSACTION TYPE on a
-charged-off loan; the merchantIssuedRefund / payoutRefund / goodwillCredit arms resolve through the
-product's accounting mappings (FUND_SOURCE, OVERPAYMENT, LOAN_PORTFOLIO, and any payment-channel
-mapping keyed by paymentTypeId).  Account ids differ between replays (each throwaway seeds its own
-GL), so the mapping is read from THIS replay's log -- the accepted createLoanProduct bodies.  The
-charge-off loan read-backs name the product; this script writes the matching create request so the
-GL account ids in the sweep can be named.
+createJournalEntriesForChargeAdjustment / ...ForLoanChargeAdjustment /
+...ForChargeOffLoanChargeAdjustment [AccrualBasedAccountingProcessorForLoan.java:997-1214] book the
+charge-adjustment legs against accounts resolved through the product's accounting mappings
+(INCOME_FROM_FEES, INCOME_FROM_PENALTIES, RECEIVABLE_FEES, RECEIVABLE_PENALTIES, FUND_SOURCE,
+LOAN_PORTFOLIO, ...).  Account ids differ between replays (each throwaway seeds its own GL), so the
+mapping is read from THIS replay's log -- the accepted createLoanProduct bodies.  The loan
+read-backs name the product; this script writes the matching create request so the GL account ids
+captured by the sweep can be named.
 
 Usage: extract-product-mappings.py <feign log> <product name> [...]
 """

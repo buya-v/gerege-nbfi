@@ -1,0 +1,22 @@
+[
+ {
+  "file": "product-mappings/create-request-LP1.json",
+  "log_line": 9836,
+  "sha256": "61df3dc385d0ec886a8731c43129608cf2d8b844de69c55375773fd13f539991"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_FLAT.json",
+  "log_line": 9920,
+  "sha256": "4c354458245d9f59c61140a26c13e0837560f265dca8f4c94366b99ee29b3907"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_FLAT_OVERDUE_FROM_AMOUNT.json",
+  "log_line": 10447,
+  "sha256": "82605c492319be77bd682854613c27d559bdd8a1a63bfcc7143c93f55fe7a4ba"
+ },
+ {
+  "file": "product-mappings/create-request-LP1_INTEREST_FLAT_OVERDUE_FROM_AMOUNT_INTEREST.json",
+  "log_line": 10712,
+  "sha256": "8dd383f3e590d9a480c254f0edf9fd2448c213b21d5c1421ea5264f7b1789676"
+ }
+]
