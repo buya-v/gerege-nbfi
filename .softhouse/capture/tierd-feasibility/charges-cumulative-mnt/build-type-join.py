@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """OH-TIERD19-CW step 6: join every swept `/journalentries` leg to its loan
 transaction TYPE, and to the CHARGED-OFF and FRAUD dimensions, then isolate the
-capitalized-income posting arms of `AccrualBasedAccountingProcessorForLoan.java`
-:195-530 -- `createJournalEntriesForCapitalizedIncome`, `...CapitalizedIncomeAdjustment`,
-`...CapitalizedIncomeAmortization`, `...ChargeOffLoanCapitalizedIncomeAmortization`,
-`...CapitalizedIncomeAmortizationAdjustment`.
+charge-adjustment posting arms of `AccrualBasedAccountingProcessorForLoan.java`
+:997-1214 -- `createJournalEntriesForChargeAdjustment`, `...ForLoanChargeAdjustment`,
+`...ForChargeOffLoanChargeAdjustment` -- plus every other charge-related
+`loanTransactionType` the loan read-backs carry.
 
 Adapted from OH-TIERD17-CR `build-type-join.py` (itself from OH-TIERD12-CE):
 the generic sweep leg -> type join, the CHARGED-OFF rule (a NON-REVERSED
-`chargeOff` loan transaction dated on or before the leg's transaction date) and
-the FRAUD flag are unchanged.  The target set is the four capitalized-income
-`loanTransactionType` codes the loan read-backs carry.  Each capitalized-income loan
-transaction is reported with its read-back amount and portions (principal /
-interest / fee / penalty / overpayment / unrecognized income), and a
-capitalized-income transaction with NO journal-entry legs is reported as a finding.
+`chargeOff` loan transaction dated on or before the leg's transaction date), the
+charged-off state from each loan's LATEST read-back, and the FRAUD flag are
+unchanged.  The target set is the charge-related `loanTransactionType` codes the
+loan read-backs carry.  Each such loan transaction is reported with its read-back
+amount and portions (principal / interest / fee / penalty / overpayment /
+unrecognized income), and a charge-related transaction with NO journal-entry legs
+is reported as a finding.
 
 The sweep is flat (`journalentries-sweep/loan-<id>.json`, one paged body per
 loan), unlike the runner's per-transaction `journalentries/`.
@@ -29,13 +30,19 @@ LOANS = os.path.join(HERE, 'loans')
 STAGE = os.path.join(HERE, 'stage')
 SEQ_RE = re.compile(r'-(\d+)\.json$')
 
-# The four capitalized-income transaction type codes the read-backs carry.
-TARGET_TYPES = (
-    'loanTransactionType.capitalizedIncome',
-    'loanTransactionType.capitalizedIncomeAdjustment',
-    'loanTransactionType.capitalizedIncomeAmortization',
-    'loanTransactionType.capitalizedIncomeAmortizationAdjustment',
+# The charge-related transaction type codes the read-backs carry.  `chargeAdjustment`
+# is the primary target (the OH-TIERD19-CW charge-adjustment posting arms); the rest
+# are the remaining charge/refund-family types this feature exercises.
+CHARGE_ADJUSTMENT_TYPE = 'loanTransactionType.chargeAdjustment'
+CHARGE_RELATED_TYPES = (
+    CHARGE_ADJUSTMENT_TYPE,
+    'loanTransactionType.waiveCharges',
+    'loanTransactionType.chargeback',
+    'loanTransactionType.goodwillCredit',
+    'loanTransactionType.payoutRefund',
+    'loanTransactionType.creditBalanceRefund',
 )
+TARGET_TYPES = CHARGE_RELATED_TYPES
 
 
 def minor(amount):
@@ -52,11 +59,18 @@ def read_jsons(paths):
 
 
 def tx_readbacks(loan_id):
-    """Every transaction read-back for the loan, committed first then stage."""
+    """Every transaction read-back for the loan, committed first then stage.
+
+    Both the `transactions` association snapshots and the `all` snapshots carry
+    the loan's `transactions` array; a transaction can appear in one and not the
+    other (e.g. a `creditBalanceRefund` only in `all`), so read both."""
     pats = [
         os.path.join(LOANS, 'loan-%d' % loan_id,
                      'loan-%d-detail-associations-transactions-*.json' % loan_id),
+        os.path.join(LOANS, 'loan-%d' % loan_id,
+                     'loan-%d-detail-associations-all-*.json' % loan_id),
         os.path.join(STAGE, 'loan-%d-detail-associations-transactions-*.json' % loan_id),
+        os.path.join(STAGE, 'loan-%d-detail-associations-all-*.json' % loan_id),
     ]
     seen = []
     for pat in pats:
@@ -89,7 +103,7 @@ def tx_map_for(loan_id):
                         'amount_minor': minor(t.get('amount'))
                         if t.get('amount') is not None else None,
                         # the read-back carries the transaction's portion split;
-                        # keep it beside the type so every capitalized-income leg can be
+                        # keep it beside the type so every charge-related leg can be
                         # reported with the transaction's amount and portions.
                         'portions': {
                             'principal_minor': minor(t.get('principalPortion'))
@@ -183,12 +197,36 @@ def detail_currency(loan_id):
     return None
 
 
-def build_capitalized_income(types, loan_chargeoff, currencies, txmaps, chargeoffs):
-    """Type x charged-off for each capitalized-income arm, the required per-leg listing,
-    and each capitalized-income transaction's read-back amount and portions.
+def detail_charged_off(loan_id):
+    """The loan-level charged-off state from the loan's LATEST read-back.
 
-    A capitalized-income transaction with NO journal-entry legs is itself a finding:
-    the capitalized-income arms must post for every such transaction, so an empty leg
+    A charge-off later undone must not count, so take `chargedOff` from the
+    highest-sequence `detail-associations-all-*` read-back; fall back to any
+    detail/read-back that carries the field.  Returns None when absent."""
+    pats = (os.path.join(LOANS, 'loan-%d' % loan_id,
+                         'loan-%d-detail-associations-all-*.json' % loan_id),
+            os.path.join(LOANS, 'loan-%d' % loan_id, 'loan-*-detail-*.json'),
+            os.path.join(STAGE, 'loan-%d-detail-*.json'))
+    for pat in pats:
+        files = sorted(glob.glob(pat),
+                       key=lambda p: int(SEQ_RE.search(p).group(1))
+                       if SEQ_RE.search(p) else 0)
+        for f in reversed(files):
+            try:
+                body = json.load(open(f))
+            except ValueError:
+                continue
+            if isinstance(body, dict) and 'chargedOff' in body:
+                return bool(body.get('chargedOff'))
+    return None
+
+
+def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
+    """Type x charged-off for each charge-related arm, the required per-leg listing,
+    and each charge-related transaction's read-back amount and portions.
+
+    A charge-related transaction with NO journal-entry legs is itself a finding:
+    the charge-related arms must post for every such transaction, so an empty leg
     set is reported rather than silently dropped.  A target type with no legs at
     all is a finding too.
     """
@@ -213,7 +251,7 @@ def build_capitalized_income(types, loan_chargeoff, currencies, txmaps, chargeof
             'all_legs': legs,
         }
 
-    # Every capitalized-income transaction the read-backs expose, with its amount and
+    # Every charge-related transaction the read-backs expose, with its amount and
     # portions, whether or not the sweep found legs for it.
     bd_transactions = []
     for lid in sorted(txmaps):
@@ -235,6 +273,7 @@ def build_capitalized_income(types, loan_chargeoff, currencies, txmaps, chargeof
                 'amount_minor': tx.get('amount_minor'),
                 'reversed': tx.get('reversed'),
                 'charged_off': bool(qualifying),
+                'charged_off_latest': loan_chargeoff.get(lid, {}).get('charged_off_latest'),
                 'chargeoff_tx_ids': ['L%d' % c[1] for c in qualifying],
                 'fraud': loan_chargeoff.get(lid, {}).get('fraud', False),
                 'currency': currencies.get(lid, 'UNKNOWN'),
@@ -255,21 +294,37 @@ def build_capitalized_income(types, loan_chargeoff, currencies, txmaps, chargeof
     no_legs = [t for t in bd_transactions if not t['legs']]
     findings = []
     if empty_types:
-        findings.append('capitalized-income transaction type(s) with NO legs at all: %s.'
+        findings.append('charge-related transaction type(s) with NO legs at all: %s.'
                         % ', '.join(empty_types))
     if not bd_transactions:
-        findings.append('no capitalized-income transaction appears in ANY loan read-back '
+        findings.append('no charge-related transaction appears in ANY loan read-back '
                         'under `loans/` -- the replay produced none (or its loan was '
-                        'not extracted), so the capitalized-income arms were never exercised.')
+                        'not extracted), so the charge-related arms were never exercised.')
     elif no_legs:
-        findings.append('%d capitalized-income transaction(s) in the read-backs have NO '
+        findings.append('%d charge-related transaction(s) in the read-backs have NO '
                         'journal-entry legs: %s.'
                         % (len(no_legs),
                            ', '.join('loan %d tx %s' % (t['loan'], t['transaction_id'])
                                      for t in no_legs)))
+    any_chargeoff_tx = any(loan_chargeoff.get(lid, {}).get('chargeoff_transactions')
+                           for lid in loan_chargeoff)
+    any_latest_co = any(loan_chargeoff.get(lid, {}).get('charged_off_latest')
+                        for lid in loan_chargeoff)
+    if not any_chargeoff_tx:
+        findings.append('no non-reversed `chargeOff` loan transaction appears in ANY '
+                        'read-back: no leg is on a charged-off loan, so the '
+                        '`...ForChargeOffLoanChargeAdjustment` arm is NOT exercised '
+                        'by this feature.')
+    if not any_latest_co:
+        findings.append('no loan\'s LATEST read-back has `chargedOff=true`: the '
+                        'charged-off dimension is empty (every leg charged-off=no).')
     return {
         'charged_off_rule': ('a NON-REVERSED chargeOff loan transaction dated on '
                              'or before the transaction/leg date'),
+        'charge_off_coverage': {
+            'any_chargeoff_transaction': any_chargeoff_tx,
+            'any_latest_charged_off': any_latest_co,
+        },
         'target_types': list(TARGET_TYPES),
         'by_type': by_type,
         'currencies': currencies,
@@ -296,6 +351,7 @@ def main():
     txmaps = {lid: tx_map_for(lid) for lid in loan_ids}
     chargeoffs = {lid: chargeoffs_for(lid) for lid in loan_ids}
     frauds = {lid: loan_fraud(lid) for lid in loan_ids}
+    latest_co = {lid: detail_charged_off(lid) for lid in loan_ids}
 
     currencies = {}
     leg_records = []
@@ -314,8 +370,11 @@ def main():
         cos = chargeoffs.get(lid, [])
         loan_chargeoff[lid] = {
             'fraud': frauds.get(lid, False),
+            # state as of each transaction date (non-reversed chargeOff <= date)
             'chargeoff_transactions': [{'transaction_id': 'L%d' % tid,
                                         'date': d} for d, tid in cos],
+            # final state from the loan's LATEST read-back (undone charge-off excluded)
+            'charged_off_latest': latest_co.get(lid),
         }
         for it in items:
             label = it.get('transactionId')
@@ -344,6 +403,7 @@ def main():
                 'amount_minor': minor(it.get('amount')),
                 'reversed': it.get('reversed'),
                 'charged_off': bool(qualifying),
+                'charged_off_latest': latest_co.get(lid),
                 'chargeoff_tx_ids': ['L%d' % tid for tid in qualifying],
                 'fraud': frauds.get(lid, False),
             })
@@ -366,7 +426,7 @@ def main():
         t['transactions'].sort(key=lambda s: int(s[1:]) if s and s[1:].isdigit() else 0)
         t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
 
-    bd = build_capitalized_income(types, loan_chargeoff, currencies, txmaps, chargeoffs)
+    bd = build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs)
     obj = {
         'tenant': 'tierd',
         'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
@@ -376,7 +436,7 @@ def main():
         'unmatched_legs': unmatched,
         'unmatched_analysis': unmatched_analysis,
         'loan_chargeoff': loan_chargeoff,
-        'capitalized_income': bd,
+        'charge_related': bd,
         'types': types,
     }
     with open(os.path.join(HERE, 'journalentry-type-join.json'), 'w') as fh:
@@ -384,7 +444,7 @@ def main():
         fh.write('\n')
     write_md(obj)
     write_tsv(obj)
-    print('joined %d legs across %d types; %d unmatched; capitalized-income legs %d on %d '
+    print('joined %d legs across %d types; %d unmatched; charge-related legs %d on %d '
           'transactions / %d loans; empty types %s'
           % (len(leg_records), len(types), len(unmatched),
              bd['total_legs'], bd['total_transactions'], len(bd['total_loans']),
@@ -392,11 +452,11 @@ def main():
 
 
 def write_md(obj):
-    bd = obj['capitalized_income']
+    bd = obj['charge_related']
     legs = obj['legs']
     out = []
     w = out.append
-    w('# Journal-entry type join — capitalized-income arms (OH-TIERD19-CW step 6)')
+    w('# Journal-entry type join — charge-related arms (OH-TIERD19-CW step 6)')
     w('')
     w('%d swept legs across %d transaction types; %d legs unmatched to a read-back.'
       % (legs, len(obj['types']), len(obj['unmatched_legs'])))
@@ -415,7 +475,7 @@ def write_md(obj):
             label, len(t['legs']), len(onco),
             ', '.join(str(x) for x in sorted({r['loan'] for r in onco})) or '–'))
     w('')
-    w('## Capitalized-income arms')
+    w('## Charge-related arms')
     w('')
     w('| type | present | legs | transactions | loans | legs on charged-off | loans on charged-off | legs on not-charged-off | loans on not-charged-off |')
     w('| --- | --- | ---: | ---: | --- | ---: | --- | ---: | --- |')
@@ -432,63 +492,70 @@ def write_md(obj):
     for f in bd['findings']:
         w('**FINDING:** %s' % f)
         w('')
-    w('## Every capitalized-income leg — required listing')
+    w('## Every charge-related leg — required listing')
     w('')
-    w('| type | loan | tx | entry | account id | account code | account name | amount (minor) | fraud | charged_off | currency | tx date | charge-off tx |')
-    w('| --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- |')
+    w('`charged-off at tx date` = a NON-REVERSED chargeOff dated on or before the '
+      'leg\'s transaction date.  `charged-off latest` = the loan `chargedOff` flag '
+      'in its LATEST read-back, so a charge-off later undone does not count.')
+    w('')
+    w('| type | loan | tx | entry | account id | account code | account name | amount (minor) | fraud | charged-off at tx date | charged-off latest | currency | tx date | charge-off tx |')
+    w('| --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- | --- |')
     any_leg = False
     for tx in bd['transactions']:
         for r in tx['legs']:
             any_leg = True
-            w('| `%s` | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
+            w('| `%s` | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
                 r['type_code'], r['loan'], r['transaction_id'], r['entry_type'],
                 r['gl_account_id'], r['gl_account_code'], r['gl_account_name'],
-                r['amount_minor'], r['fraud'], r['charged_off'], r['currency'],
+                r['amount_minor'], r['fraud'], r['charged_off'],
+                r.get('charged_off_latest'), r['currency'],
                 date_str(r['transaction_date']),
                 ', '.join(r['chargeoff_tx_ids']) or '-'))
     if not any_leg:
-        w('| _none_ | | | | | | | | | | | | |')
+        w('| _none_ | | | | | | | | | | | | | |')
     w('')
-    w('## Every capitalized-income transaction and its read-back amount / portions')
+    w('## Every charge-related transaction and its read-back amount / portions')
     w('')
     w('Portions are integer minor units; `-` means the read-back did not carry that field.')
     w('')
-    w('| loan | tx | type | date | amount (minor) | principal | interest | fee | penalty | overpayment | unrecognized income | reversed | charged_off | fraud | currency | legs |')
-    w('| ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | --- | ---: |')
+    w('| loan | tx | type | date | amount (minor) | principal | interest | fee | penalty | overpayment | unrecognized income | reversed | charged-off at date | charged-off latest | fraud | currency | legs |')
+    w('| ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | --- | --- | ---: |')
     for t in bd['transactions']:
         p = t['portions'] or {}
 
         def _m(k):
             v = p.get(k)
             return '-' if v is None else v
-        w('| %d | %s | `%s` | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d |' % (
+        w('| %d | %s | `%s` | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d |' % (
             t['loan'], t['transaction_id'], t['type_code'], date_str(t['date']),
             t['amount_minor'], _m('principal_minor'), _m('interest_minor'), _m('fee_minor'),
             _m('penalty_minor'), _m('overpayment_minor'), _m('unrecognized_income_minor'),
-            t['reversed'], t['charged_off'], t['fraud'], t['currency'], len(t['legs'])))
+            t['reversed'], t['charged_off'], t.get('charged_off_latest'),
+            t['fraud'], t['currency'], len(t['legs'])))
     if not bd['transactions']:
-        w('| _no capitalized-income transactions_ | | | | | | | | | | | | | | | |')
+        w('| _no charge-related transactions_ | | | | | | | | | | | | | | | | |')
     w('')
     w('## Per-loan currency, charge-off and fraud state')
     w('')
-    w('| loan | currency | fraud | non-reversed chargeOff transactions |')
-    w('| ---: | --- | --- | --- |')
+    w('| loan | currency | fraud | charged-off latest read-back | non-reversed chargeOff transactions |')
+    w('| ---: | --- | --- | --- | --- |')
     for lid in sorted(obj['loan_ids']):
         li = obj['loan_chargeoff'][lid]
         cos = ', '.join('%s@%s' % (c['transaction_id'], date_str(c['date']))
                         for c in li['chargeoff_transactions']) or '-'
-        w('| %d | %s | %s | %s |' % (lid, obj['currencies'][lid], li['fraud'], cos))
+        w('| %d | %s | %s | %s | %s |' % (
+            lid, obj['currencies'][lid], li['fraud'], li.get('charged_off_latest'), cos))
     w('')
     with open(os.path.join(HERE, 'journalentry-type-join.md'), 'w') as f:
         f.write('\n'.join(out) + '\n')
 
 
 def write_tsv(obj):
-    bd = obj['capitalized_income']
+    bd = obj['charge_related']
     cols = ('type_code', 'loan', 'currency', 'transaction_id', 'transaction_date',
             'entry_type', 'gl_account_id', 'gl_account_code', 'gl_account_name',
-            'amount_minor', 'fraud', 'charged_off', 'chargeoff_tx_ids')
-    with open(os.path.join(HERE, 'capitalized-income-legs.tsv'), 'w') as f:
+            'amount_minor', 'fraud', 'charged_off', 'charged_off_latest', 'chargeoff_tx_ids')
+    with open(os.path.join(HERE, 'charge-related-legs.tsv'), 'w') as f:
         f.write('\t'.join(cols) + '\n')
         for tx in bd['transactions']:
             for r in tx['legs']:

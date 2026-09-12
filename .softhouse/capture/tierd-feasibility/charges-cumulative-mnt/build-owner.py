@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""OH-TIERD19-CW step 6: write OWNER.md from the capitalized-income type join.
+"""OH-TIERD19-CW step 6: write OWNER.md from the charge-related type join.
 
 Reads journalentry-type-join.json (built by build-type-join.py) plus the
 replay/extraction/sweep/product manifests, and emits the type x charged-off
-join, every capitalized-income leg, and each capitalized-income transaction's read-back
+join, every charge-related leg, and each charge-related transaction's read-back
 amount and portions.  Money is integer minor units throughout.
 """
 import json
@@ -32,7 +32,7 @@ def main():
     legs = J['legs']
     unmatched = len(J['unmatched_legs'])
     types = J['types']
-    bd = J['capitalized_income']
+    bd = J['charge_related']
     currencies = J['currencies']
     loan_co = J['loan_chargeoff']
     loan_ids = sorted((int(x) for x in currencies))
@@ -57,14 +57,14 @@ def main():
       '`journalentries-sweep/` and `loans/` keep the decimal major units the oracle emitted, unchanged.'
       % (R['scenario_count'], len(loan_ids)))
     w('')
-    w('The target is the CAPITALIZED-INCOME posting family of '
-      '`AccrualBasedAccountingProcessorForLoan.java` :195-530 — `createJournalEntriesForCapitalizedIncome`, '
-      '`...CapitalizedIncomeAdjustment`, `...CapitalizedIncomeAmortization`, '
-      '`...ChargeOffLoanCapitalizedIncomeAmortization` and `...CapitalizedIncomeAmortizationAdjustment` — which had '
-      'never been observed at the GL level. `LoanChargesCumulativeLoan.feature` exercises all of them, with '
-      'charge-offs on part of the file. This capture joins every swept leg to its transaction TYPE '
-      'and to the loan\'s CHARGED-OFF state at the transaction date, and lists every capitalized-income leg, '
-      'each capitalized-income transaction\'s amount and its read-back portions.')
+    w('The target is the CHARGE-ADJUSTMENT posting family of '
+      '`AccrualBasedAccountingProcessorForLoan.java` :997-1214 — `createJournalEntriesForChargeAdjustment` → '
+      '`...ForLoanChargeAdjustment` / `...ForChargeOffLoanChargeAdjustment` — which had been barely observed '
+      '(6 legs). `LoanChargesCumulativeLoan.feature` (25 scenarios) exercises it: its charge-adjustment '
+      'scenario C2472 drives eight `chargeAdjustment` transactions (with and without reversal). This capture '
+      'joins every swept leg to its transaction TYPE and to the loan\'s CHARGED-OFF state at the transaction '
+      'date, and lists every charge-related leg, each charge-related transaction\'s amount and its read-back '
+      'portions.')
     w('')
 
     w('## Provenance')
@@ -99,7 +99,7 @@ def main():
       % len(PM))
     w('| `journalentry-type-join.json` | every swept leg joined to its transaction type and charged-off/fraud state |')
     w('| `journalentry-type-join.md` | the same, human-readable, per-type leg listing |')
-    w('| `capitalized-income-legs.tsv` | flat listing of every capitalized-income leg (required columns) |')
+    w('| `charge-related-legs.tsv` | flat listing of every charge-related leg (required columns) |')
     w('| `build-type-join.py` / `build-owner.py` | the join builder and this OWNER writer |')
     w('| `organize.py, build-results.py, extract-journalentries.py, extract-product-mappings.py` | the other copied extractors |')
     w('| `preflight.txt, up.txt, teardown-isolation.txt` | isolation proof (12/12 standing counters == baseline) |')
@@ -177,7 +177,7 @@ def main():
             ', '.join(str(x) for x in loans_co) or '–'))
     w('')
 
-    w('### The capitalized-income arms (step 6)')
+    w('### The charge-related arms (step 6)')
     w('')
     w('Charged-off rule: %s.' % bd['charged_off_rule'])
     w('')
@@ -197,29 +197,31 @@ def main():
         w('**FINDING:** %s' % f)
         w('')
 
-    w('### Every capitalized-income leg — required listing')
+    w('### Every charge-related leg — required listing')
     w('')
-    w('Every leg of every capitalized-income transaction type, with the leg\'s GL account (id + name), '
+    w('Every leg of every charge-related transaction type, with the leg\'s GL account (id + name), '
       'entry side, amount in minor units, the loan fraud flag and whether the loan was charged off '
-      'at the transaction date.')
+      'at the transaction date.  `charged-off at tx date` = a NON-REVERSED `chargeOff` dated on or '
+      'before the leg\'s transaction date; `charged-off latest` = the loan `chargedOff` flag in its '
+      'LATEST read-back, so a charge-off later undone does not count.')
     w('')
-    w('| type | loan | tx | entry | account id | account code | account name | amount (minor) | fraud | charged_off | currency | tx date | charge-off tx |')
-    w('| --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- |')
+    w('| type | loan | tx | entry | account id | account code | account name | amount (minor) | fraud | charged-off at tx date | charged-off latest | currency | tx date | charge-off tx |')
+    w('| --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- | --- |')
     any_leg = False
     for tx in bd['transactions']:
         for r in tx['legs']:
             any_leg = True
-            w('| `%s` | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
+            w('| `%s` | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |' % (
                 r['type_code'], r['loan'], r['transaction_id'], r['entry_type'],
                 r['gl_account_id'], r['gl_account_code'], r['gl_account_name'],
-                r['amount_minor'], r['fraud'], r['charged_off'], r['currency'],
-                date_str(r['transaction_date']),
+                r['amount_minor'], r['fraud'], r['charged_off'], r['charged_off_latest'],
+                r['currency'], date_str(r['transaction_date']),
                 ', '.join(r['chargeoff_tx_ids']) or '-'))
     if not any_leg:
-        w('| _none_ | | | | | | | | | | | | |')
+        w('| _none_ | | | | | | | | | | | | | |')
     w('')
 
-    w('### Every capitalized-income transaction and its read-back amount / portions')
+    w('### Every charge-related transaction and its read-back amount / portions')
     w('')
     w('Portions are integer minor units; `-` means the read-back did not carry that field. The '
       '`amount` is the transaction `amount`; portions are the oracle\'s `principalPortion`, '
@@ -240,19 +242,19 @@ def main():
             _m('penalty_minor'), _m('overpayment_minor'), _m('unrecognized_income_minor'),
             t['reversed'], t['charged_off'], t['fraud'], t['currency'], len(t['legs'])))
     if not bd['transactions']:
-        w('| _no capitalized-income transactions_ | | | | | | | | | | | | | | |')
+        w('| _no charge-related transactions_ | | | | | | | | | | | | | | |')
     w('')
 
     w('### Per-loan currency, charge-off and fraud state')
     w('')
-    w('| loan | currency | fraud | non-reversed chargeOff transactions |')
-    w('| ---: | --- | --- | --- |')
+    w('| loan | currency | fraud | charged-off latest read-back | non-reversed chargeOff transactions |')
+    w('| ---: | --- | --- | --- | --- |')
     for lid in loan_ids:
         li = loan_co[str(lid)]
         cos = ', '.join('%s@%s' % (c['transaction_id'], date_str(c['date']))
                         for c in li['chargeoff_transactions']) or '-'
-        w('| %d | %s | %s | %s |' % (
-            lid, currencies[str(lid)], li['fraud'], cos))
+        w('| %d | %s | %s | %s | %s |' % (
+            lid, currencies[str(lid)], li['fraud'], li['charged_off_latest'], cos))
     w('')
     w('Every loan in this capture is **MNT**.')
     w('')
@@ -272,11 +274,11 @@ def main():
                   ', '.join(str(x) for x in t['loans_on_charged_off']) or '-'))
         else:
             w('* **FINDING — `%s` has NO legs:** the type is absent from every swept body. The '
-              'capitalized-income arm it names was not exercised at the GL level by this replay (or its '
+              'charge-related arm it names was not exercised at the GL level by this replay (or its '
               'loan was not extracted). This is a finding, not a silent gap.' % code)
     if bd['transactions_without_legs']:
-        w('* **FINDING — capitalized-income transaction(s) without journal-entry legs:** %s. The '
-          'capitalized-income arms should post for every such transaction, so a leg-less transaction is '
+        w('* **FINDING — charge-related transaction(s) without journal-entry legs:** %s. The '
+          'charge-related arms should post for every such transaction, so a leg-less transaction is '
           'a shape worth checking.' % (
               ', '.join('loan %d tx %s' % (t['loan'], t['transaction_id'])
                         for t in bd['transactions_without_legs'])))
