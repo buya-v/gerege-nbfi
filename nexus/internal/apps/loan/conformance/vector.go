@@ -266,6 +266,35 @@ const SeamLoanChargedOffWriteOffJournalEntries = "loan-chargedoff-writeoff-journ
 // paymentType 11 (AUTOPAY) resolves to the product fund source 4.
 const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 
+// SeamLoanGoodwillCreditJournalEntries is the capture seam this schema grades:
+// the journal entry a GOODWILL CREDIT posts on a loan that is NOT charged off,
+// the goodwill-credit branch of
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForLoanRepayments
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1695-1871, pinned
+// commit 426a23544]. The CREDIT side is an ordinary repayment's: for each of the
+// five portion slots (principal, interest, fees, penalties, overpayment) whose
+// portion is > 0 the processor CREDITS the slot's mapped account — LOAN_PORTFOLIO,
+// INTEREST_RECEIVABLE, FEES_RECEIVABLE, PENALTIES_RECEIVABLE and OVERPAYMENT
+// respectively — MERGING portions that resolve to the SAME account into one
+// credit at the first slot's position. The DEBIT side is the goodwill arm's own
+// table, posted AFTER every credit in insertion order: principal and overpayment
+// debit GOODWILL_CREDIT, interest debits INCOME_FROM_GOODWILL_CREDIT_INTEREST,
+// fees debit INCOME_FROM_GOODWILL_CREDIT_FEES and penalties debit
+// INCOME_FROM_GOODWILL_CREDIT_PENALTY, merging debits that resolve to the same
+// account. It is NOT a transfer: no fund source is posted.
+//
+// On the pinned observations L444 (loan 42) posts a 10.00 principal credit to
+// account 6 and a 10.00 goodwill debit to account 20; L466 (loan 46) posts a
+// 500.00 overpayment credit to account 13 and a 500.00 goodwill debit to account
+// 20; L267 (loan 26) posts a 15.00 penalty credit to account 7 and a 15.00
+// income-from-goodwill-credit-penalty debit to account 12. None of the three
+// loans is charged off. The account ids DIFFER per capture — loans 42 and 46 are
+// the chargeoff-p3-mnt replay and loan 26 is the accrual-activity-p1-mnt replay —
+// so each vector carries its own product mapping. The charged-off goodwill arm
+// is a different method and is not observed here; the port refuses a charged-off
+// loan.
+const SeamLoanGoodwillCreditJournalEntries = "loan-goodwill-credit-journal-entries"
+
 // SeamLoanChargedOffRepaymentJournalEntries is the capture seam this schema
 // grades: the journal entry a REPAYMENT posts on a loan ALREADY MARKED CHARGED
 // OFF. It ports AccrualBasedAccountingProcessorForLoan
@@ -765,6 +794,46 @@ type RepaymentJournalRequest struct {
 	TransactionID string                 `json:"transaction_id"`
 	Portions      RepaymentPortionsMoney `json:"portions"`
 	Accounts      RepaymentSlotAccounts  `json:"accounts"`
+}
+
+// GoodwillCreditSlotAccounts is the product's goodwill-credit slot->account
+// mapping: the five CREDIT slots an ordinary repayment also posts, the four
+// GOODWILL-CREDIT DEBIT slots the charged-off-free arm's
+// debitAccountMapForGoodwillCredit resolves, and the RESOLVED fund source the
+// wrong drive posts instead. The credit slots and the fund source are the same
+// as RepaymentSlotAccounts; the debit slots are the goodwill arm's own table.
+// FundSource is the RESOLVED account (the payment-channel account when the
+// transaction's paymentTypeId has one, else the product's FUND_SOURCE); the
+// correct port never posts it, but the registered wrong implementation expresses
+// the fund-source defect by debiting it, so the seam carries it. The slots a
+// positive portion needs are required; a slot with a positive portion and no
+// mapped account is refused by the port.
+type GoodwillCreditSlotAccounts struct {
+	LoanPortfolio                    string `json:"loan_portfolio"`
+	ReceivableInterest               string `json:"receivable_interest"`
+	ReceivableFee                    string `json:"receivable_fee"`
+	ReceivablePenalty                string `json:"receivable_penalty"`
+	Overpayment                      string `json:"overpayment,omitempty"`
+	GoodwillCredit                   string `json:"goodwill_credit"`
+	IncomeFromGoodwillCreditInterest string `json:"income_from_goodwill_credit_interest"`
+	IncomeFromGoodwillCreditFees     string `json:"income_from_goodwill_credit_fees"`
+	IncomeFromGoodwillCreditPenalty  string `json:"income_from_goodwill_credit_penalty"`
+	FundSource                       string `json:"fund_source"`
+}
+
+// GoodwillCreditJournalRequest is the loan-goodwill-credit-journal-entries
+// seam's input: the observed portions of a GOODWILL CREDIT transaction on a loan
+// that is NOT charged off, the loan's charged-off state (which the port refuses
+// when true) and the slot->account mapping, plus the transaction id the legs are
+// posted under. The mapping is the product's accountingMappings (with the fund
+// source resolved through the payment channel) read back from the reference
+// server, never invented; a slot with a positive portion and no mapped credit or
+// debit account is refused by the port.
+type GoodwillCreditJournalRequest struct {
+	TransactionID string                     `json:"transaction_id"`
+	Portions      RepaymentPortionsMoney     `json:"portions"`
+	ChargedOff    bool                       `json:"charged_off,omitempty"`
+	Accounts      GoodwillCreditSlotAccounts `json:"accounts"`
 }
 
 // ChargedOffRepaymentSlotAccounts is the slot->account mapping of a repayment on
@@ -1326,6 +1395,12 @@ type Request struct {
 	// charged off and the resolved slot->account mapping (the fund source already
 	// resolved through the payment channel).
 	RepaymentJournal *RepaymentJournalRequest `json:"repayment_journal,omitempty"`
+	// GoodwillCreditJournal is the loan-goodwill-credit-journal-entries seam's
+	// input: a GOODWILL CREDIT transaction's five portions on a loan that is NOT
+	// charged off, the loan's charged-off state and the slot->account mapping
+	// (its five credit slots, its four goodwill debit slots and the resolved fund
+	// source the wrong drive debits).
+	GoodwillCreditJournal *GoodwillCreditJournalRequest `json:"goodwill_credit_journal,omitempty"`
 	// ChargedOffRepaymentJournal is the
 	// loan-chargedoff-repayment-journal-entries seam's input: a REPAYMENT
 	// transaction's five portions on a loan already marked charged off and the
@@ -1474,6 +1549,15 @@ type Expect struct {
 	// account, and the one-debit count are what discriminate a
 	// debit-per-portion port.
 	RepaymentJournalLegs []JournalEntryLeg `json:"repayment_journal_legs,omitempty"`
+	// GoodwillCreditJournalLegs is the loan-goodwill-credit-journal-entries
+	// seam's ordered leg list a goodwill credit posted: one credit per non-zero
+	// portion (merged by account) in portion order, then one goodwill debit per
+	// distinct debit account (merged by account) in the goodwill table's slot
+	// order. Every leg is graded on its transaction id, account, side and amount;
+	// a port that debits the resolved fund source (a transfer) or the wrong
+	// goodwill slot moves an account, and a port that debits per credit moves the
+	// count on a multi-credit transaction.
+	GoodwillCreditJournalLegs []JournalEntryLeg `json:"goodwill_credit_journal_legs,omitempty"`
 	// ChargedOffRepaymentJournalLegs is the
 	// loan-chargedoff-repayment-journal-entries seam's ordered leg list a
 	// charged-off loan's repayment posted: one credit to INCOME_FROM_RECOVERY

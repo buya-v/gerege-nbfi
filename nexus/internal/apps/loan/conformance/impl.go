@@ -158,6 +158,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goChargedOffWriteOffJournal(*req.ChargedOffWriteOffJournal)
 	case req.RepaymentJournal != nil:
 		return goRepaymentJournal(*req.RepaymentJournal)
+	case req.GoodwillCreditJournal != nil:
+		return goGoodwillCreditJournal(*req.GoodwillCreditJournal)
 	case req.ChargedOffRepaymentJournal != nil:
 		return goChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal)
 	case req.ChargedOffMerchantRefundJournal != nil:
@@ -1077,6 +1079,56 @@ func repaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{RepaymentJournalLegs: out}
+}
+
+// goGoodwillCreditJournal ports the loan-goodwill-credit-journal-entries seam:
+// it reduces the request's five portions and slot->account mapping to
+// loan.RepaymentPortions and loan.GoodwillCreditAccountMapping and runs the
+// port's own loan.CreateGoodwillCreditJournalEntryLegs with the loan's
+// charged-off state (which the port refuses when true). Every monetary cell is an
+// integer minor unit; the mapping is the product's observed accountingMappings,
+// never invented. The resolved fund source is carried for the wrong drive only
+// and is NOT passed to the correct port.
+func goGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) {
+	portions, err := repaymentPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateGoodwillCreditJournalEntryLegs(r.TransactionID, portions, r.ChargedOff, loan.GoodwillCreditAccountMapping{
+		LoanPortfolio:                    r.Accounts.LoanPortfolio,
+		ReceivableInterest:               r.Accounts.ReceivableInterest,
+		ReceivableFee:                    r.Accounts.ReceivableFee,
+		ReceivablePenalty:                r.Accounts.ReceivablePenalty,
+		Overpayment:                      r.Accounts.Overpayment,
+		GoodwillCredit:                   r.Accounts.GoodwillCredit,
+		IncomeFromGoodwillCreditInterest: r.Accounts.IncomeFromGoodwillCreditInterest,
+		IncomeFromGoodwillCreditFees:     r.Accounts.IncomeFromGoodwillCreditFees,
+		IncomeFromGoodwillCreditPenalty:  r.Accounts.IncomeFromGoodwillCreditPenalty,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return goodwillCreditJournalLegsExpect(legs), nil
+}
+
+// goodwillCreditJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a leg
+// whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func goodwillCreditJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{GoodwillCreditJournalLegs: out}
 }
 
 // goChargedOffRepaymentJournal ports the loan-chargedoff-repayment-journal-entries
@@ -2271,6 +2323,61 @@ func wrongRepaymentJournal(r RepaymentJournalRequest, mode repaymentJournalWrong
 		}
 	}
 	return expect, nil
+}
+
+// wrongGoodwillCreditJournalEvaluator is a DELIBERATELY WRONG implementation of
+// the loan-goodwill-credit-journal-entries seam, committing exactly one posting
+// defect. On any request that is not a goodwill-credit journal it delegates to
+// the correct port, so the drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongGoodwillCreditJournalEvaluator struct {
+	goEvaluator
+}
+
+func (w wrongGoodwillCreditJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.GoodwillCreditJournal != nil {
+		return wrongGoodwillCreditJournal(*req.GoodwillCreditJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongGoodwillCreditJournal runs the correct posting and then applies exactly
+// one defect: it treats the goodwill credit as an ordinary repayment and posts
+// its debit side as ONE transfer to the RESOLVED fund source instead of the
+// goodwill table. The credits are the oracle's; only the debit account moves
+// (from GOODWILL_CREDIT on a principal/overpayment credit, or from the
+// income-from-goodwill-credit slot on an interest/fee/penalty credit, to the
+// fund source), and the ONE debit of the total is what an ordinary repayment
+// posts. A port that never reads the transaction type and reuses the repayment
+// posting is exactly this mistake. It is discriminated by every committed
+// goodwill observation, whose debit account is never the fund source.
+func wrongGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) {
+	expect, err := goGoodwillCreditJournal(r)
+	if err != nil {
+		return Expect{}, err
+	}
+	var credits []JournalEntryLeg
+	var amounts []string
+	for _, leg := range expect.GoodwillCreditJournalLegs {
+		if leg.EntryType == "CREDIT" {
+			credits = append(credits, leg)
+			amounts = append(amounts, leg.AmountMinor)
+		}
+	}
+	total, ok := sumMinorStrings(amounts...)
+	if !ok {
+		return Expect{}, fmt.Errorf("loan: wrong goodwill-credit fund-source total is not an integer minor amount")
+	}
+	out := append([]JournalEntryLeg{}, credits...)
+	if total != "0" {
+		out = append(out, JournalEntryLeg{
+			TransactionID: r.TransactionID,
+			Account:       r.Accounts.FundSource,
+			EntryType:     "DEBIT",
+			AmountMinor:   total,
+		})
+	}
+	return Expect{GoodwillCreditJournalLegs: out}, nil
 }
 
 // chargebackJournalWrongMode selects which deliberately-wrong chargeback posting
@@ -3688,6 +3795,14 @@ func init() {
 			"count grows by (credits - 1) and the one-debit invariant fails on the multi-credit "+
 			"observations (loan 18 and loan 19) while the principal-only loan 14 is unaffected",
 		wrongRepaymentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongRepaymentJournalDebitsFundSourcePerPortion})
+	RegisterWrong("loan-wrong-goodwill-debits-fund-source",
+		"posts the goodwill credit's debit side as ONE transfer to the resolved fund source, exactly "+
+			"as an ordinary repayment does, instead of debiting the portions through the goodwill "+
+			"table (GOODWILL_CREDIT for principal and overpayment, the income-from-goodwill-credit "+
+			"slots for interest, fees and penalties), as a port that never reads the transaction type "+
+			"does; the credits are the oracle's but the debit account moves off every observed goodwill "+
+			"debit account to the fund source, so every goodwill vector goes red",
+		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-chargedoff-repayment-to-portfolio",
 		"posts a repayment on a loan marked charged off through the ORDINARY repayment port instead "+
 			"of the charged-off branch, as a port that forgets the loan is charged off does; the "+

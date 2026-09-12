@@ -62,6 +62,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertChargedOffWriteOffJournalBalanced(got)}
 	case SeamLoanRepaymentJournalEntries:
 		return []InvariantResult{assertRepaymentJournalBalanced(got)}
+	case SeamLoanGoodwillCreditJournalEntries:
+		return []InvariantResult{assertGoodwillCreditJournalBalanced(got)}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		return []InvariantResult{assertChargedOffRepaymentJournalBalanced(got)}
 	case SeamLoanChargedOffMerchantRefundJournalEntries:
@@ -677,6 +679,59 @@ func assertRepaymentJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("one debit of %d equals the %d credit portion(s)", debits, len(got.RepaymentJournalLegs)-1)
+	return r
+}
+
+// assertGoodwillCreditJournalBalanced: a goodwill credit's result carries
+// non-negative integer minor-unit amounts, at least one credit and at least one
+// debit leg, and the debits sum to the credits. Unlike an ordinary repayment the
+// debit side is the goodwill table's, one leg per distinct debit account, so the
+// debit count is not fixed at one: a principal+interest goodwill credit posts
+// two debits. It is asserted on the implementation's RESULT, so a port that
+// drops or unbalances a leg fails here; the account and count cells that
+// separate the goodwill accounts from a fund source are the leg differ's job.
+func assertGoodwillCreditJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "goodwill_credit_journal_balances", Assertions: 3}
+	legs := got.GoodwillCreditJournalLegs
+	if len(legs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range legs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs == 0 || debitLegs == 0 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d credit and %d debit leg(s): a goodwill credit needs both sides", creditLegs, debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credits sum to %d but the %d debit leg(s) sum to %d: a goodwill credit must balance", credits, debitLegs, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by %d goodwill debit leg(s)", creditLegs, credits, debitLegs)
 	return r
 }
 

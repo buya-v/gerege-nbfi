@@ -44,7 +44,8 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 		SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 		SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
-		SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
+		SeamLoanRepaymentJournalEntries, SeamLoanGoodwillCreditJournalEntries,
+		SeamLoanChargedOffRepaymentJournalEntries,
 		SeamLoanChargedOffMerchantRefundJournalEntries,
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
@@ -52,13 +53,14 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
 			SeamLoanWriteOffFourBucket, SeamLoanTransactionReversal, SeamLoanWriteOffJournalEntries,
 			SeamLoanChargeOffJournalEntries, SeamLoanChargedOffWriteOffJournalEntries,
-			SeamLoanRepaymentJournalEntries, SeamLoanChargedOffRepaymentJournalEntries,
+			SeamLoanRepaymentJournalEntries, SeamLoanGoodwillCreditJournalEntries,
+			SeamLoanChargedOffRepaymentJournalEntries,
 			SeamLoanChargedOffMerchantRefundJournalEntries,
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 			SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
@@ -190,6 +192,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.RepaymentJournal != nil {
+		n++
+	}
+	if v.Request.GoodwillCreditJournal != nil {
 		n++
 	}
 	if v.Request.ChargedOffRepaymentJournal != nil {
@@ -711,6 +716,60 @@ func admitRequest(v *Vector) []string {
 		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
 			problems = append(problems,
 				"request.repayment_journal.accounts.overpayment is empty but the overpayment portion is positive")
+		}
+	case SeamLoanGoodwillCreditJournalEntries:
+		if v.Request.GoodwillCreditJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "goodwill-credit-journal seam must set exactly request.goodwill_credit_journal")
+			return problems
+		}
+		j := v.Request.GoodwillCreditJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.goodwill_credit_journal.transaction_id is empty")
+		}
+		if j.ChargedOff {
+			problems = append(problems,
+				"request.goodwill_credit_journal.charged_off is true: this seam models the NOT-charged-off goodwill arm only, and the port refuses a charged-off loan")
+		}
+		for name, val := range map[string]string{
+			"portions.principal":   j.Portions.Principal,
+			"portions.interest":    j.Portions.Interest,
+			"portions.fee":         j.Portions.Fee,
+			"portions.penalty":     j.Portions.Penalty,
+			"portions.overpayment": j.Portions.Overpayment,
+		} {
+			if name == "portions.overpayment" && val == "" {
+				continue
+			}
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.goodwill_credit_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// Every credit slot and every goodwill DEBIT slot needs its account, and
+		// the seam carries the resolved fund source the wrong drive debits in
+		// place of the goodwill table. The credit accounts are NOT required to be
+		// distinct and neither are the two GOODWILL_CREDIT debits: the port
+		// MERGES slots that map to one account. The overpayment account is
+		// required only when the overpayment portion is positive.
+		for name, val := range map[string]string{
+			"accounts.loan_portfolio":                       j.Accounts.LoanPortfolio,
+			"accounts.receivable_interest":                  j.Accounts.ReceivableInterest,
+			"accounts.receivable_fee":                       j.Accounts.ReceivableFee,
+			"accounts.receivable_penalty":                   j.Accounts.ReceivablePenalty,
+			"accounts.goodwill_credit":                      j.Accounts.GoodwillCredit,
+			"accounts.income_from_goodwill_credit_interest": j.Accounts.IncomeFromGoodwillCreditInterest,
+			"accounts.income_from_goodwill_credit_fees":     j.Accounts.IncomeFromGoodwillCreditFees,
+			"accounts.income_from_goodwill_credit_penalty":  j.Accounts.IncomeFromGoodwillCreditPenalty,
+			"accounts.fund_source":                          j.Accounts.FundSource,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.goodwill_credit_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
+			problems = append(problems,
+				"request.goodwill_credit_journal.accounts.overpayment is empty but the overpayment portion is positive")
 		}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		if v.Request.ChargedOffRepaymentJournal == nil || requestShapeCount(v) != 1 {
@@ -1625,6 +1684,60 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanGoodwillCreditJournalEntries:
+		if v.Request.GoodwillCreditJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.GoodwillCreditJournal
+		if len(v.Expect.GoodwillCreditJournalLegs) == 0 {
+			problems = append(problems, "expect.goodwill_credit_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.GoodwillCreditJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.goodwill_credit_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.goodwill_credit_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.goodwill_credit_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.goodwill_credit_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: one credit per non-zero portion in slot order (merged
+		// by account), then one goodwill DEBIT per non-zero slot in the goodwill
+		// table's order (merged by account) — NOT a fund-source transfer. This
+		// reconciliation is INDEPENDENT of the port under test, so a wrong port
+		// cannot make its own output "admissible".
+		expected, probs := reconstructGoodwillCreditJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.GoodwillCreditJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.goodwill_credit_journal_legs has %d legs but the non-zero credit slots plus the goodwill debit slots need %d: credits are one per portion slot (merged by account) and the goodwill debits are one per distinct debit account",
+				len(v.Expect.GoodwillCreditJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.GoodwillCreditJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.goodwill_credit_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): a goodwill credit credits each non-zero portion to its receivable/portfolio slot (merged by account) then debits the same portions through the goodwill table (principal/overpayment to GOODWILL_CREDIT, interest/fees/penalties to their income-from-goodwill-credit slots), NEVER the fund source",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		if v.Request.ChargedOffRepaymentJournal == nil {
 			// admitRequest already refused the missing request shape.
@@ -2391,6 +2504,93 @@ func reconstructRepaymentJournalLegs(j RepaymentJournalRequest) ([]JournalEntryL
 		})
 	}
 	return legs, nil
+}
+
+// goodwillReconstructSlot is one portion slot of a reconstructed goodwill-credit
+// leg list: the slot label (for diagnostics), its integer minor amount string and
+// the account it maps to.
+type goodwillReconstructSlot struct {
+	name   string
+	amount string
+	acct   string
+}
+
+// mergeReconstructedLegs posts one leg per distinct account in slot order,
+// merging slots that share an account at the FIRST slot's position and refusing a
+// non-zero portion with no account. It is the admission-side reconstruction,
+// independent of the port under test, so the two share no code path.
+func mergeReconstructedLegs(transactionID, side, where string, slots []goodwillReconstructSlot) ([]JournalEntryLeg, []string) {
+	var order []string
+	amounts := map[string]string{}
+	for _, s := range slots {
+		if s.amount == "" || s.amount == "0" {
+			continue
+		}
+		if s.acct == "" {
+			return nil, []string{fmt.Sprintf(
+				"%s slot %s has a positive portion %s but no mapped account", where, s.name, s.amount)}
+		}
+		if _, seen := amounts[s.acct]; seen {
+			sum, ok := sumMinorStrings(amounts[s.acct], s.amount)
+			if !ok {
+				return nil, []string{where + " portions are not integer minor amounts"}
+			}
+			amounts[s.acct] = sum
+		} else {
+			order = append(order, s.acct)
+			amounts[s.acct] = s.amount
+		}
+	}
+	legs := make([]JournalEntryLeg, 0, len(order))
+	for _, account := range order {
+		legs = append(legs, JournalEntryLeg{
+			TransactionID: transactionID, Account: account, EntryType: side, AmountMinor: amounts[account],
+		})
+	}
+	return legs, nil
+}
+
+// reconstructGoodwillCreditJournalLegs derives the leg list the observed
+// goodwill-credit property requires from the request alone, independently of the
+// port, in the processor's posting order: for each non-zero portion slot one
+// credit to the slot's mapped account — LOAN_PORTFOLIO, INTEREST_RECEIVABLE,
+// FEES_RECEIVABLE, PENALTIES_RECEIVABLE and OVERPAYMENT respectively — merging
+// slots that share an account at the first slot's position, then one goodwill
+// DEBIT per non-zero slot in the goodwill table's order (GOODWILL_CREDIT for
+// principal, INCOME_FROM_GOODWILL_CREDIT_INTEREST/FEES/PENALTY for
+// interest/fees/penalties, then GOODWILL_CREDIT for overpayment), merging debits
+// that share an account. It is NOT a fund-source transfer. Each money value stays
+// an integer minor-unit string. It returns the legs and any admission problem: a
+// slot with a positive portion and no mapped CREDIT account, or a positive
+// portion with no mapped GOODWILL debit account.
+func reconstructGoodwillCreditJournalLegs(j GoodwillCreditJournalRequest) ([]JournalEntryLeg, []string) {
+	overpayment := j.Portions.Overpayment
+	if overpayment == "" {
+		overpayment = "0"
+	}
+	credits := []goodwillReconstructSlot{
+		{"LOAN_PORTFOLIO", j.Portions.Principal, j.Accounts.LoanPortfolio},
+		{"INTEREST_RECEIVABLE", j.Portions.Interest, j.Accounts.ReceivableInterest},
+		{"FEES_RECEIVABLE", j.Portions.Fee, j.Accounts.ReceivableFee},
+		{"PENALTIES_RECEIVABLE", j.Portions.Penalty, j.Accounts.ReceivablePenalty},
+		{"OVERPAYMENT", overpayment, j.Accounts.Overpayment},
+	}
+	debits := []goodwillReconstructSlot{
+		{"GOODWILL_CREDIT", j.Portions.Principal, j.Accounts.GoodwillCredit},
+		{"INCOME_FROM_GOODWILL_CREDIT_INTEREST", j.Portions.Interest, j.Accounts.IncomeFromGoodwillCreditInterest},
+		{"INCOME_FROM_GOODWILL_CREDIT_FEES", j.Portions.Fee, j.Accounts.IncomeFromGoodwillCreditFees},
+		{"INCOME_FROM_GOODWILL_CREDIT_PENALTY", j.Portions.Penalty, j.Accounts.IncomeFromGoodwillCreditPenalty},
+		{"GOODWILL_CREDIT", overpayment, j.Accounts.GoodwillCredit},
+	}
+	creditLegs, probs := mergeReconstructedLegs(j.TransactionID, "CREDIT", "request.goodwill_credit_journal credit", credits)
+	if len(probs) > 0 {
+		return nil, probs
+	}
+	debitLegs, probs := mergeReconstructedLegs(j.TransactionID, "DEBIT", "request.goodwill_credit_journal debit", debits)
+	if len(probs) > 0 {
+		return nil, probs
+	}
+	return append(creditLegs, debitLegs...), nil
 }
 
 // reconstructChargedOffRepaymentJournalLegs derives the leg list the observed
