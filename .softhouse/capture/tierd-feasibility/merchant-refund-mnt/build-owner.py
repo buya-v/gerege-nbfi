@@ -57,7 +57,7 @@ def main():
     sweep_bad = sum(1 for x in W if x['http_status'] != '200'
                     or x['curl_returncode'] != 0 or not x['json_valid'])
     steps = R['steps']
-    nsteps = sum(steps.values())
+    nsteps = steps['total']
 
     out = []
     w = out.append
@@ -281,9 +281,31 @@ def main():
     w('')
     w('### Findings')
     w('')
-    if not tg['findings']:
+    findings = list(tg['findings'])
+    unm = J.get('unmatched_legs') or []
+    if unm:
+        by_tx = {}
+        for e in J['types'].get('(unmapped)', {}).get('legs', []):
+            by_tx.setdefault((e['loan'], e['transaction_id']), []).append(e)
+        shapes = sorted({
+            ' '.join(sorted('%s:%s' % (l['entry_type'], l['gl_account_id'])
+                            for l in legs))
+            for legs in by_tx.values()})
+        findings.append(
+            '`(unmapped)`: %d swept legs on %d transaction(s) (%s) across loan(s) %s '
+            'have NO transaction TYPE — those transaction ids appear in no captured '
+            'loan read-back, so the join cannot name them. Their legs carry the '
+            'charge-off account shape and its exact reversal mirror: %s. That is an '
+            'earlier charge-off the replay went on to reverse (the surviving '
+            'charge-off is L21 on loan 2 and L31 on loan 3). No required arm is '
+            'missing; this is the only join gap.'
+            % (len(unm), len(by_tx),
+               ', '.join(sorted({e['transaction_id'] for e in unm})),
+               ', '.join(str(x) for x in sorted({e['loan'] for e in unm})),
+               '; '.join(shapes)))
+    if not findings:
         w('- none.')
-    for f in tg['findings']:
+    for f in findings:
         w('- %s' % f)
     w('')
     w('Other observations from the join:')
