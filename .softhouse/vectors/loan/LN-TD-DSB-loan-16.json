@@ -1,0 +1,64 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-DSB-loan-16",
+ "title": "A 116.89 disbursement debits LOAN_PORTFOLIO 7 by amount minus the 0 overpayment and credits the resolved fund source 10 once -- NOT the read-back principalPortion (loan 16 L88)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.disbursement_journal is transcribed from the committed disbursement loan read-back .softhouse/capture/tierd-feasibility/merchant-refund-mnt/loans/loan-16/loan-16-detail-associations-transactions-1.json (sha256 971f2856861e00adfda7d197b474165389831b733e3057eb3be06c701789cda8): loan 16, transactions[id 88 type loanTransactionType.disbursement, paymentDetailData.paymentType.id 8 AUTOPAY, amount 116.89, overpaymentPortion 0, principalPortion 0]. expect.disbursement_journal_legs is transcribed from the committed SWEEP .softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-16.json (sha256 3987fc160c059836811fe9c42ef74639b36732f4d24389b6871f11bc3db10cb2): transactionId L88 pageItems ids 236 (entryType.value DEBIT glAccountId 7 amount 116.89) and 237 (entryType.value CREDIT glAccountId 10 amount 116.89), in id order. request.disbursement_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/merchant-refund-mnt/product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json (sha256 53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15): loanPortfolioAccountId 7, overpaymentLiabilityAccountId 16, fundSourceAccountId 10, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 18}] -- the ONLY channel mapping, so paymentType 8 (AUTOPAY) has no channel mapping and the fund source resolves to the product's fundSourceAccountId 10. TENANT `tierd` -- NOT tenant `gerege`. The principal portion is amount MINUS the 0 overpayment = 116.89; the read-back principalPortion field is 0 and the port must NOT read it. Every amount is an exact decimal parsed to integer minor units (116.89 -> 11689), never a float. The disbursement is not reversed. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-disbursement-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.disbursement_journal is transcribed from .softhouse/capture/tierd-feasibility/merchant-refund-mnt/loans/loan-16/loan-16-detail-associations-transactions-1.json (sha256 971f2856861e00adfda7d197b474165389831b733e3057eb3be06c701789cda8): transaction id 88 type loanTransactionType.disbursement, paymentDetailData.paymentType.id 8, amount 116.89, overpaymentPortion 0, principalPortion 0. expect.disbursement_journal_legs is transcribed from .softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-16.json (sha256 3987fc160c059836811fe9c42ef74639b36732f4d24389b6871f11bc3db10cb2): transactionId L88 legs id 236 DEBIT account 7 116.89 and id 237 CREDIT account 10 116.89. accounts is transcribed from .softhouse/capture/tierd-feasibility/merchant-refund-mnt/product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json (sha256 53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15): loanPortfolioAccountId 7, overpaymentLiabilityAccountId 16, fundSourceAccountId 10, the ONLY paymentChannelToFundSourceMappings entry paymentTypeId 1 -> 18, so the observed paymentTypeId 8 resolves to the product fund source 10. TENANT `tierd`, MNT, 2 minor digits. 116.89 -> 11689 integer minor units by exact decimal parsing, never a float. No value synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-16.json",
+  "capture_sha256": "3987fc160c059836811fe9c42ef74639b36732f4d24389b6871f11bc3db10cb2",
+  "capture_case_id": "L88",
+  "citation": "journalentries-sweep/loan-16.json:1 (sha256 3987fc160c059836811fe9c42ef74639b36732f4d24389b6871f11bc3db10cb2): transactionId L88 carries two legs in id order -- id 236 entryType.value DEBIT glAccountId 7 amount 116.89; id 237 entryType.value CREDIT glAccountId 10 amount 116.89. The amount and overpayment are in loans/loan-16/loan-16-detail-associations-transactions-1.json:1 (sha256 971f2856861e00adfda7d197b474165389831b733e3057eb3be06c701789cda8): loan 16, transactions[id 88] type loanTransactionType.disbursement, paymentDetailData.paymentType.id 8 (AUTOPAY), amount 116.89, overpaymentPortion 0, principalPortion 0 (the read-back field the port must not read). The slot->account mapping is in product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json:1 (sha256 53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15): loanPortfolioAccountId 7, overpaymentLiabilityAccountId 16, fundSourceAccountId 10, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 18]."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "disbursement_journal": {
+   "transaction_id": "L88",
+   "amount": "11689",
+   "overpayment": "0",
+   "principal_portion": "0",
+   "accounts": {
+    "loan_portfolio": "7",
+    "overpayment": "16",
+    "fund_source": "10"
+   }
+  }
+ },
+ "expect": {
+  "disbursement_journal_legs": [
+   {
+    "transaction_id": "L88",
+    "account": "7",
+    "entry_type": "DEBIT",
+    "amount_minor": "11689"
+   },
+   {
+    "transaction_id": "L88",
+    "account": "10",
+    "entry_type": "CREDIT",
+    "amount_minor": "11689"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "disbursement-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-disbursement-uses-principal-portion"
+ ]
+}

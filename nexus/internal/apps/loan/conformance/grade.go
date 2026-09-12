@@ -243,6 +243,18 @@ func diffGoodwillCreditJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
 	diffJournalLegs(s, "goodwill_credit_journal_legs", want, got)
 }
 
+// diffDisbursementJournalLegs compares the ordered leg list of a disbursement's
+// journal entry through the same per-leg differ the other journal seams use.
+// Every leg grades four cells: the amount is the one money cell, and the
+// transaction id, account and side are structural. The list is positional
+// because the property is a fixed "debits first, then the one fund-source
+// credit" layout, not a set. The account cells see a port that debits the wrong
+// account; the count and order cells see a port that derives the portfolio debit
+// from the read-back principalPortion (0 on every observation) and so drops it.
+func diffDisbursementJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "disbursement_journal_legs", want, got)
+}
+
 // diffChargebackJournalLegs compares the ordered leg list of a loan chargeback's
 // journal entry through the same per-leg differ the write-off-journal seam uses.
 // Every leg grades four cells: the amount is the one money cell, and the
@@ -440,6 +452,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffRepaymentJournalLegs(&s, v.Expect.RepaymentJournalLegs, got.RepaymentJournalLegs)
 	case SeamLoanGoodwillCreditJournalEntries:
 		diffGoodwillCreditJournalLegs(&s, v.Expect.GoodwillCreditJournalLegs, got.GoodwillCreditJournalLegs)
+	case SeamLoanDisbursementJournalEntries:
+		diffDisbursementJournalLegs(&s, v.Expect.DisbursementJournalLegs, got.DisbursementJournalLegs)
 	case SeamLoanChargeAdjustmentJournalEntries:
 		// Reuse the repayment-journal per-leg differ: the property is the same
 		// fixed "credits in slot order, then one total debit" layout, and the
