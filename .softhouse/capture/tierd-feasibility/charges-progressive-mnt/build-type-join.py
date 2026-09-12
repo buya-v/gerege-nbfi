@@ -30,24 +30,50 @@ LOANS = os.path.join(HERE, 'loans')
 STAGE = os.path.join(HERE, 'stage')
 SEQ_RE = re.compile(r'-(\d+)\.json$')
 
-# The charge-related transaction type codes the read-backs carry.  `chargeAdjustment`
-# is the primary target (the OH-TIERD20-CX charge-adjustment posting arms); the rest
-# are the remaining charge/refund-family types this feature exercises.
+# The charge-related transaction type codes.  `chargeAdjustment` is the primary
+# target (the OH-TIERD20-CX charge-adjustment posting arms).  The target set is
+# DISCOVERED from the loan read-backs -- every type code this replay actually
+# carries whose name is in the charge/charge-off/waive/refund family -- UNIONed
+# with the known family list below so an absent member is still reported as a
+# finding (a type with no legs is a finding).
 CHARGE_ADJUSTMENT_TYPE = 'loanTransactionType.chargeAdjustment'
-CHARGE_RELATED_TYPES = (
+KNOWN_CHARGE_RELATED_TYPES = (
     CHARGE_ADJUSTMENT_TYPE,
+    'loanTransactionType.chargeOff',
     'loanTransactionType.waiveCharges',
     'loanTransactionType.chargeback',
     'loanTransactionType.goodwillCredit',
     'loanTransactionType.payoutRefund',
     'loanTransactionType.creditBalanceRefund',
+    'loanTransactionType.merchantIssuedRefund',
+    'loanTransactionType.interestRefund',
+    'loanTransactionType.writeoff',
 )
-TARGET_TYPES = CHARGE_RELATED_TYPES
+CHARGE_RELATED_MATCH = ('charge', 'refund', 'waive', 'goodwill', 'writeoff',
+                        'write-off', 'payout', 'chargeback')
 
 
 def minor(amount):
     """Decimal major units -> integer minor units string (2 ISO 4217 digits)."""
     return str(int(round(float(amount) * 100)))
+
+
+def discover_charge_related(txmaps):
+    """The target type set: every charge/refund-family type code the read-backs
+    actually carry, UNIONed with the known family list so absent members are still
+    reported as findings.  `chargeAdjustment` is always first."""
+    present = set()
+    for txmap in txmaps.values():
+        for tx in txmap.values():
+            code = tx.get('code')
+            if code:
+                present.add(code)
+    found = {c for c in present
+             if any(m in c.lower() for m in CHARGE_RELATED_MATCH)}
+    ordered = [CHARGE_ADJUSTMENT_TYPE]
+    for c in sorted((found | set(KNOWN_CHARGE_RELATED_TYPES)) - {CHARGE_ADJUSTMENT_TYPE}):
+        ordered.append(c)
+    return ordered
 
 
 def read_jsons(paths):
@@ -221,7 +247,8 @@ def detail_charged_off(loan_id):
     return None
 
 
-def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
+def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs,
+                         target_types):
     """Type x charged-off for each charge-related arm, the required per-leg listing,
     and each charge-related transaction's read-back amount and portions.
 
@@ -232,7 +259,7 @@ def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
     """
     by_type = {}
     all_legs = []
-    for code in TARGET_TYPES:
+    for code in target_types:
         t = types.get(code)
         legs = list(t['legs']) if t else []
         all_legs.extend(legs)
@@ -258,7 +285,7 @@ def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
         cos = chargeoffs.get(lid, [])
         for tid in sorted(txmaps[lid]):
             tx = txmaps[lid][tid]
-            if tx.get('code') not in TARGET_TYPES:
+            if tx.get('code') not in target_types:
                 continue
             tx_date = tx.get('date')
             qualifying = [c for c in cos
@@ -290,7 +317,7 @@ def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
                                       r['gl_account_id'] or 0))
     bd_transactions.sort(key=lambda t: (t['loan'], t['transaction_id_num']))
 
-    empty_types = [c for c in TARGET_TYPES if not by_type[c]['total_legs']]
+    empty_types = [c for c in target_types if not by_type[c]['total_legs']]
     no_legs = [t for t in bd_transactions if not t['legs']]
     findings = []
     if empty_types:
@@ -325,7 +352,7 @@ def build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs):
             'any_chargeoff_transaction': any_chargeoff_tx,
             'any_latest_charged_off': any_latest_co,
         },
-        'target_types': list(TARGET_TYPES),
+        'target_types': list(target_types),
         'by_type': by_type,
         'currencies': currencies,
         'loans': loan_chargeoff,
@@ -426,7 +453,8 @@ def main():
         t['transactions'].sort(key=lambda s: int(s[1:]) if s and s[1:].isdigit() else 0)
         t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
 
-    bd = build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs)
+    bd = build_charge_related(types, loan_chargeoff, currencies, txmaps, chargeoffs,
+                              discover_charge_related(txmaps))
     obj = {
         'tenant': 'tierd',
         'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
