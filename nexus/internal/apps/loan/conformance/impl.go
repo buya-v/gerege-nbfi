@@ -174,6 +174,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goChargebackJournal(*req.ChargebackJournal)
 	case req.BuyDownFeeJournal != nil:
 		return goBuyDownFeeJournal(*req.BuyDownFeeJournal)
+	case req.BuyDownFeeAdjustmentJournal != nil:
+		return goBuyDownFeeAdjustmentJournal(*req.BuyDownFeeAdjustmentJournal)
 	case req.CreditBalanceRefundJournal != nil:
 		return goCreditBalanceRefundJournal(*req.CreditBalanceRefundJournal)
 	case req.InterestPaymentWaiverJournal != nil:
@@ -1513,6 +1515,49 @@ func buyDownFeeJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{BuyDownFeeJournalLegs: out}
+}
+
+// goBuyDownFeeAdjustmentJournal ports the
+// loan-buy-down-fee-adjustment-journal-entries seam: it reduces the request's
+// amount, merchantBuyDownFee fact and resolved slot->account mapping to
+// loan.MinorUnits and loan.BuyDownFeeAdjustmentAccountMapping and runs the
+// port's own loan.CreateBuyDownFeeAdjustmentJournalEntryLegs. Every monetary
+// cell is an integer minor unit; the mapping is the product's (or the payment
+// channel's) observed accountingMappings, never invented.
+func goBuyDownFeeAdjustmentJournal(r BuyDownFeeAdjustmentJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateBuyDownFeeAdjustmentJournalEntryLegs(r.TransactionID, amount, r.Merchant, loan.BuyDownFeeAdjustmentAccountMapping{
+		FundSource:              r.Accounts.FundSource,
+		BuyDownExpense:          r.Accounts.BuyDownExpense,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return buyDownFeeAdjustmentJournalLegsExpect(legs), nil
+}
+
+// buyDownFeeAdjustmentJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func buyDownFeeAdjustmentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{BuyDownFeeAdjustmentJournalLegs: out}
 }
 
 // goCreditBalanceRefundJournal ports the loan-credit-balance-refund-journal-entries

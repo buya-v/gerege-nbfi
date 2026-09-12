@@ -78,6 +78,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertChargebackJournalBalanced(got)}
 	case SeamLoanBuyDownFeeJournalEntries:
 		return []InvariantResult{assertBuyDownFeeJournalBalanced(got)}
+	case SeamLoanBuyDownFeeAdjustmentJournalEntries:
+		return []InvariantResult{assertBuyDownFeeAdjustmentJournalBalanced(got)}
 	case SeamLoanCreditBalanceRefundJournalEntries:
 		return []InvariantResult{assertCreditBalanceRefundJournalBalanced(got)}
 	case SeamLoanInterestPaymentWaiverJournalEntries:
@@ -1301,6 +1303,55 @@ func assertBuyDownFeeJournalBalanced(got Expect) InvariantResult {
 	if credits != debits {
 		r.Status = InvariantViolated
 		r.Detail = fmt.Sprintf("the credit of %d does not equal the debit of %d: a buy-down-fee batch must balance", credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("one debit of %d equals one credit of %d", debits, credits)
+	return r
+}
+
+// assertBuyDownFeeAdjustmentJournalBalanced: the buy-down-fee-adjustment result
+// carries non-negative integer minor-unit amounts and the debits sum to the
+// credits. An adjustment posts exactly TWO legs, one debit and one credit of the
+// same amount, so the both-sides and one-each counts are the fixed shape the
+// account cells in diffBuyDownFeeAdjustmentJournalLegs do not already cover.
+func assertBuyDownFeeAdjustmentJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "buy_down_fee_adjustment_journal_balances", Assertions: 3}
+	if len(got.BuyDownFeeAdjustmentJournalLegs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range got.BuyDownFeeAdjustmentJournalLegs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs != 1 || debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d debit leg(s) and %d credit leg(s): a buy-down-fee adjustment posts exactly one of each", debitLegs, creditLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credit of %d does not equal the debit of %d: a buy-down-fee-adjustment batch must balance", credits, debits)
 		return r
 	}
 	r.Status = InvariantHeld
