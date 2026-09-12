@@ -1,0 +1,74 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CAJ-loan-36-penalty",
+ "title": "A charge adjustment of 20.00 penalty on a NOT-charged-off loan credits PENALTIES_RECEIVABLE 9 and posts ONE income debit 3 (loan 36 L213, adjusted charge 36 is a penalty)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.charge_adjustment_journal.portions is transcribed from the committed chargeAdjustment loan read-back .softhouse/capture/tierd-feasibility/charges-progressive-mnt/loans/loan-36/loan-36-detail-associations-transactions-6.json (sha256 d80fce0734f096f92ac04eee7c4dcf6de64fcda2232ef5bc66188834d5e8391d): loan 36, chargedOff false, fraud false, loanProductId 44, transactions[id 213 type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 36 relationType CHARGE_ADJUSTMENT, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 20.000000, overpaymentPortion 0]. request.charge_adjustment_journal.penalty_charge is transcribed from the loan's charges[] read-back .softhouse/capture/tierd-feasibility/charges-progressive-mnt/loans/loan-36/loan-36-detail-associations-charges-1.json (sha256 5bddff527cd47a7c50098a406ca21c1fc5fa1cc39f73c2bfa44c3677e99b3c94): the adjusted charge is id 36 `NSF fee`, penalty true. expect.charge_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-36.json (sha256 7085427ce2591f89318011579b41481847e313946b5e4fe00fc4a6b1c54e9523): transactionId L213 pageItems ids 479 (entryType.value CREDIT glAccountId 9 amount 20.000000) and 480 (entryType.value DEBIT glAccountId 3 amount 20.000000), in id order. request.charge_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/charges-progressive-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE.json (sha256 7ed8d4665e1a364a03a3b222894447b40d4795c54b4961871302701ff5630387): loanPortfolioAccountId 8, receivableInterestAccountId 9, receivableFeeAccountId 9, receivablePenaltyAccountId 9, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, incomeFromFeeAccountId 3, incomeFromPenaltyAccountId 3. The two income slots INCOME_FROM_FEES and INCOME_FROM_PENALTIES both map to account 3, so this observation cannot discriminate the fee-vs-penalty debit choice; charge 36 is a penalty, so the port debits INCOME_FROM_PENALTIES, which resolves to 3. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (20.000000 -> 2000), never a float. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-charge-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charge_adjustment_journal.portions is transcribed from the committed chargeAdjustment loan read-back .softhouse/capture/tierd-feasibility/charges-progressive-mnt/loans/loan-36/loan-36-detail-associations-transactions-6.json (sha256 d80fce0734f096f92ac04eee7c4dcf6de64fcda2232ef5bc66188834d5e8391d): loan 36, chargedOff false, fraud false, loanProductId 44, transactions[id 213 type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 36 relationType CHARGE_ADJUSTMENT, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 20.000000, overpaymentPortion 0]. request.charge_adjustment_journal.penalty_charge is transcribed from the loan's charges[] read-back .softhouse/capture/tierd-feasibility/charges-progressive-mnt/loans/loan-36/loan-36-detail-associations-charges-1.json (sha256 5bddff527cd47a7c50098a406ca21c1fc5fa1cc39f73c2bfa44c3677e99b3c94): the adjusted charge is id 36 `NSF fee`, penalty true. expect.charge_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-36.json (sha256 7085427ce2591f89318011579b41481847e313946b5e4fe00fc4a6b1c54e9523): transactionId L213 pageItems ids 479 (entryType.value CREDIT glAccountId 9 amount 20.000000) and 480 (entryType.value DEBIT glAccountId 3 amount 20.000000), in id order. request.charge_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/charges-progressive-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE.json (sha256 7ed8d4665e1a364a03a3b222894447b40d4795c54b4961871302701ff5630387): loanPortfolioAccountId 8, receivableInterestAccountId 9, receivableFeeAccountId 9, receivablePenaltyAccountId 9, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, incomeFromFeeAccountId 3, incomeFromPenaltyAccountId 3. The two income slots INCOME_FROM_FEES and INCOME_FROM_PENALTIES both map to account 3, so this observation cannot discriminate the fee-vs-penalty debit choice; charge 36 is a penalty, so the port debits INCOME_FROM_PENALTIES, which resolves to 3. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (20.000000 -> 2000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-36.json",
+  "capture_sha256": "7085427ce2591f89318011579b41481847e313946b5e4fe00fc4a6b1c54e9523",
+  "capture_case_id": "L213",
+  "citation": "journalentries-sweep/loan-36.json:1 (sha256 7085427ce2591f89318011579b41481847e313946b5e4fe00fc4a6b1c54e9523): transactionId L213 carries two legs in id order -- id 479 entryType.value CREDIT glAccountId 9 amount 20.000000; id 480 entryType.value DEBIT glAccountId 3 amount 20.000000. Portions are in loans/loan-36/loan-36-detail-associations-transactions-6.json:1 (sha256 d80fce0734f096f92ac04eee7c4dcf6de64fcda2232ef5bc66188834d5e8391d): loan 36 chargedOff false, transactions[id 213] type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 36, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 20.000000, overpaymentPortion 0. penalty_charge is in loans/loan-36/loan-36-detail-associations-charges-1.json:1 (sha256 5bddff527cd47a7c50098a406ca21c1fc5fa1cc39f73c2bfa44c3677e99b3c94): charge 36 penalty true. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE.json:1 (sha256 7ed8d4665e1a364a03a3b222894447b40d4795c54b4961871302701ff5630387): loanPortfolioAccountId 8, receivableInterest/Fee/PenaltyAccountId 9, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 12, incomeFromChargeOffPenaltyAccountId 12, incomeFromFeeAccountId 3, incomeFromPenaltyAccountId 3."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charge_adjustment_journal": {
+   "transaction_id": "L213",
+   "portions": {
+    "principal": "0",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "2000"
+   },
+   "penalty_charge": true,
+   "accounts": {
+    "loan_portfolio": "8",
+    "receivable_interest": "9",
+    "receivable_fee": "9",
+    "receivable_penalty": "9",
+    "overpayment": "19",
+    "income_from_charge_off_fees": "12",
+    "income_from_charge_off_penalty": "12",
+    "income_from_fees": "3",
+    "income_from_penalties": "3"
+   }
+  }
+ },
+ "expect": {
+  "charge_adjustment_journal_legs": [
+   {
+    "transaction_id": "L213",
+    "account": "9",
+    "entry_type": "CREDIT",
+    "amount_minor": "2000"
+   },
+   {
+    "transaction_id": "L213",
+    "account": "3",
+    "entry_type": "DEBIT",
+    "amount_minor": "2000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "charge-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-charge-adjustment-ignores-charge-off"
+ ]
+}
