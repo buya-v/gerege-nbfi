@@ -156,28 +156,99 @@ def detail_currency(loan_id):
     return None
 
 
-def detail_charged_off(loan_id):
-    """Loan-level charged-off state from the loan's LATEST read-back.
+def read_manifest():
+    """The capture manifest, one entry per extracted body with its `source_line`.
 
-    A charge-off later undone must not count, so take `chargedOff` from the
-    highest-sequence `detail-associations-all-*` read-back; fall back to any
-    read-back that carries the field.  None when absent."""
-    pats = (os.path.join(LOANS, 'loan-%d' % loan_id,
-                         'loan-%d-detail-associations-all-*.json' % loan_id),
-            os.path.join(LOANS, 'loan-%d' % loan_id, 'loan-*-detail-*.json'),
-            os.path.join(STAGE, 'loan-%d-detail-*.json'))
-    for pat in pats:
-        files = sorted(glob.glob(pat),
-                       key=lambda p: int(SEQ_RE.search(p).group(1))
-                       if SEQ_RE.search(p) else 0)
-        for f in reversed(files):
-            try:
-                body = json.load(open(f))
-            except ValueError:
-                continue
-            if isinstance(body, dict) and 'chargedOff' in body:
-                return bool(body.get('chargedOff'))
+    The runner's read-backs are numbered PER ENDPOINT (`...-1`, `...-2`, ...), so
+    the file-name suffix says nothing about chronology ACROSS endpoints.  The
+    manifest's `source_line` is the only reliable order; it is used for the
+    LATEST read-back below."""
+    return json.load(open(os.path.join(HERE, 'manifest-chargeoff-p4.json')))
+
+
+def readback_index(manifest):
+    """loan id -> [(source_line, relative file), ...] ascending, for every GET."""
+    out = {}
+    for e in manifest:
+        if e.get('method') != 'GET' or not e.get('loan_id'):
+            continue
+        out.setdefault(e['loan_id'], []).append((e.get('source_line') or 0, e['file']))
+    for lid in out:
+        out[lid].sort()
+    return out
+
+
+def detail_charged_off(loan_id, reads):
+    """Loan-level charged-off state from the loan's CHRONOLOGICALLY LATEST
+    read-back that carries the `chargedOff` field.
+
+    A charge-off later undone must not count, so the last read-back wins -- but
+    only read-backs ordered by the manifest `source_line`, not by the
+    per-endpoint file suffix.  None when no read-back carries the field."""
+    for _, f in reversed(reads.get(loan_id, [])):
+        try:
+            body = json.load(open(f))
+        except (ValueError, IOError):
+            continue
+        if isinstance(body, dict) and 'chargedOff' in body:
+            return bool(body.get('chargedOff'))
     return None
+
+
+def chargeoff_response_ids(loan_id):
+    """The `resourceId` of the loan's captured charge-off command response.
+
+    The charge-off POST is authoritative -- for loans 9, 10 and 12 the feature
+    charged the loan off AFTER its last `associations=transactions` read, so the
+    charge-off transaction id appears in NO read-back but the command response
+    names it.  Supplementing the read-back transaction map with this id is what
+    makes `chargeOff` complete for all 14 loans.  Non-reversed (a charge-off
+    reversal is a separate transaction/command; none is captured for these)."""
+    path = os.path.join(LOANS, 'loan-%d' % loan_id,
+                        'loan-%d-charge-off-response.json' % loan_id)
+    try:
+        body = json.load(open(path))
+    except (ValueError, IOError):
+        return []
+    rid = body.get('resourceId')
+    return [rid] if isinstance(rid, int) else []
+
+
+def sweep_items(loan_id):
+    path = os.path.join(SWEEP, 'loan-%d.json' % loan_id)
+    try:
+        return (json.load(open(path)) or {}).get('pageItems') or []
+    except (ValueError, IOError):
+        return []
+
+
+def inject_response_chargeoff(txmap, loan_id):
+    """Add synthetic `chargeOff` entries for the response ids not in the read-back
+    map, so the charge-off transaction is typed and its date/amount are known.
+    Date comes from the sweep leg; amount from the sum of its debit legs."""
+    for rid in chargeoff_response_ids(loan_id):
+        if rid in txmap:
+            continue
+        date = None
+        debit = 0
+        for it in sweep_items(loan_id):
+            if it.get('transactionId') != 'L%d' % rid:
+                continue
+            date = it.get('transactionDate')
+            if ((it.get('entryType') or {}).get('value') or '').lower() == 'debit':
+                debit += int(round(float(it.get('amount', 0)) * 100))
+        txmap[rid] = {
+            'code': 'loanTransactionType.chargeOff',
+            'value': 'Charge-off',
+            'date': date,
+            'amount_minor': str(debit) if debit else None,
+            'payment_type_id': None,
+            'payment_type_name': None,
+            'reversed': False,
+            'portions': {},
+            'source': 'charge-off-response',
+        }
+    return txmap
 
 
 def shape_key(legs):
@@ -333,9 +404,18 @@ def build_targets(types, loan_chargeoff, currencies, txmaps, chargeoffs):
 def main():
     manifest = json.load(open(os.path.join(HERE, 'journalentries-sweep-manifest.json')))
     loan_ids = sorted(m['loan_id'] for m in manifest)
+    reads = readback_index(read_manifest())
+    # The read-back transaction map.  For the three loans charged off after their
+    # last transactions read-back the `chargeOff` transaction is absent from every
+    # read-back; the charge-off command response names its id, so inject it.
     txmaps = {lid: tx_map_for(lid) for lid in loan_ids}
-    chargeoffs = {lid: chargeoffs_for(lid) for lid in loan_ids}
-    latest_co = {lid: detail_charged_off(lid) for lid in loan_ids}
+    for lid in loan_ids:
+        inject_response_chargeoff(txmaps[lid], lid)
+    readback_chargeoffs = {lid: set(chargeoffs_for(lid)) for lid in loan_ids}
+    response_chargeoffs = {lid: set(chargeoff_response_ids(lid)) for lid in loan_ids}
+    chargeoffs = {lid: sorted(readback_chargeoffs[lid] | response_chargeoffs[lid])
+                  for lid in loan_ids}
+    latest_co = {lid: detail_charged_off(lid, reads) for lid in loan_ids}
 
     currencies = {}
     leg_records = []
@@ -353,10 +433,14 @@ def main():
             currencies[lid] = cur or detail_currency(lid) or 'UNKNOWN'
         cos = chargeoffs.get(lid, [])
         loan_chargeoff[lid] = {
-            'chargeoff_transactions': [{'transaction_id': 'L%d' % tid,
-                                        'date': txmaps[lid][tid]['date']}
-                                       for tid in cos],
-            # final state from the loan's LATEST read-back (undone charge-off excluded)
+            'chargeoff_transactions': [
+                {'transaction_id': 'L%d' % tid,
+                 'date': txmaps[lid][tid]['date'],
+                 'source': 'read-back' if tid in readback_chargeoffs[lid]
+                           else 'charge-off-response'}
+                for tid in cos],
+            # final state from the loan's CHRONOLOGICALLY LATEST read-back
+            # (an undone charge-off is excluded); None when no read-back carries it
             'charged_off_latest': latest_co.get(lid),
         }
         for it in items:
@@ -376,6 +460,7 @@ def main():
                 'transaction_id_num': n,
                 'type_code': tx['code'] if tx else None,
                 'type_value': tx['value'] if tx else None,
+                'type_source': (tx.get('source') or 'read-back') if tx else None,
                 'transaction_date': tx['date'] if tx else it.get('transactionDate'),
                 'entry_type': (it.get('entryType') or {}).get('value'),
                 'gl_account_id': it.get('glAccountId'),
@@ -407,6 +492,57 @@ def main():
         t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
 
     tg = build_targets(types, loan_chargeoff, currencies, txmaps, chargeoffs)
+
+    # Supplement finding: the three charge-offs recovered from the command
+    # response because the loan was charged off after its last read-back.
+    injected = {lid: sorted(response_chargeoffs[lid] - readback_chargeoffs[lid])
+                for lid in loan_ids if response_chargeoffs[lid] - readback_chargeoffs[lid]}
+    if injected:
+        tg['findings'].append(
+            'chargeOff supplement (NOT a read-back): %s.  For these loans the feature '
+            'charged the loan off AFTER its last read-back, so the charge-off '
+            'transaction id is in no read-back; the charge-off command response '
+            '(`charge-off-response.json` `resourceId`) is the evidence and it is '
+            'injected as the `chargeOff` transaction so the arm is complete.  The '
+            'charge-off is non-reversed (no reversal transaction/command is captured '
+            'for these loans).'
+            % ', '.join('loan %d tx L%d' % (lid, injected[lid][0]) for lid in sorted(injected)))
+
+    # Supplement finding: explain the unmatched legs (post-charge-off postings that
+    # the read-backs, captured only up to the charge-off, never saw).
+    if unmatched:
+        by_loan = {}
+        for e in unmatched:
+            n = int(e['transaction_id'][1:]) if isinstance(e['transaction_id'], str) \
+                and e['transaction_id'][1:].isdigit() else None
+            if n is not None:
+                by_loan.setdefault(e['loan'], []).append(n)
+        parts = []
+        for lid in sorted(by_loan):
+            ids = sorted(set(by_loan[lid]))
+            spreads = []
+            start = prev = ids[0]
+            for n in ids[1:]:
+                if n == prev + 1:
+                    prev = n
+                    continue
+                spreads.append((start, prev))
+                start = prev = n
+            spreads.append((start, prev))
+            rng = ', '.join('L%d' % a if a == b else 'L%d-L%d' % (a, b) for a, b in spreads)
+            co = sorted(response_chargeoffs[lid]) or sorted(readback_chargeoffs[lid])
+            parts.append('loan %d (%d legs, %s)%s' % (
+                lid, len(ids), rng,
+                '; that loan\'s chargeOff is L%d' % co[-1] if co else ''))
+        tg['findings'].append(
+            '(unmapped): %d swept legs on %d transactions have no read-back type: %s.  '
+            'These are postings made AFTER the loan read-backs were last captured '
+            '(predominantly the daily accruals), so they cannot be typed from a '
+            'read-back.  They are a join gap, reported as a finding; they are NOT '
+            'missing required arms.'
+            % (len(unmatched), len({e['transaction_id'] for e in unmatched}),
+               '; '.join(parts)))
+
     obj = {
         'tenant': 'tierd',
         'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
@@ -415,6 +551,8 @@ def main():
         'legs': len(leg_records),
         'unmatched_legs': unmatched,
         'loan_chargeoff': loan_chargeoff,
+        'chargeoff_supplement': {str(lid): ['L%d' % t for t in injected[lid]]
+                                 for lid in injected},
         'targets': tg,
         'types': types,
     }

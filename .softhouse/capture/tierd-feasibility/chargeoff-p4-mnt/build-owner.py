@@ -201,7 +201,25 @@ def main():
     w('`charged_off` per leg = **a non-reversed `chargeOff` loan transaction with a '
       'LOWER transaction id than the leg\'s transaction.** (The rule is transaction id '
       'order, not date order.) `charged-off latest` = the loan `chargedOff` flag in its '
-      'LATEST read-back, so a charge-off later undone does not count.')
+      'CHRONOLOGICALLY LATEST read-back, so a charge-off later undone does not count. '
+      'The read-backs are numbered PER ENDPOINT (`...-1`, `...-2`, ...), so the file '
+      'suffix is not a cross-endpoint chronology; the LATEST read-back is the one with '
+      'the highest manifest `source_line`. That distinction is load-bearing here: the '
+      '`detail-associations-all-*` stream stops before the charge-off for loans 9, 10, '
+      '11 and 12, so the flag must come from the later `transactions`/`repaymentSchedule` '
+      'read-backs, which say `chargedOff=true`.')
+    w('')
+    w('The charge-off transaction itself is missing from the read-backs for **loans 9, '
+      '10 and 12**: the feature charged those loans off AFTER their last transactions '
+      'read-back. The charge-off command response names the id (`resourceId`, see '
+      '`chargeoff_supplement` in the join), and that id is injected as the `chargeOff` '
+      'transaction so the arm and the charged-off dimension are complete for all 14 '
+      'loans. It is flagged as a supplement, never as a read-back.')
+    w('')
+    w('The **Credit Balance Refund** step of the feature does not post as '
+      '`payoutRefund`: it posts as `loanTransactionType.creditBalanceRefund` (14 legs, '
+      'loans 13 and 14, listed in the all-types table). `payoutRefund` itself has NO '
+      'legs, and is reported as a finding.')
     w('')
     w('### Type × charged-off → legs → loans (all types)')
     w('')
@@ -290,13 +308,11 @@ def main():
                             for l in legs))
             for legs in by_tx.values()})
         findings.append(
-            '`(unmapped)`: %d swept legs on %d transaction(s) (%s) across loan(s) %s '
-            'have NO transaction TYPE — those transaction ids appear in no captured '
-            'loan read-back, so the join cannot name them. Their leg shapes are: %s. '
-            'This is a join gap, reported as a finding; it is not a missing required '
-            'arm by itself.'
+            '`(unmapped)` leg shapes (%d legs / %d transaction(s) across loan(s) %s, '
+            'all with no read-back type; per-loan id ranges are in the finding above): '
+            '%s. These are post-read-back daily accrual legs — a join gap, not a '
+            'missing required arm.'
             % (len(unm), len(by_tx),
-               ', '.join(sorted({e['transaction_id'] for e in unm})),
                ', '.join(str(x) for x in sorted({e['loan'] for e in unm})),
                '; '.join(shapes)))
     if not findings:
