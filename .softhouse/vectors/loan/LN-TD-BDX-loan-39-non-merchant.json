@@ -1,0 +1,61 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-BDX-loan-39-non-merchant",
+ "title": "A non-merchant buy-down fee adjustment debits DEFERRED_INCOME_LIABILITY 22 30000 then credits FUND_SOURCE 5 30000 (loan 39 L1435)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a BUY_DOWN_FEE_ADJUSTMENT transaction posts on a NON-merchant buy-down product, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT_CHARGE_OFF_REASON, merchantBuyDownFee false) at the buy-down-fee-adjustment transaction L1435. request.buy_down_fee_adjustment_journal.amount transcribes the loan read-back's buyDownFeeAdjustment transaction id 1435: amount 300.000000 -> \"30000\" minor units. request.buy_down_fee_adjustment_journal.merchant is the read-back's top-level merchantBuyDownFee false, so the request leaves it unset (the zero value). request.buy_down_fee_adjustment_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT_CHARGE_OFF_REASON.json: fundSourceAccountId 5, deferredIncomeLiabilityAccountId 22, and NO buyDownExpenseAccountId (the non-merchant product carries none), so buy_down_expense is absent. The product's ONLY channel mapping is paymentTypeId 1 -> 17 and the adjustment was posted with paymentTypeId 5, which has no channel mapping, so the default FUND_SOURCE 5 applies -- exactly the account the observed credit names. expect.buy_down_fee_adjustment_journal_legs is a TRANSCRIPTION of the ORIGINAL two L1435 legs in id order from the journal-entries sweep: id 3007 entryType DEBIT glAccountId 22 amount 300.0 and id 3008 CREDIT glAccountId 5 amount 300.0. The read-back marks this adjustment manuallyReversed true and the sweep also carries its later reversal (ids 3013 CREDIT account 22 and 3014 DEBIT account 5); THIS VECTOR GRADES THE ORIGINAL POSTING, which is the posting createJournalEntriesForBuyDownFeeAdjustment itself made, not the reversal. The adjustment is the mirror of the buy-down fee: the Java local is named debitAccountType but is passed as the CREDITED account, and the helper's parameter order is (accountTypeToBeDebited, accountTypeToBeCredited), so the deferred-income-liability debit comes first and the product-selected credit account second. THIS VECTOR GRADES ONE PROPERTY: when the product's merchantBuyDownFee is NOT set the buy-down-fee-adjustment credit posts to the resolved fund source, not the buy-down expense account. THIS NON-MERCHANT OBSERVATION IS A TARGET of the ignore-merchant drive: a port that always credits the buy-down expense account posts account 23 here instead of 5. This product additionally carries a charge-off-reason-to-expense mapping, but the observed adjustment does not touch it. WHAT THIS VECTOR DOES NOT GRADE: the merchant buy-down-expense credit (sibling vectors). Nothing was computed by this promotion: every amount, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-buy-down-fee-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.buy_down_fee_adjustment_journal.amount and merchant are transcribed from the committed loan read-back loans/loan-39/loan-39-detail-associations-transactions-7.json (sha256 410844ac795b293299181a821032d328439a4337475871813239dfcf0ab78de2): top-level merchantBuyDownFee false, transactions[id 1435 type loanTransactionType.buyDownFeeAdjustment] amount 300.0, manuallyReversed true, paymentDetailData.paymentType.id 5. expect.buy_down_fee_adjustment_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-39.json (sha256 213eb246624fadc0ab5499145ac78440f52114b50e4f3e2552b4aa5baf7e2615), transactionId L1435 pageItems ids 3007-3008 (the ORIGINAL posting; ids 3013-3014 are its later reversal and are NOT part of this vector). request.buy_down_fee_adjustment_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT_CHARGE_OFF_REASON.json (sha256 439d727055ff9b87b90a102b39e2e5763dcbef159e2ee8799dd80030fa10f917): fundSourceAccountId 5, deferredIncomeLiabilityAccountId 22, buyDownExpenseAccountId null, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 17]. TENANT `tierd` -- NOT tenant `gerege`. SCENARIO LoanBuyDownFees.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. Every amount is an exact decimal parsed to integer minor units (300.0 -> 30000), never a float. The read-back marks the adjustment manuallyReversed true; this vector grades the ORIGINAL posting, the posting createJournalEntriesForBuyDownFeeAdjustment made. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-39.json",
+  "capture_sha256": "213eb246624fadc0ab5499145ac78440f52114b50e4f3e2552b4aa5baf7e2615",
+  "capture_case_id": "L1435",
+  "citation": "journalentries-sweep/loan-39.json:1 (sha256 213eb246624fadc0ab5499145ac78440f52114b50e4f3e2552b4aa5baf7e2615, committed sweep read-back, tenant tierd): transactionId L1435 carries the ORIGINAL two legs in id order -- id 3007 entryType.value DEBIT glAccountId 22 amount 300.0; id 3008 entryType.value CREDIT glAccountId 5 amount 300.0; ids 3013 (CREDIT glAccountId 22) and 3014 (DEBIT glAccountId 5) are the later reversal.The two original legs balance (30000 minor units each). Amount, merchant fact and payment type are in loans/loan-39/loan-39-detail-associations-transactions-7.json:1 (sha256 410844ac795b293299181a821032d328439a4337475871813239dfcf0ab78de2): merchantBuyDownFee false, transactions[id 1435 type loanTransactionType.buyDownFeeAdjustment] amount 300.0, manuallyReversed true, paymentDetailData.paymentType.id 5. The slot->account-id mapping is in product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_NON_MERCHANT_CHARGE_OFF_REASON.json:1 (sha256 439d727055ff9b87b90a102b39e2e5763dcbef159e2ee8799dd80030fa10f917): fundSourceAccountId 5, deferredIncomeLiabilityAccountId 22, buyDownExpenseAccountId null."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "buy_down_fee_adjustment_journal": {
+   "transaction_id": "L1435",
+   "amount": "30000",
+   "accounts": {
+    "fund_source": "5",
+    "deferred_income_liability": "22"
+   }
+  }
+ },
+ "expect": {
+  "buy_down_fee_adjustment_journal_legs": [
+   {
+    "transaction_id": "L1435",
+    "account": "22",
+    "entry_type": "DEBIT",
+    "amount_minor": "30000"
+   },
+   {
+    "transaction_id": "L1435",
+    "account": "5",
+    "entry_type": "CREDIT",
+    "amount_minor": "30000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "buy-down-fee-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-buydown-adjustment-ignores-merchant"
+ ]
+}
