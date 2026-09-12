@@ -64,6 +64,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertRepaymentJournalBalanced(got)}
 	case SeamLoanGoodwillCreditJournalEntries:
 		return []InvariantResult{assertGoodwillCreditJournalBalanced(got)}
+	case SeamLoanDisbursementJournalEntries:
+		return []InvariantResult{assertDisbursementJournalBalanced(got)}
 	case SeamLoanChargeAdjustmentJournalEntries:
 		return []InvariantResult{assertChargeAdjustmentJournalBalanced(got)}
 	case SeamLoanChargedOffRepaymentJournalEntries:
@@ -734,6 +736,66 @@ func assertGoodwillCreditJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by %d goodwill debit leg(s)", creditLegs, credits, debitLegs)
+	return r
+}
+
+// assertDisbursementJournalBalanced: a disbursement's result carries
+// non-negative integer minor-unit amounts, EXACTLY ONE credit leg (the resolved
+// fund source for the whole amount) and at least one debit leg, and the debits
+// sum to the credit. Unlike a goodwill credit the debit side is the loan
+// portfolio (plus overpayment when a portion is present), so the credit count is
+// fixed at one: a port that posts one fund-source credit per debit fails here.
+// It is asserted on the implementation's RESULT, so a port that takes
+// the portfolio debit from the read-back principalPortion (0 on every
+// observation) drops the debit and fails both the one-or-more-debit and the
+// balance assertions. The account cells are the leg differ's job.
+func assertDisbursementJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "disbursement_journal_balances", Assertions: 3}
+	legs := got.DisbursementJournalLegs
+	if len(legs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range legs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d credit leg(s): a disbursement credits the resolved fund source exactly ONCE for the whole amount", creditLegs)
+		return r
+	}
+	if debitLegs == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no debit leg: a disbursement debits the loan portfolio (and any overpayment) before the credit"
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the credit is %d but the %d debit leg(s) sum to %d: a disbursement must balance", credits, debitLegs, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("one credit of %d is matched by %d disbursement debit leg(s)", credits, debitLegs)
 	return r
 }
 

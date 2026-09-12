@@ -160,6 +160,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goRepaymentJournal(*req.RepaymentJournal)
 	case req.GoodwillCreditJournal != nil:
 		return goGoodwillCreditJournal(*req.GoodwillCreditJournal)
+	case req.DisbursementJournal != nil:
+		return goDisbursementJournal(*req.DisbursementJournal)
 	case req.ChargeAdjustmentJournal != nil:
 		return goChargeAdjustmentJournal(*req.ChargeAdjustmentJournal)
 	case req.ChargedOffRepaymentJournal != nil:
@@ -1132,6 +1134,56 @@ func goodwillCreditJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{GoodwillCreditJournalLegs: out}
+}
+
+// goDisbursementJournal ports the loan-disbursement-journal-entries seam: it
+// reduces the request's amount and overpayment to integer minor units and runs
+// the port's own loan.CreateDisbursementJournalEntryLegs with the RESOLVED
+// slot->account mapping. The principal portion is NOT read from the request's
+// PrincipalPortion (the read-back field, 0 on every observation): the port
+// derives it as amount minus overpayment, and the read-back value is carried only
+// for the registered wrong drive. Every monetary cell is an integer minor unit;
+// the mapping is the product's observed accountingMappings, never invented.
+func goDisbursementJournal(r DisbursementJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	var overpayment loan.MinorUnits
+	if r.Overpayment != "" {
+		if overpayment, err = parseMinorText(r.Overpayment); err != nil {
+			return Expect{}, err
+		}
+	}
+	legs, err := loan.CreateDisbursementJournalEntryLegs(r.TransactionID, amount, overpayment, loan.DisbursementAccountMapping{
+		LoanPortfolio: r.Accounts.LoanPortfolio,
+		Overpayment:   r.Accounts.Overpayment,
+		FundSource:    r.Accounts.FundSource,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return disbursementJournalLegsExpect(legs), nil
+}
+
+// disbursementJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a leg
+// whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func disbursementJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{DisbursementJournalLegs: out}
 }
 
 // goChargeAdjustmentJournal ports the loan-charge-adjustment-journal-entries
@@ -2612,6 +2664,60 @@ func wrongChargeAdjustmentJournal(r ChargeAdjustmentJournalRequest) (Expect, err
 	return goChargeAdjustmentJournal(forced)
 }
 
+// wrongDisbursementJournalEvaluator is a DELIBERATELY WRONG implementation of
+// the loan-disbursement-journal-entries seam. It takes the portfolio debit from
+// the request's read-back PrincipalPortion instead of deriving it as amount minus
+// overpayment, exactly as a port that trusts the read-back field does. On every
+// observed disbursement principalPortion is 0, so the wrong port posts no
+// portfolio debit at all: the debit leg disappears, the leg count drops and the
+// batch no longer balances, while the fund-source credit and its amount stay
+// observed. Requests for any other seam are delegated unchanged.
+type wrongDisbursementJournalEvaluator struct {
+	goEvaluator
+}
+
+// Evaluate routes a disbursement-journal request to the deliberate defect and
+// everything else to the correct evaluator.
+func (w wrongDisbursementJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.DisbursementJournal != nil {
+		return wrongDisbursementJournal(*req.DisbursementJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongDisbursementJournal builds the disbursement legs using the read-back
+// PrincipalPortion for the portfolio debit. It commits exactly one defect: the
+// portfolio debit amount is the read-back 0 rather than amount minus overpayment.
+func wrongDisbursementJournal(r DisbursementJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	var overpayment loan.MinorUnits
+	if r.Overpayment != "" {
+		if overpayment, err = parseMinorText(r.Overpayment); err != nil {
+			return Expect{}, err
+		}
+	}
+	var principal loan.MinorUnits
+	if r.PrincipalPortion != "" {
+		if principal, err = parseMinorText(r.PrincipalPortion); err != nil {
+			return Expect{}, err
+		}
+	}
+	legs := make([]loan.JournalEntryLeg, 0, 3)
+	if principal > 0 {
+		legs = append(legs, loan.JournalEntryLeg{TransactionID: r.TransactionID, Account: r.Accounts.LoanPortfolio, Side: loan.JournalEntryDebit, Amount: principal})
+	}
+	if overpayment > 0 {
+		legs = append(legs, loan.JournalEntryLeg{TransactionID: r.TransactionID, Account: r.Accounts.Overpayment, Side: loan.JournalEntryDebit, Amount: overpayment})
+	}
+	if amount > 0 {
+		legs = append(legs, loan.JournalEntryLeg{TransactionID: r.TransactionID, Account: r.Accounts.FundSource, Side: loan.JournalEntryCredit, Amount: amount})
+	}
+	return disbursementJournalLegsExpect(legs), nil
+}
+
 // chargebackJournalWrongMode selects which deliberately-wrong chargeback posting
 // to run. Each is a port a reasonable reader might write, and each is
 // discriminated by the committed observations.
@@ -4066,6 +4172,14 @@ func init() {
 			"every side, every amount and the goodwill debit side stay observed — and the "+
 			"not-charged-off goodwill observations are unaffected",
 		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongGoodwillChargedOffCreditsPortfolio})
+	RegisterWrong("loan-wrong-disbursement-uses-principal-portion",
+		"takes the disbursement's portfolio debit from the read-back principalPortion instead of "+
+			"deriving it as amount minus overpayment, as a port that trusts the read-back field does; "+
+			"on every observed disbursement the read-back principalPortion is 0 (the whole amount is "+
+			"principal), so the loan-portfolio DEBIT disappears, the leg count drops from two to one "+
+			"and the batch no longer balances, while the fund-source CREDIT keeps both its account and "+
+			"its amount — the read-back field the port must never read",
+		wrongDisbursementJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-charge-adjustment-ignores-charge-off",
 		"posts a charge adjustment on a loan marked charged off through the NOT-charged-off credit "+
 			"table instead of the charge-off income table, as a port that forgets the loan is charged "+

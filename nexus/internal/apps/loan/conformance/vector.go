@@ -295,6 +295,36 @@ const SeamLoanRepaymentJournalEntries = "loan-repayment-journal-entries"
 // loan.
 const SeamLoanGoodwillCreditJournalEntries = "loan-goodwill-credit-journal-entries"
 
+// SeamLoanDisbursementJournalEntries is the capture seam this schema grades: the
+// journal entry a loan DISBURSEMENT posts, the disbursement branch of
+// AccrualBasedAccountingProcessorForLoan.createJournalEntriesForDisbursements
+// [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1309-1345, pinned
+// commit 426a23544]. It is the ONLY property this seam ports: the principal
+// portion is amount MINUS overpayment — NOT the read-back transaction's
+// principalPortion field, which every observed disbursement carries as 0. The
+// principal portion DEBITs LOAN_PORTFOLIO when > 0, the overpayment portion
+// DEBITs OVERPAYMENT when > 0, then the whole amount CREDITs the RESOLVED fund
+// source once. The debits come first, in that order, and the credit last.
+//
+// The fund source is RESOLVED: a payment type with a payment-channel mapping
+// uses that channel's account, otherwise the product's FUND_SOURCE. Every
+// observed disbursement's payment type has NO channel mapping — each observed
+// product maps only paymentType 1 — so each resolves to the product's
+// fundSourceAccountId; the seam carries the resolved account, never resolving it
+// itself.
+//
+// It is NOT a transfer. A loan-to-loan transfer (ASSET_TRANSFER) and an account
+// transfer (LIABILITY_TRANSFER) are the processor's other branches and are NOT
+// observed; the port takes no transfer flag, so the seam cannot express them.
+// Every observed disbursement is unreversed and has overpayment 0; an
+// overpayment portion > 0 is ported as the processor has it but is unobserved.
+//
+// The account ids DIFFER per capture: loan 16 is the merchant-refund-mnt replay,
+// loan 20 the emi-calculation-p2-mnt replay and loan 1 the repayment-p1-mnt
+// replay, so each vector carries its own product mapping and no account id is
+// shared across them.
+const SeamLoanDisbursementJournalEntries = "loan-disbursement-journal-entries"
+
 // SeamLoanChargeAdjustmentJournalEntries is the capture seam this schema grades:
 // the journal entry a CHARGE ADJUSTMENT posts on a loan. It ports
 // AccrualBasedAccountingProcessorForLoan
@@ -875,6 +905,46 @@ type GoodwillCreditJournalRequest struct {
 	Portions      RepaymentPortionsMoney     `json:"portions"`
 	ChargedOff    bool                       `json:"charged_off,omitempty"`
 	Accounts      GoodwillCreditSlotAccounts `json:"accounts"`
+}
+
+// DisbursementSlotAccounts is the product's disbursement slot->account mapping:
+// the loan portfolio the principal portion DEBITs, the overpayment liability the
+// overpayment portion DEBITs, and the RESOLVED fund source the whole amount
+// CREDITs once. FundSource is the RESOLVED account — the payment-channel account
+// when the transaction's paymentTypeId has one, else the product's FUND_SOURCE —
+// so the seam carries only the resolved account and needs no payment-type lookup
+// or product state.
+//
+// The overpayment account is required by the port only when the overpayment
+// portion is positive; it is carried here from the product's OVERPAYMENT slot
+// even when that portion is 0, because the product maps it and the caller reads
+// it back rather than inventing it.
+type DisbursementSlotAccounts struct {
+	LoanPortfolio string `json:"loan_portfolio"`
+	Overpayment   string `json:"overpayment,omitempty"`
+	FundSource    string `json:"fund_source"`
+}
+
+// DisbursementJournalRequest is the loan-disbursement-journal-entries seam's
+// input: the observed disbursement transaction's amount and overpayment in
+// integer minor units, the resolved slot->account mapping and the transaction id
+// the legs are posted under. The principal portion is NOT carried as an input —
+// the port derives it as amount minus overpayment; the read-back
+// principalPortion field is carried only in PrincipalPortion, and only so the
+// registered wrong implementation can read it, so the correct port never sees
+// it. The mapping is the product's accountingMappings (with the fund source
+// resolved through the payment channel) read back from the reference server,
+// never invented; a positive leg with no mapped account is refused by the port.
+type DisbursementJournalRequest struct {
+	TransactionID string                   `json:"transaction_id"`
+	Amount        string                   `json:"amount"`
+	Overpayment   string                   `json:"overpayment,omitempty"`
+	// PrincipalPortion is the read-back transaction's principalPortion field, 0
+	// on every observed disbursement. The CORRECT port must not read it: it is
+	// the wrong drive's input, carried here so that drive can express the defect
+	// without touching the port.
+	PrincipalPortion string                   `json:"principal_portion,omitempty"`
+	Accounts         DisbursementSlotAccounts `json:"accounts"`
 }
 
 // ChargeAdjustmentSlotAccounts is the product's charge-adjustment
@@ -1477,6 +1547,13 @@ type Request struct {
 	// (its five credit slots, its four goodwill debit slots and the resolved fund
 	// source the wrong drive debits).
 	GoodwillCreditJournal *GoodwillCreditJournalRequest `json:"goodwill_credit_journal,omitempty"`
+	// DisbursementJournal is the loan-disbursement-journal-entries seam's input:
+	// an observed disbursement transaction's amount and overpayment and the
+	// resolved slot->account mapping (the fund source already resolved through the
+	// payment channel). The read-back principalPortion is carried only for the
+	// registered wrong drive; the correct port derives the principal as amount
+	// minus overpayment and never reads it.
+	DisbursementJournal *DisbursementJournalRequest `json:"disbursement_journal,omitempty"`
 	// ChargeAdjustmentJournal is the loan-charge-adjustment-journal-entries
 	// seam's input: a CHARGE ADJUSTMENT transaction's five portions, the loan's
 	// charged-off state (which moves the credit side to the charge-off income
@@ -1640,6 +1717,15 @@ type Expect struct {
 	// goodwill slot moves an account, and a port that debits per credit moves the
 	// count on a multi-credit transaction.
 	GoodwillCreditJournalLegs []JournalEntryLeg `json:"goodwill_credit_journal_legs,omitempty"`
+	// DisbursementJournalLegs is the loan-disbursement-journal-entries seam's
+	// ordered leg list a disbursement posted: a DEBIT LOAN_PORTFOLIO for the
+	// principal portion (amount minus overpayment) when > 0, a DEBIT OVERPAYMENT
+	// for the overpayment portion when > 0, then ONE CREDIT of the whole amount to
+	// the resolved fund source. Every leg is graded on its transaction id,
+	// account, side and amount; a port that debits the principal from the
+	// read-back principalPortion (0 on every observation) posts NO portfolio debit
+	// and moves the count, which is the drive this seam discriminates.
+	DisbursementJournalLegs []JournalEntryLeg `json:"disbursement_journal_legs,omitempty"`
 	// ChargeAdjustmentJournalLegs is the
 	// loan-charge-adjustment-journal-entries seam's ordered leg list a charge
 	// adjustment posted: one credit per non-zero portion (merged by account) in
