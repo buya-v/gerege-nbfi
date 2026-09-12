@@ -1,0 +1,292 @@
+{
+ "attribution_validated": false,
+ "currency": "MNT",
+ "failed": 0,
+ "feature": "LoanChargesCumulativeLoan.feature",
+ "passed": 25,
+ "scenario_count": 25,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 5,
+   "feature_product": null,
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": null,
+   "name": "Charge creation functionality with locale EN",
+   "result": "PASSED",
+   "tag": "C50"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 16,
+   "feature_product": null,
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": null,
+   "name": "Charge creation functionality with locale DE",
+   "result": "PASSED",
+   "tag": "C51"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 27,
+   "feature_product": null,
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": null,
+   "name": "Due date charge can be successfully applied when it is added on the loan account after the maturity date (NSF scenario of last installment)",
+   "result": "PASSED",
+   "tag": "C2450"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 48,
+   "feature_product": null,
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": null,
+   "name": "Due date charge can be successfully applied when it is added on the loan account which already has a N+1 scenario (by chargeback)",
+   "result": "PASSED",
+   "tag": "C2451"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 73,
+   "feature_product": null,
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": null,
+   "name": "Due date charge can be successfully applied, then waived when it is added on the loan account after the maturity date (NSF scenario of last installment)",
+   "result": "PASSED",
+   "tag": "C2452"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 100,
+   "feature_product": null,
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": null,
+   "name": "Due date charge can be successfully applied, waived, then waive reversed when it is added on the loan account after the maturity date (NSF scenario of last installment)",
+   "result": "PASSED",
+   "tag": "C2453"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 126,
+   "feature_product": null,
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": null,
+   "name": "Charge adjustment works properly",
+   "result": "PASSED",
+   "tag": "C2472"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 916,
+   "feature_product": null,
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan on disbursement date (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2532"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 932,
+   "feature_product": null,
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan after disbursement date (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2533"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 949,
+   "feature_product": null,
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan after partial repayment (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2534"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 967,
+   "feature_product": null,
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan which is reopened by chargeback transaction after got overpaid by repayment  (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2535"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 988,
+   "feature_product": null,
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan which is reopened by payment undo transaction after got overpaid by repayment  (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2536"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1011,
+   "feature_product": null,
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan which is reopened by undo goodwill credit transaction after got overpaid by goodwill credit transaction  (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2537"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1033,
+   "feature_product": null,
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan which is reopened by undo repayment after got overpaid by goodwill credit transaction  (loan status is 'active')",
+   "result": "PASSED",
+   "tag": "C2538"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1055,
+   "feature_product": null,
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": null,
+   "name": "Verify that loanChargePaidByList section has the correct data in loanDetails and in LoanTransactionMakeRepaymentPostBusinessEvent",
+   "result": "PASSED",
+   "tag": "C2601"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1075,
+   "feature_product": null,
+   "index": 16,
+   "loan": 16,
+   "loan_client_id": null,
+   "name": "Verify that after COB job Accrual entry is made when loan has a fee-charge on disbursal date",
+   "result": "PASSED",
+   "tag": "C2606"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1091,
+   "feature_product": null,
+   "index": 17,
+   "loan": 17,
+   "loan_client_id": null,
+   "name": "Verify that after COB job Accrual entry is made when loan has a penalty-charge on disbursal date",
+   "result": "PASSED",
+   "tag": "C2607"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1107,
+   "feature_product": null,
+   "index": 18,
+   "loan": 18,
+   "loan_client_id": null,
+   "name": "Verify that charge can be added to loan which is paid off and overpaid by refund",
+   "result": "PASSED",
+   "tag": "C2635"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1127,
+   "feature_product": null,
+   "index": 19,
+   "loan": 19,
+   "loan_client_id": null,
+   "name": "FEE01 - Verify the loan creation with charge: disbursement percentage fee",
+   "result": "PASSED",
+   "tag": "C2672"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1152,
+   "feature_product": null,
+   "index": 20,
+   "loan": 20,
+   "loan_client_id": null,
+   "name": "FEE02 - Verify the loan creation with charge: flat fee",
+   "result": "PASSED",
+   "tag": "C2673"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1176,
+   "feature_product": "LP1_INTEREST_FLAT",
+   "index": 21,
+   "loan": 21,
+   "loan_client_id": null,
+   "name": "FEE03 - Verify the loan creation with charge: installment percentage fee",
+   "result": "PASSED",
+   "tag": "C2674"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1204,
+   "feature_product": "LP1_INTEREST_FLAT_OVERDUE_FROM_AMOUNT",
+   "index": 22,
+   "loan": 22,
+   "loan_client_id": null,
+   "name": "FEE04 - Verify the loan creation with charge: overdue fee on principal",
+   "result": "PASSED",
+   "tag": "C2675"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1238,
+   "feature_product": "LP1_INTEREST_FLAT_OVERDUE_FROM_AMOUNT_INTEREST",
+   "index": 23,
+   "loan": 23,
+   "loan_client_id": null,
+   "name": "FEE05 - Verify the loan creation with charge: overdue fee on principal+interest",
+   "result": "PASSED",
+   "tag": "C2676"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1272,
+   "feature_product": null,
+   "index": 24,
+   "loan": 24,
+   "loan_client_id": null,
+   "name": "Verify that partially waived installment fee applied correctly in reverse-replay logic",
+   "result": "PASSED",
+   "tag": "C2790"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1305,
+   "feature_product": null,
+   "index": 25,
+   "loan": 25,
+   "loan_client_id": null,
+   "name": "Verify that adding charge on a closed loan after maturity date is creating an N+1 installment - LP1 product",
+   "result": "PASSED",
+   "tag": "C2909"
+  }
+ ],
+ "steps": {
+  "failed": 0,
+  "passed": 691,
+  "skipped": 0,
+  "total": 691
+ },
+ "tenant": "tierd"
+}
