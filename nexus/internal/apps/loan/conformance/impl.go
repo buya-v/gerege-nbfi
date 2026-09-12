@@ -1956,6 +1956,19 @@ const (
 	// portfolio/receivable/overpayment accounts, so the account and leg-count
 	// cells move.
 	wrongIPWIgnoresChargeOff interestPaymentWaiverJournalWrongMode = iota
+	// wrongIPWChargedOffCreditsNotMerged, for a loan marked charged off, posts
+	// one credit per positive slot instead of merging the slots that resolve to
+	// the same GL account, as a port that iterates the five portions
+	// independently does. The single interest-on-loan debit is the oracle's, so
+	// every side and amount is unchanged and the batch still balances; only the
+	// credits sharing an account split apart, so the leg count grows and the
+	// per-(transaction, account) side list goes red. On the charged-off
+	// observations whose positive slots already share income-from-charge-off
+	// interest (loan-11 L42 principal+interest, loan-3 L33 principal+interest)
+	// the one merged credit becomes two. A charged-off loan with a single
+	// positive slot (loan-13 L76) and every not-charged-off observation are
+	// unaffected.
+	wrongIPWChargedOffCreditsNotMerged
 )
 
 // wrongInterestPaymentWaiverJournalEvaluator is a DELIBERATELY WRONG
@@ -1983,8 +1996,71 @@ func wrongInterestPaymentWaiverJournal(r InterestPaymentWaiverJournalRequest, mo
 	switch mode {
 	case wrongIPWIgnoresChargeOff:
 		r.ChargedOff = false
+	case wrongIPWChargedOffCreditsNotMerged:
+		if r.ChargedOff {
+			legs, err := wrongIPWChargedOffCreditsNotMergedLegs(r)
+			if err != nil {
+				return Expect{}, err
+			}
+			return interestPaymentWaiverJournalLegsExpect(legs), nil
+		}
 	}
 	return goInterestPaymentWaiverJournal(r)
+}
+
+// wrongIPWChargedOffCreditsNotMergedLegs builds the legs a port that posts one
+// credit per positive slot, never merging slots that resolve to the same GL
+// account, emits for a CHARGED-OFF interest-payment waiver. It keeps the
+// oracle's slot order, the charged-off slot->account table and the single
+// interest-on-loan debit; only the credits differ.
+func wrongIPWChargedOffCreditsNotMergedLegs(r InterestPaymentWaiverJournalRequest) ([]loan.JournalEntryLeg, error) {
+	portions, err := repaymentPortionsFromRequest(RepaymentPortionsMoney(r.Portions))
+	if err != nil {
+		return nil, err
+	}
+	slots := []struct {
+		name    string
+		amount  loan.MinorUnits
+		account string
+	}{
+		{"LOAN_PORTFOLIO", portions.Principal, r.Accounts.IncomeFromChargeOffInterest},
+		{"INTEREST_RECEIVABLE", portions.Interest, r.Accounts.IncomeFromChargeOffInterest},
+		{"FEES_RECEIVABLE", portions.Fee, r.Accounts.IncomeFromChargeOffInterest},
+		{"PENALTIES_RECEIVABLE", portions.Penalty, r.Accounts.IncomeFromChargeOffInterest},
+		{"OVERPAYMENT", portions.Overpayment, r.Accounts.Overpayment},
+	}
+	legs := make([]loan.JournalEntryLeg, 0, len(slots)+1)
+	for _, s := range slots {
+		if s.amount < 0 {
+			return nil, fmt.Errorf("loan: interest-payment-waiver slot %s carries a negative portion %d", s.name, s.amount)
+		}
+		if s.amount == 0 {
+			continue
+		}
+		if s.account == "" {
+			return nil, fmt.Errorf("loan: interest-payment-waiver slot %s has a positive portion %d but no mapped account", s.name, s.amount)
+		}
+		legs = append(legs, loan.JournalEntryLeg{
+			TransactionID: r.TransactionID,
+			Account:       s.account,
+			Side:          loan.JournalEntryCredit,
+			Amount:        s.amount,
+		})
+	}
+	total := portions.Total()
+	if total == 0 {
+		return legs, nil
+	}
+	if r.Accounts.InterestOnLoan == "" {
+		return nil, fmt.Errorf("loan: interest-payment-waiver total %d has no interest-on-loan account", total)
+	}
+	legs = append(legs, loan.JournalEntryLeg{
+		TransactionID: r.TransactionID,
+		Account:       r.Accounts.InterestOnLoan,
+		Side:          loan.JournalEntryDebit,
+		Amount:        total,
+	})
+	return legs, nil
 }
 
 // capitalizedIncomeAmortizationJournalWrongMode selects which deliberately-wrong
@@ -3902,6 +3978,18 @@ func init() {
 			"move while every side and amount stays observed — and the not-charged-off observations "+
 			"(loans 2 and 7) are unaffected",
 		wrongInterestPaymentWaiverJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongIPWIgnoresChargeOff})
+	RegisterWrong("loan-wrong-ipw-charged-off-credits-not-merged",
+		"posts one credit per positive portion slot in the CHARGED-OFF arm instead of merging the "+
+			"slots that resolve to the same GL account, as a port that iterates the five portions "+
+			"independently does; every amount, every side and the single interest-on-loan debit stay "+
+			"the oracle's, but slots sharing income-from-charge-off interest split into one credit "+
+			"each, so the leg count grows by one per collapsed pair and the per-(transaction, account) "+
+			"side list goes red — on the charged-off loan-11 L42 (principal 250.00 + interest 10.00, "+
+			"both account 20) the one 260.00 credit becomes 250.00 and 10.00, and on loan-3 L33 "+
+			"(principal 41.76 + interest 0.15, both account 17) the one 41.91 credit becomes 41.76 "+
+			"and 0.15, while the single-slot charged-off loan-13 L76 and every not-charged-off "+
+			"observation are unaffected",
+		wrongInterestPaymentWaiverJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongIPWChargedOffCreditsNotMerged})
 	RegisterWrong("loan-wrong-cia-ignores-loan-state",
 		"always credits INCOME_FROM_CAPITALIZATION for a capitalized-income amortization, as a port "+
 			"that never reads the loan's charged-off / fraud / written-off state does; on the "+
