@@ -1,0 +1,63 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-BDX-loan-13-merchant",
+ "title": "A merchant buy-down fee adjustment debits DEFERRED_INCOME_LIABILITY 22 1000 then credits BUY_DOWN_EXPENSE 23 1000 (loan 13 L502)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a BUY_DOWN_FEE_ADJUSTMENT transaction posts on a MERCHANT buy-down product, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES, merchantBuyDownFee true) at the buy-down-fee-adjustment transaction L502. request.buy_down_fee_adjustment_journal.amount transcribes the loan read-back's buyDownFeeAdjustment transaction id 502: amount 10.000000 -> \"1000\" minor units. request.buy_down_fee_adjustment_journal.merchant is the read-back's top-level merchantBuyDownFee true. request.buy_down_fee_adjustment_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json: fundSourceAccountId 5, buyDownExpenseAccountId 23, deferredIncomeLiabilityAccountId 22; the product's ONLY channel mapping is paymentTypeId 1 -> 17 and the adjustment was posted with paymentTypeId 5, which has no channel mapping, so the default FUND_SOURCE 5 applies (unused on this merchant leg). expect.buy_down_fee_adjustment_journal_legs is a TRANSCRIPTION of the two L502 legs in id order from the journal-entries sweep: id 1053 entryType DEBIT glAccountId 22 amount 10.0 and id 1054 CREDIT glAccountId 23 amount 10.0. The adjustment is the mirror of the buy-down fee: the Java local is named debitAccountType but is passed as the CREDITED account, and the helper's parameter order is (accountTypeToBeDebited, accountTypeToBeCredited), so the deferred-income-liability debit comes first and the merchant-selected buy-down expense account is credited. THIS VECTOR GRADES ONE PROPERTY: when the product's merchantBuyDownFee is set the buy-down-fee-adjustment credit posts to the buy-down expense account rather than the resolved fund source, and the debit posts to deferred income liability. THIS MERCHANT OBSERVATION IS A CONTROL for the ignore-merchant drive: a port that always credits the buy-down expense account posts the SAME legs here, and it is the non-merchant siblings that move the credit account. WHAT THIS VECTOR DOES NOT GRADE: the non-merchant fund-source credit (sibling vectors). Nothing was computed by this promotion: every amount, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-buy-down-fee-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.buy_down_fee_adjustment_journal.amount and merchant are transcribed from the committed loan read-back loans/loan-13/loan-13-detail-associations-transactions-15.json (sha256 d1b4940ecd81de6b8c87f1045691b25a77f43c53120116dd117cdff7e4d39695): top-level merchantBuyDownFee true, transactions[id 502 type loanTransactionType.buyDownFeeAdjustment] amount 10.0, paymentDetailData.paymentType.id 5. expect.buy_down_fee_adjustment_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-13.json (sha256 65cbc510b317f95bdf527003add3780266ed5cd8c6b18be3a46f3284767d46d6), transactionId L502 pageItems ids 1053-1054. request.buy_down_fee_adjustment_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json (sha256 f235786b841dc00ebe033fee6c4dbc3b6a154645932d90734503e4e6df26dd90): fundSourceAccountId 5, deferredIncomeLiabilityAccountId 22, buyDownExpenseAccountId 23, paymentChannelToFundSourceMappings [paymentTypeId 1 -> 17]. TENANT `tierd` -- NOT tenant `gerege`. SCENARIO LoanBuyDownFees.feature; Asia/Ulaanbaatar; rounding mode 4 (HALF_UP); instance destroyed. Every amount is an exact decimal parsed to integer minor units (10.0 -> 1000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-13.json",
+  "capture_sha256": "65cbc510b317f95bdf527003add3780266ed5cd8c6b18be3a46f3284767d46d6",
+  "capture_case_id": "L502",
+  "citation": "journalentries-sweep/loan-13.json:1 (sha256 65cbc510b317f95bdf527003add3780266ed5cd8c6b18be3a46f3284767d46d6, committed sweep read-back, tenant tierd): transactionId L502 carries two legs in id order -- id 1053 entryType.value DEBIT glAccountId 22 amount 10.0; id 1054 entryType.value CREDIT glAccountId 23 amount 10.0. The two legs balance (1000 minor units each). Amount, merchant fact and payment type are in loans/loan-13/loan-13-detail-associations-transactions-15.json:1 (sha256 d1b4940ecd81de6b8c87f1045691b25a77f43c53120116dd117cdff7e4d39695): merchantBuyDownFee true, transactions[id 502 type loanTransactionType.buyDownFeeAdjustment] amount 10.0, paymentDetailData.paymentType.id 5. The slot->account-id mapping is in product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json:1 (sha256 f235786b841dc00ebe033fee6c4dbc3b6a154645932d90734503e4e6df26dd90): fundSourceAccountId 5, deferredIncomeLiabilityAccountId 22, buyDownExpenseAccountId 23."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "buy_down_fee_adjustment_journal": {
+   "transaction_id": "L502",
+   "amount": "1000",
+   "merchant": true,
+   "accounts": {
+    "fund_source": "5",
+    "buy_down_expense": "23",
+    "deferred_income_liability": "22"
+   }
+  }
+ },
+ "expect": {
+  "buy_down_fee_adjustment_journal_legs": [
+   {
+    "transaction_id": "L502",
+    "account": "22",
+    "entry_type": "DEBIT",
+    "amount_minor": "1000"
+   },
+   {
+    "transaction_id": "L502",
+    "account": "23",
+    "entry_type": "CREDIT",
+    "amount_minor": "1000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "buy-down-fee-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-buydown-adjustment-ignores-merchant"
+ ]
+}
