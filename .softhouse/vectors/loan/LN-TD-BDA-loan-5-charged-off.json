@@ -1,0 +1,68 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-BDA-loan-5-charged-off",
+ "title": "A CHARGED-OFF non-fraud loan credits CHARGE_OFF_EXPENSE and debits DEFERRED_INCOME_LIABILITY for a buy-down fee amortization (loan 5 L322: CREDIT account 18 16.48, DEBIT account 22 16.48)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a BUY_DOWN_FEE_AMORTIZATION transaction posts on a loan that IS CHARGED OFF and NOT fraud, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES) at the amortization transaction L322. request.buy_down_fee_amortization_journal.portions transcribes the loan read-back's amortization transaction id 322 (type loanTransactionType.buyDownFeeAmortization): interestPortion 16.48 -> \"1648\" and feeChargesPortion 0 -> \"0\" minor units. The loan read-back carries a NON-REVERSED chargeOff transaction id 321 dated 2024-03-01 with a LOWER id than the amortization (both are dated 2024-03-01, so the id order decides), the charge-off request carries NO reason, and the loan's fraud flag is false, so request.buy_down_fee_amortization_journal.charged_off is true and fraud / written_off are absent. request.buy_down_fee_amortization_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json: incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16. expect.buy_down_fee_amortization_journal_legs is a TRANSCRIPTION of the two L322 legs in id order from the journal-entries sweep: id 656 entryType CREDIT glAccountId 18 amount 16.48 and id 657 DEBIT glAccountId 22 amount 16.48. THIS VECTOR GRADES ONE PROPERTY: a charged-off non-fraud loan's amortization credits CHARGE_OFF_EXPENSE (18), not income from buy down (24) and not the fraud account, and debits the same total to deferred income liability. It is the account cell that discriminates the ignore-loan-state drive. WHAT THIS VECTOR DOES NOT GRADE: the FRAUD branch (the loan is not fraud), a positive fee portion (zero here), the written-off arm, and the buy-down-fee CLASSIFICATION and charge-off-REASON branches (not observed, no input). Nothing was computed by this promotion: every portion, account and expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-buy-down-fee-amortization-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.buy_down_fee_amortization_journal.portions and the loan state are transcribed from the committed loan read-back loans/loan-5/loan-5-detail-associations-transactions-11.json (sha256 e62c537de2974d36847b359f4a6f89bd1d38f2478ba95c0f72724ddc26be0f45): fraud false, chargedOff true, status loanStatusType.closed.obligations.met, a non-reversed chargeOff transaction id 321 dated 2024-03-01 before transaction id 322 type loanTransactionType.buyDownFeeAmortization with interestPortion 16.48 and feeChargesPortion 0. The charge-off request loans/loan-5/loan-5-charge-off-request.json sets only transactionDate (1 March 2024) and carries NO reason. expect.buy_down_fee_amortization_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-5.json (sha256 106ad93b1aceef122d986eb4fdf70c3d1f6038f152dbba0989f28f2215723263), transactionId L322 pageItems ids 656-657. request.buy_down_fee_amortization_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json (sha256 f235786b841dc00ebe033fee6c4dbc3b6a154645932d90734503e4e6df26dd90): incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16. TENANT `tierd` -- NOT tenant `gerege`. Scenario buy-down-fees; Asia/Ulaanbaatar. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-5.json",
+  "capture_sha256": "106ad93b1aceef122d986eb4fdf70c3d1f6038f152dbba0989f28f2215723263",
+  "capture_case_id": "L322",
+  "citation": "journalentries-sweep/loan-5.json:1 (sha256 106ad93b1aceef122d986eb4fdf70c3d1f6038f152dbba0989f28f2215723263, committed sweep read-back, tenant tierd): transactionId L322 carries two legs in id order -- id 656 entryType.value CREDIT glAccountId 18 amount 16.48; id 657 DEBIT glAccountId 22 amount 16.48. The two legs balance. Portions and state are in loans/loan-5/loan-5-detail-associations-transactions-11.json:1 (sha256 e62c537de2974d36847b359f4a6f89bd1d38f2478ba95c0f72724ddc26be0f45): fraud false, chargedOff true, status loanStatusType.closed.obligations.met, a non-reversed chargeOff transaction id 321 dated 2024-03-01 before transactions[id 322] type loanTransactionType.buyDownFeeAmortization, interestPortion 16.48, feeChargesPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES.json:1 (sha256 f235786b841dc00ebe033fee6c4dbc3b6a154645932d90734503e4e6df26dd90): incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "buy_down_fee_amortization_journal": {
+   "transaction_id": "L322",
+   "portions": {
+    "interest": "1648",
+    "fee": "0"
+   },
+   "charged_off": true,
+   "accounts": {
+    "income_from_buy_down": "24",
+    "deferred_income_liability": "22",
+    "charge_off_expense": "18",
+    "charge_off_fraud_expense": "16",
+    "losses_written_off": "15"
+   }
+  }
+ },
+ "expect": {
+  "buy_down_fee_amortization_journal_legs": [
+   {
+    "transaction_id": "L322",
+    "account": "18",
+    "entry_type": "CREDIT",
+    "amount_minor": "1648"
+   },
+   {
+    "transaction_id": "L322",
+    "account": "22",
+    "entry_type": "DEBIT",
+    "amount_minor": "1648"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "buy-down-fee-amortization-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-buydown-amortization-ignores-loan-state"
+ ]
+}

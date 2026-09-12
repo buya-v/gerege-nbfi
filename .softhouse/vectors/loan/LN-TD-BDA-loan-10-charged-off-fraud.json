@@ -1,0 +1,69 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-BDA-loan-10-charged-off-fraud",
+ "title": "A CHARGED-OFF AND FRAUD loan with NO charge-off reason credits CHARGE_OFF_FRAUD_EXPENSE and debits DEFERRED_INCOME_LIABILITY, not the product's reason-mapped account (loan 10 L479: CREDIT account 16 36.26, DEBIT account 22 36.26)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the TWO-LEG journal entry a BUY_DOWN_FEE_AMORTIZATION transaction posts on a loan that IS CHARGED OFF AND FRAUD, on the Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CHARGE_OFF_REASON) at the amortization transaction L479. request.buy_down_fee_amortization_journal.portions transcribes the loan read-back's amortization transaction id 479 (type loanTransactionType.buyDownFeeAmortization): interestPortion 36.26 -> \"3626\" and feeChargesPortion 0 -> \"0\" minor units. The loan read-back carries a NON-REVERSED chargeOff transaction id 478 dated 2024-01-25 with a LOWER id than the amortization (both are dated 2024-01-25, so the id order decides), the charge-off request carries NO reason, and the loan's fraud flag is true, so request.buy_down_fee_amortization_journal.charged_off and fraud are both true; the loan is NOT written off. request.buy_down_fee_amortization_journal.accounts is the product's slot->GL-account-id mapping read back from the accepted create request create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CHARGE_OFF_REASON.json: incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16. THIS PRODUCT ALSO CARRIES chargeOffReasonToExpenseAccountMappings [{code 24 -> 16}, {code 33 -> 18}, {code 37 -> 18}], but the observed charge-off request carries NO reason, so the FRAUD branch applies and the amortization credits 16. A port that used the product's reason mapping would post 18 and fail this vector. expect.buy_down_fee_amortization_journal_legs is a TRANSCRIPTION of the two L479 legs in id order from the journal-entries sweep: id 995 entryType CREDIT glAccountId 16 amount 36.26 and id 996 DEBIT glAccountId 22 amount 36.26. THIS VECTOR GRADES ONE PROPERTY: a charged-off fraud loan's amortization credits CHARGE_OFF_FRAUD_EXPENSE (16), not income from buy down (24), not the non-fraud charge-off account (18) and not the reason-mapped account, and debits the same total to deferred income liability. It is the account cell that discriminates both the ignore-loan-state drive and a reason-mapping port. WHAT THIS VECTOR DOES NOT GRADE: a positive fee portion (zero here), the written-off arm, and the buy-down-fee CLASSIFICATION branch (not observed, no input). Nothing was computed by this promotion: every portion, account and expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-buy-down-fee-amortization-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.buy_down_fee_amortization_journal.portions and the loan state are transcribed from the committed loan read-back loans/loan-10/loan-10-detail-associations-transactions-9.json (sha256 ef7d8fd17f9ad3c79658ffa3f9a7f9af0acc497d3553797df18eb7193cdacc18): fraud true, chargedOff true, status loanStatusType.closed.obligations.met, a non-reversed chargeOff transaction id 478 dated 2024-01-25 before transaction id 479 type loanTransactionType.buyDownFeeAmortization with interestPortion 36.26 and feeChargesPortion 0. The charge-off request loans/loan-10/loan-10-charge-off-request.json sets only transactionDate (25 January 2024) and carries NO reason. expect.buy_down_fee_amortization_journal_legs is transcribed from the committed journal-entries sweep journalentries-sweep/loan-10.json (sha256 d4fca2274a8ff310878f368b0caba2b8c4674817dee2b2b86b6614c39886d8fb), transactionId L479 pageItems ids 995-996. request.buy_down_fee_amortization_journal.accounts is transcribed from the committed product mapping product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CHARGE_OFF_REASON.json (sha256 a6e34474ae827b06b28d3580ab5c735911fde526ae3e33130d2ba4b663799e8c): incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16, and chargeOffReasonToExpenseAccountMappings [{chargeOffReasonCodeValueId 24 -> 16}, {33 -> 18}, {37 -> 18}] that the observed reason-less charge-off does NOT select. TENANT `tierd` -- NOT tenant `gerege`. Scenario buy-down-fees; Asia/Ulaanbaatar. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-10.json",
+  "capture_sha256": "d4fca2274a8ff310878f368b0caba2b8c4674817dee2b2b86b6614c39886d8fb",
+  "capture_case_id": "L479",
+  "citation": "journalentries-sweep/loan-10.json:1 (sha256 d4fca2274a8ff310878f368b0caba2b8c4674817dee2b2b86b6614c39886d8fb, committed sweep read-back, tenant tierd): transactionId L479 carries two legs in id order -- id 995 entryType.value CREDIT glAccountId 16 amount 36.26; id 996 DEBIT glAccountId 22 amount 36.26. The two legs balance. Portions and state are in loans/loan-10/loan-10-detail-associations-transactions-9.json:1 (sha256 ef7d8fd17f9ad3c79658ffa3f9a7f9af0acc497d3553797df18eb7193cdacc18): fraud true, chargedOff true, status loanStatusType.closed.obligations.met, a non-reversed chargeOff transaction id 478 dated 2024-01-25 with NO reason before transactions[id 479] type loanTransactionType.buyDownFeeAmortization, interestPortion 36.26, feeChargesPortion 0. The slot->account-id mapping is in product-mappings/create-request-LP2_PROGRESSIVE_ADVANCED_PAYMENT_ALLOCATION_BUYDOWN_FEES_CHARGE_OFF_REASON.json:1 (sha256 a6e34474ae827b06b28d3580ab5c735911fde526ae3e33130d2ba4b663799e8c): incomeFromBuyDownAccountId 24, deferredIncomeLiabilityAccountId 22, writeOffAccountId 15, chargeOffExpenseAccountId 18, chargeOffFraudExpenseAccountId 16, and a reason mapping code 33 -> account 18 that the observed reason-less charge-off does NOT select."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "buy_down_fee_amortization_journal": {
+   "transaction_id": "L479",
+   "portions": {
+    "interest": "3626",
+    "fee": "0"
+   },
+   "charged_off": true,
+   "fraud": true,
+   "accounts": {
+    "income_from_buy_down": "24",
+    "deferred_income_liability": "22",
+    "charge_off_expense": "18",
+    "charge_off_fraud_expense": "16",
+    "losses_written_off": "15"
+   }
+  }
+ },
+ "expect": {
+  "buy_down_fee_amortization_journal_legs": [
+   {
+    "transaction_id": "L479",
+    "account": "16",
+    "entry_type": "CREDIT",
+    "amount_minor": "3626"
+   },
+   {
+    "transaction_id": "L479",
+    "account": "22",
+    "entry_type": "DEBIT",
+    "amount_minor": "3626"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "buy-down-fee-amortization-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-buydown-amortization-ignores-loan-state"
+ ]
+}
