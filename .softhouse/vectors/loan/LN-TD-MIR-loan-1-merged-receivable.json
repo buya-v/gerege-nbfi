@@ -78,6 +78,7 @@
  ],
  "graded_against": [
   "loan-go",
-  "loan-wrong-repayment-journal-one-debit-per-portion"
+  "loan-wrong-repayment-journal-one-debit-per-portion",
+  "loan-wrong-repayment-credits-not-merged"
  ]
 }
