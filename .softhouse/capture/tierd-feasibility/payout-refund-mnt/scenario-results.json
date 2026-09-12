@@ -1,0 +1,116 @@
+{
+ "attribution_validated": false,
+ "currency": "MNT",
+ "failed": 0,
+ "feature": "LoanPayoutRefund.feature",
+ "passed": 9,
+ "scenario_count": 9,
+ "scenarios": [
+  {
+   "failed_steps": [],
+   "feature_line": 4,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": null,
+   "name": "Payout Refund with interestRefundCalculation = false (Interest Refund transaction should NOT be created)",
+   "result": "PASSED",
+   "tag": "C3845"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 44,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": null,
+   "name": "Payout Refund with interestRefundCalculation = true (Interest Refund transaction SHOULD be created)",
+   "result": "PASSED",
+   "tag": "C3846"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 85,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": null,
+   "name": "Payout Refund without interestRefundCalculation (should fallback to loan product config)",
+   "result": "PASSED",
+   "tag": "C3847"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 126,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": null,
+   "name": "Verify reversal of Payout Refund with linked Interest Refund when subsequent transactions exist",
+   "result": "PASSED",
+   "tag": "C3857"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 198,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": null,
+   "name": "Manual Interest Refund creation for Payout Refund with interestRefundCalculation = false",
+   "result": "PASSED",
+   "tag": "C3870"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 262,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": null,
+   "name": "Undo Payout Refund with manual Interest Refund, both transactions are reversed",
+   "result": "PASSED",
+   "tag": "C3871"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 354,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": null,
+   "name": "Prevent manual Interest Refund creation if interestRefundCalculation = true and Interest Refund already exists",
+   "result": "PASSED",
+   "tag": "C3872"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 396,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": null,
+   "name": "Prevent manual Interest Refund creation on reversed refund transaction",
+   "result": "PASSED",
+   "tag": "C3878"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 412,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": null,
+   "name": "Prevent manual Interest Refund creation on non-refund transaction type",
+   "result": "PASSED",
+   "tag": "C3879"
+  }
+ ],
+ "steps": {
+  "failed": 0,
+  "passed": 210,
+  "skipped": 0,
+  "total": 210
+ },
+ "tenant": "tierd"
+}
