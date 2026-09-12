@@ -798,7 +798,7 @@ func admitRequest(v *Vector) []string {
 				"request.disbursement_journal.amount %q is not a non-negative integer minor amount", j.Amount))
 		}
 		for name, val := range map[string]string{
-			"overpayment":     j.Overpayment,
+			"overpayment":       j.Overpayment,
 			"principal_portion": j.PrincipalPortion,
 		} {
 			if val == "" {

@@ -936,9 +936,9 @@ type DisbursementSlotAccounts struct {
 // resolved through the payment channel) read back from the reference server,
 // never invented; a positive leg with no mapped account is refused by the port.
 type DisbursementJournalRequest struct {
-	TransactionID string                   `json:"transaction_id"`
-	Amount        string                   `json:"amount"`
-	Overpayment   string                   `json:"overpayment,omitempty"`
+	TransactionID string `json:"transaction_id"`
+	Amount        string `json:"amount"`
+	Overpayment   string `json:"overpayment,omitempty"`
 	// PrincipalPortion is the read-back transaction's principalPortion field, 0
 	// on every observed disbursement. The CORRECT port must not read it: it is
 	// the wrong drive's input, carried here so that drive can express the defect
