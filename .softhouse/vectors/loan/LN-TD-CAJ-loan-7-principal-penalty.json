@@ -1,0 +1,80 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CAJ-loan-7-principal-penalty",
+ "title": "A charge adjustment of 1.00 principal + 2.00 penalty credits LOAN_PORTFOLIO 2 and PENALTIES_RECEIVABLE 7, then posts ONE income debit of the total 3 (loan 7 L38, original legs 82-84)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.charge_adjustment_journal.portions is transcribed from the committed chargeAdjustment loan read-back .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/loans/loan-7/loan-7-detail-associations-transactions-9.json (sha256 c76ab9e7e26ef88a1a3ddf64d85352311fc197d8a3d970d3629916009a96cea8): loan 7, chargedOff false, fraud false, loanProductId 5, transactions[id 38 type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 7 relationType CHARGE_ADJUSTMENT (and a REPLAYED marker), principalPortion 1.000000, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 2.000000, overpaymentPortion 0]. request.charge_adjustment_journal.penalty_charge is transcribed from the loan's charges[] read-back .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/loans/loan-7/loan-7-detail-associations-charges-1.json (sha256 73fb965bf878ceeb895cb6f704cd127779bf88d488ff903f9d7d817e1833a4c8): the adjusted charge is id 7 `NSF fee`, penalty true (every loan-7 charges[] read-back that carries charge 7 agrees). expect.charge_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/journalentries-sweep/loan-7.json (sha256 301367da39e47985c679430bc112ce4e5a2a02d37ea55b5a5cbce90dec7928e0): transactionId L38 pageItems ids 82 (entryType.value CREDIT glAccountId 2 amount 1.000000), 83 (entryType.value CREDIT glAccountId 7 amount 2.000000) and 84 (entryType.value DEBIT glAccountId 9 amount 3.000000), in id order -- the ORIGINAL legs only. ids 89-91 (DEBIT 2 1.000000, DEBIT 7 2.000000, CREDIT 9 3.000000) are a LATER reversal pair and are NOT the posting. request.charge_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/product-mappings/create-request-LP1.json (sha256 61df3dc385d0ec886a8731c43129608cf2d8b844de69c55375773fd13f539991): loanPortfolioAccountId 2, receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 13, incomeFromChargeOffPenaltyAccountId 13, incomeFromFeeAccountId 9, incomeFromPenaltyAccountId 9. The two credits resolve to DIFFERENT accounts (portfolio 2, penalty receivable 7), so this observation grades the merge-free credit layout and the ONE debit of the total 3; the two income slots INCOME_FROM_FEES and INCOME_FROM_PENALTIES both map to 9, so it cannot discriminate the penalty-vs-fee debit choice -- charge 7 is a penalty, so the port debits INCOME_FROM_PENALTIES, which resolves to 9. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (1.000000 -> 100, 2.000000 -> 200, 3.000000 -> 300), never a float. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-charge-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.charge_adjustment_journal.portions is transcribed from the committed chargeAdjustment loan read-back .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/loans/loan-7/loan-7-detail-associations-transactions-9.json (sha256 c76ab9e7e26ef88a1a3ddf64d85352311fc197d8a3d970d3629916009a96cea8): loan 7, chargedOff false, fraud false, loanProductId 5, transactions[id 38 type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 7 relationType CHARGE_ADJUSTMENT (and a REPLAYED marker), principalPortion 1.000000, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 2.000000, overpaymentPortion 0]. request.charge_adjustment_journal.penalty_charge is transcribed from the loan's charges[] read-back .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/loans/loan-7/loan-7-detail-associations-charges-1.json (sha256 73fb965bf878ceeb895cb6f704cd127779bf88d488ff903f9d7d817e1833a4c8): the adjusted charge is id 7 `NSF fee`, penalty true (every loan-7 charges[] read-back that carries charge 7 agrees). expect.charge_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/journalentries-sweep/loan-7.json (sha256 301367da39e47985c679430bc112ce4e5a2a02d37ea55b5a5cbce90dec7928e0): transactionId L38 pageItems ids 82 (entryType.value CREDIT glAccountId 2 amount 1.000000), 83 (entryType.value CREDIT glAccountId 7 amount 2.000000) and 84 (entryType.value DEBIT glAccountId 9 amount 3.000000), in id order -- the ORIGINAL legs only. ids 89-91 (DEBIT 2 1.000000, DEBIT 7 2.000000, CREDIT 9 3.000000) are a LATER reversal pair and are NOT the posting. request.charge_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/charges-cumulative-mnt/product-mappings/create-request-LP1.json (sha256 61df3dc385d0ec886a8731c43129608cf2d8b844de69c55375773fd13f539991): loanPortfolioAccountId 2, receivableInterestAccountId 7, receivableFeeAccountId 7, receivablePenaltyAccountId 7, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 13, incomeFromChargeOffPenaltyAccountId 13, incomeFromFeeAccountId 9, incomeFromPenaltyAccountId 9. The two credits resolve to DIFFERENT accounts (portfolio 2, penalty receivable 7), so this observation grades the merge-free credit layout and the ONE debit of the total 3; the two income slots INCOME_FROM_FEES and INCOME_FROM_PENALTIES both map to 9, so it cannot discriminate the penalty-vs-fee debit choice -- charge 7 is a penalty, so the port debits INCOME_FROM_PENALTIES, which resolves to 9. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (1.000000 -> 100, 2.000000 -> 200, 3.000000 -> 300), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/charges-cumulative-mnt/journalentries-sweep/loan-7.json",
+  "capture_sha256": "301367da39e47985c679430bc112ce4e5a2a02d37ea55b5a5cbce90dec7928e0",
+  "capture_case_id": "L38",
+  "citation": "journalentries-sweep/loan-7.json:1 (sha256 301367da39e47985c679430bc112ce4e5a2a02d37ea55b5a5cbce90dec7928e0): transactionId L38 carries the original legs id 82 entryType.value CREDIT glAccountId 2 amount 1.000000, id 83 entryType.value CREDIT glAccountId 7 amount 2.000000 and id 84 entryType.value DEBIT glAccountId 9 amount 3.000000 (the later reversal pair ids 89-91 is excluded). Portions are in loans/loan-7/loan-7-detail-associations-transactions-9.json:1 (sha256 c76ab9e7e26ef88a1a3ddf64d85352311fc197d8a3d970d3629916009a96cea8): loan 7 chargedOff false, transactions[id 38] type loanTransactionType.chargeAdjustment, transactionRelations toLoanCharge 7, principalPortion 1.000000, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 2.000000, overpaymentPortion 0. penalty_charge is in loans/loan-7/loan-7-detail-associations-charges-1.json:1 (sha256 73fb965bf878ceeb895cb6f704cd127779bf88d488ff903f9d7d817e1833a4c8): charge 7 penalty true. The slot->account-id mapping is in product-mappings/create-request-LP1.json:1 (sha256 61df3dc385d0ec886a8731c43129608cf2d8b844de69c55375773fd13f539991): loanPortfolioAccountId 2, receivableInterest/Fee/PenaltyAccountId 7, overpaymentLiabilityAccountId 19, incomeFromChargeOffFeesAccountId 13, incomeFromChargeOffPenaltyAccountId 13, incomeFromFeeAccountId 9, incomeFromPenaltyAccountId 9."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "charge_adjustment_journal": {
+   "transaction_id": "L38",
+   "portions": {
+    "principal": "100",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "200"
+   },
+   "penalty_charge": true,
+   "accounts": {
+    "loan_portfolio": "2",
+    "receivable_interest": "7",
+    "receivable_fee": "7",
+    "receivable_penalty": "7",
+    "overpayment": "19",
+    "income_from_charge_off_fees": "13",
+    "income_from_charge_off_penalty": "13",
+    "income_from_fees": "9",
+    "income_from_penalties": "9"
+   }
+  }
+ },
+ "expect": {
+  "charge_adjustment_journal_legs": [
+   {
+    "transaction_id": "L38",
+    "account": "2",
+    "entry_type": "CREDIT",
+    "amount_minor": "100"
+   },
+   {
+    "transaction_id": "L38",
+    "account": "7",
+    "entry_type": "CREDIT",
+    "amount_minor": "200"
+   },
+   {
+    "transaction_id": "L38",
+    "account": "9",
+    "entry_type": "DEBIT",
+    "amount_minor": "300"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "charge-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-charge-adjustment-ignores-charge-off"
+ ]
+}

@@ -160,6 +160,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goRepaymentJournal(*req.RepaymentJournal)
 	case req.GoodwillCreditJournal != nil:
 		return goGoodwillCreditJournal(*req.GoodwillCreditJournal)
+	case req.ChargeAdjustmentJournal != nil:
+		return goChargeAdjustmentJournal(*req.ChargeAdjustmentJournal)
 	case req.ChargedOffRepaymentJournal != nil:
 		return goChargedOffRepaymentJournal(*req.ChargedOffRepaymentJournal)
 	case req.ChargedOffMerchantRefundJournal != nil:
@@ -1129,6 +1131,56 @@ func goodwillCreditJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 		out = []JournalEntryLeg{}
 	}
 	return Expect{GoodwillCreditJournalLegs: out}
+}
+
+// goChargeAdjustmentJournal ports the loan-charge-adjustment-journal-entries
+// seam: it reduces the request's five portions, the loan's charged-off state, the
+// penalty flag and the slot->account mapping to loan.RepaymentPortions and
+// loan.ChargeAdjustmentAccountMapping and runs the port's own
+// loan.CreateChargeAdjustmentJournalEntryLegs. Every monetary cell is an integer
+// minor unit; the mapping is the product's observed accountingMappings, never
+// invented. A charge-specific GL override is NOT modelled: the port takes the
+// product accounts only.
+func goChargeAdjustmentJournal(r ChargeAdjustmentJournalRequest) (Expect, error) {
+	portions, err := repaymentPortionsFromRequest(r.Portions)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateChargeAdjustmentJournalEntryLegs(r.TransactionID, portions, r.ChargedOff, r.PenaltyCharge, loan.ChargeAdjustmentAccountMapping{
+		LoanPortfolio:              r.Accounts.LoanPortfolio,
+		ReceivableInterest:         r.Accounts.ReceivableInterest,
+		ReceivableFee:              r.Accounts.ReceivableFee,
+		ReceivablePenalty:          r.Accounts.ReceivablePenalty,
+		Overpayment:                r.Accounts.Overpayment,
+		IncomeFromChargeOffFees:    r.Accounts.IncomeFromChargeOffFees,
+		IncomeFromChargeOffPenalty: r.Accounts.IncomeFromChargeOffPenalty,
+		IncomeFromFees:             r.Accounts.IncomeFromFees,
+		IncomeFromPenalties:        r.Accounts.IncomeFromPenalties,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return chargeAdjustmentJournalLegsExpect(legs), nil
+}
+
+// chargeAdjustmentJournalLegsExpect renders the port's ordered legs as the seam's
+// ordered leg cells. Every money cell is an integer STRING in minor units; a leg
+// whose side is somehow unknown renders an empty entry_type rather than
+// defaulting to a side the capture never showed.
+func chargeAdjustmentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{ChargeAdjustmentJournalLegs: out}
 }
 
 // goChargedOffRepaymentJournal ports the loan-chargedoff-repayment-journal-entries
@@ -2378,6 +2430,36 @@ func wrongGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) 
 		})
 	}
 	return Expect{GoodwillCreditJournalLegs: out}, nil
+}
+
+// wrongChargeAdjustmentJournalEvaluator is a DELIBERATELY WRONG implementation of
+// the loan-charge-adjustment-journal-entries seam, committing exactly one posting
+// defect. On any request that is not a charge-adjustment journal it delegates to
+// the correct port, so the drive goes red ONLY on this seam's vectors and stays
+// green everywhere else (vector isolation).
+type wrongChargeAdjustmentJournalEvaluator struct {
+	goEvaluator
+}
+
+func (w wrongChargeAdjustmentJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.ChargeAdjustmentJournal != nil {
+		return wrongChargeAdjustmentJournal(*req.ChargeAdjustmentJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongChargeAdjustmentJournal runs the correct posting but forces the loan to be
+// treated as NOT charged off, so the credit side always lands on the ordinary
+// portfolio/receivable slots instead of the charge-off income table. This is the
+// mistake of a port that never reads the loan's charged-off state. On a
+// not-charged-off observation the forced arm is the correct arm, so only the
+// charged-off observation goes red: its principal credit moves off
+// INCOME_FROM_CHARGE_OFF_FEES to LOAN_PORTFOLIO (and interest/fees to their
+// receivables), while the single debit and every amount stay observed.
+func wrongChargeAdjustmentJournal(r ChargeAdjustmentJournalRequest) (Expect, error) {
+	forced := r
+	forced.ChargedOff = false
+	return goChargeAdjustmentJournal(forced)
 }
 
 // chargebackJournalWrongMode selects which deliberately-wrong chargeback posting
@@ -3803,6 +3885,15 @@ func init() {
 			"does; the credits are the oracle's but the debit account moves off every observed goodwill "+
 			"debit account to the fund source, so every goodwill vector goes red",
 		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-charge-adjustment-ignores-charge-off",
+		"posts a charge adjustment on a loan marked charged off through the NOT-charged-off credit "+
+			"table instead of the charge-off income table, as a port that forgets the loan is charged "+
+			"off does; the principal, interest and fee credits move from INCOME_FROM_CHARGE_OFF_FEES "+
+			"to the loan portfolio and receivables, and the penalty credit from "+
+			"INCOME_FROM_CHARGE_OFF_PENALTY to the penalty receivable, while every amount and the "+
+			"single income debit stay observed — so the charged-off observation goes red and the "+
+			"not-charged-off observations are unaffected",
+		wrongChargeAdjustmentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-chargedoff-repayment-to-portfolio",
 		"posts a repayment on a loan marked charged off through the ORDINARY repayment port instead "+
 			"of the charged-off branch, as a port that forgets the loan is charged off does; the "+

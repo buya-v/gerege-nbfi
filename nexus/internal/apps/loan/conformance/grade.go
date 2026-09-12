@@ -440,6 +440,12 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffRepaymentJournalLegs(&s, v.Expect.RepaymentJournalLegs, got.RepaymentJournalLegs)
 	case SeamLoanGoodwillCreditJournalEntries:
 		diffGoodwillCreditJournalLegs(&s, v.Expect.GoodwillCreditJournalLegs, got.GoodwillCreditJournalLegs)
+	case SeamLoanChargeAdjustmentJournalEntries:
+		// Reuse the repayment-journal per-leg differ: the property is the same
+		// fixed "credits in slot order, then one total debit" layout, and the
+		// account and count cells are what separate the charged-off credit table
+		// (or a fee/penalty debit) from the not-charged-off posting.
+		diffRepaymentJournalLegs(&s, v.Expect.ChargeAdjustmentJournalLegs, got.ChargeAdjustmentJournalLegs)
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		// Reuse the repayment-journal per-leg differ: the property is the same
 		// fixed "credits in slot order, then one debit" layout, and the account
