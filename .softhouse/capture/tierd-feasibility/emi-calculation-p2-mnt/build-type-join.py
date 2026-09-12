@@ -140,11 +140,56 @@ def tx_map_for(loan_id):
     return out
 
 
+def latest_transaction_readback(loan_id):
+    """(path, body) of the loan's LATEST (highest-index) read-back that carries a
+    `transactions` list, committed first then stage.
+
+    The latest read-back is the authority for the charged-off dimension: a
+    charge-off later undone vanishes from it.  OH-TIERD23-DC merged every
+    read-back and counted undone charge-offs; this capture must not."""
+    paths = []
+    for pat in (
+        os.path.join(LOANS, 'loan-%d' % loan_id,
+                     'loan-%d-detail-associations-*.json' % loan_id),
+        os.path.join(STAGE, 'loan-%d-detail-associations-*.json' % loan_id),
+    ):
+        paths.extend(glob.glob(pat))
+    best = None
+    for f in paths:
+        m = SEQ_RE.search(f)
+        if not m:
+            continue
+        try:
+            body = json.load(open(f))
+        except ValueError:
+            continue
+        if not isinstance(body, dict) or 'transactions' not in body:
+            continue
+        seq = int(m.group(1))
+        # Highest index wins; on a tie prefer the `associations=all` read-back.
+        if best is None or seq > best[0] or (seq == best[0] and '-all-' in f):
+            best = (seq, f, body)
+    if best is None:
+        return None, None
+    return best[1], best[2]
+
+
 def chargeoffs_for(loan_id):
-    """Non-reversed `chargeOff` transaction ids, ascending (the id order is the
-    rule this capture uses: a charge-off with a LOWER transaction id)."""
-    out = [tid for tid, tx in tx_map_for(loan_id).items()
-           if tx['code'] == 'loanTransactionType.chargeOff' and not tx['reversed']]
+    """Non-reversed `chargeOff` transaction ids listed in the loan's LATEST
+    read-back, ascending (the id order is the rule this capture uses: a charge-off
+    with a LOWER transaction id than the leg's transaction)."""
+    _, body = latest_transaction_readback(loan_id)
+    if not body:
+        return []
+    out = []
+    for t in body.get('transactions') or []:
+        typ = t.get('type') or {}
+        if typ.get('code') != 'loanTransactionType.chargeOff':
+            continue
+        if t.get('manuallyReversed') or t.get('reversed'):
+            continue
+        if t.get('id') is not None:
+            out.append(t.get('id'))
     return sorted(out)
 
 
@@ -263,6 +308,7 @@ def build_targets(types, loan_chargeoff, currencies, txmaps, chargeoffs):
             if tx.get('code') not in TARGET_TYPES:
                 continue
             qualifying = [c for c in cos if c < tid]
+            co_flag = loan_chargeoff.get(lid, {}).get('charged_off_latest') is True
             target_transactions.append({
                 'loan': lid,
                 'transaction_id': 'L%d' % tid,
@@ -274,9 +320,10 @@ def build_targets(types, loan_chargeoff, currencies, txmaps, chargeoffs):
                 'reversed': tx.get('reversed'),
                 'payment_type_id': tx.get('payment_type_id'),
                 'payment_type_name': tx.get('payment_type_name'),
-                'charged_off': bool(qualifying),
+                'charged_off': bool(qualifying) and co_flag,
                 'charged_off_latest': loan_chargeoff.get(lid, {}).get('charged_off_latest'),
-                'chargeoff_tx_ids': ['L%d' % c for c in qualifying],
+                'chargeoff_tx_ids': ['L%d' % c for c in qualifying]
+                if (qualifying and co_flag) else [],
                 'currency': currencies.get(lid, 'UNKNOWN'),
                 'portions': tx.get('portions'),
                 'legs': [],
@@ -309,14 +356,16 @@ def build_targets(types, loan_chargeoff, currencies, txmaps, chargeoffs):
     any_latest_co = any(loan_chargeoff.get(lid, {}).get('charged_off_latest')
                         for lid in loan_chargeoff)
     if not any_co_tx:
-        findings.append('no non-reversed `chargeOff` loan transaction appears in ANY '
-                        'read-back: no leg is on a charged-off loan.')
+        findings.append('no non-reversed `chargeOff` loan transaction appears in any '
+                        'loan\'s LATEST read-back: no leg is on a charged-off loan.')
     if not any_latest_co:
         findings.append('no loan\'s LATEST read-back has `chargedOff=true`: the '
                         'charged-off dimension is empty (every leg charged-off=no).')
     return {
         'charged_off_rule': ('a NON-REVERSED chargeOff loan transaction with a LOWER '
-                             'transaction id than the leg\'s transaction'),
+                             'transaction id than the leg\'s transaction, listed in '
+                             'the loan\'s LATEST read-back, with the loan\'s '
+                             '`chargedOff` true'),
         'target_types': list(TARGET_TYPES),
         'by_type': by_type,
         'currencies': currencies,
@@ -369,6 +418,9 @@ def main():
                 unmatched.append({'loan': lid, 'transaction_id': label,
                                   'file': 'journalentries-sweep/loan-%d.json' % lid})
             qualifying = [tid for tid in cos if n is not None and tid < n]
+            # Both conditions from the capture rule: the loan's LATEST read-back
+            # lists a non-reversed chargeOff with a lower id, AND chargedOff is true.
+            is_charged_off = bool(qualifying) and latest_co.get(lid) is True
             leg_records.append({
                 'loan': lid,
                 'currency': it.get('currency', {}).get('code'),
@@ -386,9 +438,10 @@ def main():
                 'reversed': it.get('reversed'),
                 'payment_type_id': tx.get('payment_type_id') if tx else None,
                 'payment_type_name': tx.get('payment_type_name') if tx else None,
-                'charged_off': bool(qualifying),
+                'charged_off': is_charged_off,
                 'charged_off_latest': latest_co.get(lid),
-                'chargeoff_tx_ids': ['L%d' % tid for tid in qualifying],
+                'chargeoff_tx_ids': ['L%d' % tid for tid in qualifying]
+                if is_charged_off else [],
             })
 
     types = {}

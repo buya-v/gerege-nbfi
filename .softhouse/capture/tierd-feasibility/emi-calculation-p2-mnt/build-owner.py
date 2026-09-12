@@ -126,7 +126,7 @@ def main():
       % (sweep_ok, len(W)))
     w('| `journalentries-sweep-manifest.json` | sha256 + exact URL + http status + json '
       'validity per sweep body |')
-    w('| `journalentries-sweep.out` | per-loan sweep log |')
+    w('| `sweep.out` | per-loan sweep log |')
     w('| `sweep-journalentries.py` | the sweep driver (`curl -sk --max-time 30`, port '
       '8444, tenant `tierd`) |')
     w('| `product-mappings/` | accepted create requests of the %d products the loans use, '
@@ -149,8 +149,8 @@ def main():
       'second loan for the same client, so the replay creates %d loans over %d clients.'
       % (R['scenario_count'], R['passed'], R['failed'], steps.get('total'),
          steps.get('passed'), steps.get('skipped'), steps.get('failed'),
-         R.get('loan_count'), R['scenario_count'], R.get('loan_count'),
-         R['scenario_count']))
+         R.get('loan_count'), R['scenario_count'], R['scenario_count'],
+         R.get('loan_count'), R['scenario_count']))
     w('')
     w('Per-scenario detail (TestRailId, feature line, result, client, loan ids, product) '
       'is in `replay-result-table.md`. Scenario attribution validated: %s.'
@@ -246,7 +246,8 @@ def main():
         co = loan_chargeoff.get(lid, {})
         cos = co.get('chargeoff_transactions') or []
         w('| %d | %s | %s | %s |' % (
-            lid, currencies.get(lid, 'UNKNOWN'), m(co.get('charged_off_latest')),
+            lid, currencies.get(str(lid), currencies.get(lid, 'UNKNOWN')),
+            m(co.get('charged_off_latest')),
             ', '.join(c['transaction_id'] for c in cos) or '-'))
     w('')
     w('## Findings')
