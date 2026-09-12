@@ -1,0 +1,10 @@
+loan 1    rc=0   http=200      4903 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=1&limit=-1
+loan 2    rc=0   http=200      6289 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=2&limit=-1
+loan 3    rc=0   http=200      6295 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=3&limit=-1
+loan 4    rc=0   http=200     13256 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=4&limit=-1
+loan 5    rc=0   http=200      6300 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=5&limit=-1
+loan 6    rc=0   http=200      9078 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=6&limit=-1
+loan 7    rc=0   http=200      6300 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=7&limit=-1
+loan 8    rc=0   http=200      6311 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=8&limit=-1
+loan 9    rc=0   http=200      3523 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=9&limit=-1
+sweep: 9 loans, 89 legs; manifest /Users/buv/oh-gerege-tierd24/.softhouse/capture/tierd-feasibility/payout-refund-mnt/journalentries-sweep-manifest.json

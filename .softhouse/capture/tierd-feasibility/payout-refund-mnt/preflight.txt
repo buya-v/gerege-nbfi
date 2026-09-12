@@ -1,0 +1,44 @@
+TierD preflight -- 2026-09-12T12:30:46Z
+fineract:latest image id = sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  ok  gerege-oracle-app runs the SAME image (sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a)
+  ok  fineract-fineract-1 runs the SAME image (sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a)
+  ok  fineract-db-1 has no tenant 'tierd'
+  ok  gerege-oracle-db has no tenant 'tierd'
+
+3. isolation guard (read-only), then the standing baseline this capture opens with:
+TierD throwaway-isolation guard -- 2026-09-12T12:30:46Z
+
+I1 published host ports declared by the compose file:
+   8444:8443
+   ok  I1 no standing port is claimed.
+
+I2 container names:
+   ok    tierd-oracle-db does not exist yet.
+   ok    tierd-oracle-app does not exist yet.
+
+I3/I4 bind mounts declared:
+   ok    /Users/buv/fineract/config/docker/postgresql/docker-entrypoint-initdb.d/01-init.sh  (read-only)
+   ok    /Users/buv/fineract/config/docker/logback/logback-override.xml  (read-only)
+   ok    /Users/buv/fineract/config/docker/aws/etc/credentials  (read-only)
+   ok    /tmp/tierd-oracle-logs  (read-write, under /tmp -- outside every repository)
+   ok    I3 no named volume declared -- 'docker compose down -v' therefore destroys all state.
+
+I5 STANDING reference oracle baseline (read-only):
+   standing health = 200
+   fineract-db-1 acc_gl_journal_entry = 109/113
+   fineract-db-1 acc_gl_closure = 0/null
+   fineract-db-1 distinct_transaction_id = 38
+   fineract-db-1 m_portfolio_command_source = 379/379
+   fineract-db-1 m_client = 3/3
+   fineract-db-1 m_loan = 8/8
+   gerege-oracle-db acc_gl_journal_entry = 154/184
+   gerege-oracle-db acc_gl_closure = 0/null
+   gerege-oracle-db distinct_transaction_id = 57
+   gerege-oracle-db m_portfolio_command_source = 235/235
+   gerege-oracle-db m_client = 20/20
+   gerege-oracle-db m_loan = 18/18
+
+ISOLATED: the throwaway claims no standing port, no standing container name, no named volume
+and no read-write mount outside /tmp; the standing oracle is UP and both baselines are above.
+  standing baseline written by preflight.sh: /Users/buv/oh-gerege-tierd24/.softhouse/capture/tierd-feasibility/throwaway/out/STANDING-baseline.txt (12 counters)
+PREFLIGHT OK
