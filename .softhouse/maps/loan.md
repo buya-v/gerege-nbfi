@@ -49,7 +49,7 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `chargedoff-writeoff-journal-entry` — in_graded_domain: **True** — The journal entry a write-off posts on a loan ALREADY MARKED CHARGED OFF, the branch createJournalEntriesForWriteOffsWhe
 * capability `chargeback-journal-entry` — in_graded_domain: **True** — The journal entry a loan CHARGEBACK posts, ported from createJournalEntriesForChargeback: when the amount is > 0 CREDIT 
 * capability `credit-balance-refund-journal-entry` — in_graded_domain: **True** — The journal entry a loan CREDIT BALANCE REFUND posts, ported from createJournalEntriesForLoanCreditBalanceRefund [Accrua
-* capability `repayment-journal-entry` — in_graded_domain: **True** — The journal entry for ordinary repayments AND merchant-issued refunds on loans not charged off, the observed branch of c
+* capability `repayment-journal-entry` — in_graded_domain: **True** — The journal entry for ordinary repayments, merchant-issued refunds AND payout refunds on loans not charged off, the obse
 * capability `goodwill-credit-journal-entry` — in_graded_domain: **True** — The journal entry a GOODWILL CREDIT transaction posts on a loan, the observed GOODWILL-CREDIT branch of createJournalEnt
 * capability `charge-adjustment-journal-entry` — in_graded_domain: **True** — The journal entry a CHARGE ADJUSTMENT transaction posts on a loan, ported from createJournalEntriesForChargeAdjustment [
 * capability `chargedoff-repayment-journal-entry` — in_graded_domain: **True** — The journal entry a REPAYMENT posts on a loan ALREADY MARKED CHARGED OFF, the observed branch createJournalEntriesForRep
@@ -63,7 +63,7 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `buy-down-fee-journal-entry` — in_graded_domain: **True** — The journal entry a BUY_DOWN_FEE transaction posts, ported from createJournalEntriesForBuyDownFee [AccrualBasedAccountin
 
 ## Vectors (what is graded today)
-118 files in `.softhouse/vectors/loan/`
+121 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -160,6 +160,9 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-TD-PAUSE-loan-14-pause-starts-on-business-date.json` — request `delinquency` — capture `.softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-14/loan-14-detail-associations-all-4.json`
 * `LN-TD-POR-loan-17-payout-fraud.json` — request `charged_off_merchant_refund_journal` — capture `.softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-17/loan-17-journalentries-3.json`
 * `LN-TD-POR-loan-9-payout.json` — request `charged_off_merchant_refund_journal` — capture `.softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-9/loan-9-journalentries-3.json`
+* `LN-TD-PRF-loan-26-principal-interest-overpayment.json` — request `repayment_journal` — capture `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-26.json`
+* `LN-TD-PRF-loan-28-principal-interest.json` — request `repayment_journal` — capture `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-28.json`
+* `LN-TD-PRF-loan-34-overpayment.json` — request `repayment_journal` — capture `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-34.json`
 * `LN-TD-RCO-loan-19-chargedoff-repayment-merged.json` — request `charged_off_repayment_journal` — capture `.softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-19/loan-19-journalentries-4.json`
 * `LN-TD-RCO-loan-37-chargedoff-repayment-principal.json` — request `charged_off_repayment_journal` — capture `.softhouse/capture/tierd-feasibility/chargeoff-mnt/journalentries/loan-37/loan-37-journalentries-4.json`
 * `LN-TD-RP-loan-14-repayment-principal.json` — request `repayment_journal` — capture `.softhouse/capture/tierd-feasibility/chargeback-mnt/journalentries/loan-14/loan-14-journalentries-2.json`
@@ -383,6 +386,9 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 * `.softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-1/loan-1-detail-associations-all-5.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-14/loan-14-detail-associations-all-4.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/delinquency-mnt/loans/loan-14/loan-14-detail-associations-all-5.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-26.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-28.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/emi-calculation-p2-mnt/journalentries-sweep/loan-34.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/journalentries-sweep/loan-11.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/journalentries-sweep/loan-13.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/interest-payment-waiver-mnt/journalentries-sweep/loan-15.json/` — 1 vector(s) — (no OWNER.md)
