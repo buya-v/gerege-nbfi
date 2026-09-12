@@ -1,0 +1,39 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-capitalized-income-p2-mnt.log (236126581 bytes, 84506 lines)
+exchanges: 3217 total, 1054 loan, 2163 skipped (83% of source bytes, 89% of framed body bytes; 198013216 bytes skipped)
+loans: 34; files: 1249; kept body bytes: 23464352
+unattributed creates: 5
+  loan 1: create=1 cmd_req=8 cmd_resp=8 reads=23 files=40 bytes=376527
+  loan 2: create=1 cmd_req=9 cmd_resp=9 reads=40 files=59 bytes=4739118
+  loan 3: create=1 cmd_req=9 cmd_resp=9 reads=40 files=59 bytes=4118691
+  loan 4: create=1 cmd_req=8 cmd_resp=8 reads=34 files=51 bytes=3227205
+  loan 5: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=216701
+  loan 6: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=238364
+  loan 7: create=1 cmd_req=4 cmd_resp=4 reads=19 files=28 bytes=259165
+  loan 8: create=1 cmd_req=5 cmd_resp=5 reads=20 files=31 bytes=280444
+  loan 9: create=1 cmd_req=5 cmd_resp=5 reads=19 files=30 bytes=277983
+  loan 10: create=1 cmd_req=6 cmd_resp=6 reads=20 files=33 bytes=301915
+  loan 11: create=1 cmd_req=7 cmd_resp=7 reads=21 files=36 bytes=329146
+  loan 12: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=239291
+  loan 13: create=1 cmd_req=5 cmd_resp=5 reads=19 files=30 bytes=279191
+  loan 14: create=1 cmd_req=7 cmd_resp=7 reads=21 files=36 bytes=353833
+  loan 15: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=255451
+  loan 16: create=1 cmd_req=5 cmd_resp=5 reads=17 files=28 bytes=262809
+  loan 17: create=1 cmd_req=6 cmd_resp=6 reads=31 files=44 bytes=498361
+  loan 18: create=1 cmd_req=5 cmd_resp=5 reads=20 files=31 bytes=296959
+  loan 19: create=1 cmd_req=7 cmd_resp=7 reads=22 files=37 bytes=332068
+  loan 20: create=1 cmd_req=6 cmd_resp=6 reads=22 files=35 bytes=330583
+  loan 21: create=1 cmd_req=5 cmd_resp=5 reads=20 files=31 bytes=297336
+  loan 22: create=1 cmd_req=5 cmd_resp=5 reads=23 files=34 bytes=239745
+  loan 23: create=1 cmd_req=5 cmd_resp=5 reads=22 files=33 bytes=295714
+  loan 24: create=1 cmd_req=6 cmd_resp=6 reads=34 files=47 bytes=512598
+  loan 25: create=1 cmd_req=8 cmd_resp=8 reads=45 files=62 bytes=820069
+  loan 26: create=1 cmd_req=5 cmd_resp=5 reads=20 files=31 bytes=752288
+  loan 27: create=1 cmd_req=6 cmd_resp=6 reads=23 files=36 bytes=832201
+  loan 28: create=1 cmd_req=4 cmd_resp=4 reads=14 files=23 bytes=186876
+  loan 29: create=1 cmd_req=4 cmd_resp=4 reads=14 files=23 bytes=187172
+  loan 30: create=1 cmd_req=5 cmd_resp=5 reads=16 files=27 bytes=250308
+  loan 31: create=1 cmd_req=7 cmd_resp=7 reads=35 files=50 bytes=501204
+  loan 32: create=1 cmd_req=7 cmd_resp=7 reads=33 files=48 bytes=482926
+  loan 33: create=1 cmd_req=6 cmd_resp=6 reads=31 files=44 bytes=447602
+  loan 34: create=1 cmd_req=6 cmd_resp=6 reads=30 files=43 bytes=444508
+wrote 1249 files to stage
