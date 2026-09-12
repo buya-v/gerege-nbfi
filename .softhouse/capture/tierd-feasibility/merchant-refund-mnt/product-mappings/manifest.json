@@ -1,0 +1,27 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json",
+  "log_line": 12505,
+  "sha256": "53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PMT_ALLOC_ACTUAL_ACTUAL_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json",
+  "log_line": 19373,
+  "sha256": "d55b8ed2301412f9f834f45a973da4e58d4300edbbd3f460583961544135ad20"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF_ACCRUAL_ACTIVITY.json",
+  "log_line": 19659,
+  "sha256": "b458b2e2b21d7217c1f1a174e48452d20f6713a4f4fbbbb2d68e08ce51a34988"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INT_RECALCULATION_ZERO_INT_CHARGE_OFF_INT_RECOGNITION_FROM_DISB_DATE.json",
+  "log_line": 14804,
+  "sha256": "9ca15542b80db8b91442c5401c48906b487e39fd0dc08c272aa0618caf69a9e6"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF.json",
+  "log_line": 15514,
+  "sha256": "bade51abf1579c49584b2341e096e55f203db1f026765e1e4a56be1bd6829b43"
+ }
+]
