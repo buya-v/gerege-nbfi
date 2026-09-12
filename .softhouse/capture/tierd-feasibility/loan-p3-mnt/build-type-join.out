@@ -1,0 +1,2 @@
+joined 349 legs across 11 types; 6 unmatched; target legs 178 on 68 transactions / 33 loans; empty target types none
+resolved codes: {"loanTransactionType.creditBalanceRefund": "loanTransactionType.creditBalanceRefund", "loanTransactionType.interestRefund": "loanTransactionType.interestRefund", "loanTransactionType.merchantIssuedRefund": "loanTransactionType.merchantIssuedRefund", "loanTransactionType.payoutRefund": "loanTransactionType.payoutRefund", "loanTransactionType.refund": "loanTransactionType.refund", "loanTransactionType.repayment": "loanTransactionType.repayment"}
