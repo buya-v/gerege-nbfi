@@ -180,6 +180,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
 	case req.CapitalizedIncomeAmortizationJournal != nil:
 		return goCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal)
+	case req.BuyDownFeeAmortizationJournal != nil:
+		return goBuyDownFeeAmortizationJournal(*req.BuyDownFeeAmortizationJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
@@ -1657,6 +1659,54 @@ func capitalizedIncomeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg)
 	return Expect{CapitalizedIncomeAmortizationJournalLegs: out}
 }
 
+// goBuyDownFeeAmortizationJournal ports the
+// loan-buy-down-fee-amortization-journal-entries seam: it reduces the request's
+// interest and fee integer-minor portions, runs the port's
+// CreateBuyDownFeeAmortizationJournalEntryLegs with the loan's
+// charged-off / written-off / fraud state and the product's slot->account
+// mapping, and renders the ordered legs. Nothing is parsed as a float.
+func goBuyDownFeeAmortizationJournal(r BuyDownFeeAmortizationJournalRequest) (Expect, error) {
+	interest, err := parseMinorText(minorTextOrZero(r.Portions.Interest))
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateBuyDownFeeAmortizationJournalEntryLegs(r.TransactionID, interest, fee, r.ChargedOff, r.WrittenOff, r.Fraud, loan.BuyDownFeeAmortizationAccountMapping{
+		IncomeFromBuyDown:       r.Accounts.IncomeFromBuyDown,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+		ChargeOffExpense:        r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:   r.Accounts.ChargeOffFraudExpense,
+		LossesWrittenOff:        r.Accounts.LossesWrittenOff,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return buyDownFeeAmortizationJournalLegsExpect(legs), nil
+}
+
+// buyDownFeeAmortizationJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func buyDownFeeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{BuyDownFeeAmortizationJournalLegs: out}
+}
+
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a
 // LoanCharge of the observed amount and penalty flag, applies the ordered
 // operations through the port's own money mutations, and captures the state
@@ -2160,6 +2210,52 @@ func wrongCapitalizedIncomeAmortizationJournal(r CapitalizedIncomeAmortizationJo
 		r.WrittenOff = false
 	}
 	return goCapitalizedIncomeAmortizationJournal(r)
+}
+
+// buyDownFeeAmortizationJournalWrongMode selects which deliberately-wrong
+// buy-down fee amortization posting to run. Each is a port a reasonable reader
+// might write, and it is discriminated by the committed observations.
+type buyDownFeeAmortizationJournalWrongMode int
+
+const (
+	// wrongBDAIgnoresLoanState always credits INCOME_FROM_BUY_DOWN, ignoring the
+	// loan's charged-off, written-off and fraud state, as a port that never reads
+	// the loan state does; on the written-off loan-15, the charged-off loan-5 and
+	// the charged-off-fraud loan-10 observations the single credit moves from the
+	// state's account (15/18/16) to income from buy down (24) while the normal
+	// loan-1 and the fraud-not-charged-off loan-8 observations are unaffected.
+	wrongBDAIgnoresLoanState buyDownFeeAmortizationJournalWrongMode = iota
+)
+
+// wrongBuyDownFeeAmortizationJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-buy-down-fee-amortization-journal-entries seam,
+// parameterised by which posting defect it commits. On any request that is not a
+// buy-down fee amortization journal it delegates to the correct port, so the
+// drive goes red ONLY on this seam's vectors and stays green everywhere else
+// (vector isolation).
+type wrongBuyDownFeeAmortizationJournalEvaluator struct {
+	goEvaluator
+	mode buyDownFeeAmortizationJournalWrongMode
+}
+
+func (w wrongBuyDownFeeAmortizationJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.BuyDownFeeAmortizationJournal != nil {
+		return wrongBuyDownFeeAmortizationJournal(*req.BuyDownFeeAmortizationJournal, w.mode)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongBuyDownFeeAmortizationJournal runs the correct posting and then applies
+// exactly one defect, so the drive differs from the port on exactly the cells its
+// defect moves.
+func wrongBuyDownFeeAmortizationJournal(r BuyDownFeeAmortizationJournalRequest, mode buyDownFeeAmortizationJournalWrongMode) (Expect, error) {
+	switch mode {
+	case wrongBDAIgnoresLoanState:
+		r.ChargedOff = false
+		r.Fraud = false
+		r.WrittenOff = false
+	}
+	return goBuyDownFeeAmortizationJournal(r)
 }
 
 // chargedOffWriteOffJournalWrongMode selects which deliberately-wrong
@@ -4131,6 +4227,15 @@ func init() {
 			"CHARGE_OFF_FRAUD_EXPENSE (12) to 6, so the account cell moves while every side and amount "+
 			"stays observed — and the not-charged-off loan-1 L5 observation is unaffected",
 		wrongCapitalizedIncomeAmortizationJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongCIAIgnoresLoanState})
+	RegisterWrong("loan-wrong-buydown-amortization-ignores-loan-state",
+		"always credits INCOME_FROM_BUY_DOWN for a buy-down fee amortization, as a port that never "+
+			"reads the loan's charged-off / written-off / fraud state does; on the written-off observation "+
+			"loan-15 L521 the merged credit moves from LOSSES_WRITTEN_OFF (15) to income from buy down (24), "+
+			"on the charged-off loan-5 L322 it moves from CHARGE_OFF_EXPENSE (18) to 24, and on the "+
+			"charged-off-fraud loan-10 L479 it moves from CHARGE_OFF_FRAUD_EXPENSE (16) to 24, so the "+
+			"account cell moves while every side and amount stays observed — and the not-charged-off "+
+			"loan-1 L6 and the fraud-not-charged-off loan-8 L461 observations are unaffected",
+		wrongBuyDownFeeAmortizationJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongBDAIgnoresLoanState})
 	RegisterWrong("loan-wrong-chargedoff-writeoff-debits-fund-source",
 		"posts the per-portion FUND_SOURCE debits populateCreditDebitMaps accumulates instead of the "+
 			"one LOSSES_WRITTEN_OFF debit the oracle posts, as a port that iterates the debit map too "+

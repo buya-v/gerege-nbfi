@@ -316,6 +316,15 @@ func diffCapitalizedIncomeAmortizationJournalLegs(s *cellSink, want, got []Journ
 	diffJournalLegs(s, "capitalized_income_amortization_journal_legs", want, got)
 }
 
+// diffBuyDownFeeAmortizationJournalLegs compares the ordered leg list a
+// BUY_DOWN_FEE_AMORTIZATION posting produced against the observed one: one
+// merged credit then one total debit. Reusing diffJournalLegs means the count is
+// compared first, so a port that splits the credit per portion is a visible
+// difference; the account cell carries the loan-state switch.
+func diffBuyDownFeeAmortizationJournalLegs(s *cellSink, want, got []JournalEntryLeg) {
+	diffJournalLegs(s, "buy_down_fee_amortization_journal_legs", want, got)
+}
+
 // diffJournalLegs is the shared ordered-leg differ: the count is compared
 // first, so a port that posts a leg per portion (more legs) or drops a leg is a
 // visible difference rather than a silent truncation. Each label is prefixed
@@ -487,6 +496,8 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		diffInterestPaymentWaiverJournalLegs(&s, v.Expect.InterestPaymentWaiverJournalLegs, got.InterestPaymentWaiverJournalLegs)
 	case SeamLoanCapitalizedIncomeAmortizationJournalEntries:
 		diffCapitalizedIncomeAmortizationJournalLegs(&s, v.Expect.CapitalizedIncomeAmortizationJournalLegs, got.CapitalizedIncomeAmortizationJournalLegs)
+	case SeamLoanBuyDownFeeAmortizationJournalEntries:
+		diffBuyDownFeeAmortizationJournalLegs(&s, v.Expect.BuyDownFeeAmortizationJournalLegs, got.BuyDownFeeAmortizationJournalLegs)
 	case SeamLoanChargeLifecycle:
 		diffChargeStates(&s, v.Expect.ChargeStates, got.ChargeStates)
 	case SeamLoanStatusTransition:

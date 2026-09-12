@@ -143,6 +143,7 @@ var committedLoanSeams = []string{
 	SeamLoanChargebackJournalEntries,
 	SeamLoanCreditBalanceRefundJournalEntries,
 	SeamLoanCapitalizedIncomeAmortizationJournalEntries,
+	SeamLoanBuyDownFeeAmortizationJournalEntries,
 	SeamLoanBuyDownFeeJournalEntries,
 	SeamLoanChargeLifecycle,
 	SeamLoanStatusTransition,
