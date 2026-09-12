@@ -1,0 +1,737 @@
+{
+ "attribution_validated": true,
+ "currency": "MNT",
+ "failed": 1,
+ "feature": "EMICalculation-Part2.feature",
+ "loan_count": 52,
+ "passed": 49,
+ "problems": [],
+ "scenario_count": 50,
+ "scenarios": [
+  {
+   "client_id": 1,
+   "failed_steps": [],
+   "feature_line": 5,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_SARP_TILL_REST_FREQUENCY_DATE",
+   "index": 1,
+   "loan": 1,
+   "loans": [
+    1
+   ],
+   "name": "Verify interest recalculation in case of overdue installments: UC12 - 1st installment paid on due date, 2nd installment overdue, interest recalculation: same as repayment period, till rest frequency date",
+   "result": "PASSED",
+   "tag": "C3237"
+  },
+  {
+   "client_id": 2,
+   "failed_steps": [],
+   "feature_line": 69,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 2,
+   "loan": 2,
+   "loans": [
+    2
+   ],
+   "name": "Verify interest recalculation in case of overdue installments: UC13 - 1st installment paid on due date, 2nd installment overdue with partial late repayment, interest recalculation: daily, till preclose",
+   "result": "PASSED",
+   "tag": "C3238"
+  },
+  {
+   "client_id": 3,
+   "failed_steps": [],
+   "feature_line": 154,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_REST_FREQUENCY_DATE",
+   "index": 3,
+   "loan": 3,
+   "loans": [
+    3
+   ],
+   "name": "Verify interest recalculation in case of overdue installments: UC14 - 1st installment paid on due date, 2nd installment overdue with partial late repayment, interest recalculation: daily, till rest frequency date",
+   "result": "PASSED",
+   "tag": "C3239"
+  },
+  {
+   "client_id": 4,
+   "failed_steps": [],
+   "feature_line": 239,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_SARP_TILL_PRECLOSE",
+   "index": 4,
+   "loan": 4,
+   "loans": [
+    4
+   ],
+   "name": "Verify interest recalculation in case of overdue installments: UC15 - 1st installment paid on due date, 2nd installment overdue, interest recalculation: same as repayment period, till preclose",
+   "result": "PASSED",
+   "tag": "C3240"
+  },
+  {
+   "client_id": 5,
+   "failed_steps": [],
+   "feature_line": 324,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_SARP_TILL_REST_FREQUENCY_DATE",
+   "index": 5,
+   "loan": 5,
+   "loans": [
+    5
+   ],
+   "name": "Verify interest recalculation in case of overdue installments: UC16 - 1st installment paid on due date, 2nd installment overdue, interest recalculation: same as repayment period, till rest frequency date",
+   "result": "PASSED",
+   "tag": "C3241"
+  },
+  {
+   "client_id": 6,
+   "failed_steps": [],
+   "feature_line": 409,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_WHOLE_TERM",
+   "index": 6,
+   "loan": 6,
+   "loans": [
+    6,
+    7
+   ],
+   "name": "Verify support of interest rate calculation with frequency Whole term  configured for progressive loan",
+   "result": "PASSED",
+   "tag": "C3244"
+  },
+  {
+   "client_id": 7,
+   "failed_steps": [],
+   "feature_line": 459,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 7,
+   "loan": 8,
+   "loans": [
+    8,
+    9
+   ],
+   "name": "Verify support of interest rate calculation with frequency Whole term  configured for progressive loan on loan account level",
+   "result": "PASSED",
+   "tag": "C3287"
+  },
+  {
+   "client_id": 8,
+   "failed_steps": [],
+   "feature_line": 509,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 8,
+   "loan": 10,
+   "loans": [
+    10
+   ],
+   "name": "Verify Interest recalculation - daily for overdue loan - UC1: 360/30, pre-close on overdue loan, preClosureInterestCalculationStrategy = till pre-close date",
+   "result": "PASSED",
+   "tag": "C3245"
+  },
+  {
+   "client_id": 9,
+   "failed_steps": [],
+   "feature_line": 555,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_REST_FREQUENCY_DATE",
+   "index": 9,
+   "loan": 11,
+   "loans": [
+    11
+   ],
+   "name": "Verify Interest recalculation - daily for overdue loan - UC2: 360/30, pre-close on overdue loan, preClosureInterestCalculationStrategy = till rest frequency date",
+   "result": "PASSED",
+   "tag": "C3246"
+  },
+  {
+   "client_id": 10,
+   "failed_steps": [],
+   "feature_line": 601,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 10,
+   "loan": 12,
+   "loans": [
+    12
+   ],
+   "name": "Verify interest recalculation - late repayment, adjust NEXT installment - UC1: 360/30, daily, lesser then EMI amount is paid",
+   "result": "PASSED",
+   "tag": "C3248"
+  },
+  {
+   "client_id": 11,
+   "failed_steps": [],
+   "feature_line": 647,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 11,
+   "loan": 13,
+   "loans": [
+    13
+   ],
+   "name": "Verify interest recalculation - late repayment, adjust NEXT installment - UC2: 360/30, daily, EMI amount is paid",
+   "result": "PASSED",
+   "tag": "C3249"
+  },
+  {
+   "client_id": 12,
+   "failed_steps": [],
+   "feature_line": 693,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 12,
+   "loan": 14,
+   "loans": [
+    14
+   ],
+   "name": "Verify interest recalculation - late repayment, adjust NEXT installment - UC2: 360/30, daily, excess then EMI amount is paid",
+   "result": "PASSED",
+   "tag": "C3250"
+  },
+  {
+   "client_id": 13,
+   "failed_steps": [],
+   "feature_line": 739,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 13,
+   "loan": 15,
+   "loans": [
+    15
+   ],
+   "name": "Verify interest recalculation - late repayment, adjust LAST installment  - UC2: 360/30, daily, excess EMI amount is paid",
+   "result": "PASSED",
+   "tag": "C3267"
+  },
+  {
+   "client_id": 14,
+   "failed_steps": [],
+   "feature_line": 803,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 14,
+   "loan": 16,
+   "loans": [
+    16
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC1: 360/30, early repayment with amount less then due interest",
+   "result": "PASSED",
+   "tag": "C3251"
+  },
+  {
+   "client_id": 15,
+   "failed_steps": [],
+   "feature_line": 863,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 15,
+   "loan": 17,
+   "loans": [
+    17
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC2: 360/30, early repayment with amount 1 cent more then due interest",
+   "result": "PASSED",
+   "tag": "C3252"
+  },
+  {
+   "client_id": 16,
+   "failed_steps": [],
+   "feature_line": 923,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 16,
+   "loan": 18,
+   "loans": [
+    18
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC3: 360/30, early repayment with less than EMI amount",
+   "result": "PASSED",
+   "tag": "C3253"
+  },
+  {
+   "client_id": 17,
+   "failed_steps": [],
+   "feature_line": 983,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 17,
+   "loan": 19,
+   "loans": [
+    19
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC4: 360/30, early repayment with only 1 cent less than EMI amount",
+   "result": "PASSED",
+   "tag": "C3254"
+  },
+  {
+   "client_id": 18,
+   "failed_steps": [],
+   "feature_line": 1043,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 18,
+   "loan": 20,
+   "loans": [
+    20
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC5: 360/30, multiple early repayments for the same installment",
+   "result": "PASSED",
+   "tag": "C3255"
+  },
+  {
+   "client_id": 19,
+   "failed_steps": [],
+   "feature_line": 1113,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 19,
+   "loan": 21,
+   "loans": [
+    21
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC6: 360/30, early repayment with exact EMI amount",
+   "result": "PASSED",
+   "tag": "C3256"
+  },
+  {
+   "client_id": 20,
+   "failed_steps": [],
+   "feature_line": 1173,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 20,
+   "loan": 22,
+   "loans": [
+    22
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC7: 360/30, early repayment with twice than EMI amount",
+   "result": "PASSED",
+   "tag": "C3257"
+  },
+  {
+   "client_id": 21,
+   "failed_steps": [],
+   "feature_line": 1233,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 21,
+   "loan": 23,
+   "loans": [
+    23
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC8: 360/30, preclose after early repayment",
+   "result": "PASSED",
+   "tag": "C3258"
+  },
+  {
+   "client_id": 22,
+   "failed_steps": [],
+   "feature_line": 1299,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE_PMT_ALLOC_1",
+   "index": 22,
+   "loan": 24,
+   "loans": [
+    24
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust NEXT installment - UC9: 360/30, interest modification after early repayment",
+   "result": "PASSED",
+   "tag": "C3259"
+  },
+  {
+   "client_id": 23,
+   "failed_steps": [],
+   "feature_line": 1399,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 23,
+   "loan": 25,
+   "loans": [
+    25
+   ],
+   "name": "UC1 - Single disbursement, full refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3269"
+  },
+  {
+   "client_id": 24,
+   "failed_steps": [],
+   "feature_line": 1428,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 24,
+   "loan": 26,
+   "loans": [
+    26
+   ],
+   "name": "UC2 - Single disbursement, full refund after first installment period",
+   "result": "PASSED",
+   "tag": "C3270"
+  },
+  {
+   "client_id": 25,
+   "failed_steps": [],
+   "feature_line": 1494,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 25,
+   "loan": 27,
+   "loans": [
+    27
+   ],
+   "name": "UC3 - Multi disbursements, same day, full refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3271"
+  },
+  {
+   "client_id": 26,
+   "failed_steps": [],
+   "feature_line": 1526,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 26,
+   "loan": 28,
+   "loans": [
+    28
+   ],
+   "name": "UC4 - Multi disbursements, different days, full refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3272"
+  },
+  {
+   "client_id": 27,
+   "failed_steps": [
+    {
+     "actual": "[1, 31, 01 February 2024, 01 February 2024, 752.64, 247.36, 7.57, 0.0, 0.0, 254.93, 254.93, 0.0, 0.0, 0.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 29 tab line 3.",
+      "Actual values in line (with the same due date) are:",
+      "[1, 31, 01 February 2024, 01 February 2024, 752.64, 247.36, 7.57, 0.0, 0.0, 254.93, 254.93, 0.0, 0.0, 0.0] -",
+      "But expected values in line:",
+      "[1, 31, 01 February 2024, 01 February 2024, 752.63, 247.37, 7.57, 0.0, 0.0, 254.94, 254.94, 0.0, 0.0, 0.0]]"
+     ],
+     "expected": "[1, 31, 01 February 2024, 01 February 2024, 752.63, 247.37, 7.57, 0.0, 0.0, 254.94, 254.94, 0.0, 0.0, 0.0]]",
+     "resource": 29,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 1571,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 1559,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 27,
+   "loan": 29,
+   "loans": [
+    29
+   ],
+   "name": "UC5 - Multi disbursements, different days, full refund after first installment period",
+   "result": "FAILED",
+   "tag": "C3273"
+  },
+  {
+   "client_id": 28,
+   "failed_steps": [],
+   "feature_line": 1633,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 28,
+   "loan": 30,
+   "loans": [
+    30
+   ],
+   "name": "UC6 - Single disbursement, partial refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3277"
+  },
+  {
+   "client_id": 29,
+   "failed_steps": [],
+   "feature_line": 1699,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 29,
+   "loan": 31,
+   "loans": [
+    31
+   ],
+   "name": "UC7 - Single disbursement, partial refund after first installment period",
+   "result": "PASSED",
+   "tag": "C3278"
+  },
+  {
+   "client_id": 30,
+   "failed_steps": [],
+   "feature_line": 1767,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 30,
+   "loan": 32,
+   "loans": [
+    32
+   ],
+   "name": "UC8 - Multi disbursements, same days, partial refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3279"
+  },
+  {
+   "client_id": 31,
+   "failed_steps": [],
+   "feature_line": 1840,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 31,
+   "loan": 33,
+   "loans": [
+    33
+   ],
+   "name": "UC9 - Multi disbursements, different days, partial refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3280"
+  },
+  {
+   "client_id": 32,
+   "failed_steps": [],
+   "feature_line": 1899,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 32,
+   "loan": 34,
+   "loans": [
+    34
+   ],
+   "name": "UC10 - Multi disbursements, different days, partial refund after all installments are paid",
+   "result": "PASSED",
+   "tag": "C3281"
+  },
+  {
+   "client_id": 33,
+   "failed_steps": [],
+   "feature_line": 1984,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 33,
+   "loan": 35,
+   "loans": [
+    35
+   ],
+   "name": "UC11 - Single disbursement, multiple partial refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3304"
+  },
+  {
+   "client_id": 34,
+   "failed_steps": [],
+   "feature_line": 2045,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 34,
+   "loan": 36,
+   "loans": [
+    36
+   ],
+   "name": "UC12 - Single disbursement, multiple partial refund after first installment period",
+   "result": "PASSED",
+   "tag": "C3305"
+  },
+  {
+   "client_id": 35,
+   "failed_steps": [],
+   "feature_line": 2119,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 35,
+   "loan": 37,
+   "loans": [
+    37
+   ],
+   "name": "UC13 - Multi disbursements, same days, multiple partial refund within first installment period",
+   "result": "PASSED",
+   "tag": "C3306"
+  },
+  {
+   "client_id": 36,
+   "failed_steps": [],
+   "feature_line": 2196,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 36,
+   "loan": 38,
+   "loans": [
+    38
+   ],
+   "name": "UC14 - Multi disbursements, different days, multiple partial refunds within first installment period",
+   "result": "PASSED",
+   "tag": "C3307"
+  },
+  {
+   "client_id": 37,
+   "failed_steps": [],
+   "feature_line": 2310,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 37,
+   "loan": 39,
+   "loans": [
+    39
+   ],
+   "name": "UC15 - Multi disbursements, different days, multiple partial refunds after first installment period",
+   "result": "PASSED",
+   "tag": "C3308"
+  },
+  {
+   "client_id": 38,
+   "failed_steps": [],
+   "feature_line": 2435,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 38,
+   "loan": 40,
+   "loans": [
+    40
+   ],
+   "name": "UC16 - Multi disbursements, different days, multiple partial refunds crossing multiple installment periods",
+   "result": "PASSED",
+   "tag": "C3309"
+  },
+  {
+   "client_id": 39,
+   "failed_steps": [],
+   "feature_line": 2566,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 39,
+   "loan": 41,
+   "loans": [
+    41
+   ],
+   "name": "UC17 - Single disbursement, multiple partial refund within first installment period, one time payment prior to refund",
+   "result": "PASSED",
+   "tag": "C3310"
+  },
+  {
+   "client_id": 40,
+   "failed_steps": [],
+   "feature_line": 2645,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 40,
+   "loan": 42,
+   "loans": [
+    42
+   ],
+   "name": "Verify the recalculated EMI after interest rate change on the repayment schedule",
+   "result": "PASSED",
+   "tag": "C3288"
+  },
+  {
+   "client_id": 41,
+   "failed_steps": [],
+   "feature_line": 2715,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 41,
+   "loan": 43,
+   "loans": [
+    43
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust LAST installment - UC1: 360/30, early repayment with amount less then emi amount",
+   "result": "PASSED",
+   "tag": "C3289"
+  },
+  {
+   "client_id": 42,
+   "failed_steps": [],
+   "feature_line": 2776,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 42,
+   "loan": 44,
+   "loans": [
+    44
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust LAST installment - UC2: 360/30, early repayment emi amount paid",
+   "result": "PASSED",
+   "tag": "C3290"
+  },
+  {
+   "client_id": 43,
+   "failed_steps": [],
+   "feature_line": 2837,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 43,
+   "loan": 45,
+   "loans": [
+    45
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust LAST installment - UC3: 360/30, early repayment with excess emi amount paid",
+   "result": "PASSED",
+   "tag": "C3291"
+  },
+  {
+   "client_id": 44,
+   "failed_steps": [],
+   "feature_line": 2898,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 44,
+   "loan": 46,
+   "loans": [
+    46
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust LAST installment - UC4: 360/30, pre-closure after early payment",
+   "result": "PASSED",
+   "tag": "C3292"
+  },
+  {
+   "client_id": 45,
+   "failed_steps": [],
+   "feature_line": 2996,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 45,
+   "loan": 47,
+   "loans": [
+    47
+   ],
+   "name": "Verify Interest recalculation - EARLY repayment, adjust LAST installment - UC5: 360/30, interest modification after early payment",
+   "result": "PASSED",
+   "tag": "C3312"
+  },
+  {
+   "client_id": 46,
+   "failed_steps": [],
+   "feature_line": 3097,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 46,
+   "loan": 48,
+   "loans": [
+    48
+   ],
+   "name": "Verify the Loan reschedule - Interest modification - UC1: Interest modification after early payment with Adjustment to NEXT installment",
+   "result": "PASSED",
+   "tag": "C3297"
+  },
+  {
+   "client_id": 47,
+   "failed_steps": [],
+   "feature_line": 3167,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 47,
+   "loan": 49,
+   "loans": [
+    49
+   ],
+   "name": "Verify the Loan reschedule - Interest modification - UC2: Interest modification after early partial payment with Adjustment to NEXT installment",
+   "result": "PASSED",
+   "tag": "C3298"
+  },
+  {
+   "client_id": 48,
+   "failed_steps": [],
+   "feature_line": 3237,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 48,
+   "loan": 50,
+   "loans": [
+    50
+   ],
+   "name": "Verify the Loan reschedule - Interest modification - UC2: Interest modification after early partial payment with Adjustment to LAST installment",
+   "result": "PASSED",
+   "tag": "C3311"
+  },
+  {
+   "client_id": 49,
+   "failed_steps": [],
+   "feature_line": 3309,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALCULATION_DAILY_TILL_PRECLOSE",
+   "index": 49,
+   "loan": 51,
+   "loans": [
+    51
+   ],
+   "name": "Verify the Loan reschedule - Interest modification - UC2: Interest modification after first installment with Adjustment to NEXT installment",
+   "result": "PASSED",
+   "tag": "C3299"
+  },
+  {
+   "client_id": 50,
+   "failed_steps": [],
+   "feature_line": 3380,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_FULL",
+   "index": 50,
+   "loan": 52,
+   "loans": [
+    52
+   ],
+   "name": "UC18-1 - In case of backdated repayment the Interest Refund transaction needs to be recalculated",
+   "result": "PASSED",
+   "tag": "C3301"
+  }
+ ],
+ "steps": {
+  "failed": 1,
+  "passed": 1279,
+  "skipped": 13,
+  "total": 1293
+ },
+ "tenant": "tierd"
+}

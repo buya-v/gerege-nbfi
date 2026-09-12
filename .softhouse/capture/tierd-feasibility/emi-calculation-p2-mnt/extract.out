@@ -1,0 +1,56 @@
+source: /Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-emi-calculation-p2-mnt.log (315205323 bytes, 104948 lines)
+exchanges: 3992 total, 1223 loan, 2769 skipped (88% of source bytes, 94% of framed body bytes; 280465521 bytes skipped)
+loans: 52; files: 1436; kept body bytes: 16670359
+  loan 1: create=1 cmd_req=3 cmd_resp=3 reads=17 files=24 bytes=259575
+  loan 2: create=1 cmd_req=4 cmd_resp=4 reads=22 files=31 bytes=348983
+  loan 3: create=1 cmd_req=4 cmd_resp=4 reads=22 files=31 bytes=349279
+  loan 4: create=1 cmd_req=4 cmd_resp=4 reads=22 files=31 bytes=350485
+  loan 5: create=1 cmd_req=4 cmd_resp=4 reads=22 files=31 bytes=350815
+  loan 6: create=1 cmd_req=2 cmd_resp=2 reads=10 files=15 bytes=127341
+  loan 7: create=1 cmd_req=2 cmd_resp=2 reads=10 files=15 bytes=127192
+  loan 8: create=1 cmd_req=2 cmd_resp=2 reads=10 files=15 bytes=127174
+  loan 9: create=1 cmd_req=2 cmd_resp=2 reads=10 files=15 bytes=127132
+  loan 10: create=1 cmd_req=3 cmd_resp=3 reads=15 files=22 bytes=229554
+  loan 11: create=1 cmd_req=3 cmd_resp=3 reads=15 files=22 bytes=229674
+  loan 12: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=218029
+  loan 13: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=217226
+  loan 14: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=217451
+  loan 15: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=290183
+  loan 16: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234612
+  loan 17: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234583
+  loan 18: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234671
+  loan 19: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234649
+  loan 20: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=332009
+  loan 21: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234754
+  loan 22: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234852
+  loan 23: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=324903
+  loan 24: create=1 cmd_req=3 cmd_resp=3 reads=16 files=23 bytes=343502
+  loan 25: create=1 cmd_req=3 cmd_resp=3 reads=12 files=19 bytes=171078
+  loan 26: create=1 cmd_req=5 cmd_resp=5 reads=21 files=32 bytes=326998
+  loan 27: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=244324
+  loan 28: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=244109
+  loan 29: create=1 cmd_req=4 cmd_resp=4 reads=13 files=22 bytes=198837
+  loan 30: create=1 cmd_req=6 cmd_resp=6 reads=24 files=37 bytes=396627
+  loan 31: create=1 cmd_req=6 cmd_resp=6 reads=24 files=37 bytes=395169
+  loan 32: create=1 cmd_req=7 cmd_resp=7 reads=28 files=43 bytes=489210
+  loan 33: create=1 cmd_req=7 cmd_resp=7 reads=25 files=40 bytes=448029
+  loan 34: create=1 cmd_req=9 cmd_resp=9 reads=31 files=50 bytes=580750
+  loan 35: create=1 cmd_req=4 cmd_resp=4 reads=20 files=29 bytes=302003
+  loan 36: create=1 cmd_req=6 cmd_resp=6 reads=24 files=37 bytes=438741
+  loan 37: create=1 cmd_req=6 cmd_resp=6 reads=26 files=39 bytes=479472
+  loan 38: create=1 cmd_req=9 cmd_resp=9 reads=37 files=56 bytes=778352
+  loan 39: create=1 cmd_req=8 cmd_resp=8 reads=36 files=53 bytes=708689
+  loan 40: create=1 cmd_req=9 cmd_resp=9 reads=37 files=56 bytes=748298
+  loan 41: create=1 cmd_req=7 cmd_resp=7 reads=26 files=41 bytes=520876
+  loan 42: create=1 cmd_req=3 cmd_resp=3 reads=12 files=19 bytes=404645
+  loan 43: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234463
+  loan 44: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234483
+  loan 45: create=1 cmd_req=3 cmd_resp=3 reads=14 files=21 bytes=234497
+  loan 46: create=1 cmd_req=4 cmd_resp=4 reads=19 files=28 bytes=391432
+  loan 47: create=1 cmd_req=3 cmd_resp=3 reads=18 files=25 bytes=357646
+  loan 48: create=1 cmd_req=3 cmd_resp=3 reads=18 files=25 bytes=284719
+  loan 49: create=1 cmd_req=3 cmd_resp=3 reads=18 files=25 bytes=284466
+  loan 50: create=1 cmd_req=3 cmd_resp=3 reads=18 files=25 bytes=284501
+  loan 51: create=1 cmd_req=3 cmd_resp=3 reads=18 files=25 bytes=284867
+  loan 52: create=1 cmd_req=4 cmd_resp=4 reads=16 files=25 bytes=224450
+wrote 1436 files to stage
