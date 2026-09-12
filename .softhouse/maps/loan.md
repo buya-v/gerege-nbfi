@@ -35,6 +35,7 @@ Source: `.softhouse/capabilities-loan.json`
 * seam **loan-capitalized-income-amortization-journal-entries** — The journal entry of the observed loan CAPITALIZED_INCOME_AMORTIZATION transactions, tenant tierd: for each positive interest and fee portion the credit account
 * seam **loan-buy-down-fee-journal-entries** — The journal entry of the observed loan BUY_DOWN_FEE transactions, tenant tierd: when the amount is positive ONE debit of the amount is posted, to BUY_DOWN_EXPEN
 * seam **loan-buy-down-fee-amortization-journal-entries** — The journal entry of the observed loan BUY_DOWN_FEE_AMORTIZATION transactions, tenant tierd: for each positive interest and fee portion the credit account is se
+* seam **loan-buy-down-fee-adjustment-journal-entries** — The journal entry of the observed loan BUY_DOWN_FEE_ADJUSTMENT transactions, tenant tierd: when the amount is positive ONE debit of the amount is posted to DEFE
 * capability `repayment-allocation` — in_graded_domain: **True** — The four-bucket greedy allocation of a repayment across penalty/fee/interest/principal of one instalment, as written bac
 * capability `transaction-balance` — in_graded_domain: **True** — The running outstandingLoanBalance column of the transactions read-back, DERIVED row by row from principal portions (I-3
 * capability `journal-entry-batch-balance` — in_graded_domain: **True** — TWO properties of a loan-produced journal-entry batch read back from the journal-entries endpoint. First, the derived de
@@ -65,9 +66,10 @@ Source: `.softhouse/capabilities-loan.json`
 * capability `capitalized-income-amortization-journal-entry` — in_graded_domain: **True** — The journal entry a CAPITALIZED_INCOME_AMORTIZATION transaction posts, ported from createJournalEntriesForCapitalizedInc
 * capability `buy-down-fee-journal-entry` — in_graded_domain: **True** — The journal entry a BUY_DOWN_FEE transaction posts, ported from createJournalEntriesForBuyDownFee [AccrualBasedAccountin
 * capability `buy-down-fee-amortization-journal-entry` — in_graded_domain: **True** — The journal entry a BUY_DOWN_FEE_AMORTIZATION transaction posts, ported from createJournalEntriesForBuyDownFeeAmortizati
+* capability `buy-down-fee-adjustment-journal-entry` — in_graded_domain: **True** — The journal entry the observed loan BUY_DOWN_FEE_ADJUSTMENT transactions post, tenant tierd: when the amount is positive
 
 ## Vectors (what is graded today)
-129 files in `.softhouse/vectors/loan/`
+133 files in `.softhouse/vectors/loan/`
 
 * `LN-L01-delinquent-days-july-62.json` — request `delinquency` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
 * `LN-L01-status-active.json` — request `status` — capture `.softhouse/capture/loan/out/loan-1-detail-raw.json`
@@ -116,6 +118,10 @@ Source: `.softhouse/capabilities-loan.json`
 * `LN-TD-BDA-loan-8-fraud-not-charged-off.json` — request `buy_down_fee_amortization_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-8.json`
 * `LN-TD-BDF-loan-1-merchant.json` — request `buy_down_fee_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-1.json`
 * `LN-TD-BDF-loan-20-non-merchant.json` — request `buy_down_fee_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-20.json`
+* `LN-TD-BDX-loan-13-merchant.json` — request `buy_down_fee_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-13.json`
+* `LN-TD-BDX-loan-14-merchant.json` — request `buy_down_fee_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-14.json`
+* `LN-TD-BDX-loan-25-non-merchant.json` — request `buy_down_fee_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-25.json`
+* `LN-TD-BDX-loan-39-non-merchant.json` — request `buy_down_fee_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-39.json`
 * `LN-TD-CAJ-loan-36-penalty.json` — request `charge_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-36.json`
 * `LN-TD-CAJ-loan-40-charged-off.json` — request `charge_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-40.json`
 * `LN-TD-CAJ-loan-41-principal.json` — request `charge_adjustment_journal` — capture `.softhouse/capture/tierd-feasibility/charges-progressive-mnt/journalentries-sweep/loan-41.json`
@@ -202,7 +208,7 @@ Source: `.softhouse/capabilities-loan.json`
 ## Registration — where to add a seam / implementation / drive
 * `nexus/internal/apps/loan/conformance/impl.go:44` — `func Register(name string, e LoanEvaluator) {`
 * `nexus/internal/apps/loan/conformance/impl.go:54` — `func RegisterWrong(name, defect string, e LoanEvaluator) {`
-* `nexus/internal/apps/loan/conformance/impl.go:3967` — `Register("loan-go", NewGoEvaluator())`
+* `nexus/internal/apps/loan/conformance/impl.go:4043` — `Register("loan-go", NewGoEvaluator())`
 * conformance package files (`nexus/internal/apps/loan/conformance/`): `admit.go`, `capability.go`, `cmd/conformance/main.go`, `committed_store_test.go`, `conformance_test.go`, `doc.go`, `grade.go`, `impl.go`, `invariants.go`, `nofloat.go`, `report.go`, `vector.go`
 * committed-store test (the only valid coverage instrument): `nexus/internal/apps/loan/conformance/committed_store_test.go`
 
@@ -212,113 +218,116 @@ evaluator switch, its grading case. An evaluator that dispatches on the REQUEST 
 does not name the constant — find it by the request type listed here. Derived from the code (added 2026-09-11 after OH-DLGRADE-BT spent 586
 events finding four of these lines by hand).
 
-* **`loan-accrual-journal-entries`** — `SeamLoanAccrualJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:459`; used at `admit.go:52`, `admit.go:70`, `admit.go:991`, `admit.go:2115`, `grade.go:484`, `invariants.go:75`, `vector.go:430`
-* **`loan-buy-down-fee-amortization-journal-entries`** — `SeamLoanBuyDownFeeAmortizationJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1194`; used at `admit.go:55`, `admit.go:73`, `admit.go:1258`, `admit.go:2435`, `grade.go:499`, `invariants.go:87`, `vector.go:1166`
-* **`loan-buy-down-fee-journal-entries`** — `SeamLoanBuyDownFeeJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:504`; used at `admit.go:56`, `admit.go:74`, `admit.go:1095`, `admit.go:2221`, `grade.go:491`, `invariants.go:79`, `vector.go:485`
-* **`loan-capitalized-income-amortization-journal-entries`** — `SeamLoanCapitalizedIncomeAmortizationJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1120`; used at `admit.go:54`, `admit.go:72`, `admit.go:1215`, `admit.go:2381`, `grade.go:497`, `invariants.go:85`, `vector.go:1094`
-* **`loan-charge-adjustment-journal-entries`** — `SeamLoanChargeAdjustmentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:363`; used at `admit.go:49`, `admit.go:67`, `admit.go:837`, `admit.go:1952`, `grade.go:466`, `invariants.go:69`, `vector.go:328`
-* **`loan-charge-lifecycle`** — `SeamLoanChargeLifecycle` declared `nexus/internal/apps/loan/conformance/vector.go:540`; used at `admit.go:56`, `admit.go:74`, `admit.go:1301`, `admit.go:2489`, `grade.go:501`, `invariants.go:89`, `vector.go:534`
-* **`loan-chargeback-journal-entries`** — `SeamLoanChargebackJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:483`; used at `admit.go:52`, `admit.go:70`, `admit.go:1025`, `admit.go:2168`, `grade.go:489`, `invariants.go:77`, `vector.go:461`
-* **`loan-chargedoff-merchant-refund-journal-entries`** — `SeamLoanChargedOffMerchantRefundJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:428`; used at `admit.go:51`, `admit.go:69`, `admit.go:934`, `admit.go:2061`, `grade.go:478`, `invariants.go:73`, `vector.go:394`
-* **`loan-chargedoff-repayment-journal-entries`** — `SeamLoanChargedOffRepaymentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:392`; used at `admit.go:50`, `admit.go:68`, `admit.go:888`, `admit.go:2007`, `grade.go:472`, `invariants.go:71`, `vector.go:365`
-* **`loan-chargedoff-writeoff-journal-entries`** — `SeamLoanChargedOffWriteOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:243`; used at `admit.go:46`, `admit.go:64`, `admit.go:640`, `admit.go:1735`, `grade.go:458`, `invariants.go:61`, `vector.go:221`
-* **`loan-chargeoff-journal-entries`** — `SeamLoanChargeOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:219`; used at `admit.go:46`, `admit.go:64`, `admit.go:594`, `admit.go:1682`, `grade.go:456`, `invariants.go:59`, `vector.go:198`
-* **`loan-credit-balance-refund-journal-entries`** — `SeamLoanCreditBalanceRefundJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:532`; used at `admit.go:53`, `admit.go:71`, `admit.go:1123`, `admit.go:2274`, `grade.go:493`, `invariants.go:81`, `vector.go:506`
-* **`loan-delinquent-days`** — `SeamLoanDelinquentDays` declared `nexus/internal/apps/loan/conformance/vector.go:79`; used at `admit.go:44`, `admit.go:62`, `admit.go:459`, `admit.go:1495`, `grade.go:445`, `invariants.go:51`, `vector.go:65`
-* **`loan-disbursement`** — `SeamLoanDisbursement` declared `nexus/internal/apps/loan/conformance/vector.go:31`; used at `admit.go:42`, `admit.go:60`, `admit.go:324`, `admit.go:1371`, `grade.go:429`, `vector.go:29`
-* **`loan-disbursement-journal-entries`** — `SeamLoanDisbursementJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:326`; used at `admit.go:48`, `admit.go:66`, `admit.go:792`, `admit.go:1898`, `grade.go:464`, `invariants.go:67`, `vector.go:298`
-* **`loan-goodwill-credit-journal-entries`** — `SeamLoanGoodwillCreditJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:296`; used at `admit.go:47`, `admit.go:65`, `admit.go:735`, `admit.go:1844`, `grade.go:462`, `invariants.go:65`, `vector.go:269`
-* **`loan-interest-payment-waiver-journal-entries`** — `SeamLoanInterestPaymentWaiverJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1045`; used at `admit.go:53`, `admit.go:71`, `admit.go:1165`, `admit.go:2327`, `grade.go:495`, `invariants.go:83`, `vector.go:1022`
-* **`loan-journal-entry-batch-balance`** — `SeamLoanJournalEntryBatchBalance` declared `nexus/internal/apps/loan/conformance/vector.go:101`; used at `admit.go:44`, `admit.go:62`, `admit.go:376`, `admit.go:1416`, `grade.go:438`, `invariants.go:47`, `vector.go:81`
-* **`loan-repayment-allocation`** — `SeamLoanRepaymentAllocation` declared `nexus/internal/apps/loan/conformance/vector.go:22`; used at `admit.go:42`, `admit.go:60`, `admit.go:289`, `admit.go:1350`, `grade.go:425`, `invariants.go:37`, `vector.go:19`
-* **`loan-repayment-journal-entries`** — `SeamLoanRepaymentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:267`; used at `admit.go:47`, `admit.go:65`, `admit.go:685`, `admit.go:1791`, `grade.go:460`, `invariants.go:63`, `vector.go:245`
-* **`loan-schedule-amortization`** — `SeamLoanScheduleAmortization` declared `nexus/internal/apps/loan/conformance/vector.go:118`; used at `admit.go:44`, `admit.go:62`, `admit.go:438`, `admit.go:1469`, `grade.go:442`, `invariants.go:49`, `vector.go:103`
-* **`loan-schedule-interest`** — `SeamLoanScheduleInterest` declared `nexus/internal/apps/loan/conformance/vector.go:27`; used at `admit.go:42`, `admit.go:60`, `admit.go:306`, `admit.go:1367`, `grade.go:427`, `invariants.go:39`, `vector.go:24`
-* **`loan-status`** — `SeamLoanStatus` declared `nexus/internal/apps/loan/conformance/vector.go:42`; used at `admit.go:43`, `admit.go:61`, `admit.go:352`, `admit.go:1379`, `grade.go:433`, `invariants.go:43`, `vector.go:33`
-* **`loan-status-transition`** — `SeamLoanStatusTransition` declared `nexus/internal/apps/loan/conformance/vector.go:551`; used at `admit.go:56`, `admit.go:74`, `admit.go:2514`, `grade.go:503`, `invariants.go:91`, `vector.go:542`
-* **`loan-summary-outstanding`** — `SeamLoanSummaryOutstanding` declared `nexus/internal/apps/loan/conformance/vector.go:63`; used at `admit.go:43`, `admit.go:61`, `admit.go:336`, `admit.go:1375`, `grade.go:431`, `invariants.go:41`, `vector.go:57`
-* **`loan-transaction-balance`** — `SeamLoanTransactionBalance` declared `nexus/internal/apps/loan/conformance/vector.go:55`; used at `admit.go:43`, `admit.go:61`, `admit.go:360`, `admit.go:1392`, `grade.go:436`, `invariants.go:45`, `vector.go:44`
-* **`loan-transaction-reversal`** — `SeamLoanTransactionReversal` declared `nexus/internal/apps/loan/conformance/vector.go:165`; used at `admit.go:45`, `admit.go:63`, `admit.go:512`, `admit.go:1539`, `grade.go:452`, `invariants.go:55`, `vector.go:139`
-* **`loan-writeoff-four-bucket`** — `SeamLoanWriteOffFourBucket` declared `nexus/internal/apps/loan/conformance/vector.go:137`; used at `admit.go:45`, `admit.go:63`, `admit.go:489`, `admit.go:1504`, `grade.go:450`, `invariants.go:53`, `vector.go:120`
-* **`loan-writeoff-journal-entries`** — `SeamLoanWriteOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:196`; used at `admit.go:45`, `admit.go:63`, `admit.go:550`, `admit.go:1628`, `grade.go:454`, `invariants.go:57`, `vector.go:167`
+* **`loan-accrual-journal-entries`** — `SeamLoanAccrualJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:459`; used at `admit.go:52`, `admit.go:71`, `admit.go:996`, `admit.go:2148`, `grade.go:495`, `invariants.go:75`, `vector.go:430`
+* **`loan-buy-down-fee-adjustment-journal-entries`** — `SeamLoanBuyDownFeeAdjustmentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:530`; used at `admit.go:57`, `admit.go:76`, `admit.go:1128`, `admit.go:2307`, `grade.go:504`, `invariants.go:81`, `vector.go:506`
+* **`loan-buy-down-fee-amortization-journal-entries`** — `SeamLoanBuyDownFeeAmortizationJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1220`; used at `admit.go:55`, `admit.go:74`, `admit.go:1291`, `admit.go:2521`, `grade.go:512`, `invariants.go:89`, `vector.go:1192`
+* **`loan-buy-down-fee-journal-entries`** — `SeamLoanBuyDownFeeJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:504`; used at `admit.go:56`, `admit.go:75`, `admit.go:1100`, `admit.go:2254`, `grade.go:502`, `invariants.go:79`, `vector.go:485`
+* **`loan-capitalized-income-amortization-journal-entries`** — `SeamLoanCapitalizedIncomeAmortizationJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1146`; used at `admit.go:54`, `admit.go:73`, `admit.go:1248`, `admit.go:2467`, `grade.go:510`, `invariants.go:87`, `vector.go:1120`
+* **`loan-charge-adjustment-journal-entries`** — `SeamLoanChargeAdjustmentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:363`; used at `admit.go:49`, `admit.go:68`, `admit.go:842`, `admit.go:1985`, `grade.go:477`, `invariants.go:69`, `vector.go:328`
+* **`loan-charge-lifecycle`** — `SeamLoanChargeLifecycle` declared `nexus/internal/apps/loan/conformance/vector.go:566`; used at `admit.go:56`, `admit.go:75`, `admit.go:1334`, `admit.go:2575`, `grade.go:514`, `invariants.go:91`, `vector.go:560`
+* **`loan-chargeback-journal-entries`** — `SeamLoanChargebackJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:483`; used at `admit.go:52`, `admit.go:71`, `admit.go:1030`, `admit.go:2201`, `grade.go:500`, `invariants.go:77`, `vector.go:461`
+* **`loan-chargedoff-merchant-refund-journal-entries`** — `SeamLoanChargedOffMerchantRefundJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:428`; used at `admit.go:51`, `admit.go:70`, `admit.go:939`, `admit.go:2094`, `grade.go:489`, `invariants.go:73`, `vector.go:394`
+* **`loan-chargedoff-repayment-journal-entries`** — `SeamLoanChargedOffRepaymentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:392`; used at `admit.go:50`, `admit.go:69`, `admit.go:893`, `admit.go:2040`, `grade.go:483`, `invariants.go:71`, `vector.go:365`
+* **`loan-chargedoff-writeoff-journal-entries`** — `SeamLoanChargedOffWriteOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:243`; used at `admit.go:46`, `admit.go:65`, `admit.go:645`, `admit.go:1768`, `grade.go:469`, `invariants.go:61`, `vector.go:221`
+* **`loan-chargeoff-journal-entries`** — `SeamLoanChargeOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:219`; used at `admit.go:46`, `admit.go:65`, `admit.go:599`, `admit.go:1715`, `grade.go:467`, `invariants.go:59`, `vector.go:198`
+* **`loan-credit-balance-refund-journal-entries`** — `SeamLoanCreditBalanceRefundJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:558`; used at `admit.go:53`, `admit.go:72`, `admit.go:1156`, `admit.go:2360`, `grade.go:506`, `invariants.go:83`, `vector.go:532`
+* **`loan-delinquent-days`** — `SeamLoanDelinquentDays` declared `nexus/internal/apps/loan/conformance/vector.go:79`; used at `admit.go:44`, `admit.go:63`, `admit.go:464`, `admit.go:1528`, `grade.go:456`, `invariants.go:51`, `vector.go:65`
+* **`loan-disbursement`** — `SeamLoanDisbursement` declared `nexus/internal/apps/loan/conformance/vector.go:31`; used at `admit.go:42`, `admit.go:61`, `admit.go:329`, `admit.go:1404`, `grade.go:440`, `vector.go:29`
+* **`loan-disbursement-journal-entries`** — `SeamLoanDisbursementJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:326`; used at `admit.go:48`, `admit.go:67`, `admit.go:797`, `admit.go:1931`, `grade.go:475`, `invariants.go:67`, `vector.go:298`
+* **`loan-goodwill-credit-journal-entries`** — `SeamLoanGoodwillCreditJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:296`; used at `admit.go:47`, `admit.go:66`, `admit.go:740`, `admit.go:1877`, `grade.go:473`, `invariants.go:65`, `vector.go:269`
+* **`loan-interest-payment-waiver-journal-entries`** — `SeamLoanInterestPaymentWaiverJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:1071`; used at `admit.go:53`, `admit.go:72`, `admit.go:1198`, `admit.go:2413`, `grade.go:508`, `invariants.go:85`, `vector.go:1048`
+* **`loan-journal-entry-batch-balance`** — `SeamLoanJournalEntryBatchBalance` declared `nexus/internal/apps/loan/conformance/vector.go:101`; used at `admit.go:44`, `admit.go:63`, `admit.go:381`, `admit.go:1449`, `grade.go:449`, `invariants.go:47`, `vector.go:81`
+* **`loan-repayment-allocation`** — `SeamLoanRepaymentAllocation` declared `nexus/internal/apps/loan/conformance/vector.go:22`; used at `admit.go:42`, `admit.go:61`, `admit.go:294`, `admit.go:1383`, `grade.go:436`, `invariants.go:37`, `vector.go:19`
+* **`loan-repayment-journal-entries`** — `SeamLoanRepaymentJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:267`; used at `admit.go:47`, `admit.go:66`, `admit.go:690`, `admit.go:1824`, `grade.go:471`, `invariants.go:63`, `vector.go:245`
+* **`loan-schedule-amortization`** — `SeamLoanScheduleAmortization` declared `nexus/internal/apps/loan/conformance/vector.go:118`; used at `admit.go:44`, `admit.go:63`, `admit.go:443`, `admit.go:1502`, `grade.go:453`, `invariants.go:49`, `vector.go:103`
+* **`loan-schedule-interest`** — `SeamLoanScheduleInterest` declared `nexus/internal/apps/loan/conformance/vector.go:27`; used at `admit.go:42`, `admit.go:61`, `admit.go:311`, `admit.go:1400`, `grade.go:438`, `invariants.go:39`, `vector.go:24`
+* **`loan-status`** — `SeamLoanStatus` declared `nexus/internal/apps/loan/conformance/vector.go:42`; used at `admit.go:43`, `admit.go:62`, `admit.go:357`, `admit.go:1412`, `grade.go:444`, `invariants.go:43`, `vector.go:33`
+* **`loan-status-transition`** — `SeamLoanStatusTransition` declared `nexus/internal/apps/loan/conformance/vector.go:577`; used at `admit.go:56`, `admit.go:75`, `admit.go:2600`, `grade.go:516`, `invariants.go:93`, `vector.go:568`
+* **`loan-summary-outstanding`** — `SeamLoanSummaryOutstanding` declared `nexus/internal/apps/loan/conformance/vector.go:63`; used at `admit.go:43`, `admit.go:62`, `admit.go:341`, `admit.go:1408`, `grade.go:442`, `invariants.go:41`, `vector.go:57`
+* **`loan-transaction-balance`** — `SeamLoanTransactionBalance` declared `nexus/internal/apps/loan/conformance/vector.go:55`; used at `admit.go:43`, `admit.go:62`, `admit.go:365`, `admit.go:1425`, `grade.go:447`, `invariants.go:45`, `vector.go:44`
+* **`loan-transaction-reversal`** — `SeamLoanTransactionReversal` declared `nexus/internal/apps/loan/conformance/vector.go:165`; used at `admit.go:45`, `admit.go:64`, `admit.go:517`, `admit.go:1572`, `grade.go:463`, `invariants.go:55`, `vector.go:139`
+* **`loan-writeoff-four-bucket`** — `SeamLoanWriteOffFourBucket` declared `nexus/internal/apps/loan/conformance/vector.go:137`; used at `admit.go:45`, `admit.go:64`, `admit.go:494`, `admit.go:1537`, `grade.go:461`, `invariants.go:53`, `vector.go:120`
+* **`loan-writeoff-journal-entries`** — `SeamLoanWriteOffJournalEntries` declared `nexus/internal/apps/loan/conformance/vector.go:196`; used at `admit.go:45`, `admit.go:64`, `admit.go:555`, `admit.go:1661`, `grade.go:465`, `invariants.go:57`, `vector.go:167`
 
 ## Drives registered (name — file:line)
 Source: the binary's own -list-implementations (names prefixed `loan-wrong-` only; a binary may host another context's drives, e.g. loanschedule hosts ledger's).
 
-* `loan-wrong-accrual-journal-adjustment-not-reversed` — `nexus/internal/apps/loan/conformance/impl.go:4325`
-* `loan-wrong-allocation-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:4002`
-* `loan-wrong-allocation-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4008`
-* `loan-wrong-buy-down-fee-ignores-merchant` — `nexus/internal/apps/loan/conformance/impl.go:4350`
-* `loan-wrong-buydown-amortization-ignores-loan-state` — `nexus/internal/apps/loan/conformance/impl.go:4230`
-* `loan-wrong-cbr-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4357`
-* `loan-wrong-charge-adjustment-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4288`
-* `loan-wrong-charge-outstanding-ignores-waived` — `nexus/internal/apps/loan/conformance/impl.go:4381`
-* `loan-wrong-charge-partial-marks-paid` — `nexus/internal/apps/loan/conformance/impl.go:4366`
-* `loan-wrong-charge-waiver-counts-as-paid` — `nexus/internal/apps/loan/conformance/impl.go:4376`
-* `loan-wrong-charge-waiver-leaves-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:4371`
-* `loan-wrong-chargeback-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4341`
-* `loan-wrong-chargeback-journal-overpayment-to-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4333`
-* `loan-wrong-chargedoff-merchant-refund-as-recovery` — `nexus/internal/apps/loan/conformance/impl.go:4306`
-* `loan-wrong-chargedoff-refund-fraud-ignored` — `nexus/internal/apps/loan/conformance/impl.go:4316`
-* `loan-wrong-chargedoff-repayment-to-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4297`
-* `loan-wrong-chargedoff-writeoff-debits-fund-source` — `nexus/internal/apps/loan/conformance/impl.go:4239`
-* `loan-wrong-chargeoff-journal-ignores-fraud` — `nexus/internal/apps/loan/conformance/impl.go:4193`
-* `loan-wrong-cia-ignores-loan-state` — `nexus/internal/apps/loan/conformance/impl.go:4221`
-* `loan-wrong-delinquency-absent-nonzero` — `nexus/internal/apps/loan/conformance/impl.go:4110`
-* `loan-wrong-delinquency-pause-ignored` — `nexus/internal/apps/loan/conformance/impl.go:4115`
-* `loan-wrong-delinquency-thirty-day-month` — `nexus/internal/apps/loan/conformance/impl.go:4104`
-* `loan-wrong-disbursement-uses-principal-portion` — `nexus/internal/apps/loan/conformance/impl.go:4280`
-* `loan-wrong-goodwill-chargedoff-credits-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4271`
-* `loan-wrong-goodwill-debits-fund-source` — `nexus/internal/apps/loan/conformance/impl.go:4263`
-* `loan-wrong-half-even-schedule-interest` — `nexus/internal/apps/loan/conformance/impl.go:3968`
-* `loan-wrong-ipw-charged-off-credits-not-merged` — `nexus/internal/apps/loan/conformance/impl.go:4209`
-* `loan-wrong-ipw-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4200`
-* `loan-wrong-journal-entry-batch-collapses-credits-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:4057`
-* `loan-wrong-journal-entry-batch-debit-from-first-two-credits` — `nexus/internal/apps/loan/conformance/impl.go:4069`
-* `loan-wrong-journal-entry-batch-drops-fee-pair` — `nexus/internal/apps/loan/conformance/impl.go:4033`
-* `loan-wrong-journal-entry-batch-first-pair-only` — `nexus/internal/apps/loan/conformance/impl.go:4028`
-* `loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts` — `nexus/internal/apps/loan/conformance/impl.go:4049`
-* `loan-wrong-journal-entry-batch-nets-account` — `nexus/internal/apps/loan/conformance/impl.go:4038`
-* `loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time` — `nexus/internal/apps/loan/conformance/impl.go:4063`
-* `loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:4075`
-* `loan-wrong-journal-entry-batch-swaps-first-pair-sides` — `nexus/internal/apps/loan/conformance/impl.go:4043`
-* `loan-wrong-repayment-credits-not-merged` — `nexus/internal/apps/loan/conformance/impl.go:4253`
-* `loan-wrong-repayment-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:4246`
-* `loan-wrong-repayment-omits-principal` — `nexus/internal/apps/loan/conformance/impl.go:3997`
-* `loan-wrong-reversal-business-date` — `nexus/internal/apps/loan/conformance/impl.go:4166`
-* `loan-wrong-reversal-duplicates-instead-of-reverses` — `nexus/internal/apps/loan/conformance/impl.go:4149`
-* `loan-wrong-reversal-flags-originals` — `nexus/internal/apps/loan/conformance/impl.go:4155`
-* `loan-wrong-reversal-fresh-transaction-id` — `nexus/internal/apps/loan/conformance/impl.go:4161`
-* `loan-wrong-schedule-amortization-drops-final-component` — `nexus/internal/apps/loan/conformance/impl.go:4087`
-* `loan-wrong-schedule-amortization-uniform-rounded-up` — `nexus/internal/apps/loan/conformance/impl.go:4099`
-* `loan-wrong-schedule-amortization-uniform-truncated` — `nexus/internal/apps/loan/conformance/impl.go:4093`
-* `loan-wrong-status-iota-ordinal` — `nexus/internal/apps/loan/conformance/impl.go:3977`
-* `loan-wrong-status-transition-approve-skips-to-active` — `nexus/internal/apps/loan/conformance/impl.go:4397`
-* `loan-wrong-status-transition-ignores-repaid-in-full` — `nexus/internal/apps/loan/conformance/impl.go:4386`
-* `loan-wrong-status-transition-writeoff-closes-obligations-met` — `nexus/internal/apps/loan/conformance/impl.go:4392`
-* `loan-wrong-summary-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:3987`
-* `loan-wrong-summary-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:3992`
-* `loan-wrong-summary-drops-principal` — `nexus/internal/apps/loan/conformance/impl.go:3982`
-* `loan-wrong-summary-interest-not-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:3972`
-* `loan-wrong-transaction-balance-accrual-zero` — `nexus/internal/apps/loan/conformance/impl.go:4019`
-* `loan-wrong-transaction-balance-folds-repayment-interest` — `nexus/internal/apps/loan/conformance/impl.go:4023`
-* `loan-wrong-transaction-balance-waiver-moves-principal` — `nexus/internal/apps/loan/conformance/impl.go:4014`
-* `loan-wrong-writeoff-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:4133`
-* `loan-wrong-writeoff-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4138`
-* `loan-wrong-writeoff-journal-debits-loan-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4182`
-* `loan-wrong-writeoff-journal-debits-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:4177`
-* `loan-wrong-writeoff-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:4171`
-* `loan-wrong-writeoff-journal-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4188`
-* `loan-wrong-writeoff-principal-and-interest` — `nexus/internal/apps/loan/conformance/impl.go:4127`
-* `loan-wrong-writeoff-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:4121`
-* `loan-wrong-writeoff-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4143`
+* `loan-wrong-accrual-journal-adjustment-not-reversed` — `nexus/internal/apps/loan/conformance/impl.go:4401`
+* `loan-wrong-allocation-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:4078`
+* `loan-wrong-allocation-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4084`
+* `loan-wrong-buy-down-fee-ignores-merchant` — `nexus/internal/apps/loan/conformance/impl.go:4426`
+* `loan-wrong-buydown-adjustment-ignores-merchant` — `nexus/internal/apps/loan/conformance/impl.go:4433`
+* `loan-wrong-buydown-amortization-ignores-loan-state` — `nexus/internal/apps/loan/conformance/impl.go:4306`
+* `loan-wrong-cbr-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4441`
+* `loan-wrong-charge-adjustment-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4364`
+* `loan-wrong-charge-outstanding-ignores-waived` — `nexus/internal/apps/loan/conformance/impl.go:4465`
+* `loan-wrong-charge-partial-marks-paid` — `nexus/internal/apps/loan/conformance/impl.go:4450`
+* `loan-wrong-charge-waiver-counts-as-paid` — `nexus/internal/apps/loan/conformance/impl.go:4460`
+* `loan-wrong-charge-waiver-leaves-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:4455`
+* `loan-wrong-chargeback-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4417`
+* `loan-wrong-chargeback-journal-overpayment-to-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4409`
+* `loan-wrong-chargedoff-merchant-refund-as-recovery` — `nexus/internal/apps/loan/conformance/impl.go:4382`
+* `loan-wrong-chargedoff-refund-fraud-ignored` — `nexus/internal/apps/loan/conformance/impl.go:4392`
+* `loan-wrong-chargedoff-repayment-to-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4373`
+* `loan-wrong-chargedoff-writeoff-debits-fund-source` — `nexus/internal/apps/loan/conformance/impl.go:4315`
+* `loan-wrong-chargeoff-journal-ignores-fraud` — `nexus/internal/apps/loan/conformance/impl.go:4269`
+* `loan-wrong-cia-ignores-loan-state` — `nexus/internal/apps/loan/conformance/impl.go:4297`
+* `loan-wrong-delinquency-absent-nonzero` — `nexus/internal/apps/loan/conformance/impl.go:4186`
+* `loan-wrong-delinquency-pause-ignored` — `nexus/internal/apps/loan/conformance/impl.go:4191`
+* `loan-wrong-delinquency-thirty-day-month` — `nexus/internal/apps/loan/conformance/impl.go:4180`
+* `loan-wrong-disbursement-uses-principal-portion` — `nexus/internal/apps/loan/conformance/impl.go:4356`
+* `loan-wrong-goodwill-chargedoff-credits-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4347`
+* `loan-wrong-goodwill-debits-fund-source` — `nexus/internal/apps/loan/conformance/impl.go:4339`
+* `loan-wrong-half-even-schedule-interest` — `nexus/internal/apps/loan/conformance/impl.go:4044`
+* `loan-wrong-ipw-charged-off-credits-not-merged` — `nexus/internal/apps/loan/conformance/impl.go:4285`
+* `loan-wrong-ipw-ignores-charge-off` — `nexus/internal/apps/loan/conformance/impl.go:4276`
+* `loan-wrong-journal-entry-batch-collapses-credits-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:4133`
+* `loan-wrong-journal-entry-batch-debit-from-first-two-credits` — `nexus/internal/apps/loan/conformance/impl.go:4145`
+* `loan-wrong-journal-entry-batch-drops-fee-pair` — `nexus/internal/apps/loan/conformance/impl.go:4109`
+* `loan-wrong-journal-entry-batch-first-pair-only` — `nexus/internal/apps/loan/conformance/impl.go:4104`
+* `loan-wrong-journal-entry-batch-maps-fee-to-disbursement-accounts` — `nexus/internal/apps/loan/conformance/impl.go:4125`
+* `loan-wrong-journal-entry-batch-nets-account` — `nexus/internal/apps/loan/conformance/impl.go:4114`
+* `loan-wrong-journal-entry-batch-pairs-legs-two-at-a-time` — `nexus/internal/apps/loan/conformance/impl.go:4139`
+* `loan-wrong-journal-entry-batch-routes-accrual-income-to-one-account` — `nexus/internal/apps/loan/conformance/impl.go:4151`
+* `loan-wrong-journal-entry-batch-swaps-first-pair-sides` — `nexus/internal/apps/loan/conformance/impl.go:4119`
+* `loan-wrong-repayment-credits-not-merged` — `nexus/internal/apps/loan/conformance/impl.go:4329`
+* `loan-wrong-repayment-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:4322`
+* `loan-wrong-repayment-omits-principal` — `nexus/internal/apps/loan/conformance/impl.go:4073`
+* `loan-wrong-reversal-business-date` — `nexus/internal/apps/loan/conformance/impl.go:4242`
+* `loan-wrong-reversal-duplicates-instead-of-reverses` — `nexus/internal/apps/loan/conformance/impl.go:4225`
+* `loan-wrong-reversal-flags-originals` — `nexus/internal/apps/loan/conformance/impl.go:4231`
+* `loan-wrong-reversal-fresh-transaction-id` — `nexus/internal/apps/loan/conformance/impl.go:4237`
+* `loan-wrong-schedule-amortization-drops-final-component` — `nexus/internal/apps/loan/conformance/impl.go:4163`
+* `loan-wrong-schedule-amortization-uniform-rounded-up` — `nexus/internal/apps/loan/conformance/impl.go:4175`
+* `loan-wrong-schedule-amortization-uniform-truncated` — `nexus/internal/apps/loan/conformance/impl.go:4169`
+* `loan-wrong-status-iota-ordinal` — `nexus/internal/apps/loan/conformance/impl.go:4053`
+* `loan-wrong-status-transition-approve-skips-to-active` — `nexus/internal/apps/loan/conformance/impl.go:4481`
+* `loan-wrong-status-transition-ignores-repaid-in-full` — `nexus/internal/apps/loan/conformance/impl.go:4470`
+* `loan-wrong-status-transition-writeoff-closes-obligations-met` — `nexus/internal/apps/loan/conformance/impl.go:4476`
+* `loan-wrong-summary-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:4063`
+* `loan-wrong-summary-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4068`
+* `loan-wrong-summary-drops-principal` — `nexus/internal/apps/loan/conformance/impl.go:4058`
+* `loan-wrong-summary-interest-not-outstanding` — `nexus/internal/apps/loan/conformance/impl.go:4048`
+* `loan-wrong-transaction-balance-accrual-zero` — `nexus/internal/apps/loan/conformance/impl.go:4095`
+* `loan-wrong-transaction-balance-folds-repayment-interest` — `nexus/internal/apps/loan/conformance/impl.go:4099`
+* `loan-wrong-transaction-balance-waiver-moves-principal` — `nexus/internal/apps/loan/conformance/impl.go:4090`
+* `loan-wrong-writeoff-drops-fee` — `nexus/internal/apps/loan/conformance/impl.go:4209`
+* `loan-wrong-writeoff-drops-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4214`
+* `loan-wrong-writeoff-journal-debits-loan-portfolio` — `nexus/internal/apps/loan/conformance/impl.go:4258`
+* `loan-wrong-writeoff-journal-debits-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:4253`
+* `loan-wrong-writeoff-journal-one-debit-per-portion` — `nexus/internal/apps/loan/conformance/impl.go:4247`
+* `loan-wrong-writeoff-journal-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4264`
+* `loan-wrong-writeoff-principal-and-interest` — `nexus/internal/apps/loan/conformance/impl.go:4203`
+* `loan-wrong-writeoff-principal-only` — `nexus/internal/apps/loan/conformance/impl.go:4197`
+* `loan-wrong-writeoff-swaps-fee-and-penalty` — `nexus/internal/apps/loan/conformance/impl.go:4219`
 
-67 drives.
+68 drives.
 
 ## Port functions (non-test, non-conformance)
 * `nexus/internal/apps/loan/accrualjournal.go`: `CreateAccrualJournalEntryLegs`:57
 * `nexus/internal/apps/loan/allocation.go`: `Total`:25, `For`:30, `Set`:45, `Add`:59, `AllocateInOrder`:81, `AllocateCredit`:108, `AllocatePayment`:125
 * `nexus/internal/apps/loan/allocationtype.go`: `String`:43, `HumanReadableName`:52, `IsPenalty`:57, `IsFee`:58, `IsPrincipal`:59, `IsInterest`:60
+* `nexus/internal/apps/loan/buydownfeeadjustmentjournal.go`: `CreateBuyDownFeeAdjustmentJournalEntryLegs`:57
 * `nexus/internal/apps/loan/buydownfeeamortizationjournal.go`: `CreateBuyDownFeeAmortizationJournalEntryLegs`:88
 * `nexus/internal/apps/loan/buydownfeejournal.go`: `CreateBuyDownFeeJournalEntryLegs`:53
 * `nexus/internal/apps/loan/capitalizedincomeamortizationjournal.go`: `CreateCapitalizedIncomeAmortizationJournalEntryLegs`:86
@@ -366,8 +375,12 @@ Source: the binary's own -list-implementations (names prefixed `loan-wrong-` onl
 * `.softhouse/capture/tierd-feasibility/accrual-activity-p1-mnt/journalentries-sweep/loan-26.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-1.json/` — 2 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-10.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-13.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-14.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-15.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-20.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-25.json/` — 1 vector(s) — (no OWNER.md)
+* `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-39.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-5.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/buydown-fees-mnt/journalentries-sweep/loan-8.json/` — 1 vector(s) — (no OWNER.md)
 * `.softhouse/capture/tierd-feasibility/capitalized-income-p1-mnt/journalentries-sweep/loan-1.json/` — 1 vector(s) — (no OWNER.md)
