@@ -1087,10 +1087,10 @@ func repaymentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
 // it reduces the request's five portions and slot->account mapping to
 // loan.RepaymentPortions and loan.GoodwillCreditAccountMapping and runs the
 // port's own loan.CreateGoodwillCreditJournalEntryLegs with the loan's
-// charged-off state (which the port refuses when true). Every monetary cell is an
-// integer minor unit; the mapping is the product's observed accountingMappings,
-// never invented. The resolved fund source is carried for the wrong drive only
-// and is NOT passed to the correct port.
+// charged-off state. Every monetary cell is an integer minor unit; the mapping is
+// the product's observed accountingMappings, never invented. The resolved fund
+// source is carried for the wrong drives only and is NOT passed to the correct
+// port.
 func goGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) {
 	portions, err := repaymentPortionsFromRequest(r.Portions)
 	if err != nil {
@@ -1101,6 +1101,7 @@ func goGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) {
 		ReceivableInterest:               r.Accounts.ReceivableInterest,
 		ReceivableFee:                    r.Accounts.ReceivableFee,
 		ReceivablePenalty:                r.Accounts.ReceivablePenalty,
+		IncomeFromRecovery:               r.Accounts.IncomeFromRecovery,
 		Overpayment:                      r.Accounts.Overpayment,
 		GoodwillCredit:                   r.Accounts.GoodwillCredit,
 		IncomeFromGoodwillCreditInterest: r.Accounts.IncomeFromGoodwillCreditInterest,
