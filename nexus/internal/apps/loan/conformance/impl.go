@@ -180,6 +180,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
 	case req.CapitalizedIncomeAmortizationJournal != nil:
 		return goCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal)
+	case req.BuyDownFeeAmortizationJournal != nil:
+		return goBuyDownFeeAmortizationJournal(*req.BuyDownFeeAmortizationJournal)
 	case req.ChargeLifecycle != nil:
 		return goChargeLifecycle(*req.ChargeLifecycle)
 	case req.StatusTransition != nil:
@@ -1655,6 +1657,54 @@ func capitalizedIncomeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg)
 		out = []JournalEntryLeg{}
 	}
 	return Expect{CapitalizedIncomeAmortizationJournalLegs: out}
+}
+
+// goBuyDownFeeAmortizationJournal ports the
+// loan-buy-down-fee-amortization-journal-entries seam: it reduces the request's
+// interest and fee integer-minor portions, runs the port's
+// CreateBuyDownFeeAmortizationJournalEntryLegs with the loan's
+// charged-off / written-off / fraud state and the product's slot->account
+// mapping, and renders the ordered legs. Nothing is parsed as a float.
+func goBuyDownFeeAmortizationJournal(r BuyDownFeeAmortizationJournalRequest) (Expect, error) {
+	interest, err := parseMinorText(minorTextOrZero(r.Portions.Interest))
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateBuyDownFeeAmortizationJournalEntryLegs(r.TransactionID, interest, fee, r.ChargedOff, r.WrittenOff, r.Fraud, loan.BuyDownFeeAmortizationAccountMapping{
+		IncomeFromBuyDown:       r.Accounts.IncomeFromBuyDown,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+		ChargeOffExpense:        r.Accounts.ChargeOffExpense,
+		ChargeOffFraudExpense:   r.Accounts.ChargeOffFraudExpense,
+		LossesWrittenOff:        r.Accounts.LossesWrittenOff,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return buyDownFeeAmortizationJournalLegsExpect(legs), nil
+}
+
+// buyDownFeeAmortizationJournalLegsExpect renders the port's ordered legs as the
+// seam's ordered leg cells. Every money cell is an integer STRING in minor
+// units; a leg whose side is somehow unknown renders an empty entry_type rather
+// than defaulting to a side the capture never showed.
+func buyDownFeeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, len(legs))
+	for i, leg := range legs {
+		out[i] = JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     journalEntrySideCode(leg.Side),
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		}
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{BuyDownFeeAmortizationJournalLegs: out}
 }
 
 // goChargeLifecycle ports the loan-charge-lifecycle seam: it builds a

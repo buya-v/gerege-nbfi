@@ -1163,6 +1163,80 @@ type CapitalizedIncomeAmortizationJournalRequest struct {
 	Accounts      CapitalizedIncomeAmortizationSlotAccounts  `json:"accounts"`
 }
 
+// SeamLoanBuyDownFeeAmortizationJournalEntries is the capture seam this schema
+// grades: the journal entry a BUY_DOWN_FEE_AMORTIZATION transaction posts. It
+// ports AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForBuyDownFeeAmortization, dispatching on the loan's
+// charged-off state to createJournalEntriesForLoanBuyDownFeeAmortization or
+// createJournalEntriesForChargeOffLoanBuyDownFeeAmortization [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:576-765, pinned commit 426a23544].
+// For each positive portion (interest, fees) it DEBITS DEFERRED_INCOME_LIABILITY
+// and CREDITS ONE income account: INCOME_FROM_BUY_DOWN while the loan is neither
+// charged off nor written off, LOSSES_WRITTEN_OFF once it is written off,
+// CHARGE_OFF_EXPENSE once it is charged off (non-fraud), or
+// CHARGE_OFF_FRAUD_EXPENSE once it is charged off and fraud. The two portions
+// resolve to the SAME credit account and the SAME deferred-income-liability
+// account, so the processor MERGES them into ONE credit and ONE debit (its
+// accountMap is a LinkedHashMap); credits come first, the debit last. Fraud is
+// read ONLY in the charged-off arm: a fraud loan that is NOT charged off credits
+// income from buy down like any other.
+//
+// On the pinned observations L6 (loan 1, neither) credits income from buy down
+// (account 24) 5000 and debits deferred income liability (22) 5000; L461 (loan
+// 8, FRAUD but NOT charged off) credits income from buy down (24) 1758 and debits
+// 22 1758 — the fraud flag is ignored; L521 (loan 15, WRITTEN OFF) credits losses
+// written off (15) 10000 and debits 22 10000; L322 (loan 5, CHARGED OFF, no
+// charge-off reason) credits charge-off expense (18) 1648 and debits 22 1648;
+// L479 (loan 10, CHARGED OFF and FRAUD, no charge-off reason) credits charge-off
+// fraud expense (16) 3626 and debits 22 3626. The buy-down-fee CLASSIFICATION
+// branch and the charge-off-REASON branch share the Java method but are NOT
+// observed, and the request carries no input for them.
+const SeamLoanBuyDownFeeAmortizationJournalEntries = "loan-buy-down-fee-amortization-journal-entries"
+
+// BuyDownFeeAmortizationPortionsMoney is the money a BUY_DOWN_FEE_AMORTIZATION
+// transaction amortizes, each slot an integer STRING in minor units. It is the
+// request-side reduction of the transaction's interestPortion and
+// feeChargesPortion. Fee is optional (absent when the observed read-back omits
+// it).
+type BuyDownFeeAmortizationPortionsMoney struct {
+	Interest string `json:"interest"`
+	Fee      string `json:"fee,omitempty"`
+}
+
+// BuyDownFeeAmortizationSlotAccounts is the product's buy-down-fee-amortization
+// slot->account mapping, each account the GL code the oracle's GET
+// /loanproducts/{id}.accountingMappings returns for that slot.
+// DeferredIncomeLiability is DEBITed ONCE with the sum of both portions.
+// IncomeFromBuyDown is CREDITED when the loan is neither charged off nor written
+// off, LossesWrittenOff (LOSSES_WRITTEN_OFF) when it is written off,
+// ChargeOffExpense when it is charged off (non-fraud) and ChargeOffFraudExpense
+// when it is charged off and fraud.
+type BuyDownFeeAmortizationSlotAccounts struct {
+	IncomeFromBuyDown       string `json:"income_from_buy_down"`
+	DeferredIncomeLiability string `json:"deferred_income_liability"`
+	ChargeOffExpense        string `json:"charge_off_expense,omitempty"`
+	ChargeOffFraudExpense   string `json:"charge_off_fraud_expense,omitempty"`
+	LossesWrittenOff        string `json:"losses_written_off,omitempty"`
+}
+
+// BuyDownFeeAmortizationJournalRequest is the
+// loan-buy-down-fee-amortization-journal-entries seam's input: the observed
+// interest and fee portions of a BUY_DOWN_FEE_AMORTIZATION transaction, the
+// loan's charged-off / fraud / written-off state and the product's
+// slot->account mapping, plus the transaction id the legs are posted under. The
+// mapping is the product's accountingMappings read back from the reference
+// server, never invented; a positive portion with no mapped credit or
+// deferred-income-liability account is refused by the port, as is the impossible
+// charged_off && written_off state.
+type BuyDownFeeAmortizationJournalRequest struct {
+	TransactionID string                              `json:"transaction_id"`
+	Portions      BuyDownFeeAmortizationPortionsMoney `json:"portions"`
+	ChargedOff    bool                                `json:"charged_off,omitempty"`
+	Fraud         bool                                `json:"fraud,omitempty"`
+	WrittenOff    bool                                `json:"written_off,omitempty"`
+	Accounts      BuyDownFeeAmortizationSlotAccounts  `json:"accounts"`
+}
+
 // ChargedOffMerchantRefundSlotAccounts is the slot->account mapping of a
 // MERCHANT-ISSUED REFUND or a PAYOUT REFUND on a loan MARKED CHARGED OFF. Each
 // positive portion CREDITS its own charge-off slot: principal
@@ -1577,6 +1651,12 @@ type Request struct {
 	// loan's charged-off / fraud / written-off state and the product's
 	// slot->account mapping.
 	CapitalizedIncomeAmortizationJournal *CapitalizedIncomeAmortizationJournalRequest `json:"capitalized_income_amortization_journal,omitempty"`
+	// BuyDownFeeAmortizationJournal is the
+	// loan-buy-down-fee-amortization-journal-entries seam's input: a
+	// BUY_DOWN_FEE_AMORTIZATION transaction's interest and fee portions, the
+	// loan's charged-off / fraud / written-off state and the product's
+	// slot->account mapping.
+	BuyDownFeeAmortizationJournal *BuyDownFeeAmortizationJournalRequest `json:"buy_down_fee_amortization_journal,omitempty"`
 	// ChargedOffMerchantRefundJournal is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's input: a
 	// MERCHANT-ISSUED REFUND transaction's five portions on a loan already marked
@@ -1766,6 +1846,16 @@ type Expect struct {
 	// transaction id, account, side and amount; the loan-state account switch is
 	// what discriminates a port that ignores the loan's state.
 	CapitalizedIncomeAmortizationJournalLegs []JournalEntryLeg `json:"capitalized_income_amortization_journal_legs,omitempty"`
+	// BuyDownFeeAmortizationJournalLegs is the
+	// loan-buy-down-fee-amortization-journal-entries seam's ordered leg list a
+	// buy-down-fee amortization posted: ONE credit of the interest+fee total to
+	// the dispatch's income account (income from buy down, losses written off,
+	// charge-off expense or charge-off fraud expense), then ONE debit of the same
+	// total to deferred income liability. Every leg is graded on its transaction
+	// id, account, side and amount; the loan-state account switch, and the fact
+	// that fraud is read only in the charged-off arm, is what discriminates a port
+	// that ignores the loan's state.
+	BuyDownFeeAmortizationJournalLegs []JournalEntryLeg `json:"buy_down_fee_amortization_journal_legs,omitempty"`
 	// ChargedOffMerchantRefundJournalLegs is the
 	// loan-chargedoff-merchant-refund-journal-entries seam's ordered leg list a
 	// merchant-issued refund posted on a charged-off loan: one credit per positive

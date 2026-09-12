@@ -52,10 +52,11 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 		SeamLoanCapitalizedIncomeAmortizationJournalEntries,
+		SeamLoanBuyDownFeeAmortizationJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
@@ -69,6 +70,7 @@ func Admit(v *Vector, opts Options) []string {
 			SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 			SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 			SeamLoanCapitalizedIncomeAmortizationJournalEntries,
+			SeamLoanBuyDownFeeAmortizationJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries))
 	}
 	if v.Oracle.FineractCommit == "" {
@@ -229,6 +231,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.CapitalizedIncomeAmortizationJournal != nil {
+		n++
+	}
+	if v.Request.BuyDownFeeAmortizationJournal != nil {
 		n++
 	}
 	if v.Request.ChargeLifecycle != nil {
@@ -1248,6 +1253,49 @@ func admitRequest(v *Vector) []string {
 			if val == "" {
 				problems = append(problems, fmt.Sprintf(
 					"request.capitalized_income_amortization_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+	case SeamLoanBuyDownFeeAmortizationJournalEntries:
+		if v.Request.BuyDownFeeAmortizationJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "buy-down-fee-amortization-journal seam must set exactly request.buy_down_fee_amortization_journal")
+			return problems
+		}
+		j := v.Request.BuyDownFeeAmortizationJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.buy_down_fee_amortization_journal.transaction_id is empty")
+		}
+		portions := map[string]string{
+			"portions.interest": j.Portions.Interest,
+			"portions.fee":      minorTextOrZero(j.Portions.Fee),
+		}
+		for name, val := range portions {
+			if !isIntegerMinorString(minorTextOrZero(val)) {
+				problems = append(problems, fmt.Sprintf(
+					"request.buy_down_fee_amortization_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		if j.ChargedOff && j.WrittenOff {
+			problems = append(problems, "request.buy_down_fee_amortization_journal cannot be both charged_off and written_off: the processor dispatches on exactly one")
+		}
+		positive := func(s string) bool { return strings.TrimLeft(minorTextOrZero(s), "0") != "" }
+		acctChecks := map[string]string{}
+		if positive(j.Portions.Interest) || positive(j.Portions.Fee) {
+			acctChecks["accounts.deferred_income_liability"] = j.Accounts.DeferredIncomeLiability
+			switch {
+			case j.ChargedOff && j.Fraud:
+				acctChecks["accounts.charge_off_fraud_expense"] = j.Accounts.ChargeOffFraudExpense
+			case j.ChargedOff:
+				acctChecks["accounts.charge_off_expense"] = j.Accounts.ChargeOffExpense
+			case j.WrittenOff:
+				acctChecks["accounts.losses_written_off"] = j.Accounts.LossesWrittenOff
+			default:
+				acctChecks["accounts.income_from_buy_down"] = j.Accounts.IncomeFromBuyDown
+			}
+		}
+		for name, val := range acctChecks {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.buy_down_fee_amortization_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
 		}
 	case SeamLoanChargeLifecycle:
@@ -2384,6 +2432,60 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanBuyDownFeeAmortizationJournalEntries:
+		if v.Request.BuyDownFeeAmortizationJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.BuyDownFeeAmortizationJournal
+		if len(v.Expect.BuyDownFeeAmortizationJournalLegs) == 0 {
+			problems = append(problems, "expect.buy_down_fee_amortization_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.BuyDownFeeAmortizationJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.buy_down_fee_amortization_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.buy_down_fee_amortization_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_amortization_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_amortization_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: ONE CREDIT of the interest+fee total to the dispatch's
+		// income account selected by the loan state (income from buy down, losses
+		// written off, charge-off expense or charge-off fraud expense), then ONE
+		// DEBIT of the same total to DEFERRED_INCOME_LIABILITY. Independent of the
+		// port under test.
+		expected, probs := reconstructBuyDownFeeAmortizationJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.BuyDownFeeAmortizationJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.buy_down_fee_amortization_journal_legs has %d legs but the observed posting needs %d (one merged credit then one total debit)",
+				len(v.Expect.BuyDownFeeAmortizationJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.BuyDownFeeAmortizationJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.buy_down_fee_amortization_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): the amortization credits the loan-state income account and then debits the total to DEFERRED_INCOME_LIABILITY",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanChargeLifecycle:
 		if len(v.Expect.ChargeStates) == 0 {
 			problems = append(problems, "expect.charge_states is empty for the charge-lifecycle seam")
@@ -3469,6 +3571,60 @@ func reconstructCapitalizedIncomeAmortizationJournalLegs(j CapitalizedIncomeAmor
 	}
 	if j.Accounts.DeferredIncomeLiability == "" {
 		return nil, []string{"request.capitalized_income_amortization_journal positive total has no mapped deferred-income-liability account"}
+	}
+	amount := strconv.FormatInt(total, 10)
+	return []JournalEntryLeg{
+		{TransactionID: j.TransactionID, Account: creditAccount, EntryType: "CREDIT", AmountMinor: amount},
+		{TransactionID: j.TransactionID, Account: j.Accounts.DeferredIncomeLiability, EntryType: "DEBIT", AmountMinor: amount},
+	}, nil
+}
+
+// reconstructBuyDownFeeAmortizationJournalLegs reconstructs, straight from the
+// observed request and independently of the port under test, the ONLY leg list
+// the pinned property admits. Exactly like
+// reconstructCapitalizedIncomeAmortizationJournalLegs it visits the two portion
+// slots (interest, fees), sums the non-negative minor amounts, selects the ONE
+// credit account from the loan state in the Java dispatch's order (charged off
+// and fraud -> charge-off fraud expense, charged off -> charge-off expense,
+// written off -> losses written off, else income from buy down) and returns ONE
+// merged CREDIT of the total then ONE DEBIT of the total to
+// DEFERRED_INCOME_LIABILITY. A zero total posts nothing.
+func reconstructBuyDownFeeAmortizationJournalLegs(j BuyDownFeeAmortizationJournalRequest) ([]JournalEntryLeg, []string) {
+	if j.ChargedOff && j.WrittenOff {
+		return nil, []string{"request.buy_down_fee_amortization_journal is both charged_off and written_off: the processor dispatches on exactly one"}
+	}
+
+	var creditAccount string
+	switch {
+	case j.ChargedOff && j.Fraud:
+		creditAccount = j.Accounts.ChargeOffFraudExpense
+	case j.ChargedOff:
+		creditAccount = j.Accounts.ChargeOffExpense
+	case j.WrittenOff:
+		creditAccount = j.Accounts.LossesWrittenOff
+	default:
+		creditAccount = j.Accounts.IncomeFromBuyDown
+	}
+
+	var total int64
+	names := []string{"INTEREST", "FEES"}
+	amounts := []string{minorTextOrZero(j.Portions.Interest), minorTextOrZero(j.Portions.Fee)}
+	for i, amt := range amounts {
+		n, err := strconv.ParseInt(amt, 10, 64)
+		if err != nil || n < 0 {
+			return nil, []string{fmt.Sprintf(
+				"request.buy_down_fee_amortization_journal slot %s %q is not a non-negative integer minor amount", names[i], amt)}
+		}
+		total += n
+	}
+	if total == 0 {
+		return nil, nil
+	}
+	if creditAccount == "" {
+		return nil, []string{"request.buy_down_fee_amortization_journal positive total has no mapped credit account"}
+	}
+	if j.Accounts.DeferredIncomeLiability == "" {
+		return nil, []string{"request.buy_down_fee_amortization_journal positive total has no mapped deferred-income-liability account"}
 	}
 	amount := strconv.FormatInt(total, 10)
 	return []JournalEntryLeg{
