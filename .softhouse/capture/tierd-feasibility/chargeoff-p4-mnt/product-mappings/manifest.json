@@ -1,0 +1,52 @@
+[
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_REFUND_FULL.json",
+  "log_line": 16110,
+  "sha256": "e44ead431e223c7b903091ad4ce5b05ef03c90b7170af4eab5576314305d9a11"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_ZERO_CHARGE_OFF.json",
+  "log_line": 18070,
+  "sha256": "4be944f76d275025f5b7fd1e2efc85b0549298fd57472faaaba74d10b81750d0"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_360_30_ZERO_INTEREST_CHARGE_OFF_ACCRUAL_ACTIVITY.json",
+  "log_line": 19009,
+  "sha256": "45ad119535e418bfa1a8482ecec4784757759843eccdb79130b0fc0bcef4491b"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_RECALC_ZERO_CHARGE_OFF_ACCRUAL.json",
+  "log_line": 18885,
+  "sha256": "d2566f5e131cfeb7da5acd7485ba73e7259248e109ee12f0223b515955132803"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ZERO_INT_CHARGE_OFF.json",
+  "log_line": 15988,
+  "sha256": "e8353b8234b7d28202c786d0be8755bbbfe87155fb26094d4fc392aa953f5560"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INT_DAILY_EMI_ACTUAL_ACTUAL_NO_INTEREST_RECALC_INT_REFUND_FULL_ACC_MATUR_CHARGE_OFF.json",
+  "log_line": 15163,
+  "sha256": "cfe3fbadcd004936ce37d8b56e45aab1f333d08594c457f09f165d906fbaa098"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON.json",
+  "log_line": 14943,
+  "sha256": "324c5124ce48fe9ea1ae721e75e06579d82a228b05462a9d549b2b10b26da2a5"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_DELINQUENT_REASON_INTEREST_RECALC.json",
+  "log_line": 15694,
+  "sha256": "8e7de0c13975c42cacf9753879521b5e8593f0860a873f20e65236704a72c67b"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR.json",
+  "log_line": 13404,
+  "sha256": "e58dbbb9078699f7ad271410fc44d719750c6498bbf390c9541e7e1dd7bc32a3"
+ },
+ {
+  "file": "product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_RECOGNITION_DISBURSEMENT_DAILY_EMI_360_30_ACCRUAL_ACTIVITY.json",
+  "log_line": 14514,
+  "sha256": "6831018381e56e2780440cff5787df41044e5a4975b95a5a5e0d6baebe6049db"
+ }
+]
