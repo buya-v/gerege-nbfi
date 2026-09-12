@@ -731,9 +731,10 @@ func admitRequest(v *Vector) []string {
 		if j.TransactionID == "" {
 			problems = append(problems, "request.goodwill_credit_journal.transaction_id is empty")
 		}
-		if j.ChargedOff {
+		if j.ChargedOff && (positiveMinorString(j.Portions.Principal) || positiveMinorString(j.Portions.Interest) ||
+			positiveMinorString(j.Portions.Fee) || positiveMinorString(j.Portions.Penalty)) && j.Accounts.IncomeFromRecovery == "" {
 			problems = append(problems,
-				"request.goodwill_credit_journal.charged_off is true: this seam models the NOT-charged-off goodwill arm only, and the port refuses a charged-off loan")
+				"request.goodwill_credit_journal.accounts.income_from_recovery is empty but the charged-off loan has a positive credit portion: the charged-off arm posts those to INCOME_FROM_RECOVERY")
 		}
 		for name, val := range map[string]string{
 			"portions.principal":   j.Portions.Principal,
@@ -751,11 +752,13 @@ func admitRequest(v *Vector) []string {
 			}
 		}
 		// Every credit slot and every goodwill DEBIT slot needs its account, and
-		// the seam carries the resolved fund source the wrong drive debits in
+		// the seam carries the resolved fund source the wrong drives debit in
 		// place of the goodwill table. The credit accounts are NOT required to be
 		// distinct and neither are the two GOODWILL_CREDIT debits: the port
 		// MERGES slots that map to one account. The overpayment account is
-		// required only when the overpayment portion is positive.
+		// required only when the overpayment portion is positive, and
+		// INCOME_FROM_RECOVERY only on a charged-off loan with a positive
+		// principal/interest/fee/penalty portion (checked above).
 		for name, val := range map[string]string{
 			"accounts.loan_portfolio":                       j.Accounts.LoanPortfolio,
 			"accounts.receivable_interest":                  j.Accounts.ReceivableInterest,
@@ -2664,27 +2667,40 @@ func mergeReconstructedLegs(transactionID, side, where string, slots []goodwillR
 // reconstructGoodwillCreditJournalLegs derives the leg list the observed
 // goodwill-credit property requires from the request alone, independently of the
 // port, in the processor's posting order: for each non-zero portion slot one
-// credit to the slot's mapped account — LOAN_PORTFOLIO, INTEREST_RECEIVABLE,
-// FEES_RECEIVABLE, PENALTIES_RECEIVABLE and OVERPAYMENT respectively — merging
-// slots that share an account at the first slot's position, then one goodwill
-// DEBIT per non-zero slot in the goodwill table's order (GOODWILL_CREDIT for
-// principal, INCOME_FROM_GOODWILL_CREDIT_INTEREST/FEES/PENALTY for
-// interest/fees/penalties, then GOODWILL_CREDIT for overpayment), merging debits
-// that share an account. It is NOT a fund-source transfer. Each money value stays
-// an integer minor-unit string. It returns the legs and any admission problem: a
-// slot with a positive portion and no mapped CREDIT account, or a positive
-// portion with no mapped GOODWILL debit account.
+// credit to the slot's mapped account — on a loan that is NOT charged off
+// LOAN_PORTFOLIO, INTEREST_RECEIVABLE, FEES_RECEIVABLE, PENALTIES_RECEIVABLE
+// and OVERPAYMENT, on a CHARGED-OFF loan all four non-overpayment slots to
+// INCOME_FROM_RECOVERY (merged into one credit at the principal slot) and
+// OVERPAYMENT still separate — merging slots that share an account at the first
+// slot's position, then one goodwill DEBIT per non-zero slot in the goodwill
+// table's order (GOODWILL_CREDIT for principal, INCOME_FROM_GOODWILL_CREDIT_
+// INTEREST/FEES/PENALTY for interest/fees/penalties, then GOODWILL_CREDIT for
+// overpayment), merging debits that share an account. It is NOT a fund-source
+// transfer. Each money value stays an integer minor-unit string. It returns the
+// legs and any admission problem: a slot with a positive portion and no mapped
+// CREDIT account, or a positive portion with no mapped GOODWILL debit account.
 func reconstructGoodwillCreditJournalLegs(j GoodwillCreditJournalRequest) ([]JournalEntryLeg, []string) {
 	overpayment := j.Portions.Overpayment
 	if overpayment == "" {
 		overpayment = "0"
 	}
-	credits := []goodwillReconstructSlot{
-		{"LOAN_PORTFOLIO", j.Portions.Principal, j.Accounts.LoanPortfolio},
-		{"INTEREST_RECEIVABLE", j.Portions.Interest, j.Accounts.ReceivableInterest},
-		{"FEES_RECEIVABLE", j.Portions.Fee, j.Accounts.ReceivableFee},
-		{"PENALTIES_RECEIVABLE", j.Portions.Penalty, j.Accounts.ReceivablePenalty},
-		{"OVERPAYMENT", overpayment, j.Accounts.Overpayment},
+	var credits []goodwillReconstructSlot
+	if j.ChargedOff {
+		credits = []goodwillReconstructSlot{
+			{"INCOME_FROM_RECOVERY", j.Portions.Principal, j.Accounts.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", j.Portions.Interest, j.Accounts.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", j.Portions.Fee, j.Accounts.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", j.Portions.Penalty, j.Accounts.IncomeFromRecovery},
+			{"OVERPAYMENT", overpayment, j.Accounts.Overpayment},
+		}
+	} else {
+		credits = []goodwillReconstructSlot{
+			{"LOAN_PORTFOLIO", j.Portions.Principal, j.Accounts.LoanPortfolio},
+			{"INTEREST_RECEIVABLE", j.Portions.Interest, j.Accounts.ReceivableInterest},
+			{"FEES_RECEIVABLE", j.Portions.Fee, j.Accounts.ReceivableFee},
+			{"PENALTIES_RECEIVABLE", j.Portions.Penalty, j.Accounts.ReceivablePenalty},
+			{"OVERPAYMENT", overpayment, j.Accounts.Overpayment},
+		}
 	}
 	debits := []goodwillReconstructSlot{
 		{"GOODWILL_CREDIT", j.Portions.Principal, j.Accounts.GoodwillCredit},
@@ -3390,6 +3406,20 @@ func isIntegerMinorString(s string) bool {
 		}
 	}
 	return true
+}
+
+// positiveMinorString reports whether s is an integer minor-unit string whose
+// exact value is greater than zero. It parses the decimal integer, never a
+// float, and treats a non-integer or out-of-range string as non-positive.
+func positiveMinorString(s string) bool {
+	if !isIntegerMinorString(s) {
+		return false
+	}
+	n, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return false
+	}
+	return n > 0
 }
 
 // isCivilDate reports whether s is a zero-padded calendar date in YYYY-MM-DD

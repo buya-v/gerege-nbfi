@@ -9,12 +9,17 @@ import "fmt"
 // AccrualBasedAccountingProcessorForLoan.java:1695-1871, pinned commit
 // 426a23544].
 //
-// The CREDIT side is identical to an ordinary repayment: the principal portion
-// credits LOAN_PORTFOLIO, interest credits INTEREST_RECEIVABLE, fees credit
-// FEES_RECEIVABLE, penalties credit PENALTIES_RECEIVABLE and overpayment credits
-// OVERPAYMENT, portions that resolve to the SAME account MERGING into one credit
-// at the first slot's position (the processor's creditBalances is a
-// LinkedHashMap) [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1720-1780].
+// The CREDIT side is identical to an ordinary repayment on a loan that is NOT
+// charged off: the principal portion credits LOAN_PORTFOLIO, interest credits
+// INTEREST_RECEIVABLE, fees credit FEES_RECEIVABLE, penalties credit
+// PENALTIES_RECEIVABLE and overpayment credits OVERPAYMENT, portions that
+// resolve to the SAME account MERGING into one credit at the first slot's
+// position (the processor's creditBalances is a LinkedHashMap) [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:1720-1780]. On a CHARGED-OFF loan
+// the same four non-overpayment portions instead credit INCOME_FROM_RECOVERY
+// (merging into one credit at the principal slot) and only overpayment keeps its
+// own account [VERIFIED: AccrualBasedAccountingProcessorForLoan.java:1433-1435,
+// 1461-1464, 1491-1493, 1529-1532, 1564-1566, pinned commit 426a23544].
 //
 // The DEBIT side is the goodwill-credit arm's own table, not a fund source: the
 // principal portion debits GOODWILL_CREDIT, interest debits
@@ -47,6 +52,11 @@ type GoodwillCreditAccountMapping struct {
 	// Overpayment is the AccrualAccountsForLoan.OVERPAYMENT slot, credited with
 	// the overpayment portion.
 	Overpayment string
+	// IncomeFromRecovery is the AccrualAccountsForLoan.INCOME_FROM_RECOVERY slot,
+	// credited with the principal, interest, fee and penalty portions on a
+	// CHARGED-OFF loan (they merge into one credit at the principal slot). It is
+	// not read on a loan that is not charged off.
+	IncomeFromRecovery string
 	// GoodwillCredit is the AccrualAccountsForLoan.GOODWILL_CREDIT slot, debited
 	// with the principal and overpayment portions (which merge when it is the
 	// same account for both).
@@ -67,47 +77,64 @@ type GoodwillCreditAccountMapping struct {
 
 // CreateGoodwillCreditJournalEntryLegs ports the GOODWILL-CREDIT branch of
 // AccrualBasedAccountingProcessorForLoan.createJournalEntriesForLoanRepayments
-// on a loan that is NOT charged off [VERIFIED:
-// AccrualBasedAccountingProcessorForLoan.java:1695-1871, pinned commit
-// 426a23544]. It is a pure function: the transaction's five portions (integer
-// minor units), the loan's charged-off state and the slot->account mapping in,
-// journal-entry legs out — no clock, no I/O, no stored balance.
+// on a loan that is NOT charged off and of
+// createJournalEntriesForRepaymentWhenLoanIsChargedOff when it is [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:1369-1376, 1695-1871, pinned
+// commit 426a23544]. It is a pure function: the transaction's five portions
+// (integer minor units), the loan's charged-off state and the slot->account
+// mapping in, journal-entry legs out — no clock, no I/O, no stored balance.
 //
-// It CREDITS exactly as an ordinary repayment: it visits the five slots in the
-// processor's order (principal, interest, fees, penalties, overpayment) and for
-// every slot whose portion is > 0 credits the slot's mapped account, MERGING
-// into the first slot that already named the same account. It then DEBITs the
-// same portions through the goodwill table — principal and overpayment to
-// GOODWILL_CREDIT, interest to INCOME_FROM_GOODWILL_CREDIT_INTEREST, fees to
+// It CREDITS the five slots in the processor's order (principal, interest,
+// fees, penalties, overpayment) and for every slot whose portion is > 0 credits
+// the slot's mapped account, MERGING into the first slot that already named the
+// same account. On a loan that is NOT charged off the four non-overpayment
+// slots credit LOAN_PORTFOLIO, INTEREST_RECEIVABLE, FEES_RECEIVABLE and
+// PENALTIES_RECEIVABLE and overpayment credits OVERPAYMENT, exactly as an
+// ordinary repayment. On a CHARGED-OFF loan the four non-overpayment slots
+// instead credit INCOME_FROM_RECOVERY (merging into one credit at the principal
+// slot) and overpayment still credits OVERPAYMENT. The goodwill branch does NOT
+// read the fraud flag.
+//
+// It then DEBITs the same portions through the goodwill table — principal and
+// overpayment to GOODWILL_CREDIT, interest to
+// INCOME_FROM_GOODWILL_CREDIT_INTEREST, fees to
 // INCOME_FROM_GOODWILL_CREDIT_FEES, penalties to
 // INCOME_FROM_GOODWILL_CREDIT_PENALTY — merging debits that resolve to the same
-// account, and posts every debit AFTER every credit in insertion order. A
-// goodwill credit is NOT a transfer: no fund source is posted.
+// account, and posts every debit AFTER every credit in insertion order. The
+// debit table is the same in both arms. A goodwill credit is NOT a transfer: no
+// fund source is posted.
 //
-// This port models the NOT-charged-off goodwill arm only. The charged-off
-// goodwill arm is a different method (createJournalEntriesForRepaymentWhenLoanIsChargedOff)
-// and is NOT observed here: the port REFUSES a chargedOff input rather than
-// guessing that arm.
-//
-// It refuses, rather than inventing, a negative portion, a positive portion
-// whose slot maps to no credit account or no debit account, and a charged-off
-// loan.
+// It refuses, rather than inventing, a negative portion and a positive portion
+// whose slot maps to no credit account or no debit account. On a charged-off
+// loan the principal, interest, fee and penalty credits all need
+// INCOME_FROM_RECOVERY, so a positive one of those with no recovery mapping is
+// refused.
 func CreateGoodwillCreditJournalEntryLegs(transactionID string, portions RepaymentPortions, chargedOff bool, mapping GoodwillCreditAccountMapping) ([]JournalEntryLeg, error) {
 	if transactionID == "" {
 		return nil, fmt.Errorf("loan: goodwill-credit journal entries need a transaction id")
 	}
-	if chargedOff {
-		return nil, fmt.Errorf("loan: goodwill-credit journal entries refuse a charged-off loan")
-	}
 
-	// credits carry the repayment's five slots; debits carry the goodwill arm's
-	// own five slots (principal and overpayment share GOODWILL_CREDIT).
-	credits := []repaymentSlot{
-		{"LOAN_PORTFOLIO", portions.Principal, mapping.LoanPortfolio},
-		{"INTEREST_RECEIVABLE", portions.Interest, mapping.ReceivableInterest},
-		{"FEES_RECEIVABLE", portions.Fee, mapping.ReceivableFee},
-		{"PENALTIES_RECEIVABLE", portions.Penalty, mapping.ReceivablePenalty},
-		{"OVERPAYMENT", portions.Overpayment, mapping.Overpayment},
+	// credits carry the repayment's five slots: the portfolio/receivables on a
+	// loan that is NOT charged off, the recovery account (with overpayment still
+	// separate) on a charged-off loan. debits carry the goodwill arm's own five
+	// slots (principal and overpayment share GOODWILL_CREDIT) in both arms.
+	var credits []repaymentSlot
+	if chargedOff {
+		credits = []repaymentSlot{
+			{"INCOME_FROM_RECOVERY", portions.Principal, mapping.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", portions.Interest, mapping.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", portions.Fee, mapping.IncomeFromRecovery},
+			{"INCOME_FROM_RECOVERY", portions.Penalty, mapping.IncomeFromRecovery},
+			{"OVERPAYMENT", portions.Overpayment, mapping.Overpayment},
+		}
+	} else {
+		credits = []repaymentSlot{
+			{"LOAN_PORTFOLIO", portions.Principal, mapping.LoanPortfolio},
+			{"INTEREST_RECEIVABLE", portions.Interest, mapping.ReceivableInterest},
+			{"FEES_RECEIVABLE", portions.Fee, mapping.ReceivableFee},
+			{"PENALTIES_RECEIVABLE", portions.Penalty, mapping.ReceivablePenalty},
+			{"OVERPAYMENT", portions.Overpayment, mapping.Overpayment},
+		}
 	}
 	debits := []repaymentSlot{
 		{"GOODWILL_CREDIT", portions.Principal, mapping.GoodwillCredit},

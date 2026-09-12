@@ -835,21 +835,25 @@ type RepaymentJournalRequest struct {
 
 // GoodwillCreditSlotAccounts is the product's goodwill-credit slot->account
 // mapping: the five CREDIT slots an ordinary repayment also posts, the four
-// GOODWILL-CREDIT DEBIT slots the charged-off-free arm's
-// debitAccountMapForGoodwillCredit resolves, and the RESOLVED fund source the
-// wrong drive posts instead. The credit slots and the fund source are the same
-// as RepaymentSlotAccounts; the debit slots are the goodwill arm's own table.
+// GOODWILL-CREDIT DEBIT slots the debitAccountMapForGoodwillCredit resolves, the
+// INCOME_FROM_RECOVERY credit slot the CHARGED-OFF arm posts the four
+// non-overpayment portions to, and the RESOLVED fund source the wrong drive
+// posts instead. The credit slots and the fund source are the same as
+// RepaymentSlotAccounts; the debit slots are the goodwill arm's own table.
 // FundSource is the RESOLVED account (the payment-channel account when the
 // transaction's paymentTypeId has one, else the product's FUND_SOURCE); the
-// correct port never posts it, but the registered wrong implementation expresses
-// the fund-source defect by debiting it, so the seam carries it. The slots a
-// positive portion needs are required; a slot with a positive portion and no
-// mapped account is refused by the port.
+// correct port never posts it, but the registered wrong implementations express
+// their defects by posting it, so the seam carries it. The slots a positive
+// portion needs are required; a slot with a positive portion and no mapped
+// account is refused by the port. IncomeFromRecovery is required only on a
+// charged-off loan with a positive principal, interest, fee or penalty portion:
+// the NOT-charged-off arm never reads it.
 type GoodwillCreditSlotAccounts struct {
 	LoanPortfolio                    string `json:"loan_portfolio"`
 	ReceivableInterest               string `json:"receivable_interest"`
 	ReceivableFee                    string `json:"receivable_fee"`
 	ReceivablePenalty                string `json:"receivable_penalty"`
+	IncomeFromRecovery               string `json:"income_from_recovery,omitempty"`
 	Overpayment                      string `json:"overpayment,omitempty"`
 	GoodwillCredit                   string `json:"goodwill_credit"`
 	IncomeFromGoodwillCreditInterest string `json:"income_from_goodwill_credit_interest"`
@@ -859,13 +863,13 @@ type GoodwillCreditSlotAccounts struct {
 }
 
 // GoodwillCreditJournalRequest is the loan-goodwill-credit-journal-entries
-// seam's input: the observed portions of a GOODWILL CREDIT transaction on a loan
-// that is NOT charged off, the loan's charged-off state (which the port refuses
-// when true) and the slot->account mapping, plus the transaction id the legs are
-// posted under. The mapping is the product's accountingMappings (with the fund
-// source resolved through the payment channel) read back from the reference
-// server, never invented; a slot with a positive portion and no mapped credit or
-// debit account is refused by the port.
+// seam's input: the observed portions of a GOODWILL CREDIT transaction, the
+// loan's charged-off state (which selects which accounts the credit side posts)
+// and the slot->account mapping, plus the transaction id the legs are posted
+// under. The mapping is the product's accountingMappings (with the fund source
+// resolved through the payment channel) read back from the reference server,
+// never invented; a slot with a positive portion and no mapped credit or debit
+// account is refused by the port.
 type GoodwillCreditJournalRequest struct {
 	TransactionID string                     `json:"transaction_id"`
 	Portions      RepaymentPortionsMoney     `json:"portions"`
