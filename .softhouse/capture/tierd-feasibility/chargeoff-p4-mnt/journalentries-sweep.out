@@ -1,0 +1,15 @@
+loan 1    rc=0   http=200     21632 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=1&limit=-1
+loan 2    rc=0   http=200     21657 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=2&limit=-1
+loan 3    rc=0   http=200     20962 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=3&limit=-1
+loan 4    rc=0   http=200     18818 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=4&limit=-1
+loan 5    rc=0   http=200     20923 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=5&limit=-1
+loan 6    rc=0   http=200     16017 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=6&limit=-1
+loan 7    rc=0   http=200     13925 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=7&limit=-1
+loan 8    rc=0   http=200      7020 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=8&limit=-1
+loan 9    rc=0   http=200    159420 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=9&limit=-1
+loan 10   rc=0   http=200    160416 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=10&limit=-1
+loan 11   rc=0   http=200     11192 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=11&limit=-1
+loan 12   rc=0   http=200     11192 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=12&limit=-1
+loan 13   rc=0   http=200     28715 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=13&limit=-1
+loan 14   rc=0   http=200     44722 bytes  https://localhost:8444/fineract-provider/api/v1/journalentries?loanId=14&limit=-1
+sweep: 14 loans, 800 legs; manifest /Users/buv/oh-gerege-tierd23/.softhouse/capture/tierd-feasibility/chargeoff-p4-mnt/journalentries-sweep-manifest.json
