@@ -2940,6 +2940,36 @@ func wrongBuyDownFeeJournal(r BuyDownFeeJournalRequest) (Expect, error) {
 	return goBuyDownFeeJournal(r)
 }
 
+// wrongBuyDownFeeAdjustmentJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-buy-down-fee-adjustment-journal-entries seam: it
+// always credits the buy-down expense account, as a port that never reads the
+// loan product's merchantBuyDownFee fact does. On the non-merchant observations
+// loan-25 L819 and loan-39 L1435 the credit moves from the fund-source account 5
+// to the buy-down expense account 23 while every side, amount and the
+// deferred-income debit stay observed; the merchant observations loan-13 L502
+// and loan-14 L511 are unaffected. On any request that is not a buy-down-fee
+// adjustment journal it delegates to the correct port, so the drive goes red
+// ONLY on this seam's vectors and stays green everywhere else (vector
+// isolation).
+type wrongBuyDownFeeAdjustmentJournalEvaluator struct {
+	goEvaluator
+}
+
+func (w wrongBuyDownFeeAdjustmentJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.BuyDownFeeAdjustmentJournal != nil {
+		return wrongBuyDownFeeAdjustmentJournal(*req.BuyDownFeeAdjustmentJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongBuyDownFeeAdjustmentJournal runs the correct posting with the
+// merchantBuyDownFee fact forced on, so it credits the buy-down expense account
+// even on a non-merchant product.
+func wrongBuyDownFeeAdjustmentJournal(r BuyDownFeeAdjustmentJournalRequest) (Expect, error) {
+	r.Merchant = true
+	return goBuyDownFeeAdjustmentJournal(r)
+}
+
 // creditBalanceRefundJournalWrongMode selects which deliberately-wrong credit
 // balance refund posting to run. Each is a port a reasonable reader might
 // write, and each is discriminated by the committed observations.
@@ -4399,6 +4429,14 @@ func init() {
 			"every side, amount, the deferred-income-liability credit and the count stay observed — and "+
 			"the non-merchant observation loan-20 L781 is unaffected",
 		wrongBuyDownFeeJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-buydown-adjustment-ignores-merchant",
+		"always credits the buy-down expense account for a buy-down-fee adjustment, as a port that "+
+			"never reads the loan product's merchantBuyDownFee fact does; on the pinned non-merchant "+
+			"observation loan-25 L819 the credit moves from the fund-source account 5 to the buy-down "+
+			"expense account 23 while every side, amount, the deferred-income-liability debit and the "+
+			"count stay observed, on loan-39 L1435 the credit likewise moves 5->23, and the merchant "+
+			"observations loan-13 L502 and loan-14 L511 are unaffected",
+		wrongBuyDownFeeAdjustmentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-cbr-ignores-charge-off",
 		"posts the principal portion of a credit balance refund to the loan-portfolio account even on a "+
 			"charged-off (and fraud) loan, as a port that never reads the loan's charged-off flag does; "+
