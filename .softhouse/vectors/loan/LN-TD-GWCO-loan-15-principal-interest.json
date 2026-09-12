@@ -77,6 +77,8 @@
   "goodwill-credit-journal-entry"
  ],
  "graded_against": [
-  "loan-go"
+  "loan-go",
+  "loan-wrong-goodwill-debits-fund-source",
+  "loan-wrong-goodwill-chargedoff-credits-portfolio"
  ]
 }

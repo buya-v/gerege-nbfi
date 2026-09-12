@@ -2502,33 +2502,58 @@ func wrongRepaymentJournal(r RepaymentJournalRequest, mode repaymentJournalWrong
 	return expect, nil
 }
 
+// goodwillCreditJournalWrongMode selects which deliberately-wrong goodwill-credit
+// posting to run. Each is a port a reasonable reader might write, and each is
+// discriminated by the committed observations.
+type goodwillCreditJournalWrongMode int
+
+const (
+	// wrongGoodwillDebitsFundSource treats the goodwill credit as an ordinary
+	// repayment and posts its debit side as ONE transfer to the RESOLVED fund
+	// source instead of the goodwill table's accounts, as a port that never reads
+	// the transaction type does. The credits are the oracle's; only the debit
+	// account moves, so every committed goodwill observation goes red.
+	wrongGoodwillDebitsFundSource goodwillCreditJournalWrongMode = iota
+	// wrongGoodwillChargedOffCreditsPortfolio posts the NOT-charged-off
+	// portfolio/receivable accounts on the CREDIT side of a goodwill credit on a
+	// loan marked charged off, as a port that never reads the loan's charged-off
+	// flag does. On the charged-off observations the merged INCOME_FROM_RECOVERY
+	// credit moves to LOAN_PORTFOLIO and the receivable slots, while the goodwill
+	// debit side and the not-charged-off observations are unaffected.
+	wrongGoodwillChargedOffCreditsPortfolio
+)
+
 // wrongGoodwillCreditJournalEvaluator is a DELIBERATELY WRONG implementation of
-// the loan-goodwill-credit-journal-entries seam, committing exactly one posting
-// defect. On any request that is not a goodwill-credit journal it delegates to
-// the correct port, so the drive goes red ONLY on this seam's vectors and stays
-// green everywhere else (vector isolation).
+// the loan-goodwill-credit-journal-entries seam, parameterised by which posting
+// defect it commits. On any request that is not a goodwill-credit journal it
+// delegates to the correct port, so the drive goes red ONLY on this seam's
+// vectors and stays green everywhere else (vector isolation).
 type wrongGoodwillCreditJournalEvaluator struct {
 	goEvaluator
+	mode goodwillCreditJournalWrongMode
 }
 
 func (w wrongGoodwillCreditJournalEvaluator) Evaluate(req Request) (Expect, error) {
 	if req.GoodwillCreditJournal != nil {
-		return wrongGoodwillCreditJournal(*req.GoodwillCreditJournal)
+		return wrongGoodwillCreditJournal(*req.GoodwillCreditJournal, w.mode)
 	}
 	return w.goEvaluator.Evaluate(req)
 }
 
 // wrongGoodwillCreditJournal runs the correct posting and then applies exactly
-// one defect: it treats the goodwill credit as an ordinary repayment and posts
-// its debit side as ONE transfer to the RESOLVED fund source instead of the
-// goodwill table. The credits are the oracle's; only the debit account moves
-// (from GOODWILL_CREDIT on a principal/overpayment credit, or from the
-// income-from-goodwill-credit slot on an interest/fee/penalty credit, to the
-// fund source), and the ONE debit of the total is what an ordinary repayment
-// posts. A port that never reads the transaction type and reuses the repayment
-// posting is exactly this mistake. It is discriminated by every committed
-// goodwill observation, whose debit account is never the fund source.
-func wrongGoodwillCreditJournal(r GoodwillCreditJournalRequest) (Expect, error) {
+// one defect, so the drive differs from the port on exactly the cells its defect
+// moves. For wrongGoodwillDebitsFundSource it treats the goodwill credit as an
+// ordinary repayment and posts its debit side as ONE transfer to the RESOLVED
+// fund source instead of the goodwill table (the credits are the oracle's; only
+// the debit account moves). For wrongGoodwillChargedOffCreditsPortfolio it clears
+// the charged-off flag before posting, so a charged-off loan credits the
+// not-charged-off portfolio/receivable accounts instead of INCOME_FROM_RECOVERY
+// while the goodwill debit side is unchanged.
+func wrongGoodwillCreditJournal(r GoodwillCreditJournalRequest, mode goodwillCreditJournalWrongMode) (Expect, error) {
+	if mode == wrongGoodwillChargedOffCreditsPortfolio {
+		r.ChargedOff = false
+		return goGoodwillCreditJournal(r)
+	}
 	expect, err := goGoodwillCreditJournal(r)
 	if err != nil {
 		return Expect{}, err
@@ -4031,7 +4056,16 @@ func init() {
 			"slots for interest, fees and penalties), as a port that never reads the transaction type "+
 			"does; the credits are the oracle's but the debit account moves off every observed goodwill "+
 			"debit account to the fund source, so every goodwill vector goes red",
-		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongGoodwillDebitsFundSource})
+	RegisterWrong("loan-wrong-goodwill-chargedoff-credits-portfolio",
+		"credits a goodwill credit on a loan MARKED CHARGED OFF through the not-charged-off "+
+			"portfolio/receivable accounts instead of INCOME_FROM_RECOVERY, as a port that never reads "+
+			"the loan's charged-off flag on the credit side does; on the charged-off observations "+
+			"loan-45 L97 and loan-15 L113 the ONE merged income-from-recovery credit splits onto "+
+			"LOAN_PORTFOLIO and the receivable slots, so the account and leg-count cells move while "+
+			"every side, every amount and the goodwill debit side stay observed — and the "+
+			"not-charged-off goodwill observations are unaffected",
+		wrongGoodwillCreditJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator), mode: wrongGoodwillChargedOffCreditsPortfolio})
 	RegisterWrong("loan-wrong-charge-adjustment-ignores-charge-off",
 		"posts a charge adjustment on a loan marked charged off through the NOT-charged-off credit "+
 			"table instead of the charge-off income table, as a port that forgets the loan is charged "+
