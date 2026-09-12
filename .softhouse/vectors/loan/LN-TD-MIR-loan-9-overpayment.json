@@ -1,0 +1,71 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-MIR-loan-9-overpayment",
+ "title": "A merchant-issued refund on a loan NOT charged off posts ONE 10.00 credit to OVERPAYMENT 16 and ONE 10.00 debit to the resolved fund source 10 (loan 9 L55, overpayment-only)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "Parity vector transcribing the journal entry a MERCHANT-ISSUED REFUND posted on a loan NOT charged off under the SAME method as an ordinary repayment, createJournalEntriesForLoanRepayments (dispatch: isRepaymentType() includes isMerchantIssuedRefund() [LoanTransactionType.java:193-196]; AccrualBasedAccountingProcessorForLoan.java:87-90 then :1369-1376; pinned 426a23544). Tier-D MNT replay (throwaway tenant `tierd`, currency MNT, 2 minor digits, product LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL, loan 9 chargedOff false / fraud false) at merchantIssuedRefund transaction L55. request.repayment_journal.portions transcribes the loan read-back's transaction id 55 (type loanTransactionType.merchantIssuedRefund id 21, paymentDetailData.paymentType.id 8 AUTOPAY, manuallyReversed false): overpaymentPortion 10.0 -> \"1000\" minor units, principal/interest/fee/penalty 0 and omitted. request.repayment_journal.accounts is the accepted create request product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json with the fund source RESOLVED through the payment channel: loanPortfolioAccountId 7, receivableInterest/Fee/PenaltyAccountId 4, overpaymentLiabilityAccountId 16, fundSourceAccountId 10; the ONLY paymentChannelToFundSourceMappings entry is paymentTypeId 1 -> 18, so the refund's paymentType 8 (AUTOPAY) has no channel mapping and resolves to the product fund source 10. The vector supplies the RESOLVED account; the port does not resolve channels. expect.repayment_journal_legs is a TRANSCRIPTION of the two L55 legs in id order from the journal-entries SWEEP: leg id 146 CREDIT glAccountId 16 10.00, leg id 147 DEBIT glAccountId 10 10.00. THIS VECTOR GRADES ONE PROPERTY: a repayment-type posting CREDITS each non-zero portion to its slot account, MERGING portions that share a credit account at the first slot's position, then DEBITs the total exactly ONCE to the resolved fund source, credits first and the single debit last. A port that credits the wrong slot account or debits an account other than the resolved fund source moves a leg. WHAT THIS VECTOR DOES NOT GRADE: the merge discriminator (there is a single credited portion, so merging is invisible; the loan-1 interest+penalty merge vector grades it); the one-debit-vs-debit-per-portion discriminator (with one credit the two postings coincide; the loan-15 and loan-1 vectors carry more than one credit); the transaction-type dispatch itself (the seam carries no transaction type, so the merchant-issued kind is established by the capture, not by an input the port branches on). Every leg in the sweep file for L55 is transcribed; the ids are the observed posting ids and no reversed mirror leg is present. Nothing was computed by this promotion: every portion, every account and every expected leg is read directly from the committed files.",
+ "oracle": {
+  "seam": "loan-repayment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.repayment_journal.portions is transcribed from the committed merchantIssuedRefund loan read-back .softhouse/capture/tierd-feasibility/merchant-refund-mnt/loans/loan-9/loan-9-detail-associations-transactions-6.json (sha256 acce065681278518de9801afd3ff38d88efe321b164a6436a6a422d76d075f59): loan 9 chargedOff false / fraud false / loanProductId 46, transactions[id 55] type loanTransactionType.merchantIssuedRefund (id 21), paymentDetailData.paymentType.id 8 AUTOPAY, manuallyReversed false, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 10.0. expect.repayment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-9.json (sha256 e5f583c54a7d53f3923e52c4510b82e122720339ab2587d083ca356350ff7d81): transactionId L55 pageItems in id order are id 146 (entryType.value CREDIT glAccountId 16 amount 10.0) and id 147 (DEBIT glAccountId 10 amount 10.0). request.repayment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/merchant-refund-mnt/product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json (sha256 53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15, the sha256 the product-mappings/manifest.json carries for it): loanPortfolioAccountId 7, receivableInterestAccountId 4, receivableFeeAccountId 4, receivablePenaltyAccountId 4, overpaymentLiabilityAccountId 16, fundSourceAccountId 10, paymentChannelToFundSourceMappings [{paymentTypeId 1, fundSourceAccountId 18}] -- the ONLY channel mapping, so the refund's paymentType 8 resolves to the product fund source 10. TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units (10.0 -> 1000), never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/merchant-refund-mnt/journalentries-sweep/loan-9.json",
+  "capture_sha256": "e5f583c54a7d53f3923e52c4510b82e122720339ab2587d083ca356350ff7d81",
+  "capture_case_id": "L55",
+  "citation": "journalentries-sweep/loan-9.json:1 (sha256 e5f583c54a7d53f3923e52c4510b82e122720339ab2587d083ca356350ff7d81): transactionId L55 carries two legs in id order -- id 146 entryType.value CREDIT glAccountId 16 amount 10.0; id 147 DEBIT glAccountId 10 amount 10.0. The one credit equals the one debit (1000 minor units). Portions are in loans/loan-9/loan-9-detail-associations-transactions-6.json:1 (sha256 acce065681278518de9801afd3ff38d88efe321b164a6436a6a422d76d075f59): loan 9 chargedOff false, transactions[id 55] type loanTransactionType.merchantIssuedRefund, paymentDetailData.paymentType.id 8 AUTOPAY, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 10.0. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL.json:1 (sha256 53246a7b8e792f9b63f7f4223bb3ffcd68f76487aa222bf42babc09fd23ded15): loanPortfolioAccountId 7, receivableInterestAccountId 4, receivableFeeAccountId 4, receivablePenaltyAccountId 4, overpaymentLiabilityAccountId 16, fundSourceAccountId 10, with the only channel mapping paymentTypeId 1 -> 18, so the AUTOPAY paymentType 8 resolves to 10."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "repayment_journal": {
+   "transaction_id": "L55",
+   "portions": {
+    "principal": "0",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "1000"
+   },
+   "accounts": {
+    "loan_portfolio": "7",
+    "receivable_interest": "4",
+    "receivable_fee": "4",
+    "receivable_penalty": "4",
+    "overpayment": "16",
+    "fund_source": "10"
+   }
+  }
+ },
+ "expect": {
+  "repayment_journal_legs": [
+   {
+    "transaction_id": "L55",
+    "account": "16",
+    "entry_type": "CREDIT",
+    "amount_minor": "1000"
+   },
+   {
+    "transaction_id": "L55",
+    "account": "10",
+    "entry_type": "DEBIT",
+    "amount_minor": "1000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "repayment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-repayment-journal-one-debit-per-portion"
+ ]
+}
