@@ -1,0 +1,10 @@
+OH-TIERD30-DR step 1: replay LoanReAmortization-Part1 (50 scenarios) in MNT
+
+Whole-file replay of LoanReAmortization-Part1.feature against the throwaway
+reference oracle (tenant tierd, port 8444) with the Feign capture on.
+
+Result: 50 scenarios (45 passed, 5 failed); 1354 steps (1319 passed, 30
+skipped, 5 failed). Failures are recorded, not diagnosed. Loan attribution is
+scenario k -> loan k (validated after extraction in step 2).
+
+Adds the capture dir, the adapted run script, the replay log, the result table.

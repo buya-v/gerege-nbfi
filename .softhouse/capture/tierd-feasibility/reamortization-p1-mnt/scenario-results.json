@@ -1,0 +1,647 @@
+{
+ "attribution_validated": false,
+ "currency": "MNT",
+ "failed": 5,
+ "feature": "LoanReAmortization-Part1.feature",
+ "passed": 45,
+ "scenario_count": 50,
+ "scenarios": [
+  {
+   "failed_steps": [
+    {
+     "actual": "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 1 tab line 4.",
+      "Actual values in line (with the same due date) are:",
+      "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+      "But expected values in line:",
+      "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]"
+     ],
+     "expected": "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]",
+     "resource": 1,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 30,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 5,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 1,
+   "loan": 1,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - re-amortization happy path",
+   "result": "FAILED",
+   "tag": "C3069"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 2 tab line 4.",
+      "Actual values in line (with the same due date) are:",
+      "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+      "But expected values in line:",
+      "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]"
+     ],
+     "expected": "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]",
+     "resource": 2,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 75,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 50,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 2,
+   "loan": 2,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - re-amortization happy path with loan externalId",
+   "result": "FAILED",
+   "tag": "C3070"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 3 tab line 4.",
+      "Actual values in line (with the same due date) are:",
+      "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+      "But expected values in line:",
+      "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]"
+     ],
+     "expected": "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]",
+     "resource": 3,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 106,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 95,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 3,
+   "loan": 3,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - re-amortization undo happy path",
+   "result": "FAILED",
+   "tag": "C3071"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 144,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 4,
+   "loan": 4,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - delinquency calculation triggered upon re-amortization transaction",
+   "result": "PASSED",
+   "tag": "C3072"
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 5 tab line 4.",
+      "Actual values in line (with the same due date) are:",
+      "[3, 15, 31 January 2024, null, 187.0, 188.0, 0.0, 0.0, 0.0, 188.0, 0.0, 0.0, 0.0, 188.0] -",
+      "But expected values in line:",
+      "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]"
+     ],
+     "expected": "[3, 15, 31 January 2024, null, 188.0, 187.0, 0.0, 0.0, 0.0, 187.0, 0.0, 0.0, 0.0, 187.0]]",
+     "resource": 5,
+     "step": "Then Loan Repayment schedule has 4 periods, with the following data for periods:",
+     "step_feature_line": 177,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 164,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 5,
+   "loan": 5,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC1: re-amortization after charge applied on loan",
+   "result": "FAILED",
+   "tag": "C3073"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 197,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 6,
+   "loan": 6,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC2: complete past due principal amount reamortization scenario",
+   "result": "PASSED",
+   "tag": "C3074"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 228,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 7,
+   "loan": 7,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC3: reverse replay scenario",
+   "result": "PASSED",
+   "tag": "C3075"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 277,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 8,
+   "loan": 8,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC4: N+1 Installment scenario",
+   "result": "PASSED",
+   "tag": "C3076"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 310,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 9,
+   "loan": 9,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC5: re-amortization on same day of installment",
+   "result": "PASSED",
+   "tag": "C3077"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 343,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 10,
+   "loan": 10,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - UC6: Parital Paid Scenario",
+   "result": "PASSED",
+   "tag": "C3078"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 392,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 11,
+   "loan": 11,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction - Event check",
+   "result": "PASSED",
+   "tag": "C3089"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 413,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 12,
+   "loan": 12,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction reverse-replay - UC1: undo old repayment",
+   "result": "PASSED",
+   "tag": "C3112"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 471,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 13,
+   "loan": 13,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction reverse-replay - UC2: backdated repayment",
+   "result": "PASSED",
+   "tag": "C3113"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 526,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 14,
+   "loan": 14,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction reverse-replay - UC3: backdated disbursement",
+   "result": "PASSED",
+   "tag": "C3114"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 584,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 15,
+   "loan": 15,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction reverse-replay - UC4: backdated charge",
+   "result": "PASSED",
+   "tag": "C3115"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 642,
+   "feature_product": "LP2_DOWNPAYMENT_AUTO_ADVANCED_PAYMENT_ALLOCATION",
+   "index": 16,
+   "loan": 16,
+   "loan_client_id": null,
+   "name": "Verify Loan re-amortization transaction reverse-replay - UC5: re-amortization validation should not consider reverted transactions",
+   "result": "PASSED",
+   "tag": "C3134"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 748,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 17,
+   "loan": 17,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - UC1",
+   "result": "PASSED",
+   "tag": "C4304"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 812,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 18,
+   "loan": 18,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - Principal and interest and Fees - UC2",
+   "result": "PASSED",
+   "tag": "C4305"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 884,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 19,
+   "loan": 19,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - N+1 Scenario - UC3",
+   "result": "PASSED",
+   "tag": "C4306"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 952,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_INTEREST_PENALTY_FEE_PRINCIPAL",
+   "index": 20,
+   "loan": 20,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - Charge-back before re-amortization - UC4",
+   "result": "PASSED",
+   "tag": "C4307"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1019,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 21,
+   "loan": 21,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - Partially paid installment - UC5",
+   "result": "PASSED",
+   "tag": "C4308"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1084,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_AUTO_DOWNPAYMENT",
+   "index": 22,
+   "loan": 22,
+   "loan_client_id": null,
+   "name": "Verify allowing Re-amortization on interest bearing loan - Interest calculation: Default Behavior - DownPayment Scenarios - UC6",
+   "result": "PASSED",
+   "tag": "C4309"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1155,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 23,
+   "loan": 23,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC1: Principal and interest re-amortization",
+   "result": "PASSED",
+   "tag": "C4219"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1223,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 24,
+   "loan": 24,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC2: Principal interest and fee re-amortization",
+   "result": "PASSED",
+   "tag": "C4220"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1291,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 25,
+   "loan": 25,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC3: Principal interest and fee re-amortization, N+1 installment",
+   "result": "PASSED",
+   "tag": "C4221"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1361,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_INTEREST_PENALTY_FEE_PRINCIPAL",
+   "index": 26,
+   "loan": 26,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC4: Principal interest re-amortization, chargeback",
+   "result": "PASSED",
+   "tag": "C4222"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1430,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 27,
+   "loan": 27,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC5: Principal interest and fee re-amortization, partial payment",
+   "result": "PASSED",
+   "tag": "C4223"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1497,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_AUTO_DOWNPAYMENT",
+   "index": 28,
+   "loan": 28,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization transaction on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC6: Principal and interest re-amortization, downpayment",
+   "result": "PASSED",
+   "tag": "C4224"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1569,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 29,
+   "loan": 29,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization trn reversed by backdated repayment - Interest calculation: Default Behavior - UC7",
+   "result": "PASSED",
+   "tag": "C4374"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1641,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 30,
+   "loan": 30,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization trn reverse-replayed by backdated repayment - Interest calculation: equal amortization interest split - UC7",
+   "result": "PASSED",
+   "tag": "C4375"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1712,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_PRINCIPAL_FIRST",
+   "index": 31,
+   "loan": 31,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization trn reverse-replayed by backdated repayment - Interest calculation: Default Behavior - UC7.1",
+   "result": "PASSED",
+   "tag": "C4376"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1783,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL_PRINCIPAL_FIRST",
+   "index": 32,
+   "loan": 32,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization trn reversed by backdated repayment - Interest calculation: equal amortization interest split - UC7.1",
+   "result": "PASSED",
+   "tag": "C4377"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1855,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 33,
+   "loan": 33,
+   "loan_client_id": null,
+   "name": "Verify multiple Re-amortizations on the same loan - Interest calculation: Default Behavior - Multiple Re-amortizations on the same loan",
+   "result": "PASSED",
+   "tag": "C4310"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1912,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 34,
+   "loan": 34,
+   "loan_client_id": null,
+   "name": "Verify multiple Re-amortizations on the same loan - Interest calculation: Equal Amortization Behavior - Multiple Re-amortizations on the same loan",
+   "result": "PASSED",
+   "tag": null
+  },
+  {
+   "failed_steps": [
+    {
+     "actual": "[3, 31, 01 April 2024, null, 50.43, 16.62, 0.39, 5.0, 10.0, 32.01, 0.0, 0.0, 0.0, 32.01] -",
+     "detail_lines": [
+      "Wrong value in Repayment schedule of resource 35 tab line 4.",
+      "Actual values in line (with the same due date) are:",
+      "[3, 31, 01 April 2024, null, 50.43, 16.62, 0.39, 5.0, 10.0, 32.01, 0.0, 0.0, 0.0, 32.01] -",
+      "But expected values in line:",
+      "[3, 31, 01 April 2024, null, 50.46, 16.59, 0.42, 5.0, 10.0, 32.01, 0.0, 0.0, 0.0, 32.01]]"
+     ],
+     "expected": "[3, 31, 01 April 2024, null, 50.46, 16.59, 0.42, 5.0, 10.0, 32.01, 0.0, 0.0, 0.0, 32.01]]",
+     "resource": 35,
+     "step": "Then Loan Repayment schedule has 6 periods, with the following data for periods:",
+     "step_feature_line": 1947,
+     "tab_line": null
+    }
+   ],
+   "feature_line": 1933,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 35,
+   "loan": 35,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization with overdue penalties - Interest calculation: Default Behavior - Re-amortization with overdue penalties",
+   "result": "FAILED",
+   "tag": "C4311"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 1983,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 36,
+   "loan": 36,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization with multiple unpaid installments - Interest calculation: Default Behavior - Re-amortization with multiple unpaid installments",
+   "result": "PASSED",
+   "tag": "C4312"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2026,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 37,
+   "loan": 37,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization after overpayment - Interest calculation: Default Behavior - Re-amortization after overpayment",
+   "result": "PASSED",
+   "tag": "C4313"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2077,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_NO_CALC_ON_PAST_DUE_TILL_PRECLOSE",
+   "index": 38,
+   "loan": 38,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal on interest bearing loan - Interest calculation: Default Behavior - UC8",
+   "result": "PASSED",
+   "tag": "C4389"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2161,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_NO_CALC_ON_PAST_DUE_TILL_PRECLOSE",
+   "index": 39,
+   "loan": 39,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC8",
+   "result": "PASSED",
+   "tag": "C4390"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2247,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_NO_CALC_ON_PAST_DUE_TILL_PRECLOSE",
+   "index": 40,
+   "loan": 40,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after repayment on interest bearing loan - Interest calculation: Default Behavior - UC8.1",
+   "result": "PASSED",
+   "tag": "C4396"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2352,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALC_EMI_360_30_CHARGEBACK_INTEREST_FEE_PRINCIPAL",
+   "index": 41,
+   "loan": 41,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after chargeback on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC8.2",
+   "result": "PASSED",
+   "tag": "C4397"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2459,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_NO_CALC_ON_PAST_DUE_TILL_PRECLOSE",
+   "index": 42,
+   "loan": 42,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after charge on interest bearing loan - Interest calculation: Default Behavior - UC8.3",
+   "result": "PASSED",
+   "tag": "C4398"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2569,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_REFUND_INTEREST_RECALC_ACCRUAL_ACTIVITY",
+   "index": 43,
+   "loan": 43,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after MIR on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC8.4",
+   "result": "PASSED",
+   "tag": "C4399"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2678,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_MULTIDISBURSE_CHARGEBACK",
+   "index": 44,
+   "loan": 44,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after 2nd disb on interest bearing loan - Interest calculation: Default Behavior - UC8.5",
+   "result": "PASSED",
+   "tag": "C4400"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2787,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_RECALCULATION_DAILY_EMI_360_30_MULTIDISBURSE_AUTO_DOWNPAYMENT",
+   "index": 45,
+   "loan": 45,
+   "loan_client_id": null,
+   "name": "Verify Re-amortization reversal after 2nd disb with downpayment on interest bearing loan - Interest handling: EQUAL_AMORTIZATION_INTEREST_SPLIT - UC8.6",
+   "result": "PASSED",
+   "tag": "C4401"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2911,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF",
+   "index": 46,
+   "loan": 46,
+   "loan_client_id": null,
+   "name": "Verify that Re-amortization is forbidden on charged-off loan, interest bearing loan, Interest calculation: Default Behavior, Charge-off scenario (zero interest) - UC1",
+   "result": "PASSED",
+   "tag": "C4402"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 2981,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 47,
+   "loan": 47,
+   "loan_client_id": null,
+   "name": "Verify that Re-amortization is forbidden on charged-off loan, interest bearing loan, Interest calculation: Default Behavior, Charge-off scenario (regular) - UC2",
+   "result": "PASSED",
+   "tag": "C4403"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3050,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR",
+   "index": 48,
+   "loan": 48,
+   "loan_client_id": null,
+   "name": "Verify that Re-amortization is forbidden on charged-off loan, interest bearing loan, Interest calculation: Default Behavior, Charge-off scenario (accelerate maturity) - UC3",
+   "result": "PASSED",
+   "tag": "C4404"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3115,
+   "feature_product": "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF",
+   "index": 49,
+   "loan": 49,
+   "loan_client_id": null,
+   "name": "Verify that Re-amortization is forbidden on charged-off loan (zero interest), interest bearing loan, Interest handling: equal amortization + interest split - UC4",
+   "result": "PASSED",
+   "tag": "C4405"
+  },
+  {
+   "failed_steps": [],
+   "feature_line": 3185,
+   "feature_product": "LP2_ADV_CUSTOM_PMT_ALLOC_PROGRESSIVE_LOAN_SCHEDULE_HORIZONTAL",
+   "index": 50,
+   "loan": 50,
+   "loan_client_id": null,
+   "name": "Verify that Re-amortization is forbidden on charged-off loan (regular), interest bearing loan, Interest handling: equal amortization + interest split - UC5",
+   "result": "PASSED",
+   "tag": "C4406"
+  }
+ ],
+ "steps": {
+  "failed": 5,
+  "passed": 1319,
+  "skipped": 30,
+  "total": 1354
+ },
+ "tenant": "tierd"
+}
