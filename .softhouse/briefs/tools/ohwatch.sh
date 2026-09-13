@@ -143,7 +143,18 @@ recent = ' '.join(_acttext(f) for f in ev[-25:] if os.path.exists(f)) if live_cw
 # touched the same path goes quiet and reads dead again.
 whole = ' '.join(_acttext(f) for f in ev if os.path.exists(f)) if live_cwds else ''
 is_live = any(c in recent for c in live_cwds) or (idle < 300 and any(c in whole for c in live_cwds))
-if not is_live:
+# A RUN THAT DIED ON THE MODEL LOOKS FINISHED. On 2026-09-12 23:41 OH-CIXGRADE-DQ stopped after 3 events on
+# DeepSeek "Insufficient Balance" and read "(no live process)" like a completed run; the driver lost 9.5 hours
+# before noticing. A ConversationErrorEvent in the tail is now named on its own line.
+errdetail = ''
+for f in ev[-5:]:
+    try: o = json.load(open(f))
+    except Exception: continue
+    if o.get('kind') == 'ConversationErrorEvent':
+        errdetail = ('%s: %s' % (o.get('code',''), o.get('detail',''))).replace('\n',' ')[:150]
+if errdetail:
+    flag = 'ERRORED'
+elif not is_live:
     flag = '(no live process)'
 elif idle >= SILENT_S:
     flag = 'STALLED-NOW(silent)'
@@ -157,6 +168,7 @@ note = '' if not recovered else '  (%d recovered -1)' % recovered
 print('%-34s events=%-5s idle=%4ds  trailing-1=%d%s  %s' %
       (os.path.basename(d.rstrip('/'))[:32], n, idle, trailing, note, flag))
 print('    last: %s' % (lastact or '(none)'))
+if errdetail: print('    ERROR: %s' % errdetail)
 PY
 done
 
