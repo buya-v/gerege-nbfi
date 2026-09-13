@@ -1,2 +1,2 @@
-scenarios: 50; passed: 45; failed: 5; attribution validated: False; problems: 0
+scenarios: 50; passed: 45; failed: 5; attribution validated: True; problems: 0
 wrote replay-result-table.md

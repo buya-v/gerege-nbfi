@@ -167,16 +167,28 @@ def parse_replay():
 
 
 def loan_facts():
-    """loan id -> clientId from create-request (empty when stage/ is absent)."""
+    """loan id -> clientId from the loan's real create-request (empty when stage/ is absent).
+
+    bin/extract.py can emit more than one `create-request` file per id when an
+    external-id `reAmortize` POST is mis-keyed (see organize.py / OWNER.md).  The
+    mis-keyed body has no loan fields; the real create carries `clientId`/`loanType`,
+    so prefer the latter.
+    """
     facts = {}
     if not os.path.isdir(STAGE):
         return facts
     for fn in sorted(os.listdir(STAGE)):
-        m = re.match(r'loan-(\d+)-create-request\.json$', fn)
-        if m:
-            lid = int(m.group(1))
+        m = re.match(r'loan-(\d+)-create-request(?:-\d+)?\.json$', fn)
+        if not m:
+            continue
+        lid = int(m.group(1))
+        try:
             body = json.load(open(os.path.join(STAGE, fn)))
-            facts.setdefault(lid, {})['clientId'] = body.get('clientId')
+        except ValueError:
+            continue
+        if not isinstance(body, dict) or body.get('clientId') is None:
+            continue
+        facts.setdefault(lid, {})['clientId'] = body.get('clientId')
     return facts
 
 

@@ -1,0 +1,4 @@
+copied 1605 body files into loans/loan-*/ (45 committed loans); skipped 2 mis-keyed external-id bodies
+manifest entries: 1692; committed: 1605; loans: 50; unattributed: []
+kept_body_bytes: 16142419 of committed files: 15599983
+mis-keyed external-id bodies: [{'stage_file': 'loan-40-create-request-1.json', 'external_id': 'c957167d-7732-4eca-a3a2-958bb759ba2a', 'keyed_loan': 40, 'owner_loan': 10}, {'stage_file': 'loan-6-create-request-1.json', 'external_id': '785775ad-5a1e-4cab-8482-0a2675f1c43c', 'keyed_loan': 6, 'owner_loan': 2}]
