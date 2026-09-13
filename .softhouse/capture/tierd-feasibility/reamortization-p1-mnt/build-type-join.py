@@ -1,57 +1,49 @@
 #!/usr/bin/env python3
-"""OH-TIERD29-DO step 6: join every swept `/journalentries` leg to its loan
+"""OH-TIERD30-DR step 6: join every swept `/journalentries` leg to its loan
 transaction TYPE and to the CHARGED-OFF dimension, then characterise the
-capitalized-income posting family -- `capitalizedIncome`,
-`capitalizedIncomeAdjustment`, `capitalizedIncomeAmortization`,
-`capitalizedIncomeAmortizationAdjustment` and `chargeOff`.
+re-amortization posting arms -- `reAmortize`, `repayment`, `accrual` and
+`chargeOff` -- and inventory, per loan, the read-backs that carry a repayment
+schedule (`repaymentSchedule.periods`) before and after each re-amortization.
 
-Adapted from the OH-TIERD22-DB `merchant-refund-mnt/build-type-join.py`.
-The generic sweep leg -> type join, the per-loan currency extraction, the
-transaction's `paymentType` (id + name, from `paymentDetailData.paymentType`)
-and the DISTINCT leg shapes (account ids + sides) per target type, with one
-example (loan, tx id, portions, paymentType id) and a per-shape transaction
-count, are kept.
+Adapted from the OH-TIERD22-DB `merchant-refund-mnt/build-type-join.py`.  Two
+things changed for this capture:
 
-CHARGED-OFF RULE (OH-TIERD29-DO, date order -- NOT id order):
-a leg's transaction is on a charged-off loan only if the loan's LATEST
-read-back (highest index) has `chargedOff` true and lists a NON-REVERSED
-`chargeOff` transaction with an EARLIER transaction DATE than the leg's
-transaction, or the SAME date and a LOWER transaction id.  Ordering by date
-matters: a backdated repayment has a higher id but posts as not charged off
-(OH-TIERD26-DJ).  An undone charge-off vanishes from the latest read-back and
-therefore does not count.
+  * the charged-off rule is DATE-ordered, not id-ordered (OH-TIERD26-DJ): a leg
+    is on a charged-off loan only if the loan's LATEST read-back has
+    `chargedOff` true AND lists a chargeOff transaction with an EARLIER
+    transaction DATE, or the SAME date and a LOWER id.  A backdated repayment
+    with a higher id but an earlier date therefore posts as NOT charged off, and
+    an undone charge-off (gone from the latest read-back) never counts.
+  * the schedule dimension: for every loan, the read-back files that carry a
+    `periods` array are listed and phased against each captured reAmortize call
+    using the extractor's `source_line` (a true chronology), so a reader can see
+    which schedule bodies were read before and after each re-amortization.
 
 The sweep is flat (`journalentries-sweep/loan-<id>.json`, one paged body per
-loan).  A target type with NO legs is itself a finding: the arm may not have
-been exercised by the feature.
+loan), unlike the runner's per-transaction `journalentries/`.
 """
 import glob
+import hashlib
 import json
 import os
-import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SWEEP = os.path.join(HERE, 'journalentries-sweep')
 LOANS = os.path.join(HERE, 'loans')
 STAGE = os.path.join(HERE, 'stage')
-SEQ_RE = re.compile(r'-(\d+)\.json$')
+MANIFEST = os.path.join(HERE, 'manifest-reamortization-p1.json')
 
-# The capitalized-income posting arms OH-TIERD29-DO step 6 must characterise.
-# The target set is exactly this list so a target the replay never exercised is
-# still reported -- with zero legs -- as a finding.
+# The posting arms OH-TIERD30-DR step 6 must characterise.  `reAmortize` is the
+# re-amortization transaction the feature drives; the other three are the legs
+# the task calls out.  A target the replay never exercised is still reported --
+# with zero legs -- as a finding.
 TARGET_TYPES = (
-    'loanTransactionType.capitalizedIncome',
-    'loanTransactionType.capitalizedIncomeAdjustment',
-    'loanTransactionType.capitalizedIncomeAmortization',
-    'loanTransactionType.capitalizedIncomeAmortizationAdjustment',
+    'loanTransactionType.reAmortize',
+    'loanTransactionType.repayment',
+    'loanTransactionType.accrual',
     'loanTransactionType.chargeOff',
 )
-
-CHARGEOFF_RULE = ('a leg\'s transaction is on a charged-off loan only if the loan\'s '
-                  'LATEST read-back has `chargedOff=true` and lists a NON-REVERSED '
-                  '`chargeOff` transaction with an EARLIER transaction DATE than the '
-                  'leg\'s transaction, or the SAME date and a LOWER transaction id '
-                  '(date order, not id order)')
+REAMORT = 'loanTransactionType.reAmortize'
 
 
 def minor(amount):
@@ -65,34 +57,45 @@ def date_str(seq):
     return '%04d-%02d-%02d' % tuple(seq)
 
 
-def read_jsons(paths):
-    for f in paths:
+def load_manifest_lines():
+    """(loan_id, base name) -> source log line, for chronological ordering."""
+    out = {}
+    for e in json.load(open(MANIFEST)):
+        out[(e['loan_id'], os.path.basename(e['file']))] = e['source_line']
+    return out
+
+
+def loan_files(loan_id):
+    """All captured bodies for the loan, keyed by base name.  The committed
+    `loans/loan-<id>/` copy is preferred; a FAILED scenario's loan only exists
+    under `stage/`."""
+    out = {}
+    for f in glob.glob(os.path.join(LOANS, 'loan-%d' % loan_id, '*.json')):
+        out[os.path.basename(f)] = f
+    for f in sorted(glob.glob(os.path.join(STAGE, 'loan-%d-*.json' % loan_id))):
+        out.setdefault(os.path.basename(f), f)
+    return out
+
+
+def readbacks(loan_id, lines):
+    """[(source_line, relpath, body)] for every read-back of the loan, sorted by
+    the extractor's source line (the true capture order)."""
+    out = []
+    for base, f in loan_files(loan_id).items():
+        if not base.endswith('.json'):
+            continue
         try:
-            yield f, json.load(open(f))
+            body = json.load(open(f))
         except ValueError:
             continue
-
-
-def tx_readbacks(loan_id):
-    """Every transaction read-back for the loan, committed first then stage."""
-    pats = [
-        os.path.join(LOANS, 'loan-%d' % loan_id,
-                     'loan-%d-detail-associations-transactions-*.json' % loan_id),
-        os.path.join(LOANS, 'loan-%d' % loan_id,
-                     'loan-%d-detail-associations-all-*.json' % loan_id),
-        os.path.join(STAGE, 'loan-%d-detail-associations-transactions-*.json' % loan_id),
-        os.path.join(STAGE, 'loan-%d-detail-associations-all-*.json' % loan_id),
-    ]
-    seen = []
-    for pat in pats:
-        seen.extend(glob.glob(pat))
-    return sorted(seen, key=lambda p: int(SEQ_RE.search(p).group(1))
-                  if SEQ_RE.search(p) else 0)
+        if not isinstance(body, dict):
+            continue
+        rel = os.path.relpath(f, HERE)
+        out.append((lines.get((loan_id, base), 0), rel, body))
+    return sorted(out, key=lambda r: (r[0], r[1]))
 
 
 def payment_of(t):
-    """(paymentType id, paymentType name) from a transaction read-back, or
-    (None, None) for a leg that carries no payment detail."""
     pdd = t.get('paymentDetailData')
     if isinstance(pdd, dict):
         pt = pdd.get('paymentType')
@@ -101,22 +104,17 @@ def payment_of(t):
     return None, None
 
 
-def tx_map_for(loan_id):
-    """loanTransactionId -> {code, value, date, amount_minor, payment_type_id,
-    payment_type_name, reversed, portions}.
-
-    Merged over every transaction read-back of the loan; the type of an id is
-    stable across reads (asserted)."""
+def tx_map_for(loan_id, lines):
+    """loanTransactionId -> type/date/amount/portions/paymentType/reversed,
+    merged over every transaction read-back of the loan."""
     out = {}
-    for f, body in read_jsons(tx_readbacks(loan_id)):
-        if not isinstance(body, dict):
-            continue
+    for _, _, body in readbacks(loan_id, lines):
         for t in body.get('transactions') or []:
             tid = t.get('id')
-            typ = t.get('type') or {}
-            code = typ.get('code')
             if tid is None:
                 continue
+            typ = t.get('type') or {}
+            code = typ.get('code')
             prev = out.get(tid)
             if prev and code and prev['code'] and prev['code'] != code:
                 raise SystemExit('type instability loan %d tx %s: %s vs %s'
@@ -144,106 +142,152 @@ def tx_map_for(loan_id):
                     'unrecognized_income_minor': minor(t.get('unrecognizedIncomePortion'))
                     if t.get('unrecognizedIncomePortion') is not None else None,
                 },
-                # loan read-backs expose `manuallyReversed`; the journal-entry
-                # legs use `reversed`.  Treat either as reversed, sticky.
                 'reversed': (bool(prev.get('reversed')) if prev else False)
                 or bool(t.get('manuallyReversed')) or bool(t.get('reversed')),
             }
     return out
 
 
-def latest_chargeoff_state(loan_id):
-    """The LATEST read-back's charge-off state.
-
-    `charged_off_latest` is the loan `chargedOff` flag in the highest-sequence
-    detail-associations-all-* read-back that carries it (an undone charge-off
-    vanishes from the latest read-back, so this is authoritative).
-    `chargeoff_transactions` is the NON-REVERSED `chargeOff` transactions listed
-    in that same read-back, and is empty unless `chargedOff` is true."""
-    pats = (os.path.join(LOANS, 'loan-%d' % loan_id,
-                         'loan-%d-detail-associations-all-*.json' % loan_id),
-            os.path.join(LOANS, 'loan-%d' % loan_id, 'loan-*-detail-*.json'),
-            os.path.join(STAGE, 'loan-%d-detail-*.json'))
-    for pat in pats:
-        files = sorted(glob.glob(pat),
-                       key=lambda p: int(SEQ_RE.search(p).group(1))
-                       if SEQ_RE.search(p) else 0)
-        for f in reversed(files):
-            try:
-                body = json.load(open(f))
-            except ValueError:
-                continue
-            if not (isinstance(body, dict) and 'chargedOff' in body):
-                continue
-            state = {'charged_off_latest': bool(body.get('chargedOff')),
-                     'readback': os.path.basename(f),
-                     'chargeoff_transactions': []}
-            if state['charged_off_latest']:
-                for t in body.get('transactions') or []:
-                    if (t.get('type') or {}).get('code') != 'loanTransactionType.chargeOff':
-                        continue
-                    if t.get('manuallyReversed') or t.get('reversed'):
-                        continue
-                    state['chargeoff_transactions'].append({
-                        'transaction_id': 'L%d' % t['id'],
-                        'id': t['id'],
-                        'date': t.get('date'),
-                    })
-            return state
-    return {'charged_off_latest': None, 'readback': None, 'chargeoff_transactions': []}
+def latest_transaction_readback(loan_id, lines):
+    """(line, relpath, body) for the loan's LATEST read-back that carries a
+    `transactions` array (the highest source line), or None."""
+    best = None
+    for line, rel, body in readbacks(loan_id, lines):
+        if body.get('transactions'):
+            if best is None or line >= best[0]:
+                best = (line, rel, body)
+    return best
 
 
-def charged_off_at(state, leg_id, leg_date):
-    """True when a non-reversed chargeOff transaction in the latest read-back is
-    EARLIER (by date) than the leg, or the SAME date with a LOWER id."""
-    if not state.get('charged_off_latest'):
-        return False
-    for c in state.get('chargeoff_transactions') or []:
-        cd, cid = c.get('date'), c.get('id')
-        if cd is None or leg_date is None or leg_id is None:
+def charged_off_state(loan_id, lines):
+    """Charged-off state from the loan's LATEST read-back.
+
+    `charged_off_latest` = the `chargedOff` flag there; `chargeoffs` = the
+    non-reversed `chargeOff` loan transactions listed THERE (an undone
+    charge-off is gone from the latest read-back and so never counts).  A leg is
+    charged off when the flag is true and the latest read-back lists a chargeOff
+    with an EARLIER date, or the same date and a lower id.
+    """
+    latest = latest_transaction_readback(loan_id, lines)
+    if latest is None:
+        return {'charged_off_latest': None, 'chargeoffs': []}
+    _, rel, body = latest
+    cos = []
+    for t in body.get('transactions') or []:
+        if (t.get('type') or {}).get('code') != 'loanTransactionType.chargeOff':
             continue
-        if cd < leg_date:
-            return True
-        if cd == leg_date and cid < leg_id:
-            return True
-    return False
-
-
-def qualifying_ids(state, leg_id, leg_date):
-    """The chargeOff transaction ids that make this leg charged-off (for the
-    per-leg provenance list)."""
-    out = []
-    if not state.get('charged_off_latest'):
-        return out
-    for c in state.get('chargeoff_transactions') or []:
-        cd, cid = c.get('date'), c.get('id')
-        if cd is None or leg_date is None or leg_id is None:
+        if bool(t.get('manuallyReversed')) or bool(t.get('reversed')):
             continue
-        if cd < leg_date or (cd == leg_date and cid < leg_id):
-            out.append(c['transaction_id'])
-    return out
+        if t.get('id') is None:
+            continue
+        cos.append({'transaction_id': t.get('id'), 'date': t.get('date')})
+    return {
+        'charged_off_latest': bool(body.get('chargedOff')),
+        'latest_readback': rel,
+        'chargeoffs': sorted(cos, key=lambda c: c['transaction_id']),
+    }
 
 
-def detail_currency(loan_id):
-    for pat in (os.path.join(LOANS, 'loan-%d' % loan_id, 'loan-*-detail-*.json'),
-                os.path.join(STAGE, 'loan-%d-detail-*.json')):
-        for _, body in read_jsons(sorted(glob.glob(pat))):
-            if isinstance(body, dict) and isinstance(body.get('currency'), dict):
-                return body['currency'].get('code')
+def is_charged_off(date, tx_id, state):
+    if not state.get('charged_off_latest') or not date or tx_id is None:
+        return False, []
+    hit = []
+    for c in state.get('chargeoffs', []):
+        cd = c.get('date')
+        cid = c.get('transaction_id')
+        if cd and (list(cd) < list(date)
+                   or (list(cd) == list(date) and cid < tx_id)):
+            hit.append(cid)
+    return bool(hit), hit
+
+
+def reamortize_calls(loan_id, lines):
+    """Captured reAmortize calls for the loan, split into SUCCESSFUL calls (the
+    response carries a `resourceId`) and REJECTED attempts (a domain-rule
+    response with `errors`, e.g. `error.msg.loan.reamortize.not.allowed.on.
+    charged.off`).  Only a successful call rewrites the schedule, so only its
+    source line is a phase boundary."""
+    files = loan_files(loan_id)
+    ok, rejected = [], []
+    for base in sorted(files):
+        if 'reAmortize' not in base or 'response' not in base or not base.endswith('.json'):
+            continue
+        path = files[base]
+        try:
+            body = json.load(open(path))
+        except ValueError:
+            continue
+        rec = {'source_line': lines.get((loan_id, base), 0),
+               'file': os.path.relpath(path, HERE)}
+        if isinstance(body, dict) and isinstance(body.get('resourceId'), int) \
+                and not body.get('errors'):
+            rec['transaction_id'] = 'L%d' % body['resourceId']
+            ok.append(rec)
+        else:
+            errs = []
+            if isinstance(body, dict):
+                for e in body.get('errors') or []:
+                    errs.append(e.get('userMessageGlobalisationCode')
+                                or e.get('developerMessage'))
+                rec['http_status'] = body.get('httpStatusCode')
+            rec['reason'] = '; '.join(x for x in errs if x) or 'no resourceId in response'
+            rejected.append(rec)
+    ok.sort(key=lambda r: (r['source_line'], r['file']))
+    rejected.sort(key=lambda r: (r['source_line'], r['file']))
+    return ok, rejected
+
+
+def schedule_entries(loan_id, lines):
+    """Every read-back of the loan that carries a `periods` array, with its
+    source line, periods count, a sha256 of the periods array, and the phase
+    relative to each SUCCESSFUL reAmortize call."""
+    ok, _ = reamortize_calls(loan_id, lines)
+    boundaries = sorted({r['source_line'] for r in ok})
+    rows = []
+    for line, rel, body in readbacks(loan_id, lines):
+        rs = body.get('repaymentSchedule')
+        if not isinstance(rs, dict) or not isinstance(rs.get('periods'), list):
+            continue
+        periods = rs['periods']
+        raw = json.dumps(periods, sort_keys=True).encode()
+        base = os.path.basename(rel)
+        if 'detail-associations-all' in base:
+            kind = 'associations-all'
+        elif 'repaymentSchedule' in base:
+            kind = 'associations-repaymentSchedule'
+        else:
+            kind = 'other'
+        if not boundaries:
+            phase = 'no-reAmortize'
+        else:
+            k = sum(1 for b in boundaries if b < line)
+            phase = 'before-reAmortize' if k == 0 else 'after-reAmortize-%d' % k
+        rows.append({
+            'file': rel,
+            'source_line': line,
+            'kind': kind,
+            'periods': len(periods),
+            'periods_sha256': hashlib.sha256(raw).hexdigest(),
+            'phase': phase,
+        })
+    rows.sort(key=lambda r: (r['source_line'], r['file']))
+    return boundaries, rows
+
+
+def detail_currency(loan_id, lines):
+    for _, _, body in readbacks(loan_id, lines):
+        if isinstance(body.get('currency'), dict):
+            return body['currency'].get('code')
     return None
 
 
 def shape_key(legs):
-    """The leg shape: the sorted (side, account id) pairs, e.g.
-    `CREDIT:2 DEBIT:1`."""
     return ' '.join('%s:%s' % (l['entry_type'], l['gl_account_id'])
                     for l in sorted(legs, key=lambda r: (r['entry_type'] or '',
                                                          r['gl_account_id'] or 0)))
 
 
-def build_targets(types, loan_chargeoff, currencies, txmaps):
-    """Type x charged-off for every target arm plus the DISTINCT leg shapes per
-    arm, each with one example and the count of transactions of that shape."""
+def build_targets(types, txmaps, charged, currencies):
     by_type = {}
     all_legs = []
     for code in TARGET_TYPES:
@@ -266,7 +310,7 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
                                 key=lambda p: (p[0] or '', p[1] or 0)),
                 'transactions': [],
                 'legs': sorted(group, key=lambda r: (r['entry_type'] or '',
-                                                      r['gl_account_id'] or 0)),
+                                                     r['gl_account_id'] or 0)),
             })
             s['transactions'].append((lid, n))
         shape_list = []
@@ -309,11 +353,12 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
     # portions, payment type and legs, whether or not the sweep found legs.
     target_transactions = []
     for lid in sorted(txmaps):
-        state = loan_chargeoff.get(lid) or {}
+        state = charged.get(lid, {})
         for tid in sorted(txmaps[lid]):
             tx = txmaps[lid][tid]
             if tx.get('code') not in TARGET_TYPES:
                 continue
+            co, hits = is_charged_off(tx.get('date'), tid, state)
             target_transactions.append({
                 'loan': lid,
                 'transaction_id': 'L%d' % tid,
@@ -325,9 +370,9 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
                 'reversed': tx.get('reversed'),
                 'payment_type_id': tx.get('payment_type_id'),
                 'payment_type_name': tx.get('payment_type_name'),
-                'charged_off': charged_off_at(state, tid, tx.get('date')),
+                'charged_off': co,
                 'charged_off_latest': state.get('charged_off_latest'),
-                'chargeoff_tx_ids': qualifying_ids(state, tid, tx.get('date')),
+                'chargeoff_tx_ids': ['L%d' % c for c in hits],
                 'currency': currencies.get(lid, 'UNKNOWN'),
                 'portions': tx.get('portions'),
                 'legs': [],
@@ -345,8 +390,9 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
     findings = []
     empty = [c for c in TARGET_TYPES if not by_type[c]['total_legs']]
     if empty:
-        findings.append('target type(s) with NO journal-entry legs '
-                        'at all: %s.  The arm was NOT exercised by this feature.'
+        findings.append('target type(s) with NO journal-entry legs at all: %s.  The '
+                        're-amortization command succeeds and rewrites the schedule, '
+                        'but the reAmortize transaction itself posts no journal entry.'
                         % ', '.join(empty))
     no_legs = [t for t in target_transactions if not t['legs']]
     if no_legs:
@@ -355,22 +401,19 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
                         % (len(no_legs),
                            ', '.join('loan %d tx %s' % (t['loan'], t['transaction_id'])
                                      for t in no_legs)))
-    any_co_tx = any(loan_chargeoff.get(lid, {}).get('chargeoff_transactions')
-                    for lid in loan_chargeoff)
-    any_latest_co = any(loan_chargeoff.get(lid, {}).get('charged_off_latest')
-                        for lid in loan_chargeoff)
-    if not any_co_tx:
+    if not any(state.get('chargeoffs') for state in charged.values()):
         findings.append('no non-reversed `chargeOff` loan transaction appears in ANY '
-                        'LATEST read-back: no leg is on a charged-off loan.')
-    if not any_latest_co:
+                        "loan's LATEST read-back: no leg is on a charged-off loan.")
+    if not any(state.get('charged_off_latest') for state in charged.values()):
         findings.append('no loan\'s LATEST read-back has `chargedOff=true`: the '
                         'charged-off dimension is empty (every leg charged-off=no).')
     return {
-        'charged_off_rule': CHARGEOFF_RULE,
+        'charged_off_rule': ('a NON-REVERSED chargeOff loan transaction, listed in the '
+                             "loan's LATEST read-back, with an EARLIER transaction DATE "
+                             "than the leg's transaction, or the SAME date and a LOWER id"),
         'target_types': list(TARGET_TYPES),
         'by_type': by_type,
         'currencies': currencies,
-        'loans': loan_chargeoff,
         'total_legs': len(all_legs),
         'total_transactions': len(target_transactions),
         'total_loans': sorted({r['loan'] for r in all_legs}),
@@ -381,107 +424,11 @@ def build_targets(types, loan_chargeoff, currencies, txmaps):
     }
 
 
-def main():
-    manifest = json.load(open(os.path.join(HERE, 'journalentries-sweep-manifest.json')))
-    loan_ids = sorted(m['loan_id'] for m in manifest)
-    txmaps = {lid: tx_map_for(lid) for lid in loan_ids}
-    co_states = {lid: latest_chargeoff_state(lid) for lid in loan_ids}
-
-    currencies = {}
-    leg_records = []
-    unmatched = []
-    loan_chargeoff = {}
-    for lid in loan_ids:
-        path = os.path.join(SWEEP, 'loan-%d.json' % lid)
-        if not os.path.exists(path):
-            continue
-        body = json.load(open(path))
-        items = body.get('pageItems') or []
-        if not currencies.get(lid):
-            cur = next((it.get('currency', {}).get('code') for it in items
-                        if it.get('currency')), None)
-            currencies[lid] = cur or detail_currency(lid) or 'UNKNOWN'
-        state = co_states.get(lid) or {}
-        loan_chargeoff[lid] = {
-            'readback': state.get('readback'),
-            'charged_off_latest': state.get('charged_off_latest'),
-            'chargeoff_transactions': state.get('chargeoff_transactions') or [],
-        }
-        for it in items:
-            label = it.get('transactionId')
-            n = int(label[1:]) if isinstance(label, str) and label.startswith('L') \
-                and label[1:].isdigit() else None
-            tx = txmaps.get(lid, {}).get(n)
-            if tx is None:
-                unmatched.append({'loan': lid, 'transaction_id': label,
-                                  'file': 'journalentries-sweep/loan-%d.json' % lid})
-            leg_date = tx.get('date') if tx else it.get('transactionDate')
-            leg_records.append({
-                'loan': lid,
-                'currency': it.get('currency', {}).get('code'),
-                'journalentries_file': 'journalentries-sweep/loan-%d.json' % lid,
-                'transaction_id': label,
-                'transaction_id_num': n,
-                'type_code': tx['code'] if tx else None,
-                'type_value': tx['value'] if tx else None,
-                'transaction_date': leg_date,
-                'entry_type': (it.get('entryType') or {}).get('value'),
-                'gl_account_id': it.get('glAccountId'),
-                'gl_account_code': it.get('glAccountCode'),
-                'gl_account_name': it.get('glAccountName'),
-                'amount_minor': minor(it.get('amount')),
-                'reversed': it.get('reversed'),
-                'payment_type_id': tx.get('payment_type_id') if tx else None,
-                'payment_type_name': tx.get('payment_type_name') if tx else None,
-                'charged_off': charged_off_at(state, n, leg_date),
-                'charged_off_latest': state.get('charged_off_latest'),
-                'chargeoff_tx_ids': qualifying_ids(state, n, leg_date),
-            })
-
-    types = {}
-    for r in leg_records:
-        key = r['type_code'] or '(unmapped)'
-        t = types.setdefault(key, {'type_code': r['type_code'],
-                                   'type_value': r['type_value'],
-                                   'loans': [], 'transactions': [], 'legs': []})
-        if r['loan'] not in t['loans']:
-            t['loans'].append(r['loan'])
-        if r['transaction_id'] not in t['transactions']:
-            t['transactions'].append(r['transaction_id'])
-        t['legs'].append(r)
-    for t in types.values():
-        t['loans'].sort()
-        t['transactions'].sort(key=lambda s: int(s[1:]) if s and s[1:].isdigit() else 0)
-        t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
-
-    tg = build_targets(types, loan_chargeoff, currencies, txmaps)
-    obj = {
-        'tenant': 'tierd',
-        'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
-        'loan_ids': loan_ids,
-        'currencies': currencies,
-        'legs': len(leg_records),
-        'unmatched_legs': unmatched,
-        'loan_chargeoff': loan_chargeoff,
-        'targets': tg,
-        'types': types,
-    }
-    with open(os.path.join(HERE, 'journalentry-type-join.json'), 'w') as fh:
-        json.dump(obj, fh, indent=1, sort_keys=True)
-        fh.write('\n')
-    write_md(obj)
-    print('joined %d legs across %d types; %d unmatched; target legs %d on %d '
-          'transactions / %d loans; empty target types %s'
-          % (len(leg_records), len(types), len(unmatched), tg['total_legs'],
-             tg['total_transactions'], len(tg['total_loans']),
-             ','.join(tg['empty_types']) or 'none'))
-
-
 def write_md(obj):
     tg = obj['targets']
     out = []
     w = out.append
-    w('# Journal-entry type join — capitalized-income p2 arms (OH-TIERD29-DO step 6)')
+    w('# Journal-entry type join — re-amortization arms (OH-TIERD30-DR step 6)')
     w('')
     w('%d swept legs across %d transaction types; %d legs unmatched to a read-back.'
       % (obj['legs'], len(obj['types']), len(obj['unmatched_legs'])))
@@ -537,8 +484,150 @@ def write_md(obj):
                 s['shape'], ', '.join(str(a) for a in s['account_ids']), s['count'],
                 ', '.join(str(x) for x in s['loans']), ex['loan'], ex['transaction_id']))
         w('')
+    w('## Repayment schedules before/after each re-amortization')
+    w('')
+    for lid in obj['loan_ids']:
+        ev = obj['reamortize_events'].get(str(lid), {})
+        w('### loan %d — %s' % (lid, obj['currencies'].get(str(lid), 'UNKNOWN')))
+        w('')
+        w('reAmortize calls (source line): %s; reAmortize transactions: %s'
+          % (', '.join(str(x) for x in ev.get('command_source_lines', [])) or '-',
+             ', '.join('%s@%s' % (t['transaction_id'], date_str(t['date']))
+                       for t in ev.get('transactions', [])) or '-'))
+        rej = ev.get('rejected_calls', [])
+        if rej:
+            w('')
+            w('REJECTED reAmortize attempt(s): %s'
+              % '; '.join('%s r%d (%s)' % (r['file'], r.get('http_status') or 0,
+                                           r.get('reason'))
+                          for r in rej))
+        w('')
+        rows = obj['schedules'].get(str(lid), [])
+        if not rows:
+            w('_no read-back carries a `periods` array._')
+            w('')
+            continue
+        w('| read-back file | source line | kind | periods | periods sha256 | phase |')
+        w('| --- | ---: | --- | ---: | --- | --- |')
+        for r in rows:
+            w('| `%s` | %d | %s | %d | `%s` | %s |' % (
+                r['file'], r['source_line'], r['kind'], r['periods'],
+                r['periods_sha256'][:16], r['phase']))
+        w('')
     with open(os.path.join(HERE, 'journalentry-type-join.md'), 'w') as f:
         f.write('\n'.join(out) + '\n')
+
+
+def main():
+    lines = load_manifest_lines()
+    manifest = json.load(open(os.path.join(HERE, 'journalentries-sweep-manifest.json')))
+    loan_ids = sorted(m['loan_id'] for m in manifest)
+    txmaps = {lid: tx_map_for(lid, lines) for lid in loan_ids}
+    charged = {lid: charged_off_state(lid, lines) for lid in loan_ids}
+
+    currencies = {}
+    leg_records = []
+    unmatched = []
+    loan_chargeoff = {}
+    schedules = {}
+    reamort_events = {}
+    for lid in loan_ids:
+        state = charged[lid]
+        loan_chargeoff[lid] = state
+        ok_calls, rejected_calls = reamortize_calls(lid, lines)
+        boundaries, rows = schedule_entries(lid, lines)
+        schedules[lid] = rows
+        reamort_events[lid] = {
+            'command_source_lines': sorted({r['source_line'] for r in ok_calls}),
+            'calls': ok_calls,
+            'rejected_calls': rejected_calls,
+            'transactions': [
+                {'transaction_id': 'L%d' % tid, 'date': txmaps[lid][tid].get('date'),
+                 'type_code': txmaps[lid][tid].get('code')}
+                for tid in sorted(txmaps[lid])
+                if txmaps[lid][tid].get('code') == REAMORT
+            ],
+        }
+
+        path = os.path.join(SWEEP, 'loan-%d.json' % lid)
+        if not os.path.exists(path):
+            continue
+        body = json.load(open(path))
+        items = body.get('pageItems') or []
+        cur = next((it.get('currency', {}).get('code') for it in items
+                    if it.get('currency')), None)
+        currencies[lid] = cur or detail_currency(lid, lines) or 'UNKNOWN'
+        for it in items:
+            label = it.get('transactionId')
+            n = int(label[1:]) if isinstance(label, str) and label.startswith('L') \
+                and label[1:].isdigit() else None
+            tx = txmaps.get(lid, {}).get(n)
+            if tx is None:
+                unmatched.append({'loan': lid, 'transaction_id': label,
+                                  'file': 'journalentries-sweep/loan-%d.json' % lid})
+            co, hits = is_charged_off(tx.get('date') if tx else None, n, state)
+            leg_records.append({
+                'loan': lid,
+                'currency': it.get('currency', {}).get('code'),
+                'journalentries_file': 'journalentries-sweep/loan-%d.json' % lid,
+                'transaction_id': label,
+                'transaction_id_num': n,
+                'type_code': tx['code'] if tx else None,
+                'type_value': tx['value'] if tx else None,
+                'transaction_date': tx['date'] if tx else it.get('transactionDate'),
+                'entry_type': (it.get('entryType') or {}).get('value'),
+                'gl_account_id': it.get('glAccountId'),
+                'gl_account_code': it.get('glAccountCode'),
+                'gl_account_name': it.get('glAccountName'),
+                'amount_minor': minor(it.get('amount')),
+                'reversed': it.get('reversed'),
+                'payment_type_id': tx.get('payment_type_id') if tx else None,
+                'payment_type_name': tx.get('payment_type_name') if tx else None,
+                'charged_off': co,
+                'charged_off_latest': state.get('charged_off_latest'),
+                'chargeoff_tx_ids': ['L%d' % c for c in hits],
+            })
+
+    types = {}
+    for r in leg_records:
+        key = r['type_code'] or '(unmapped)'
+        t = types.setdefault(key, {'type_code': r['type_code'],
+                                   'type_value': r['type_value'],
+                                   'loans': [], 'transactions': [], 'legs': []})
+        if r['loan'] not in t['loans']:
+            t['loans'].append(r['loan'])
+        if r['transaction_id'] not in t['transactions']:
+            t['transactions'].append(r['transaction_id'])
+        t['legs'].append(r)
+    for t in types.values():
+        t['loans'].sort()
+        t['transactions'].sort(key=lambda s: int(s[1:]) if s and s[1:].isdigit() else 0)
+        t['legs'].sort(key=lambda r: (r['loan'], r['transaction_id_num'] or 0))
+
+    tg = build_targets(types, txmaps, charged, currencies)
+    obj = {
+        'tenant': 'tierd',
+        'source': 'GET /journalentries?loanId=<id>&limit=-1 on the throwaway (8444)',
+        'loan_ids': loan_ids,
+        'currencies': currencies,
+        'legs': len(leg_records),
+        'unmatched_legs': unmatched,
+        'loan_chargeoff': loan_chargeoff,
+        'schedules': schedules,
+        'reamortize_events': reamort_events,
+        'targets': tg,
+        'types': types,
+    }
+    with open(os.path.join(HERE, 'journalentry-type-join.json'), 'w') as fh:
+        json.dump(obj, fh, indent=1, sort_keys=True)
+        fh.write('\n')
+    write_md(obj)
+    n_sched = sum(len(v) for v in schedules.values())
+    print('joined %d legs across %d types; %d unmatched; target legs %d on %d '
+          'transactions / %d loans; empty target types %s; schedule bodies %d'
+          % (len(leg_records), len(types), len(unmatched), tg['total_legs'],
+             tg['total_transactions'], len(tg['total_loans']),
+             ','.join(tg['empty_types']) or 'none', n_sched))
 
 
 if __name__ == '__main__':
