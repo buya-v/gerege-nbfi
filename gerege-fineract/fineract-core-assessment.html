@@ -1,0 +1,236 @@
+<title>Fineract as Gerege's Core</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+  :root {
+    --paper: #f4f5f7;
+    --sheet: #ffffff;
+    --ink: #1a2130;
+    --muted: #5a6474;
+    --rule: #dce1e8;
+    --accent: #1f5fa8;
+    --accent-soft: #e6eef8;
+    --good: #2e7a4d;
+    --good-soft: #e3f1e8;
+    --warn: #9a6200;
+    --warn-soft: #f8efdc;
+    --bad: #b03a2e;
+    --bad-soft: #f9e4e1;
+    --info: #4d5a6c;
+    --info-soft: #eceff3;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #11151b; --sheet: #181d25; --ink: #e6e9ee; --muted: #9aa4b3; --rule: #2a313c;
+      --accent: #86b3ec; --accent-soft: #1c2a3c;
+      --good: #7ccf9c; --good-soft: #17291f; --warn: #e5b45c; --warn-soft: #2e2413;
+      --bad: #f19185; --bad-soft: #321a18; --info: #b3bdca; --info-soft: #222933;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #11151b; --sheet: #181d25; --ink: #e6e9ee; --muted: #9aa4b3; --rule: #2a313c;
+    --accent: #86b3ec; --accent-soft: #1c2a3c;
+    --good: #7ccf9c; --good-soft: #17291f; --warn: #e5b45c; --warn-soft: #2e2413;
+    --bad: #f19185; --bad-soft: #321a18; --info: #b3bdca; --info-soft: #222933;
+  }
+
+  body { background: var(--paper); color: var(--ink); font: 400 16px/1.6 var(--sans); padding-inline: 16px; }
+  main { max-width: 760px; margin: 0 auto; padding-block: 48px 72px; }
+  .eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 700 clamp(30px, 5vw, 42px)/1.15 var(--serif); margin: 10px 0 14px; text-wrap: balance; letter-spacing: -.01em; }
+  h2 { font: 600 24px/1.25 var(--serif); margin: 52px 0 12px; text-wrap: balance; }
+  p { margin: 0 0 14px; max-width: 68ch; }
+  .lede { color: var(--muted); }
+  code, .path { font-family: var(--mono); font-size: .86em; background: var(--info-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+  .verdict { background: var(--sheet); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 6px; padding: 20px 22px; margin: 26px 0 8px; }
+  .verdict .label { font: 600 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .verdict p { margin-bottom: 8px; }
+  .verdict ol { margin: 6px 0 0; padding-left: 22px; }
+  .verdict li { margin-bottom: 4px; }
+
+  .figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 18px 0 6px; }
+  .fig { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; }
+  .fig .n { font: 700 26px/1.1 var(--serif); font-variant-numeric: tabular-nums; }
+  .fig .l { font-size: 13.5px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+
+  .tablewrap { overflow-x: auto; margin: 16px 0 8px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  thead th { font: 600 12px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--info-soft); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.req { font-weight: 500; width: 30%; }
+
+  .chip { display: inline-block; font: 600 11px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 5px 7px; border-radius: 4px; white-space: nowrap; margin-bottom: 4px; }
+  .chip.native { color: var(--good); background: var(--good-soft); }
+  .chip.config { color: var(--accent); background: var(--accent-soft); }
+  .chip.ext { color: var(--warn); background: var(--warn-soft); }
+  .chip.ratify { color: var(--bad); background: var(--bad-soft); }
+  .chip.verify { color: var(--info); background: var(--info-soft); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+  .col { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; }
+  .col h3 { font: 600 13px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; margin: 0 0 10px; }
+  .col.gain h3 { color: var(--good); }
+  .col.cost h3 { color: var(--warn); }
+  .col ul { margin: 0; padding-left: 18px; }
+  .col li { margin-bottom: 8px; font-size: 15px; }
+
+  ul.carry { padding-left: 20px; }
+  ul.carry li { margin-bottom: 10px; max-width: 68ch; }
+  .rec { background: var(--accent-soft); border-radius: 6px; padding: 16px 18px; margin-top: 16px; }
+  .rec strong { color: var(--accent); }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 16px 0 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 16px 44px; max-width: 70ch; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--sheet); border: 1px solid var(--rule); font: 600 14px/28px var(--mono); text-align: center; color: var(--accent); }
+  ol.steps li b { display: block; }
+
+  ol.decisions { padding-left: 22px; }
+  ol.decisions li { margin-bottom: 10px; max-width: 68ch; }
+  .foot { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+</style>
+
+<main>
+  <div class="eyebrow">Gerege NBFI · assessment for Buyan · 13 Sep 2026</div>
+  <h1>Run Fineract as Gerege’s core, and extend it for Mongolia?</h1>
+  <p class="lede">Today the program ports Fineract to Go context by context, and a running Fineract serves only as the reference every port must match. The alternative is to run Fineract itself in production, configured for Mongolia, and build what Gerege needs as extensions. This is an exploration, not a decision.</p>
+
+  <div class="verdict">
+    <div class="label">Short answer</div>
+    <p><strong>It is the faster and cheaper road to a licensed, operating NBFI, and worth exploring seriously.</strong> Keep it on two conditions:</p>
+    <ol>
+      <li>A 1–2 week spike proves the Mongolia-specific needs fit as out-of-tree extensions, with no fork of Fineract.</li>
+      <li>You re-ratify three project rules Fineract cannot meet as written.</li>
+    </ol>
+  </div>
+
+  <div class="figs" aria-label="Key comparison figures">
+    <div class="fig"><div class="n">100–165</div><div class="l">working days of porting still ahead on the Go road, plus the parallel run</div></div>
+    <div class="fig"><div class="n">~6–10 wk</div><div class="l">rough estimate to a pilot-ready core on Fineract (to be firmed up by the spike)</div></div>
+    <div class="fig"><div class="n">908 / 938</div><div class="l">Fineract’s own test scenarios that pass in MNT on our replay rig</div></div>
+    <div class="fig"><div class="n">3</div><div class="l">project rules that would need your re-ratification</div></div>
+  </div>
+
+  <h2>What Fineract already offers for extension</h2>
+  <p>Checked in the Fineract build this project already pins (commit <code>426a23544</code>, 12 Aug 2026). Extensions live <em>outside</em> Fineract’s core modules, in a <code>custom/</code> source set built into the same application. A worked example (<code>custom/acme</code>) and a packaging file (<code>docker-compose-custom.yml</code>) ship upstream.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th scope="col">Extension type</th><th scope="col">Shown in the pinned build</th><th scope="col">Gerege would use it for</th></tr></thead>
+      <tbody>
+        <tr><td class="req">Override a platform service</td><td><span class="path">custom/acme/note/service</span></td><td>Local rules without touching core code</td></tr>
+        <tr><td class="req">Custom repayment processing</td><td><span class="path">custom/acme/loan/processor</span></td><td>Mongolian allocation orders, if the standard ones do not fit</td></tr>
+        <tr><td class="req">End-of-day (close of business) steps</td><td><span class="path">custom/acme/loan/cob</span></td><td>FRC-required daily steps, provisioning rules</td></tr>
+        <tr><td class="req">Batch jobs</td><td><span class="path">custom/acme/loan/job</span></td><td>Reconciliation, regulatory extracts</td></tr>
+        <tr><td class="req">Events to Kafka or ActiveMQ</td><td><span class="path">custom/acme/event</span></td><td>Feeding Gerege Nexus, notifications, payment rails, a shadow ledger</td></tr>
+        <tr><td class="req">Custom data fields (data tables)</td><td><span class="path">DatatablesApiResource</span></td><td>Mongolian KYC fields, the three-part name, registration number</td></tr>
+        <tr><td class="req">Webhooks</td><td><span class="path">infrastructure/hooks</span></td><td>Simple integrations</td></tr>
+        <tr><td class="req">Idempotency keys</td><td><span class="path">fineract-command</span></td><td>The mandatory <code>Idempotency-Key</code> on money requests</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Fineract also brings multi-tenancy, role-based permissions, maker-checker, an audit trail of every command, double-entry accounting, loan products, charges, delinquency and reporting.</p>
+
+  <h2>Fit with Gerege’s rules</h2>
+  <p>Each project rule, against Fineract as it ships.</p>
+  <div class="legend" aria-label="Legend">
+    <span><span class="chip native">native</span> works as shipped</span>
+    <span><span class="chip config">configure</span> a setting</span>
+    <span><span class="chip ext">extension</span> Gerege builds it</span>
+    <span><span class="chip verify">verify</span> the spike must prove it</span>
+    <span><span class="chip ratify">re-ratify</span> your decision</span>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th scope="col">Rule</th><th scope="col">Fineract as shipped</th><th scope="col">What it would take</th></tr></thead>
+      <tbody>
+        <tr><td class="req">PostgreSQL only; Oracle Database prohibited</td><td><span class="chip native">native</span> PostgreSQL is the default</td><td>Nothing</td></tr>
+        <tr><td class="req">HALF_UP rounding, precision 19</td><td><span class="chip config">configure</span> per tenant</td><td>Set it; our vectors already check it</td></tr>
+        <tr><td class="req">MNT (ISO 4217 496, 2 minor digits)</td><td><span class="chip config">configure</span> currency set-up</td><td>Set it</td></tr>
+        <tr><td class="req">Asia/Ulaanbaatar and Asia/Hovd</td><td><span class="chip config">configure</span> one time zone per tenant</td><td>UB works; Hovd (+07) needs either UB time for the business date, or an extension</td></tr>
+        <tr><td class="req">No floating point in money</td><td><span class="chip native">native</span> exact decimals, never float</td><td>Nothing</td></tr>
+        <tr><td class="req">Money stored as whole minor units</td><td><span class="chip ratify">re-ratify</span> stored as <code>DECIMAL(19,6)</code></td><td>Accept decimal storage, with a guard at the API edge that refuses anything below one mönggö</td></tr>
+        <tr><td class="req">Balances derived, never written</td><td><span class="chip ratify">re-ratify</span> loan outstanding amounts are stored</td><td>Treat stored figures as caches; the ledger stays the source of truth, with a nightly check that they match</td></tr>
+        <tr><td class="req">Three-part names (ovog, patronymic, given)</td><td><span class="chip ratify">re-ratify</span> first / middle / last name</td><td>A documented mapping, or the three fields in a data table behind a Gerege API</td></tr>
+        <tr><td class="req">Append-only ledger; corrections by reversal</td><td><span class="chip verify">verify</span> journal reversals exist</td><td>Prove no path edits a posted entry</td></tr>
+        <tr><td class="req"><code>Idempotency-Key</code> mandatory on money requests</td><td><span class="chip verify">verify</span> supported in the command layer</td><td>Prove it can be required; otherwise enforce it at the Gerege edge</td></tr>
+        <tr><td class="req">National ID: 10 characters, structural check</td><td><span class="chip ext">extension</span> identifiers exist, no Mongolian check</td><td>A validator on client create and update</td></tr>
+        <tr><td class="req">Banksuljee RTGS, ACH+, NETC; threshold from config</td><td><span class="chip ext">extension</span> payment types only</td><td>An integration service driven by Fineract’s events</td></tr>
+        <tr><td class="req">No deposit-taking (NBFI licence)</td><td><span class="chip verify">verify</span> savings is a full module</td><td>No savings products, permissions removed; prove it cannot be switched on</td></tr>
+        <tr><td class="req">FRC regulatory reporting</td><td><span class="chip ext">extension</span> report engine exists</td><td>FRC report definitions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>What we would gain and what we would pay</h2>
+  <div class="cols">
+    <div class="col gain">
+      <h3>Gains</h3>
+      <ul>
+        <li><b>Time to a pilot:</b> weeks of configuration and extensions instead of months of porting.</li>
+        <li><b>Maturity:</b> years of production use at other institutions, and 908 of 938 of its own scenarios pass in MNT on our rig.</li>
+        <li><b>Cost:</b> Apache 2.0, no licence fee; model credit goes to extensions and tests, not re-implementation.</li>
+      </ul>
+    </div>
+    <div class="col cost">
+      <h3>Costs and risks</h3>
+      <ul>
+        <li><b>Two stacks:</b> a Java service to operate, patch and upgrade next to Gerege Nexus in Go.</li>
+        <li><b>Upgrade discipline:</b> extensions must stay out of Fineract’s core; a fork makes every upgrade a merge.</li>
+        <li><b>Less control:</b> Fineract’s model decides naming fields, stored balances and the single tenant time zone.</li>
+        <li><b>Regulatory:</b> FRC acceptance and a parallel run are still needed, as on the Go road.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>What carries over from the work already done</h2>
+  <ul class="carry">
+    <li><b>The reference environment</b> (the standing Fineract, the MNT tenant set-up, the throwaway replay rig) becomes the development and acceptance environment.</li>
+    <li><b>322 golden vectors and 938 replayed scenarios</b> become the regression suite for the configured Fineract, for every extension, and for each Fineract upgrade.</li>
+    <li><b>The Go ports</b> (about 25,600 lines of graded postings and schedule code) can run as an independent <b>shadow ledger</b>: fed by Fineract’s events, they recompute each posting and flag any disagreement. That is a strong control to show FRC and auditors.</li>
+    <li><b>Gerege Nexus</b> becomes the channel, identity and integration layer in front of Fineract, behind the same adapter contract. The contract stays; only what sits behind it changes.</li>
+  </ul>
+
+  <h2>Three roads</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th scope="col"></th><th scope="col">A. Go port (today)</th><th scope="col">B. Fineract core + Go edge</th><th scope="col">C. Fineract now, move to Go later</th></tr></thead>
+      <tbody>
+        <tr><td class="req">Ledger and products</td><td>Go, ported area by area</td><td>Fineract</td><td>Fineract at first</td></tr>
+        <tr><td class="req">Mongolian capabilities</td><td>In Go</td><td>Fineract extensions and Nexus services</td><td>As B</td></tr>
+        <tr><td class="req">Time to pilot</td><td>Longest</td><td>Shortest</td><td>Shortest</td></tr>
+        <tr><td class="req">Control of the core</td><td>Full</td><td>Partial</td><td>Partial, rising over time</td></tr>
+        <tr><td class="req">Use of the Go work so far</td><td>Fully</td><td>Shadow ledger and edge</td><td>Shadow ledger; ports go live only where needed</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rec"><strong>Recommendation: B, keeping C open.</strong> Launch on Fineract, extend it the upstream way, run the graded Go postings as a shadow ledger, and move an area into Go later only for a concrete reason: performance, an FRC requirement Fineract cannot meet, or an extension that costs more than a port.</div>
+
+  <h2>A spike to decide it</h2>
+  <p>One to two weeks, all of it inside <code>gerege-fineract/</code>, before any commitment.</p>
+  <ol class="steps">
+    <li><b>Configure a Gerege tenant</b> on a throwaway Fineract: MNT, HALF_UP, Asia/Ulaanbaatar, two representative loan products, no savings products.</li>
+    <li><b>Build three out-of-tree extensions:</b> national ID validation, the three-part name held in a data table behind a small API, and an event consumer that drives a stub payment-rail service, with the RTGS / ACH+ threshold in config.</li>
+    <li><b>Run acceptance:</b> replay the existing golden vectors and Fineract scenarios against the tenant; nothing may regress.</li>
+    <li><b>Prove the constraints:</b> no savings endpoint can be enabled, <code>Idempotency-Key</code> can be required on money requests, and a Fineract version bump leaves the extensions untouched.</li>
+    <li><b>Decide with evidence:</b> effort per extension, anything that needed a core change (target: none), and a firm pilot estimate.</li>
+  </ol>
+
+  <h2>Decisions for you</h2>
+  <ol class="decisions">
+    <li>Whether to run the spike, with the Go port staying suspended meanwhile.</li>
+    <li>Whether to re-ratify the three rules Fineract cannot meet as written: whole-minor-unit storage, stored balances, and the name fields.</li>
+    <li>Whether Ulaanbaatar time is acceptable as Hovd’s business date.</li>
+    <li>Who operates a Java service in production.</li>
+  </ol>
+  <p>Cutover, FRC sign-off and licence facts stay yours on either road.</p>
+
+  <div class="foot">Source: <code>gerege-fineract/ASSESSMENT.md</code> in the gerege-nbfi repository. Fineract evidence from the pinned checkout, commit 426a23544. Estimates are rough and measured from this project’s own pace; the spike exists to replace them with evidence.</div>
+</main>
