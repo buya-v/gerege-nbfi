@@ -1,0 +1,4 @@
+# Disposable build inputs and run logs -- never committed.
+.work/
+logs/
+**/stage/
