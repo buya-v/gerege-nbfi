@@ -182,6 +182,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
 	case req.CapitalizedIncomeAmortizationJournal != nil:
 		return goCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal)
+	case req.CapitalizedIncomeAdjustmentJournal != nil:
+		return goCapitalizedIncomeAdjustmentJournal(*req.CapitalizedIncomeAdjustmentJournal)
 	case req.BuyDownFeeAmortizationJournal != nil:
 		return goBuyDownFeeAmortizationJournal(*req.BuyDownFeeAmortizationJournal)
 	case req.ChargeLifecycle != nil:
@@ -1702,6 +1704,80 @@ func capitalizedIncomeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg)
 		out = []JournalEntryLeg{}
 	}
 	return Expect{CapitalizedIncomeAmortizationJournalLegs: out}
+}
+
+// goCapitalizedIncomeAdjustmentJournal ports the
+// loan-capitalized-income-adjustment-journal-entries seam: it reduces the
+// request's amount and five integer-minor portions, runs the port's
+// CreateCapitalizedIncomeAdjustmentJournalEntryLegs with the product's
+// slot->account mapping, and renders the ordered legs. The credit side has NO
+// charged-off arm, so no loan state is read. Nothing is parsed as a float.
+func goCapitalizedIncomeAdjustmentJournal(r CapitalizedIncomeAdjustmentJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	principal, err := parseMinorText(minorTextOrZero(r.Portions.Principal))
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(minorTextOrZero(r.Portions.Interest))
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
+	if err != nil {
+		return Expect{}, err
+	}
+	penalty, err := parseMinorText(minorTextOrZero(r.Portions.Penalty))
+	if err != nil {
+		return Expect{}, err
+	}
+	overpayment, err := parseMinorText(minorTextOrZero(r.Portions.Overpayment))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateCapitalizedIncomeAdjustmentJournalEntryLegs(r.TransactionID, amount, loan.RepaymentPortions{
+		Principal:   principal,
+		Interest:    interest,
+		Fee:         fee,
+		Penalty:     penalty,
+		Overpayment: overpayment,
+	}, loan.CapitalizedIncomeAdjustmentAccountMapping{
+		LoanPortfolio:           r.Accounts.LoanPortfolio,
+		ReceivableInterest:      r.Accounts.ReceivableInterest,
+		ReceivableFee:           r.Accounts.ReceivableFee,
+		ReceivablePenalty:       r.Accounts.ReceivablePenalty,
+		Overpayment:             r.Accounts.Overpayment,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return capitalizedIncomeAdjustmentJournalLegsExpect(legs), nil
+}
+
+// capitalizedIncomeAdjustmentJournalLegsExpect renders the port's ordered legs
+// to the graded expectation, preserving the port's order: one credit per
+// non-zero portion slot (merged by account) then the one deferred-income debit.
+func capitalizedIncomeAdjustmentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, 0, len(legs))
+	for _, leg := range legs {
+		side := "CREDIT"
+		if leg.Side == loan.JournalEntryDebit {
+			side = "DEBIT"
+		}
+		out = append(out, JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     side,
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		})
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{CapitalizedIncomeAdjustmentJournalLegs: out}
 }
 
 // goBuyDownFeeAmortizationJournal ports the

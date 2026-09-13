@@ -1145,6 +1145,63 @@ type InterestPaymentWaiverJournalRequest struct {
 // but are NOT observed, and the request carries no input for them.
 const SeamLoanCapitalizedIncomeAmortizationJournalEntries = "loan-capitalized-income-amortization-journal-entries"
 
+// SeamLoanCapitalizedIncomeAdjustmentJournalEntries is the capture seam this
+// schema grades: the journal entry a CAPITALIZED_INCOME_ADJUSTMENT transaction
+// posts. It ports AccrualBasedAccountingProcessorForLoan
+// .createJournalEntriesForCapitalizedIncomeAdjustment [VERIFIED:
+// AccrualBasedAccountingProcessorForLoan.java:232-306, pinned commit 426a23544].
+// When the transaction amount is greater than zero it CREDITS each positive
+// portion to its slot -- principal LOAN_PORTFOLIO, interest INTEREST_RECEIVABLE,
+// fees FEES_RECEIVABLE, penalties PENALTIES_RECEIVABLE, overpayment OVERPAYMENT
+// -- merging portions that resolve to the SAME account into one credit at the
+// first slot's position (the processor's accountMap is a LinkedHashMap), then
+// posts exactly ONE DEBIT of the transaction AMOUNT, after every credit, to
+// DEFERRED_INCOME_LIABILITY. There is NO charged-off arm: the credit side is
+// the same on every loan.
+//
+// On the pinned observations L523 (loan 6) credits the portfolio (9) 4000 and
+// debits deferred income liability (24) 4000; L573 (loan 11) credits 9 5998 and
+// the interest receivable (1) 2, then ONE debit 24 6000; L625 (loan 17) credits
+// 9 49660 and the interest receivable (1) 40, then ONE debit 24 49700; L198
+// (loan 2) credits the overpayment liability (17) 1500 and debits 24 1500.
+// Account ids are THIS replay's product mapping.
+//
+// The Java posts the debit at the transaction AMOUNT without reconciling the
+// portions against it; this seam carries both and the port REFUSES a mismatch,
+// which no observation exercises. No charged-off capitalized-income adjustment
+// is observed, so the capability's honest limit is that absence.
+const SeamLoanCapitalizedIncomeAdjustmentJournalEntries = "loan-capitalized-income-adjustment-journal-entries"
+
+// CapitalizedIncomeAdjustmentSlotAccounts is the product's
+// capitalized-income-adjustment slot->account mapping, each account the GL code
+// the oracle's GET /loanproducts/{id}.accountingMappings returns for that slot.
+// The five portion slots are CREDITED and the deferred-income-liability slot is
+// DEBITed ONCE with the transaction amount. Overpayment is shared by every
+// posting.
+type CapitalizedIncomeAdjustmentSlotAccounts struct {
+	LoanPortfolio           string `json:"loan_portfolio"`
+	ReceivableInterest      string `json:"receivable_interest"`
+	ReceivableFee           string `json:"receivable_fee"`
+	ReceivablePenalty       string `json:"receivable_penalty"`
+	Overpayment             string `json:"overpayment,omitempty"`
+	DeferredIncomeLiability string `json:"deferred_income_liability"`
+}
+
+// CapitalizedIncomeAdjustmentJournalRequest is the
+// loan-capitalized-income-adjustment-journal-entries seam's input: a
+// CAPITALIZED_INCOME_ADJUSTMENT transaction's amount and five portions, and the
+// product's slot->account mapping, plus the transaction id the legs are posted
+// under. The mapping is the product's accountingMappings read back from the
+// reference server, never invented; a positive portion with no mapped credit
+// account, a positive amount with no deferred-income-liability account, and
+// portions whose sum differs from the amount are refused by the port.
+type CapitalizedIncomeAdjustmentJournalRequest struct {
+	TransactionID string                                  `json:"transaction_id"`
+	Amount        string                                  `json:"amount"`
+	Portions      RepaymentPortionsMoney                  `json:"portions"`
+	Accounts      CapitalizedIncomeAdjustmentSlotAccounts `json:"accounts"`
+}
+
 // CapitalizedIncomeAmortizationPortionsMoney is the money a
 // CAPITALIZED_INCOME_AMORTIZATION transaction amortizes, each slot an integer
 // STRING in minor units. It is the request-side reduction of the transaction's
@@ -1706,6 +1763,12 @@ type Request struct {
 	// loan's charged-off / fraud / written-off state and the product's
 	// slot->account mapping.
 	CapitalizedIncomeAmortizationJournal *CapitalizedIncomeAmortizationJournalRequest `json:"capitalized_income_amortization_journal,omitempty"`
+	// CapitalizedIncomeAdjustmentJournal is the
+	// loan-capitalized-income-adjustment-journal-entries seam's input: a
+	// CAPITALIZED_INCOME_ADJUSTMENT transaction's amount and five portions and
+	// the product's slot->account mapping. The credit side has no charged-off
+	// arm, and the single debit is the transaction amount.
+	CapitalizedIncomeAdjustmentJournal *CapitalizedIncomeAdjustmentJournalRequest `json:"capitalized_income_adjustment_journal,omitempty"`
 	// BuyDownFeeAmortizationJournal is the
 	// loan-buy-down-fee-amortization-journal-entries seam's input: a
 	// BUY_DOWN_FEE_AMORTIZATION transaction's interest and fee portions, the
@@ -1906,6 +1969,15 @@ type Expect struct {
 	// transaction id, account, side and amount; the loan-state account switch is
 	// what discriminates a port that ignores the loan's state.
 	CapitalizedIncomeAmortizationJournalLegs []JournalEntryLeg `json:"capitalized_income_amortization_journal_legs,omitempty"`
+	// CapitalizedIncomeAdjustmentJournalLegs is the
+	// loan-capitalized-income-adjustment-journal-entries seam's ordered leg list a
+	// capitalized-income adjustment posted: one credit per non-zero portion in
+	// slot order (merged by account) to the portfolio/receivable slots, then ONE
+	// debit of the transaction amount to deferred income liability. Every leg is
+	// graded on its transaction id, account, side and amount; a port that credits
+	// the whole amount to the portfolio moves the credit accounts, and a port that
+	// splits the single debit moves the count.
+	CapitalizedIncomeAdjustmentJournalLegs []JournalEntryLeg `json:"capitalized_income_adjustment_journal_legs,omitempty"`
 	// BuyDownFeeAmortizationJournalLegs is the
 	// loan-buy-down-fee-amortization-journal-entries seam's ordered leg list a
 	// buy-down-fee amortization posted: ONE credit of the interest+fee total to
