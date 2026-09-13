@@ -1,0 +1,72 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CIX-loan-2-overpayment",
+ "title": "A capitalized-income adjustment of 15.00 all-overpayment on loan 2 credits the OVERPAYMENT liability 17 1500, then ONE deferred-income-liability debit 24 1500 (loan 2 L198, original legs 410-411)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.capitalized_income_adjustment_journal.amount and portions are transcribed from the committed capitalizedIncomeAdjustment loan read-back .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/loans/loan-2/loan-2-detail-associations-transactions-13.json (sha256 864cb8837fdd8e3370bab727c03a61a2ba3bece328fad9609b531b69e12583af): loan 2 transactions[id 198 type loanTransactionType.capitalizedIncomeAdjustment, amount 15.000000, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 15.000000], overpaid. expect.capitalized_income_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-2.json (sha256 059b2997d667024b37c541d74ffd871b6e346dfead3e662d75e6378ea17a1512): transactionId L198 pageItems ids 410 (CREDIT glAccountId 17 15.000000) and 411 (DEBIT glAccountId 24 15.000000), in id order. request.capitalized_income_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24. the credit goes to the OVERPAYMENT liability 17, NOT the portfolio 9, so this observation discriminates the wrong port that always credits LOAN_PORTFOLIO with the amount and drops the overpayment slot TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units, never a float. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-capitalized-income-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.capitalized_income_adjustment_journal.amount and portions are transcribed from the committed capitalizedIncomeAdjustment loan read-back .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/loans/loan-2/loan-2-detail-associations-transactions-13.json (sha256 864cb8837fdd8e3370bab727c03a61a2ba3bece328fad9609b531b69e12583af): loan 2 transactions[id 198 type loanTransactionType.capitalizedIncomeAdjustment, amount 15.000000, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 15.000000], overpaid. expect.capitalized_income_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-2.json (sha256 059b2997d667024b37c541d74ffd871b6e346dfead3e662d75e6378ea17a1512): transactionId L198 pageItems ids 410 (CREDIT glAccountId 17 15.000000) and 411 (DEBIT glAccountId 24 15.000000), in id order. request.capitalized_income_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24. the credit goes to the OVERPAYMENT liability 17, NOT the portfolio 9, so this observation discriminates the wrong port that always credits LOAN_PORTFOLIO with the amount and drops the overpayment slot TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units, never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-2.json",
+  "capture_sha256": "059b2997d667024b37c541d74ffd871b6e346dfead3e662d75e6378ea17a1512",
+  "capture_case_id": "L198",
+  "citation": "journalentries-sweep/loan-2.json:1 (sha256 059b2997d667024b37c541d74ffd871b6e346dfead3e662d75e6378ea17a1512): transactionId L198 carries the original legs ids 410 (CREDIT glAccountId 17 15.000000) and 411 (DEBIT glAccountId 24 15.000000). Portions are in loans/loan-2/loan-2-detail-associations-transactions-13.json:1 (sha256 864cb8837fdd8e3370bab727c03a61a2ba3bece328fad9609b531b69e12583af): loan 2 transactions[id 198 type loanTransactionType.capitalizedIncomeAdjustment, amount 15.000000, principalPortion 0, interestPortion 0, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 15.000000]. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json:1 (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "capitalized_income_adjustment_journal": {
+   "transaction_id": "L198",
+   "amount": "1500",
+   "portions": {
+    "principal": "0",
+    "interest": "0",
+    "fee": "0",
+    "penalty": "0",
+    "overpayment": "1500"
+   },
+   "accounts": {
+    "loan_portfolio": "9",
+    "receivable_interest": "1",
+    "receivable_fee": "1",
+    "receivable_penalty": "1",
+    "overpayment": "17",
+    "deferred_income_liability": "24"
+   }
+  }
+ },
+ "expect": {
+  "capitalized_income_adjustment_journal_legs": [
+   {
+    "transaction_id": "L198",
+    "account": "17",
+    "entry_type": "CREDIT",
+    "amount_minor": "1500"
+   },
+   {
+    "transaction_id": "L198",
+    "account": "24",
+    "entry_type": "DEBIT",
+    "amount_minor": "1500"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "capitalized-income-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-cix-credits-deferred-by-amount"
+ ]
+}

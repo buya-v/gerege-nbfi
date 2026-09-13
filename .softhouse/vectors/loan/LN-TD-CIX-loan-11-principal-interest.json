@@ -1,0 +1,77 @@
+{
+ "schema": "gerege.loan.vector/v1",
+ "case_id": "LN-TD-CIX-loan-11-principal-interest",
+ "title": "A capitalized-income adjustment of 60.00 (principal 59.98 + interest 0.02) on loan 11 credits LOAN_PORTFOLIO 9 5998 and INTEREST_RECEIVABLE 1 2, then ONE deferred-income-liability debit 24 6000 (loan 11 L573, original legs 1174-1176)",
+ "class": "parity",
+ "context": "loan",
+ "_note": "request.capitalized_income_adjustment_journal.amount and portions are transcribed from the committed capitalizedIncomeAdjustment loan read-back .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/loans/loan-11/loan-11-detail-associations-transactions-7.json (sha256 47f672d0166015e04f82ba0b09e8355205516322e570acd0987192537549714a): loan 11 transactions[id 573 type loanTransactionType.capitalizedIncomeAdjustment, amount 60.000000, principalPortion 59.980000, interestPortion 0.020000, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0], closed.obligations.met. expect.capitalized_income_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-11.json (sha256 53e123b1bcd01f281784604a5fe37d4221fd180cf854a58d5aade2b8eb4da15f): transactionId L573 pageItems ids 1174 (CREDIT 9 59.980000), 1175 (CREDIT 1 0.020000), 1176 (DEBIT 24 60.000000), in id order. request.capitalized_income_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24. the portfolio credit carries only the principal portion 5998 while the interest credit 2 is separate, so this observation discriminates the wrong port that credits the whole amount to the portfolio and drops the interest credit TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units, never a float. No value was synthesised.",
+ "oracle": {
+  "seam": "loan-capitalized-income-adjustment-journal-entries",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb"
+ },
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "request.capitalized_income_adjustment_journal.amount and portions are transcribed from the committed capitalizedIncomeAdjustment loan read-back .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/loans/loan-11/loan-11-detail-associations-transactions-7.json (sha256 47f672d0166015e04f82ba0b09e8355205516322e570acd0987192537549714a): loan 11 transactions[id 573 type loanTransactionType.capitalizedIncomeAdjustment, amount 60.000000, principalPortion 59.980000, interestPortion 0.020000, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0], closed.obligations.met. expect.capitalized_income_adjustment_journal_legs is transcribed from the committed journal-entries SWEEP .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-11.json (sha256 53e123b1bcd01f281784604a5fe37d4221fd180cf854a58d5aade2b8eb4da15f): transactionId L573 pageItems ids 1174 (CREDIT 9 59.980000), 1175 (CREDIT 1 0.020000), 1176 (DEBIT 24 60.000000), in id order. request.capitalized_income_adjustment_journal.accounts is transcribed from the committed accepted create request .softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24. the portfolio credit carries only the principal portion 5998 while the interest credit 2 is separate, so this observation discriminates the wrong port that credits the whole amount to the portfolio and drops the interest credit TENANT `tierd` -- NOT tenant `gerege`. Every amount is an exact decimal parsed to integer minor units, never a float. No value was synthesised.",
+  "capture_ref": ".softhouse/capture/tierd-feasibility/capitalized-income-p2-mnt/journalentries-sweep/loan-11.json",
+  "capture_sha256": "53e123b1bcd01f281784604a5fe37d4221fd180cf854a58d5aade2b8eb4da15f",
+  "capture_case_id": "L573",
+  "citation": "journalentries-sweep/loan-11.json:1 (sha256 53e123b1bcd01f281784604a5fe37d4221fd180cf854a58d5aade2b8eb4da15f): transactionId L573 carries the original legs ids 1174 (CREDIT 9 59.980000), 1175 (CREDIT 1 0.020000), 1176 (DEBIT 24 60.000000). Portions are in loans/loan-11/loan-11-detail-associations-transactions-7.json:1 (sha256 47f672d0166015e04f82ba0b09e8355205516322e570acd0987192537549714a): loan 11 transactions[id 573 type loanTransactionType.capitalizedIncomeAdjustment, amount 60.000000, principalPortion 59.980000, interestPortion 0.020000, feeChargesPortion 0, penaltyChargesPortion 0, overpaymentPortion 0]. The slot->account-id mapping is in product-mappings/create-request-LP2_ADV_PYMNT_INTEREST_DAILY_EMI_360_30_INTEREST_RECALC_DAILY_CAPITALIZED_INCOME_ADJ_CUSTOM_ALLOC.json:1 (sha256 b23b04947ed12fff3d5fa2911860b178e059a19b6e6507a723e83ad9a0b66002): loanPortfolioAccountId 9, receivableInterestAccountId 1, receivableFeeAccountId 1, receivablePenaltyAccountId 1, overpaymentLiabilityAccountId 17, deferredIncomeLiabilityAccountId 24."
+ },
+ "tenant_params": {
+  "rounding_mode": "HALF_UP",
+  "rounding_ordinal": 4,
+  "precision": 19,
+  "currency": "MNT",
+  "minor_units": 2,
+  "timezone": "Asia/Ulaanbaatar"
+ },
+ "request": {
+  "capitalized_income_adjustment_journal": {
+   "transaction_id": "L573",
+   "amount": "6000",
+   "portions": {
+    "principal": "5998",
+    "interest": "2",
+    "fee": "0",
+    "penalty": "0"
+   },
+   "accounts": {
+    "loan_portfolio": "9",
+    "receivable_interest": "1",
+    "receivable_fee": "1",
+    "receivable_penalty": "1",
+    "overpayment": "17",
+    "deferred_income_liability": "24"
+   }
+  }
+ },
+ "expect": {
+  "capitalized_income_adjustment_journal_legs": [
+   {
+    "transaction_id": "L573",
+    "account": "9",
+    "entry_type": "CREDIT",
+    "amount_minor": "5998"
+   },
+   {
+    "transaction_id": "L573",
+    "account": "1",
+    "entry_type": "CREDIT",
+    "amount_minor": "2"
+   },
+   {
+    "transaction_id": "L573",
+    "account": "24",
+    "entry_type": "DEBIT",
+    "amount_minor": "6000"
+   }
+  ]
+ },
+ "capabilities_required": [
+  "capitalized-income-adjustment-journal-entry"
+ ],
+ "graded_against": [
+  "loan-go",
+  "loan-wrong-cix-credits-deferred-by-amount"
+ ]
+}
