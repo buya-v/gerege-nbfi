@@ -52,12 +52,13 @@ func Admit(v *Vector, opts Options) []string {
 		SeamLoanAccrualJournalEntries, SeamLoanChargebackJournalEntries,
 		SeamLoanCreditBalanceRefundJournalEntries, SeamLoanInterestPaymentWaiverJournalEntries,
 		SeamLoanCapitalizedIncomeAmortizationJournalEntries,
+		SeamLoanCapitalizedIncomeAdjustmentJournalEntries,
 		SeamLoanBuyDownFeeAmortizationJournalEntries,
 		SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries,
 		SeamLoanBuyDownFeeAdjustmentJournalEntries:
 	default:
 		problems = append(problems, fmt.Sprintf(
-			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
+			"oracle.seam %q: this harness grades only seams %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q, %q and %q",
 			v.Oracle.Seam, SeamLoanRepaymentAllocation, SeamLoanScheduleInterest, SeamLoanDisbursement,
 			SeamLoanSummaryOutstanding, SeamLoanStatus, SeamLoanTransactionBalance,
 			SeamLoanJournalEntryBatchBalance, SeamLoanScheduleAmortization, SeamLoanDelinquentDays,
@@ -73,7 +74,8 @@ func Admit(v *Vector, opts Options) []string {
 			SeamLoanCapitalizedIncomeAmortizationJournalEntries,
 			SeamLoanBuyDownFeeAmortizationJournalEntries,
 			SeamLoanChargeLifecycle, SeamLoanStatusTransition, SeamLoanBuyDownFeeJournalEntries,
-			SeamLoanBuyDownFeeAdjustmentJournalEntries))
+			SeamLoanBuyDownFeeAdjustmentJournalEntries,
+			SeamLoanCapitalizedIncomeAdjustmentJournalEntries))
 	}
 	if v.Oracle.FineractCommit == "" {
 		problems = append(problems, "oracle.fineract_commit is empty")
@@ -236,6 +238,9 @@ func requestShapeCount(v *Vector) int {
 		n++
 	}
 	if v.Request.CapitalizedIncomeAmortizationJournal != nil {
+		n++
+	}
+	if v.Request.CapitalizedIncomeAdjustmentJournal != nil {
 		n++
 	}
 	if v.Request.BuyDownFeeAmortizationJournal != nil {
@@ -1287,6 +1292,60 @@ func admitRequest(v *Vector) []string {
 				problems = append(problems, fmt.Sprintf(
 					"request.capitalized_income_amortization_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
 			}
+		}
+	case SeamLoanCapitalizedIncomeAdjustmentJournalEntries:
+		if v.Request.CapitalizedIncomeAdjustmentJournal == nil || requestShapeCount(v) != 1 {
+			problems = append(problems, "capitalized-income-adjustment-journal seam must set exactly request.capitalized_income_adjustment_journal")
+			return problems
+		}
+		j := v.Request.CapitalizedIncomeAdjustmentJournal
+		if j.TransactionID == "" {
+			problems = append(problems, "request.capitalized_income_adjustment_journal.transaction_id is empty")
+		}
+		if !isIntegerMinorString(j.Amount) {
+			problems = append(problems, fmt.Sprintf(
+				"request.capitalized_income_adjustment_journal.amount %q is not a non-negative integer minor amount", j.Amount))
+		}
+		for name, val := range map[string]string{
+			"portions.principal":   j.Portions.Principal,
+			"portions.interest":    j.Portions.Interest,
+			"portions.fee":         j.Portions.Fee,
+			"portions.penalty":     j.Portions.Penalty,
+			"portions.overpayment": j.Portions.Overpayment,
+		} {
+			if name == "portions.overpayment" && val == "" {
+				continue
+			}
+			if !isIntegerMinorString(val) {
+				problems = append(problems, fmt.Sprintf(
+					"request.capitalized_income_adjustment_journal.%s %q is not a non-negative integer minor amount", name, val))
+			}
+		}
+		// The credit side has no charged-off arm, so every slot it can touch is
+		// read back from the product, never invented: the portfolio and the three
+		// receivables are required because the registered wrong implementation
+		// posts the whole amount to the portfolio while the correct port credits
+		// any slot; the overpayment account is required only when the overpayment
+		// portion is positive; the deferred-income-liability account is required
+		// only when the amount is positive.
+		for name, val := range map[string]string{
+			"accounts.loan_portfolio":      j.Accounts.LoanPortfolio,
+			"accounts.receivable_interest": j.Accounts.ReceivableInterest,
+			"accounts.receivable_fee":      j.Accounts.ReceivableFee,
+			"accounts.receivable_penalty":  j.Accounts.ReceivablePenalty,
+		} {
+			if val == "" {
+				problems = append(problems, fmt.Sprintf(
+					"request.capitalized_income_adjustment_journal.%s is empty: the slot->account mapping is read back from the product, never invented", name))
+			}
+		}
+		if j.Portions.Overpayment != "" && j.Portions.Overpayment != "0" && j.Accounts.Overpayment == "" {
+			problems = append(problems,
+				"request.capitalized_income_adjustment_journal.accounts.overpayment is empty but the overpayment portion is positive")
+		}
+		if positiveMinorString(j.Amount) && j.Accounts.DeferredIncomeLiability == "" {
+			problems = append(problems,
+				"request.capitalized_income_adjustment_journal.accounts.deferred_income_liability is empty but the amount is positive")
 		}
 	case SeamLoanBuyDownFeeAmortizationJournalEntries:
 		if v.Request.BuyDownFeeAmortizationJournal == nil || requestShapeCount(v) != 1 {
@@ -2518,6 +2577,60 @@ func admitExpect(v *Vector) []string {
 					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
 			}
 		}
+	case SeamLoanCapitalizedIncomeAdjustmentJournalEntries:
+		if v.Request.CapitalizedIncomeAdjustmentJournal == nil {
+			// admitRequest already refused the missing request shape.
+			return problems
+		}
+		j := v.Request.CapitalizedIncomeAdjustmentJournal
+		if len(v.Expect.CapitalizedIncomeAdjustmentJournalLegs) == 0 {
+			problems = append(problems, "expect.capitalized_income_adjustment_journal_legs is empty: the posted leg list is the observable this seam grades")
+			return problems
+		}
+		for i, leg := range v.Expect.CapitalizedIncomeAdjustmentJournalLegs {
+			switch {
+			case leg.TransactionID == "":
+				problems = append(problems, fmt.Sprintf("expect.capitalized_income_adjustment_journal_legs[%d].transaction_id is empty", i))
+			case leg.Account == "":
+				problems = append(problems, fmt.Sprintf("expect.capitalized_income_adjustment_journal_legs[%d].account is empty", i))
+			case !journalEntryTypeAdmitted(leg.EntryType):
+				problems = append(problems, fmt.Sprintf(
+					"expect.capitalized_income_adjustment_journal_legs[%d].entry_type %q is not an observed side (DEBIT, CREDIT)", i, leg.EntryType))
+			case !isIntegerMinorString(leg.AmountMinor):
+				problems = append(problems, fmt.Sprintf(
+					"expect.capitalized_income_adjustment_journal_legs[%d].amount_minor %q is not a non-negative integer minor amount", i, leg.AmountMinor))
+			}
+		}
+		if len(problems) > 0 {
+			return problems
+		}
+		// Reconstruct straight from the request the ONLY leg list the observed
+		// property admits: one credit per non-zero portion in slot order (merged
+		// by account) — the portfolio, the three receivables and the overpayment
+		// liability — then exactly ONE debit of the transaction AMOUNT to deferred
+		// income liability. This reconciliation is INDEPENDENT of the port under
+		// test, so a wrong port cannot make its own output "admissible".
+		expected, probs := reconstructCapitalizedIncomeAdjustmentJournalLegs(*j)
+		problems = append(problems, probs...)
+		if len(probs) > 0 {
+			return problems
+		}
+		if len(expected) != len(v.Expect.CapitalizedIncomeAdjustmentJournalLegs) {
+			problems = append(problems, fmt.Sprintf(
+				"expect.capitalized_income_adjustment_journal_legs has %d legs but the non-zero credit slots (merged by account) plus the one debit need %d: credits are one per distinct credit account and the amount is debited exactly once",
+				len(v.Expect.CapitalizedIncomeAdjustmentJournalLegs), len(expected)))
+			return problems
+		}
+		for i := range expected {
+			got, want := v.Expect.CapitalizedIncomeAdjustmentJournalLegs[i], expected[i]
+			if got.TransactionID != want.TransactionID || got.Account != want.Account ||
+				got.EntryType != want.EntryType || got.AmountMinor != want.AmountMinor {
+				problems = append(problems, fmt.Sprintf(
+					"expect.capitalized_income_adjustment_journal_legs[%d] = (%s, %s, %s, %s), want (%s, %s, %s, %s): a capitalized-income adjustment credits each non-zero portion to its slot (merged by account), then posts ONE debit of the transaction amount to DEFERRED_INCOME_LIABILITY — never the whole amount to the portfolio",
+					i, got.TransactionID, got.Account, got.EntryType, got.AmountMinor,
+					want.TransactionID, want.Account, want.EntryType, want.AmountMinor))
+			}
+		}
 	case SeamLoanBuyDownFeeAmortizationJournalEntries:
 		if v.Request.BuyDownFeeAmortizationJournal == nil {
 			// admitRequest already refused the missing request shape.
@@ -3146,6 +3259,63 @@ func reconstructChargeAdjustmentJournalLegs(j ChargeAdjustmentJournalRequest) ([
 	}
 	return append(creditLegs, JournalEntryLeg{
 		TransactionID: j.TransactionID, Account: account, EntryType: "DEBIT", AmountMinor: total,
+	}), nil
+}
+
+// reconstructCapitalizedIncomeAdjustmentJournalLegs derives the leg list the
+// observed capitalized-income-adjustment property requires from the request
+// alone, independently of the port, in the processor's posting order: one credit
+// per non-zero portion slot — LOAN_PORTFOLIO, INTEREST_RECEIVABLE,
+// FEES_RECEIVABLE, PENALTIES_RECEIVABLE and OVERPAYMENT — merging slots that
+// share an account at the first slot's position, then ONE debit of the
+// transaction AMOUNT to DEFERRED_INCOME_LIABILITY. The credit side has no
+// charged-off arm. Each money value stays an integer minor-unit string. It
+// returns the legs and any admission problem: a positive portion with no mapped
+// credit account, a positive amount with no deferred-income-liability account,
+// or portions whose sum differs from the amount (which the Java never
+// reconciles, so the port refuses it rather than posting an unbalanced batch).
+func reconstructCapitalizedIncomeAdjustmentJournalLegs(j CapitalizedIncomeAdjustmentJournalRequest) ([]JournalEntryLeg, []string) {
+	zeroIfEmpty := func(s string) string {
+		if s == "" {
+			return "0"
+		}
+		return s
+	}
+	principal := zeroIfEmpty(j.Portions.Principal)
+	interest := zeroIfEmpty(j.Portions.Interest)
+	fee := zeroIfEmpty(j.Portions.Fee)
+	penalty := zeroIfEmpty(j.Portions.Penalty)
+	overpayment := zeroIfEmpty(j.Portions.Overpayment)
+
+	credits := []goodwillReconstructSlot{
+		{"LOAN_PORTFOLIO", principal, j.Accounts.LoanPortfolio},
+		{"INTEREST_RECEIVABLE", interest, j.Accounts.ReceivableInterest},
+		{"FEES_RECEIVABLE", fee, j.Accounts.ReceivableFee},
+		{"PENALTIES_RECEIVABLE", penalty, j.Accounts.ReceivablePenalty},
+		{"OVERPAYMENT", overpayment, j.Accounts.Overpayment},
+	}
+	creditLegs, probs := mergeReconstructedLegs(j.TransactionID, "CREDIT", "request.capitalized_income_adjustment_journal credit", credits)
+	if len(probs) > 0 {
+		return nil, probs
+	}
+	total, ok := sumMinorStrings(principal, interest, fee, penalty, overpayment)
+	if !ok {
+		return nil, []string{"request.capitalized_income_adjustment_journal portions are not integer minor amounts"}
+	}
+	amount := zeroIfEmpty(j.Amount)
+	if total != amount {
+		return nil, []string{fmt.Sprintf(
+			"request.capitalized_income_adjustment_journal portions sum to %s but the transaction amount is %s: the debit is the amount, so unequal credits and debit are refused", total, amount)}
+	}
+	if amount == "0" {
+		return creditLegs, nil
+	}
+	if j.Accounts.DeferredIncomeLiability == "" {
+		return nil, []string{fmt.Sprintf(
+			"request.capitalized_income_adjustment_journal amount %s has no deferred-income-liability account", amount)}
+	}
+	return append(creditLegs, JournalEntryLeg{
+		TransactionID: j.TransactionID, Account: j.Accounts.DeferredIncomeLiability, EntryType: "DEBIT", AmountMinor: amount,
 	}), nil
 }
 

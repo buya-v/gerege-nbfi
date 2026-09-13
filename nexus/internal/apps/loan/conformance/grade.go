@@ -480,6 +480,13 @@ func gradeOne(v *Vector, opts Options) vectorResult {
 		// account and count cells are what separate the charged-off credit table
 		// (or a fee/penalty debit) from the not-charged-off posting.
 		diffRepaymentJournalLegs(&s, v.Expect.ChargeAdjustmentJournalLegs, got.ChargeAdjustmentJournalLegs)
+	case SeamLoanCapitalizedIncomeAdjustmentJournalEntries:
+		// Reuse the repayment-journal per-leg differ: the property is the same
+		// fixed "credits in slot order, then one total debit" layout, and the
+		// account and count cells are what separate the per-slot portfolio /
+		// receivable / overpayment credits from a port that credits the whole
+		// transaction amount to the portfolio in one leg.
+		diffRepaymentJournalLegs(&s, v.Expect.CapitalizedIncomeAdjustmentJournalLegs, got.CapitalizedIncomeAdjustmentJournalLegs)
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		// Reuse the repayment-journal per-leg differ: the property is the same
 		// fixed "credits in slot order, then one debit" layout, and the account

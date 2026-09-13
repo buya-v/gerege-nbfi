@@ -68,6 +68,8 @@ func AssertInvariants(v *Vector, got Expect) []InvariantResult {
 		return []InvariantResult{assertDisbursementJournalBalanced(got)}
 	case SeamLoanChargeAdjustmentJournalEntries:
 		return []InvariantResult{assertChargeAdjustmentJournalBalanced(got)}
+	case SeamLoanCapitalizedIncomeAdjustmentJournalEntries:
+		return []InvariantResult{assertCapitalizedIncomeAdjustmentJournalBalanced(got)}
 	case SeamLoanChargedOffRepaymentJournalEntries:
 		return []InvariantResult{assertChargedOffRepaymentJournalBalanced(got)}
 	case SeamLoanChargedOffMerchantRefundJournalEntries:
@@ -859,6 +861,66 @@ func assertChargeAdjustmentJournalBalanced(got Expect) InvariantResult {
 	}
 	r.Status = InvariantHeld
 	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by the one income debit", creditLegs, credits)
+	return r
+}
+
+// assertCapitalizedIncomeAdjustmentJournalBalanced: a capitalized-income
+// adjustment's result carries non-negative integer minor-unit amounts, at least
+// one credit leg, EXACTLY ONE debit leg and the debit sums to the credits. The
+// credit side has no charged-off arm: it is one credit per positive portion slot
+// in slot order, merging slots that resolve to the same account, then ONE debit
+// of the transaction amount to deferred income liability. A port that credits
+// the whole amount to the portfolio keeps the count at one debit but moves the
+// credit account and amount on a multi-portion adjustment; a port that splits
+// the debit fails the count. It is asserted on the implementation's RESULT, so a
+// port that drops or unbalances a leg fails too.
+func assertCapitalizedIncomeAdjustmentJournalBalanced(got Expect) InvariantResult {
+	r := InvariantResult{Name: "capitalized_income_adjustment_journal_balances", Assertions: 4}
+	legs := got.CapitalizedIncomeAdjustmentJournalLegs
+	if len(legs) == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no legs"
+		return r
+	}
+	var credits, debits int64
+	creditLegs, debitLegs := 0, 0
+	for i, leg := range legs {
+		n, err := strconv.ParseInt(leg.AmountMinor, 10, 64)
+		if err != nil || n < 0 {
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d amount %q is not a non-negative integer minor amount", i, leg.AmountMinor)
+			return r
+		}
+		switch leg.EntryType {
+		case "CREDIT":
+			creditLegs++
+			credits += n
+		case "DEBIT":
+			debitLegs++
+			debits += n
+		default:
+			r.Status = InvariantViolated
+			r.Detail = fmt.Sprintf("leg %d side %q is not DEBIT or CREDIT", i, leg.EntryType)
+			return r
+		}
+	}
+	if creditLegs == 0 {
+		r.Status = InvariantViolated
+		r.Detail = "the result carries no credit leg: a capitalized-income adjustment credits each non-zero portion"
+		return r
+	}
+	if debitLegs != 1 {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the result carries %d debit leg(s): a capitalized-income adjustment posts exactly ONE debit of the transaction amount", debitLegs)
+		return r
+	}
+	if credits != debits {
+		r.Status = InvariantViolated
+		r.Detail = fmt.Sprintf("the %d credit leg(s) sum to %d but the single debit is %d: a capitalized-income adjustment must balance", creditLegs, credits, debits)
+		return r
+	}
+	r.Status = InvariantHeld
+	r.Detail = fmt.Sprintf("%d credit leg(s) sum to %d, matched by the one deferred-income-liability debit", creditLegs, credits)
 	return r
 }
 

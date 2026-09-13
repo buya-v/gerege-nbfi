@@ -182,6 +182,8 @@ func (goEvaluator) Evaluate(req Request) (Expect, error) {
 		return goInterestPaymentWaiverJournal(*req.InterestPaymentWaiverJournal)
 	case req.CapitalizedIncomeAmortizationJournal != nil:
 		return goCapitalizedIncomeAmortizationJournal(*req.CapitalizedIncomeAmortizationJournal)
+	case req.CapitalizedIncomeAdjustmentJournal != nil:
+		return goCapitalizedIncomeAdjustmentJournal(*req.CapitalizedIncomeAdjustmentJournal)
 	case req.BuyDownFeeAmortizationJournal != nil:
 		return goBuyDownFeeAmortizationJournal(*req.BuyDownFeeAmortizationJournal)
 	case req.ChargeLifecycle != nil:
@@ -1704,6 +1706,80 @@ func capitalizedIncomeAmortizationJournalLegsExpect(legs []loan.JournalEntryLeg)
 	return Expect{CapitalizedIncomeAmortizationJournalLegs: out}
 }
 
+// goCapitalizedIncomeAdjustmentJournal ports the
+// loan-capitalized-income-adjustment-journal-entries seam: it reduces the
+// request's amount and five integer-minor portions, runs the port's
+// CreateCapitalizedIncomeAdjustmentJournalEntryLegs with the product's
+// slot->account mapping, and renders the ordered legs. The credit side has NO
+// charged-off arm, so no loan state is read. Nothing is parsed as a float.
+func goCapitalizedIncomeAdjustmentJournal(r CapitalizedIncomeAdjustmentJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	principal, err := parseMinorText(minorTextOrZero(r.Portions.Principal))
+	if err != nil {
+		return Expect{}, err
+	}
+	interest, err := parseMinorText(minorTextOrZero(r.Portions.Interest))
+	if err != nil {
+		return Expect{}, err
+	}
+	fee, err := parseMinorText(minorTextOrZero(r.Portions.Fee))
+	if err != nil {
+		return Expect{}, err
+	}
+	penalty, err := parseMinorText(minorTextOrZero(r.Portions.Penalty))
+	if err != nil {
+		return Expect{}, err
+	}
+	overpayment, err := parseMinorText(minorTextOrZero(r.Portions.Overpayment))
+	if err != nil {
+		return Expect{}, err
+	}
+	legs, err := loan.CreateCapitalizedIncomeAdjustmentJournalEntryLegs(r.TransactionID, amount, loan.RepaymentPortions{
+		Principal:   principal,
+		Interest:    interest,
+		Fee:         fee,
+		Penalty:     penalty,
+		Overpayment: overpayment,
+	}, loan.CapitalizedIncomeAdjustmentAccountMapping{
+		LoanPortfolio:           r.Accounts.LoanPortfolio,
+		ReceivableInterest:      r.Accounts.ReceivableInterest,
+		ReceivableFee:           r.Accounts.ReceivableFee,
+		ReceivablePenalty:       r.Accounts.ReceivablePenalty,
+		Overpayment:             r.Accounts.Overpayment,
+		DeferredIncomeLiability: r.Accounts.DeferredIncomeLiability,
+	})
+	if err != nil {
+		return Expect{}, err
+	}
+	return capitalizedIncomeAdjustmentJournalLegsExpect(legs), nil
+}
+
+// capitalizedIncomeAdjustmentJournalLegsExpect renders the port's ordered legs
+// to the graded expectation, preserving the port's order: one credit per
+// non-zero portion slot (merged by account) then the one deferred-income debit.
+func capitalizedIncomeAdjustmentJournalLegsExpect(legs []loan.JournalEntryLeg) Expect {
+	out := make([]JournalEntryLeg, 0, len(legs))
+	for _, leg := range legs {
+		side := "CREDIT"
+		if leg.Side == loan.JournalEntryDebit {
+			side = "DEBIT"
+		}
+		out = append(out, JournalEntryLeg{
+			TransactionID: leg.TransactionID,
+			Account:       leg.Account,
+			EntryType:     side,
+			AmountMinor:   strconv.FormatInt(int64(leg.Amount), 10),
+		})
+	}
+	if out == nil {
+		out = []JournalEntryLeg{}
+	}
+	return Expect{CapitalizedIncomeAdjustmentJournalLegs: out}
+}
+
 // goBuyDownFeeAmortizationJournal ports the
 // loan-buy-down-fee-amortization-journal-entries seam: it reduces the request's
 // interest and fee integer-minor portions, runs the port's
@@ -2301,6 +2377,53 @@ func wrongBuyDownFeeAmortizationJournal(r BuyDownFeeAmortizationJournalRequest, 
 		r.WrittenOff = false
 	}
 	return goBuyDownFeeAmortizationJournal(r)
+}
+
+// wrongCapitalizedIncomeAdjustmentJournalEvaluator is a DELIBERATELY WRONG
+// implementation of the loan-capitalized-income-adjustment-journal-entries seam,
+// committing exactly one posting defect. On any request that is not a
+// capitalized-income adjustment journal it delegates to the correct port, so the
+// drive goes red ONLY on this seam's vectors and stays green everywhere else
+// (vector isolation).
+type wrongCapitalizedIncomeAdjustmentJournalEvaluator struct {
+	goEvaluator
+}
+
+func (w wrongCapitalizedIncomeAdjustmentJournalEvaluator) Evaluate(req Request) (Expect, error) {
+	if req.CapitalizedIncomeAdjustmentJournal != nil {
+		return wrongCapitalizedIncomeAdjustmentJournal(*req.CapitalizedIncomeAdjustmentJournal)
+	}
+	return w.goEvaluator.Evaluate(req)
+}
+
+// wrongCapitalizedIncomeAdjustmentJournal credits the WHOLE transaction amount
+// to LOAN_PORTFOLIO and then posts the one deferred-income-liability debit,
+// ignoring the portions: the interest, fee, penalty and overpayment credits
+// vanish and the portfolio credit carries the amount instead of the principal
+// portion. It is the mistake of a port that treats the adjustment as a transfer
+// whose credit is the amount. The principal-only observation is unaffected
+// because its sole credit is already the amount, so the drive's vectors must
+// include a multi-portion adjustment and the overpayment-only adjustment.
+func wrongCapitalizedIncomeAdjustmentJournal(r CapitalizedIncomeAdjustmentJournalRequest) (Expect, error) {
+	amount, err := parseMinorText(r.Amount)
+	if err != nil {
+		return Expect{}, err
+	}
+	legs := []loan.JournalEntryLeg{}
+	if amount > 0 {
+		legs = append(legs, loan.JournalEntryLeg{
+			TransactionID: r.TransactionID,
+			Account:       r.Accounts.LoanPortfolio,
+			Side:          loan.JournalEntryCredit,
+			Amount:        amount,
+		}, loan.JournalEntryLeg{
+			TransactionID: r.TransactionID,
+			Account:       r.Accounts.DeferredIncomeLiability,
+			Side:          loan.JournalEntryDebit,
+			Amount:        amount,
+		})
+	}
+	return capitalizedIncomeAdjustmentJournalLegsExpect(legs), nil
 }
 
 // chargedOffWriteOffJournalWrongMode selects which deliberately-wrong
@@ -4370,6 +4493,15 @@ func init() {
 			"single income debit stay observed — so the charged-off observation goes red and the "+
 			"not-charged-off observations are unaffected",
 		wrongChargeAdjustmentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
+	RegisterWrong("loan-wrong-cix-credits-deferred-by-amount",
+		"credits LOAN_PORTFOLIO with the whole transaction amount instead of splitting it by portion, "+
+			"as a port that books the capitalized-income adjustment as a transfer does; on the "+
+			"principal+interest observations the portfolio credit moves from the principal portion to "+
+			"the amount and the interest credit disappears, and on the overpayment-only observation "+
+			"the credit account moves from the overpayment liability to the portfolio, while the single "+
+			"deferred-income debit and the batch balance stay observed; the principal-only observation "+
+			"is unaffected because its sole credit is already the amount",
+		wrongCapitalizedIncomeAdjustmentJournalEvaluator{goEvaluator: NewGoEvaluator().(goEvaluator)})
 	RegisterWrong("loan-wrong-chargedoff-repayment-to-portfolio",
 		"posts a repayment on a loan marked charged off through the ORDINARY repayment port instead "+
 			"of the charged-off branch, as a port that forgets the loan is charged off does; the "+
