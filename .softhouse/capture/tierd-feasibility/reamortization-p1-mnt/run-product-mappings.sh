@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Run extract-product-mappings.py for every loan product named in this replay's
-# loan read-backs.  FEIGN must be assigned before use (see OH-TIERD16-CO lesson).
+# loan read-backs (OH-TIERD30-DR, LoanReAmortization-Part1).  FEIGN must be
+# assigned before use (see OH-TIERD16-CO lesson).
 set -u
 cd "$(dirname "$0")"
-FEIGN="${FEIGN:-/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-merchant-refund-mnt.log}"
+FEIGN="${FEIGN:-/Users/buv/fineract-tierd/fineract-e2e-tests-runner/build/capture/feign-reamortization-p1-mnt.log}"
 if [ ! -f "$FEIGN" ]; then echo "FEIGN not found: $FEIGN" >&2; exit 1; fi
 
 # Derive the product names from the loan read-backs (loanProductName).
