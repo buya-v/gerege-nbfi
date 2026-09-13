@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""OH-TIERD22-DB step 3 (THE NEW STEP): read every loan's journal entries from the
+"""OH-TIERD30-DR step 3 (THE NEW STEP): read every loan's journal entries from the
 still-running throwaway oracle and save each body verbatim.
 
-Copy of OH-TIERD21-DA `repayment-p1-mnt/sweep-journalentries.py`; the port (8444) and
-tenant (`tierd`) are already the throwaway's, so only the task header changed.
+Copy of OH-TIERD22-DB `merchant-refund-mnt/sweep-journalentries.py`; the port (8444)
+and tenant (`tierd`) are already the throwaway's, so only the task header changed.
+This is the re-run of the OH-TIERD12-CE sweep AFTER the LoanReAmortization-Part1
+replay and BEFORE teardown, so the re-amortization legs are still live.
 
 For every loan id the replay created, this runs exactly one bounded GET:
 
